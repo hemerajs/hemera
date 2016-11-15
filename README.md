@@ -100,7 +100,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Motivation
 
-You should'nt care about where you app lives, whether you data will arrive or they are scaled.
+You shouldn't care about where you app lives, whether you data will arrive or they are scaled.
 Let me dreaming :)
 
 ## Inspiration
