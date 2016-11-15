@@ -1,0 +1,17 @@
+{
+  "name": "hemera",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "url": "git@github.com:StarpTech/hemera.git",
+    "type": "git"
+  },
+  "author": "Dustin Deus <deusdustin@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "bloomrun": "^3.0.0",
+    "debug": "^2.3.2",
+    "nats": "^0.6.8",
+    "rx": "^4.1.0"
+  }
+}
