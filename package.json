@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "mocha -t 5000 --recursive",
-    "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec -t 5000 --recursive"
+    "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec -t 5000 --recursive",
+    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
   "author": "Dustin Deus <deusdustin@gmail.com>",
   "license": "MIT",
@@ -21,8 +22,10 @@
   },
   "devDependencies": {
     "code": "^4.0.0",
+    "coveralls": "^2.11.15",
     "fastbench": "^1.0.1",
     "istanbul": "^0.4.5",
-    "mocha": "^3.1.2"
+    "mocha": "^3.1.2",
+    "mocha-lcov-reporter": "^1.2.0"
   }
 }
