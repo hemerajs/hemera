@@ -11,6 +11,8 @@ A [Node.js](http://nodejs.org/) microservices toolkit for the [NATS messaging sy
 
 [NATS messaging system](https://nats.io)
 
+We use the Request Reply concept to realize this toolkit. [Request Reply](http://nats.io/documentation/concepts/nats-req-rep/)
+
 ### Example
 
 ```js
@@ -51,6 +53,22 @@ hemera.act({ topic: 'math', cmd: 'sub', a: 100, b: 20 }, (resp) => {
   
   console.log('Result', resp);
 });
+```
+
+### API
+
+Request:
+```
+act({ topic: '<name>', pattern... }, callback)
+
+topic: `Required` The name of the subscription topic.
+```
+
+Reply:
+```
+add({ topic: '<name>', pattern... }, callback)
+
+topic: `Required` The name of the subscription topic.
 ```
 
 ### TOOD
