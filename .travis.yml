@@ -1,0 +1,15 @@
+language: node_js
+sudo: false
+
+node_js:
+  - "0.12"
+  - "4"
+  - "5"
+  - "6"
+
+before_script:
+  - mkdir -p gnatsd
+  - wget https://github.com/nats-io/gnatsd/releases/download/v0.7.2/gnatsd-v0.7.2-linux-amd64.tar.gz -qO - | tar -zxvC gnatsd/
+
+after_success:
+  - npm run coveralls
