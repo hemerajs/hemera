@@ -30,7 +30,7 @@ We use the Request Reply concept to realize this toolkit. [Request Reply](http:/
 'use strict';
 
 const Hemera = require('./lib');
-const nats = require ('nats').connect("nats://root:root@localhost:6242");
+const nats = require ('nats').connect();
 
 const hemera = new Hemera({ nats, timeout: 2000 });
 
