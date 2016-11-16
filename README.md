@@ -4,7 +4,11 @@ A [Node.js](http://nodejs.org/) microservices toolkit for the [NATS messaging sy
 
 > The simplicity and focus of NATS enables it to deliver superior performance and stability with a lightweight footprint. It has the potential of becoming the de-facto transport for microservice architectures and event driven systems in this new era.
 
-—Asim Aslam, Creator of Micro
+Asim Aslam, Creator of Micro
+
+> "I discovered NATS for its performance, and stayed for its simplicity. It’s been a wonderfully reliable layer that connects our microservice architecture at Pressly. The source is easily readable and approachable, and the future developments keep me excited!
+
+Peter Kieltyka - CTO, Pressly
 
 [![License MIT](https://img.shields.io/npm/l/express.svg)](http://opensource.org/licenses/MIT)
 
