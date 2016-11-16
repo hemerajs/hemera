@@ -100,6 +100,10 @@ npm install
 npm run test
 ```
 
+## Monitoring
+
+Easy and beauitiful tool to monitor you app. [natsboard](https://github.com/fatihcode/natsboard)
+
 ## Built With
 
 * [Rx](https://github.com/Reactive-Extensions/RxJS) - Reactive Extension
