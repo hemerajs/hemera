@@ -71,9 +71,8 @@ add({ topic: '<name>', pattern... }, callback)
 topic: `Required` The name of the subscription topic.
 ```
 
-### Does NATS offer any guarantee of message ordering?
-NATS implements source ordered delivery per publisher. That is to say, messages from a given single publisher will be delivered to all eligible subscribers in the order in which they were originally published. There are no guarantees of message delivery order amongst multiple publishers.
-As long as you use the same `topic` the order of you messages is guaranteed.
+### NATS Limits & features
+[http://nats.io/documentation/faq/](http://nats.io/documentation/faq/)
 
 
 ### TOOD
