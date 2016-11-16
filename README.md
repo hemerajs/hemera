@@ -42,11 +42,16 @@ hemera.ready(() => {
   hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
 
     cb(resp.a + resp.b);
-  })
+  });
 
   hemera.add({ topic: 'math', cmd: 'sub' }, (resp, cb) => {
 
     cb(resp.a - resp.b);
+  });
+
+  hemera.add({ topic: 'email', cmd: 'send' }, (resp, cb) => {
+
+    cb();
   })
 
   /**
@@ -66,6 +71,9 @@ hemera.ready(() => {
     
     console.log('Result', resp);
   });
+
+  //Without callback
+  hemera.act({ topic: 'email', cmd: 'send', email: 'foobar@mail.com', msg: 'Hi' });
 
 });
 ```
