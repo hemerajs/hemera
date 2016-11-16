@@ -26,14 +26,14 @@ const hemera = new Hemera({ nats });
 /**
  * Your Implementations
  */
-hemera.add({ topic: 'math', cmd: 'add' }, (resp) => {
+hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
 
-  return resp.a + resp.b;
+  cb(resp.a + resp.b);
 })
 
-hemera.add({ topic: 'math', cmd: 'sub' }, (resp) => {
+hemera.add({ topic: 'math', cmd: 'sub' }, (resp, cb) => {
 
-  return resp.a - resp.b;
+  cb(resp.a - resp.b);
 })
 
 /**
