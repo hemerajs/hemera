@@ -11,7 +11,13 @@
   "dependencies": {
     "bloomrun": "^3.0.0",
     "debug": "^2.3.2",
+    "fast-json-parse": "^1.0.2",
+    "fast-safe-stringify": "^1.1.1",
     "nats": "^0.6.8",
     "rx": "^4.1.0"
+  },
+  "devDependencies": {
+    "fastbench": "^1.0.1",
+    "mocha": "^3.1.2"
   }
 }

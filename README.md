@@ -56,7 +56,8 @@ hemera.act({ topic: 'math', cmd: 'sub', a: 100, b: 20 }, (resp) => {
 ### TOOD
 
 - Error handling
-- Protocol interface
+- Protocol specification
+- Transport interface
 - API Documentation
 - Tests
 
@@ -100,8 +101,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Motivation
 
-You shouldn't care about where you app lives, whether you data will arrive or they are scaled.
-Let me dreaming :)
+Seneca is 
 
 ## Inspiration
 
