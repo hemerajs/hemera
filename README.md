@@ -110,7 +110,7 @@ topic: `Required` The name of the subscription topic.
 ### Installing
 
 ```
-npm install
+npm install hemera
 ```
 
 
