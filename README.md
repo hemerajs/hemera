@@ -18,6 +18,7 @@ Peter Kieltyka - CTO, Pressly
 
 ## Getting Started
 
+Hemera is a small wrapper around the nats driver. We want to provide a toolkit to develop microservice in an easy and powerful way. We use bloom filters to provide a pattern matching RPC style. You don't have to worry about the transport. NATS is powerful. The first goal is to provide a robust implementation for the basic operation. This implicit request reply mechanism, error handling, timeout handling, logging and more...
 
 ### Prerequisites
 
