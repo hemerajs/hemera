@@ -117,10 +117,6 @@ See also the list of [contributors](https://github.com/StarpTech/hemera/contribu
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
-## Motivation
-
-Seneca is 
-
 ## Inspiration
 
 [Seneca](https://github.com/senecajs/seneca) - A microservices toolkit for Node.js.
