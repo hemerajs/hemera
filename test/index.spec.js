@@ -61,6 +61,35 @@ describe('Basic', function () {
 
   });
 
+  it('Should be able to act without a callback', function (done) {
+
+    const nats = require('nats').connect(authUrl);
+    const hemera = new Hemera({
+      nats
+    });
+
+    hemera.ready(() => {
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+
+          cb();
+          done();
+      });
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      });
+
+    });
+
+  });
+
   it('Should be able to call a handler by different patterns', function (done) {
 
     const nats = require('nats').connect(authUrl);
