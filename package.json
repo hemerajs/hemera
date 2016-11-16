@@ -1,6 +1,6 @@
 {
   "name": "hemera",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "main": "index.js",
   "repository": {
     "url": "git@github.com:StarpTech/hemera.git",
@@ -22,6 +22,7 @@
   "devDependencies": {
     "code": "^4.0.0",
     "fastbench": "^1.0.1",
+    "istanbul": "^0.4.5",
     "mocha": "^3.1.2"
   }
 }
