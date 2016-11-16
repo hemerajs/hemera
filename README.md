@@ -127,7 +127,6 @@ Easy and beauitiful tool to monitor you app. [natsboard](https://github.com/fati
 
 ## Built With
 
-* [Rx](https://github.com/Reactive-Extensions/RxJS) - Reactive Extension
 * [Bloomrun](https://github.com/mcollina/bloomrun) - A js pattern matcher based on bloom filters
 * [Node Nats Driver](https://github.com/nats-io/node-nats) - Node.js client for NATS, the cloud native messaging system.
 
