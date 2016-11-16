@@ -11,7 +11,7 @@ Asim Aslam, Creator of Micro
 Peter Kieltyka - CTO, Pressly
 
 [![License MIT](https://img.shields.io/npm/l/express.svg)](http://opensource.org/licenses/MIT)
-
+[![Build Status](https://travis-ci.org/StarpTech/hemera.svg?branch=master)](https://travis-ci.org/StarpTech/hemera)
 - __Status:__ Experimental
 
 ## Getting Started
