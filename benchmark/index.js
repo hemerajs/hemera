@@ -48,7 +48,6 @@ var server = nsc.start_server(PORT, flags, () => {
     iterations: 500
   });
 
-  // run them two times
   run(function () {
     hemera.close();
     server.kill();
