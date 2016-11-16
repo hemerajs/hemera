@@ -90,7 +90,7 @@ topic: `Required` The name of the subscription topic.
 [http://nats.io/documentation/faq/](http://nats.io/documentation/faq/)
 
 
-### TOOD
+### TODO
 
 - Error handling
 - Protocol specification

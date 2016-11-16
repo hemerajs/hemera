@@ -1,6 +1,6 @@
 'use strict';
 
-var Hemera = require('../'),
+const Hemera = require('../'),
   nsc = require('./support/nats_server_control'),
   Code = require('code');
 
