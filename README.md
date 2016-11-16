@@ -78,6 +78,7 @@ topic: `Required` The name of the subscription topic.
 - Transport interface
 - API Documentation
 - Tests
+- Logging
 
 ### Installing
 
