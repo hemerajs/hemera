@@ -2,6 +2,8 @@
 
 A [Node.js](http://nodejs.org/) microservices toolkit for the [NATS messaging system](https://nats.io)..
 
+[![License MIT](https://img.shields.io/npm/l/express.svg)](http://opensource.org/licenses/MIT)
+
 - __Status:__ Experimental
 
 ## Getting Started
