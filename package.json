@@ -15,7 +15,6 @@
   "license": "MIT",
   "dependencies": {
     "bloomrun": "^3.0.0",
-    "debug": "^2.3.2",
     "fast-json-parse": "^1.0.2",
     "fast-safe-stringify": "^1.1.1",
     "pino": "^3.0.1"
