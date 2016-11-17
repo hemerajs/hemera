@@ -127,12 +127,12 @@ const hemera = new Hemera({
 ```
 
 ```js
-[2016-11-17T21:04:47.608Z] INFO (app/18196 on starptech): REQ
+[2016-11-17T21:04:47.608Z] INFO (app/18196 on starptech): ACT
     topic: "math"
     cmd: "add"
     a: 1
     b: 2
-[2016-11-17T21:04:47.613Z] INFO (app/18196 on starptech): RESP
+[2016-11-17T21:04:47.613Z] INFO (app/18196 on starptech): ACT_RESP
     topic: "math"
     cmd: "add"
     a: 1
