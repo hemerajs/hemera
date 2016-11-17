@@ -143,7 +143,7 @@ const hemera = new Hemera({
 ### NATS Limits & features
 [http://nats.io/documentation/faq/](http://nats.io/documentation/faq/)
 
-### Are you the only one who use NATS for a microservice architectures?
+### Are you the only one who use NATS for microservice architectures?
 
 > The simplicity and focus of NATS enables it to deliver superior performance and stability with a lightweight footprint. It has the potential of becoming the de-facto transport for microservice architectures and event driven systems in this new era.
 
