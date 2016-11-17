@@ -23,9 +23,12 @@ hemera.ready(() => {
   /**
   * Call them
   */
-  hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 2 }, (err, resp) => {
+  hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 2 }, function(err, resp) {
     
-    console.log('Result', resp);
+    hemera.act({ topic: 'math', cmd: 'add', a: 1, b: resp }, function(err, resp)  {
+    
+      console.log('Result', resp);
+    });
   });
 
   hemera.act({ topic: 'math', cmd: 'sub', a: 1, b: 20 }, (err, resp) => {
@@ -33,7 +36,7 @@ hemera.ready(() => {
     console.log('Result', resp);
   });
 
-  hemera.act({ topic: 'math', cmd: 'sub', a: 100, b: 20 }, (err, resp) => {
+  hemera.act({ topic: 'math', cmd: 'sub', a: 100, b: 20, $timeout: 5000 /* Overwrite timeout for this request */ }, (err, resp) => {
     
     console.log('Result', resp);
   });
