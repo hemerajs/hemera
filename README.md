@@ -58,20 +58,32 @@ hemera.ready(() => {
 });
 ```
 
-### API
+### Writing an application
 
-Request:
+Define your service
+```js
+hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
+  cb(null, resp.a + resp.b);
+});
 ```
-act({ topic: '<name>', pattern... }, callback)
 
-topic: `Required` The name of the subscription topic.
+Call your service
+```js
+hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
+console.log(resp); //2
+});
 ```
-
-Reply:
+Reply an error
+```js
+hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
+  cb(new CustomError('Invalid operation'));
+});
 ```
-add({ topic: '<name>', pattern... }, callback)
-
-topic: `Required` The name of the subscription topic.
+Handle that error
+```js
+hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
+ err instanceOf CustomError // true
+});
 ```
 
 ### NATS Limits & features
@@ -86,16 +98,6 @@ Asim Aslam, Creator of Micro
 > "I discovered NATS for its performance, and stayed for its simplicity. It’s been a wonderfully reliable layer that connects our microservice architecture at Pressly. The source is easily readable and approachable, and the future developments keep me excited!
 
 Peter Kieltyka - CTO, Pressly
-
-
-### TODO
-
-- Error handling
-- Protocol specification
-- Transport interface
-- API Documentation
-- Tests
-- Logging
 
 ### Installing
 
