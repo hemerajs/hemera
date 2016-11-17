@@ -35,7 +35,8 @@ We use the Request Reply concept to realize this toolkit. [Request Reply](http:/
 const nats = require('nats').connect(authUrl);
     
 const hemera = new Hemera({
-  timeout: 200
+  timeout: 200,
+  debug: true
 });
 
 hemera.useTransport(nats);

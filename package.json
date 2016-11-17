@@ -18,7 +18,6 @@
     "debug": "^2.3.2",
     "fast-json-parse": "^1.0.2",
     "fast-safe-stringify": "^1.1.1",
-    "nats": "^0.6.8",
     "pino": "^3.0.1"
   },
   "devDependencies": {
@@ -27,6 +26,7 @@
     "fastbench": "^1.0.1",
     "istanbul": "^0.4.5",
     "mocha": "^3.1.2",
-    "mocha-lcov-reporter": "^1.2.0"
+    "mocha-lcov-reporter": "^1.2.0",
+    "nats": "^0.6.8"
   }
 }
