@@ -118,6 +118,34 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, $timeout: 5000 }, (err, resp
 });
 ```
 
+### Plugins
+
+```
+let plugin = function (options) {
+
+  let hemera = this;
+
+  expect(options.a).to.be.equals('1');
+
+  hemera.add({
+    topic: 'math',
+    cmd: 'add'
+  }, (resp, cb) => {
+
+    cb(null, {
+      result: resp.a + resp.b
+    });
+  });
+
+  return {
+    name: 'myPlugin'
+  };
+
+};
+
+hemera.use(plugin, pluginOptions);
+```
+
 ### Logging
 
 ```js
