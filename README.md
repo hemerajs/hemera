@@ -100,6 +100,12 @@ hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
    err instanceOf FatalError // true
 });
 ```
+#### Specify custom timeout per act
+```js
+hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, $timeout: 5000 }, (err, resp) => {
+});
+```
+
 ### Logging
 
 ```js
