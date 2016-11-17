@@ -79,13 +79,27 @@ hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
   cb(new CustomError('Invalid operation'));
 });
 ```
-Handle that error
+Error-first-callbacks
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
  err instanceOf CustomError // true
 });
 ```
-
+Handle timeout errors
+```js
+hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
+ err instanceOf TimeoutError // true
+});
+```
+Fatal errors
+```js
+hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
+ var a = 5 / 0  // Upps!
+});
+hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
+   err instanceOf FatalError // true
+});
+```
 ### NATS Limits & features
 [http://nats.io/documentation/faq/](http://nats.io/documentation/faq/)
 
