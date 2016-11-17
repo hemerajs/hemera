@@ -6,6 +6,7 @@ const nats = require ('nats').connect();
 const hemera = new Hemera({ debug: true });
 
 hemera.useTransport(nats);
+
 hemera.ready(() => {
 
   /**
@@ -13,12 +14,12 @@ hemera.ready(() => {
   */
   hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
 
-    cb(resp.a + resp.b);
+    cb(null, resp.a + resp.b);
   })
 
   hemera.add({ topic: 'math', cmd: 'sub' }, (resp, cb) => {
 
-    cb(resp.a - resp.b);
+    cb(null, resp.a - resp.b);
   })
 
   /**
