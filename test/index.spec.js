@@ -41,7 +41,7 @@ describe('Basic', function () {
         cmd: 'add'
       }, (resp, cb) => {
 
-        cb({
+        cb(null, {
           result: resp.a + resp.b
         });
       });
@@ -113,7 +113,7 @@ describe('Basic', function () {
         cmd: 'add'
       }, (resp, cb) => {
 
-        cb({
+        cb(null, {
           result: resp.a + resp.b
         });
       });
@@ -123,7 +123,7 @@ describe('Basic', function () {
         cmd: 'sub'
       }, (resp, cb) => {
 
-        cb({
+        cb(null, {
           result: resp.a - resp.b
         });
       });

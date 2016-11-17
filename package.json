@@ -17,7 +17,8 @@
     "bloomrun": "^3.0.0",
     "fast-json-parse": "^1.0.2",
     "fast-safe-stringify": "^1.1.1",
-    "pino": "^3.0.1"
+    "pino": "^3.0.1",
+    "serialize-error": "^2.0.0"
   },
   "devDependencies": {
     "code": "^4.0.0",

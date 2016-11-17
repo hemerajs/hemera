@@ -48,12 +48,12 @@ hemera.ready(() => {
   */
   hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
 
-    cb(resp.a + resp.b);
+    cb(null, resp.a + resp.b);
   });
 
   hemera.add({ topic: 'math', cmd: 'sub' }, (resp, cb) => {
 
-    cb(resp.a - resp.b);
+    cb(null, resp.a - resp.b);
   });
 
   hemera.add({ topic: 'email', cmd: 'send' }, (resp, cb) => {
