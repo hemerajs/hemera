@@ -170,6 +170,10 @@ npm run test
 
 Easy and beauitiful tool to monitor you app. [natsboard](https://github.com/fatihcode/natsboard)
 
+## Nginx integration for NATS
+
+[nginx-nats](https://github.com/nats-io/nginx-nats)
+
 ## Built With
 
 * [Bloomrun](https://github.com/mcollina/bloomrun) - A js pattern matcher based on bloom filters
