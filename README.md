@@ -94,7 +94,7 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
 #### Fatal errors
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
- var a = 5 / 0  // Upps!
+ throw new Error('Upps');
 });
 hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
    err instanceOf FatalError // true
