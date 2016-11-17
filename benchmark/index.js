@@ -12,9 +12,8 @@ var noAuthUrl = 'nats://localhost:' + PORT;
 var server = nsc.start_server(PORT, flags, () => {
 
   const nats = require('nats').connect(authUrl);
-  const hemera = new Hemera({
-    nats
-  });
+  const hemera = new Hemera();
+  hemera.useTransport(nats);
 
   hemera.ready(() => {
 
@@ -23,7 +22,7 @@ var server = nsc.start_server(PORT, flags, () => {
       cmd: 'add'
     }, (resp, cb) => {
 
-      cb({
+      cb(null, {
         result: resp.a + resp.b
       });
     });
@@ -45,7 +44,7 @@ var server = nsc.start_server(PORT, flags, () => {
 
     }
   ], {
-    iterations: 500
+    iterations: 1000
   });
 
   run(function () {
