@@ -138,7 +138,25 @@
     <span class="hljs-keyword">this</span>.config = Hoek.applyToDefaults(defaultConfig, params || {});
     <span class="hljs-keyword">this</span>.topics = {};
 
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.config.debug) {
+
+      Pretty.pipe(process.stdout);
+
+      <span class="hljs-keyword">this</span>.logger = Pino({
+        <span class="hljs-attr">name</span>: <span class="hljs-string">'app'</span>,
+        <span class="hljs-attr">safe</span>: <span class="hljs-literal">true</span>
+      }, Pretty);
+    }
+
   }
+  <span class="hljs-comment">/**
+   * 
+   * 
+   * @param {any} transport
+   * 
+   * @memberOf Hemera
+   */</span>
   useTransport(transport) {
       <span class="hljs-keyword">this</span>.transport = transport;
     }
@@ -173,14 +191,7 @@
         };
       }
 
-      Pretty.pipe(process.stdout);
-
-      <span class="hljs-keyword">var</span> log = Pino({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">'app'</span>,
-        <span class="hljs-attr">safe</span>: <span class="hljs-literal">true</span>
-      }, Pretty);
-
-      <span class="hljs-keyword">return</span> log;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.logger;
     }
     <span class="hljs-comment">/**
      * 
@@ -560,7 +571,10 @@ We use one subscriber per topic</p>
             
             <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">let</span> msg = SafeStringify({
         pattern
-      });</pre></div></div>
+      });
+    
+      <span class="hljs-keyword">this</span>.log.info(pattern, <span class="hljs-string">'REQ'</span>);
+      <span class="hljs-keyword">let</span> t1 = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();</pre></div></div>
             
         </li>
         
@@ -585,6 +599,21 @@ We use one subscriber per topic</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Measure time</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.log.info(Hoek.merge(pattern, { <span class="hljs-attr">$time</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>() - t1 }), <span class="hljs-string">'RESP'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Parse response as JSON</p>
 
@@ -621,11 +650,11 @@ We use one subscriber per topic</p>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>let it crash</p>
 
@@ -643,11 +672,11 @@ We use one subscriber per topic</p>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Handle timeout</p>
 
@@ -655,7 +684,7 @@ We use one subscriber per topic</p>
             
             <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.transport.timeout(sid, pattern.$timeout || <span class="hljs-keyword">this</span>.config.timeout, <span class="hljs-number">1</span>, () =&gt; {
 
-        <span class="hljs-keyword">this</span>.log.error(<span class="hljs-keyword">new</span> TimeoutError(ACT_TIMEOUT_ERROR), <span class="hljs-string">'Pattern: '</span> + SafeStringify(pattern));
+        <span class="hljs-keyword">this</span>.log.error(<span class="hljs-keyword">new</span> TimeoutError(ACT_TIMEOUT_ERROR), pattern);
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> cb === <span class="hljs-string">'function'</span>) {
           cb(<span class="hljs-keyword">new</span> TimeoutError(ACT_TIMEOUT_ERROR));
