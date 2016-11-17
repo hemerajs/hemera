@@ -27,7 +27,7 @@ describe('Basic', function () {
   it('Should be able to add a handler and act it', function (done) {
 
     const nats = require('nats').connect(authUrl);
-    
+
     const hemera = new Hemera({
       timeout: 200
     });
@@ -67,7 +67,7 @@ describe('Basic', function () {
   it('Should be able to act without a callback', function (done) {
 
     const nats = require('nats').connect(authUrl);
-    
+
     const hemera = new Hemera({
       timeout: 200
     });
@@ -81,8 +81,8 @@ describe('Basic', function () {
         cmd: 'send'
       }, (resp, cb) => {
 
-          cb();
-          done();
+        cb();
+        done();
       });
 
       hemera.act({
@@ -99,7 +99,7 @@ describe('Basic', function () {
   it('Should be able to call a handler by different patterns', function (done) {
 
     const nats = require('nats').connect(authUrl);
-    
+
     const hemera = new Hemera({
       timeout: 200
     });
@@ -180,7 +180,7 @@ describe('Timeouts', function () {
   it('Should be able to check for an error when we get no answer back within the timeout limit', function (done) {
 
     const nats = require('nats').connect(authUrl);
-    
+
     const hemera = new Hemera({
       timeout: 200
     });
@@ -200,6 +200,65 @@ describe('Timeouts', function () {
         expect(resp).not.to.be.exists();
         hemera.close();
         done();
+      });
+
+    });
+
+  });
+
+});
+
+
+describe('Error handling', function () {
+
+  var PORT = 6242;
+  var flags = ['--user', 'derek', '--pass', 'foobar'];
+  var authUrl = 'nats://derek:foobar@localhost:' + PORT;
+  var noAuthUrl = 'nats://localhost:' + PORT;
+  var server;
+
+  // Start up our own nats-server
+  before(function (done) {
+    server = nsc.start_server(PORT, flags, done);
+  });
+
+  // Shutdown our server after we are done
+  after(function () {
+    server.kill();
+  });
+
+  it('Should be able to get the error', function (done) {
+
+    const nats = require('nats').connect(authUrl);
+
+    const hemera = new Hemera({
+      timeout: 200
+    });
+
+    hemera.useTransport(nats);
+
+    hemera.ready(() => {
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+
+        cb(new Error('Uups'));
+      });
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+
+        expect(err).to.be.exists();
+        expect(err.name).to.be.equals('Error');
+        expect(err.message).to.be.equals('Uups');
+        done();
+
       });
 
     });

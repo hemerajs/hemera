@@ -15,10 +15,10 @@
   "license": "MIT",
   "dependencies": {
     "bloomrun": "^3.0.0",
+    "errio": "^1.2.1",
     "fast-json-parse": "^1.0.2",
     "fast-safe-stringify": "^1.1.1",
-    "pino": "^3.0.1",
-    "serialize-error": "^2.0.0"
+    "pino": "^3.0.1"
   },
   "devDependencies": {
     "code": "^4.0.0",
