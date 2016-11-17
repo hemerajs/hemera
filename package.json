@@ -18,7 +18,8 @@
     "debug": "^2.3.2",
     "fast-json-parse": "^1.0.2",
     "fast-safe-stringify": "^1.1.1",
-    "nats": "^0.6.8"
+    "nats": "^0.6.8",
+    "pino": "^3.0.1"
   },
   "devDependencies": {
     "code": "^4.0.0",

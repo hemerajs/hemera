@@ -32,10 +32,13 @@ We use the Request Reply concept to realize this toolkit. [Request Reply](http:/
 ```js
 'use strict';
 
-const Hemera = require('./lib');
-const nats = require ('nats').connect();
+const nats = require('nats').connect(authUrl);
+    
+const hemera = new Hemera({
+  timeout: 200
+});
 
-const hemera = new Hemera({ nats, timeout: 2000 });
+hemera.useTransport(nats);
 
 hemera.ready(() => {
 
@@ -60,7 +63,7 @@ hemera.ready(() => {
   /**
   * Call them
   */
-  hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 2 }, (err, resp) => {
+  hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 2, $timeout: 5000 }, (err, resp) => {
     
     console.log('Result', resp);
   });

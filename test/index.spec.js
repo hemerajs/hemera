@@ -27,9 +27,12 @@ describe('Basic', function () {
   it('Should be able to add a handler and act it', function (done) {
 
     const nats = require('nats').connect(authUrl);
+    
     const hemera = new Hemera({
-      nats
+      timeout: 200
     });
+
+    hemera.useTransport(nats);
 
     hemera.ready(() => {
 
@@ -64,9 +67,12 @@ describe('Basic', function () {
   it('Should be able to act without a callback', function (done) {
 
     const nats = require('nats').connect(authUrl);
+    
     const hemera = new Hemera({
-      nats
+      timeout: 200
     });
+
+    hemera.useTransport(nats);
 
     hemera.ready(() => {
 
@@ -93,9 +99,12 @@ describe('Basic', function () {
   it('Should be able to call a handler by different patterns', function (done) {
 
     const nats = require('nats').connect(authUrl);
+    
     const hemera = new Hemera({
-      nats
+      timeout: 200
     });
+
+    hemera.useTransport(nats);
 
     hemera.ready(() => {
 
@@ -171,10 +180,12 @@ describe('Timeouts', function () {
   it('Should be able to check for an error when we get no answer back within the timeout limit', function (done) {
 
     const nats = require('nats').connect(authUrl);
+    
     const hemera = new Hemera({
-      nats,
       timeout: 200
     });
+
+    hemera.useTransport(nats);
 
     hemera.ready(() => {
 
