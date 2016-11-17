@@ -33,12 +33,7 @@ hemera.ready(() => {
     });
   });
 
-  hemera.act({ topic: 'math', cmd: 'sub', a: 1, b: 20 }, (err, resp) => {
-    
-    console.log('Result', resp);
-  });
-
-  hemera.act({ topic: 'math', cmd: 'sub', a: 100, b: 20, $timeout: 5000 /* Overwrite timeout for this request */ }, (err, resp) => {
+  hemera.act({ topic: 'math', cmd: 'subeded', a: 1, b: 20 }, (err, resp) => {
     
     console.log('Result', resp);
   });
