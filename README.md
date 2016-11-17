@@ -11,7 +11,18 @@ A [Node.js](http://nodejs.org/) microservices toolkit for the [NATS messaging sy
 
 ## Getting Started
 
-Hemera is a small wrapper around the nats driver. We want to provide a toolkit to develop microservices in an easy and powerful way. We use bloom filters to provide a pattern matching RPC style. You don't have to worry about the transport. NATS is powerful. The first goal is to provide a robust implementation for all basic operations. This implicit request reply mechanism, error handling, timeout handling, logging and more...
+Hemera is a small wrapper around the nats driver. We want to provide a toolkit to develop microservices in an easy and powerful way. We use bloom filters to provide a pattern matching RPC style. You don't have to worry about the transport. NATS is powerful.
+
+With Hemera you have the best of both worlds. Efficient pattern matching to have the most flexibility in defining your RPC's.
+It doesn't matter where your server or client lives. You can add the same `add` as many as you want on different hosts to ensure maximal availability. Thanks to the Request Reply pattern you can work with that as if you do a normal http request. Mind your own business NATS do the rest for you:
+
+- high througput message fanout
+- Addressing, discovery
+- Command and control (control plane)
+- Load balancing
+- N-way scalability
+- Location transparency
+- Fault tolerance
 
 ### Prerequisites
 
