@@ -198,6 +198,8 @@ describe('Timeouts', function () {
 
         expect(err).to.be.exists();
         expect(resp).not.to.be.exists();
+        expect(err.name).to.be.equals('TimeoutError');
+        expect(err.message).to.be.equals('Timeout');
         hemera.close();
         done();
       });
@@ -255,8 +257,11 @@ describe('Error handling', function () {
       }, (err, resp) => {
 
         expect(err).to.be.exists();
-        expect(err.name).to.be.equals('Error');
-        expect(err.message).to.be.equals('Uups');
+        expect(err.name).to.be.equals('BusinessError');
+        expect(err.message).to.be.equals('Bad implementation');
+        expect(err.cause.name).to.be.equals('Error');
+        expect(err.cause.message).to.be.equals('Uups');
+        expect(err.ownStack).to.be.exists('Uups');
         done();
 
       });
