@@ -227,7 +227,7 @@ describe('Error handling', function () {
     server.kill();
   });
 
-  it('Should be able to get the error', function (done) {
+  it('Should be able to serialize and deserialize an error back to the callee', function (done) {
 
     const nats = require('nats').connect(authUrl);
 
