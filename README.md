@@ -118,7 +118,7 @@ hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, $timeout: 5000 }, (err, resp) => {
 });
 ```
-#### Namespaces
+### Namespaces
 Namespaces are just patterns which will be extended to the pattern object in your `act` or `add`.
 In the namspace scope you have only access to `act` or `add` method.
 ```js
