@@ -60,38 +60,38 @@ hemera.ready(() => {
 
 ### Writing an application
 
-Define your service
+#### Define your service
 ```js
 hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
   cb(null, resp.a + resp.b);
 });
 ```
 
-Call your service
+#### Call your service
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
 console.log(resp); //2
 });
 ```
-Reply an error
+#### Reply an error
 ```js
 hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
   cb(new CustomError('Invalid operation'));
 });
 ```
-Error-first-callbacks
+#### Error-first-callbacks
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
  err instanceOf CustomError // true
 });
 ```
-Handle timeout errors
+#### Handle timeout errors
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
  err instanceOf TimeoutError // true
 });
 ```
-Fatal errors
+#### Fatal errors
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
  var a = 5 / 0  // Upps!
@@ -100,6 +100,28 @@ hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
    err instanceOf FatalError // true
 });
 ```
+### Logging
+
+```
+const hemera = new Hemera({
+  debug: true
+});
+```
+
+```
+[2016-11-17T21:04:47.608Z] INFO (app/18196 on starptech): REQ
+    topic: "math"
+    cmd: "add"
+    a: 1
+    b: 2
+[2016-11-17T21:04:47.613Z] INFO (app/18196 on starptech): RESP
+    topic: "math"
+    cmd: "add"
+    a: 1
+    b: 2
+    $time: 2
+```
+
 ### NATS Limits & features
 [http://nats.io/documentation/faq/](http://nats.io/documentation/faq/)
 
