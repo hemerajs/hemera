@@ -120,7 +120,7 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, $timeout: 5000 }, (err, resp
 
 ### Plugins
 
-```
+```js
 let plugin = function (options) {
 
   let hemera = this;
