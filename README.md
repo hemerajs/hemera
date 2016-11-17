@@ -102,13 +102,13 @@ hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
 ```
 ### Logging
 
-```
+```js
 const hemera = new Hemera({
   debug: true
 });
 ```
 
-```
+```js
 [2016-11-17T21:04:47.608Z] INFO (app/18196 on starptech): REQ
     topic: "math"
     cmd: "add"
