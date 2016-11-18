@@ -188,6 +188,17 @@ const hemera = new Hemera({
     $time: 2
 ```
 
+### Protocol
+
+JSON
+
+```JSON
+{
+  result: <msg>,
+  error: <serialized_error>
+}
+```
+
 ### NATS Limits & features
 [http://nats.io/documentation/faq/](http://nats.io/documentation/faq/)
 
