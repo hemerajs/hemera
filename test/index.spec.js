@@ -32,7 +32,7 @@ describe('Basic', function () {
       timeout: 200
     });
 
-    hemera.useTransport(nats);
+    Hemera.transport = nats;
 
     hemera.ready(() => {
 
@@ -93,7 +93,7 @@ describe('Basic', function () {
       timeout: 2000
     });
 
-    hemera.useTransport(nats);
+    Hemera.transport = nats;
 
     hemera.ready(() => {
 
@@ -128,7 +128,7 @@ describe('Basic', function () {
       timeout: 2000
     });
 
-    hemera.useTransport(nats);
+    Hemera.transport = nats;
 
     hemera.ready(() => {
 
@@ -158,7 +158,7 @@ describe('Basic', function () {
       timeout: 200
     });
 
-    hemera.useTransport(nats);
+    Hemera.transport = nats;
 
     hemera.ready(() => {
 
@@ -190,7 +190,7 @@ describe('Basic', function () {
       timeout: 200
     });
 
-    hemera.useTransport(nats);
+    Hemera.transport = nats;
 
     hemera.ready(() => {
 
@@ -224,7 +224,7 @@ describe('Basic', function () {
       timeout: 200
     });
 
-    hemera.useTransport(nats);
+    Hemera.transport = nats;
 
     hemera.ready(() => {
 
@@ -267,7 +267,7 @@ describe('Basic', function () {
       timeout: 200
     });
 
-    hemera.useTransport(nats);
+    Hemera.transport = nats;
 
     hemera.ready(() => {
 
@@ -301,7 +301,7 @@ describe('Basic', function () {
       timeout: 200
     });
 
-    hemera.useTransport(nats);
+    Hemera.transport = nats;
 
     hemera.ready(() => {
 
@@ -382,7 +382,7 @@ describe('Timeouts', function () {
       timeout: 200
     });
 
-    hemera.useTransport(nats);
+    Hemera.transport = nats;
 
     hemera.ready(() => {
 
@@ -434,7 +434,7 @@ describe('Logging', function () {
       timeout: 200
     });
 
-    hemera.useTransport(nats);
+    Hemera.transport = nats;
 
     hemera.log.info('Test');
     hemera.log.fatal('Test');
@@ -473,7 +473,7 @@ describe('Error handling', function () {
       timeout: 200
     });
 
-    hemera.useTransport(nats);
+    Hemera.transport = nats;
 
     hemera.ready(() => {
 
@@ -516,7 +516,7 @@ describe('Error handling', function () {
       crashOnFatal: false
     });
 
-    hemera.useTransport(nats);
+    Hemera.transport = nats;
 
     hemera.ready(() => {
 
@@ -559,7 +559,7 @@ describe('Error handling', function () {
       crashOnFatal: false
     });
 
-    hemera.useTransport(nats);
+    Hemera.transport = nats;
 
     hemera.ready(() => {
 
@@ -602,7 +602,7 @@ describe('Error handling', function () {
       timeout: 200
     });
 
-    hemera.useTransport(nats);
+    Hemera.transport = nats;
 
     hemera.ready(() => {
 
@@ -661,7 +661,7 @@ describe('Plugin interface', function () {
       timeout: 200
     });
 
-    hemera.useTransport(nats);
+    Hemera.transport = nats;
 
     hemera.ready(() => {
 
@@ -740,7 +740,7 @@ describe('Namespacing interface', function () {
       timeout: 200
     });
 
-    hemera.useTransport(nats);
+    Hemera.transport = nats;
 
     hemera.ready(() => {
 

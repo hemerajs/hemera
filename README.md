@@ -43,7 +43,7 @@ const hemera = new Hemera({
   debug: true
 });
 
-hemera.useTransport(nats);
+Hemera.transport = nats;
 
 hemera.ready(() => {
 
