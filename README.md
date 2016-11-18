@@ -194,8 +194,8 @@ JSON
 
 ```JSON
 {
-  result: <msg>,
-  error: <serialized_error>
+  "result": "<msg>",
+  "error": "<serialized_error>"
 }
 ```
 
