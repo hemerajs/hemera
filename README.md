@@ -37,13 +37,13 @@ We use the Request Reply concept to realize this toolkit. [Request Reply](http:/
 'use strict';
 
 const nats = require('nats').connect(authUrl);
+
+Hemera.transport = nats;
     
 const hemera = new Hemera({
   timeout: 200,
   debug: true
 });
-
-Hemera.transport = nats;
 
 hemera.ready(() => {
 
