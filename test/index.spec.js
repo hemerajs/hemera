@@ -771,8 +771,18 @@ describe('Namespacing interface', function () {
 
           expect(err).to.be.not.exists();
           expect(resp).not.to.be.equals(3);
-          hemera.close();
-          done();
+          
+          this.act({
+            cmd: 'add',
+            a: 1,
+            b: 2000
+          }, (err, resp) => {
+
+            expect(err).to.be.not.exists();
+            expect(resp).not.to.be.equals(3);
+            hemera.close();
+            done();
+          });
         });
 
       });
