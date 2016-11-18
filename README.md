@@ -36,6 +36,7 @@ We use the Request Reply concept to realize this toolkit. [Request Reply](http:/
 ```js
 'use strict';
 
+const Hemera = require('hemera');
 const nats = require('nats').connect(authUrl);
 
 Hemera.transport = nats;
