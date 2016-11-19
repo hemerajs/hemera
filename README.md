@@ -44,10 +44,8 @@ npm install hemera
 
 const Hemera = require('hemera');
 const nats = require('nats').connect(authUrl);
-
-Hemera.transport = nats;
     
-const hemera = new Hemera({
+const hemera = new Hemera(nats, {
   timeout: 200,
   debug: true
 });

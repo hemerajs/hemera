@@ -26,11 +26,7 @@ function myPlugin(options) {
 const Hemera = require('./../')
 const nats = require('nats').connect()
 
-const hemera = new Hemera({
-  debug: true
-})
-
-Hemera.transport = nats
+const hemera = new Hemera(nats, { debug: true })
 
 hemera.ready(() => {
 

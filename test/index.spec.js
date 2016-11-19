@@ -2,7 +2,8 @@
 
 const Hemera = require('../'),
   nsc = require('./support/nats_server_control'),
-  Code = require('code')
+  Code = require('code'),
+  Sinon = require('sinon')
 
 const expect = Code.expect
 
@@ -28,12 +29,8 @@ describe('Basic', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera({
-      timeout: 200
-    })
-
-    Hemera.transport = nats
-
+    const hemera = new Hemera(nats)
+      
     hemera.ready(() => {
 
       hemera.add({
@@ -89,11 +86,7 @@ describe('Basic', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera({
-      timeout: 2000
-    })
-
-    Hemera.transport = nats
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
 
@@ -124,11 +117,7 @@ describe('Basic', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera({
-      timeout: 2000
-    })
-
-    Hemera.transport = nats
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
 
@@ -154,11 +143,7 @@ describe('Basic', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera({
-      timeout: 200
-    })
-
-    Hemera.transport = nats
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
 
@@ -186,11 +171,7 @@ describe('Basic', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera({
-      timeout: 200
-    })
-
-    Hemera.transport = nats
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
 
@@ -220,11 +201,7 @@ describe('Basic', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera({
-      timeout: 200
-    })
-
-    Hemera.transport = nats
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
 
@@ -263,11 +240,7 @@ describe('Basic', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera({
-      timeout: 200
-    })
-
-    Hemera.transport = nats
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
 
@@ -297,11 +270,7 @@ describe('Basic', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera({
-      timeout: 200
-    })
-
-    Hemera.transport = nats
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
 
@@ -378,11 +347,9 @@ describe('Timeouts', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera({
-      timeout: 200
+    const hemera = new Hemera(nats, {
+      timeout: 20
     })
-
-    Hemera.transport = nats
 
     hemera.ready(() => {
 
@@ -407,46 +374,6 @@ describe('Timeouts', function () {
 
 })
 
-
-describe('Logging', function () {
-
-  var PORT = 6242
-  var flags = ['--user', 'derek', '--pass', 'foobar']
-  var authUrl = 'nats://derek:foobar@localhost:' + PORT
-  var noAuthUrl = 'nats://localhost:' + PORT
-  var server
-
-  // Start up our own nats-server
-  before(function (done) {
-    server = nsc.start_server(PORT, flags, done)
-  })
-
-  // Shutdown our server after we are done
-  after(function () {
-    server.kill()
-  })
-
-  it('Should be able to check for an error when we get no answer back within the timeout limit', function (done) {
-
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera({
-      timeout: 200
-    })
-
-    Hemera.transport = nats
-
-    hemera.log.info('Test')
-    hemera.log.fatal('Test')
-
-    hemera.close()
-    done()
-
-  })
-
-})
-
-
 describe('Error handling', function () {
 
   var PORT = 6242
@@ -469,11 +396,7 @@ describe('Error handling', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera({
-      timeout: 200
-    })
-
-    Hemera.transport = nats
+    const hemera = new Hemera(nats, { crashOnFatal: false })
 
     hemera.ready(() => {
 
@@ -512,11 +435,7 @@ describe('Error handling', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera({
-      crashOnFatal: false
-    })
-
-    Hemera.transport = nats
+    const hemera = new Hemera(nats, { crashOnFatal: false })
 
     hemera.ready(() => {
 
@@ -555,11 +474,7 @@ describe('Error handling', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera({
-      crashOnFatal: false
-    })
-
-    Hemera.transport = nats
+    const hemera = new Hemera(nats, { crashOnFatal: false })
 
     hemera.ready(() => {
 
@@ -598,11 +513,7 @@ describe('Error handling', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera({
-      timeout: 200
-    })
-
-    Hemera.transport = nats
+    const hemera = new Hemera(nats, { crashOnFatal: false })
 
     hemera.ready(() => {
 
@@ -657,11 +568,7 @@ describe('Plugin interface', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera({
-      timeout: 200
-    })
-
-    Hemera.transport = nats
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
 
@@ -715,11 +622,7 @@ describe('Plugin interface', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera({
-      timeout: 200
-    })
-
-    Hemera.transport = nats
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
 
@@ -810,12 +713,9 @@ describe('Logging interface', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera({
-      timeout: 200,
-      debug: true
-    })
-
-    Hemera.transport = nats
+    const hemera = new Hemera(nats)
+      
+    var logSpy = Sinon.spy(hemera, "log");
 
     hemera.ready(() => {
 
@@ -838,6 +738,7 @@ describe('Logging interface', function () {
 
         expect(err).to.be.not.exists()
         expect(resp).not.to.be.equals(3)
+        expect(logSpy.called).to.be.equals(true)
         hemera.close()
         done()
       })

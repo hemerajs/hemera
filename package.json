@@ -31,6 +31,7 @@
     "istanbul": "^0.4.5",
     "mocha": "^3.1.2",
     "mocha-lcov-reporter": "^1.2.0",
-    "nats": "^0.6.8"
+    "nats": "^0.6.8",
+    "sinon": "^1.17.6"
   }
 }
