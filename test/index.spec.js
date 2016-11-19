@@ -30,7 +30,7 @@ describe('Basic', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
-      
+
     hemera.ready(() => {
 
       hemera.add({
@@ -396,7 +396,9 @@ describe('Error handling', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, { crashOnFatal: false })
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
 
     hemera.ready(() => {
 
@@ -435,7 +437,9 @@ describe('Error handling', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, { crashOnFatal: false })
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
 
     hemera.ready(() => {
 
@@ -474,7 +478,9 @@ describe('Error handling', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, { crashOnFatal: false })
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
 
     hemera.ready(() => {
 
@@ -513,7 +519,9 @@ describe('Error handling', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, { crashOnFatal: false })
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
 
     hemera.ready(() => {
 
@@ -714,7 +722,7 @@ describe('Logging interface', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
-      
+
     var logSpy = Sinon.spy(hemera, "log");
 
     hemera.ready(() => {
