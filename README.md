@@ -164,7 +164,7 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, function (err, resp) {
     });
 });
 ```
-If you want to set a context only this `act` and all nested `act`
+If you want to set a context only for this `act` and all nested `act`
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, context$: 1 }, function (err, resp) {
 
