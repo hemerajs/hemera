@@ -27,13 +27,13 @@ hemera.ready(() => {
     
     hemera.act({ topic: 'math', cmd: 'add', a: 1, b: resp }, function (err, resp) {
     
-      console.log('Result', resp)
+    this.log().info('Result', resp)
     })
   })
 
-  hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 20 }, (err, resp) => {
+  hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 20 }, function (err, resp) {
     
-    console.log('Result', resp)
+    this.log().info('Result', resp)
   })
 
 })
