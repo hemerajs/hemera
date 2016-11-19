@@ -121,7 +121,7 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, $timeout: 5000 }, (err, resp
 ```
 
 ### Delegation
-#### _* Notice the use of this_
+#### _* Notice the use of ```this```_
 
 #### Metadata
 If you want to transfer metadata to a service you can use the `meta$` property before sending. It will be passed in all nested `act`.
