@@ -230,9 +230,7 @@ hemera.use(plugin, pluginOptions);
 ### Logging
 
 ```js
-const hemera = new Hemera({
-  debug: true
-});
+const hemera = new Hemera(nats, { logLevel: 'info' });
 ```
 
 ```js
