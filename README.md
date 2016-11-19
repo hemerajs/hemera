@@ -31,6 +31,12 @@ It doesn't matter where your server or client lives. You can add the same `add` 
 
 We use the Request Reply concept to realize this toolkit. [Request Reply](http://nats.io/documentation/concepts/nats-req-rep/)
 
+### Installing
+
+```
+npm install hemera
+```
+
 ### Example
 
 ```js
@@ -256,13 +262,6 @@ Asim Aslam, Creator of Micro
 > "I discovered NATS for its performance, and stayed for its simplicity. It’s been a wonderfully reliable layer that connects our microservice architecture at Pressly. The source is easily readable and approachable, and the future developments keep me excited!
 
 Peter Kieltyka - CTO, Pressly
-
-### Installing
-
-```
-npm install hemera
-```
-
 
 ## Running the tests
 
