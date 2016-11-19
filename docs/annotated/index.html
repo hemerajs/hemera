@@ -37,7 +37,7 @@
  */</span>
 
 <span class="hljs-comment">/* jslint node: true */</span><span class="hljs-meta">
-'use strict'</span>;
+'use strict'</span>
 
 <span class="hljs-comment">/**
  * Module Dependencies
@@ -52,7 +52,7 @@
   Errio = <span class="hljs-built_in">require</span>(<span class="hljs-string">'errio'</span>),
   Hoek = <span class="hljs-built_in">require</span>(<span class="hljs-string">'hoek'</span>),
   SuperError = <span class="hljs-built_in">require</span>(<span class="hljs-string">'super-error'</span>),
-  Pretty = Pino.pretty();
+  Pretty = Pino.pretty()
 
 <span class="hljs-comment">/**
  * Constants
@@ -81,7 +81,8 @@
   INVALID_ERROR_OBJECT = <span class="hljs-string">'No native Error object passed'</span>,
   PATTERN_NOT_FOUND = <span class="hljs-string">'No handler found for this pattern'</span>,
   IMPLEMENTATION_ERROR = <span class="hljs-string">'Bad implementation'</span>,
-  PAYLOAD_PARSING_ERROR = <span class="hljs-string">'Invalid payload'</span>;</pre></div></div>
+  PAYLOAD_PARSING_ERROR = <span class="hljs-string">'Invalid payload'</span>,
+  PLUGIN_ALREADY_IN_USE = <span class="hljs-string">'Plugin is already registered'</span></pre></div></div>
             
         </li>
         
@@ -104,7 +105,7 @@
   ImplementationError = HemeraError.subclass(<span class="hljs-string">'ImplementationError'</span>),
   BusinessError = HemeraError.subclass(<span class="hljs-string">'BusinessError'</span>),
   FatalError = HemeraError.subclass(<span class="hljs-string">'FatalError'</span>),
-  PatternNotFound = HemeraError.subclass(<span class="hljs-string">'PatternNotFound'</span>);</pre></div></div>
+  PatternNotFound = HemeraError.subclass(<span class="hljs-string">'PatternNotFound'</span>)</pre></div></div>
             
         </li>
         
@@ -123,7 +124,7 @@
   <span class="hljs-attr">timeout</span>: <span class="hljs-number">2000</span>,
   <span class="hljs-attr">debug</span>: <span class="hljs-literal">false</span>,
   <span class="hljs-attr">crashOnFatal</span>: <span class="hljs-literal">true</span>
-};
+}
 
 <span class="hljs-comment">/**
  * 
@@ -134,31 +135,71 @@
 
   <span class="hljs-keyword">constructor</span>(params) {
 
-    <span class="hljs-keyword">this</span>.catalog = Bloomrun();
-    <span class="hljs-keyword">this</span>.config = Hoek.applyToDefaults(defaultConfig, params || {});
-    <span class="hljs-keyword">this</span>.topics = {};
+      <span class="hljs-keyword">this</span>.catalog = Bloomrun()
+      <span class="hljs-keyword">this</span>.config = Hoek.applyToDefaults(defaultConfig, params || {})
+      <span class="hljs-keyword">this</span>.topics = {}
+      <span class="hljs-keyword">this</span>.plugins = {}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Special variables for act and add</p>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.context$ = {}
+      <span class="hljs-keyword">this</span>.meta$ = {}
+      <span class="hljs-keyword">this</span>.plugin$ = {};
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.config.debug) {
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.config.debug) {
 
-      Pretty.pipe(process.stdout);
+        Pretty.pipe(process.stdout)
 
-      <span class="hljs-keyword">this</span>.logger = Pino({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">'app'</span>,
-        <span class="hljs-attr">safe</span>: <span class="hljs-literal">true</span>
-      }, Pretty);
+        <span class="hljs-keyword">this</span>.logger = Pino({
+          <span class="hljs-attr">name</span>: <span class="hljs-string">'app'</span>,
+          <span class="hljs-attr">safe</span>: <span class="hljs-literal">true</span>
+        }, Pretty)
+      }
+
     }
+    <span class="hljs-comment">/**
+     * 
+     * 
+     * @param {any} plugin
+     * 
+     * @memberOf Hemera
+     */</span>
+  use(plugin, options) {
 
-  }
-  <span class="hljs-comment">/**
-   * 
-   * 
-   * @param {any} transport
-   * 
-   * @memberOf Hemera
-   */</span>
-  useTransport(transport) {
-      <span class="hljs-keyword">this</span>.transport = transport;
+      <span class="hljs-keyword">let</span> delegate = <span class="hljs-keyword">this</span>.delegate()
+      <span class="hljs-keyword">let</span> pluginConfig = plugin.call(delegate, options)
+      delegate.plugin$ = pluginConfig
+
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.plugins[pluginConfig.name]) {
+
+        <span class="hljs-keyword">this</span>.log.error(<span class="hljs-keyword">new</span> Hemera(PLUGIN_ALREADY_IN_USE, pluginConfig))
+        <span class="hljs-keyword">throw</span> (<span class="hljs-keyword">new</span> Hemera(PLUGIN_ALREADY_IN_USE, pluginConfig))
+      }
+
+      <span class="hljs-keyword">this</span>.plugins[pluginConfig.name] = pluginConfig
+
+    }
+    <span class="hljs-comment">/**
+     * 
+     * 
+     * @param {any} transport
+     * 
+     * @memberOf Hemera
+     */</span>
+  <span class="hljs-keyword">static</span> transport() {
+
+      <span class="hljs-keyword">return</span> Hemera.transport
     }
     <span class="hljs-comment">/**
      * 
@@ -168,7 +209,7 @@
      */</span>
   fatal() {
 
-      process.exit(<span class="hljs-number">1</span>);
+      process.exit(<span class="hljs-number">1</span>)
 
     }
     <span class="hljs-comment">/**
@@ -188,10 +229,10 @@
           <span class="hljs-attr">fatal</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {},
           <span class="hljs-attr">warn</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {},
           <span class="hljs-attr">trace</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {}
-        };
+        }
       }
 
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.logger;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.logger
     }
     <span class="hljs-comment">/**
      * 
@@ -202,9 +243,9 @@
      */</span>
   ready(cb) {
 
-      <span class="hljs-keyword">this</span>.transport.on(<span class="hljs-string">'connect'</span>, () =&gt; {
-        cb();
-      });
+      Hemera.transport.on(<span class="hljs-string">'connect'</span>, () =&gt; {
+        cb()
+      })
 
     }
     <span class="hljs-comment">/**
@@ -216,11 +257,11 @@
      */</span>
   error(cb) {
 
-      <span class="hljs-keyword">this</span>.transport.on(<span class="hljs-string">'error'</span>, (err) =&gt; {
+      Hemera.transport.on(<span class="hljs-string">'error'</span>, (err) =&gt; {
 
-        <span class="hljs-keyword">this</span>.log.error(err);
-        cb(err);
-      });
+        <span class="hljs-keyword">this</span>.log.error(err)
+        cb(err)
+      })
 
     }
     <span class="hljs-comment">/**
@@ -233,25 +274,7 @@
      */</span>
   subscribe(topic) {
 
-      <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <p>Avoid duplicate subsribers of the emit stream
-We use one subscriber per topic</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (self.topics[topic]) {
-        <span class="hljs-keyword">return</span>;
-      }</pre></div></div>
+      <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span></pre></div></div>
             
         </li>
         
@@ -262,13 +285,14 @@ We use one subscriber per topic</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Add subscriber</p>
+              <p>Avoid duplicate subsrcibers of the emit stream
+We use one subscriber per topic</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      self.transport.subscribe(topic, {
-        <span class="hljs-string">'queue'</span>: <span class="hljs-string">'queue.'</span> + topic
-      }, (request, replyTo) =&gt; {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (self.topics[topic]) {
+        <span class="hljs-keyword">return</span>
+      }</pre></div></div>
             
         </li>
         
@@ -279,11 +303,13 @@ We use one subscriber per topic</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>Parse response as JSON</p>
+              <p>Add subscriber</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> result = Parse(request);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      Hemera.transport.subscribe(topic, {
+        <span class="hljs-string">'queue'</span>: <span class="hljs-string">'queue.'</span> + topic
+      }, (request, replyTo) =&gt; {</pre></div></div>
             
         </li>
         
@@ -294,13 +320,11 @@ We use one subscriber per topic</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>Invalid payload</p>
+              <p>Parse response as JSON</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (result.error) {
-
-          <span class="hljs-keyword">this</span>.log.error(<span class="hljs-keyword">new</span> ParseError(PAYLOAD_PARSING_ERROR).causedBy(result.error));</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> result = Parse(request)</pre></div></div>
             
         </li>
         
@@ -311,19 +335,13 @@ We use one subscriber per topic</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>Encode msg as JSON</p>
+              <p>Invalid payload</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">let</span> msg = SafeStringify({
-            <span class="hljs-attr">result</span>: <span class="hljs-literal">null</span>,
-            <span class="hljs-attr">error</span>: Errio.stringify(<span class="hljs-keyword">new</span> ParseError(PAYLOAD_PARSING_ERROR).causedBy(result.error))
-          });
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (result.error) {
 
-          <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.transport.publish(replyTo, msg);
-        }
-
-        <span class="hljs-keyword">let</span> handler = <span class="hljs-keyword">this</span>.catalog.lookup(result.value.pattern);</pre></div></div>
+          <span class="hljs-keyword">this</span>.log.error(<span class="hljs-keyword">new</span> ParseError(PAYLOAD_PARSING_ERROR).causedBy(result.error))</pre></div></div>
             
         </li>
         
@@ -334,19 +352,21 @@ We use one subscriber per topic</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>Check if a handler is registered with this pattern</p>
+              <p>Encode msg as JSON</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (handler) {
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">let</span> msg = SafeStringify({
+            <span class="hljs-attr">result</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">error</span>: Errio.stringify(<span class="hljs-keyword">new</span> ParseError(PAYLOAD_PARSING_ERROR).causedBy(result.error))
+          })
 
-          <span class="hljs-keyword">try</span> {
+          <span class="hljs-keyword">return</span> Hemera.transport.publish(replyTo, msg)
+        }
 
-            handler(result.value.pattern, (err, resp) =&gt; {
+        <span class="hljs-keyword">this</span>.log.info(result.value.pattern, <span class="hljs-string">'ADD_IN'</span>)
 
-              <span class="hljs-keyword">if</span> (err) {
-                <span class="hljs-keyword">this</span>.log.error(<span class="hljs-keyword">new</span> BusinessError().causedBy(err));
-              }</pre></div></div>
+        <span class="hljs-keyword">let</span> handler = <span class="hljs-keyword">this</span>.catalog.lookup(result.value.pattern)</pre></div></div>
             
         </li>
         
@@ -357,14 +377,23 @@ We use one subscriber per topic</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>Encode msg as JSON</p>
+              <p>Check if a handler is registered with this pattern</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>              <span class="hljs-keyword">let</span> msg = SafeStringify({
-                <span class="hljs-attr">result</span>: resp,
-                <span class="hljs-attr">error</span>: err ? Errio.stringify(<span class="hljs-keyword">new</span> BusinessError(IMPLEMENTATION_ERROR).causedBy(err)) : <span class="hljs-literal">null</span>
-              });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (handler) {
+
+          <span class="hljs-keyword">try</span> {
+
+            result = Hoek.merge(result.value.pattern, {
+              <span class="hljs-attr">meta$</span>: result.value.meta$
+            })
+
+            handler(result, (err, resp) =&gt; {
+
+              <span class="hljs-keyword">if</span> (err) {
+                <span class="hljs-keyword">this</span>.log.error(<span class="hljs-keyword">new</span> BusinessError().causedBy(err))
+              }</pre></div></div>
             
         </li>
         
@@ -375,16 +404,14 @@ We use one subscriber per topic</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>Send message</p>
+              <p>Encode msg as JSON</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>              <span class="hljs-keyword">this</span>.transport.publish(replyTo, msg);
-            });
-
-          } <span class="hljs-keyword">catch</span> (err) {
-
-            <span class="hljs-keyword">this</span>.log.fatal(<span class="hljs-keyword">new</span> FatalError().causedBy(err));</pre></div></div>
+            <div class="content"><div class='highlight'><pre>              <span class="hljs-keyword">let</span> msg = SafeStringify({
+                <span class="hljs-attr">result</span>: resp,
+                <span class="hljs-attr">error</span>: err ? Errio.stringify(<span class="hljs-keyword">new</span> BusinessError(IMPLEMENTATION_ERROR).causedBy(err)) : <span class="hljs-literal">null</span>
+              })</pre></div></div>
             
         </li>
         
@@ -395,14 +422,16 @@ We use one subscriber per topic</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>Encode msg as JSON</p>
+              <p>Send message</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> msg = SafeStringify({
-              <span class="hljs-attr">result</span>: <span class="hljs-literal">null</span>,
-              <span class="hljs-attr">error</span>: Errio.stringify(<span class="hljs-keyword">new</span> ImplementationError(IMPLEMENTATION_ERROR).causedBy(err))
-            });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>              Hemera.transport.publish(replyTo, msg)
+            })
+
+          } <span class="hljs-keyword">catch</span> (err) {
+
+            <span class="hljs-keyword">this</span>.log.fatal(<span class="hljs-keyword">new</span> FatalError().causedBy(err))</pre></div></div>
             
         </li>
         
@@ -413,11 +442,14 @@ We use one subscriber per topic</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>Send error back to callee</p>
+              <p>Encode msg as JSON</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">this</span>.transport.publish(replyTo, msg);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> msg = SafeStringify({
+              <span class="hljs-attr">result</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">error</span>: Errio.stringify(<span class="hljs-keyword">new</span> ImplementationError(IMPLEMENTATION_ERROR).causedBy(err))
+            })</pre></div></div>
             
         </li>
         
@@ -428,21 +460,11 @@ We use one subscriber per topic</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>let it crash</p>
+              <p>Send error back to callee</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.config.crashOnFatal) {
-              <span class="hljs-keyword">this</span>.fatal();
-            }
-
-          }
-
-        } <span class="hljs-keyword">else</span> {
-
-          <span class="hljs-keyword">this</span>.log.info({
-            topic
-          }, PATTERN_NOT_FOUND);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            Hemera.transport.publish(replyTo, msg)</pre></div></div>
             
         </li>
         
@@ -453,14 +475,21 @@ We use one subscriber per topic</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>Encode msg as JSON</p>
+              <p>let it crash</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">let</span> msg = SafeStringify({
-            <span class="hljs-attr">result</span>: <span class="hljs-literal">null</span>,
-            <span class="hljs-attr">error</span>: Errio.stringify(<span class="hljs-keyword">new</span> PatternNotFound(PATTERN_NOT_FOUND))
-          });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.config.crashOnFatal) {
+              <span class="hljs-keyword">this</span>.fatal()
+            }
+
+          }
+
+        } <span class="hljs-keyword">else</span> {
+
+          <span class="hljs-keyword">this</span>.log.info({
+            topic
+          }, PATTERN_NOT_FOUND)</pre></div></div>
             
         </li>
         
@@ -471,16 +500,34 @@ We use one subscriber per topic</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
+              <p>Encode msg as JSON</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">let</span> msg = SafeStringify({
+            <span class="hljs-attr">result</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">error</span>: Errio.stringify(<span class="hljs-keyword">new</span> PatternNotFound(PATTERN_NOT_FOUND))
+          })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
               <p>Send error back to callee</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">this</span>.transport.publish(replyTo, msg);
+            <div class="content"><div class='highlight'><pre>          Hemera.transport.publish(replyTo, msg)
         }
 
-      });
+      })
 
-      self.topics[topic] = <span class="hljs-literal">true</span>;
+      self.topics[topic] = <span class="hljs-literal">true</span>
 
     }
     <span class="hljs-comment">/**
@@ -494,36 +541,21 @@ We use one subscriber per topic</p>
   add(pattern, cb) {
 
       <span class="hljs-keyword">if</span> (!pattern.topic) {
-        <span class="hljs-keyword">this</span>.log.error(<span class="hljs-keyword">new</span> HemeraError(NO_TOPIC_TO_SUBSCRIBE));
-        <span class="hljs-keyword">throw</span> (<span class="hljs-keyword">new</span> HemeraError(NO_TOPIC_TO_SUBSCRIBE));
+        <span class="hljs-keyword">this</span>.log.error(<span class="hljs-keyword">new</span> HemeraError(NO_TOPIC_TO_SUBSCRIBE))
+        <span class="hljs-keyword">throw</span> (<span class="hljs-keyword">new</span> HemeraError(NO_TOPIC_TO_SUBSCRIBE))
       }
 
-      <span class="hljs-keyword">let</span> handler = <span class="hljs-keyword">this</span>.catalog.lookup(pattern);
+      <span class="hljs-keyword">let</span> handler = <span class="hljs-keyword">this</span>.catalog.lookup(pattern)
 
       <span class="hljs-keyword">if</span> (handler) {
-        <span class="hljs-keyword">this</span>.log.error(<span class="hljs-keyword">new</span> HemeraError(PATTERN_ALREADY_IN_USE));
-        <span class="hljs-keyword">throw</span> (<span class="hljs-keyword">new</span> HemeraError(PATTERN_ALREADY_IN_USE));
+        <span class="hljs-keyword">this</span>.log.error(<span class="hljs-keyword">new</span> HemeraError(PATTERN_ALREADY_IN_USE))
+        <span class="hljs-keyword">throw</span> (<span class="hljs-keyword">new</span> HemeraError(PATTERN_ALREADY_IN_USE))
       }
 
       <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> cb !== <span class="hljs-string">'function'</span>) {
-        <span class="hljs-keyword">this</span>.log.error(<span class="hljs-keyword">new</span> HemeraError(MISSING_IMPLEMENTATION));
-        <span class="hljs-keyword">throw</span> (<span class="hljs-keyword">new</span> HemeraError(MISSING_IMPLEMENTATION));
+        <span class="hljs-keyword">this</span>.log.error(<span class="hljs-keyword">new</span> HemeraError(MISSING_IMPLEMENTATION))
+        <span class="hljs-keyword">throw</span> (<span class="hljs-keyword">new</span> HemeraError(MISSING_IMPLEMENTATION))
       }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <p>Add to bloomrun</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.catalog.add(pattern, cb);</pre></div></div>
             
         </li>
         
@@ -534,11 +566,29 @@ We use one subscriber per topic</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
+              <p>Add to bloomrun</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.catalog.add(pattern, (resp, reply) =&gt; {
+
+        cb.apply(<span class="hljs-keyword">this</span>.delegate(), [resp, reply, <span class="hljs-keyword">this</span>.meta$]);
+      })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
               <p>Subscribe on topic</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.subscribe(pattern.topic);
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.subscribe(pattern.topic)
 
     }
     <span class="hljs-comment">/**
@@ -552,29 +602,9 @@ We use one subscriber per topic</p>
   act(pattern, cb) {
 
       <span class="hljs-keyword">if</span> (!pattern.topic) {
-        <span class="hljs-keyword">this</span>.log.error(<span class="hljs-keyword">new</span> HemeraError(NO_TOPIC_TO_REQUEST));
-        <span class="hljs-keyword">throw</span> (<span class="hljs-keyword">new</span> HemeraError(NO_TOPIC_TO_REQUEST));
+        <span class="hljs-keyword">this</span>.log.error(<span class="hljs-keyword">new</span> HemeraError(NO_TOPIC_TO_REQUEST))
+        <span class="hljs-keyword">throw</span> (<span class="hljs-keyword">new</span> HemeraError(NO_TOPIC_TO_REQUEST))
       }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
-              <p>Parse msg as JSON</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">let</span> msg = SafeStringify({
-        pattern
-      });
-    
-      <span class="hljs-keyword">this</span>.log.info(pattern, <span class="hljs-string">'REQ'</span>);
-      <span class="hljs-keyword">let</span> t1 = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();</pre></div></div>
             
         </li>
         
@@ -585,11 +615,11 @@ We use one subscriber per topic</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>Request to topic</p>
+              <p>Create delegate</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">let</span> sid = <span class="hljs-keyword">this</span>.transport.request(pattern.topic, msg, (response) =&gt; {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">let</span> delegate = <span class="hljs-keyword">this</span>.delegate()</pre></div></div>
             
         </li>
         
@@ -600,11 +630,11 @@ We use one subscriber per topic</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p>Measure time</p>
+              <p>Set context by pattern or current configuration</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.log.info(Hoek.merge(pattern, { <span class="hljs-attr">$time</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>() - t1 }), <span class="hljs-string">'RESP'</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      delegate.context$ = pattern.context$ || <span class="hljs-keyword">this</span>.context$</pre></div></div>
             
         </li>
         
@@ -615,37 +645,11 @@ We use one subscriber per topic</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <p>Parse response as JSON</p>
+              <p>Set metadata by pattern or previous delegate</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> msg = Parse(response);
-
-        <span class="hljs-keyword">try</span> {
-
-          <span class="hljs-keyword">if</span> (msg.error) {
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> cb === <span class="hljs-string">'function'</span>) {
-              <span class="hljs-keyword">return</span> cb(<span class="hljs-keyword">new</span> ParseError(PAYLOAD_PARSING_ERROR).causedBy(msg.error));
-            }
-
-            <span class="hljs-keyword">this</span>.log.error(<span class="hljs-keyword">new</span> ParseError(PAYLOAD_PARSING_ERROR).causedBy(msg.error));
-          }
-
-          <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> cb === <span class="hljs-string">'function'</span>) {
-
-            <span class="hljs-keyword">if</span> (msg.value.error) {
-
-              <span class="hljs-keyword">return</span> cb(Errio.parse(msg.value.error));
-            }
-
-            cb(<span class="hljs-literal">null</span>, msg.value.result);
-          }
-
-        } <span class="hljs-keyword">catch</span> (err) {
-
-
-          <span class="hljs-keyword">this</span>.log.fatal(<span class="hljs-keyword">new</span> FatalError().causedBy(err));</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">let</span> metadata = pattern.meta$ || delegate.meta$;</pre></div></div>
             
         </li>
         
@@ -656,18 +660,17 @@ We use one subscriber per topic</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <p>let it crash</p>
+              <p>Parse msg as JSON</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.config.crashOnFatal) {
-            <span class="hljs-keyword">this</span>.fatal();
-          } <span class="hljs-keyword">else</span> {
-            cb(<span class="hljs-keyword">new</span> FatalError().causedBy(err));
-          }
-        }
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">let</span> msg = SafeStringify({
+        <span class="hljs-attr">pattern</span>: pattern,
+        <span class="hljs-attr">meta$</span>: metadata
+      })
 
-      });</pre></div></div>
+      <span class="hljs-keyword">this</span>.log.info(pattern, <span class="hljs-string">'ACT'</span>)
+      <span class="hljs-keyword">let</span> t1 = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>()</pre></div></div>
             
         </li>
         
@@ -678,20 +681,147 @@ We use one subscriber per topic</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
+              <p>Request to topic</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">let</span> sid = Hemera.transport.request(pattern.topic, msg, (response) =&gt; {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Measure time</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.log.info(Hoek.merge(pattern, {
+          <span class="hljs-attr">$time</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>() - t1
+        }), <span class="hljs-string">'ACT_RESP'</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Parse response as JSON</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> msg = Parse(response)
+
+        <span class="hljs-keyword">try</span> {
+
+          <span class="hljs-keyword">if</span> (msg.error) {
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> cb === <span class="hljs-string">'function'</span>) {
+              <span class="hljs-keyword">return</span> cb(<span class="hljs-keyword">new</span> ParseError(PAYLOAD_PARSING_ERROR).causedBy(msg.error))
+            }
+
+            <span class="hljs-keyword">this</span>.log.error(<span class="hljs-keyword">new</span> ParseError(PAYLOAD_PARSING_ERROR).causedBy(msg.error))
+          }
+
+          <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> cb === <span class="hljs-string">'function'</span>) {
+
+            <span class="hljs-keyword">if</span> (msg.value.error) {
+
+              <span class="hljs-keyword">return</span> cb.apply(delegate, [Errio.parse(msg.value.error)])
+            }
+
+            cb.apply(delegate, [<span class="hljs-literal">null</span>, msg.value.result])
+          }
+
+        } <span class="hljs-keyword">catch</span> (err) {
+
+
+          <span class="hljs-keyword">this</span>.log.fatal(<span class="hljs-keyword">new</span> FatalError().causedBy(err))</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Let it crash</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.config.crashOnFatal) {
+            <span class="hljs-keyword">this</span>.fatal()
+          } <span class="hljs-keyword">else</span> {
+            cb.apply(delegate, [<span class="hljs-keyword">new</span> FatalError().causedBy(err)])
+          }
+        }
+
+      })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
               <p>Handle timeout</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.transport.timeout(sid, pattern.$timeout || <span class="hljs-keyword">this</span>.config.timeout, <span class="hljs-number">1</span>, () =&gt; {
+            <div class="content"><div class='highlight'><pre>      Hemera.transport.timeout(sid, pattern.timeout$ || <span class="hljs-keyword">this</span>.config.timeout, <span class="hljs-number">1</span>, () =&gt; {
 
-        <span class="hljs-keyword">this</span>.log.error(<span class="hljs-keyword">new</span> TimeoutError(ACT_TIMEOUT_ERROR), pattern);
+        <span class="hljs-keyword">this</span>.log.error(<span class="hljs-keyword">new</span> TimeoutError(ACT_TIMEOUT_ERROR), pattern)
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> cb === <span class="hljs-string">'function'</span>) {
-          cb(<span class="hljs-keyword">new</span> TimeoutError(ACT_TIMEOUT_ERROR));
+          cb(<span class="hljs-keyword">new</span> TimeoutError(ACT_TIMEOUT_ERROR))
         }
 
-      });
+      })
 
+    }
+    <span class="hljs-comment">/**
+     * 
+     * 
+     * @returns
+     * 
+     * @memberOf Hemera
+     */</span>
+  delegate() {
+
+      <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Create new instance of hemera but with pointer on the previous propertys
+So we are able to create a scope per act without lossing the core api.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> delegate = <span class="hljs-built_in">Object</span>.create(self)
+      delegate.context$ = self.context$
+      delegate.meta$ = self.meta$
+      delegate.plugin$ = self.plugin$
+
+      <span class="hljs-keyword">return</span> delegate
     }
     <span class="hljs-comment">/**
      * 
@@ -701,7 +831,7 @@ We use one subscriber per topic</p>
      */</span>
   list(params) {
 
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.catalog.list(params);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.catalog.list(params)
 
     }
     <span class="hljs-comment">/**
@@ -713,13 +843,13 @@ We use one subscriber per topic</p>
      */</span>
   close() {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.transport.close();
+    <span class="hljs-keyword">return</span> Hemera.transport.close()
 
   }
 
 }
 
-<span class="hljs-built_in">module</span>.exports = Hemera;</pre></div></div>
+<span class="hljs-built_in">module</span>.exports = Hemera</pre></div></div>
             
         </li>
         
