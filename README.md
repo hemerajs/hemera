@@ -228,16 +228,16 @@ const hemera = new Hemera({
 
 ### Protocol
 
-JSON
+Format: JSON
 
-Response
+#### Response
 ```JSON
 {
   "result": "<msg>",
   "error": "<serialized_error>"
 }
 ```
-Request
+#### Request
 ```JSON
 {
   "pattern": "<msg>",
