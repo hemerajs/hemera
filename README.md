@@ -120,6 +120,37 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, $timeout: 5000 }, (err, resp
 });
 ```
 
+### Delegation
+
+#### Metadata
+If you want to transfer metadata to a service you can use the `meta$` property before sending. It will be passed in all nested acts.
+```js
+hemera.add({ topic: 'math', cmd: 'add', meta$: { a: 'test' } }, function (resp, cb) {
+
+    cb(null, resp.a + resp.b);
+});
+hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, meta$: { a: 'test' } }, function (err, resp) {
+    //or
+    this.meta$.token = 'ABC1234';
+
+    this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 });
+});
+```
+
+#### Context
+If you want to set a context across `acts` you can use the `context$` property.
+```js
+hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, function (err, resp) {
+
+    this.context$.a = 'foobar';
+
+    this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 }, function (err, resp) {
+        
+        this.context$.a // 'foobar'
+    });
+});
+```
+
 ### Plugins
 
 ```js
