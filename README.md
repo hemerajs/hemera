@@ -227,13 +227,20 @@ const hemera = new Hemera({
 
 JSON
 
+Response
 ```JSON
 {
   "result": "<msg>",
   "error": "<serialized_error>"
 }
 ```
-
+Request
+```JSON
+{
+  "pattern": "<msg>",
+  "meta$": "<msg>"
+}
+```
 ### NATS Limits & features
 [http://nats.io/documentation/faq/](http://nats.io/documentation/faq/)
 
