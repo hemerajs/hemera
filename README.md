@@ -125,8 +125,11 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, $timeout: 5000 }, (err, resp
 #### Metadata
 If you want to transfer metadata to a service you can use the `meta$` property before sending. It will be passed in all nested acts.
 ```js
-hemera.add({ topic: 'math', cmd: 'add', meta$: { a: 'test' } }, function (resp, cb) {
-
+hemera.add({ topic: 'math', cmd: 'add' }, function (resp, cb) {
+    
+    //Access to metadata
+    let meta = resp.meta$
+    
     cb(null, resp.a + resp.b);
 });
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, meta$: { a: 'test' } }, function (err, resp) {
