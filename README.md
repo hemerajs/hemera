@@ -132,14 +132,24 @@ hemera.add({ topic: 'math', cmd: 'add' }, function (resp, cb) {
     
     cb(null, resp.a + resp.b);
 });
+```
+Will set the metadata only for this `act` and all nested `act`
+```js
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, meta$: { a: 'test' } }, function (err, resp) {
+
+    this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 });
+});
+```
+Will set the metadata on all `act`
+```js
+hemera.meta$.token = 'ABC1234'
+hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1}, function (err, resp) {
     //or
     this.meta$.token = 'ABC1234';
 
     this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 });
 });
 ```
-
 #### Context
 If you want to set a context across `acts` you can use the `context$` property.
 ```js
