@@ -121,6 +121,7 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, $timeout: 5000 }, (err, resp
 ```
 
 ### Delegation
+#### _* Notice the use of this_
 
 #### Metadata
 If you want to transfer metadata to a service you can use the `meta$` property before sending. It will be passed in all nested `act`.
@@ -137,7 +138,7 @@ Will set the metadata only for only this `act` and all nested `act`
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, meta$: { a: 'test' } }, function (err, resp) {
 
-    this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 });
+    *this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 });
 });
 ```
 Will set the metadata on all `act`
@@ -145,9 +146,9 @@ Will set the metadata on all `act`
 hemera.meta$.token = 'ABC1234'
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1}, function (err, resp) {
     //or
-    this.meta$.token = 'ABC1234';
+    *this.meta$.token = 'ABC1234';
 
-    this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 });
+    *this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 });
 });
 ```
 #### Context
@@ -156,9 +157,9 @@ If you want to set a context across all `act` you can use the `context$` propert
 hemera.context$.a = 'foobar';
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, function (err, resp) {
     //or
-    this.context$.a = 'foobar';
+    *this.context$.a = 'foobar';
 
-    this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 }, function (err, resp) {
+    *this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 }, function (err, resp) {
         
         this.context$.a // 'foobar'
     });
@@ -168,7 +169,7 @@ If you want to set a context only for this `act` and all nested `act`
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, context$: 1 }, function (err, resp) {
 
-    this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 }, function (err, resp) {
+    *this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 }, function (err, resp) {
         
         this.context$ // 1
     });
