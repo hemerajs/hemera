@@ -141,7 +141,7 @@ hemera.add({ topic: 'math', cmd: 'add' }, function (resp, cb) {
     cb(null, resp.a + resp.b);
 });
 ```
-Will set the metadata only for only this `act` and all nested `act`
+Will set the metadata only for this `act` and all nested `act`
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, meta$: { a: 'test' } }, function (err, resp) {
 
