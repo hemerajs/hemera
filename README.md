@@ -86,6 +86,8 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
 console.log(resp); //2
 });
 ```
+### Error handling
+
 #### Reply an error
 ```js
 hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
