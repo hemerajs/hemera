@@ -8,9 +8,9 @@
 
 A [Node.js](http://nodejs.org/) microservices toolkit for the [NATS messaging system](https://nats.io)
 
-- __Status:__ Experimental
+- __Status:__ 🚧 Experimental
 
-## Getting Started
+## 📓 Getting Started
 
 Hemera is a small wrapper around the nats driver. We want to provide a toolkit to develop microservices in an easy and powerful way. We use bloom filters to provide a pattern matching RPC style. You don't have to worry about the transport. NATS is powerful.
 
