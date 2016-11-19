@@ -47,7 +47,7 @@ const nats = require('nats').connect(authUrl);
     
 const hemera = new Hemera(nats, {
   timeout: 200,
-  debug: true
+  logLevel: 'info'
 });
 
 hemera.ready(() => {
