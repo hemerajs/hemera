@@ -60,7 +60,7 @@ hemera.ready(() => {
   })
 
 
-  hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 2, $timeout: 5000 }, (err, resp) => {
+  hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 2, timeout$: 5000 }, (err, resp) => {
     
     console.log('Result', resp);
   });
@@ -116,7 +116,7 @@ hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
 ```
 #### Specify custom timeout per act
 ```js
-hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, $timeout: 5000 }, (err, resp) => {
+hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, timeout$: 5000 }, (err, resp) => {
 });
 ```
 
