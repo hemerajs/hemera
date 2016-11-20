@@ -570,6 +570,48 @@ describe('Error handling', function () {
 
   })
 
+  it('Payload valdiation error', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.ready(() => {
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send',
+        a: {
+          type$: 'number'
+        }
+      }, (resp, cb) => {
+
+        throw new Error('Shit!')
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        a: '1'
+      }, (err, resp) => {
+
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('PayloadValidationError')
+        expect(err.message).to.be.equals('Invalid payload')
+        expect(err.cause.name).to.be.equals('Error')
+        expect(err.cause.message).to.be.equals('The value "1" is not of type \'number\' (parent: a).')
+        hemera.close()
+        done()
+
+
+      })
+
+    })
+
+  })
+
   it('Should crash on fatal', function (done) {
 
     const nats = require('nats').connect(authUrl)
