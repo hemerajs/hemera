@@ -208,6 +208,29 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, context$: 1 }, function (err
    });
 });
 ```
+### Payload validation
+Hemera includes a payload validator called [parambulator](https://github.com/rjrodger/parambulator)
+```js
+hemera.add({
+    topic: 'math',
+    cmd: 'add',
+    a: {
+      type$: 'number'
+    }
+  }, (resp, cb) => {
+
+    cb(null, {
+      result: resp.a + resp.b
+    });
+  });
+```
+Handling
+```js
+hemera.act({ topic: 'math', cmd: 'add', a: '1' }, function (err, resp) {
+        
+   err instanceof PayloadValidationError //true
+});
+```
 ### Plugins
 
 ```js
