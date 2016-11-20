@@ -251,7 +251,7 @@ const hemera = new Hemera(nats, { logLevel: 'info' });
     cmd: "add"
     a: 1
     b: 2
-    $time: 2
+    time$: 2
 ```
 
 ### Protocol
