@@ -433,6 +433,102 @@ describe('Error handling', function () {
 
   })
 
+  it('Should be able to handle parsing errors', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    var stub = Sinon.stub(hemera, "parseJSON");
+
+    stub.returns({
+      error: new Error('TEST')
+    })
+
+    hemera.ready(() => {
+
+
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+
+        cb()
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('HemeraParseError')
+        expect(err.message).to.be.equals('Invalid payload')
+
+        stub.restore();
+        hemera.close()
+        done()
+
+
+      })
+
+    })
+
+  })
+
+  it('Should be able to handle response parsing error', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.ready(() => {
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+
+        cb()
+      })
+
+      var stub = Sinon.stub(hemera, "parseJSON");
+
+      stub.onCall(1);
+
+      stub.returns({
+        error: new Error('TEST')
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('HemeraParseError')
+        expect(err.message).to.be.equals('Invalid payload')
+
+        stub.restore();
+        hemera.close()
+        done()
+
+
+      })
+
+    })
+
+  })
+
   it('Should be able to handle business errors', function (done) {
 
     const nats = require('nats').connect(authUrl)
@@ -466,6 +562,53 @@ describe('Error handling', function () {
         expect(err.ownStack).to.be.exists()
         hemera.close()
         done()
+
+
+      })
+
+    })
+
+  })
+
+  it('Should crash on fatal', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: true,
+      timeout: 10000
+    })
+
+    var stub = Sinon.stub(hemera, "fatal");
+
+    stub.onCall(1);
+
+    stub.returns(true)
+
+    hemera.ready(() => {
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+
+        throw new Error('Shit!')
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+
+        //Fatal Error will be throw after the server proceed the msg
+        setTimeout(() => {
+          expect(stub.called).to.be.equals(true)
+          stub.restore()
+          hemera.close()
+          done()
+        }, 20)
 
 
       })
