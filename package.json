@@ -15,14 +15,14 @@
   "author": "Dustin Deus <deusdustin@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "bloomrun": "^3.0.0",
-    "errio": "^1.2.1",
-    "fast-json-parse": "^1.0.2",
-    "fast-safe-stringify": "^1.1.1",
-    "hoek": "^4.1.0",
-    "kilt": "^2.0.2",
-    "pino": "^3.0.1",
-    "super-error": "^2.0.0"
+    "bloomrun": "3.0.x",
+    "errio": "1.2.x",
+    "fast-json-parse": "1.0.x",
+    "fast-safe-stringify": "1.1.x",
+    "hoek": "4.1.x",
+    "kilt": "2.0.x",
+    "pino": "3.0.x",
+    "super-error": "2.0.x"
   },
   "devDependencies": {
     "code": "^4.0.0",
