@@ -92,12 +92,12 @@ console.log(resp); //2
 A match happens when all properties of the added pattern matches with the one in the passed obj.
 
 #### Matched!
-```
+```js
 hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
   cb(resp.a + resp.b)
 });
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 });
-```
+```js
 #### Not matched!
 ```
 hemera.add({ topic: 'math', cmd: 'add', foo: 'bar' }, (resp, cb) => {
