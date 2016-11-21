@@ -228,7 +228,7 @@ Handling
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: '1' }, function (err, resp) {
         
-   err instanceof PayloadValidationError //true
+   err instanceOf PayloadValidationError //true
 });
 ```
 ### Plugins
