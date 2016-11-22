@@ -291,6 +291,10 @@ Format: JSON
   "meta$": "<msg>"
 }
 ```
+### Introduction to NATS
+
+https://www.youtube.com/watch?v=NfL0WO44pqc
+
 ### NATS Limits & features
 [http://nats.io/documentation/faq/](http://nats.io/documentation/faq/)
 
