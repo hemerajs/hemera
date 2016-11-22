@@ -789,13 +789,15 @@ describe('Plugin interface', function () {
           })
         })
 
-        return {
-          name: 'myPlugin'
-        }
-
       }
 
-      hemera.use(plugin, pluginOptions)
+      hemera.use({
+        plugin: plugin,
+        attributes: {
+          name: 'myPlugin'
+        },
+        options: pluginOptions
+      })
 
       hemera.act({
         topic: 'math',
@@ -841,10 +843,6 @@ describe('Plugin interface', function () {
           })
         })
 
-        return {
-          name: 'myPlugin'
-        }
-
       }
 
       //Plugin
@@ -862,16 +860,24 @@ describe('Plugin interface', function () {
           })
         })
 
-        return {
-          name: 'myPlugin'
-        }
-
       }
 
       try {
 
-        hemera.use(plugin, pluginOptions)
-        hemera.use(plugin2, pluginOptions)
+        hemera.use({
+          plugin: plugin,
+          attributes: {
+            name: 'myPlugin'
+          },
+          options: pluginOptions
+        })
+        hemera.use({
+          plugin: plugin2,
+          attributes: {
+            name: 'myPlugin'
+          },
+          options: pluginOptions
+        })
 
       } catch (e) {
 

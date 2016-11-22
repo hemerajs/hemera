@@ -13,10 +13,6 @@ function myPlugin(options) {
     cb(null, resp.a + resp.b)
   })
 
-  return {
-    name: 'myPlugin'
-  }
-
 }
 
 
@@ -30,6 +26,6 @@ const hemera = new Hemera(nats, { logLevel: 'info' })
 
 hemera.ready(() => {
 
-  hemera.use(myPlugin)
+  hemera.use({ plugin: myPlugin, attributes: { name: 'myPlugin' } })
 
 })

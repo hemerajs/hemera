@@ -234,7 +234,7 @@ hemera.act({ topic: 'math', cmd: 'add', a: '1' }, function (err, resp) {
 ### Plugins
 
 ```js
-let plugin = function (options) {
+let myPlugin = function (options) {
 
   let hemera = this;
 
@@ -248,13 +248,9 @@ let plugin = function (options) {
     });
   });
 
-  return {
-    name: 'myPlugin'
-  };
-
 };
 
-hemera.use(plugin, pluginOptions);
+hemera.use({ plugin: myPlugin, attributes: { name: 'myPlugin' }, options: { } })
 ```
 
 ### Logging
