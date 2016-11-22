@@ -5,6 +5,7 @@
 [![Build Status](https://travis-ci.org/StarpTech/hemera.svg?branch=master)](https://travis-ci.org/StarpTech/hemera)
 [![NPM Downloads](https://img.shields.io/npm/dt/hemera.svg?style=flat)](https://www.npmjs.com/package/@starptech/hemera)
 [![Coverage Status](https://coveralls.io/repos/github/StarpTech/hemera/badge.svg?branch=master)](https://coveralls.io/github/StarpTech/hemera?branch=master)
+[![Gitter][BadgeGitter]][Gitter]
 
 A [Node.js](http://nodejs.org/) microservices toolkit for the [NATS messaging system](https://nats.io)
 
