@@ -291,7 +291,7 @@ Format: JSON
   "meta$": "<msg>"
 }
 ```
-### Introduction in NATS
+### Introduction to NATS
 
 https://www.youtube.com/watch?v=NfL0WO44pqc
 
