@@ -17,13 +17,22 @@ Hemera is a small wrapper around the nats driver. We want to provide a toolkit t
 With Hemera you have the best of both worlds. Efficient pattern matching to have the most flexibility in defining your RPC's.
 It doesn't matter where your server or client lives. You can add the same `add` as many as you want on different hosts to ensure maximal availability. Thanks to the Request Reply pattern you can work with that as if you do a normal http request. The only dependency you have is a single binary of 7MB. Mind your own business NATS do the rest for you:
 
-- high througput message fanout
-- Addressing, discovery
-- Command and control (control plane)
-- Load balancing
-- N-way scalability
-- Location transparency
-- Fault tolerance
+### Service Discovery
+- Missing services are spawned by the control service.
+
+### Scalability
+- Queue group name allow load balancing of services.
+- Filtering enables limiting the impact of a request based on a subject name.
+
+### Fault tolerance
+- Auto-heals when new services are added
+- Cluster mode
+
+### Load Balancing
+- Queue groups 
+- HTTP/REST endpoints use a redirector or scaling strategy
+
+\+ **Herma** = _Pattern-driven micro services._
 
 ### Prerequisites
 
