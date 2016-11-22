@@ -8,6 +8,8 @@ const Hemera = require('../'),
 
 const expect = Code.expect
 
+process.setMaxListeners(0);
+
 describe('Basic', function () {
 
   var PORT = 6242
@@ -1147,7 +1149,7 @@ describe('Memory leak test', function () {
 
       for (var index = 0; index < 1000; index++) {
         doAdd(index)
-        
+
       }
 
       Async.times(1000, function (n, next) {
