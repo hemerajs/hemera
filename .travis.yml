@@ -6,9 +6,11 @@ node_js:
   - "5"
   - "6"
 
-before_script:
+before_install:
   - sudo apt-get install build-essential
   - sudo apt-get install libkrb5-dev
+
+before_script:
   - mkdir -p gnatsd
   - wget https://github.com/nats-io/gnatsd/releases/download/v0.7.2/gnatsd-v0.7.2-linux-amd64.tar.gz -qO - | tar -zxvC gnatsd/
 
