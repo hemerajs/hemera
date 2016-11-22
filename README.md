@@ -32,7 +32,7 @@ It doesn't matter where your server or client lives. You can add the same `add` 
 - Queue groups 
 - HTTP/REST endpoints use a redirector or scaling strategy
 
-\+ **Herma** = _Pattern-driven micro services._
+\+ **Hemera** = _Pattern-driven micro services._
 
 ### Prerequisites
 
