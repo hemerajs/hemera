@@ -4,10 +4,11 @@ const Hemera = require('./../')
 const nats = require('nats').connect()
 
 const hemera = new Hemera(nats, {
-  logLevel: 'info'
+  logLevel: 'error'
 })
 
 hemera.ready(() => {
+
 
   for (var index = 0; index < 100; index++) {
 

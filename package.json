@@ -27,14 +27,15 @@
     "super-error": "2.0.x"
   },
   "devDependencies": {
-    "code": "^4.0.0",
-    "coveralls": "^2.11.15",
-    "docco": "^0.7.0",
-    "fastbench": "^1.0.1",
-    "istanbul": "^0.4.5",
-    "mocha": "^3.1.2",
-    "mocha-lcov-reporter": "^1.2.0",
-    "nats": "^0.6.8",
-    "sinon": "^1.17.6"
+    "async": "2.1.x",
+    "code": "4.0.x",
+    "coveralls": "2.11.x",
+    "docco": "0.7.x",
+    "istanbul": "0.4.x",
+    "memwatch-next": "^0.3.0",
+    "mocha": "3.1.x",
+    "mocha-lcov-reporter": "1.2.x",
+    "nats": "0.6.x",
+    "sinon": "1.17.x"
   }
 }

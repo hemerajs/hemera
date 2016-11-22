@@ -3,7 +3,8 @@
 const Hemera = require('../'),
   nsc = require('./support/nats_server_control'),
   Code = require('code'),
-  Sinon = require('sinon')
+  Sinon = require('sinon'),
+  Async = require("async")
 
 const expect = Code.expect
 
@@ -441,7 +442,7 @@ describe('Error handling', function () {
       crashOnFatal: false
     })
 
-    var stub = Sinon.stub(hemera, "parseJSON");
+    var stub = Sinon.stub(hemera, "parseJSON")
 
     stub.returns({
       error: new Error('TEST')
@@ -470,7 +471,7 @@ describe('Error handling', function () {
         expect(err.name).to.be.equals('HemeraParseError')
         expect(err.message).to.be.equals('Invalid payload')
 
-        stub.restore();
+        stub.restore()
         hemera.close()
         done()
 
@@ -499,9 +500,9 @@ describe('Error handling', function () {
         cb()
       })
 
-      var stub = Sinon.stub(hemera, "parseJSON");
+      var stub = Sinon.stub(hemera, "parseJSON")
 
-      stub.onCall(1);
+      stub.onCall(1)
 
       stub.returns({
         error: new Error('TEST')
@@ -518,7 +519,7 @@ describe('Error handling', function () {
         expect(err.name).to.be.equals('HemeraParseError')
         expect(err.message).to.be.equals('Invalid payload')
 
-        stub.restore();
+        stub.restore()
         hemera.close()
         done()
 
@@ -621,9 +622,9 @@ describe('Error handling', function () {
       timeout: 10000
     })
 
-    var stub = Sinon.stub(hemera, "fatal");
+    var stub = Sinon.stub(hemera, "fatal")
 
-    stub.onCall(1);
+    stub.onCall(1)
 
     stub.returns(true)
 
@@ -908,7 +909,7 @@ describe('Logging interface', function () {
 
     const hemera = new Hemera(nats)
 
-    var logSpy = Sinon.spy(hemera, "log");
+    var logSpy = Sinon.spy(hemera, "log")
 
     hemera.ready(() => {
 
@@ -940,7 +941,7 @@ describe('Logging interface', function () {
 
   })
 
-});
+})
 
 describe('Metadata', function () {
 
@@ -1078,4 +1079,90 @@ describe('Context', function () {
 
   })
 
-});
+})
+
+describe('Memory leak test', function () {
+
+  var PORT = 6242
+  var flags = ['--user', 'derek', '--pass', 'foobar']
+  var authUrl = 'nats://derek:foobar@localhost:' + PORT
+  var noAuthUrl = 'nats://localhost:' + PORT
+  var server
+
+  // Start up our own nats-server
+  before(function (done) {
+    server = nsc.start_server(PORT, flags, done)
+  })
+
+  // Shutdown our server after we are done
+  after(function () {
+    server.kill()
+  })
+
+  it('Test memory leak', function (done) {
+
+    const Memwatch = require('memwatch-next')
+
+    var hd = new Memwatch.HeapDiff()
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+
+
+      Memwatch.on('leak', function (info) {
+
+        consoe.log(info)
+        throw new Error('memory leak')
+
+      })
+
+      var doAdd = function (id) {
+
+        hemera.add({
+          topic: 'math',
+          cmd: 'add' + id
+        }, (resp, cb) => {
+
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        })
+
+      }
+
+      var doAct = function (id, callback) {
+        hemera.act({
+          topic: 'math',
+          cmd: 'add' + id,
+          a: 1,
+          b: 2
+        }, (err, resp) => {
+
+          callback(err, resp)
+        })
+      }
+
+      for (var index = 0; index < 1000; index++) {
+        doAdd(index)
+        
+      }
+
+      Async.times(1000, function (n, next) {
+        doAct(n, function (err, result) {
+          next(err, result)
+        })
+      }, function (err, results) {
+
+        var diff = hd.end()
+        hemera.close()
+        done()
+      })
+
+    })
+
+  })
+
+})
