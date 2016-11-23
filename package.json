@@ -1,6 +1,6 @@
 {
   "name": "@starptech/hemera",
-  "version": "0.1.23",
+  "version": "0.1.24",
   "main": "index.js",
   "repository": {
     "url": "git@github.com:StarpTech/hemera.git",
