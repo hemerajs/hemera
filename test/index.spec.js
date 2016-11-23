@@ -739,6 +739,47 @@ describe('Error handling', function () {
 
   })
 
+  it('Should log disconnect errors', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.ready(() => {
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+
+        throw new Error('Shit!')
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('ImplementationError')
+        expect(err.message).to.be.equals('Bad implementation')
+        expect(err.cause.name).to.be.equals('Error')
+        expect(err.cause.message).to.be.equals('Shit!')
+        expect(err.ownStack).to.be.exists()
+        hemera.close()
+        done()
+
+
+      })
+
+    })
+
+  })
+
 })
 
 
