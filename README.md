@@ -44,7 +44,7 @@ We use the Request Reply concept to realize this toolkit. [Request Reply](http:/
 ### Installing
 
 ```
-npm i @starptech/hemera
+npm i nats-hemera
 ```
 
 ### Example
