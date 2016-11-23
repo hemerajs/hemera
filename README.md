@@ -301,6 +301,31 @@ Format: JSON
   "meta$": "<msg>"
 }
 ```
+## Best practice
+
+1. Think in small parts. A topic is like a service. You can define a service like `auth` which is responsible for authenticate users.
+
+This service has actions like:
+
+```js
+hemera.add({ topic: 'auth', cmd: 'authenticate' })
+hemera.add({ topic: 'auth', cmd: 'passwordReset' })
+...
+```
+
+2. Create another instance of it.
+
+Now your service is scaled.
+
+3.  Create another NATS Server and create a cluster.
+
+Now your service is fault-tolerant.
+```
+var servers = ['nats://nats.io:4222', 'nats://nats.io:5222', 'nats://nats.io:6222'];
+var nc = nats.connect({'servers': servers});
+new Hemera(nc);
+```
+
 ### Introduction to NATS
 
 https://www.youtube.com/watch?v=NfL0WO44pqc
