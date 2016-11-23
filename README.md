@@ -303,7 +303,7 @@ Format: JSON
 ```
 ## Best practice
 
-1. Think in small parts. A topic is like a service. You can define a service like `auth` which is responsible for authenticate users.
+Think in small parts. A topic is like a service. You can define a service like `auth` which is responsible for authenticate users.
 
 This service has actions like:
 
@@ -313,11 +313,11 @@ hemera.add({ topic: 'auth', cmd: 'passwordReset' })
 ...
 ```
 
-2. Create another instance of it.
+#### Create another instance of it.
 
 Now your service is scaled.
 
-3.  Create another NATS Server and create a cluster.
+#### Create another NATS Server and create a cluster.
 
 Now your service is fault-tolerant.
 ```
