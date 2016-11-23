@@ -1,5 +1,5 @@
 {
-  "name": "@starptech/hemera",
+  "name": "nats-hemera",
   "version": "0.1.25",
   "main": "index.js",
   "repository": {
@@ -10,7 +10,7 @@
     "annotate": "docco lib/index.js -o docs/",
     "test": "mocha -t 5000 --recursive",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec -t 5000 --recursive",
-    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report text-lcov -- -R spec | node ./node_modules/coveralls/bin/coveralls.js"
   },
   "author": "Dustin Deus <deusdustin@gmail.com>",
   "license": "MIT",
