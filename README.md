@@ -313,14 +313,19 @@ hemera.add({ topic: 'auth', cmd: 'passwordReset' })
 ...
 ```
 
-#### Create another instance of it.
+#### Create multiple instances of your service.
 
 Now your service is scaled.
+
+```js
+node service.js
+node service.js
+```
 
 #### Create another NATS Server and create a cluster.
 
 Now your service is fault-tolerant.
-```
+```js
 var servers = ['nats://nats.io:4222', 'nats://nats.io:5222', 'nats://nats.io:6222'];
 var nc = nats.connect({'servers': servers});
 new Hemera(nc);
