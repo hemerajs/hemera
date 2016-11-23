@@ -739,13 +739,20 @@ describe('Error handling', function () {
 
   })
 
-  it('Should log disconnect errors', function (done) {
+  it('Should crash when an expected error happens in the ACT handler', function (done) {
 
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      crashOnFatal: false
+      crashOnFatal: true,
+      timeout: 10000
     })
+
+    var stub = Sinon.stub(hemera, "fatal")
+
+    stub.onCall(1)
+
+    stub.returns(true)
 
     hemera.ready(() => {
 
@@ -754,7 +761,7 @@ describe('Error handling', function () {
         cmd: 'send'
       }, (resp, cb) => {
 
-        throw new Error('Shit!')
+        cb(true)
       })
 
       hemera.act({
@@ -764,14 +771,15 @@ describe('Error handling', function () {
         msg: 'Hi!'
       }, (err, resp) => {
 
-        expect(err).to.be.exists()
-        expect(err.name).to.be.equals('ImplementationError')
-        expect(err.message).to.be.equals('Bad implementation')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('Shit!')
-        expect(err.ownStack).to.be.exists()
-        hemera.close()
-        done()
+        //Fatal Error will be throw after the server proceed the msg
+        setTimeout(() => {
+          expect(stub.called).to.be.equals(true)
+          stub.restore()
+          hemera.close()
+          done()
+        }, 200)
+
+        throw (new Error('Test'))
 
 
       })
