@@ -30,7 +30,7 @@ It doesn't matter where your server or client lives. You can add the same `add` 
 - Configure cluster mode to be more reliable.
 
 ### Load Balancing
-- Queue groups are enable by default in Hemera.
+- Queue groups are used by default in Hemera.
 
 
 \+ **Hemera** = _Pattern-driven micro services._
