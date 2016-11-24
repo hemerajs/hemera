@@ -350,7 +350,7 @@ Peter Kieltyka - CTO, Pressly
 
 ## Running the tests
 
-
+Set the path to the `gnatsd` before start testing.
 ```
 npm run test
 ```
