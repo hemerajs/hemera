@@ -19,19 +19,19 @@ With Hemera you have the best of both worlds. Efficient pattern matching to have
 It doesn't matter where your server or client lives. You can add the same `add` as many as you want on different hosts to ensure maximal availability. Thanks to the Request Reply pattern you can work with that as if you do a normal http request. The only dependency you have is a single binary of 7MB. Mind your own business NATS do the rest for you:
 
 ### Service Discovery
-- Missing services are spawned by the control service.
+- Any subscription is managed by NATS. You don't need any service discovery. Totally location transparency.
 
 ### Scalability
+- Filtering on the subject name enables services to divide work (perhaps with locality) e.g `topic:auth:germany`
 - Queue group name allow load balancing of services.
-- Filtering enables limiting the impact of a request based on a subject name.
 
 ### Fault tolerance
-- Auto-heals when new services are added
-- Cluster mode
+- Auto-heals when new services are added.
+- Configure cluster mode to be more reliable.
 
 ### Load Balancing
-- Queue groups 
-- HTTP/REST endpoints use a redirector or scaling strategy
+- Queue groups are enable by default in Hemera.
+
 
 \+ **Hemera** = _Pattern-driven micro services._
 
