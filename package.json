@@ -1,6 +1,6 @@
 {
   "name": "nats-hemera",
-  "version": "0.1.26",
+  "version": "0.1.27",
   "main": "index.js",
   "repository": {
     "url": "git@github.com:StarpTech/hemera.git",
