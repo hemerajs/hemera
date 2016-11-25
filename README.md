@@ -331,7 +331,7 @@ var nc = nats.connect({'servers': servers});
 new Hemera(nc);
 ```
 
-#### TODO
+## TODO
 
 - NATS Streaming
 
