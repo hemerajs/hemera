@@ -281,22 +281,37 @@ const hemera = new Hemera(nats, { logLevel: 'info' });
     time$: 2
 ```
 
+### Tracing
+
+```js
+hemera.on('outbound', (msg) => {
+  console.log('Outbound', msg)
+})
+
+hemera.on('inbound', (msg) => {
+  console.log('Inbound', msg)
+})
+```
+
 ### Protocol
 
 Format: JSON
 
-#### Response
-```JSON
-{
-  "result": "<msg>",
-  "error": "<serialized_error>"
-}
-```
 #### Request
 ```JSON
 {
   "pattern": "<msg>",
-  "meta$": "<msg>"
+  "meta$": "<msg>",
+  "request$": "<msg>"
+}
+```
+#### Response
+```JSON
+{
+  "result": "<msg>",
+  "error": "<serialized_error>",
+  "meta$": "<msg>",
+  "response$": "<msg>"
 }
 ```
 ## Best practice

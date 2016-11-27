@@ -51,6 +51,7 @@
     "hoek": "4.1.x",
     "kilt": "2.0.x",
     "lodash": "4.17.x",
+    "nuid": "0.6.x",
     "parambulator": "1.5.x",
     "pino": "3.0.x",
     "super-error": "2.0.x"
