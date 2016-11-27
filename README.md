@@ -199,8 +199,6 @@ If you want to set a context across all `act` you can use the `context$` propert
 ```js
 hemera.context$.a = 'foobar';
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, function (err, resp) {
-    //or
-   this.context$.a = 'foobar';
 
    this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 }, function (err, resp) {
         
