@@ -252,7 +252,7 @@
       <span class="hljs-keyword">this</span>.events.on(<span class="hljs-string">'connect'</span>, () =&gt; {
 
         <span class="hljs-keyword">this</span>.log().info(TRANSPORT_CONNECTED)
-        cb()
+        cb.call(<span class="hljs-keyword">this</span>)
       })
 
     }
@@ -458,8 +458,6 @@ We use one subscriber per topic</p>
 
           <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.send(replyTo, <span class="hljs-keyword">this</span>.buildError(error, additionalResponseData))
         }
-
-        <span class="hljs-keyword">this</span>.log().info(result.value.pattern, <span class="hljs-string">'ADD_IN'</span>)
 
         <span class="hljs-keyword">let</span> actMeta = <span class="hljs-keyword">this</span>.catalog.lookup(result.value.pattern)</pre></div></div>
             
@@ -961,7 +959,7 @@ We use one subscriber per topic</p>
         }
       }
 
-      <span class="hljs-keyword">this</span>.log().info(pattern, <span class="hljs-string">'ACT - OUTBOUND'</span>)</pre></div></div>
+      <span class="hljs-keyword">this</span>.log().info(pattern, <span class="hljs-string">'ACT_OUTBOUND'</span>)</pre></div></div>
             
         </li>
         
@@ -1071,7 +1069,7 @@ We use one subscriber per topic</p>
             
             <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">this</span>.emit(<span class="hljs-string">'inbound'</span>, msg.value)
 
-          <span class="hljs-keyword">this</span>.log().info(pattern, <span class="hljs-string">'ACT - INBOUND'</span>)
+          <span class="hljs-keyword">this</span>.log().info(pattern, <span class="hljs-string">'ACT_INBOUND'</span>)
 
           <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> cb === <span class="hljs-string">'function'</span>) {
 
