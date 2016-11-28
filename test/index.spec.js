@@ -346,7 +346,50 @@ describe('Timeouts', function () {
     server.kill()
   })
 
-  it('Should be able to check for an error when we get no answer back within the timeout limit', function (done) {
+  it('Should throw timeout error when callback is not fired', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false,
+      timeout: 150
+    })
+
+    hemera.ready(() => {
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+
+        setTimeout(() => {
+
+          expect(err).to.be.exists()
+          expect(resp).not.to.be.exists()
+          expect(err.name).to.be.equals('TimeoutError')
+          expect(err.message).to.be.equals('Timeout')
+          hemera.close()
+          done()
+
+        }, 200)
+
+
+      })
+
+    })
+
+  })
+
+  it('Should throw timeout error when pattern is not defined on the network', function (done) {
 
     const nats = require('nats').connect(authUrl)
 
