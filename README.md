@@ -84,6 +84,12 @@ hemera.ready(() => {
 
 ### Writing an application
 
+_Add_: Define you implementation.
+
+_Act_: Start a request
+
+_Topic_: The subject to subcribe. It's kind of namespace for your service. If you want to scale your service you have to create a second instance of your whole service. If you just want to scale a method you have to subcribe to a different subject like `math:additions` because any subscriber have to contain the full implementation of the service.
+
 #### Define your service
 ```js
 hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
@@ -97,6 +103,7 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
 console.log(resp); //2
 });
 ```
+
 ### Pattern matching rules
 
 A match happens when all properties of the added pattern matches with the one in the passed obj.
