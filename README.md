@@ -88,7 +88,7 @@ _Add_: Define you implementation.
 
 _Act_: Start a request
 
-_Topic_: The subject to subcribe. The smallest unit of Hemera. It's kind of namespace for your service. If you want to scale your service you have to create a second instance of your service. If you just want to scale a method you have to subcribe to a different subject like `math:additions` because any subscriber have to contain the full implementation of the service.
+_Topic_: The subject to subcribe. **The smallest unit of Hemera**. It's kind of namespace for your service. If you want to scale your service you have to create a second instance of your service. If you just want to scale a method you have to subcribe to a different subject like `math:additions` because any subscriber have to contain the full implementation of the service.
 
 #### Define your service
 ```js
