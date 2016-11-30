@@ -351,10 +351,6 @@ var nc = nats.connect({'servers': servers});
 new Hemera(nc);
 ```
 
-## TODO
-
-- NATS Streaming
-
 ### Introduction to NATS
 
 https://www.youtube.com/watch?v=NfL0WO44pqc
