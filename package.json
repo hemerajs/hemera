@@ -3,9 +3,9 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "version": "0.1.34",
   "main": "index.js",
-  "homepage": "https://starptech.github.io/hemera/",
+  "homepage": "https://hemerajs.github.io/hemera/",
   "repository": {
-    "url": "git@github.com:StarpTech/hemera.git",
+    "url": "git@github.com:hemerajs/hemera.git",
     "type": "git"
   },
   "keywords": [
