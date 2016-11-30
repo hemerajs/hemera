@@ -9,7 +9,7 @@
 
 A [Node.js](http://nodejs.org/) microservices toolkit for the [NATS messaging system](https://nats.io)
 
-- __Status:__ 🚧 Experimental
+- __Status:__ Release Candidate
 
 ## 📓 Getting Started
 
