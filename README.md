@@ -223,6 +223,11 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, context$: 1 }, function (err
    });
 });
 ```
+
+### Tracing capabilities
+
+In any act or add you can access the property `this.parentId$` or `this.requestId$` to get informations about your current or parent call. You can listen on the `inbound` event to get detail information about you calls this includes transport-latency, response/request timing and durations.
+
 ### Payload validation
 Hemera includes a payload validator called [parambulator](https://github.com/rjrodger/parambulator)
 ```js
