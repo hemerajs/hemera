@@ -228,6 +228,27 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, context$: 1 }, function (err
 
 In any act or add you can access the property `this.parentId$` or `this.requestId$` to get informations about your current or parent call. You can listen on the `inbound` event to get detail information about you calls this includes transport-latency, response/request timing and durations.
 
+```js
+    result: 10
+    error: null
+    response$: {
+      "startTime": 456447212806,
+      "endTime": 456447216611,
+      "duration": 3805
+    }
+    meta$: {}
+    request$: {
+      "id": "32HDHW7G1WRMNF2B6Y3KOD",
+      "parentId": "32HDHW7G1WRMU0ZHX9J864",
+      "startTime": 456447211853,
+      "endTime": 456447216759,
+      "transportLatency": 953,
+      "duration": 4906
+    }
+```
+
+Times are in nanoseconds.
+
 ### Payload validation
 Hemera includes a payload validator called [parambulator](https://github.com/rjrodger/parambulator)
 ```js
