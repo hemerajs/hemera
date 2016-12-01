@@ -1,7 +1,7 @@
 {
   "name": "nats-hemera",
   "author": "Dustin Deus (https://github.com/StarpTech)",
-  "version": "0.1.36",
+  "version": "0.1.37",
   "main": "index.js",
   "homepage": "https://hemerajs.github.io/hemera/",
   "repository": {
