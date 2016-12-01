@@ -2,9 +2,9 @@
 ![Hemera](https://github.com/StarpTech/hemera/raw/master/hemera.png)
 
 [![License MIT](https://img.shields.io/npm/l/express.svg)](http://opensource.org/licenses/MIT)
-[![Build Status](https://travis-ci.org/StarpTech/hemera.svg?branch=master)](https://travis-ci.org/StarpTech/hemera)
+[![Build Status](https://travis-ci.org/hemerajs/hemera.svg?branch=master)](https://travis-ci.org/hemerajs/hemera)
 [![NPM Downloads](https://img.shields.io/npm/dt/nats-hemera.svg?style=flat)](https://www.npmjs.com/package/nats-hemera)
-[![Coverage Status](https://coveralls.io/repos/github/StarpTech/hemera/badge.svg?branch=master)](https://coveralls.io/github/StarpTech/hemera?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/hemerajs/hemera/badge.svg?branch=master)](https://coveralls.io/github/hemerajs/hemera?branch=master)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/hemerajs/hemera)
 
 A [Node.js](http://nodejs.org/) microservices toolkit for the [NATS messaging system](https://nats.io)
@@ -13,16 +13,16 @@ A [Node.js](http://nodejs.org/) microservices toolkit for the [NATS messaging sy
 
 ## 📓 Getting Started
 
-Hemera is a small wrapper around the nats driver. We want to provide a toolkit to develop microservices in an easy and powerful way. We use bloom filters to provide a pattern matching RPC style. You don't have to worry about the transport. NATS is powerful.
+Hemera is a small wrapper around the NATS driver. We want to provide a toolkit to develop micro services in an easy and powerful way. We use bloom filters to provide a pattern matching RPC style. You don't have to worry about the transport. NATS is powerful.
 
-With Hemera you have the best of both worlds. Efficient pattern matching to have the most flexibility in defining your RPC's.
-It doesn't matter where your server or client lives. You can add the same `add` as many as you want on different hosts to ensure maximal availability. Thanks to the Request Reply pattern you can work with that as if you do a normal http request. The only dependency you have is a single binary of 7MB. Mind your own business NATS do the rest for you:
+With Hemera you have the best of both worlds. Efficient pattern matching to have the most flexibility in defining your RPC's. It doesn't matter where your server or client lives. You can add the same add as many as you want on different hosts to ensure maximal availability. Thanks to the Request Reply pattern you can work with that as if you do a normal http request. The only dependency you have is a single binary of 7MB. Mind your own business NATS do the rest for you:
+
 
 ### Service Discovery
 - Any subscription is managed by NATS. You don't need any service discovery. Totally location transparency.
 
 ### Scalability
-- Filtering on the subject name enables services to divide work (perhaps with locality) e.g `topic:auth:germany`
+- Filtering on the subject name enables services to divide work (perhaps with locality) e.g. `topic:auth:germany`
 - Queue group name allow load balancing of services.
 
 ### Fault tolerance
@@ -88,7 +88,7 @@ _Add_: Define you implementation.
 
 _Act_: Start a request
 
-_Topic_: The subject to subcribe. **The smallest unit of Hemera**. It's kind of namespace for your service. If you want to scale your service you have to create a second instance of your service. If you just want to scale a method you have to subcribe to a different subject like `math:additions` because any subscriber have to contain the full implementation of the service otherwise you can run into a `PatternNotFound` exception
+_Topic_: The subject to subscribe. **The smallest unit of Hemera**. It's kind of namespace for your service. If you want to scale your service you have to create a second instance of your service. If you just want to scale a method you have to subscribe to a different subject like `math:additions` because any subscriber have to contain the full implementation of the service otherwise you can run into a `PatternNotFound` exception.
 
 #### Define your service
 ```js
@@ -106,7 +106,7 @@ console.log(resp); //2
 
 ### Pattern matching rules
 
-A match happens when all properties of the added pattern matches with the one in the passed obj.
+A match happens when all properties of added pattern matches with the one in the passed object.
 
 #### Matched!
 ```js
@@ -144,7 +144,7 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
 });
 ```
 #### Fatal errors
-Fatal errors will crash your server. You should implement a gracefully shutdown and use a process watcher like PM2 to come back in a clear state. Optional you can disable this behaviour by `crashOnFatal: false`
+Fatal errors will crash your server. You should implement a gracefully shutdown and use a process watcher like PM2 to come back in a clear state. Optional you can disable this behavior by `crashOnFatal: false`
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
  throw new Error('Upps');
@@ -174,7 +174,7 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, timeout$: 5000 }, (err, resp
 
 #### Metadata
 If you want to transfer metadata to a service you can use the `meta$` property before sending. It will be passed in all nested `act`.
-E.g you can add a JWT token as metadata to express if your action is legitimate.
+E.g. you can add a JWT token as metadata to express if your action is legitimate.
 ```js
 hemera.add({ topic: 'math', cmd: 'add' }, function (resp, cb) {
     
@@ -226,7 +226,7 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, context$: 1 }, function (err
 
 ### Tracing capabilities
 
-In any act or add you can access the property `this.parentId$` or `this.requestId$` to get informations about your current or parent call. You can listen on the `inbound` event to get detail information about you calls this includes transport-latency, response/request timing and durations.
+In any act or add you can access the property `this.parentId$` or `this.requestId$` to get information about your current or parent call. You can listen on the `inbound` event to get detail information about you calls this includes transport-latency, response/request timing and durations.
 
 ```js
     result: 10
@@ -247,7 +247,7 @@ In any act or add you can access the property `this.parentId$` or `this.requestI
     }
 ```
 
-Times are in nanoseconds.
+Times are represented in nanoseconds.
 
 ### Payload validation
 Hemera includes a payload validator called [parambulator](https://github.com/rjrodger/parambulator)
@@ -403,7 +403,7 @@ npm run test
 
 ## Monitoring
 
-Easy and beauitiful tool to monitor you app. [natsboard](https://github.com/fatihcode/natsboard)
+Easy and beautiful tool to monitor you app. [natsboard](https://github.com/fatihcode/natsboard)
 
 ## Nginx integration for NATS
 
