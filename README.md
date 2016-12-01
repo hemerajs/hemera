@@ -403,7 +403,7 @@ npm run test
 
 ## Monitoring
 
-Easy and beautiful tool to monitor you app. [natsboard](https://github.com/fatihcode/natsboard)
+Easy and beautiful tool to monitor you app. [hemera-board](https://github.com/hemerajs/hemera-board)
 
 ## Nginx integration for NATS
 
