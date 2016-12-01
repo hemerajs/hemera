@@ -1,6 +1,7 @@
 'use strict'
 
 const Hemera = require('../'),
+  Util = require('../lib/util'),    
   nsc = require('./support/nats_server_control'),
   Code = require('code'),
   Sinon = require('sinon'),
@@ -487,7 +488,7 @@ describe('Error handling', function () {
       crashOnFatal: false
     })
 
-    var stub = Sinon.stub(hemera, "parseJSON")
+    var stub = Sinon.stub(Util, "parseJSON")
 
     stub.returns({
       error: new Error('TEST')
@@ -545,7 +546,7 @@ describe('Error handling', function () {
         cb()
       })
 
-      var stub = Sinon.stub(hemera, "parseJSON")
+      var stub = Sinon.stub(Util, "parseJSON")
 
       stub.onCall(1)
 
