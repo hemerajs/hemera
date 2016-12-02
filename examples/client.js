@@ -9,7 +9,7 @@ hemera.ready(() => {
 
   hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 2 }, function (err, resp) {
     
-    this.log().info('Result', resp)
+    this.log.info('Result', resp)
   })
 
 })
