@@ -3,13 +3,14 @@
 const Hemera = require('./../')
 const nats = require('nats').connect()
 
-let logger = {
-  info: function(msg) {
+class Logger {
+  info(msg) {
+
     console.log(msg);
   }
 }
 
-const hemera = new Hemera(nats, { logLevel: 'info', logger })
+const hemera = new Hemera(nats, { logLevel: 'info', logger: new Logger })
 
 hemera.ready(() => {
 

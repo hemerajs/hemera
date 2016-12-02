@@ -62,6 +62,7 @@
     "coveralls": "2.11.x",
     "docco": "0.7.x",
     "istanbul": "0.4.x",
+    "joi": "^10.0.2",
     "memwatch-next": "^0.3.0",
     "mocha": "~3.2.0",
     "mocha-lcov-reporter": "1.2.x",
