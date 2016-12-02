@@ -496,7 +496,7 @@ describe('Custom payload validator', function () {
 
   })
 
-  it.only('Should be able modify payload by custom payload validator', function (done) {
+  it('Should be able modify payload by custom payload validator', function (done) {
 
     const Joi = require('joi')
 
