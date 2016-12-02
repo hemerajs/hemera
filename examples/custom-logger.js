@@ -1,9 +1,15 @@
 'use strict'
 
 const Hemera = require('./../')
-const nats = require ('nats').connect()
+const nats = require('nats').connect()
 
-const hemera = new Hemera(nats, { logLevel: 'info' })
+let logger = {
+  info: function(msg) {
+    console.log(msg);
+  }
+}
+
+const hemera = new Hemera(nats, { logLevel: 'info', logger })
 
 hemera.ready(() => {
 

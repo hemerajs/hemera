@@ -1046,13 +1046,19 @@ describe('Logging interface', function () {
     server.kill()
   })
 
-  it('Should be able to log', function (done) {
+  it('Should be able to use custom logger', function (done) {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats)
+    let logger = {
+      info: function () {}
+    }
 
-    var logSpy = Sinon.spy(hemera, "log")
+    var logSpy = Sinon.spy(logger, 'info')
+
+    const hemera = new Hemera(nats, {
+      logger
+    })
 
     hemera.ready(() => {
 
@@ -1129,7 +1135,9 @@ describe('Metadata', function () {
         cmd: 'add',
         a: 1,
         b: 2,
-        meta$: { a: 'test' }
+        meta$: {
+          a: 'test'
+        }
       }, function (err, resp) {
 
         expect(err).to.be.not.exists()

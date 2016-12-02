@@ -62,7 +62,7 @@ hemera.ready(function () {
     b: 20
   }).then(function (resp) {
 
-    hemera.log().info('Result', resp)
+    hemera.log.info('Result', resp)
   })
 
 })

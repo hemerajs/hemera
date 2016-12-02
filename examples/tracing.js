@@ -10,7 +10,7 @@ const hemera = new Hemera(nats, {
 hemera.ready(() => {
 
   hemera.on('inbound', function (msg) {
-    this.log().info(msg);
+    this.log.info(msg);
   })
 
   /**
@@ -38,7 +38,7 @@ hemera.ready(() => {
     }, function (err, resp2) {
 
       let r2 = this.requestId$
-      this.log().info('ParentId Level1 Match =', this.parentId$ === r1, this.request$);
+      this.log.info('ParentId Level1 Match =', this.parentId$ === r1, this.request$);
 
       this.act({
         topic: 'math',
@@ -47,7 +47,7 @@ hemera.ready(() => {
         b: 2
       }, function (err, resp2) {
 
-        this.log().info('ParentId Level2 Match =', this.parentId$ === r2, this.request$);
+        this.log.info('ParentId Level2 Match =', this.parentId$ === r2, this.request$);
         cb(null, resp.a - resp.b)
       });
     });
@@ -71,7 +71,7 @@ hemera.ready(() => {
       b: resp
     }, function (err, resp) {
 
-      this.log().info('ParentId Match =', r1 === this.parentId$)
+      this.log.info('ParentId Match =', r1 === this.parentId$)
     })
   })
 

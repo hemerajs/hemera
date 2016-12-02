@@ -25,7 +25,7 @@ hemera.ready(() => {
         throw new Error();
       }
 
-      this.log().info('Result', resp)
+      this.log.info('Result', resp)
     })
 
   }
