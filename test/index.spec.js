@@ -1,7 +1,7 @@
 'use strict'
 
 const Hemera = require('../'),
-  Util = require('../lib/util'),    
+  Util = require('../lib/util'),
   nsc = require('./support/nats_server_control'),
   Code = require('code'),
   Sinon = require('sinon'),
@@ -1117,7 +1117,7 @@ describe('Metadata', function () {
         cmd: 'add'
       }, function (resp, cb) {
 
-        expect(resp.meta$).to.be.equals('test')
+        expect(resp.meta$.a).to.be.equals('test')
 
         cb(null, {
           result: resp.a + resp.b
@@ -1129,7 +1129,7 @@ describe('Metadata', function () {
         cmd: 'add',
         a: 1,
         b: 2,
-        meta$: 'test'
+        meta$: { a: 'test' }
       }, function (err, resp) {
 
         expect(err).to.be.not.exists()
@@ -1242,7 +1242,7 @@ describe('Tracing', function () {
     server.kill()
   })
 
-  it('Should set correct request parentId$ and request$ context', function (done) {
+  it('Should set correct request parentId$, span and request$ context', function (done) {
 
     /**
      * math:add-->math:sub
@@ -1276,6 +1276,8 @@ describe('Tracing', function () {
 
         let r1 = this.requestId$
 
+        expect(this.meta$.span).to.be.equals(2)
+
         expect(this.parentId$).to.be.exists()
 
         this.act({
@@ -1288,6 +1290,8 @@ describe('Tracing', function () {
           let r2 = this.requestId$
 
           expect(this.parentId$).to.be.equals(r1)
+
+          expect(this.meta$.span).to.be.equals(3)
 
           expect(this.request$.startTime).to.be.a.number()
           expect(this.request$.endTime).to.be.a.number()
@@ -1329,6 +1333,8 @@ describe('Tracing', function () {
         expect(this.request$.transportLatency).to.be.a.number()
         expect(this.request$.duration).to.be.a.number()
 
+        expect(this.meta$.span).to.be.equals(1)
+
         this.act({
           topic: 'math',
           cmd: 'sub',
@@ -1343,6 +1349,8 @@ describe('Tracing', function () {
           expect(this.request$.endTime).to.be.a.number()
           expect(this.request$.transportLatency).to.be.a.number()
           expect(this.request$.duration).to.be.a.number()
+
+          expect(this.meta$.span).to.be.equals(4)
 
           hemera.close()
           done()

@@ -236,14 +236,17 @@ In any act or add you can access the property `this.parentId$` or `this.requestI
       "endTime": 456447216611,
       "duration": 3805
     }
-    meta$: {}
+    meta$: {
+      span: 3 //This request is the third node in the transaction.
+    },
     request$: {
       "id": "32HDHW7G1WRMNF2B6Y3KOD",
       "parentId": "32HDHW7G1WRMU0ZHX9J864",
       "startTime": 456447211853,
       "endTime": 456447216759,
       "transportLatency": 953,
-      "duration": 4906
+      "duration": 4906,
+      "act": "a:1,b:3,cmd:sub,topic:math"
     }
 ```
 
@@ -333,18 +336,18 @@ Format: JSON
 #### Request
 ```JSON
 {
-  "pattern": "<msg>",
-  "meta$": "<msg>",
-  "request$": "<msg>"
+  "pattern": "<object>",
+  "meta$": "<object>",
+  "request$": "<object>"
 }
 ```
 #### Response
 ```JSON
 {
-  "result": "<msg>",
+  "result": "<any>",
   "error": "<serialized_error>",
-  "meta$": "<msg>",
-  "response$": "<msg>"
+  "meta$": "<object>",
+  "response$": "<object>"
 }
 ```
 ## Best practice
