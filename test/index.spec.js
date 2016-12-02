@@ -421,6 +421,139 @@ describe('Timeouts', function () {
 
 })
 
+describe('Custom payload validator', function () {
+
+  var PORT = 6242
+  var flags = ['--user', 'derek', '--pass', 'foobar']
+  var authUrl = 'nats://derek:foobar@localhost:' + PORT
+  var noAuthUrl = 'nats://localhost:' + PORT
+  var server
+
+  // Start up our own nats-server
+  before(function (done) {
+    server = nsc.start_server(PORT, flags, done)
+  })
+
+  // Shutdown our server after we are done
+  after(function () {
+    server.kill()
+  })
+
+  it('Should be able to use custom payload validator', function (done) {
+
+    const Joi = require('joi')
+
+    class JoiPayloadValidator {
+      static validate(schema, msg, cb) {
+
+        Joi.validate(msg, schema, {
+          allowUnknown: true
+        }, (err, value) => {
+
+          cb(err, value)
+        })
+      }
+    }
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false,
+      logLevel: 'info',
+      payloadValidator: JoiPayloadValidator
+    })
+
+    hemera.ready(() => {
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send',
+        a: Joi.number().required()
+      }, (resp, cb) => {
+
+        cb()
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        a: 'dwedwed'
+      }, (err, resp) => {
+
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('PayloadValidationError')
+        expect(err.message).to.be.equals('Invalid payload')
+        expect(err.cause.name).to.be.equals('ValidationError')
+        expect(err.cause.isJoi).to.be.equals(true)
+        expect(err.cause.message).to.be.equals('child "a" fails because ["a" must be a number]')
+        hemera.close()
+        done()
+
+
+      })
+
+    })
+
+  })
+
+  it('Should be able modify payload by custom payload validator', function (done) {
+
+    const Joi = require('joi')
+
+    class JoiPayloadValidator {
+      static validate(schema, msg, cb) {
+
+        Joi.validate(msg, schema, {
+          allowUnknown: true
+        }, (err, value) => {
+
+          cb(err, value)
+        })
+      }
+    }
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false,
+      logLevel: 'info',
+      payloadValidator: JoiPayloadValidator
+    })
+
+    hemera.ready(() => {
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send',
+        a: Joi.number().required(),
+        b: Joi.number().default(100)
+      }, (resp, cb) => {
+
+        expect(resp.b).to.be.equals(100)
+        cb(null, true)
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        a: 33
+      }, (err, resp) => {
+
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.equals(true)
+
+        hemera.close()
+        done()
+
+
+      })
+
+    })
+
+  })
+
+})
+
 describe('Error handling', function () {
 
   var PORT = 6242
@@ -617,7 +750,7 @@ describe('Error handling', function () {
 
   })
 
-  it('Payload valdiation error', function (done) {
+  it('Payload validation error', function (done) {
 
     const nats = require('nats').connect(authUrl)
 
