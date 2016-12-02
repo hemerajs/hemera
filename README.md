@@ -254,6 +254,8 @@ Times are represented in nanoseconds.
 
 ### Payload validation
 Hemera includes a payload validator called [parambulator](https://github.com/rjrodger/parambulator)
+But you can also use different validators e.g [Joi example](https://github.com/hemerajs/hemera/blob/master/examples/custom-payload-validator.js)
+
 ```js
 hemera.add({
     topic: 'math',
@@ -298,6 +300,8 @@ hemera.use({ plugin: myPlugin, attributes: { name: 'myPlugin' }, options: { } })
 ```
 
 ### Logging
+
+Hemera used Pino logger by default but you can also use your own [example](https://github.com/hemerajs/hemera/blob/master/examples/custom-logger.js)
 
 ```js
 const hemera = new Hemera(nats, { logLevel: 'info' });
