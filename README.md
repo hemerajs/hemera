@@ -32,6 +32,8 @@ With Hemera you have the best of both worlds. Efficient pattern matching to have
 ### Load Balancing
 - Queue groups are used by default in Hemera.
 
+\+ **Hemera** = _Pattern-driven micro services._
+
 Table of contents
 =================
 
@@ -69,8 +71,6 @@ Table of contents
   * [Nginx integration for NATS](#nginx-integration-for-nats)
   * [Contributing](#contributing)
   * [Inspiration](#inspiration)
-
-\+ **Hemera** = _Pattern-driven micro services._
 
 ### Prerequisites
 
