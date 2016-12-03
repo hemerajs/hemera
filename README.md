@@ -55,7 +55,7 @@ Table of contents
       * [Metadata](#metadata)
       * [Context](#context)
   * [Tracing capabilities](#tracing-capabilities)
-      * [Get in/out-bound events](#get-inout-bound-events)
+      * [Get events](#get-events)
   * [Payload validation](#payload-validation)
   * [Plugins](#plugins)
   * [Logging](#logging)
