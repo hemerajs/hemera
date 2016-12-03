@@ -287,7 +287,7 @@ In any act or add you can access the property `this.parentId$` or `this.requestI
     }
 ```
 
-#### Get in/out-bound events
+#### Get-events
 
 ```js
 hemera.on('outbound', (msg) => {
