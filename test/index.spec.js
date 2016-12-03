@@ -1419,7 +1419,6 @@ describe('Tracing', function () {
 
         let r1 = this.requestId$
 
-        expect(this.meta$.span).to.be.equals(2)
         expect(this.meta$.traceId).to.be.string()
         expect(this.parentId$).to.be.exists()
 
@@ -1434,7 +1433,6 @@ describe('Tracing', function () {
 
           expect(this.parentId$).to.be.equals(r1)
 
-          expect(this.meta$.span).to.be.equals(3)
           expect(this.meta$.traceId).to.be.equals(traceId)
 
           expect(this.request$.startTime).to.be.a.number()
@@ -1479,8 +1477,6 @@ describe('Tracing', function () {
 
         traceId = this.meta$.traceId
 
-        expect(this.meta$.span).to.be.equals(1)
-
         this.act({
           topic: 'math',
           cmd: 'sub',
@@ -1496,8 +1492,6 @@ describe('Tracing', function () {
           expect(this.request$.endTime).to.be.a.number()
           expect(this.request$.transportLatency).to.be.a.number()
           expect(this.request$.duration).to.be.a.number()
-
-          expect(this.meta$.span).to.be.equals(4)
 
           hemera.close()
           done()

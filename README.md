@@ -269,22 +269,21 @@ In any act or add you can access the property `this.parentId$` or `this.requestI
     result: 10
     error: null
     response$: {
-      "startTime": 456447212806,
+      "startTime": 456447212806, //You can check how long did it take to execute your implementation
       "endTime": 456447216611,
-      "duration": 3805
+      "duration": 3805 //Total time in nanoseconds
     }
     meta$: {
-      span: 3 //This request is the third node in the transaction.
+      "traceId": "XBZPK4DHF2HI3FBODLGB1P" //All requests associated with a specific trace also share a common trace id
     },
     request$: {
-      "id": "32HDHW7G1WRMNF2B6Y3KOD",
-      "parentId": "32HDHW7G1WRMU0ZHX9J864",
-      "traceId": "32HDHW7G1WRMU0ZHX9J861",
+      "id": "32HDHW7G1WRMNF2B6Y3KOD", //Current request id
+      "parentId": "32HDHW7G1WRMU0ZHX9J864", //Previous request id
       "startTime": 456447211853,
       "endTime": 456447216759,
-      "transportLatency": 953,
-      "duration": 4906,
-      "pattern": "a:1,b:3,cmd:sub,topic:math"
+      "transportLatency": 953, //Transport between NATS driver and NATS Server
+      "duration": 4906, //Total time in nanoseconds
+      "pattern": "a:1,b:3,cmd:sub,topic:math" //Current matched pattern
     }
 ```
 
