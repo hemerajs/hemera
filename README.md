@@ -55,7 +55,7 @@ Table of contents
       * [Metadata](#metadata)
       * [Context](#context)
   * [Tracing capabilities](#tracing-capabilities)
-      * [Example](#example)
+      * [Get in/out-bound events](#get-in--out-bound-events)
   * [Payload validation](#payload-validation)
   * [Plugins](#plugins)
   * [Logging](#logging)
@@ -287,7 +287,7 @@ In any act or add you can access the property `this.parentId$` or `this.requestI
     }
 ```
 
-#### Example
+#### Get in/out-bound events
 
 ```js
 hemera.on('outbound', (msg) => {
