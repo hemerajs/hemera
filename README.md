@@ -63,7 +63,7 @@ Table of contents
   * [Best practice](#best-practice)
       * [Multiple instances of your service](#create-multiple-instances-of-your-service)
       * [Clustering](#create-another-nats-server-and-create-a-cluster)
-  * [Introduction-to-nats](#introduction-to-nats)
+  * [Introduction to NATS](#introduction-to-nats)
   * [NATS Limits & features](#nats-limits--features)
   * [Monitoring](#monitoring)
   * [Nginx integration for NATS](#nginx-integration-for-nats)
