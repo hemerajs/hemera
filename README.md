@@ -32,6 +32,42 @@ With Hemera you have the best of both worlds. Efficient pattern matching to have
 ### Load Balancing
 - Queue groups are used by default in Hemera.
 
+Table of contents
+=================
+
+  * [Prerequisites](#prerequisites)
+  * [Installing](#installing)
+  * [Example](#example)
+  * [Writing an application](#writing-an-application)
+    * [Define your service](#define-your-service)
+    * [Call your service](#call-your-service)
+  * [Pattern matching rules](#pattern-matching-rules)
+      * [Matched!](#Matched!)
+      * [Not matched!](#not-matched)
+  * [Error handling](#error-handling)
+      * [Reply an error](#reply-an-error)
+      * [Error-first-callbacks](#error-first-callbacks)
+      * [Handle timeout errors](#handle-timeout-errors)
+      * [Fatal errors](#fatal-errors)
+      * [Listen on transport errors](#listen-on-transport-errors)
+      * [Specify custom timeout per act](#specify-custom-timeout-per-act)
+  * [Delegation](#delegation)
+      * [Metadata](#metadata)
+      * [Context](#context)
+  * [Tracing capabilities](#tracing-capabilities)
+      * [Example](#example)
+  * [Payload validation](#payload-validation)
+  * [Plugins](#plugins)
+  * [Logging](#logging)
+  * [Best practice](#best-practice)
+        * [Multiple instances of your service.](#create-multiple-instances-of-your-service)
+        * [Clustering](#create-another-nats-server-and-create-a-cluster)
+  * [Introduction-to-nats](#introduction-to-nats)
+  * [NATS Limits & features](#nats-limits--features)
+  * [Monitoring](#monitoring)
+  * [Nginx integration for NATS](#nginx-integration-for-nats)
+  * [Contributing](#contributing)
+  * [Inspiration](#inspiration)
 
 \+ **Hemera** = _Pattern-driven micro services._
 
@@ -250,6 +286,18 @@ In any act or add you can access the property `this.parentId$` or `this.requestI
     }
 ```
 
+#### Example
+
+```js
+hemera.on('outbound', (msg) => {
+  console.log('Outbound', msg)
+})
+
+hemera.on('inbound', (msg) => {
+  console.log('Inbound', msg)
+})
+```
+
 Times are represented in nanoseconds.
 
 ### Payload validation
@@ -322,18 +370,6 @@ const hemera = new Hemera(nats, { logLevel: 'info' });
     a: 1
     b: 2
     time$: 2
-```
-
-### Tracing
-
-```js
-hemera.on('outbound', (msg) => {
-  console.log('Outbound', msg)
-})
-
-hemera.on('inbound', (msg) => {
-  console.log('Inbound', msg)
-})
 ```
 
 ### Protocol
