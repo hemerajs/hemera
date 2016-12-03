@@ -1400,6 +1400,8 @@ describe('Tracing', function () {
 
       expect(this.parentId$).to.be.not.exists()
 
+      let traceId = '' //Is unique in a request
+
       hemera.add({
         topic: 'math',
         cmd: 'add'
@@ -1418,7 +1420,7 @@ describe('Tracing', function () {
         let r1 = this.requestId$
 
         expect(this.meta$.span).to.be.equals(2)
-
+        expect(this.meta$.traceId).to.be.string()
         expect(this.parentId$).to.be.exists()
 
         this.act({
@@ -1433,6 +1435,7 @@ describe('Tracing', function () {
           expect(this.parentId$).to.be.equals(r1)
 
           expect(this.meta$.span).to.be.equals(3)
+          expect(this.meta$.traceId).to.be.equals(traceId)
 
           expect(this.request$.startTime).to.be.a.number()
           expect(this.request$.endTime).to.be.a.number()
@@ -1447,7 +1450,7 @@ describe('Tracing', function () {
           }, function (err, resp2) {
 
             expect(this.parentId$).to.be.equals(r2)
-
+            expect(this.meta$.traceId).to.be.equals(traceId)
             expect(this.request$.startTime).to.be.a.number()
             expect(this.request$.endTime).to.be.a.number()
             expect(this.request$.transportLatency).to.be.a.number()
@@ -1467,12 +1470,14 @@ describe('Tracing', function () {
       }, function (err, resp) {
 
         let r1 = this.requestId$
-
+        expect(this.meta$.traceId).to.be.exists()
         expect(this.request$.id).to.be.string()
         expect(this.request$.startTime).to.be.a.number()
         expect(this.request$.endTime).to.be.a.number()
         expect(this.request$.transportLatency).to.be.a.number()
         expect(this.request$.duration).to.be.a.number()
+
+        traceId = this.meta$.traceId
 
         expect(this.meta$.span).to.be.equals(1)
 
@@ -1484,6 +1489,7 @@ describe('Tracing', function () {
         }, function (err, resp) {
 
           expect(this.parentId$).to.be.equals(r1)
+          expect(this.meta$.traceId).to.be.equals(traceId)
           expect(this.request$.id).to.be.string()
           expect(this.request$.parentId).to.be.a.string()
           expect(this.request$.startTime).to.be.a.number()

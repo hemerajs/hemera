@@ -279,11 +279,12 @@ In any act or add you can access the property `this.parentId$` or `this.requestI
     request$: {
       "id": "32HDHW7G1WRMNF2B6Y3KOD",
       "parentId": "32HDHW7G1WRMU0ZHX9J864",
+      "traceId": "32HDHW7G1WRMU0ZHX9J861",
       "startTime": 456447211853,
       "endTime": 456447216759,
       "transportLatency": 953,
       "duration": 4906,
-      "act": "a:1,b:3,cmd:sub,topic:math"
+      "pattern": "a:1,b:3,cmd:sub,topic:math"
     }
 ```
 
