@@ -59,6 +59,7 @@ Table of contents
   * [Payload validation](#payload-validation)
   * [Plugins](#plugins)
   * [Logging](#logging)
+  * [Protocol](#protocol)
   * [Best practice](#best-practice)
       * [Multiple instances of your service](#create-multiple-instances-of-your-service)
       * [Clustering](#create-another-nats-server-and-create-a-cluster)
