@@ -10,6 +10,7 @@
 A [Node.js](http://nodejs.org/) microservices toolkit for the [NATS messaging system](https://nats.io)
 
 - __Status:__ Release Candidate
+- __Website:__ https://hemerajs.github.io/hemera-site/
 
 ## 📓 Getting Started
 
