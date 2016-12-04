@@ -61,6 +61,7 @@
     "code": "4.0.x",
     "coveralls": "2.11.x",
     "docco": "0.7.x",
+    "hemera-testsuite": "^1.0.0",
     "istanbul": "0.4.x",
     "joi": "10.0.x",
     "memwatch-next": "^0.3.0",

@@ -2,10 +2,10 @@
 
 const Hemera = require('../'),
   Util = require('../lib/util'),
-  nsc = require('./support/nats_server_control'),
   Code = require('code'),
   Sinon = require('sinon'),
-  Async = require("async")
+  Async = require("async"),
+  HemeraTestsuite = require('hemera-testsuite')
 
 const expect = Code.expect
 
@@ -21,7 +21,7 @@ describe('Basic', function () {
 
   // Start up our own nats-server
   before(function (done) {
-    server = nsc.start_server(PORT, flags, done)
+    server = HemeraTestsuite.start_server(PORT, flags, done)
   })
 
   // Shutdown our server after we are done
@@ -339,7 +339,7 @@ describe('Timeouts', function () {
 
   // Start up our own nats-server
   before(function (done) {
-    server = nsc.start_server(PORT, flags, done)
+    server = HemeraTestsuite.start_server(PORT, flags, done)
   })
 
   // Shutdown our server after we are done
@@ -431,7 +431,7 @@ describe('Custom payload validator', function () {
 
   // Start up our own nats-server
   before(function (done) {
-    server = nsc.start_server(PORT, flags, done)
+    server = HemeraTestsuite.start_server(PORT, flags, done)
   })
 
   // Shutdown our server after we are done
@@ -564,7 +564,7 @@ describe('Error handling', function () {
 
   // Start up our own nats-server
   before(function (done) {
-    server = nsc.start_server(PORT, flags, done)
+    server = HemeraTestsuite.start_server(PORT, flags, done)
   })
 
   // Shutdown our server after we are done
@@ -1020,7 +1020,7 @@ describe('Plugin interface', function () {
 
   // Start up our own nats-server
   before(function (done) {
-    server = nsc.start_server(PORT, flags, done)
+    server = HemeraTestsuite.start_server(PORT, flags, done)
   })
 
   // Shutdown our server after we are done
@@ -1171,7 +1171,7 @@ describe('Logging interface', function () {
 
   // Start up our own nats-server
   before(function (done) {
-    server = nsc.start_server(PORT, flags, done)
+    server = HemeraTestsuite.start_server(PORT, flags, done)
   })
 
   // Shutdown our server after we are done
@@ -1235,7 +1235,7 @@ describe('Metadata', function () {
 
   // Start up our own nats-server
   before(function (done) {
-    server = nsc.start_server(PORT, flags, done)
+    server = HemeraTestsuite.start_server(PORT, flags, done)
   })
 
   // Shutdown our server after we are done
@@ -1306,7 +1306,7 @@ describe('Context', function () {
 
   // Start up our own nats-server
   before(function (done) {
-    server = nsc.start_server(PORT, flags, done)
+    server = HemeraTestsuite.start_server(PORT, flags, done)
   })
 
   // Shutdown our server after we are done
@@ -1375,7 +1375,7 @@ describe('Tracing', function () {
 
   // Start up our own nats-server
   before(function (done) {
-    server = nsc.start_server(PORT, flags, done)
+    server = HemeraTestsuite.start_server(PORT, flags, done)
   })
 
   // Shutdown our server after we are done
@@ -1515,7 +1515,7 @@ describe('Memory leak test', function () {
 
   // Start up our own nats-server
   before(function (done) {
-    server = nsc.start_server(PORT, flags, done)
+    server = HemeraTestsuite.start_server(PORT, flags, done)
   })
 
   // Shutdown our server after we are done
