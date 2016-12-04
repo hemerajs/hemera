@@ -1394,7 +1394,7 @@ describe('Tracing', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats)
+    const hemera = new Hemera(nats, { logLevel: 'info' })
 
     hemera.ready(() => {
 
@@ -1437,7 +1437,6 @@ describe('Tracing', function () {
 
           expect(this.request$.startTime).to.be.a.number()
           expect(this.request$.endTime).to.be.a.number()
-          expect(this.request$.transportLatency).to.be.a.number()
           expect(this.request$.duration).to.be.a.number()
 
           this.act({
@@ -1451,7 +1450,6 @@ describe('Tracing', function () {
             expect(this.meta$.traceId).to.be.equals(traceId)
             expect(this.request$.startTime).to.be.a.number()
             expect(this.request$.endTime).to.be.a.number()
-            expect(this.request$.transportLatency).to.be.a.number()
             expect(this.request$.duration).to.be.a.number()
 
             cb(null, resp.a - resp.b)
@@ -1472,7 +1470,6 @@ describe('Tracing', function () {
         expect(this.request$.id).to.be.string()
         expect(this.request$.startTime).to.be.a.number()
         expect(this.request$.endTime).to.be.a.number()
-        expect(this.request$.transportLatency).to.be.a.number()
         expect(this.request$.duration).to.be.a.number()
 
         traceId = this.meta$.traceId
@@ -1490,7 +1487,6 @@ describe('Tracing', function () {
           expect(this.request$.parentId).to.be.a.string()
           expect(this.request$.startTime).to.be.a.number()
           expect(this.request$.endTime).to.be.a.number()
-          expect(this.request$.transportLatency).to.be.a.number()
           expect(this.request$.duration).to.be.a.number()
 
           hemera.close()
