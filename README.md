@@ -19,7 +19,7 @@ With Hemera you have the best of both worlds. Efficient pattern matching to have
 
 
 ### Service Discovery
-- Any subscription is managed by NATS. You don't need any service discovery. Totally location transparency.
+- Any subscription is managed by NATS. You don't need any service discovery. Total location transparency.
 
 ### Scalability
 - Filtering on the subject name enables services to divide work (perhaps with locality) e.g. `topic:auth:germany`
