@@ -34,7 +34,6 @@
     "queueing"
   ],
   "scripts": {
-    "annotate": "docco lib/index.js -o docs/",
     "test": "mocha -t 5000 --recursive",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec -t 5000 --recursive",
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report text-lcov -- -R spec | node ./node_modules/coveralls/bin/coveralls.js"
@@ -60,7 +59,6 @@
     "async": "2.1.x",
     "code": "4.0.x",
     "coveralls": "2.11.x",
-    "docco": "0.7.x",
     "hemera-testsuite": "^1.0.0",
     "istanbul": "0.4.x",
     "joi": "10.0.x",
