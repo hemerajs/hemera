@@ -29,15 +29,6 @@ hemera.ready(() => {
     cmd: 'sub'
   }, function (resp, cb) {
 
-    let r1 = this.requestId$
-
-    this.act({
-      topic: 'math',
-      cmd: 'add',
-      a: 1,
-      b: 2
-    })
-
     this.act({
       topic: 'math',
       cmd: 'add',
@@ -66,7 +57,6 @@ hemera.ready(() => {
     a: 1,
     b: 20
   }, function (err, resp) {
-    let r1 = this.requestId$
 
     this.act({
       topic: 'math',

@@ -271,6 +271,7 @@ In any act or add you can access the property `this.parentId$` or `this.requestI
     response$: {
       "startTime": 456447212806, //You can check how long did it take to execute your implementation
       "endTime": 456447216611,
+      "transportLatency": 953, //Transport between NATS driver and NATS Server
       "duration": 3805 //Total time in nanoseconds
     }
     meta$: {
