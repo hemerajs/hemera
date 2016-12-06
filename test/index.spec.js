@@ -1247,19 +1247,47 @@ describe('Metadata', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats)
+    const hemera = new Hemera(nats, {
+      logLevel: 'info'
+    })
 
     hemera.ready(() => {
+
+      hemera.add({
+        topic: 'math',
+        cmd: 'sub'
+      }, function (resp, cb) {
+
+        cb(null, {
+          result: resp.a - resp.b
+        })
+
+      })
 
       hemera.add({
         topic: 'math',
         cmd: 'add'
       }, function (resp, cb) {
 
-        expect(resp.meta$.a).to.be.equals('test')
+        expect(this.meta$.a).to.be.equals('test')
 
-        cb(null, {
-          result: resp.a + resp.b
+        this.act({
+          topic: 'math',
+          cmd: 'sub',
+          a: 1,
+          b: 2,
+          meta$: {
+            b: 33
+          }
+        }, function (err, resp) {
+
+          expect(this.meta$.a).to.be.equals('test')
+          expect(this.meta$.b).to.be.equals(33)
+
+          cb(null, {
+            result: resp.a + resp.b
+          })
+
         })
       })
 
@@ -1274,7 +1302,6 @@ describe('Metadata', function () {
       }, function (err, resp) {
 
         expect(err).to.be.not.exists()
-        expect(resp).not.to.be.equals(3)
 
         this.act({
           topic: 'math',
@@ -1284,7 +1311,6 @@ describe('Metadata', function () {
         }, function (err, resp) {
 
           expect(err).to.be.not.exists()
-          expect(resp).not.to.be.equals(3)
           hemera.close()
           done()
         })
@@ -1394,7 +1420,9 @@ describe('Tracing', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, { logLevel: 'info' })
+    const hemera = new Hemera(nats, {
+      logLevel: 'info'
+    })
 
     hemera.ready(() => {
 
@@ -1407,7 +1435,8 @@ describe('Tracing', function () {
         cmd: 'add'
       }, function (resp, cb) {
 
-        expect(this.parentId$).to.be.exists()
+        expect(this.trace$.traceId).to.be.string()
+        expect(this.trace$.spanId).to.be.string()
 
         cb(null, resp.a + resp.b)
       })
@@ -1417,45 +1446,57 @@ describe('Tracing', function () {
         cmd: 'sub'
       }, function (resp, cb) {
 
-        let r1 = this.requestId$
+        let r1 = this.request$.id
 
-        expect(this.meta$.traceId).to.be.string()
-        expect(this.parentId$).to.be.exists()
+        expect(this.trace$.traceId).to.be.string()
+        expect(this.trace$.spanId).to.be.string()
+        expect(this.request$.parentId).to.be.exists()
+        expect(this.trace$.parentSpanId).to.be.string()
 
         this.act({
           topic: 'math',
           cmd: 'add',
           a: 1,
           b: 2
-        }, function (err, resp2) {
+        })
 
-          let r2 = this.requestId$
-
-          expect(this.parentId$).to.be.equals(r1)
-
-          expect(this.meta$.traceId).to.be.equals(traceId)
-
-          expect(this.request$.startTime).to.be.a.number()
-          expect(this.request$.endTime).to.be.a.number()
-          expect(this.request$.duration).to.be.a.number()
+        setTimeout(() => {
 
           this.act({
             topic: 'math',
             cmd: 'add',
-            a: 10,
+            a: 1,
             b: 2
           }, function (err, resp2) {
 
-            expect(this.parentId$).to.be.equals(r2)
-            expect(this.meta$.traceId).to.be.equals(traceId)
-            expect(this.request$.startTime).to.be.a.number()
-            expect(this.request$.endTime).to.be.a.number()
+            let r2 = this.request$.id
+
+            expect(this.request$.parentId).to.be.equals(r1)
+
+            expect(this.trace$.traceId).to.be.equals(traceId)
+            expect(this.trace$.spanId).to.be.string()
             expect(this.request$.duration).to.be.a.number()
 
-            cb(null, resp.a - resp.b)
+            this.act({
+              topic: 'math',
+              cmd: 'add',
+              a: 10,
+              b: 2
+            }, function (err, resp2) {
+
+              expect(this.request$.parentId).to.be.equals(r2)
+              expect(this.trace$.parentSpanId).to.be.string()
+              expect(this.trace$.traceId).to.be.equals(traceId)
+              expect(this.trace$.spanId).to.be.string()
+              expect(this.request$.duration).to.be.a.number()
+
+              cb(null, resp.a - resp.b)
+            })
+
           })
 
-        })
+        }, 200)
+
       })
 
       hemera.act({
@@ -1465,14 +1506,13 @@ describe('Tracing', function () {
         b: 2
       }, function (err, resp) {
 
-        let r1 = this.requestId$
-        expect(this.meta$.traceId).to.be.exists()
+        let r1 = this.request$.id
+        expect(this.trace$.traceId).to.be.exists()
+        expect(this.trace$.spanId).to.be.string()
         expect(this.request$.id).to.be.string()
-        expect(this.request$.startTime).to.be.a.number()
-        expect(this.request$.endTime).to.be.a.number()
         expect(this.request$.duration).to.be.a.number()
 
-        traceId = this.meta$.traceId
+        traceId = this.trace$.traceId
 
         this.act({
           topic: 'math',
@@ -1481,12 +1521,13 @@ describe('Tracing', function () {
           b: resp
         }, function (err, resp) {
 
-          expect(this.parentId$).to.be.equals(r1)
-          expect(this.meta$.traceId).to.be.equals(traceId)
+          expect(this.request$.parentId).to.be.equals(r1)
+
+          expect(this.trace$.traceId).to.be.equals(traceId)
+          expect(this.trace$.spanId).to.be.string()
+          expect(this.trace$.parentSpanId).to.be.string()
           expect(this.request$.id).to.be.string()
           expect(this.request$.parentId).to.be.a.string()
-          expect(this.request$.startTime).to.be.a.number()
-          expect(this.request$.endTime).to.be.a.number()
           expect(this.request$.duration).to.be.a.number()
 
           hemera.close()

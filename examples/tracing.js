@@ -19,9 +19,26 @@ hemera.ready(() => {
   hemera.add({
     topic: 'math',
     cmd: 'add'
-  }, (resp, cb) => {
+  }, function (resp, cb) {
 
-    cb(null, resp.a + resp.b)
+    this.act({
+      topic: 'math',
+      cmd: 'sub',
+      a: 100,
+      b: 20
+    }, function (err, resp) {
+
+      this.act({
+        topic: 'math',
+        cmd: 'sub',
+        a: 100,
+        b: 50
+      }, function (err, resp) {
+
+        cb(null, resp)
+        })
+      })
+    
   })
 
   hemera.add({
@@ -29,23 +46,7 @@ hemera.ready(() => {
     cmd: 'sub'
   }, function (resp, cb) {
 
-    this.act({
-      topic: 'math',
-      cmd: 'add',
-      a: 1,
-      b: 2
-    }, function (err, resp2) {
-
-      this.act({
-        topic: 'math',
-        cmd: 'add',
-        a: 10,
-        b: 2
-      }, function (err, resp2) {
-
-        cb(null, resp.a - resp.b)
-      });
-    });
+    cb(null, resp.a - resp.b)
   })
 
   /**
@@ -58,15 +59,7 @@ hemera.ready(() => {
     b: 20
   }, function (err, resp) {
 
-    this.act({
-      topic: 'math',
-      cmd: 'sub',
-      a: 100,
-      b: resp
-    }, function (err, resp) {
-
-      this.log.info('Finished', resp)
-    })
+    this.log.info('Finished', resp)
   })
 
 })

@@ -263,28 +263,26 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, context$: 1 }, function (err
 ```
 
 ### Tracing capabilities
+Tracing in the style of [Google’s Dapper](http://static.googleusercontent.com/media/research.google.com/en//pubs/archive/36356.pdf)
 
-In any act or add you can access the property `this.parentId$` or `this.requestId$` to get information about your current or parent call. You can listen on the `inbound` event to get detail information about you calls this includes response/request timing and durations.
+In any act or add you can access the property `this.request$` or `this.trace$` to get information about your current or parent call. You can listen on the `inbound` event to get detail information.
 
 ```js
-    result: 10
-    error: null
-    response$: {
-      "startTime": 456447212806, //You can check how long did it take to execute your server-side implementation
-      "endTime": 456447216611,
-      "duration": 3805 //Total time in nanoseconds
+    meta$: {}
+    trace$: {
+      "traceId": "CRCNVG28BUVOBUS7MDY067",
+      "spanId": "CRCNVG28BUVOLJT4L6B2DW",
+      "timestamp": 887381084442,
+      "duration": 10851,
+      "service": "a:1,b:20,cmd:add,topic:math"
     }
-    meta$: {
-      "traceId": "XBZPK4DHF2HI3FBODLGB1P" //All requests associated with a specific trace id
-    },
     request$: {
-      "id": "32HDHW7G1WRMNF2B6Y3KOD", //Current request id
-      "parentId": "32HDHW7G1WRMU0ZHX9J864", //Previous request id
-      "startTime": 456447211853,
-      "endTime": 456447216759,
-      "duration": 4906, //Total time in nanoseconds
-      "pattern": "a:1,b:3,cmd:sub,topic:math" //Current matched pattern
+      "id": "CRCNVG28BUVONL3P5L76AR",
+      "timestamp": 887381084459,
+      "duration": 10851,
+      "pattern": "a:1,b:20,cmd:add,topic:math"
     }
+    result: 50
 ```
 
 #### Get-events
