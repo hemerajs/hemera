@@ -217,7 +217,7 @@ E.g. you can add a JWT token as metadata to express if your action is legitimate
 hemera.add({ topic: 'math', cmd: 'add' }, function (resp, cb) {
     
     //Access to metadata
-    let meta = resp.meta$
+    let meta = this.meta$
     
     cb(null, resp.a + resp.b);
 });
@@ -244,7 +244,9 @@ If you want to set a context across all `act` you can use the `context$` propert
 ```js
 hemera.context$.a = 'foobar';
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, function (err, resp) {
-
+   
+   this.context$.a // 'foobar'
+   
    this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 }, function (err, resp) {
         
        this.context$.a // 'foobar'
