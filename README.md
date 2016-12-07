@@ -195,9 +195,9 @@ hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
 #### Listen on transport errors
 ```js
 const hemera = new Hemera(nats, { logLevel: 'info' });
-hemera.events.on('error', ...)
-hemera.events.on('disconnect', ...)
-hemera.events.on('connect', ...)
+hemera.transport.on('error', ...)
+hemera.transport.on('disconnect', ...)
+hemera.transport.on('connect', ...)
 //see NATS driver for more events
 ```
 
@@ -276,7 +276,8 @@ In any act or add you can access the property `this.request$` or `this.trace$` t
       "spanId": "CRCNVG28BUVOLJT4L6B2DW",
       "timestamp": 887381084442,
       "duration": 10851,
-      "service": "a:1,b:20,cmd:add,topic:math"
+      "service": "math",
+      "method": "a:1,b:20,cmd:add,topic:math"
     }
     request$: {
       "id": "CRCNVG28BUVONL3P5L76AR",
@@ -290,12 +291,20 @@ In any act or add you can access the property `this.request$` or `this.trace$` t
 #### Get-events
 
 ```js
-hemera.on('outbound', (msg) => {
-  console.log('Outbound', msg)
+hemera.on('onPreRequest', (msg) => {
+  console.log(msg)
 })
 
-hemera.on('inbound', (msg) => {
-  console.log('Inbound', msg)
+hemera.on('onPostRequest', (msg) => {
+  console.log(msg)
+})
+
+hemera.on('OnPreProcessing', (msg) => {
+  console.log(msg)
+})
+
+hemera.on('onPreResponse', (msg) => {
+  console.log(msg)
 })
 ```
 

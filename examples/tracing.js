@@ -9,8 +9,8 @@ const hemera = new Hemera(nats, {
 
 hemera.ready(() => {
 
-  hemera.on('inbound', function (msg) {
-    this.log.info(msg);
+  hemera.on('onPostRequest', function (msg) {
+    this.log.info(msg.trace$);
   })
 
   /**
