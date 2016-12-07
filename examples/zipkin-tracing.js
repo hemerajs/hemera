@@ -19,10 +19,13 @@ hemera.ready(() => {
   hemera.on('onPreProcessing', function (ctx) {
 
     //Zipkin tracing
-    let traceId = zipkinTracer.wrapValue(ctx.trace$.traceId)
-    let spanId = ctx.trace$.spanId
-    let parentSpanId = zipkinTracer.wrapValue(ctx.trace$.parentSpanId)
-    let id = zipkinTracer.serverRecv(traceId, parentSpanId, spanId, ctx.trace$.service, ctx.trace$.method)
+    let id = zipkinTracer.serverRecv({
+      traceId: ctx.trace$.traceId,
+      parentSpanId: ctx.trace$.parentSpanId,
+      spanId: ctx.trace$.spanId,
+      service: ctx.trace$.service,
+      method: ctx.trace$.method
+    })
 
     //Store id in context
     ctx.zkTraceId = id
@@ -38,10 +41,13 @@ hemera.ready(() => {
   hemera.on('onPreRequest', function (ctx) {
 
     //Zipkin tracing    
-    let traceId = zipkinTracer.wrapValue(ctx.trace$.traceId)
-    let spanId = ctx.trace$.spanId
-    let parentSpanId = zipkinTracer.wrapValue(ctx.trace$.parentSpanId)
-    let id = zipkinTracer.clientSend(traceId, parentSpanId, spanId, ctx.trace$.service, ctx.trace$.method)
+    let id = zipkinTracer.clientSend({
+      traceId: ctx.trace$.traceId,
+      parentSpanId: ctx.trace$.parentSpanId,
+      spanId: ctx.trace$.spanId,
+      service: ctx.trace$.service,
+      method: ctx.trace$.method
+    })
 
     //Store id in context
     ctx.zkTraceId = id
@@ -62,20 +68,6 @@ hemera.ready(() => {
     topic: 'math',
     cmd: 'add'
   }, function (resp, cb) {
-
-    this.act({
-      topic: 'math',
-      cmd: 'sub',
-      a: 100,
-      b: 20
-    })
-
-    this.act({
-      topic: 'test',
-      cmd: 'sub',
-      a: 100,
-      b: 20
-    })
 
     this.act({
       topic: 'math',
