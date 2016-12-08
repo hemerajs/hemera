@@ -1,3 +1,5 @@
+/*global it describe before after*/
+
 'use strict'
 
 const Hemera = require('../'),
