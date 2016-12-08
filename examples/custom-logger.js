@@ -10,13 +10,20 @@ class Logger {
   }
 }
 
-const hemera = new Hemera(nats, { logLevel: 'info', logger: new Logger })
+const hemera = new Hemera(nats, {
+  logLevel: 'info',
+  logger: new Logger
+})
 
 hemera.ready(() => {
 
-  hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 2 }, function (err, resp) {
-    
+  hemera.act({
+    topic: 'math',
+    cmd: 'add',
+    a: 1,
+    b: 2
+  }, function (err, resp) {
+
     this.log.info('Result', resp)
   })
-
 })

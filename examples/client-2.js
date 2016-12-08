@@ -9,7 +9,6 @@ const hemera = new Hemera(nats, {
 
 hemera.ready(() => {
 
-
   for (var index = 0; index < 100; index++) {
 
     let a = Math.random();
@@ -27,7 +26,5 @@ hemera.ready(() => {
 
       this.log.info('Result', resp)
     })
-
   }
-
 })

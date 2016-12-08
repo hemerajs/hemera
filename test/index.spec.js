@@ -1,3 +1,5 @@
+/*global it describe before after*/
+
 'use strict'
 
 const Hemera = require('../'),
@@ -81,9 +83,7 @@ describe('Basic', function () {
           done()
         })
       })
-
     })
-
   })
 
   it('Should be able to act without a callback', function (done) {
@@ -112,9 +112,7 @@ describe('Basic', function () {
 
       hemera.close()
       done()
-
     })
-
   })
 
   it('Should be able to get list of all patterns', function (done) {
@@ -138,9 +136,7 @@ describe('Basic', function () {
 
       hemera.close()
       done()
-
     })
-
   })
 
   it('Callback must be from type function', function (done) {
@@ -164,11 +160,8 @@ describe('Basic', function () {
         expect(err.message).to.be.equals('Missing implementation')
         hemera.close()
         done()
-
       }
-
     })
-
   })
 
   it('Topic is required in a add', function (done) {
@@ -194,11 +187,8 @@ describe('Basic', function () {
         expect(err.message).to.be.equals('No topic to subscribe')
         hemera.close()
         done()
-
       }
-
     })
-
   })
 
   it('Should throw an error by duplicate patterns', function (done) {
@@ -233,11 +223,8 @@ describe('Basic', function () {
         expect(err.message).to.be.equals('Pattern is already in use')
         hemera.close()
         done()
-
       }
-
     })
-
   })
 
   it('Topic is required in a act', function (done) {
@@ -263,11 +250,8 @@ describe('Basic', function () {
         expect(err.message).to.be.equals('No topic to request')
         hemera.close()
         done()
-
       }
-
     })
-
   })
 
   it('Should be able to call a handler by different patterns', function (done) {
@@ -321,13 +305,9 @@ describe('Basic', function () {
           done()
         })
       })
-
     })
-
   })
-
 })
-
 
 describe('Timeouts', function () {
 
@@ -382,12 +362,8 @@ describe('Timeouts', function () {
           done()
 
         }, 200)
-
-
       })
-
     })
-
   })
 
   it('Should throw timeout error when pattern is not defined on the network', function (done) {
@@ -414,11 +390,8 @@ describe('Timeouts', function () {
         hemera.close()
         done()
       })
-
     })
-
   })
-
 })
 
 describe('Custom payload validator', function () {
@@ -488,12 +461,8 @@ describe('Custom payload validator', function () {
         expect(err.cause.message).to.be.equals('child "a" fails because ["a" must be a number]')
         hemera.close()
         done()
-
-
       })
-
     })
-
   })
 
   it('Should be able modify payload by custom payload validator', function (done) {
@@ -544,14 +513,9 @@ describe('Custom payload validator', function () {
 
         hemera.close()
         done()
-
-
       })
-
     })
-
   })
-
 })
 
 describe('Error handling', function () {
@@ -605,12 +569,8 @@ describe('Error handling', function () {
         expect(err.ownStack).to.be.exists()
         hemera.close()
         done()
-
-
       })
-
     })
-
   })
 
   it('Should be able to handle parsing errors', function (done) {
@@ -628,8 +588,6 @@ describe('Error handling', function () {
     })
 
     hemera.ready(() => {
-
-
 
       hemera.add({
         topic: 'email',
@@ -653,12 +611,8 @@ describe('Error handling', function () {
         stub.restore()
         hemera.close()
         done()
-
-
       })
-
     })
-
   })
 
   it('Should be able to handle response parsing error', function (done) {
@@ -701,12 +655,8 @@ describe('Error handling', function () {
         stub.restore()
         hemera.close()
         done()
-
-
       })
-
     })
-
   })
 
   it('Should be able to handle business errors', function (done) {
@@ -742,12 +692,8 @@ describe('Error handling', function () {
         expect(err.ownStack).to.be.exists()
         hemera.close()
         done()
-
-
       })
-
     })
-
   })
 
   it('Payload validation error', function (done) {
@@ -784,12 +730,8 @@ describe('Error handling', function () {
         expect(err.cause.message).to.be.equals('The value "1" is not of type \'number\' (parent: a).')
         hemera.close()
         done()
-
-
       })
-
     })
-
   })
 
   it('Should crash on fatal', function (done) {
@@ -831,12 +773,8 @@ describe('Error handling', function () {
           hemera.close()
           done()
         }, 20)
-
-
       })
-
     })
-
   })
 
   it('Should crash when an unexpected error thrown during timeout issue', function (done) {
@@ -873,12 +811,8 @@ describe('Error handling', function () {
         }, 500)
 
         throw (new Error('Test'))
-
-
       })
-
     })
-
   })
 
   it('Should crash on unhandled business errors', function (done) {
@@ -914,12 +848,8 @@ describe('Error handling', function () {
         expect(err.ownStack).to.be.exists()
         hemera.close()
         done()
-
-
       })
-
     })
-
   })
 
   it('Pattern not found', function (done) {
@@ -950,12 +880,8 @@ describe('Error handling', function () {
         expect(err.message).to.be.equals('No handler found for this pattern')
         hemera.close()
         done()
-
-
       })
-
     })
-
   })
 
   it('Should crash when an expected error happens in the ACT handler', function (done) {
@@ -999,16 +925,10 @@ describe('Error handling', function () {
         }, 200)
 
         throw (new Error('Test'))
-
-
       })
-
     })
-
   })
-
 })
-
 
 describe('Plugin interface', function () {
 
@@ -1079,9 +999,7 @@ describe('Plugin interface', function () {
         hemera.close()
         done()
       })
-
     })
-
   })
 
   it('Should be able to check duplicate registered plugins', function (done) {
@@ -1154,11 +1072,8 @@ describe('Plugin interface', function () {
         hemera.close()
         done()
       }
-
     })
-
   })
-
 })
 
 describe('Logging interface', function () {
@@ -1218,11 +1133,8 @@ describe('Logging interface', function () {
         hemera.close()
         done()
       })
-
     })
-
   })
-
 })
 
 describe('Metadata', function () {
@@ -1315,11 +1227,8 @@ describe('Metadata', function () {
           done()
         })
       })
-
     })
-
   })
-
 })
 
 describe('Context', function () {
@@ -1384,11 +1293,8 @@ describe('Context', function () {
           done()
         })
       })
-
     })
-
   })
-
 })
 
 describe('Tracing', function () {
@@ -1492,11 +1398,8 @@ describe('Tracing', function () {
 
               cb(null, resp.a - resp.b)
             })
-
           })
-
         }, 200)
-
       })
 
       hemera.act({
@@ -1532,14 +1435,10 @@ describe('Tracing', function () {
 
           hemera.close()
           done()
-
         })
       })
-
     })
-
   })
-
 })
 
 describe('Memory leak test', function () {
@@ -1621,9 +1520,6 @@ describe('Memory leak test', function () {
         hemera.close()
         done()
       })
-
     })
-
   })
-
 })
