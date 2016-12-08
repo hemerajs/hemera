@@ -22,15 +22,13 @@ hemera.ready(function () {
 
           return next(err);
         })
-
     })
-
   }
 
   //wrap act method
-   let act = (pattern) => {
+  let act = (pattern) => {
 
-     return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
 
       return this.act(pattern, function (err, res) {
 
@@ -39,11 +37,8 @@ hemera.ready(function () {
         }
 
         resolve(res)
-
       });
-
     });
-
   }
 
 
@@ -64,5 +59,4 @@ hemera.ready(function () {
 
     hemera.log.info('Result', resp)
   })
-
 })

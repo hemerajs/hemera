@@ -94,7 +94,6 @@ hemera.ready(() => {
         cb(null, resp)
       })
     })
-
   })
 
   hemera.add({
@@ -117,5 +116,4 @@ hemera.ready(() => {
 
     this.log.info('Finished', resp)
   })
-
 })

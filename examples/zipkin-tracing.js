@@ -118,5 +118,4 @@ hemera.ready(() => {
 
     this.log.info('Finished', resp)
   })
-
 })
