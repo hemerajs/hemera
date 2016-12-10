@@ -1,7 +1,7 @@
 'use strict'
 
 var Hemera = require('../'),
-  nsc = require('./../test/support/nats_server_control'),
+  nsc = require('hemera-testsuite'),
   Code = require('code'),
   Async = require("async");
 
@@ -22,11 +22,11 @@ var server = nsc.start_server(PORT, flags, () => {
     }, (resp, cb) => {
 
       setTimeout(() => {
-        
+
         cb(null, {
           result: resp.a + resp.b
         });
-        
+
       }, 1000)
 
     });
