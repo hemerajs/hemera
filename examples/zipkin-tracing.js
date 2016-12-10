@@ -40,7 +40,7 @@ hemera.ready(() => {
 
   hemera.on('onPreRequest', function (ctx) {
 
-    //Zipkin tracing    
+    //Zipkin tracing
     let id = zipkinTracer.clientSend({
       traceId: ctx.trace$.traceId,
       parentSpanId: ctx.trace$.parentSpanId,
