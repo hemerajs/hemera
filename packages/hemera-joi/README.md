@@ -2,6 +2,7 @@
 
 This is a plugin to use [Joi](https://github.com/hapijs/joi) with Hemera.
 
+#### Example
 ```js
 const Hemera = require('./../')
 const Joi = require('joi')
