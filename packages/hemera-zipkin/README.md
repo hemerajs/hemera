@@ -100,7 +100,7 @@ hemera.act({
     email: 'peter@gmail.com',
     password: '1234',
     
-    meta$: { query:   } //only primitive values
+    meta$: { foo: 'bar' } //only primitive values
 }, function (err, resp) {
 
   this.log.info('Finished', resp)
