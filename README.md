@@ -57,6 +57,7 @@ Table of contents
   * [Delegation](#delegation)
       * [Metadata](#metadata)
       * [Context](#context)
+      * [Context](#delegate)
   * [Extension points](#extension-points)
   * [Tracing capabilities](#tracing-capabilities)
       * [Get events](#get-events)
@@ -213,7 +214,7 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, timeout$: 5000 }, (err, resp
 
 #### Metadata
 If you want to transfer metadata to a service you can use the `meta$` property before sending. It will be passed in all nested `act`.
-E.g. you can add a JWT token as metadata to express if your action is legitimate.
+E.g. you can add a JWT token as metadata to express if your action is legitimate. Data will be transfered!
 ```js
 hemera.add({ topic: 'math', cmd: 'add' }, function (resp, cb) {
     
@@ -223,14 +224,14 @@ hemera.add({ topic: 'math', cmd: 'add' }, function (resp, cb) {
     cb(null, resp.a + resp.b);
 });
 ```
-Will set the metadata only for this `act` and all nested operations.
+Will set the metadata only for this `act` and all nested operations. Data will be transfered!
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, meta$: { a: 'test' } }, function (err, resp) {
 
    this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 });
 });
 ```
-Will set the metadata on all `act`
+Will set the metadata on all `act`. Data will be transfered!
 ```js
 hemera.meta$.token = 'ABC1234'
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1}, function (err, resp) {
@@ -241,7 +242,7 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1}, function (err, resp) {
 });
 ```
 #### Context
-If you want to set a context across all `act` you can use the `context$` property.
+If you want to set a context across all `act` you can use the `context$` property. Data will __not__ be transfered!
 ```js
 hemera.context$.a = 'foobar';
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, function (err, resp) {
@@ -264,7 +265,9 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, context$: 1 }, function (err
    });
 });
 ```
-If you want to pass data only to the next you can use `delegate$`
+#### Delegate
+
+If you want to pass data only to the next you can use `delegate$`. Data will be transfered!
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, delegate$: { query: 'Select from Users' } }, function (err, resp) {
 
