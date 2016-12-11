@@ -23,6 +23,7 @@ hemera.ready(() => {
 
     let userId = 1
 
+    //Visible in zipkin ui
     this.delegate$.query = 'SELECT FROM User;'
 
     this.act({
