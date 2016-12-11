@@ -324,7 +324,7 @@ hemera.on('onPreResponse', (msg) => {
 Times are represented in nanoseconds.
 
 ### Payload validation
-You can use different validators e.g [Joi example](https://github.com/hemerajs/hemera/blob/master/examples/custom-payload-validator.js)
+You can use different validators e.g [Joi example](https://github.com/hemerajs/hemera/tree/master/packages/hemera-joi)
 
 ```js
 hemera.add({
