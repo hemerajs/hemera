@@ -17,7 +17,6 @@
   "license": "ISC",
   "dependencies": {
     "zipkin": "0.5.x",
-    "zipkin-transport-http": "0.5.x",
-    "joi": "^10.0.5"
+    "zipkin-transport-http": "0.5.x"
   }
 }

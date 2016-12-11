@@ -16,6 +16,6 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "ISC",
   "dependencies": {
-    "joi": "^10.0.5"
+    "joi": "10.0.x"
   }
 }
