@@ -265,19 +265,35 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, context$: 1 }, function (err
    });
 });
 ```
+<<<<<<< Updated upstream
 #### Delegate
 
 If you want to pass data only to the next you can use `delegate$`. Data will be transfered!
+=======
+
+If you want to pass data only to the `add` you can use `delegate$`. This feature is used to transfer contextual data to tracing systems.
+>>>>>>> Stashed changes
 ```js
-hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, delegate$: { query: 'Select from Users' } }, function (err, resp) {
+hemera.act({ topic: 'math', cmd: 'add', delegate$: { foo: 'bar' } })
+hemera.add({
+  topic: 'math',
+  cmd: 'add',
+}, function (resp, cb) {
 
-   this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 }, function (err, resp) {
-      //or
-      this.delegate$.query = 'Select from Users'
-   });
-});
+  cb()
+
+})
+
+hemera.add({
+  topic: 'math',
+  cmd: 'add',
+}, function (resp, cb) {
+
+  //Visible in zipkin ui
+  this.delegate$.query = 'SELECT FROM User;'
+
+})
 ```
-
 ### Extension points
 You can extend the behavior by extension.
 `onClientPreRequest`, `onClientPostRequest`, `onServerPreHandler`, `onServerPreRequest`, `onServerPreResponse`
