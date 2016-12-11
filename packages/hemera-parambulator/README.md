@@ -2,7 +2,7 @@
 
 This is a plugin to use [Parambulator](https://github.com/rjrodger/parambulator) with Hemera.
 
-### Example
+#### Example
 
 ```js
 const Hemera = require('./../')
