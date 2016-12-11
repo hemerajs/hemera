@@ -1,66 +1,81 @@
 'use strict'
 
-const Tracer = require('./lib/tracer')
+const Zipkin = require('./lib/index')
+const Hoek = require('hoek')
+
+//Config
+let defaultConfig = {
+  debug: false,
+  host: '127.0.0.1',
+  port: '9411',
+  path: '/api/v1/spans'
+}
 
 exports.plugin = function hemeraZipkin(options) {
 
   var hemera = this
 
-  let zipkinTracer = new Tracer({
-    httpLogger: {
-      endpoint: options.url
-    }
-  })
+  const config = Hoek.applyToDefaults(defaultConfig, options || {})
+
+  const Tracer = new Zipkin(config)
 
   hemera.on('onServerPreRequest', function (ctx) {
 
     //Zipkin tracing
-    let id = zipkinTracer.serverRecv({
+    let traceData = {
       traceId: ctx.trace$.traceId,
       parentSpanId: ctx.trace$.parentSpanId,
       spanId: ctx.trace$.spanId,
-      service: ctx.trace$.service,
-      method: ctx.trace$.method
-    })
+      sampled: 1
+    }
 
-    //Store id in context
-    ctx.zkTraceId = id
+    ctx._zkTrace = Tracer.send_server_recv(traceData, {
+      service: ctx.trace$.service,
+      name: ctx.trace$.method
+    })
   })
 
   hemera.on('onServerPreResponse', function (ctx) {
 
     //Zipkin tracing
-    zipkinTracer.serverSend(ctx.zkTraceId)
+    Tracer.send_server_send(ctx._zkTrace, {
+      service: ctx.trace$.service,
+      name: ctx.trace$.method,
+      serverName: config.serverName
+    })
 
   })
 
   hemera.on('onClientPreRequest', function (ctx) {
 
     //Zipkin tracing
-    let id = zipkinTracer.clientSend({
+    let traceData = {
       traceId: ctx.trace$.traceId,
       parentSpanId: ctx.trace$.parentSpanId,
       spanId: ctx.trace$.spanId,
-      service: ctx.trace$.service,
-      method: ctx.trace$.method
-    })
+      sampled: 1
+    }
 
-    //Store id in context
-    ctx.zkTraceId = id
+    ctx._zkTrace = Tracer.send_client_send(traceData, {
+      service: ctx.trace$.service,
+      name: ctx.trace$.method
+    })
 
   })
 
   hemera.on('onClientPostRequest', function (ctx) {
 
     //Zipkin tracing
-    zipkinTracer.clientRecv(ctx.zkTraceId)
+    Tracer.send_client_recv(ctx._zkTrace, {
+      service: ctx.trace$.service,
+      name: ctx.trace$.method
+    })
 
   })
 
 }
 
-exports.options = {
-}
+exports.options = {}
 
 exports.attributes = {
   name: 'hemera-zipkin'

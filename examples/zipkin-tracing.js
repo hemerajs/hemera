@@ -3,7 +3,7 @@
 const Hemera = require('./../')
 const nats = require('nats').connect()
 const hemeraZipkin = require('./../packages/hemera-zipkin')
-hemeraZipkin.options.url = 'http://192.168.99.100:9411/api/v1/spans'
+hemeraZipkin.options.host = '192.168.99.100'
 
 const hemera = new Hemera(nats, {
   logLevel: 'info'
