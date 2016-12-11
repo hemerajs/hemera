@@ -94,7 +94,7 @@ hemera.ready(() => {
 
 ## Binary annotations
 
-You can easily provide extra information about the RPC if you use the special meta$ variable.
+You can easily provide extra information about the RPC if you use the special delegate$ variable.
 
 ```js
 hemera.act({
