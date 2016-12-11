@@ -89,6 +89,24 @@ hemera.ready(() => {
 
 #### 4. Refresh Zipkin Dashboard
 
+## Binary annotations
+
+You can easily provide extra information about the RPC if you use the special meta$ variable.
+
+```js
+hemera.act({
+    topic: 'auth',
+    cmd: 'signup',
+    email: 'peter@gmail.com',
+    password: '1234',
+    
+    meta$: { query:   } //only primitive values
+}, function (err, resp) {
+
+  this.log.info('Finished', resp)
+})
+```
+
 ### Credits
 
 [Zipkin Simple](https://github.com/paolochiodi/zipkin-simple)
