@@ -1,13 +1,10 @@
 'use strict'
 
-const Lab = require('lab')
 const Code = require('code')
 const Transport = require('./../../lib/transports/http-batch')
 const FakeServer = require('./../fake-server')
 
-const lab = exports.lab = Lab.script()
-const describe = lab.describe
-const it = lab.it
+
 const expect = Code.expect
 
 const FAKE_SERVER_PORT = 9090
@@ -26,16 +23,16 @@ describe('Transports', function () {
 
     let fakeServer
 
-    lab.before(function (done) {
+    before(function (done) {
       fakeServer = FakeServer(FAKE_SERVER_PORT, done)
     })
 
-    lab.beforeEach(function (done) {
+    beforeEach(function (done) {
       fakeServer.reset()
       done()
     })
 
-    lab.after(function (done) {
+    after(function (done) {
       fakeServer.stop()
       done()
     })

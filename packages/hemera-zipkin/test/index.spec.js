@@ -1,12 +1,8 @@
 'use strict'
 
-const Lab = require('lab')
 const Code = require('code')
 const Zipkin = require('./../lib')
 
-const lab = exports.lab = Lab.script()
-const describe = lab.describe
-const it = lab.it
 const expect = Code.expect
 
 const TO_MICROSECONDS = 1000
@@ -23,7 +19,7 @@ function noop() {}
 
 describe('Zipkin client', function () {
 
-  lab.beforeEach(function resetTransport(done) {
+  beforeEach(function resetTransport(done) {
     Client.options({
       transport: noop
     })
@@ -153,8 +149,9 @@ describe('Zipkin client', function () {
       it('sends data to zipkin', function (done) {
 
         function testTransport(data) {
+
           try {
-            expect(data).to.include({
+            expect(data).to.part.include({
               traceId: 'test traceId',
               name: 'test name',
               id: 'test spanId',
@@ -239,7 +236,7 @@ describe('Zipkin client', function () {
 
         function testTransport(data) {
           try {
-            expect(data).to.include({
+            expect(data).to.part.include({
               traceId: 'test traceId',
               name: 'test name',
               id: 'test spanId',
@@ -293,7 +290,7 @@ describe('Zipkin client', function () {
 
         function testTransport(data) {
           try {
-            expect(data).to.include({
+            expect(data).to.part.include({
               traceId: 'test traceId',
               name: 'test name',
               id: 'test spanId',
@@ -339,7 +336,7 @@ describe('Zipkin client', function () {
 
         function testTransport(data) {
           try {
-            expect(data).to.include({
+            expect(data).to.part.include({
               traceId: 'test traceId',
               name: 'test name',
               id: 'test spanId',
@@ -393,7 +390,7 @@ describe('Zipkin client', function () {
 
         function testTransport(data) {
           try {
-            expect(data).to.include({
+            expect(data).to.part.include({
               traceId: 'test traceId',
               name: 'test name',
               id: 'test spanId',
@@ -431,7 +428,7 @@ describe('Zipkin client', function () {
 
         function testTransport(data) {
           try {
-            expect(data).to.include({
+            expect(data).to.part.include({
               name: 'test name',
               annotations: [{
                 value: 'sr',
