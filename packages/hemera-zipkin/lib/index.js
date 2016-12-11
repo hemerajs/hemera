@@ -90,6 +90,7 @@ zipkinSimple.prototype.getChild = function getChild(traceData) {
 }
 
 zipkinSimple.prototype.sendTrace = function sendTrace(trace, data) {
+
   if (!trace.sampled) {
     return
   }
@@ -104,6 +105,19 @@ zipkinSimple.prototype.sendTrace = function sendTrace(trace, data) {
 
   if (trace.parentSpanId) {
     body.parentId = trace.parentSpanId
+  }
+
+  for (var key in data.binaryAnnotations) {
+    if (data.binaryAnnotations.hasOwnProperty(key)) {
+      var value = data.binaryAnnotations[key];
+      //Only primitive values are supported
+      if (typeof value !== 'object') {
+        body.binaryAnnotations.push({
+          key,
+          value: value.toString()
+        })
+      }
+    }
   }
 
   var time = generateTimestamp()
@@ -146,6 +160,12 @@ zipkinSimple.prototype.traceWithAnnotation = function traceWithAnnotation(trace,
   return trace
 }
 
+zipkinSimple.prototype.addBinary = function addBinary(data, annotation) {
+
+  data.binaryAnnotations = data.binaryAnnotations || {}
+  data.binaryAnnotations = Object.assign(data.binaryAnnotations, annotation)
+}
+
 zipkinSimple.prototype.sendClientSend = function sendClientSend(trace, data) {
   return this.traceWithAnnotation(trace, data, 'cs')
 }
@@ -176,6 +196,7 @@ zipkinSimple.prototype.options = function setOptions(opts) {
   return this.opts
 }
 
+zipkinSimple.prototype.add_binary = zipkinSimple.prototype.addBinary
 zipkinSimple.prototype.get_child = zipkinSimple.prototype.getChild
 zipkinSimple.prototype.send_client_send = zipkinSimple.prototype.sendClientSend
 zipkinSimple.prototype.send_client_recv = zipkinSimple.prototype.sendClientRecv

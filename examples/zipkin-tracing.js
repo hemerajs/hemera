@@ -65,7 +65,8 @@ hemera.ready(() => {
     topic: 'auth',
     cmd: 'signup',
     email: 'peter@gmail.com',
-    password: '1234'
+    password: '1234',
+    meta$: { token: '1234', test: 1 }
   }, function (err, resp) {
 
     this.log.info('Finished', resp)

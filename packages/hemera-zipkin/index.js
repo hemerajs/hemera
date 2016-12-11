@@ -5,6 +5,7 @@ const Hoek = require('hoek')
 
 //Config
 let defaultConfig = {
+  serverName: '',
   debug: false,
   host: '127.0.0.1',
   port: '9411',
@@ -21,7 +22,17 @@ exports.plugin = function hemeraZipkin(options) {
 
   hemera.on('onServerPreRequest', function (ctx) {
 
-    //Zipkin tracing
+    let meta = {
+      service: ctx.trace$.service,
+      name: ctx.trace$.method
+    }
+
+    Tracer.add_binary(meta, {
+      serverName: config.serverName
+    })
+
+    Tracer.add_binary(meta, ctx.meta$)
+
     let traceData = {
       traceId: ctx.trace$.traceId,
       parentSpanId: ctx.trace$.parentSpanId,
@@ -29,26 +40,40 @@ exports.plugin = function hemeraZipkin(options) {
       sampled: 1
     }
 
-    ctx._zkTrace = Tracer.send_server_recv(traceData, {
-      service: ctx.trace$.service,
-      name: ctx.trace$.method
-    })
+    ctx._zkTrace = Tracer.send_server_recv(traceData, meta)
+
   })
 
   hemera.on('onServerPreResponse', function (ctx) {
 
-    //Zipkin tracing
-    Tracer.send_server_send(ctx._zkTrace, {
+    let meta = {
       service: ctx.trace$.service,
-      name: ctx.trace$.method,
+      name: ctx.trace$.method
+    }
+
+    Tracer.add_binary(meta, {
       serverName: config.serverName
     })
+
+    Tracer.add_binary(meta, ctx.meta$)
+
+    Tracer.send_server_send(ctx._zkTrace, meta)
 
   })
 
   hemera.on('onClientPreRequest', function (ctx) {
 
-    //Zipkin tracing
+    let meta = {
+      service: ctx.trace$.service,
+      name: ctx.trace$.method
+    }
+
+    Tracer.add_binary(meta, {
+      serverName: config.serverName
+    })
+
+    Tracer.add_binary(meta, ctx.meta$)
+
     let traceData = {
       traceId: ctx.trace$.traceId,
       parentSpanId: ctx.trace$.parentSpanId,
@@ -56,20 +81,24 @@ exports.plugin = function hemeraZipkin(options) {
       sampled: 1
     }
 
-    ctx._zkTrace = Tracer.send_client_send(traceData, {
-      service: ctx.trace$.service,
-      name: ctx.trace$.method
-    })
+    ctx._zkTrace = Tracer.send_client_send(traceData, meta)
 
   })
 
   hemera.on('onClientPostRequest', function (ctx) {
 
-    //Zipkin tracing
-    Tracer.send_client_recv(ctx._zkTrace, {
+    let meta = {
       service: ctx.trace$.service,
       name: ctx.trace$.method
+    }
+
+    Tracer.add_binary(meta, {
+      serverName: config.serverName
     })
+
+    Tracer.add_binary(meta, ctx.meta$)
+
+    Tracer.send_client_recv(ctx._zkTrace, meta)
 
   })
 
