@@ -1,5 +1,7 @@
 # Hemera-joi package
 
+This is a plugin to use [Joi](https://github.com/hapijs/joi) with Hemera.
+
 ```js
 const Hemera = require('./../')
 const Joi = require('joi')
