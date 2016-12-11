@@ -1,5 +1,7 @@
 # Hemera-parambulator package
 
+This is a plugin to use [Parambulator](https://github.com/rjrodger/parambulator) with Hemera.
+
 ### Example
 
 ```js
