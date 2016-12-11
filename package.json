@@ -67,8 +67,6 @@
     "mocha-lcov-reporter": "1.2.x",
     "nats": "0.6.x",
     "sinon": "1.17.x",
-    "zipkin": "0.5.x",
-    "parambulator": "1.5.x",
-    "zipkin-transport-http": "0.5.x"
+    "lerna": "2.0.0-beta.30"
   }
 }

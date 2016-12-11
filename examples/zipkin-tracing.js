@@ -2,64 +2,16 @@
 
 const Hemera = require('./../')
 const nats = require('nats').connect()
-const ZipkinTracer = require('./../lib/zipkin-tracer')
+const hemeraZipkin = require('./../packages/hemera-zipkin')
+hemeraZipkin.options.url = 'http://192.168.99.100:9411/api/v1/spans'
 
 const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
-let zipkinTracer = new ZipkinTracer({
-  httpLogger: {
-    endpoint: 'http://192.168.99.100:9411/api/v1/spans'
-  }
-});
+hemera.use(hemeraZipkin)
 
 hemera.ready(() => {
-
-  hemera.on('onServerPreRequest', function (ctx) {
-
-    //Zipkin tracing
-    let id = zipkinTracer.serverRecv({
-      traceId: ctx.trace$.traceId,
-      parentSpanId: ctx.trace$.parentSpanId,
-      spanId: ctx.trace$.spanId,
-      service: ctx.trace$.service,
-      method: ctx.trace$.method
-    })
-
-    //Store id in context
-    ctx.zkTraceId = id
-  })
-
-  hemera.on('onServerPreResponse', function (ctx) {
-
-    //Zipkin tracing
-    zipkinTracer.serverSend(ctx.zkTraceId)
-
-  })
-
-  hemera.on('onClientPreRequest', function (ctx) {
-
-    //Zipkin tracing
-    let id = zipkinTracer.clientSend({
-      traceId: ctx.trace$.traceId,
-      parentSpanId: ctx.trace$.parentSpanId,
-      spanId: ctx.trace$.spanId,
-      service: ctx.trace$.service,
-      method: ctx.trace$.method
-    })
-
-    //Store id in context
-    ctx.zkTraceId = id
-
-  })
-
-  hemera.on('onClientPostRequest', function (ctx) {
-
-    //Zipkin tracing
-    zipkinTracer.clientRecv(ctx.zkTraceId)
-
-  })
 
   /**
    * Your Implementations
