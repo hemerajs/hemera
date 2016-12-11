@@ -87,6 +87,8 @@ hemera.ready(() => {
 })
 ```
 
+#### 4. Refresh Zipkin Dashboard
+
 ### Credits
 
 [Zipkin Simple](https://github.com/paolochiodi/zipkin-simple)
