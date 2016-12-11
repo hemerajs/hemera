@@ -16,7 +16,7 @@ let zipkinTracer = new ZipkinTracer({
 
 hemera.ready(() => {
 
-  hemera.on('onPreProcessing', function (ctx) {
+  hemera.on('onServerPreRequest', function (ctx) {
 
     //Zipkin tracing
     let id = zipkinTracer.serverRecv({
@@ -31,14 +31,14 @@ hemera.ready(() => {
     ctx.zkTraceId = id
   })
 
-  hemera.on('onPreResponse', function (ctx) {
+  hemera.on('onServerPreResponse', function (ctx) {
 
     //Zipkin tracing
     zipkinTracer.serverSend(ctx.zkTraceId)
 
   })
 
-  hemera.on('onPreRequest', function (ctx) {
+  hemera.on('onClientPreRequest', function (ctx) {
 
     //Zipkin tracing
     let id = zipkinTracer.clientSend({
@@ -54,7 +54,7 @@ hemera.ready(() => {
 
   })
 
-  hemera.on('onPostRequest', function (ctx) {
+  hemera.on('onClientPostRequest', function (ctx) {
 
     //Zipkin tracing
     zipkinTracer.clientRecv(ctx.zkTraceId)

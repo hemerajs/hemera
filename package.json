@@ -49,8 +49,8 @@
     "fast-json-parse": "1.0.x",
     "fast-safe-stringify": "1.1.x",
     "hoek": "4.1.x",
+    "items": "2.1.x",
     "lodash": "4.17.x",
-    "parambulator": "1.5.x",
     "pino": "3.0.x",
     "super-error": "2.0.x"
   },
@@ -58,7 +58,7 @@
     "async": "2.1.x",
     "code": "4.0.x",
     "coveralls": "2.11.x",
-    "eslint": "~3.12.0",
+    "eslint": "3.12.x",
     "hemera-testsuite": "1.0.x",
     "istanbul": "0.4.x",
     "joi": "10.0.x",
@@ -68,6 +68,7 @@
     "nats": "0.6.x",
     "sinon": "1.17.x",
     "zipkin": "0.5.x",
+    "parambulator": "1.5.x",
     "zipkin-transport-http": "0.5.x"
   }
 }

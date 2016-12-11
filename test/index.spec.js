@@ -416,24 +416,27 @@ describe('Custom payload validator', function () {
 
     const Joi = require('joi')
 
-    class JoiPayloadValidator {
-      static validate(schema, msg, cb) {
-
-        Joi.validate(msg, schema, {
-          allowUnknown: true
-        }, (err, value) => {
-
-          cb(err, value)
-        })
-      }
-    }
-
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
       crashOnFatal: false,
-      logLevel: 'info',
-      payloadValidator: JoiPayloadValidator
+      logLevel: 'info'
+    })
+
+    hemera.ext('onServerPreHandler', function (next) {
+
+      let schema = this._actMeta.schema
+      let pattern = this._request.value.pattern
+
+      Joi.validate(pattern, schema, {
+        allowUnknown: true
+      }, (err, value) => {
+
+        this._request.value.pattern = value
+
+        next(err)
+      })
+
     })
 
     hemera.ready(() => {
@@ -454,8 +457,8 @@ describe('Custom payload validator', function () {
       }, (err, resp) => {
 
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('PayloadValidationError')
-        expect(err.message).to.be.equals('Invalid payload')
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals('Extension error')
         expect(err.cause.name).to.be.equals('ValidationError')
         expect(err.cause.isJoi).to.be.equals(true)
         expect(err.cause.message).to.be.equals('child "a" fails because ["a" must be a number]')
@@ -469,24 +472,27 @@ describe('Custom payload validator', function () {
 
     const Joi = require('joi')
 
-    class JoiPayloadValidator {
-      static validate(schema, msg, cb) {
-
-        Joi.validate(msg, schema, {
-          allowUnknown: true
-        }, (err, value) => {
-
-          cb(err, value)
-        })
-      }
-    }
-
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
       crashOnFatal: false,
-      logLevel: 'info',
-      payloadValidator: JoiPayloadValidator
+      logLevel: 'info'
+    })
+
+    hemera.ext('onServerPreHandler', function (next) {
+
+      let schema = this._actMeta.schema
+      let pattern = this._request.value.pattern
+
+      Joi.validate(pattern, schema, {
+        allowUnknown: true
+      }, (err, value) => {
+
+        this._request.value.pattern = value
+
+        next(err)
+      })
+
     })
 
     hemera.ready(() => {
@@ -698,10 +704,24 @@ describe('Error handling', function () {
 
   it('Payload validation error', function (done) {
 
+    const Parambulator = require('parambulator')
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
       crashOnFatal: false
+    })
+
+    hemera.ext('onServerPreHandler', function (next) {
+
+      let schema = this._actMeta.schema
+      let pattern = this._request.value.pattern
+
+      let paramcheck = Parambulator(schema)
+      paramcheck.validate(pattern, (err) => {
+
+        next(err)
+      })
+
     })
 
     hemera.ready(() => {
@@ -724,8 +744,8 @@ describe('Error handling', function () {
       }, (err, resp) => {
 
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('PayloadValidationError')
-        expect(err.message).to.be.equals('Invalid payload')
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals('Extension error')
         expect(err.cause.name).to.be.equals('Error')
         expect(err.cause.message).to.be.equals('The value "1" is not of type \'number\' (parent: a).')
         hemera.close()

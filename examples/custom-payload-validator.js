@@ -4,21 +4,24 @@ const Hemera = require('./../')
 const Joi = require('joi')
 const nats = require('nats').connect()
 
-class JoiPayloadValidator {
-  static validate(schema, msg, cb) {
-
-    Joi.validate(msg, schema, {
-      allowUnknown: true
-    }, (err, value) => {
-
-      cb(err, value)
-    })
-  }
-}
-
 const hemera = new Hemera(nats, {
-  logLevel: 'info',
-  payloadValidator: JoiPayloadValidator
+  logLevel: 'info'
+})
+
+hemera.ext('onServerPreHandler', function (next) {
+
+  let schema = this._actMeta.schema
+  let pattern = this._request.value.pattern
+
+  Joi.validate(pattern, schema, {
+    allowUnknown: true
+  }, (err, value) => {
+
+    this._request.value.pattern = value
+
+    next(err)
+  })
+
 })
 
 hemera.ready(() => {

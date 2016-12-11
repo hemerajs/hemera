@@ -57,6 +57,7 @@ Table of contents
   * [Delegation](#delegation)
       * [Metadata](#metadata)
       * [Context](#context)
+  * [Extension points](#extension-points)
   * [Tracing capabilities](#tracing-capabilities)
       * [Get events](#get-events)
   * [Payload validation](#payload-validation)
@@ -264,6 +265,18 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, context$: 1 }, function (err
 });
 ```
 
+### Extension points
+You can extend the behavior by extension.
+`onClientPreRequest`, `onClientPostRequest`, `onServerPreHandler`, `onServerPreRequest`, `onServerPreResponse`
+
+```js
+hemera.ext('extension-name', function(next) {
+   
+   let ctx = this
+
+})
+```
+
 ### Tracing capabilities
 Tracing in the style of [Google’s Dapper](http://static.googleusercontent.com/media/research.google.com/en//pubs/archive/36356.pdf)
 
@@ -311,8 +324,7 @@ hemera.on('onPreResponse', (msg) => {
 Times are represented in nanoseconds.
 
 ### Payload validation
-Hemera includes a payload validator called [parambulator](https://github.com/rjrodger/parambulator)
-But you can also use different validators e.g [Joi example](https://github.com/hemerajs/hemera/blob/master/examples/custom-payload-validator.js)
+You can use different validators e.g [Joi example](https://github.com/hemerajs/hemera/blob/master/examples/custom-payload-validator.js)
 
 ```js
 hemera.add({
