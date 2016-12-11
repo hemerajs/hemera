@@ -223,7 +223,7 @@ hemera.add({ topic: 'math', cmd: 'add' }, function (resp, cb) {
     cb(null, resp.a + resp.b);
 });
 ```
-Will set the metadata only for this `act` and all nested `act`
+Will set the metadata only for this `act` and all nested operations.
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, meta$: { a: 'test' } }, function (err, resp) {
 
@@ -257,10 +257,20 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, function (err, resp) {
 If you want to set a context only for this `act` and all nested `act`
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, context$: 1 }, function (err, resp) {
-
+   //or
    this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 }, function (err, resp) {
         
       this.context$ // 1
+   });
+});
+```
+If you want to pass data only to the next you can use `delegate$`
+```js
+hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, delegate$: { query: 'Select from Users' } }, function (err, resp) {
+
+   this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 }, function (err, resp) {
+      //or
+      this.delegate$.query = 'Select from Users'
    });
 });
 ```
@@ -398,23 +408,14 @@ const hemera = new Hemera(nats, { logLevel: 'info' });
 
 Format: JSON
 
-#### Request
 ```JSON
-{
-  "pattern": "<object>",
-  "meta$": "<object>",
-  "request$": "<object>"
-}
+pattern: "<object>",
+meta$: "<object>",
+delegate$: "<object>",
+trace$: "<object>",
+request$: "<object>",
 ```
-#### Response
-```JSON
-{
-  "result": "<any>",
-  "error": "<serialized_error>",
-  "meta$": "<object>",
-  "response$": "<object>"
-}
-```
+
 ## Best practice
 
 Think in small parts. A topic is like a service. You can define a service like `auth` which is responsible for authenticate users.

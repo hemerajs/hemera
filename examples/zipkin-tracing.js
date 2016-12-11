@@ -23,6 +23,8 @@ hemera.ready(() => {
 
     let userId = 1
 
+    this.delegate$.query = 'SELECT FROM User;'
+
     this.act({
       topic: 'email',
       cmd: 'send',
@@ -65,8 +67,7 @@ hemera.ready(() => {
     topic: 'auth',
     cmd: 'signup',
     email: 'peter@gmail.com',
-    password: '1234',
-    meta$: { token: '1234', test: 1 }
+    password: '1234'
   }, function (err, resp) {
 
     this.log.info('Finished', resp)

@@ -31,7 +31,7 @@ exports.plugin = function hemeraZipkin(options) {
       serverName: config.serverName
     })
 
-    Tracer.add_binary(meta, ctx.meta$)
+    Tracer.add_binary(meta, ctx.delegate$)
 
     let traceData = {
       traceId: ctx.trace$.traceId,
@@ -55,7 +55,7 @@ exports.plugin = function hemeraZipkin(options) {
       serverName: config.serverName
     })
 
-    Tracer.add_binary(meta, ctx.meta$)
+    Tracer.add_binary(meta, ctx.delegate$)
 
     Tracer.send_server_send(ctx._zkTrace, meta)
 
@@ -72,7 +72,7 @@ exports.plugin = function hemeraZipkin(options) {
       serverName: config.serverName
     })
 
-    Tracer.add_binary(meta, ctx.meta$)
+    Tracer.add_binary(meta, ctx.delegate$)
 
     let traceData = {
       traceId: ctx.trace$.traceId,
@@ -96,7 +96,7 @@ exports.plugin = function hemeraZipkin(options) {
       serverName: config.serverName
     })
 
-    Tracer.add_binary(meta, ctx.meta$)
+    Tracer.add_binary(meta, ctx.delegate$)
 
     Tracer.send_client_recv(ctx._zkTrace, meta)
 
