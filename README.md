@@ -57,7 +57,7 @@ Table of contents
   * [Delegation](#delegation)
       * [Metadata](#metadata)
       * [Context](#context)
-      * [Context](#delegate)
+      * [Delegate](#delegate)
   * [Extension points](#extension-points)
   * [Tracing capabilities](#tracing-capabilities)
       * [Get events](#get-events)
