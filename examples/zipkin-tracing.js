@@ -1,6 +1,6 @@
 'use strict'
 
-const Hemera = require('./../')
+const Hemera = require('./../packages/hemera')
 const nats = require('nats').connect()
 const hemeraZipkin = require('./../packages/hemera-zipkin')
 hemeraZipkin.options.host = '192.168.99.100'

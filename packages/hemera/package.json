@@ -1,0 +1,54 @@
+{
+  "name": "nats-hemera",
+  "author": "Dustin Deus (https://github.com/StarpTech)",
+  "version": "0.1.61",
+  "main": "index.js",
+  "homepage": "https://hemerajs.github.io/hemera/",
+  "repository": {
+    "url": "git@github.com:hemerajs/hemera.git",
+    "type": "git"
+  },
+  "keywords": [
+    "micro",
+    "service",
+    "microservice",
+    "micro-service",
+    "microservices",
+    "micro-services",
+    "services",
+    "micro services",
+    "micro service",
+    "framework",
+    "minimum",
+    "viable",
+    "product",
+    "toolkit",
+    "startup",
+    "nats",
+    "messaging",
+    "pubsub",
+    "publish",
+    "subscribe",
+    "queue",
+    "distributed",
+    "queueing"
+  ],
+  "scripts": {},
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "bloomrun": "3.0.x",
+    "errio": "1.2.x",
+    "fast-json-parse": "1.0.x",
+    "fast-safe-stringify": "1.1.x",
+    "hoek": "4.1.x",
+    "items": "2.1.x",
+    "lodash": "4.17.x",
+    "pino": "3.0.x",
+    "super-error": "2.0.x"
+  },
+  "devDependencies": {
+  }
+}

@@ -34,6 +34,9 @@
     "queueing"
   ],
   "scripts": {
+    "setup": "npm i && lerna bootstrap",
+    "clean": "lerna clean",
+    "release": "lerna publish -i",
     "test": "mocha -t 5000 --recursive",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec -t 5000 --recursive",
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report text-lcov -- -R spec | node ./node_modules/coveralls/bin/coveralls.js",
@@ -43,31 +46,18 @@
     "node": ">=4.0.0"
   },
   "license": "MIT",
-  "dependencies": {
-    "bloomrun": "3.0.x",
-    "errio": "1.2.x",
-    "fast-json-parse": "1.0.x",
-    "fast-safe-stringify": "1.1.x",
-    "hoek": "4.1.x",
-    "items": "2.1.x",
-    "lodash": "4.17.x",
-    "pino": "3.0.x",
-    "super-error": "2.0.x"
-  },
   "devDependencies": {
-    "async": "2.1.x",
     "code": "4.0.x",
     "coveralls": "2.11.x",
     "eslint": "3.12.x",
     "hemera-testsuite": "1.0.x",
     "istanbul": "0.4.x",
-    "joi": "10.0.x",
-    "parambulator": "1.5.x",
     "memwatch-next": "0.3.x",
     "mocha": "3.2.x",
     "mocha-lcov-reporter": "1.2.x",
-    "nats": "0.6.x",
     "sinon": "1.17.x",
-    "lerna": "2.0.0-beta.30"
+    "lerna": "2.0.0-beta.30",
+    "joi": "10.0.x",
+    "nats": "0.6.x"
   }
 }

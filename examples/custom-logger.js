@@ -1,6 +1,6 @@
 'use strict'
 
-const Hemera = require('./../')
+const Hemera = require('./../packages/hemera')
 const nats = require('nats').connect()
 
 class Logger {
