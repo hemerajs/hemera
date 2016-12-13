@@ -6,6 +6,9 @@ node_js:
   - "5"
   - "6"
 
+script:
+  - npm run ci
+  
 before_install:
   - sudo apt-get install python-software-properties
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
