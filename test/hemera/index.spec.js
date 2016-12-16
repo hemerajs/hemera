@@ -996,7 +996,7 @@ describe('Metadata', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      logLevel: 'info'
+      logLevel: 'silent'
     })
 
     hemera.ready(() => {
@@ -1156,7 +1156,7 @@ describe('Delegate', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      logLevel: 'info'
+      logLevel: 'silent'
     })
 
     hemera.ready(() => {
@@ -1239,7 +1239,7 @@ describe('Tracing', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      logLevel: 'info'
+      logLevel: 'silent'
     })
 
     hemera.ready(() => {
@@ -1434,4 +1434,57 @@ describe('Memory leak test', function () {
       })
     })
   })
+})
+
+describe('Broadcasting', function () {
+
+  var PORT = 6242
+  var flags = ['--user', 'derek', '--pass', 'foobar']
+  var authUrl = 'nats://derek:foobar@localhost:' + PORT
+  var noAuthUrl = 'nats://localhost:' + PORT
+  var server
+
+  // Start up our own nats-server
+  before(function (done) {
+    server = HemeraTestsuite.start_server(PORT, flags, done)
+  })
+
+  // Shutdown our server after we are done
+  after(function () {
+    server.kill()
+  })
+
+  it('Simple broadcasting', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.ready(() => {
+
+      hemera.add({
+        broadcast$: true,
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+
+        cb()
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+
+        expect(err).to.be.exists()
+        hemera.close()
+        done()
+      })
+    })
+  })
+
 })

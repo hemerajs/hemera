@@ -37,7 +37,7 @@ describe('Basic', function () {
 
     const hemera = new Hemera(nats, {
       crashOnFatal: false,
-      logLevel: 'info'
+      logLevel: 'silent'
     })
 
     hemera.use(HemeraJoi)
@@ -77,7 +77,7 @@ describe('Basic', function () {
 
     const hemera = new Hemera(nats, {
       crashOnFatal: false,
-      logLevel: 'info'
+      logLevel: 'silent'
     })
 
     hemera.use(HemeraJoi)
