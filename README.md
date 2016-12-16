@@ -343,7 +343,7 @@ hemera.on('onPostRequest', (msg) => {
   console.log(msg)
 })
 
-hemera.on('OnPreProcessing', (msg) => {
+hemera.on('onPreProcessing', (msg) => {
   console.log(msg)
 })
 
