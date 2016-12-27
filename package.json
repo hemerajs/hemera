@@ -45,7 +45,6 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "async": "2.1.x",
     "code": "4.0.x",
     "coveralls": "2.11.x",
     "eslint": "3.12.x",

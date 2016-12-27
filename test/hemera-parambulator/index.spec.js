@@ -5,7 +5,6 @@ const Hemera = require('../../packages/hemera'),
   Util = require('../../packages/hemera/build/util'),
   Code = require('code'),
   Sinon = require('sinon'),
-  Async = require("async"),
   HemeraTestsuite = require('hemera-testsuite')
 
 const expect = Code.expect
