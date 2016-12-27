@@ -36,7 +36,8 @@
   "scripts": {
     "flow": "flow check",
     "build": "flow-remove-types lib/ --out-dir build/",
-    "prepublish": "npm run flow && npm run build"
+    "prepublish": "npm run flow && npm run build",
+    "lint": "eslint --ext .js lib"
   },
   "engines": {
     "node": ">=4.0.0"
