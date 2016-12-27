@@ -36,9 +36,9 @@
     "clean": "lerna clean",
     "release": "lerna publish -i",
     "ci": "npm run setup",
-    "test": "lerna run flow && mocha -t 5000 --recursive",
-    "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec -t 5000 --recursive",
-    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report text-lcov -- -R spec | node ./node_modules/coveralls/bin/coveralls.js"
+    "test": "nyc mocha --timeout=5000",
+    "coverage": "nyc report --reporter=text-lcov",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "engines": {
     "node": ">=4.0.0"
@@ -50,11 +50,12 @@
     "eslint": "3.12.x",
     "hemera-testsuite": "1.0.x",
     "istanbul": "0.4.x",
+    "joi": "10.0.x",
+    "lerna": "2.0.0-beta.30",
     "mocha": "3.2.x",
     "mocha-lcov-reporter": "1.2.x",
-    "sinon": "1.17.x",
-    "lerna": "2.0.0-beta.30",
-    "joi": "10.0.x",
-    "nats": "0.6.x"
+    "nats": "0.6.x",
+    "nyc": "10.0.x",
+    "sinon": "1.17.x"
   }
 }
