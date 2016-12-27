@@ -2,7 +2,7 @@
 
 const Hemera = require('../../packages/hemera'),
   HemeraZipkin = require('../../packages/hemera-zipkin'),
-  Util = require('../../packages/hemera/lib/util'),
+  Util = require('../../packages/hemera/build/util'),
   Code = require('code'),
   Sinon = require('sinon'),
   Async = require("async"),

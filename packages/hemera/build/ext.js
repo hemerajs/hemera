@@ -1,4 +1,4 @@
-// @flow
+//      
 
 /*!
  * hemera
@@ -15,10 +15,10 @@ const Items = require('items')
  */
 class Ext {
 
-  _handler: Array<Function>;
-  _type: string;
+                            
+                
 
-  constructor(type: string) {
+  constructor(type        ) {
 
     this._handler = []
     this._type = type
@@ -30,7 +30,7 @@ class Ext {
    *
    * @memberOf Ext
    */
-  subscribe(handler: Function) {
+  subscribe(handler          ) {
 
     this._handler.push(handler)
 
@@ -42,7 +42,7 @@ class Ext {
    *
    * @memberOf Ext
    */
-  invoke(ctx: any, cb: Function) {
+  invoke(ctx     , cb          ) {
 
     const each = (ext, next) => {
 

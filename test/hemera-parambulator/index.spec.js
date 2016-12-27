@@ -2,7 +2,7 @@
 
 const Hemera = require('../../packages/hemera'),
   HemeraParambulator = require('../../packages/hemera-parambulator'),
-  Util = require('../../packages/hemera/lib/util'),
+  Util = require('../../packages/hemera/build/util'),
   Code = require('code'),
   Sinon = require('sinon'),
   Async = require("async"),

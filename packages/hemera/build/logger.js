@@ -1,4 +1,4 @@
-// @flow
+//      
 
 /*!
  * hemera
@@ -29,8 +29,8 @@ var defaultConfig = {
  */
 class Logger {
 
-  _config: any;
-  _logger: any;
+               
+               
   /**
    * Creates an instance of Logger.
    *
@@ -38,7 +38,7 @@ class Logger {
    *
    * @memberOf Logger
    */
-  constructor(params: { level: string }) {
+  constructor(params                   ) {
 
     let self = this
 
@@ -58,7 +58,7 @@ class Logger {
     //Set levels, create new prototype methods
     self._config.levels.forEach((level) => {
 
-      let that: { [id: string]: Function } = this
+      let that                             = this
 
       that[level] = function () {
 
