@@ -36,9 +36,9 @@
     "clean": "lerna clean",
     "release": "lerna publish -i",
     "ci": "npm run setup",
-    "test": "nyc mocha --timeout=5000",
-    "coverage": "nyc report --reporter=text-lcov",
-    "coveralls": "nyc report --reporter=text-lcov | coveralls"
+    "test": "nyc mocha -t 5000 --recursive",
+    "coverage": "npm run test && nyc report --reporter=html",
+    "coveralls": "npm run test && nyc report --reporter=text-lcov | coveralls"
   },
   "engines": {
     "node": ">=4.0.0"
