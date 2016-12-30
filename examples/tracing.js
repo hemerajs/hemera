@@ -9,9 +9,9 @@ const hemera = new Hemera(nats, {
 
 hemera.ready(() => {
 
-  hemera.on('onClientPostRequest', function (msg) {
+  hemera.on('onClientPostRequest', function (ctx) {
 
-    console.log(msg);
+    console.log(ctx.trace$)
 
   })
 
@@ -30,6 +30,7 @@ hemera.ready(() => {
       b: 20
     })
 
+    //Leads to timeout error
     this.act({
       topic: 'test',
       cmd: 'sub',

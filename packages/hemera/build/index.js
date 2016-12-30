@@ -113,7 +113,7 @@ class Hemera extends EventEmitter {
 
       //Set metadata by passed pattern or current message context
       ctx.meta$ = Hoek.merge(pattern.meta$ || {}, ctx.meta$)
-        //Is only passed by msg
+      //Is only passed by msg
       ctx.delegate$ = pattern.delegate$ || {}
 
       //Tracing
@@ -194,6 +194,10 @@ class Hemera extends EventEmitter {
 
     this._extensions.onServerPreRequest.subscribe(function (next) {
 
+      let ctx = this
+
+      ctx.emit('onServerPreRequest', ctx)
+
       next()
 
     })
@@ -201,24 +205,8 @@ class Hemera extends EventEmitter {
     this._extensions.onServerPreResponse.subscribe(function (next) {
 
       let ctx = this
-      let result = this._response
-
-      let message = {
-        meta$: ctx.meta$ || {},
-        trace$: ctx.trace$ || {},
-        request$: ctx.request$,
-        result: result instanceof Error ? null : result,
-        error: result instanceof Error ? Errio.stringify(result) : null
-      }
-
-      let endTime = Util.nowHrTime()
-      message.request$.duration = endTime - message.request$.timestamp
-      message.trace$.duration = endTime - message.request$.timestamp
-
-      ctx._message = message
 
       ctx.emit('onServerPreResponse', ctx)
-
       next()
 
     })
@@ -264,27 +252,26 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   get topics() {
-
     return this._topics
   }
-    /**
-     *
-     *
-     * @param {any} type
-     * @param {any} handler
-     *
-     * @memberOf Hemera
-     */
+  /**
+   *
+   *
+   * @param {any} type
+   * @param {any} handler
+   *
+   * @memberOf Hemera
+   */
   ext(type, handler) {
 
     this._extensions[type].subscribe(handler)
 
   }
-  /**
-   * @param {any} plugin
-   *
-   * @memberOf Hemera
-   */
+    /**
+     * @param {any} plugin
+     *
+     * @memberOf Hemera
+     */
   use(params) {
 
     if (this._plugins[params.attributes.name]) {
@@ -367,23 +354,53 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
+  _buildMessage() {
+
+    let result = this._response
+
+    let message = {
+      meta$: this.meta$ || {},
+      trace$: this.trace$ || {},
+      request$: this.request$,
+      result: result instanceof Error ? null : result,
+      error: result instanceof Error ? Errio.stringify(result) : null
+    }
+
+    let endTime = Util.nowHrTime()
+    message.request$.duration = endTime - message.request$.timestamp
+    message.trace$.duration = endTime - message.request$.timestamp
+
+    this._message = message
+
+  }
+  /**
+   *
+   *
+   *
+   * @memberOf Hemera
+   */
   reply() {
 
     let self = this;
 
-    if (self._response instanceof Error) {
-
-      self.log.error(self._response)
-    }
-
     self._extensions.onServerPreResponse.invoke(self, function (err) {
 
-      if (err) {
+      //check if an error was already catched
+      if (self._response instanceof Error) {
+
+        self.log.error(self._response)
+        self._buildMessage()
+      }
+      //Check for an extension error
+      else if (err) {
 
         let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+        self._response = error
+        self.log.error(self._response)
+        self._buildMessage()
+      } else {
 
-        self.log.error(error)
-        throw (error)
+        self._buildMessage()
       }
 
       const msg = Util.stringifyJSON(self._message)
@@ -447,7 +464,10 @@ class Hemera extends EventEmitter {
           let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
 
           self.log.error(error)
-          throw (error)
+          self._response = error
+
+          //Send message
+          return self.reply()
         }
 
         //Invalid payload
@@ -643,7 +663,12 @@ class Hemera extends EventEmitter {
         let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
 
         self.log.error(error)
-        throw (error)
+
+        if (typeof cb === 'function') {
+          return cb.call(self, error)
+        }
+
+        return
       }
 
       //Encode msg to JSON
@@ -666,7 +691,6 @@ class Hemera extends EventEmitter {
             self.log.error(error)
 
             if (typeof cb === 'function') {
-
               return cb.call(self, error)
             }
           }
@@ -679,7 +703,12 @@ class Hemera extends EventEmitter {
               let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
 
               self.log.error(error)
-              throw (error)
+
+              if (typeof cb === 'function') {
+                return cb.call(self, error)
+              }
+
+              return
             }
 
             if (typeof cb === 'function') {

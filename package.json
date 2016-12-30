@@ -36,7 +36,7 @@
     "clean": "lerna clean",
     "release": "lerna publish -i",
     "ci": "npm run setup",
-    "test": "nyc mocha -t 5000 --recursive",
+    "test": "lerna run build && nyc mocha -t 5000 --recursive",
     "coverage": "npm run test && nyc report --reporter=html",
     "coveralls": "npm run test && nyc report --reporter=text-lcov | coveralls"
   },

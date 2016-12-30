@@ -837,6 +837,87 @@ describe('Plugin interface', function () {
     })
   })
 
+  it('Should be able to get a map of registered plugins', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+
+      let pluginOptions = {
+        a: '1'
+      }
+
+      //Plugin
+      let plugin1 = function (options) {
+
+        let hemera = this
+
+        expect(options.a).to.be.equals('1')
+
+        hemera.add({
+          topic: 'math',
+          cmd: 'add'
+        }, (resp, cb) => {
+
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        })
+
+      }
+
+      hemera.use({
+        plugin: plugin1,
+        attributes: {
+          name: 'myPlugin1'
+        },
+        options: pluginOptions
+      })
+
+      //Plugin
+      let plugin2 = function (options) {
+
+        let hemera = this
+
+        expect(options.a).to.be.equals('1')
+
+        hemera.add({
+          topic: 'math',
+          cmd: 'add2'
+        }, (resp, cb) => {
+
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        })
+
+      }
+
+      hemera.use({
+        plugin: plugin2,
+        attributes: {
+          name: 'myPlugin2'
+        },
+        options: pluginOptions
+      })
+
+      expect(hemera.plugins).to.be.equals({
+        myPlugin1: {
+          name: 'myPlugin1'
+        },
+        myPlugin2: {
+          name: 'myPlugin2'
+        }
+      })
+
+      hemera.close()
+      done()
+
+    })
+  })
+
   it('Should be able to check duplicate registered plugins', function (done) {
 
     const nats = require('nats').connect(authUrl)
@@ -1400,6 +1481,250 @@ describe('Broadcasting', function () {
         hemera.close()
         done()
       })
+    })
+  })
+
+})
+
+describe('Extension error', function () {
+
+  var PORT = 6242
+  var flags = ['--user', 'derek', '--pass', 'foobar']
+  var authUrl = 'nats://derek:foobar@localhost:' + PORT
+  var noAuthUrl = 'nats://localhost:' + PORT
+  var server
+
+  // Start up our own nats-server
+  before(function (done) {
+    server = HemeraTestsuite.start_server(PORT, flags, done)
+  })
+
+  // Shutdown our server after we are done
+  after(function () {
+    server.kill()
+  })
+
+  it('onClientPostRequest', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.ready(() => {
+
+      let plugin = function (options) {
+
+        let hemera = this
+
+        hemera._extensions.onClientPostRequest.subscribe(function (next) {
+
+          next(new Error('test'))
+        })
+
+        hemera.add({
+          cmd: 'add',
+          topic: 'math'
+        }, (resp, cb) => {
+
+          cb(null, resp.a + resp.b)
+        })
+
+      }
+
+      hemera.use({
+        plugin: plugin,
+        attributes: {
+          name: 'myPlugin'
+        },
+        options: {}
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, (err, resp) => {
+
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals('Extension error')
+        expect(err.cause.name).to.be.equals('Error')
+        expect(err.cause.message).to.be.equals('test')
+        hemera.close()
+        done()
+      })
+
+    })
+  })
+
+  it('onClientPreRequest', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.ready(() => {
+
+      let plugin = function (options) {
+
+        let hemera = this
+
+        hemera._extensions.onClientPreRequest.subscribe(function (next) {
+
+          next(new Error('test'))
+        })
+
+        hemera.add({
+          cmd: 'add',
+          topic: 'math'
+        }, (resp, cb) => {
+
+          cb(null, resp.a + resp.b)
+        })
+
+      }
+
+      hemera.use({
+        plugin: plugin,
+        attributes: {
+          name: 'myPlugin'
+        },
+        options: {}
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, (err, resp) => {
+
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals('Extension error')
+        expect(err.cause.name).to.be.equals('Error')
+        expect(err.cause.message).to.be.equals('test')
+        hemera.close()
+        done()
+      })
+
+    })
+  })
+
+  it('onServerPreRequest', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.ready(() => {
+
+      let plugin = function (options) {
+
+        let hemera = this
+
+        hemera._extensions.onServerPreRequest.subscribe(function (next) {
+
+          next(new Error('test'))
+        })
+
+        hemera.add({
+          cmd: 'add',
+          topic: 'math'
+        }, (resp, cb) => {
+
+          cb(null, resp.a + resp.b)
+        })
+
+      }
+
+      hemera.use({
+        plugin: plugin,
+        attributes: {
+          name: 'myPlugin'
+        },
+        options: {}
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, (err, resp) => {
+
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals('Extension error')
+        expect(err.cause.name).to.be.equals('Error')
+        expect(err.cause.message).to.be.equals('test')
+        hemera.close()
+        done()
+      })
+
+    })
+  })
+
+  it('onServerPreResponse', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.ready(() => {
+
+      let plugin = function (options) {
+
+        let hemera = this
+
+        hemera._extensions.onServerPreResponse.subscribe(function (next) {
+
+          next(new Error('test'))
+        })
+
+        hemera.add({
+          cmd: 'add',
+          topic: 'math'
+        }, (resp, cb) => {
+
+          cb(null, resp.a + resp.b)
+        })
+
+      }
+
+      hemera.use({
+        plugin: plugin,
+        attributes: {
+          name: 'myPlugin'
+        },
+        options: {}
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, (err, resp) => {
+
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals('Extension error')
+        expect(err.cause.name).to.be.equals('Error')
+        expect(err.cause.message).to.be.equals('test')
+        hemera.close()
+        done()
+      })
+
     })
   })
 
