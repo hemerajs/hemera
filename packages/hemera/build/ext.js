@@ -1,4 +1,4 @@
-//      
+// 
 
 /*!
  * hemera
@@ -15,10 +15,10 @@ const Items = require('items')
  */
 class Ext {
 
-                            
-                
+  
+  
 
-  constructor(type        ) {
+  constructor(type) {
 
     this._handler = []
     this._type = type
@@ -30,7 +30,7 @@ class Ext {
    *
    * @memberOf Ext
    */
-  subscribe(handler          ) {
+  subscribe(handler) {
 
     this._handler.push(handler)
 
@@ -42,7 +42,7 @@ class Ext {
    *
    * @memberOf Ext
    */
-  invoke(ctx     , cb          ) {
+  invoke(ctx, cb) {
 
     const each = (ext, next) => {
 
