@@ -51,10 +51,10 @@ class Hemera extends EventEmitter {
   _config: Config;
   _catalog: any;
   _transport: Nats;
-  _topics: {[id:string]: boolean};
-  _plugins: {[id:string]: Plugin};
+  _topics: {[id: string]: boolean};
+  _plugins: {[id: string]: Plugin};
 
-  _extensions: {[id:string]: Ext};
+  _extensions: {[id: string]: Ext};
   _shouldCrash: boolean;
   _replyTo: string;
   _request: any;
@@ -233,7 +233,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  get plugins() : {[id:string]: any} {
+  get plugins(): {[id: string]: any} {
 
     return this._plugins
   }
@@ -243,7 +243,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  get catalog() : any {
+  get catalog(): any {
 
     return this._catalog
   }
@@ -253,7 +253,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  get transport() : Nats {
+  get transport(): Nats {
 
     return this._transport
   }
@@ -263,10 +263,10 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  get topics() : {[id:string]: any} {
+  get topics(): {[id: string]: any} {
 
-      return this._topics
-    }
+    return this._topics
+  }
     /**
      *
      *
@@ -275,7 +275,7 @@ class Hemera extends EventEmitter {
      *
      * @memberOf Hemera
      */
-  ext(type: string, handler: Function) : void {
+  ext(type: string, handler: Function): void {
 
     this._extensions[type].subscribe(handler)
 
@@ -542,7 +542,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  add(pattern: {[id:string]: any}, cb: Function) {
+  add(pattern: {[id: string]: any}, cb: Function) {
 
     //Topic is needed to subscribe on a subject in NATS
     if (!pattern.topic) {
@@ -613,7 +613,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  act(pattern: {[id:string]: number}, cb: Function) {
+  act(pattern: {[id: string]: number}, cb: Function) {
 
     //Topic is needed to subscribe on a subject in NATS
     if (!pattern.topic) {
@@ -731,7 +731,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  handleTimeout(sid: number, pattern: {[id:string]: number}, cb: Function) {
+  handleTimeout(sid: number, pattern: {[id: string]: number}, cb: Function) {
 
     //Handle timeout
     this.timeout(sid, pattern.timeout$ || this._config.timeout, 1, () => {

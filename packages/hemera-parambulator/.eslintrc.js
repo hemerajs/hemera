@@ -1,4 +1,5 @@
 module.exports = {
+  "parser": "babel-eslint",
   "env": {
     "es6": true,
     "node": true
@@ -9,8 +10,8 @@ module.exports = {
   },
   // see http://eslint.org/docs/rules/
   "rules": {
-    "indent": [ "error", 2 ],
-    "quotes": [ "error", "single" ],
+    "indent": ["error", 2],
+    "quotes": ["error", "single"],
     //"semi": [ "warn", "never"]
   }
 };
