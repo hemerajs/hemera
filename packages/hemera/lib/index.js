@@ -802,7 +802,8 @@ class Hemera extends EventEmitter {
 
   /**
    * @returns
-   *
+   * OLOO (objects-linked-to-other-objects) is a code style which creates and relates objects directly without the abstraction of classes. OLOO quite naturally * implements [[Prototype]]-based behavior delegation.
+   * More details: {@link https://github.com/getify/You-Dont-Know-JS/blob/master/this%20%26%20object%20prototypes/ch6.md}
    * @memberOf Hemera
    */
   createContext() {
