@@ -74,6 +74,7 @@ hemera.ready(() => {
 
   Your AQL query
 
+
 #### topic:arango-store,cmd:aql,type:all
 
  Execute AQL Query and return all matched results
