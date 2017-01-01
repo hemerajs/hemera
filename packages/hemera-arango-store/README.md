@@ -2,7 +2,7 @@
 
 This is a plugin to use [Arangodb](https://github.com/arangodb) with Hemera.
 
-Execute any AQL query from anywhere. For more details of [ArangoDB Query Language](https://www.arangodb.com/why-arangodb/sql-aql-comparison/)
+Execute any AQL query from anywhere. For more details [ArangoDB Query Language](https://www.arangodb.com/why-arangodb/sql-aql-comparison/)
 
 #### Example
 
