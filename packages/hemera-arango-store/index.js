@@ -2,7 +2,7 @@
 
 const Arangojs = require('arangojs')
 
-exports.plugin = function hemeraArango(options) {
+exports.plugin = function hemeraArangoStore(options) {
 
   const hemera = this
 
@@ -67,5 +67,5 @@ exports.options = {
 }
 
 exports.attributes = {
-  name: 'hemera-arango'
+  name: 'hemera-arango-store'
 }

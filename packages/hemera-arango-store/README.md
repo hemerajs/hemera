@@ -1,4 +1,4 @@
-# Hemera-arango package
+# Hemera-arango-store package
 
 This is a plugin to use [Arangodb](https://github.com/arangodb) with Hemera.
 
