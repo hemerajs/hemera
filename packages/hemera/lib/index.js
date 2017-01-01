@@ -26,7 +26,7 @@ const
   Util = require('./util'),
   DefaultLogger = require('./logger')
 
-//Config
+// config
 var defaultConfig: Config = {
   timeout: 2000,
   debug: false,
@@ -75,7 +75,7 @@ class Hemera extends EventEmitter {
     this._topics = {}
     this._plugins = {}
 
-    //Special variables for act and add
+    // special variables for act and add
     this.context$ = {}
     this.meta$ = {}
     this.delegate$ = {}
@@ -88,7 +88,7 @@ class Hemera extends EventEmitter {
       id: ''
     }
 
-    //Define extension points
+    // define extension points
     this._extensions = {
       onClientPreRequest: new Ext('onClientPreRequest'),
       onClientPostRequest: new Ext('onClientPostRequest'),
@@ -108,15 +108,15 @@ class Hemera extends EventEmitter {
       let cleanPattern = this._cleanPattern
       let ctx: Hemera = this
 
-      //Shared context
+      // shared context
       ctx.context$ = pattern.context$ || prevCtx.context$
 
-      //Set metadata by passed pattern or current message context
+      // set metadata by passed pattern or current message context
       ctx.meta$ = Hoek.merge(pattern.meta$ || {}, ctx.meta$)
-      //Is only passed by msg
+      // is only passed by msg
       ctx.delegate$ = pattern.delegate$ || {}
 
-      //Tracing
+      // tracing
       ctx.trace$ = pattern.trace$ || {}
       ctx.trace$.parentSpanId = prevCtx.trace$.spanId
       ctx.trace$.traceId = prevCtx.trace$.traceId || Util.randomId()
@@ -125,7 +125,7 @@ class Hemera extends EventEmitter {
       ctx.trace$.service = pattern.topic
       ctx.trace$.method = Util.pattern(pattern)
 
-      //Request
+      // request
       let request: Request = {
         id: pattern.requestId$ || Util.randomId(),
         parentId: ctx.request$.id,
@@ -133,7 +133,7 @@ class Hemera extends EventEmitter {
         duration: 0
       }
 
-      //Build msg
+      // build msg
       let message: ActMessage = {
         pattern: cleanPattern,
         meta$: ctx.meta$,
@@ -157,7 +157,7 @@ class Hemera extends EventEmitter {
       let pattern: Pattern = this._pattern
       let msg = ctx._response.value
 
-      //Pass to act context
+      // pass to act context
       ctx.request$ = msg.request$ || {}
       ctx.request$.service = pattern.topic
       ctx.request$.method = Util.pattern(pattern)
@@ -267,11 +267,11 @@ class Hemera extends EventEmitter {
     this._extensions[type].subscribe(handler)
 
   }
-    /**
-     * @param {any} plugin
-     *
-     * @memberOf Hemera
-     */
+  /**
+   * @param {any} plugin
+   *
+   * @memberOf Hemera
+   */
   use(params: PluginDefinition) {
 
     if (this._plugins[params.attributes.name]) {
@@ -282,7 +282,7 @@ class Hemera extends EventEmitter {
       throw (error)
     }
 
-    //Create new execution context
+    // create new execution context
     let ctx = this.createContext()
     ctx.plugin$ = params.attributes
     params.plugin.call(ctx, params.options)
@@ -385,13 +385,13 @@ class Hemera extends EventEmitter {
 
     self._extensions.onServerPreResponse.invoke(self, function (err) {
 
-      //check if an error was already catched
+      // check if an error was already catched
       if (self._response instanceof Error) {
 
         self.log.error(self._response)
         self._buildMessage()
       }
-      //Check for an extension error
+      // check for an extension error
       else if (err) {
 
         let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
@@ -405,12 +405,13 @@ class Hemera extends EventEmitter {
 
       const msg = Util.stringifyJSON(self._message)
 
+      // indicate that an error occurs and that the program should exit
       if (self._shouldCrash) {
 
-        //Send error back to callee
+        // send error back to callee
         return self.send(self._replyTo, msg, () => {
 
-          //let it crash
+          // let it crash
           if (self._config.crashOnFatal) {
 
             self.fatal()
@@ -435,18 +436,18 @@ class Hemera extends EventEmitter {
 
     let self: Hemera = this
 
-    //Avoid duplicate subscribers of the emit stream
-    //We use one subscriber per topic
+    // avoid duplicate subscribers of the emit stream
+    // we use one subscriber per topic
     if (self._topics[topic]) {
       return
     }
 
-    //Queue group names allow load balancing of services
+    // queue group names allow load balancing of services
     self.transport.subscribe(topic, {
       'queue': 'queue.' + topic
     }, (request: any, replyTo: string) => {
 
-      //Create new execution context
+      // create new execution context
       let ctx = this.createContext()
       ctx._shouldCrash = false
       ctx._replyTo = replyTo
@@ -466,11 +467,11 @@ class Hemera extends EventEmitter {
           self.log.error(error)
           self._response = error
 
-          //Send message
+          // send message
           return self.reply()
         }
 
-        //Invalid payload
+        // invalid payload
         if (self._request.error) {
 
           let error = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR, {
@@ -483,10 +484,10 @@ class Hemera extends EventEmitter {
         self._pattern = self._request.value.pattern
         self._actMeta = self._catalog.lookup(self._pattern)
 
-        //Check if a handler is registered with this pattern
+        // check if a handler is registered with this pattern
         if (self._actMeta) {
 
-          //Extension point 'onServerPreHandler'
+          // extension point 'onServerPreHandler'
           self._extensions.onServerPreHandler.invoke(ctx, function (err: Error) {
 
             if (err) {
@@ -495,7 +496,7 @@ class Hemera extends EventEmitter {
 
               self.log.error(self._response)
 
-              //Send message
+              // send message
               return self.reply()
             }
 
@@ -503,7 +504,7 @@ class Hemera extends EventEmitter {
 
               let action = self._actMeta.action.bind(self)
 
-              //Call action
+              // call action
               action(self._request.value.pattern, (err: Error, resp) => {
 
                 if (err) {
@@ -517,7 +518,7 @@ class Hemera extends EventEmitter {
 
                 self._response = resp
 
-                //Send message
+                // send message
                 self.reply()
               })
 
@@ -544,7 +545,7 @@ class Hemera extends EventEmitter {
             pattern: self._pattern
           })
 
-          //Send error back to callee
+          // send error back to callee
           self.reply()
         }
 
@@ -566,7 +567,7 @@ class Hemera extends EventEmitter {
     [id: string]: any
   }, cb: Function) {
 
-    //Topic is needed to subscribe on a subject in NATS
+    // topic is needed to subscribe on a subject in NATS
     if (!pattern.topic) {
 
       let error = new Errors.HemeraError(Constants.NO_TOPIC_TO_SUBSCRIBE, {
@@ -591,7 +592,7 @@ class Hemera extends EventEmitter {
 
     let schema = {}
 
-    //Remove objects (rules) from pattern
+    // remove objects (rules) from pattern
     _.each(pattern, function (v: string, k: any) {
 
       if (_.isObject(v)) {
@@ -600,7 +601,7 @@ class Hemera extends EventEmitter {
       }
     })
 
-    //Create message object which represent the object behind the matched pattern
+    // create message object which represent the object behind the matched pattern
     let actMeta: ActMeta = {
       schema: schema,
       pattern: origPattern,
@@ -609,7 +610,7 @@ class Hemera extends EventEmitter {
 
     let handler = this._catalog.lookup(origPattern)
 
-    //Check if pattern is already registered
+    // check if pattern is already registered
     if (handler) {
 
       let error = new Errors.HemeraError(Constants.PATTERN_ALREADY_IN_USE, {
@@ -620,12 +621,12 @@ class Hemera extends EventEmitter {
       throw (error)
     }
 
-    //Add to bloomrun
+    // add to bloomrun
     this._catalog.add(origPattern, actMeta)
 
     this.log.info(origPattern, Constants.ADD_ADDED)
 
-    //Subscribe on topic
+    // subscribe on topic
     this.subscribe(pattern.topic)
   }
 
@@ -639,7 +640,7 @@ class Hemera extends EventEmitter {
     [id: string]: number
   }, cb: Function) {
 
-    //Topic is needed to subscribe on a subject in NATS
+    // topic is needed to subscribe on a subject in NATS
     if (!pattern.topic) {
 
       let error = new Errors.HemeraError(Constants.NO_TOPIC_TO_REQUEST, {
@@ -650,7 +651,7 @@ class Hemera extends EventEmitter {
       throw (error)
     }
 
-    //Create new execution context
+    // create new execution context
     let ctx = this.createContext()
     ctx._pattern = pattern
     ctx._prevContext = this
@@ -675,17 +676,17 @@ class Hemera extends EventEmitter {
         return
       }
 
-      //Encode msg to JSON
+      // encode msg to JSON
       self._request = Util.stringifyJSON(self._message)
 
-      //Send request
+      // send request
       let sid = self.sendRequest(pattern.topic, self._request, (response: any) => {
 
         self._response = Util.parseJSON(response)
 
         try {
 
-          //If payload is invalid
+          // if payload is invalid
           if (self._response.error) {
 
             let error = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR, {
@@ -699,7 +700,7 @@ class Hemera extends EventEmitter {
             }
           }
 
-          //Extension point 'onClientPostRequest'
+          // extension point 'onClientPostRequest'
           self._extensions.onClientPostRequest.invoke(ctx, function (err: Error) {
 
             if (err) {
@@ -725,7 +726,7 @@ class Hemera extends EventEmitter {
 
                 self.log.error(error)
 
-                //Error is already wrapped
+                // error is already wrapped
                 return cb.call(self, Errio.parse(self._response.value.error))
               }
 
@@ -742,7 +743,7 @@ class Hemera extends EventEmitter {
 
           self.log.fatal(error)
 
-          //Let it crash
+          // let it crash
           if (self._config.crashOnFatal) {
 
             self.fatal()
@@ -750,7 +751,7 @@ class Hemera extends EventEmitter {
         }
       })
 
-      //Handle timeout
+      // handle timeout
       self.handleTimeout(sid, pattern, cb)
 
     })
@@ -768,7 +769,7 @@ class Hemera extends EventEmitter {
     [id: string]: number
   }, cb: Function) {
 
-    //Handle timeout
+    // handle timeout
     this.timeout(sid, pattern.timeout$ || this._config.timeout, 1, () => {
 
       let error = new Errors.TimeoutError(Constants.ACT_TIMEOUT_ERROR, {
@@ -790,7 +791,7 @@ class Hemera extends EventEmitter {
 
           this.log.fatal(error)
 
-          //Let it crash
+          // let it crash
           if (this._config.crashOnFatal) {
 
             this.fatal()
@@ -810,8 +811,8 @@ class Hemera extends EventEmitter {
 
     var self = this
 
-    //Create new instance of hemera but with pointer on the previous propertys
-    //So we are able to create a scope per act without lossing the reference to the core api.
+    // create new instance of hemera but with pointer on the previous propertys
+    // so we are able to create a scope per act without lossing the reference to the core api.
     var ctx: Hemera = Object.create(self)
 
     return ctx
