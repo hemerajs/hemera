@@ -23,14 +23,15 @@ hemera.ready(() => {
 
     let userId = 1
 
-    //Visible in zipkin ui
+    // visible in zipkin ui
     this.delegate$.query = 'SELECT FROM User;'
 
     this.act({
       topic: 'email',
       cmd: 'send',
       email: resp.email,
-      message: 'Welcome!'
+      message: 'Welcome!',
+      delegate$: { info: 'bar' } // visible in zipkin ui
     }, function (err, resp) {
 
       this.act({
@@ -69,7 +70,7 @@ hemera.ready(() => {
     cmd: 'signup',
     email: 'peter@gmail.com',
     password: '1234',
-    delegate$: { foo: 'bar' }
+    delegate$: { foo: 'bar' } // visible in zipkin ui
   }, function (err, resp) {
 
     this.log.info('Finished', resp)
