@@ -12,6 +12,18 @@ A [Node.js](http://nodejs.org/) microservices toolkit for the [NATS messaging sy
 - __Status:__ Release Candidate
 - __Website:__ https://hemerajs.github.io/hemera-site/
 
+## Packages
+
+The `mu` repo is managed as a monorepo, composed of multiple npm packages.
+
+| Package | Version |
+|--------|-------|
+| nats-hemera | [![npm](https://img.shields.io/npm/v/nats-hemera.svg?maxAge=2592000)](https://www.npmjs.com/package/nats-hemera)
+| hemera-joi | [![npm](https://img.shields.io/npm/v/hemera-joi.svg?maxAge=2592000)](https://www.npmjs.com/package/hemera-joi)
+| hemera-parambulator | [![npm](https://img.shields.io/npm/v/hemera-parambulator.svg?maxAge=2592000)](https://www.npmjs.com/package/hemera-parambulator)
+| hemera-arango-store | [![npm](https://img.shields.io/npm/v/hemera-arango-store.svg?maxAge=2592000)](https://www.npmjs.com/package/hemera-arango-store)
+| hemera-zipkin | [![npm](https://img.shields.io/npm/v/hemera-zipkin.svg?maxAge=2592000)](https://www.npmjs.com/package/hemera-zipkin)
+
 ## 📓 Getting Started
 
 Hemera is a small wrapper around the NATS driver. We want to provide a toolkit to develop micro services in an easy and powerful way. We use bloom filters to provide a pattern matching RPC style. You don't have to worry about the transport. NATS is powerful.
