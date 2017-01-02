@@ -64,7 +64,7 @@ exports.plugin = function hemeraArangoStore(options) {
 
     db.query(req.query, req.variables).then((cursor) => {
 
-      return cursor.all()
+      return cursor.next()
 
     })
     .then(value => {

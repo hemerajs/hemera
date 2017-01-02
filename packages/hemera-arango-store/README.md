@@ -114,3 +114,33 @@ Create a new collection
 * **databaseName**: `string` (Default: `""`)
 
   The database to use against the query.
+
+#### topic:arango-store,cmd:createDatabase
+
+Create a new database
+
+**Arguments**
+
+* **name**: `string`
+
+  The name of the database
+
+* **users**: `Array<Object>` (optional)
+
+  If specified, the array must contain objects with the following properties:
+
+  * **username**: `string`
+
+    The username of the user to create for the database.
+
+  * **passwd**: `string` (Default: empty)
+
+    The password of the user.
+
+  * **active**: `boolean` (Default: `true`)
+
+    Whether the user is active.
+
+  * **extra**: `Object` (optional)
+
+    An object containing additional user data.
