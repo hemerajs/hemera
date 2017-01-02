@@ -54,6 +54,7 @@ class Hemera extends EventEmitter {
   _topics: { [id: string]: boolean };
   _plugins: { [id: string]: Plugin };
 
+  _exposition: any;
   _extensions: { [id: string]: Ext };
   _shouldCrash: boolean;
   _replyTo: string;
@@ -74,8 +75,9 @@ class Hemera extends EventEmitter {
     this._transport = transport
     this._topics = {}
     this._plugins = {}
+    this._exposition = {}
 
-    // special variables for act and add
+    // special variables for new execution context
     this.context$ = {}
     this.meta$ = {}
     this.delegate$ = {}
@@ -237,6 +239,39 @@ class Hemera extends EventEmitter {
   }
 
   /**
+   *
+   *
+   * @readonly
+   * @type {Exposition}
+   * @memberOf Hemera
+   */
+  get exposition(): any {
+
+    return this._exposition
+  }
+
+  /**
+   *
+   *
+   * @param {string} key
+   * @param {mixed} object
+   *
+   * @memberOf Hemera
+   */
+  expose(key: string, object: mixed) {
+
+    if (!this.exposition[key]) {
+
+      this.exposition[key] = object
+    } else {
+
+      this.log.warn(Constants.EXPOSITION_OVERWRITE)
+      this.exposition[key] = object
+    }
+
+  }
+
+  /**
    * @readonly
    *
    * @memberOf Hemera
@@ -284,11 +319,11 @@ class Hemera extends EventEmitter {
 
     // create new execution context
     let ctx = this.createContext()
-    ctx.plugin$ = params.attributes
+    ctx.plugin$.attributes = params.attributes
     params.plugin.call(ctx, params.options)
 
     this.log.info(params.attributes.name, Constants.PLUGIN_ADDED)
-    this._plugins[params.attributes.name] = ctx.plugin$
+    this._plugins[params.attributes.name] = ctx.plugin$.attributes
 
   }
 

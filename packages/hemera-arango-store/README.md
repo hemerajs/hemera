@@ -4,6 +4,10 @@ This is a plugin to use [Arangodb](https://github.com/arangodb) with Hemera.
 
 Execute any AQL query from anywhere. For more details [ArangoDB Query Language](https://www.arangodb.com/why-arangodb/sql-aql-comparison/)
 
+### Start Arangodb with Docker
+
+`docker run -e ARANGO_NO_AUTH=1 -d --name arangodb-instance -d arangodb -p 8529:8529`
+
 #### Example
 
 ```js
@@ -24,8 +28,9 @@ const hemera = new Hemera(nats, {
 hemera.use(hemeraArango)
 
 hemera.ready(() => {
-  
-  // return all users
+
+  let aql = hemera.exposition.aqlTemplate
+
   hemera.act({
     topic: 'arango-store',
     cmd: 'aql',
@@ -39,17 +44,15 @@ hemera.ready(() => {
     this.log.info(resp, 'Query result')
   })
 
-  // create new user from plain JSON
+  const user = {
+    name: 'olaf'
+  }
+
   hemera.act({
     topic: 'arango-store',
     cmd: 'aql',
     type: 'one',
-    variables: {
-      user: {
-        name: 'olaf'
-      }
-    },
-    query: `INSERT @user INTO users`
+    query: aql`INSERT ${user} INTO users`
   }, function (err, resp) {
 
     this.log.info(resp, 'Query result')
@@ -70,6 +73,10 @@ hemera.ready(() => {
 
   The template variables for your AQL query.
 
+* **databaseName**: `string` (Default: `""`)
+
+  The database to use against the query.
+
 * **query**: `string` (Default: `""`)
 
   Your AQL query
@@ -84,6 +91,10 @@ hemera.ready(() => {
 * **variables**: `object` (Default: `undefined`)
 
   The template variables for your AQL query.
+
+* **databaseName**: `string` (Default: `""`)
+
+  The database to use against the query.
 
 * **query**: `string` (Default: `""`)
 

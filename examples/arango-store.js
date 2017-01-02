@@ -15,7 +15,9 @@ const hemera = new Hemera(nats, {
 hemera.use(hemeraArango)
 
 hemera.ready(() => {
-  
+
+  let aql = hemera.exposition.aqlTemplate
+
   hemera.act({
     topic: 'arango-store',
     cmd: 'aql',
@@ -29,16 +31,15 @@ hemera.ready(() => {
     this.log.info(resp, 'Query result')
   })
 
+  const user = {
+    name: 'olaf'
+  }
+
   hemera.act({
     topic: 'arango-store',
     cmd: 'aql',
     type: 'one',
-    variables: {
-      user: {
-        name: 'olaf'
-      }
-    },
-    query: `INSERT @user INTO users`
+    query: aql`INSERT ${user} INTO users`
   }, function (err, resp) {
 
     this.log.info(resp, 'Query result')

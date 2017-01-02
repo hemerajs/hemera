@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint index.js"
   },
   "author": "Dustin Deus (https://github.com/StarpTech)",

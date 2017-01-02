@@ -8,11 +8,17 @@ exports.plugin = function hemeraArangoStore(options) {
 
   let db = Arangojs(options.arango)
 
+  hemera.expose('aqlTemplate', Arangojs.aql)
+
   hemera.add({
     topic: 'arango-store',
     type: 'one',
     cmd: 'aql'
   }, function (req, cb) {
+
+    if (req.databaseName) {
+      db.useDatabase(req.databaseName)
+    }
 
     db.query(req.query, req.variables).then((cursor) => {
 
@@ -39,6 +45,10 @@ exports.plugin = function hemeraArangoStore(options) {
     type: 'all',
     cmd: 'aql'
   }, function (req, cb) {
+
+    if (req.databaseName) {
+      db.useDatabase(req.databaseName)
+    }
 
     db.query(req.query, req.variables).then((cursor) => {
 

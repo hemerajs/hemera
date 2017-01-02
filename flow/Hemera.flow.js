@@ -30,6 +30,10 @@ type Context = {
 };
 
 type Plugin = {
+  [x: string]: any
+};
+
+type Exposition = {
   [x: string]: any,
 };
 
