@@ -14,7 +14,7 @@ A [Node.js](http://nodejs.org/) microservices toolkit for the [NATS messaging sy
 
 ## Packages
 
-The `mu` repo is managed as a monorepo, composed of multiple npm packages.
+The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 
 | Package | Version |
 |--------|-------|
