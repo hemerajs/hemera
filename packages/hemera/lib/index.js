@@ -260,15 +260,20 @@ class Hemera extends EventEmitter {
    */
   expose(key: string, object: mixed) {
 
-    if (!this.exposition[key]) {
+    if (this.plugin$.attributes) {
 
-      this.exposition[key] = object
+      if (!this._exposition[this.plugin$.attributes.name]) {
+
+        this._exposition[this.plugin$.attributes.name] = {}
+        this._exposition[this.plugin$.attributes.name][key] = object
+      } else {
+
+        this._exposition[this.plugin$.attributes.name][key] = object
+      }
     } else {
 
-      this.log.warn(Constants.EXPOSITION_OVERWRITE)
-      this.exposition[key] = object
+      this._exposition[key] = object
     }
-
   }
 
   /**
@@ -319,6 +324,7 @@ class Hemera extends EventEmitter {
 
     // create new execution context
     let ctx = this.createContext()
+    ctx.plugin$ = {}
     ctx.plugin$.attributes = params.attributes
     params.plugin.call(ctx, params.options)
 

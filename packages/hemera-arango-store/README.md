@@ -29,11 +29,11 @@ hemera.use(hemeraArango)
 
 hemera.ready(() => {
 
-  let aql = hemera.exposition.aqlTemplate
+  let aql = hemera.exposition['hemera-arango-store'].aqlTemplate
 
   hemera.act({
     topic: 'arango-store',
-    cmd: 'aql',
+    cmd: 'executeAqlQuery',
     type: 'all',
     query: `
     FOR u IN users
@@ -50,7 +50,7 @@ hemera.ready(() => {
 
   hemera.act({
     topic: 'arango-store',
-    cmd: 'aql',
+    cmd: 'executeAqlQuery',
     type: 'one',
     query: aql`INSERT ${user} INTO users`
   }, function (err, resp) {
@@ -63,7 +63,7 @@ hemera.ready(() => {
 
 ## API
 
-#### topic:arango-store,cmd:aql,type:one
+#### topic:arango-store,cmd:executeAqlQuery,type:one
 
  Execute AQL Query and return the first result
 
@@ -82,7 +82,7 @@ hemera.ready(() => {
   Your AQL query
 
 
-#### topic:arango-store,cmd:aql,type:all
+#### topic:arango-store,cmd:executeAqlQuery,type:all
 
  Execute AQL Query and return all matched results
 
@@ -99,3 +99,18 @@ hemera.ready(() => {
 * **query**: `string` (Default: `""`)
 
   Your AQL query
+
+
+#### topic:arango-store,cmd:createCollection
+
+Create a new collection
+
+**Arguments**
+
+* **type**: `string` (Default: `""`)
+
+  The type of collection to create. `edge` or default.
+
+* **databaseName**: `string` (Default: `""`)
+
+  The database to use against the query.

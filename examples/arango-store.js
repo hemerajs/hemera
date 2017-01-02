@@ -16,11 +16,11 @@ hemera.use(hemeraArango)
 
 hemera.ready(() => {
 
-  let aql = hemera.exposition.aqlTemplate
+  let aql = hemera.exposition['hemera-arango-store'].aqlTemplate
 
   hemera.act({
     topic: 'arango-store',
-    cmd: 'aql',
+    cmd: 'executeAqlQuery',
     type: 'all',
     query: `
     FOR u IN users
@@ -37,7 +37,7 @@ hemera.ready(() => {
 
   hemera.act({
     topic: 'arango-store',
-    cmd: 'aql',
+    cmd: 'executeAqlQuery',
     type: 'one',
     query: aql`INSERT ${user} INTO users`
   }, function (err, resp) {
