@@ -25,7 +25,34 @@ exports.plugin = function hemeraArangoStore(options) {
     cmd: 'createDatabase'
   }, function (req, cb) {
 
-    db.createDatabase(req.name, req.users).create().then((res) => cb(null, res)).catch(cb)
+    db.createDatabase(req.name, req.users)
+      .create()
+      .then((res) => cb(null, res))
+      .catch(cb)
+
+  })
+
+  /**
+   * Execute a transaction
+   */
+  hemera.add({
+    topic: 'arango-store',
+    cmd: 'executeTransaction'
+  }, function (req, cb) {
+
+    switchDb(req.databaseName)
+
+    let action = String(req.action)
+
+    db.transaction(req.collections, action, req.params, req.lockTimeout)
+    .then(value => {
+
+      cb(null, value)
+    })
+    .catch((err) => {
+
+      cb(err)
+    })
 
   })
 
@@ -47,7 +74,9 @@ exports.plugin = function hemeraArangoStore(options) {
       collection = db.collection(req.name)
     }
 
-    collection.create().then((res) => cb(null, res)).catch(cb)
+    collection.create()
+      .then((res) => cb(null, res))
+      .catch(cb)
 
   })
 

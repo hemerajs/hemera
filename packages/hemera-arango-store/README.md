@@ -144,3 +144,41 @@ Create a new database
   * **extra**: `Object` (optional)
 
     An object containing additional user data.
+
+#### topic:arango-store,cmd:executeTransaction
+
+`async database.transaction(collections, action, [params,] [lockTimeout]): Object`
+
+Performs a server-side transaction and returns its return value.
+
+**Arguments**
+
+* **collections**: `Object`
+
+  An object with the following properties:
+
+  * **read**: `Array<string>` (optional)
+
+    An array of names (or a single name) of collections that will be read from during the transaction.
+
+  * **write**: `Array<string>` (optional)
+
+    An array of names (or a single name) of collections that will be written to or read from during the transaction.
+
+* **action**: `string`
+
+  A string evaluating to a JavaScript function to be executed on the server.
+
+* **params**: `Object` (optional)
+
+  Available as variable `params` when the *action* function is being executed on server. Check the example below.
+
+* **lockTimeout**: `number` (optional)
+
+  Determines how long the database will wait while attemping to gain locks on collections used by the transaction before timing out.
+
+If *collections* is an array or string, it will be treated as *collections.write*.
+
+Please note that while *action* should be a string evaluating to a well-formed JavaScript function, it's not possible to pass in a JavaScript function directly because the function needs to be evaluated on the server and will be transmitted in plain text.
+
+For more information on transactions, see [the HTTP API documentation for transactions](https://docs.arangodb.com/latest/HTTP/Transaction/index.html).
