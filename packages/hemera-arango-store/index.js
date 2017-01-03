@@ -49,10 +49,7 @@ exports.plugin = function hemeraArangoStore(options) {
 
       cb(null, value)
     })
-    .catch((err) => {
-
-      cb(err)
-    })
+    .catch(cb)
 
   })
 
@@ -100,10 +97,7 @@ exports.plugin = function hemeraArangoStore(options) {
 
       cb(null, value)
     })
-    .catch((err) => {
-
-      cb(err)
-    })
+    .catch(cb)
 
   })
 
@@ -127,10 +121,7 @@ exports.plugin = function hemeraArangoStore(options) {
 
       cb(null, value)
     })
-    .catch((err) => {
-
-      cb(err)
-    })
+    .catch(cb)
 
   })
 
