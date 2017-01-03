@@ -6,7 +6,9 @@ Execute any AQL query from anywhere. For more details [ArangoDB Query Language](
 
 ### Start Arangodb with Docker
 
-`docker run -e ARANGO_NO_AUTH=1 -d --name arangodb-instance -d arangodb -p 8529:8529`
+```js
+docker run -e ARANGO_NO_AUTH=1 -d --name arangodb-instance -d arangodb -p 8529:8529
+```
 
 #### Example
 
