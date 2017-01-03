@@ -396,6 +396,9 @@ hemera.act({ topic: 'math', cmd: 'add', a: '1' }, function (err, resp) {
 let myPlugin = function (options) {
 
   let hemera = this;
+  
+  //Expose data which you can access globally with hemera.exposition.<pluginName>.<property>
+  hemera.expose('magicNumber', 42)
 
   hemera.add({
     topic: 'math',
