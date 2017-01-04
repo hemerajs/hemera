@@ -5,6 +5,8 @@ exports.plugin = function myPlugin(options) {
 
   var hemera = this
 
+  hemera.expose('somethingToExpose', 4)
+
   hemera.add({
     topic: 'math',
     cmd: 'add'

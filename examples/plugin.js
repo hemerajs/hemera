@@ -24,6 +24,8 @@ const hemera = new Hemera(nats, {
 
 hemera.ready(() => {
 
+  hemera.expose('somethingToExpose', 4)
+
   hemera.use({
     plugin: myPlugin,
     attributes: {
