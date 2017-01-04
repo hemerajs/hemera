@@ -5,7 +5,7 @@ const Hemera = require('./../packages/hemera'),
   Code = require('code'),
   Async = require("async")
 
-const PORT = 6242
+const PORT = 6242;
 const flags = ['--user', 'derek', '--pass', 'foobar']
 const authUrl = 'nats://derek:foobar@localhost:' + PORT
 const noAuthUrl = 'nats://localhost:' + PORT
@@ -21,17 +21,14 @@ const server = nsc.start_server(PORT, flags, () => {
       cmd: 'add'
     }, (resp, cb) => {
 
-      setTimeout(() => {
-
-        cb(null, {
-          result: resp.a + resp.b
-        });
-
-      }, 1000)
+      cb(null, {
+        result: resp.a + resp.b
+      })
 
     })
 
     function act(cb) {
+
       hemera.act({
         topic: 'math',
         cmd: 'add',
@@ -40,34 +37,34 @@ const server = nsc.start_server(PORT, flags, () => {
       }, (err, resp) => {
 
         cb(err, resp)
-      })
+      });
     }
 
-    let t1 = new Date();
+    let t1 = new Date()
 
-    Async.parallel([
-        function (callback) {
-          act(callback)
-        },
-        function (callback) {
-          act(callback)
-        },
-        function (callback) {
-          act(callback)
-        },
-        function (callback) {
-          act(callback)
-        }
-      ],
-      // optional callback
-      function (err, results) {
+    let count = 0
+
+    Async.whilst(
+      function () {
+        return count < 5000
+      },
+      function (callback) {
+        count++
+
+        act(callback)
+      },
+      function (err, n) {
 
         let offset = ((new Date) - t1)
-        console.log(`Calls: ${4}, Measure: ${offset} ms, Average: ${offset/4} ms`)
+        console.log(`Calls: ${count}, Measure: ${offset} ms, Average: ${offset/count} ms`)
+
         hemera.close()
         server.kill()
-      });
+
+      }
+    )
 
   })
+
 
 })
