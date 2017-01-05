@@ -104,7 +104,7 @@ npm i nats-hemera
 ```js
 'use strict';
 
-const Hemera = require('hemera');
+const Hemera = require('nats-hemera');
 const nats = require('nats').connect(authUrl);
     
 const hemera = new Hemera(nats, { logLevel: 'info' });
