@@ -1,4 +1,6 @@
 # Hemera
+
+[![Join the chat at https://gitter.im/hemerajs/hemera](https://badges.gitter.im/hemerajs/hemera.svg)](https://gitter.im/hemerajs/hemera?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ![Hemera](https://github.com/StarpTech/hemera/raw/master/hemera.png)
 
 [![License MIT](https://img.shields.io/npm/l/express.svg)](http://opensource.org/licenses/MIT)
