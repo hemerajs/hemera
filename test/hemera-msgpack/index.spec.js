@@ -1,7 +1,7 @@
 'use strict'
 
 const Hemera = require('../../packages/hemera'),
-  HemeraZipkin = require('../../packages/hemera-zipkin'),
+  HemeraMsgpack = require('../../packages/hemera-msgpack'),
   Util = require('../../packages/hemera/build/util'),
   Code = require('code'),
   Sinon = require('sinon'),
@@ -11,9 +11,9 @@ const expect = Code.expect
 
 process.setMaxListeners(0);
 
-describe('Hemera-zipkin', function () {
+describe('Hemera-msgpack', function () {
 
-  var PORT = 6244
+  var PORT = 6243
   var flags = ['--user', 'derek', '--pass', 'foobar']
   var authUrl = 'nats://derek:foobar@localhost:' + PORT
   var noAuthUrl = 'nats://localhost:' + PORT
@@ -29,36 +29,36 @@ describe('Hemera-zipkin', function () {
     server.kill()
   })
 
-  it('Should be able to trace', function (done) {
+  it('encode and decode', function (done) {
 
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      crashOnFatal: false
+      crashOnFatal: false,
+      logLevel: 'silent'
     })
 
-    hemera.use(HemeraZipkin)
+    hemera.use(HemeraMsgpack)
 
     hemera.ready(() => {
 
       hemera.add({
-        topic: 'email',
-        cmd: 'send',
-        a: {
-          type$: 'number'
-        }
+        topic: 'math',
+        cmd: 'add'
       }, (resp, cb) => {
 
-        cb()
+        cb(null, resp.a + resp.b)
       })
 
       hemera.act({
-        topic: 'email',
-        cmd: 'send',
-        a: '1'
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
       }, (err, resp) => {
 
         expect(err).to.be.not.exists()
+        expect(resp).to.be.equals(3)
         hemera.close()
         done()
       })

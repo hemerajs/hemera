@@ -10,7 +10,7 @@ const expect = Code.expect
 
 process.setMaxListeners(0);
 
-describe('Basic', function () {
+describe('Hemera', function () {
 
   var PORT = 6242
   var flags = ['--user', 'derek', '--pass', 'foobar']
