@@ -1,4 +1,4 @@
-# Hemera-arango-store package
+# Hemera-msgpack package
 
 This is a plugin to use [Mspack](http://msgpack.org/index.html) with Hemera.
 
