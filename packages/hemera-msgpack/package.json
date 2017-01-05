@@ -1,0 +1,14 @@
+{
+  "name": "hemera-msgpack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint index.js"
+  },
+  "author": "Dustin Deus (https://github.com/StarpTech)",
+  "license": "MIT",
+  "dependencies": {
+    "msgpack5": "3.4.x"
+  }
+}

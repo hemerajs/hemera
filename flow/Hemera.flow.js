@@ -51,6 +51,14 @@ type Trace = {
   method?: string;
 };
 
+type Encoder = {
+  encode(): string;
+};
+
+type Decoder = {
+  decode(): string;
+};
+
 type Pattern = {
   meta$: any;
   trace$: Trace;

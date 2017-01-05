@@ -24,6 +24,8 @@ const
   Constants = require('./constants'),
   Ext = require('./ext'),
   Util = require('./util'),
+  DefaultEncoder = require('./encoder'),
+  DefaultDecoder = require('./decoder'),
   DefaultLogger = require('./logger')
 
 // config
@@ -66,6 +68,9 @@ class Hemera extends EventEmitter {
   
   
 
+  
+  
+
   constructor(transport, params) {
 
     super()
@@ -89,6 +94,9 @@ class Hemera extends EventEmitter {
       timestamp: 0,
       id: ''
     }
+
+    this._encoder = new DefaultEncoder
+    this._decoder = new DefaultDecoder
 
     // define extension points
     this._extensions = {
@@ -226,6 +234,28 @@ class Hemera extends EventEmitter {
   get plugins() {
 
     return this._plugins
+  }
+
+  /**
+   *
+   *
+   * @type {*}
+   * @memberOf Hemera
+   */
+  set decoder(decoder) {
+
+    this._decoder = decoder
+  }
+
+  /**
+   *
+   *
+   * @type {*}
+   * @memberOf Hemera
+   */
+  set encoder(encoder) {
+
+    this._encoder = encoder
   }
 
   /**
@@ -444,7 +474,7 @@ class Hemera extends EventEmitter {
         self._buildMessage()
       }
 
-      const msg = Util.stringifyJSON(self._message)
+      const msg = self._encoder.encode(self._message)
 
       // indicate that an error occurs and that the program should exit
       if (self._shouldCrash) {
@@ -492,7 +522,7 @@ class Hemera extends EventEmitter {
       let ctx = this.createContext()
       ctx._shouldCrash = false
       ctx._replyTo = replyTo
-      ctx._request = Util.parseJSON(request)
+      ctx._request = self._decoder.decode(request)
       ctx._pattern = {}
       ctx._actMeta = {}
 
@@ -714,12 +744,12 @@ class Hemera extends EventEmitter {
       }
 
       // encode msg to JSON
-      self._request = Util.stringifyJSON(self._message)
+      self._request = self._encoder.encode(self._message)
 
       // send request
       let sid = self.sendRequest(pattern.topic, self._request, (response) => {
 
-        self._response = Util.parseJSON(response)
+        self._response = self._decoder.decode(response)
 
         try {
 

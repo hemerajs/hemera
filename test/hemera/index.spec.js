@@ -454,7 +454,7 @@ describe('Error handling', function () {
       crashOnFatal: false
     })
 
-    var stub = Sinon.stub(Util, "parseJSON")
+    var stub = Sinon.stub(hemera._decoder, "decode")
 
     stub.returns({
       error: new Error('TEST')
@@ -506,7 +506,7 @@ describe('Error handling', function () {
         cb()
       })
 
-      var stub = Sinon.stub(Util, "parseJSON")
+      var stub = Sinon.stub(hemera._decoder, "decode")
 
       stub.onCall(1)
 
