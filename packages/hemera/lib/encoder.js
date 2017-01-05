@@ -12,7 +12,7 @@ const Util = require('./util')
 
 class Encoder {
 
-  encode(msg: Object) {
+  encode(msg: any) {
 
     return Util.stringifyJSON(msg)
   }

@@ -52,11 +52,11 @@ type Trace = {
 };
 
 type Encoder = {
-  encode(): string;
+  encode(): any;
 };
 
 type Decoder = {
-  decode(): string;
+  decode(): any;
 };
 
 type Pattern = {

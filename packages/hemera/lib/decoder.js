@@ -12,7 +12,7 @@ const Util = require('./util')
 
 class Decoder {
 
-  decode(msg: string) {
+  decode(msg: any) {
 
     return Util.parseJSON(msg)
   }
