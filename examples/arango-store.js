@@ -4,7 +4,7 @@ const Hemera = require('./../packages/hemera')
 const nats = require('nats').connect()
 const hemeraArango = require('./../packages/hemera-arango-store')
 hemeraArango.options.arango = {
-  url: 'http://192.168.99.100:8529',
+  url: 'http://127.0.0.1:8529',
   databaseName: 'test'
 }
 

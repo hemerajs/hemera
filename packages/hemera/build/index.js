@@ -765,14 +765,15 @@ class Hemera extends EventEmitter {
 
               if (self._response.value.error) {
 
+                let responseError = Errio.parse(self._response.value.error)
+                let responseErrorCause = responseError.cause
                 let error = new Errors.BusinessError(Constants.BUSINESS_ERROR, {
                   pattern: self._cleanPattern
-                }).causedBy(Errio.parse(self._response.value.error))
+                }).causedBy(responseErrorCause ? responseError.cause : responseError)
 
                 self.log.error(error)
 
-                // error is already wrapped
-                return cb.call(self, Errio.parse(self._response.value.error))
+                return cb.call(self, responseError)
               }
 
               cb.apply(self, [null, self._response.value.result])

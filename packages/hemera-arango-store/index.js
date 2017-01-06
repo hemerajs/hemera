@@ -6,15 +6,47 @@ exports.plugin = function hemeraArangoStore(options) {
 
   const hemera = this
 
-  let db = Arangojs(options.arango)
-
   hemera.expose('aqlTemplate', Arangojs.aql)
 
-  function switchDb(databaseName) {
+  const pool = {}
 
-    if (databaseName) {
-      db.useDatabase(databaseName)
+  /**
+   * Create pool of database connections
+   */
+  function useDb(databaseName) {
+
+    let db
+    let arangoOptions = {
+      databaseName
     }
+
+    Object.assign(arangoOptions, options.arango)
+
+    // explicit by request
+    if (databaseName) {
+
+      if (pool[databaseName]) {
+
+        return pool[databaseName].connection
+      } else {
+
+        pool[databaseName] = {
+          connection: null
+        }
+      }
+
+      db = new Arangojs.Database(arangoOptions)
+      pool[databaseName].connection = db
+    }
+    else if (options.arango.dbInstance) {
+
+      db = options.arango.dbInstance
+    } else {
+
+      db = new Arangojs.Database(arangoOptions)
+    }
+
+    return db
   }
 
   /**
@@ -25,10 +57,11 @@ exports.plugin = function hemeraArangoStore(options) {
     cmd: 'createDatabase'
   }, function (req, cb) {
 
+    let db = useDb(req.databaseName)
+
     db.createDatabase(req.name, req.users)
-      .create()
       .then((res) => cb(null, res))
-      .catch(cb)
+      .catch((err) => cb(new Error(err.message)))
 
   })
 
@@ -40,16 +73,13 @@ exports.plugin = function hemeraArangoStore(options) {
     cmd: 'executeTransaction'
   }, function (req, cb) {
 
-    switchDb(req.databaseName)
+    let db = useDb(req.databaseName)
 
     let action = String(req.action)
 
     db.transaction(req.collections, action, req.params, req.lockTimeout)
-    .then(value => {
-
-      cb(null, value)
-    })
-    .catch(cb)
+      .then((res) => cb(null, res))
+      .catch((err) => cb(new Error(err.message)))
 
   })
 
@@ -61,7 +91,7 @@ exports.plugin = function hemeraArangoStore(options) {
     cmd: 'createCollection'
   }, function (req, cb) {
 
-    switchDb(req.databaseName)
+    let db = useDb(req.databaseName)
 
     let collection
 
@@ -73,7 +103,7 @@ exports.plugin = function hemeraArangoStore(options) {
 
     collection.create()
       .then((res) => cb(null, res))
-      .catch(cb)
+      .catch((err) => cb(new Error(err.message)))
 
   })
 
@@ -86,18 +116,15 @@ exports.plugin = function hemeraArangoStore(options) {
     cmd: 'executeAqlQuery'
   }, function (req, cb) {
 
-    switchDb(req.databaseName)
+    let db = useDb(req.databaseName)
 
     db.query(req.query, req.variables).then((cursor) => {
 
       return cursor.next()
 
     })
-    .then(value => {
-
-      cb(null, value)
-    })
-    .catch(cb)
+    .then((res) => cb(null, res))
+    .catch((err) => cb(new Error(err.message)))
 
   })
 
@@ -110,18 +137,15 @@ exports.plugin = function hemeraArangoStore(options) {
     cmd: 'executeAqlQuery'
   }, function (req, cb) {
 
-    switchDb(req.databaseName)
+    let db = useDb(req.databaseName)
 
     db.query(req.query, req.variables).then((cursor) => {
 
       return cursor.all()
 
     })
-    .then(value => {
-
-      cb(null, value)
-    })
-    .catch(cb)
+    .then((res) => cb(null, res))
+    .catch((err) => cb(new Error(err.message)))
 
   })
 
