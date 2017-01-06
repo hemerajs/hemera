@@ -11,7 +11,7 @@ const expect = Code.expect
 
 process.setMaxListeners(0);
 
-describe('Hemera-msgpack', function () {
+describe.skip('Hemera-msgpack', function () {
 
   var PORT = 6243
   var flags = ['--user', 'derek', '--pass', 'foobar']
