@@ -51,11 +51,11 @@ type Trace = {
   method?: string;
 };
 
-type Encoder = {
+interface Encoder {
   encode(): any;
 };
 
-type Decoder = {
+interface Decoder {
   decode(): any;
 };
 

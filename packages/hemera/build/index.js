@@ -95,8 +95,8 @@ class Hemera extends EventEmitter {
       id: ''
     }
 
-    this._encoder = new DefaultEncoder
-    this._decoder = new DefaultDecoder
+    this._encoder = { encode: DefaultEncoder.encode }
+    this._decoder = { decode: DefaultDecoder.decode }
 
     // define extension points
     this._extensions = {
@@ -234,28 +234,6 @@ class Hemera extends EventEmitter {
   get plugins() {
 
     return this._plugins
-  }
-
-  /**
-   *
-   *
-   * @type {*}
-   * @memberOf Hemera
-   */
-  set decoder(decoder) {
-
-    this._decoder = decoder
-  }
-
-  /**
-   *
-   *
-   * @type {*}
-   * @memberOf Hemera
-   */
-  set encoder(encoder) {
-
-    this._encoder = encoder
   }
 
   /**

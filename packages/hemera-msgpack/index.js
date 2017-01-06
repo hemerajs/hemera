@@ -4,17 +4,36 @@ var msgpack = require('msgpack5')(),
   encode = msgpack.encode,
   decode = msgpack.decode
 
-exports.plugin = function hemeraArangoStore(options) {
+exports.plugin = function hemeraMsgpack(options) {
 
   const hemera = this
 
-  hemera.decoder = { decode }
-  hemera.encoder = { encode }
+  hemera._decoder.decode = (a) => {
+
+    try {
+
+      return {
+        value: decode(a),
+        error: null
+      }
+
+    } catch (err) {
+
+      return {
+        value: null,
+        error: err
+      }
+    }
+  }
+
+  hemera._encoder.encode = (a) => {
+
+    return encode(a)
+  }
 
 }
 
-exports.options = {
-}
+exports.options = {}
 
 exports.attributes = {
   name: 'hemera-msgpack'
