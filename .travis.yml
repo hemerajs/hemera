@@ -16,8 +16,9 @@ before_install:
   - curl https://www.arangodb.com/repositories/travisCI/setup_arangodb_${ARANGODB_VERSION}.sh | bash
 
 before_script:
-  - mkdir -p gnatsd
-  - wget https://github.com/nats-io/gnatsd/releases/download/v0.9.4/gnatsd-v0.9.4-linux-amd64.tar.gz -qO - | tar -zxvC gnatsd/
+  - wget https://github.com/nats-io/gnatsd/releases/download/v0.9.6/gnatsd-v0.9.6-linux-amd64.zip -qO tmp.zip
+  - unzip tmp.zip
+  - mv gnatsd-v0.9.6-linux-amd64 gnatsd
 
 after_script:
   - kill -9 $(pgrep arangod)
