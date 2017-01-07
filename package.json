@@ -37,7 +37,7 @@
     "release": "lerna publish -i",
     "test": "lerna run build && nyc mocha -t 5000 ./test/**/*.js ./packages/hemera-zipkin/test/**/*.js",
     "coverage": "npm run test && nyc report --reporter=html",
-    "ci": "lerna run build && nyc mocha -t 5000 ./test/**/*.js ./packages/hemera-zipkin/test/**/*.js nyc report --reporter=text-lcov | coveralls"
+    "ci": "lerna run build && nyc mocha -t 5000 ./test/**/*.js ./packages/hemera-zipkin/test/**/*.js && nyc report --reporter=text-lcov | coveralls"
   },
   "engines": {
     "node": ">=4.0.0"
