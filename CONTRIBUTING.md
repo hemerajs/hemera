@@ -14,16 +14,6 @@ $ git clone YOUR_HEMERA_REPO_URL
 $ lerna setup
 ```
 
-## Building
-
-```sh
-$ yarn run build
-```
-
-```sh
-$ yarn run watch
-```
-
 ## Testing
 
 Hemera unit tests
