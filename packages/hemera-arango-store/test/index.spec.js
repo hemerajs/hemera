@@ -42,17 +42,22 @@ describe('Hemera-arango-store', function () {
     HemeraArangoStore.options.arango = {
       dbInstance: arangodb
     }
-    server = HemeraTestsuite.start_server(PORT, flags, () => {
 
-      const nats = require('nats').connect(authUrl)
+    clearArangodb().then(() => {
 
-      hemera = new Hemera(nats, {
-        crashOnFatal: false,
-        logLevel: 'silent'
+      server = HemeraTestsuite.start_server(PORT, flags, () => {
+
+        const nats = require('nats').connect(authUrl)
+
+        hemera = new Hemera(nats, {
+          crashOnFatal: false,
+          logLevel: 'silent'
+        })
+        hemera.use(HemeraArangoStore)
+        aql = hemera.exposition['hemera-arango-store'].aqlTemplate
+        hemera.ready(done);
+
       })
-      hemera.use(HemeraArangoStore)
-      aql = hemera.exposition['hemera-arango-store'].aqlTemplate
-      hemera.ready(done);
 
     })
 
@@ -76,6 +81,8 @@ describe('Hemera-arango-store', function () {
     }, (err, resp) => {
 
       expect(err).to.be.not.exists()
+      expect(resp).to.be.an.object()
+      expect(resp.result).to.be.equals(true)
 
       done()
     })
@@ -100,6 +107,8 @@ describe('Hemera-arango-store', function () {
       }, (err, resp) => {
 
         expect(err).to.be.not.exists()
+        expect(resp).to.be.an.object()
+        expect(resp.name).to.be.equals('testCollection')
 
         done()
       })
@@ -124,6 +133,8 @@ describe('Hemera-arango-store', function () {
       }, (err, resp) => {
 
         expect(err).to.be.not.exists()
+        expect(resp).to.be.an.object()
+        expect(resp.name).to.be.equals('testCollection')
 
         done()
       })
@@ -158,10 +169,11 @@ describe('Hemera-arango-store', function () {
           cmd: 'executeAqlQuery',
           type: 'one',
           databaseName: 'test4',
-          query: aql `INSERT ${user} INTO users`
+          query: aql `INSERT ${user} INTO users return NEW`
         }, function (err, resp) {
 
           expect(err).to.be.not.exists()
+          expect(resp).to.be.an.object()
 
           done()
         })
@@ -201,6 +213,7 @@ describe('Hemera-arango-store', function () {
         }, function (err, resp) {
 
           expect(err).to.be.not.exists()
+          expect(resp).to.be.an.array()
 
           done()
         })
