@@ -47,7 +47,7 @@ describe('Hemera-arango-store', function () {
 
     arangodb = Arangojs(arangoOptions)
     HemeraArangoStore.options.arango = {
-      dbInstance: arangodb
+      driver: arangodb
     }
 
     //clear and bootstrap db

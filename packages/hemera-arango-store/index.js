@@ -29,12 +29,12 @@ const HemeraParambulator = require('hemera-parambulator')
 exports.plugin = function hemeraArangoStore(options) {
 
   const hemera = this
+  const pool = {}
 
   hemera.use(HemeraParambulator)
 
   hemera.expose('aqlTemplate', Arangojs.aql)
-
-  const pool = {}
+  hemera.expose('connectionPool', pool)
 
   /**
    * Create pool of database connections
@@ -63,9 +63,9 @@ exports.plugin = function hemeraArangoStore(options) {
 
       db = new Arangojs.Database(arangoOptions)
       pool[databaseName].connection = db
-    } else if (options.arango.dbInstance) {
+    } else if (options.arango.driver) {
 
-      db = options.arango.dbInstance
+      db = options.arango.driver
     } else {
 
       db = new Arangojs.Database(arangoOptions)
