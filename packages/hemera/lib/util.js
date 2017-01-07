@@ -10,9 +10,7 @@
 
 const
   _ = require('lodash'),
-  Crypto = require('crypto'),
-  SafeStringify = require('fast-safe-stringify'),
-  Parse = require('fast-json-parse')
+  Crypto = require('crypto')
 
 /**
  * @class Util
