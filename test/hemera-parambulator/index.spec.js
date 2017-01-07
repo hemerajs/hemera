@@ -69,7 +69,7 @@ describe('Hemera-parambulator', function () {
     })
   })
 
-  it.only('Should be able to modify the payload', function (done) {
+  it('Should be able to modify the payload', function (done) {
 
     const nats = require('nats').connect(authUrl)
 
