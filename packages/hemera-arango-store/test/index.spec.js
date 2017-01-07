@@ -8,22 +8,21 @@ const Hemera = require('./../../hemera'),
 
 const expect = Code.expect
 
-process.setMaxListeners(0);
-
 describe('Hemera-arango-store', function () {
 
-  var PORT = 6243
-  var flags = ['--user', 'derek', '--pass', 'foobar']
-  var authUrl = 'nats://derek:foobar@localhost:' + PORT
-  var noAuthUrl = 'nats://localhost:' + PORT
+  let PORT = 6243
+  let flags = ['--user', 'derek', '--pass', 'foobar']
+  let authUrl = 'nats://derek:foobar@localhost:' + PORT
+  let noAuthUrl = 'nats://localhost:' + PORT
 
-  var server
-  var arangoOptions = {
+  let server
+  let arangoOptions = {
     url: 'http://127.0.0.1:8529/'
   }
-  var hemera
-  var aql
-  var arangodb
+  let hemera
+  let aql
+  let arangodb
+  let testDatabase = 'test'
 
   function clearArangodb() {
 
@@ -36,6 +35,10 @@ describe('Hemera-arango-store', function () {
       })
   }
 
+  function bootstrapArangodb() {
+    return arangodb.createDatabase(testDatabase)
+  }
+
   before(function (done) {
 
     arangodb = Arangojs(arangoOptions)
@@ -43,17 +46,21 @@ describe('Hemera-arango-store', function () {
       dbInstance: arangodb
     }
 
-    clearArangodb().then(() => {
+    //clear and bootstrap db
+    clearArangodb().then(bootstrapArangodb).then(() => {
 
       server = HemeraTestsuite.start_server(PORT, flags, () => {
 
+        //Connect to gnats
         const nats = require('nats').connect(authUrl)
 
+        //Create hemera instance
         hemera = new Hemera(nats, {
           crashOnFatal: false,
           logLevel: 'silent'
         })
         hemera.use(HemeraArangoStore)
+        //Load plugin
         aql = hemera.exposition['hemera-arango-store'].aqlTemplate
         hemera.ready(done);
 
@@ -65,6 +72,7 @@ describe('Hemera-arango-store', function () {
 
   after(function () {
 
+    //clear arangodb and kill gnats and hemera
     return clearArangodb().then(() => {
       hemera.close()
       server.kill()
@@ -74,10 +82,12 @@ describe('Hemera-arango-store', function () {
 
   it('Create database', function (done) {
 
+    const testDb = 'testdb'
+
     hemera.act({
       topic: 'arango-store',
       cmd: 'createDatabase',
-      name: 'test'
+      name: testDb
     }, (err, resp) => {
 
       expect(err).to.be.not.exists()
@@ -90,183 +100,140 @@ describe('Hemera-arango-store', function () {
 
   it('Create edge collection', function (done) {
 
+    const testCollection = 'payments'
+
     hemera.act({
       topic: 'arango-store',
-      cmd: 'createDatabase',
-      name: 'test2'
+      cmd: 'createCollection',
+      type: 'edge',
+      name: testCollection,
+      databaseName: testDatabase
     }, (err, resp) => {
 
       expect(err).to.be.not.exists()
+      expect(resp).to.be.an.object()
+      expect(resp.name).to.be.equals(testCollection)
 
-      hemera.act({
-        topic: 'arango-store',
-        cmd: 'createCollection',
-        type: 'edge',
-        name: 'testCollection',
-        databaseName: 'test2'
-      }, (err, resp) => {
-
-        expect(err).to.be.not.exists()
-        expect(resp).to.be.an.object()
-        expect(resp.name).to.be.equals('testCollection')
-
-        done()
-      })
+      done()
     })
   })
 
   it('Create collection', function (done) {
 
+    const testCollection = 'users'
+
     hemera.act({
       topic: 'arango-store',
-      cmd: 'createDatabase',
-      name: 'test3'
+      cmd: 'createCollection',
+      name: testCollection,
+      databaseName: testDatabase
     }, (err, resp) => {
 
       expect(err).to.be.not.exists()
+      expect(resp).to.be.an.object()
+      expect(resp.name).to.be.equals(testCollection)
 
-      hemera.act({
-        topic: 'arango-store',
-        cmd: 'createCollection',
-        name: 'testCollection',
-        databaseName: 'test3'
-      }, (err, resp) => {
-
-        expect(err).to.be.not.exists()
-        expect(resp).to.be.an.object()
-        expect(resp.name).to.be.equals('testCollection')
-
-        done()
-      })
+      done()
     })
   })
 
   it('Execute AQL Query with one result', function (done) {
 
+    const testCollection = 'apples'
+
     hemera.act({
       topic: 'arango-store',
-      cmd: 'createDatabase',
-      name: 'test4'
+      cmd: 'createCollection',
+      name: testCollection,
+      databaseName: testDatabase
     }, (err, resp) => {
 
       expect(err).to.be.not.exists()
+      expect(resp).to.be.an.object()
+      expect(resp.name).to.be.equals(testCollection)
+
+      const user = {
+        name: 'olaf'
+      }
 
       hemera.act({
         topic: 'arango-store',
-        cmd: 'createCollection',
-        name: 'users',
-        databaseName: 'test4'
-      }, (err, resp) => {
+        cmd: 'executeAqlQuery',
+        type: 'one',
+        databaseName: testDatabase,
+        query: aql `INSERT ${user} INTO apples return NEW`
+      }, function (err, resp) {
 
         expect(err).to.be.not.exists()
+        expect(resp).to.be.an.object()
 
-        const user = {
-          name: 'olaf'
-        }
-
-        hemera.act({
-          topic: 'arango-store',
-          cmd: 'executeAqlQuery',
-          type: 'one',
-          databaseName: 'test4',
-          query: aql `INSERT ${user} INTO users return NEW`
-        }, function (err, resp) {
-
-          expect(err).to.be.not.exists()
-          expect(resp).to.be.an.object()
-
-          done()
-        })
-
+        done()
       })
+
     })
   })
 
   it('Execute AQL Query with multiple returns', function (done) {
 
+    const testCollection = 'cars'
+
     hemera.act({
       topic: 'arango-store',
-      cmd: 'createDatabase',
-      name: 'test5'
+      cmd: 'createCollection',
+      name: testCollection,
+      databaseName: testDatabase
     }, (err, resp) => {
 
       expect(err).to.be.not.exists()
+      expect(resp).to.be.an.object()
+      expect(resp.name).to.be.equals(testCollection)
 
       hemera.act({
         topic: 'arango-store',
-        cmd: 'createCollection',
-        name: 'users',
-        databaseName: 'test5'
-      }, (err, resp) => {
-
-        expect(err).to.be.not.exists()
-
-        hemera.act({
-          topic: 'arango-store',
-          cmd: 'executeAqlQuery',
-          type: 'all',
-          databaseName: 'test5',
-          query: `
-            FOR u IN users
+        cmd: 'executeAqlQuery',
+        type: 'all',
+        databaseName: testDatabase,
+        query: `
+            FOR u IN cars
             RETURN u
             `
-        }, function (err, resp) {
+      }, function (err, resp) {
 
-          expect(err).to.be.not.exists()
-          expect(resp).to.be.an.array()
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.an.array()
 
-          done()
-        })
-
+        done()
       })
+
     })
   })
 
   it('Execute Transaction', function (done) {
 
+    var action = String(function () {
+      return true
+    })
+
     hemera.act({
       topic: 'arango-store',
-      cmd: 'createDatabase',
-      name: 'test6'
-    }, (err, resp) => {
+      cmd: 'executeTransaction',
+      databaseName: testDatabase,
+      action,
+      params: {
+        age: 12
+      },
+      collections: {
+        read: 'users'
+      }
+    }, function (err, resp) {
 
       expect(err).to.be.not.exists()
 
-      hemera.act({
-        topic: 'arango-store',
-        cmd: 'createCollection',
-        name: 'users',
-        databaseName: 'test6'
-      }, (err, resp) => {
+      expect(resp).to.be.equals(true)
 
-        expect(err).to.be.not.exists()
-
-        var action = String(function () {
-          return true
-        })
-
-        hemera.act({
-          topic: 'arango-store',
-          cmd: 'executeTransaction',
-          databaseName: 'test6',
-          action,
-          params: {
-            age: 12
-          },
-          collections: {
-            read: 'users'
-          }
-        }, function (err, resp) {
-
-          expect(err).to.be.not.exists()
-
-          expect(resp).to.be.equals(true)
-
-          done()
-        })
-
-      })
+      done()
     })
+
   })
 
 })
