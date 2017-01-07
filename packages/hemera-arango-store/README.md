@@ -10,6 +10,20 @@ Execute any AQL query from anywhere. For more details [ArangoDB Query Language](
 docker run -e ARANGO_NO_AUTH=1 -d --name arangodb-instance -d arangodb -p 8529:8529
 ```
 
+### Running the tests
+
+Install and start Arangodb before starting.
+
+**arangod.conf**
+```
+endpoint = tcp://127.0.0.1:8529
+authentication = false
+```
+
+```
+npm run test
+```
+
 #### Example
 
 ```js
@@ -19,7 +33,7 @@ const Hemera = require('nats-hemera')
 const nats = require('nats').connect()
 const hemeraArango = require('hemera-arango-store')
 hemeraArango.options.arango = {
-  url: 'http://192.168.99.100:8529',
+  url: 'http://127.0.0.1:8529',
   databaseName: 'test'
 }
 
