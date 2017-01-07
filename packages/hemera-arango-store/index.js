@@ -29,49 +29,36 @@ const HemeraParambulator = require('hemera-parambulator')
 exports.plugin = function hemeraArangoStore(options) {
 
   const hemera = this
-  const pool = {}
+  const connections = {}
 
   hemera.use(HemeraParambulator)
 
   hemera.expose('aqlTemplate', Arangojs.aql)
-  hemera.expose('connectionPool', pool)
+  hemera.expose('connectionPool', connections)
 
   /**
    * Create pool of database connections
    */
   function useDb(databaseName) {
 
-    let db
-    let arangoOptions = {
-      databaseName
+    if (connections[databaseName]) {
+
+      return connections[databaseName]
     }
 
-    Object.assign(arangoOptions, options.arango)
-
-    // explicit by request
     if (databaseName) {
 
-      if (pool[databaseName]) {
+      let option = Object.assign({}, options.arango);
+      option.databaseName = databaseName
 
-        return pool[databaseName].connection
-      } else {
+      connections[databaseName] = new Arangojs.Database(option)
 
-        pool[databaseName] = {
-          connection: null
-        }
-      }
-
-      db = new Arangojs.Database(arangoOptions)
-      pool[databaseName].connection = db
-    } else if (options.arango.driver) {
-
-      db = options.arango.driver
-    } else {
-
-      db = new Arangojs.Database(arangoOptions)
+      return connections[databaseName]
     }
 
-    return db
+    connections[databaseName] = options.arango.driver
+
+    return connections[databaseName]
   }
 
   /**

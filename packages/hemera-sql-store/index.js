@@ -34,20 +34,26 @@ exports.plugin = function hemeraSqlStore(options) {
       return connections[databaseName]
     }
 
-    const knex = options.knex.driver || Knex({
-      dialect: options.dialect,
-      connection: Object.assign(options.connection, {
-        database: databaseName
-      }),
-      pool: {
-        min: 0,
-        max: 7
-      }
-    })
+    if (databaseName) {
 
-    connections[databaseName] = knex
+      let option = Object.assign({}, options.connection);
+      option.database = databaseName
 
-    return knex
+      connections[databaseName] = Knex({
+        dialect: options.dialect,
+        connection: option,
+        pool: {
+          min: 0,
+          max: 7
+        }
+      })
+
+      return connections[databaseName]
+    }
+
+    connections[databaseName] = options.knex.driver
+
+    return connections[databaseName]
 
   }
 
