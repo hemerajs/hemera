@@ -21,6 +21,3 @@ before_script:
 
 after_script:
   - kill -9 $(pgrep arangod)
-
-after_success:
-  - kill -9 $(pgrep arangod)
