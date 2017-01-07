@@ -69,4 +69,40 @@ describe('Hemera-parambulator', function () {
     })
   })
 
+  it.only('Should be able to modify the payload', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.use(HemeraParambulator)
+
+    hemera.ready(() => {
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send',
+        a: {
+          default$: 'hello'
+        }
+      }, (resp, cb) => {
+
+        cb(null, resp.a)
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send'
+      }, (err, resp) => {
+
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.equals('hello')
+        hemera.close()
+        done()
+      })
+    })
+  })
+
 })
