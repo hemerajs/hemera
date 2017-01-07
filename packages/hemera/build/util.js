@@ -10,9 +10,7 @@
 
 const
   _ = require('lodash'),
-  Crypto = require('crypto'),
-  SafeStringify = require('fast-safe-stringify'),
-  Parse = require('fast-json-parse')
+  Crypto = require('crypto')
 
 /**
  * @class Util
@@ -57,30 +55,6 @@ class Util {
     return _.pickBy(obj, function (val, prop) {
       return !_.includes(prop, '$')
     })
-  }
-
-  /**
-   * @static
-   * @param {any} msg
-   * @returns
-   *
-   * @memberOf Util
-   */
-  static parseJSON(msg) {
-
-    return Parse(msg)
-  }
-
-  /**
-   * @static
-   * @param {any} msg
-   * @returns
-   *
-   * @memberOf Util
-   */
-  static stringifyJSON(msg) {
-
-    return SafeStringify(msg)
   }
 
   /**

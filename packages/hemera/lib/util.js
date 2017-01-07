@@ -58,30 +58,6 @@ class Util {
   }
 
   /**
-   * @static
-   * @param {any} msg
-   * @returns
-   *
-   * @memberOf Util
-   */
-  static parseJSON(msg) {
-
-    return Parse(msg)
-  }
-
-  /**
-   * @static
-   * @param {any} msg
-   * @returns
-   *
-   * @memberOf Util
-   */
-  static stringifyJSON(msg) {
-
-    return SafeStringify(msg)
-  }
-
-  /**
    * @param {any} args
    * @returns
    *
