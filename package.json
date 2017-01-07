@@ -35,7 +35,6 @@
     "setup": "npm i && lerna bootstrap",
     "clean": "lerna clean",
     "release": "lerna publish -i",
-    "ci": "npm run setup",
     "test": "lerna run build && nyc mocha -t 5000 ./test/**/*.js",
     "coverage": "npm run test && nyc report --reporter=html",
     "ci": "lerna run build && nyc mocha -t 5000 ./test/**/*.js ./packages/hemera-zipkin/test/**/*.js ./packages/hemera-arango-store/test/**/*.js && nyc report --reporter=text-lcov | coveralls"
