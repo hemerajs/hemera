@@ -81,15 +81,27 @@ hemera.ready(() => {
 
 ## Table of Contents
 
-* [Collection API](#collection-api)
-  * [topic:arango-store,cmd:createCollection](#create-collection)
-* [Query API](#query-api)
-  * [topic:arango-store,cmd:executeAqlQuery,type:all](#query-all)
-  * [topic:arango-store,cmd:executeAqlQuery,type:one](#query-one)
-* [Transaction API](#transaction-api)
-  * [topic:arango-store,cmd:executeTransaction](#execute-transaction)
-* [Database API](#database-api)
-  * [topic:arango-store,cmd:createDatabase](#create-database)
+* [Store API](#Document-api)
+  * [topic:arango-store,cmd:create](#create)
+  * [topic:arango-store,cmd:update](#update)
+  * [topic:arango-store,cmd:updateById](#updateById)
+  * [topic:arango-store,cmd:find](#find)
+  * [topic:arango-store,cmd:findById](#findById)
+  * [topic:arango-store,cmd:remove](#remove)
+  * [topic:arango-store,cmd:removeById](#removeById)
+  * [topic:arango-store,cmd:replace](#replace)
+  * [topic:arango-store,cmd:replaceById](#replaceById)
+
+* [Driver API](#collection-api)
+  * [Collection API](#collection-api)
+    * [topic:arango-store,cmd:createCollection](#create-collection)
+  * [Query API](#query-api)
+    * [topic:arango-store,cmd:executeAqlQuery,type:all](#query-all)
+    * [topic:arango-store,cmd:executeAqlQuery,type:one](#query-one)
+  * [Transaction API](#transaction-api)
+    * [topic:arango-store,cmd:executeTransaction](#execute-transaction)
+  * [Database API](#database-api)
+    * [topic:arango-store,cmd:createDatabase](#create-database)
   
 #### query one
 
