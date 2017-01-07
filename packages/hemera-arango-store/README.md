@@ -79,7 +79,19 @@ hemera.ready(() => {
 
 ## API
 
-#### topic:arango-store,cmd:executeAqlQuery,type:one
+## Table of Contents
+
+* [Collection API](#collection-api)
+  * [topic:arango-store,cmd:createCollection](#create-collection)
+* [Query API](#query-api)
+  * [topic:arango-store,cmd:executeAqlQuery,type:all](#query-all)
+  * [topic:arango-store,cmd:executeAqlQuery,type:one](#query-one)
+* [Transaction API](#transaction-api)
+  * [topic:arango-store,cmd:executeTransaction](#execute-transaction)
+* [Database API](#database-api)
+  * [topic:arango-store,cmd:createDatabase](#create-database)
+  
+#### query one
 
  Execute AQL Query and return the first result
 
@@ -98,7 +110,7 @@ hemera.ready(() => {
   Your AQL query
 
 
-#### topic:arango-store,cmd:executeAqlQuery,type:all
+#### query all
 
  Execute AQL Query and return all matched results
 
@@ -117,7 +129,7 @@ hemera.ready(() => {
   Your AQL query
 
 
-#### topic:arango-store,cmd:createCollection
+#### create collection
 
 Create a new collection
 
@@ -131,7 +143,7 @@ Create a new collection
 
   The database to use against the query.
 
-#### topic:arango-store,cmd:createDatabase
+#### create database
 
 Create a new database
 
@@ -161,7 +173,7 @@ Create a new database
 
     An object containing additional user data.
 
-#### topic:arango-store,cmd:executeTransaction
+#### execute transaction
 
 `async database.transaction(collections, action, [params,] [lockTimeout]): Object`
 
