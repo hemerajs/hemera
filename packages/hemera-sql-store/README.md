@@ -1,8 +1,8 @@
-# Hemera-arango-store package
+# Hemera-sql-store package
 
 **Status**: In development
 
-This is a plugin to use an SQL Database with Hemera.
+This is a plugin to use a SQL Database with Hemera.
 This plugin is based on [Knex](http://knexjs.org/).
 
 ### Start Arangodb with Docker
@@ -72,12 +72,12 @@ hemera.ready(() => {
 ## Table of Contents
 
 * [Store API](#Document-api)
-  * [topic:arango-store,cmd:create](#create)
-  * [topic:arango-store,cmd:update](#update)
-  * [topic:arango-store,cmd:updateById](#updateById)
-  * [topic:arango-store,cmd:find](#find)
-  * [topic:arango-store,cmd:findById](#findById)
-  * [topic:arango-store,cmd:remove](#remove)
-  * [topic:arango-store,cmd:removeById](#removeById)
-  * [topic:arango-store,cmd:replace](#replace)
-  * [topic:arango-store,cmd:replaceById](#replaceById)
+  * [topic:sql-store,cmd:create](#create)
+  * [topic:sql-store,cmd:update](#update)
+  * [topic:sql-store,cmd:updateById](#updateById)
+  * [topic:sql-store,cmd:find](#find)
+  * [topic:sql-store,cmd:findById](#findById)
+  * [topic:sql-store,cmd:remove](#remove)
+  * [topic:sql-store,cmd:removeById](#removeById)
+  * [topic:sql-store,cmd:replace](#replace)
+  * [topic:sql-store,cmd:replaceById](#replaceById)
