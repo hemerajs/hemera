@@ -1,10 +1,36 @@
 'use strict'
 
 const Arangojs = require('arangojs')
+const HemeraParambulator = require('hemera-parambulator')
+
+/**
+ * Actions:
+ *
+ * Common API methods:
+ *
+ * create
+ * remove
+ * removeById
+ * update
+ * updateById
+ * find
+ * findById
+ * replace
+ * replaceById
+ *
+ * Driver specific API methods:
+ *
+ * executeTransaction
+ * createDatabase
+ * createCollection
+ * executeAqlQuery
+ */
 
 exports.plugin = function hemeraArangoStore(options) {
 
   const hemera = this
+
+  hemera.use(HemeraParambulator)
 
   hemera.expose('aqlTemplate', Arangojs.aql)
 
@@ -37,8 +63,7 @@ exports.plugin = function hemeraArangoStore(options) {
 
       db = new Arangojs.Database(arangoOptions)
       pool[databaseName].connection = db
-    }
-    else if (options.arango.dbInstance) {
+    } else if (options.arango.dbInstance) {
 
       db = options.arango.dbInstance
     } else {
@@ -57,11 +82,17 @@ exports.plugin = function hemeraArangoStore(options) {
     cmd: 'createDatabase'
   }, function (req, cb) {
 
-    let db = useDb(req.databaseName)
+    let db = useDb('_system')
 
-    db.createDatabase(req.name, req.users)
-      .then((res) => cb(null, res))
-      .catch((err) => cb(new Error(err.message)))
+    db.createDatabase(req.name, req.users, (err, res) => {
+
+      if (err) {
+        return cb(new Error(err.message))
+      }
+
+      return cb(null, res)
+
+    })
 
   })
 
@@ -77,9 +108,15 @@ exports.plugin = function hemeraArangoStore(options) {
 
     let action = String(req.action)
 
-    db.transaction(req.collections, action, req.params, req.lockTimeout)
-      .then((res) => cb(null, res))
-      .catch((err) => cb(new Error(err.message)))
+    db.transaction(req.collections, action, req.params, req.lockTimeout, (err, res) => {
+
+      if (err) {
+        return cb(new Error(err.message))
+      }
+
+      return cb(null, res)
+
+    })
 
   })
 
@@ -101,9 +138,15 @@ exports.plugin = function hemeraArangoStore(options) {
       collection = db.collection(req.name)
     }
 
-    collection.create()
-      .then((res) => cb(null, res))
-      .catch((err) => cb(new Error(err.message)))
+    collection.create((err, res) => {
+
+      if (err) {
+        return cb(new Error(err.message))
+      }
+
+      return cb(null, res)
+
+    })
 
   })
 
@@ -118,13 +161,15 @@ exports.plugin = function hemeraArangoStore(options) {
 
     let db = useDb(req.databaseName)
 
-    db.query(req.query, req.variables).then((cursor) => {
+    db.query(req.query, req.variables, (err, res) => {
 
-      return cursor.next()
+      if (err) {
+        return cb(new Error(err.message))
+      }
+
+      return res.next(cb)
 
     })
-    .then((res) => cb(null, res))
-    .catch((err) => cb(new Error(err.message)))
 
   })
 
@@ -139,13 +184,245 @@ exports.plugin = function hemeraArangoStore(options) {
 
     let db = useDb(req.databaseName)
 
-    db.query(req.query, req.variables).then((cursor) => {
+    db.query(req.query, req.variables, (err, res) => {
 
-      return cursor.all()
+      if (err) {
+        return cb(new Error(err.message))
+      }
+
+      return res.all(cb)
 
     })
-    .then((res) => cb(null, res))
-    .catch((err) => cb(new Error(err.message)))
+
+  })
+
+  hemera.add({
+    topic: 'arango-store',
+    cmd: 'create',
+    collection: {
+      required$: true,
+      type$: 'string'
+    },
+    data: {
+      type$: 'object'
+    }
+  }, function (req, cb) {
+
+    let db = useDb(req.databaseName)
+
+    db.collection(req.collection)
+    .save(req.data, (err, res) => {
+
+      if (err) {
+        return cb(new Error(err.message))
+      }
+
+      return cb(null, res)
+
+    });
+
+  })
+
+  hemera.add({
+    topic: 'arango-store',
+    cmd: 'update',
+    data: {
+      type$: 'object'
+    },
+    filter: {
+      type$: 'object',
+      default$: {}
+    }
+  }, function (req, cb) {
+
+    let db = useDb(req.databaseName)
+
+    db.collection(req.collection)
+    .updateByExample(req.filter, req.data, (err, res) => {
+
+      if (err) {
+        return cb(new Error(err.message))
+      }
+
+      return cb(null, res)
+
+    });
+
+  })
+
+  hemera.add({
+    topic: 'arango-store',
+    cmd: 'updateById',
+    data: {
+      type$: 'object'
+    },
+    id: {
+      required$: true,
+      type$: 'object'
+    }
+  }, function (req, cb) {
+
+    let db = useDb(req.databaseName)
+
+    db.collection(req.collection)
+    .updateByExample(req.id, req.data, (err, res) => {
+
+      if (err) {
+        return cb(new Error(err.message))
+      }
+
+      return cb(null, res)
+
+    });
+
+  })
+
+  hemera.add({
+    topic: 'arango-store',
+    cmd: 'remove',
+    filter: {
+      type$: 'object',
+      default$: {}
+    }
+  }, function (req, cb) {
+
+    let db = useDb(req.databaseName)
+
+    db.collection(req.collection)
+    .removeByExample(req.filter, (err, res) => {
+
+      if (err) {
+        return cb(new Error(err.message))
+      }
+
+      return cb(null, res)
+
+    });
+
+  })
+
+  hemera.add({
+    topic: 'arango-store',
+    cmd: 'removeById',
+    id: {
+      required$: true,
+      type$: 'object'
+    }
+  }, function (req, cb) {
+
+    let db = useDb(req.databaseName)
+
+    db.collection(req.collection)
+    .removeByExample(req.id, (err, res) => {
+
+      if (err) {
+        return cb(new Error(err.message))
+      }
+
+      return cb(null, res)
+
+    });
+
+  })
+
+  hemera.add({
+    topic: 'arango-store',
+    cmd: 'replace',
+    data: {
+      type$: 'object'
+    },
+    filter: {
+      type$: 'object',
+      default$: {}
+    }
+  }, function (req, cb) {
+
+    let db = useDb(req.databaseName)
+
+    db.collection(req.collection)
+    .replaceByExample(req.filter, req.data, (err, res) => {
+
+      if (err) {
+        return cb(new Error(err.message))
+      }
+
+      return cb(null, res)
+
+    });
+
+  })
+
+  hemera.add({
+    topic: 'arango-store',
+    cmd: 'replaceById',
+    data: {
+      type$: 'object'
+    },
+    id: {
+      required$: true,
+      type$: 'object'
+    }
+  }, function (req, cb) {
+
+    let db = useDb(req.databaseName)
+
+    db.collection(req.collection)
+    .replaceByExample(req.id, req.data, (err, res) => {
+
+      if (err) {
+        return cb(new Error(err.message))
+      }
+
+      return cb(null, res)
+
+    });
+
+  })
+
+  hemera.add({
+    topic: 'arango-store',
+    cmd: 'findById',
+    id: {
+      required$: true
+    }
+  }, function (req, cb) {
+
+    let db = useDb(req.databaseName)
+
+    db.collection(req.collection)
+    .byExample(req.id, (err, res) => {
+
+      if (err) {
+        return cb(new Error(err.message))
+      }
+
+      return res.next(cb)
+
+    });
+
+  })
+
+  hemera.add({
+    topic: 'arango-store',
+    cmd: 'find',
+    filter: {
+      type$: 'object',
+      default$: {}
+    }
+  }, function (req, cb) {
+
+    let db = useDb(req.databaseName)
+
+    db.collection(req.collection)
+    .byExample(req.filter, (err, res) => {
+
+      if (err) {
+        return cb(new Error(err.message))
+      }
+
+      res.all(cb)
+
+    });
 
   })
 
