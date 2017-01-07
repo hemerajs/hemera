@@ -1,6 +1,7 @@
 'use strict'
 
 const Hemera = require('./../packages/hemera')
+const Promise = require('bluebird')
 const nats = require('nats').connect()
 
 const hemera = new Hemera(nats, {
@@ -14,14 +15,14 @@ hemera.ready(function () {
 
     this.add(pattern, function (resp, next) {
 
-      Promise.resolve(cb.call(this, resp)).then(function (result) {
+      new Promise((resolve, reject) => {
+          
+          resolve(cb.call(this, resp))
 
-          return next(null, result)
         })
-        .catch(function (err) {
+        .then((result) => next(null, result))
+        .catch(next)
 
-          return next(err);
-        })
     })
   }
 
@@ -37,8 +38,8 @@ hemera.ready(function () {
         }
 
         resolve(res)
-      });
-    });
+      })
+    })
   }
 
 
