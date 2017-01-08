@@ -1,5 +1,7 @@
 # Hemera-sql-store package
 
+[![npm](https://img.shields.io/npm/v/hemera-sql-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-sql-store)
+
 **Status**: In development
 
 This is a plugin to use a SQL Database with Hemera.
