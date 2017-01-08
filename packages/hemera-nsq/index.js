@@ -8,6 +8,8 @@ exports.plugin = function hemeraNsqStore(options) {
   const hemera = this
   const readers = {}
 
+  hemera.expose('readers', readers)
+
   hemera.use(HemeraParambulator)
 
   /**
@@ -24,7 +26,7 @@ exports.plugin = function hemeraNsqStore(options) {
 
     reader.connect();
 
-    reader.on(reader.NSQD_CONNECTED , function (host, port) {
+    reader.on(reader.NSQD_CONNECTED, function (host, port) {
 
       hemera.log.info('Reader connected to %s:%s', host, port)
 

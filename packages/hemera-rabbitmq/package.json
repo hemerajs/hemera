@@ -1,0 +1,25 @@
+{
+  "name": "hemera-rabbitmq",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint index.js",
+    "test": "nyc mocha -t 5000 ./test/**/*.js",
+    "coverage": "npm run test && nyc report --reporter=html"
+  },
+  "author": "Dustin Deus (https://github.com/StarpTech)",
+  "license": "MIT",
+  "dependencies": {
+    "hemera-parambulator": "0.1.x",
+    "rabbot": "1.0.x"
+  },
+  "devDependencies": {
+    "code": "4.0.x",
+    "hemera-testsuite": "1.0.x",
+    "istanbul": "0.4.x",
+    "mocha": "3.2.x",
+    "mocha-lcov-reporter": "1.2.x",
+    "nyc": "10.0.x"
+  }
+}
