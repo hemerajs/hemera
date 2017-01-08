@@ -1,6 +1,6 @@
 # Hemera-rabbit package
 
-[![npm](https://img.shields.io/npm/v/hemera-rabbit.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-rabbit)
+[![npm](https://img.shields.io/npm/v/hemera-rabbitmq.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-rabbitmq)
 
 **Status**: In development
 
