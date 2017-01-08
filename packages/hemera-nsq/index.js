@@ -11,9 +11,9 @@ exports.plugin = function hemeraNsqStore(options) {
   hemera.use(HemeraParambulator)
 
   /**
-   * Create a reader which emits all events to the next NATS subscriber
+   * Create a consumer which proxy all events to the next NATS subscriber
    */
-  function read(subject, channel) {
+  function consume(subject, channel) {
 
     if (readers[subject + channel]) {
 
@@ -108,7 +108,7 @@ exports.plugin = function hemeraNsqStore(options) {
           return cb(err)
         }
 
-        read(req.subject, req.channel)
+        consume(req.subject, req.channel)
 
         cb(null, true)
 
