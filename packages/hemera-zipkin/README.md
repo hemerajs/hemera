@@ -1,5 +1,7 @@
 # Hemera-zipkin package
 
+[![npm](https://img.shields.io/npm/v/hemera-zipkin.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-zipkin)
+
 This is a plugin to use [Zipkin](http://zipkin.io/) with Hemera.
 
 #### 1. Run zipkin in docker container
