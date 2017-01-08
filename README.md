@@ -87,6 +87,7 @@ Table of contents
       * [Clustering](#create-another-nats-server-and-create-a-cluster)
   * [Introduction to NATS](#introduction-to-nats)
   * [NATS Limits & features](#nats-limits--features)
+  * [Bridge to other messaging systems](#bridge-to-other-messaging systems)
   * [Monitoring](#monitoring)
   * [Nginx integration for NATS](#nginx-integration-for-nats)
   * [Contributing](#contributing)
@@ -522,6 +523,14 @@ npm run test
 ## Monitoring
 
 Easy and beautiful tool to monitor you app. [hemera-board](https://github.com/hemerajs/hemera-board)
+
+## Bridge to other messaging systems
+
+If you need message delivery or another guarantee which NATS cannot provide you are able to plugin any other messaging system. E.g we provide plugins for RabbitMQ and NSQ.
+
+![Hemera](https://github.com/StarpTech/hemera/raw/master/media/hemera-rabbitmq-nsq.png)
+> We can always build stronger guarantees on top, but we can’t always remove them from below."
+Tyler Treat
 
 ## Nginx integration for NATS
 
