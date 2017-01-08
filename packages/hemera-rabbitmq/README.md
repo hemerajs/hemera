@@ -1,5 +1,7 @@
 # Hemera-rabbit package
 
+[![npm](https://img.shields.io/npm/v/hemera-rabbit.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-rabbit)
+
 **Status**: In development
 
 This is a plugin to use [RabbitMQ](https://www.rabbitmq.com) with Hemera.
