@@ -25,7 +25,7 @@ hemera.ready(() => {
   // This action can be called multiple times.
   hemera.add({
     topic: 'nsq',
-    cmd: 'read',
+    cmd: 'subscribe',
     subject: 'processPayment',
     channel: 'payment'
   }, function (res, cb) {
@@ -37,7 +37,7 @@ hemera.ready(() => {
 
   hemera.add({
     topic: 'nsq',
-    cmd: 'read',
+    cmd: 'subscribe',
     subject: 'sendNewsletter',
     channel: 'userKlaus'
   }, function (res, cb) {
@@ -49,7 +49,7 @@ hemera.ready(() => {
 
   hemera.add({
     topic: 'nsq',
-    cmd: 'read',
+    cmd: 'subscribe',
     subject: 'sendNewsletter',
     channel: 'userPeter'
   }, function (res, cb) {

@@ -24,24 +24,30 @@ exports.plugin = function hemeraNsqStore(options) {
 
     reader.connect();
 
-    reader.on('discard', function (msg) {
+    reader.on(reader.NSQD_CONNECTED , function (host, port) {
+
+      hemera.log.info('Reader connected to %s:%s', host, port)
+
+    })
+
+    reader.on(reader.DISCARD, function (msg) {
 
       hemera.log.warn(msg, 'Message was discarded')
 
     })
 
-    reader.on('error', function (err) {
+    reader.on(reader.ERROR, function (err) {
 
       hemera.log.error(err, 'Reader error')
       hemera.fatal() //Let it crash and restart
 
     })
 
-    reader.on('message', function (msg) {
+    reader.on(reader.MESSAGE, function (msg) {
 
       hemera.act({
         topic: 'nsq',
-        cmd: 'read',
+        cmd: 'subscribe',
         subject: subject,
         channel: channel,
         data: msg.json()

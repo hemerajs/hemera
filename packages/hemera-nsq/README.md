@@ -4,6 +4,8 @@ This is a plugin to use [NSQ](http://nsq.io/) with Hemera.
 
 NSQ promotes distributed and decentralized topologies without single points of failure, enabling fault tolerance and high availability coupled with a reliable message delivery guarantee. It is complementary to the primary NATS transport system. 
 
+The client use JSON to transfer data.
+
 ### Start NSQ with Docker
 
 [Steps](http://nsq.io/deployment/docker.html)
@@ -39,7 +41,7 @@ hemera.ready(() => {
   // This action can be called multiple times.
   hemera.add({
     topic: 'nsq',
-    cmd: 'read',
+    cmd: 'subscribe',
     subject: 'click',
     channel: 'metrics'
   }, function (res, cb) {
