@@ -1,4 +1,4 @@
-# Hemera-nsq package
+# Hemera-rabbit package
 
 **Status**: In development
 
@@ -8,7 +8,7 @@ RabbitMQ is a messaging broker - an intermediary for messaging. It gives your ap
 
 The client use JSON to transfer data.
 
-Support:
+### Support:
 - PUB/SUB
 
 ### Start RabbitMQ instance
