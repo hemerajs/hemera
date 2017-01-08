@@ -1,5 +1,7 @@
 # Hemera-joi package
 
+[![npm](https://img.shields.io/npm/v/hemera-joi.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-joi)
+
 This is a plugin to use [Joi](https://github.com/hapijs/joi) with Hemera.
 
 #### Example
