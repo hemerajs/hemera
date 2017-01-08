@@ -1,6 +1,13 @@
 language: node_js
 sudo: true
 
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
+      
 node_js:
   - "4"
   - "5"
