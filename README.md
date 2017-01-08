@@ -87,7 +87,7 @@ Table of contents
       * [Clustering](#create-another-nats-server-and-create-a-cluster)
   * [Introduction to NATS](#introduction-to-nats)
   * [NATS Limits & features](#nats-limits--features)
-  * [Bridge to other messaging systems](#bridge-to-other-messaging systems)
+  * [Bridge to other messaging systems](#bridge-to-other-messaging-systems)
   * [Monitoring](#monitoring)
   * [Nginx integration for NATS](#nginx-integration-for-nats)
   * [Contributing](#contributing)
