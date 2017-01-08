@@ -1,5 +1,7 @@
 # Hemera-nsq package
 
+[![npm](https://img.shields.io/npm/v/hemera-nsq.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-nsq)
+
 This is a plugin to use [NSQ](http://nsq.io/) with Hemera.
 
 NSQ promotes distributed and decentralized topologies without single points of failure, enabling fault tolerance and high availability coupled with a reliable message delivery guarantee. It is complementary to the primary NATS transport system. 
