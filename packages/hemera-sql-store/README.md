@@ -5,6 +5,22 @@
 This is a plugin to use a SQL Database with Hemera.
 This plugin is based on [Knex](http://knexjs.org/).
 
+It can handle following dialects
+
+- pg
+- mysql
+- mariasql
+- mssql
+- mysql2
+- strong-oracle
+- sqlite3
+- oracle
+
+Mysql and postgresql driver are preinstalled. If you need a different you can install it easily with
+```
+npm install --save <driver>
+```
+
 ### Start Arangodb with Docker
 
 ```js
