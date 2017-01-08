@@ -1,6 +1,6 @@
 {
   "name": "hemera-rabbitmq",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-parambulator": "0.1.x",
+    "hemera-parambulator": "^0.1.64",
     "rabbot": "1.0.x"
   },
   "devDependencies": {
