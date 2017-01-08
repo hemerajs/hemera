@@ -1,15 +1,12 @@
 # Hemera
 
+![Hemera](https://github.com/StarpTech/hemera/raw/master/media/hemera-architecture.png)
+
 [![License MIT](https://img.shields.io/npm/l/express.svg)](http://opensource.org/licenses/MIT)
 [![Build Status](https://travis-ci.org/hemerajs/hemera.svg?branch=master)](https://travis-ci.org/hemerajs/hemera)
 [![NPM Downloads](https://img.shields.io/npm/dt/nats-hemera.svg?style=flat)](https://www.npmjs.com/package/nats-hemera)
 [![Coverage Status](https://coveralls.io/repos/github/hemerajs/hemera/badge.svg?branch=master)](https://coveralls.io/github/hemerajs/hemera?branch=master)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/hemerajs/hemera)
-
-![Hemera](https://github.com/StarpTech/hemera/raw/master/media/hemera-architecture.png)
-![Hemera](https://github.com/StarpTech/hemera/raw/master/media/hemera-rabbitmq-nsq.png)
-> We can always build stronger guarantees on top, but we can’t always remove them from below."
-Tyler Treat
 
 A [Node.js](http://nodejs.org/) microservices toolkit for the [NATS messaging system](https://nats.io)
 
