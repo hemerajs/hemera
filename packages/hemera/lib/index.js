@@ -316,15 +316,19 @@ class Hemera extends EventEmitter {
 
     this._extensions[type].subscribe(function (next) {
 
-      let currentAct = this._actMeta.plugin
+      let currentActPlugin = this._actMeta.plugin
       let currentPlugin = self.plugin$
 
       // when we have a plugin context and the ext is plugin scoped only.
-      if (!globalScoped && currentPlugin.attributes &&  currentPlugin.options && currentPlugin.options.privateExtensions) {
+      if (!globalScoped
+        && currentPlugin.attributes
+        && currentPlugin.options
+        && currentPlugin.options.privateExtensions) {
 
-        if (currentAct && currentPlugin) {
+        // check if the action comes from a plugin
+        if (currentActPlugin) {
 
-          if (currentPlugin.attributes.name === currentAct.name) {
+          if (currentPlugin.attributes.name === currentActPlugin.name) {
 
             return handler.call(this, next)
           } else {
