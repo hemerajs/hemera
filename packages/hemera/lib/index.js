@@ -310,9 +310,35 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  ext(type: string, handler: Function): void {
+  ext(type: string, handler: Function, globalScoped: boolean): void {
 
-    this._extensions[type].subscribe(handler)
+    let self = this
+
+    this._extensions[type].subscribe(function (next) {
+
+      let currentAct = this._actMeta.plugin
+      let currentPlugin = self.plugin$.attributes
+
+      // when we have a plugin context and the ext is plugin scoped only.
+      if (!globalScoped && currentPlugin && currentPlugin.private) {
+
+        if (currentAct && currentPlugin) {
+
+          if (currentPlugin.name === currentAct.name) {
+
+            return handler.call(this, next)
+          } else {
+            return next()
+          }
+        }
+
+        return next()
+      } else {
+
+         return handler.call(this, next)
+      }
+
+    })
 
   }
   /**
@@ -654,7 +680,8 @@ class Hemera extends EventEmitter {
     let actMeta: ActMeta = {
       schema: schema,
       pattern: origPattern,
-      action: cb
+      action: cb,
+      plugin: this.plugin$.attributes
     }
 
     let handler = this._catalog.lookup(origPattern)

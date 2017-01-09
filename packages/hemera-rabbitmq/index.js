@@ -85,5 +85,6 @@ exports.plugin = function hemeraRabbitmq(options) {
 exports.options = {}
 
 exports.attributes = {
-  name: 'hemera-rabbitmq'
+  name: 'hemera-rabbitmq',
+  dependencies: ['hemera-parambulator']
 }

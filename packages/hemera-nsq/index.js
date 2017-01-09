@@ -125,5 +125,6 @@ exports.options = {
 }
 
 exports.attributes = {
-  name: 'hemera-nsq'
+  name: 'hemera-nsq',
+  dependencies: ['hemera-parambulator']
 }

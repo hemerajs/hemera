@@ -918,6 +918,161 @@ describe('Plugin interface', function () {
     })
   })
 
+  it('Should be able to use scoped plugin extensions', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let extensionGlobal = Sinon.spy()
+    let extensionPluginPrivate = Sinon.spy()
+    let extensionPluginGlobal = Sinon.spy()
+
+    hemera.ready(() => {
+
+      hemera.ext('onServerPreHandler', function (next) {
+
+        extensionGlobal()
+        next()
+
+      })
+
+      hemera.add({
+        topic: 'math',
+        cmd: 'sub'
+      }, (resp, cb) => {
+
+        cb(null, {
+          result: resp.a - resp.b
+        })
+      })
+
+      let pluginOptions = {
+        a: '1'
+      }
+
+      //Plugin
+      let plugin1 = function (options) {
+
+        let hemera = this
+
+        hemera.ext('onServerPreHandler', function (next) {
+
+          extensionPluginPrivate()
+          next()
+
+        })
+
+        hemera.add({
+          topic: 'math',
+          cmd: 'add'
+        }, (resp, cb) => {
+
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        })
+
+
+        expect(hemera._extensions.onServerPreHandler._handler.length).to.be.equals(2)
+
+      }
+
+      hemera.use({
+        plugin: plugin1,
+        attributes: {
+          name: 'myPlugin1',
+          private: true
+        },
+        options: pluginOptions
+      })
+
+      //Plugin
+      let plugin2 = function (options) {
+
+        let hemera = this
+
+        hemera.ext('onServerPreHandler', function (next) {
+
+          extensionPluginGlobal()
+          next()
+
+        }, true)
+
+        hemera.add({
+          topic: 'math',
+          cmd: 'multiply'
+        }, (resp, cb) => {
+
+          cb(null, {
+            result: resp.a * resp.b
+          })
+        })
+
+      }
+
+      hemera.use({
+        plugin: plugin2,
+        attributes: {
+          name: 'myPlugin2',
+          private: false
+        },
+        options: pluginOptions
+      })
+
+
+      expect(hemera._extensions.onServerPreHandler._handler.length).to.be.equals(3)
+
+      /**
+       * Call plugin declared action
+       */
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, (err, resp) => {
+
+        expect(extensionPluginPrivate.called).to.be.equals(true)
+        expect(extensionGlobal.called).to.be.equals(true)
+
+        /**
+         * Call global declared action
+         */
+        hemera.act({
+          topic: 'math',
+          cmd: 'sub',
+          a: 2,
+          b: 1
+        }, (err, resp) => {
+
+          expect(extensionPluginPrivate.calledTwice).to.be.equals(false)
+          expect(extensionGlobal.calledTwice).to.be.equals(true)
+
+          /**
+           * Call plugin declared action
+           */
+          hemera.act({
+            topic: 'math',
+            cmd: 'multiply',
+            a: 2,
+            b: 1
+          }, (err, resp) => {
+
+            expect(extensionGlobal.callCount).to.be.equals(3)
+            expect(extensionPluginGlobal.callCount).to.be.equals(3)
+            expect(extensionPluginPrivate.callCount).to.be.equals(1)
+
+            hemera.close()
+            done()
+          })
+        })
+
+      })
+
+    })
+  })
+
   it('Should be able to check duplicate registered plugins', function (done) {
 
     const nats = require('nats').connect(authUrl)
