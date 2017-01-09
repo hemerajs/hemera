@@ -317,14 +317,14 @@ class Hemera extends EventEmitter {
     this._extensions[type].subscribe(function (next) {
 
       let currentAct = this._actMeta.plugin
-      let currentPlugin = self.plugin$.attributes
+      let currentPlugin = self.plugin$
 
       // when we have a plugin context and the ext is plugin scoped only.
-      if (!globalScoped && currentPlugin && currentPlugin.private) {
+      if (!globalScoped && currentPlugin.attributes &&  currentPlugin.options && currentPlugin.options.privateExtensions) {
 
         if (currentAct && currentPlugin) {
 
-          if (currentPlugin.name === currentAct.name) {
+          if (currentPlugin.attributes.name === currentAct.name) {
 
             return handler.call(this, next)
           } else {
@@ -348,11 +348,12 @@ class Hemera extends EventEmitter {
    */
   use(params: PluginDefinition) {
 
-    if (this._plugins[params.attributes.name]) {
+    // plugin scoped plugins can be used multiple times
+    if (this._plugins[params.attributes.name] && !params.options.privateExtensions) {
       let error = new Errors.HemeraError(Constants.PLUGIN_ALREADY_IN_USE, {
         plugin: params.attributes.name
       })
-      this.log.error(error)
+      this.log.info(error)
       throw (error)
     }
 
@@ -360,6 +361,7 @@ class Hemera extends EventEmitter {
     let ctx = this.createContext()
     ctx.plugin$ = {}
     ctx.plugin$.attributes = params.attributes
+    ctx.plugin$.options = params.options
     params.plugin.call(ctx, params.options)
 
     this.log.info(params.attributes.name, Constants.PLUGIN_ADDED)

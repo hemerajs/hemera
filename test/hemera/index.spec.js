@@ -947,10 +947,6 @@ describe('Plugin interface', function () {
         })
       })
 
-      let pluginOptions = {
-        a: '1'
-      }
-
       //Plugin
       let plugin1 = function (options) {
 
@@ -981,10 +977,11 @@ describe('Plugin interface', function () {
       hemera.use({
         plugin: plugin1,
         attributes: {
-          name: 'myPlugin1',
-          private: true
+          name: 'myPlugin1'
         },
-        options: pluginOptions
+        options: {
+          privateExtensions: true
+        }
       })
 
       //Plugin
@@ -1014,10 +1011,9 @@ describe('Plugin interface', function () {
       hemera.use({
         plugin: plugin2,
         attributes: {
-          name: 'myPlugin2',
-          private: false
+          name: 'myPlugin2'
         },
-        options: pluginOptions
+        options: {}
       })
 
 
@@ -1145,7 +1141,77 @@ describe('Plugin interface', function () {
       }
     })
   })
+
+  it('Should be able to use private plugins multiple times', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+
+      let pluginOptions = {
+        a: '1',
+        privateExtensions: true
+      }
+
+      //Plugin
+      let plugin = function (options) {
+
+        let hemera = this
+
+        hemera.add({
+          topic: 'math',
+          cmd: 'add'
+        }, (resp, cb) => {
+
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        })
+
+      }
+
+      //Plugin
+      let plugin2 = function (options) {
+
+        let hemera = this
+
+        hemera.add({
+          topic: 'math',
+          cmd: 'sub'
+        }, (resp, cb) => {
+
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        })
+
+      }
+
+      hemera.use({
+        plugin: plugin,
+        attributes: {
+          name: 'myPlugin'
+        },
+        options: pluginOptions
+      })
+      hemera.use({
+        plugin: plugin2,
+        attributes: {
+          name: 'myPlugin'
+        },
+        options: pluginOptions
+      })
+
+      hemera.close()
+      done()
+    })
+  })
+
 })
+
+
 
 describe('Logging interface', function () {
 

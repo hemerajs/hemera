@@ -3,6 +3,9 @@
 const Rabbit = require('rabbot');
 const HemeraParambulator = require('hemera-parambulator')
 
+// Avoid collisions with other extensions
+HemeraParambulator.options.privateExtensions = true
+
 exports.plugin = function hemeraRabbitmq(options) {
 
   const hemera = this

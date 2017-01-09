@@ -3,6 +3,9 @@
 const Nsq = require('nsqjs');
 const HemeraParambulator = require('hemera-parambulator')
 
+// Avoid collisions with other extensions
+HemeraParambulator.options.privateExtensions = true
+
 exports.plugin = function hemeraNsqStore(options) {
 
   const hemera = this

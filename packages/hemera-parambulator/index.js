@@ -22,9 +22,7 @@ exports.plugin = function hemeraParambulator() {
 }
 
 exports.options = {
-  attributes: {
-    private: true //All hemera extension will be marked as scoped. You can use different extensions per plugin
-  }
+  privateExtensions: false
 }
 
 exports.attributes = {
