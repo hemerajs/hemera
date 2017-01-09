@@ -24,10 +24,8 @@ hemera.ready(() => {
   // Listen to a NSQ events
   // This action can be called multiple times.
   hemera.add({
-    topic: 'nsq',
-    cmd: 'subscribe',
-    subject: 'processPayment',
-    channel: 'payment'
+    topic: 'nsq.processPayment.payment',
+    cmd: 'subscribe'
   }, function (res, cb) {
 
     this.log.info(res, 'Data')
@@ -36,22 +34,8 @@ hemera.ready(() => {
   })
 
   hemera.add({
-    topic: 'nsq',
-    cmd: 'subscribe',
-    subject: 'sendNewsletter',
-    channel: 'userKlaus'
-  }, function (res, cb) {
-
-    this.log.info(res, 'Data')
-
-    cb()
-  })
-
-  hemera.add({
-    topic: 'nsq',
-    cmd: 'subscribe',
-    subject: 'sendNewsletter',
-    channel: 'userPeter'
+    topic: 'nsq.newsletter.germany',
+    cmd: 'subscribe'
   }, function (res, cb) {
 
     this.log.info(res, 'Data')
@@ -79,24 +63,8 @@ hemera.ready(() => {
   hemera.act({
     topic: 'nsq',
     cmd: 'publish',
-    subject: 'sendNewsletter',
-    channel: 'userPeter',
-    data: {
-      to: 'peter',
-      text: 'Sry but you lose!'
-    }
-  }, function (err, resp) {
-
-    this.log.info(resp, 'ACK')
-
-  })
-
-  // Send a message to NSQ
-  hemera.act({
-    topic: 'nsq',
-    cmd: 'publish',
-    subject: 'sendNewsletter',
-    channel: 'userKlaus',
+    subject: 'newsletter',
+    channel: 'germany',
     data: {
       to: 'klaus',
       text: 'You got a gift!'

@@ -17,6 +17,9 @@ The client use JSON to transfer data.
 
 I recommend to use the free plan to create a RabbitMQ instance on http://cloudamqp.com
 
+### How does it work with NATS and Hemera
+We use a seperate topic for every RabbitMQ Topic because with that you can listen in every hemera service for amqp events. Every message will be delivered to the next subscriber. If you have running two instances of your hemera-amqp service and you use a __fanout__ mechanism you will execute your RPC multiple times. As you can see RabbitMQ give you new possibilities how to distribute your data but without lossing the benefits of nats-hemera with regard to load balancing and service-discovery.
+
 #### Example
 
 ```js
@@ -61,9 +64,8 @@ hemera.ready(() => {
   // Listen to a Rabbitmq events
   // This action can be called multiple times.
   hemera.add({
-    topic: 'rabbitmq',
-    cmd: 'subscribe',
-    type: 'publisher.message'
+    topic: 'rabbitmq.publisher.message',
+    cmd: 'subscribe'
   }, function (res, cb) {
 
     this.log.info(res, 'Data')

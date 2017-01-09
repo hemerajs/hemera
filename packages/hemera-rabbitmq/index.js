@@ -30,9 +30,8 @@ exports.plugin = function hemeraRabbitmq(options) {
       const handler = Rabbit.handle(type, function (msg) {
 
         hemera.act({
-          topic: 'rabbitmq',
+          topic: `rabbitmq.${type}`,
           cmd: 'subscribe',
-          type: type,
           data: msg.body
         }, (err) => {
 
@@ -69,7 +68,6 @@ exports.plugin = function hemeraRabbitmq(options) {
       consume(req.type)
 
       Rabbit.publish(req.exchange, {
-          routingKey: direction,
           type: req.type,
           body: req.data
         }).then(function () {

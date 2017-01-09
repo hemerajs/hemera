@@ -7,7 +7,7 @@ const hemeraRabbitmq = require('./../packages/hemera-rabbitmq')
 hemeraRabbitmq.options.rabbitmq = {
   // arguments used to establish a connection to a broker
   connection: {
-    uri: '<uri>'
+    uri: 'amqp://lprrunqx:XgIUdmLJGDYATeIC7WinN7-zWiB6nvqO@spotted-monkey.rmq.cloudamqp.com/lprrunqx'
   },
 
   // define the exchanges
@@ -39,9 +39,8 @@ hemera.ready(() => {
   // Listen to a Rabbitmq events
   // This action can be called multiple times.
   hemera.add({
-    topic: 'rabbitmq',
-    cmd: 'subscribe',
-    type: 'publisher.message'
+    topic: 'rabbitmq.publisher.message',
+    cmd: 'subscribe'
   }, function (res, cb) {
 
     this.log.info(res, 'Data')

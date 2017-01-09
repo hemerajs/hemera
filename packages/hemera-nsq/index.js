@@ -48,10 +48,8 @@ exports.plugin = function hemeraNsqStore(options) {
     reader.on(reader.MESSAGE, function (msg) {
 
       hemera.act({
-        topic: 'nsq',
+        topic: `nsq.${subject}.${channel}`,
         cmd: 'subscribe',
-        subject: subject,
-        channel: channel,
         data: msg.json()
       }, (err) => {
 
