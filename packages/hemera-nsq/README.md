@@ -13,7 +13,7 @@ The client use JSON to transfer data.
 [Steps](http://nsq.io/deployment/docker.html)
 
 ### How does it work with NATS and Hemera
-We use a seperate topic for every NSQ Topic/Channels because with that you can listen in every hemera service for amqp events. Every message will be delivered to the next subscriber. If you have running two instances of your hemera-amqp service and you use a __fanout__ mechanism you will execute your RPC multiple times. As you can see NSQ give you new possibilities how to distribute your data but without lossing the benefits of nats-hemera with regard to load balancing and service-discovery.
+We use a seperate topic for every NSQ Topic/Channels because with that you can listen in every hemera service for events. Every message will be delivered to the next subscriber. If you have running two instances of your hemera-amqp service and you use a __fanout__ mechanism you will execute your RPC multiple times. As you can see NSQ give you new possibilities how to distribute your data but without lossing the benefits of nats-hemera with regard to load balancing and service-discovery.
 
 #### Example
 
