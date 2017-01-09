@@ -23,7 +23,7 @@ Mysql and postgresql driver are preinstalled. If you need a different you can in
 npm install --save <driver>
 ```
 
-### Start Arangodb with Docker
+### Start Mariadb with Docker
 
 ```js
 docker run -d --name mysql -p 3306:3306 dockerfile/mariadb
