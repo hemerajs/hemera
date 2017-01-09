@@ -1,6 +1,6 @@
 {
   "name": "hemera-sql-store",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-parambulator": "^0.1.64",
+    "hemera-parambulator": "^0.1.65",
     "knex": "0.12.x",
     "mysql": "2.12.x",
     "pg": "6.1.x",
