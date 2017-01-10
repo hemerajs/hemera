@@ -11,7 +11,7 @@ const expect = Code.expect
 
 process.setMaxListeners(0);
 
-describe.skip('Hemera-msgpack', function () {
+describe('Hemera-msgpack', function () {
 
   var PORT = 6243
   var flags = ['--user', 'derek', '--pass', 'foobar']
@@ -31,11 +31,11 @@ describe.skip('Hemera-msgpack', function () {
 
   it('encode and decode', function (done) {
 
-    const nats = require('nats').connect(authUrl)
+    const nats = require('nats').connect({ url: authUrl, preserveBuffers: true })
 
     const hemera = new Hemera(nats, {
       crashOnFatal: false,
-      logLevel: 'silent'
+      logLevel: 'info'
     })
 
     hemera.use(HemeraMsgpack)

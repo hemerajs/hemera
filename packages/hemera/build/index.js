@@ -112,11 +112,12 @@ class Hemera extends EventEmitter {
      */
     this._extensions.onClientPreRequest.subscribe(function (next) {
 
+      let ctx = this
+
       let pattern = this._pattern
 
       let prevCtx = this._prevContext
       let cleanPattern = this._cleanPattern
-      let ctx = this
 
       // shared context
       ctx.context$ = pattern.context$ || prevCtx.context$
@@ -153,6 +154,8 @@ class Hemera extends EventEmitter {
       }
 
       ctx._message = message
+
+      ctx._request = ctx._encoder.encode(ctx._message)
 
       ctx.log.info(pattern, `ACT_OUTBOUND - ID:${String(ctx._message.request$.id)}`)
 
@@ -755,9 +758,6 @@ class Hemera extends EventEmitter {
 
         return
       }
-
-      // encode msg to JSON
-      self._request = self._encoder.encode(self._message)
 
       // send request
       let sid = self.sendRequest(pattern.topic, self._request, (response) => {
