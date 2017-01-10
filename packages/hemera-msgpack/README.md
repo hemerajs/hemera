@@ -17,7 +17,7 @@ https://github.com/nats-io/node-nats/issues/108#issuecomment-270795405
 
 const Hemera = require('nats-hemera')
 const nats = require('nats').connect({ 
-  // otherwise NATS will interpet all data as LATIN1 (binary encoding)
+  // otherwise NATS will interpret all data as LATIN1 (binary encoding)
   preserveBuffers: true
 })
 const HemeraMsgpack = require('hemera-msgpack')
