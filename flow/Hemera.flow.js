@@ -6,7 +6,7 @@ declare type Config = {
 }
 
 type PluginDefinition = {
-  attributes: { name: string };
+  attributes: { name: string, dependencies: Array<string> };
   plugin: Function;
   options: any;
 }

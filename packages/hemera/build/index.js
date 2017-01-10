@@ -328,7 +328,8 @@ class Hemera extends EventEmitter {
         // check if the action comes from a plugin
         if (currentActPlugin) {
 
-          if (currentPlugin.attributes.name === currentActPlugin.name) {
+          if (currentPlugin.attributes.name === currentActPlugin.name
+          || currentActPlugin.dependencies.indexOf(currentPlugin.attributes.name) > -1) {
 
             return handler.call(this, next)
           } else {
@@ -365,6 +366,7 @@ class Hemera extends EventEmitter {
     let ctx = this.createContext()
     ctx.plugin$ = {}
     ctx.plugin$.attributes = params.attributes
+    ctx.plugin$.attributes.dependencies = params.attributes.dependencies || []
     ctx.plugin$.options = params.options
     params.plugin.call(ctx, params.options)
 

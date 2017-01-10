@@ -29,7 +29,8 @@ hemera.ready(() => {
   hemera.use({
     plugin: myPlugin,
     attributes: {
-      name: 'myPlugin'
+      name: 'myPlugin',
+      dependencies: []
     },
     options: {
       privateExtensions: true // privateExtensions means that plugin extension should only affect on the action which are defined in the plugin

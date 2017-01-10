@@ -905,10 +905,12 @@ describe('Plugin interface', function () {
 
       expect(hemera.plugins).to.be.equals({
         myPlugin1: {
-          name: 'myPlugin1'
+          name: 'myPlugin1',
+          dependencies: []
         },
         myPlugin2: {
-          name: 'myPlugin2'
+          name: 'myPlugin2',
+          dependencies: []
         }
       })
 
@@ -927,6 +929,7 @@ describe('Plugin interface', function () {
     let extensionGlobal = Sinon.spy()
     let extensionPluginPrivate = Sinon.spy()
     let extensionPluginGlobal = Sinon.spy()
+    let extensionPluginPlugin = Sinon.spy()
 
     hemera.ready(() => {
 
@@ -952,6 +955,29 @@ describe('Plugin interface', function () {
 
         let hemera = this
 
+        let pluginPlugin = function (options) {
+
+          let hemera = this
+
+          hemera.ext('onServerPreHandler', function (next) {
+
+            extensionPluginPlugin()
+            next()
+
+          })
+
+        }
+
+        hemera.use({
+          plugin: pluginPlugin,
+          attributes: {
+            name: 'pluginPlugin'
+          },
+          options: {
+            privateExtensions: true
+          }
+        })
+
         hemera.ext('onServerPreHandler', function (next) {
 
           extensionPluginPrivate()
@@ -970,14 +996,15 @@ describe('Plugin interface', function () {
         })
 
 
-        expect(hemera._extensions.onServerPreHandler._handler.length).to.be.equals(2)
+        expect(hemera._extensions.onServerPreHandler._handler.length).to.be.equals(3)
 
       }
 
       hemera.use({
         plugin: plugin1,
         attributes: {
-          name: 'myPlugin1'
+          name: 'myPlugin1',
+          dependencies: ['pluginPlugin']
         },
         options: {
           privateExtensions: true
@@ -994,7 +1021,7 @@ describe('Plugin interface', function () {
           extensionPluginGlobal()
           next()
 
-        }, true)
+        })
 
         hemera.add({
           topic: 'math',
@@ -1017,7 +1044,7 @@ describe('Plugin interface', function () {
       })
 
 
-      expect(hemera._extensions.onServerPreHandler._handler.length).to.be.equals(3)
+      expect(hemera._extensions.onServerPreHandler._handler.length).to.be.equals(4)
 
       /**
        * Call plugin declared action
@@ -1059,8 +1086,12 @@ describe('Plugin interface', function () {
             expect(extensionPluginGlobal.callCount).to.be.equals(3)
             expect(extensionPluginPrivate.callCount).to.be.equals(1)
 
+            expect(extensionPluginPlugin.callCount).to.be.equals(1)
+
             hemera.close()
             done()
+
+
           })
         })
 
