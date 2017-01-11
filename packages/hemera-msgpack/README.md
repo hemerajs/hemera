@@ -6,9 +6,6 @@ This is a plugin to use [Mspack](http://msgpack.org/index.html) with Hemera.
 
 MessagePack is an efficient binary serialization format. It lets you exchange data among multiple languages like JSON. But it's faster and smaller. Small integers are encoded into a single byte, and typical short strings require only one extra byte in addition to the strings themselves.
 
-#### Blocked issues
-
-https://github.com/nats-io/node-nats/issues/108#issuecomment-270795405
 
 #### Example
 
@@ -16,6 +13,7 @@ https://github.com/nats-io/node-nats/issues/108#issuecomment-270795405
 'use strict'
 
 const Hemera = require('nats-hemera')
+// Use NATS driver >= 0.7.2
 const nats = require('nats').connect({ 
   // otherwise NATS will interpret all data as LATIN1 (binary encoding)
   preserveBuffers: true

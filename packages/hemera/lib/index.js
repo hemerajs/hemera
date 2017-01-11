@@ -155,7 +155,7 @@ class Hemera extends EventEmitter {
 
       ctx._message = message
 
-      ctx._request = ctx._encoder.encode(ctx._message)
+      ctx._request = ctx._encoder.encode.call(ctx, ctx._message)
 
       ctx.log.info(pattern, `ACT_OUTBOUND - ID:${String(ctx._message.request$.id)}`)
 
@@ -489,7 +489,7 @@ class Hemera extends EventEmitter {
         self._buildMessage()
       }
 
-      const msg = self._encoder.encode(self._message)
+      const msg = self._encoder.encode.call(self, self._message)
 
       // indicate that an error occurs and that the program should exit
       if (self._shouldCrash) {
@@ -537,7 +537,7 @@ class Hemera extends EventEmitter {
       let ctx = this.createContext()
       ctx._shouldCrash = false
       ctx._replyTo = replyTo
-      ctx._request = self._decoder.decode(request)
+      ctx._request = self._decoder.decode.call(ctx, request)
       ctx._pattern = {}
       ctx._actMeta = {}
 
@@ -766,7 +766,7 @@ class Hemera extends EventEmitter {
       // send request
       let sid = self.sendRequest(pattern.topic, self._request, (response: any) => {
 
-        self._response = self._decoder.decode(response)
+        self._response = self._decoder.decode.call(ctx, response)
 
         try {
 
