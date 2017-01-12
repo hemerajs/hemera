@@ -1,4 +1,4 @@
-//
+// 
 
 /*!
  * hemera
@@ -41,35 +41,35 @@ var defaultConfig = {
  */
 class Hemera extends EventEmitter {
 
+  
+  
+  
+  
+  
+  
 
+  
 
+  
+  
+  
+  
+  
 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  
+  
 
   constructor(transport, params) {
 
@@ -147,17 +147,17 @@ class Hemera extends EventEmitter {
       // build msg
       let message = {
         pattern: cleanPattern,
-        meta$: ctx.meta$,
-        delegate$: ctx.delegate$,
-        trace$: ctx.trace$,
-        request$: request
+        meta: ctx.meta$,
+        delegate: ctx.delegate$,
+        trace: ctx.trace$,
+        request: request
       }
 
       ctx._message = message
 
-      ctx._request = ctx._encoder.encode(ctx._message)
+      ctx._request = ctx._encoder.encode.call(ctx, ctx._message)
 
-      ctx.log.info(pattern, `ACT_OUTBOUND - ID:${String(ctx._message.request$.id)}`)
+      ctx.log.info(pattern, `ACT_OUTBOUND - ID:${String(ctx._message.request.id)}`)
 
       ctx.emit('onClientPreRequest', ctx)
 
@@ -171,11 +171,11 @@ class Hemera extends EventEmitter {
       let msg = ctx._response.value
 
       // pass to act context
-      ctx.request$ = msg.request$ || {}
+      ctx.request$ = msg.request || {}
       ctx.request$.service = pattern.topic
       ctx.request$.method = Util.pattern(pattern)
-      ctx.trace$ = msg.trace$ || {}
-      ctx.meta$ = msg.meta$ || {}
+      ctx.trace$ = msg.trace || {}
+      ctx.meta$ = msg.meta || {}
 
       ctx.log.info(`ACT_INBOUND - ID:${ctx.request$.id} (${ctx.request$.duration / 1000000}ms)`)
 
@@ -194,10 +194,10 @@ class Hemera extends EventEmitter {
 
       if (msg) {
 
-        ctx.meta$ = msg.meta$ || {}
-        ctx.trace$ = msg.trace$ || {}
-        ctx.delegate$ = msg.delegate$ || {}
-        ctx.request$ = msg.request$ || {}
+        ctx.meta$ = msg.meta || {}
+        ctx.trace$ = msg.trace || {}
+        ctx.delegate$ = msg.delegate || {}
+        ctx.request$ = msg.request || {}
       }
 
       ctx.emit('onServerPreRequest', ctx)
@@ -445,16 +445,16 @@ class Hemera extends EventEmitter {
     let result = this._response
 
     let message = {
-      meta$: this.meta$ || {},
-      trace$: this.trace$ || {},
-      request$: this.request$,
+      meta: this.meta$ || {},
+      trace: this.trace$ || {},
+      request: this.request$,
       result: result instanceof Error ? null : result,
-      error: result instanceof Error ? Errio.stringify(result) : null
+      error: result instanceof Error ? Errio.toObject(result) : null
     }
 
     let endTime = Util.nowHrTime()
-    message.request$.duration = endTime - message.request$.timestamp
-    message.trace$.duration = endTime - message.request$.timestamp
+    message.request.duration = endTime - message.request.timestamp
+    message.trace.duration = endTime - message.request.timestamp
 
     this._message = message
 
@@ -489,7 +489,7 @@ class Hemera extends EventEmitter {
         self._buildMessage()
       }
 
-      const msg = self._encoder.encode(self._message)
+      const msg = self._encoder.encode.call(self, self._message)
 
       // indicate that an error occurs and that the program should exit
       if (self._shouldCrash) {
@@ -537,7 +537,7 @@ class Hemera extends EventEmitter {
       let ctx = this.createContext()
       ctx._shouldCrash = false
       ctx._replyTo = replyTo
-      ctx._request = self._decoder.decode(request)
+      ctx._request = self._decoder.decode.call(ctx, request)
       ctx._pattern = {}
       ctx._actMeta = {}
 
@@ -762,7 +762,7 @@ class Hemera extends EventEmitter {
       // send request
       let sid = self.sendRequest(pattern.topic, self._request, (response) => {
 
-        self._response = self._decoder.decode(response)
+        self._response = self._decoder.decode.call(ctx, response)
 
         try {
 
@@ -800,7 +800,7 @@ class Hemera extends EventEmitter {
 
               if (self._response.value.error) {
 
-                let responseError = Errio.parse(self._response.value.error)
+                let responseError = Errio.fromObject(self._response.value.error)
                 let responseErrorCause = responseError.cause
                 let error = new Errors.BusinessError(Constants.BUSINESS_ERROR, {
                   pattern: self._cleanPattern

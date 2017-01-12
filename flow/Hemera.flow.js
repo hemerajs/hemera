@@ -69,19 +69,19 @@ type Pattern = {
 }
 
 type Message = {
-  meta$: Meta;
-  trace$: Trace;
-  request$: Request;
+  meta: Meta;
+  trace: Trace;
+  request: Request;
   result: any;
   error: Error | null;
 }
 
 type ActMessage = {
   pattern: any;
-  meta$: any;
-  delegate$: any;
-  trace$: any;
-  request$: Request;
+  meta: any;
+  delegate: any;
+  trace: any;
+  request: Request;
 }
 
 type ActResponse = any;

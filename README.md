@@ -340,8 +340,8 @@ Tracing in the style of [Google’s Dapper](http://static.googleusercontent.com/
 In any act or add you can access the property `this.request$` or `this.trace$` to get information about your current or parent call. You can listen on the `inbound` event to get detail information.
 
 ```js
-    meta$: {}
-    trace$: {
+    meta: {}
+    trace: {
       "traceId": "CRCNVG28BUVOBUS7MDY067",
       "spanId": "CRCNVG28BUVOLJT4L6B2DW",
       "timestamp": 887381084442,
@@ -349,7 +349,7 @@ In any act or add you can access the property `this.request$` or `this.trace$` t
       "service": "math",
       "method": "a:1,b:20,cmd:add,topic:math"
     }
-    request$: {
+    request: {
       "id": "CRCNVG28BUVONL3P5L76AR",
       "timestamp": 887381084459,
       "duration": 10851,
@@ -459,11 +459,54 @@ const hemera = new Hemera(nats, { logLevel: 'info' });
 Format: JSON
 
 ```JSON
-pattern: "<object>",
-meta$: "<object>",
-delegate$: "<object>",
-trace$: "<object>",
-request$: "<object>",
+message ErrorCause {
+  string message = 1;
+  string name = 2;
+}
+
+message RootCause {
+  string message = 1;
+  string name = 2;
+}
+
+message Error {
+  string message = 1;
+  string name = 2;
+  Pattern pattern = 3;
+  ErrorCause cause = 4;
+  RootCause rootCause = 5;
+  string ownStack = 6;
+}
+
+message Request {
+  string id = 1;
+  string parentId = 2;
+  int64 timestamp = 3;
+  int32 duration = 4;
+}
+
+message Trace {
+  string traceId = 1;
+  string spanId = 2;
+  int64 timestamp = 3;
+  string service = 4;
+  string method = 5;
+  int32 duration = 6;
+}
+
+message Pattern = Object;
+message Result = Any;
+message Delegate = Object;
+message Meta = Object;
+
+message Protocol {
+    Trace trace = 1;
+    Request request = 2;
+    Result result = 3;
+    Error error = 4;
+    Meta meta = 5;
+    Delegate delegate = 6;
+}
 ```
 
 ## Best practice

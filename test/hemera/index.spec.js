@@ -757,7 +757,7 @@ describe('Error handling', function () {
           stub.restore()
           hemera.close()
           done()
-        }, 200)
+        }, 50)
 
         throw (new Error('Test'))
       })
@@ -1761,6 +1761,7 @@ describe('Extension error', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
+      logLevel: 'silent',
       crashOnFatal: false
     })
 
@@ -1817,6 +1818,7 @@ describe('Extension error', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
+      logLevel: 'silent',
       crashOnFatal: false
     })
 
@@ -1873,6 +1875,7 @@ describe('Extension error', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
+      logLevel: 'silent',
       crashOnFatal: false
     })
 
@@ -1929,6 +1932,7 @@ describe('Extension error', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
+      logLevel: 'silent',
       crashOnFatal: false
     })
 
