@@ -458,7 +458,7 @@ const hemera = new Hemera(nats, { logLevel: 'info' });
 
 Format: JSON
 
-```JSON
+```
 message ErrorCause {
   string message = 1;
   string name = 2;
