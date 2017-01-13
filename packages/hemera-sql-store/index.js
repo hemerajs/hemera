@@ -80,10 +80,10 @@ exports.plugin = function hemeraSqlStore(options) {
 }
 
 exports.options = {
-  url: null,
-  connection: null
+  payloadValidator: 'hemera-parambulator'
 }
 
 exports.attributes = {
-  name: 'hemera-sql-store'
+  name: 'hemera-sql-store',
+  dependencies: ['hemera-parambulator']
 }

@@ -198,15 +198,15 @@ exports.plugin = function hemeraArangoStore(options) {
     let db = useDb(req.databaseName)
 
     db.collection(req.collection)
-    .save(req.data, (err, res) => {
+      .save(req.data, (err, res) => {
 
-      if (err) {
-        return cb(new Error(err.message))
-      }
+        if (err) {
+          return cb(new Error(err.message))
+        }
 
-      return cb(null, res)
+        return cb(null, res)
 
-    });
+      });
 
   })
 
@@ -225,15 +225,15 @@ exports.plugin = function hemeraArangoStore(options) {
     let db = useDb(req.databaseName)
 
     db.collection(req.collection)
-    .updateByExample(req.filter, req.data, (err, res) => {
+      .updateByExample(req.filter, req.data, (err, res) => {
 
-      if (err) {
-        return cb(new Error(err.message))
-      }
+        if (err) {
+          return cb(new Error(err.message))
+        }
 
-      return cb(null, res)
+        return cb(null, res)
 
-    });
+      });
 
   })
 
@@ -252,15 +252,15 @@ exports.plugin = function hemeraArangoStore(options) {
     let db = useDb(req.databaseName)
 
     db.collection(req.collection)
-    .updateByExample(req.id, req.data, (err, res) => {
+      .updateByExample(req.id, req.data, (err, res) => {
 
-      if (err) {
-        return cb(new Error(err.message))
-      }
+        if (err) {
+          return cb(new Error(err.message))
+        }
 
-      return cb(null, res)
+        return cb(null, res)
 
-    });
+      });
 
   })
 
@@ -276,15 +276,15 @@ exports.plugin = function hemeraArangoStore(options) {
     let db = useDb(req.databaseName)
 
     db.collection(req.collection)
-    .removeByExample(req.filter, (err, res) => {
+      .removeByExample(req.filter, (err, res) => {
 
-      if (err) {
-        return cb(new Error(err.message))
-      }
+        if (err) {
+          return cb(new Error(err.message))
+        }
 
-      return cb(null, res)
+        return cb(null, res)
 
-    });
+      });
 
   })
 
@@ -300,15 +300,15 @@ exports.plugin = function hemeraArangoStore(options) {
     let db = useDb(req.databaseName)
 
     db.collection(req.collection)
-    .removeByExample(req.id, (err, res) => {
+      .removeByExample(req.id, (err, res) => {
 
-      if (err) {
-        return cb(new Error(err.message))
-      }
+        if (err) {
+          return cb(new Error(err.message))
+        }
 
-      return cb(null, res)
+        return cb(null, res)
 
-    });
+      });
 
   })
 
@@ -327,15 +327,15 @@ exports.plugin = function hemeraArangoStore(options) {
     let db = useDb(req.databaseName)
 
     db.collection(req.collection)
-    .replaceByExample(req.filter, req.data, (err, res) => {
+      .replaceByExample(req.filter, req.data, (err, res) => {
 
-      if (err) {
-        return cb(new Error(err.message))
-      }
+        if (err) {
+          return cb(new Error(err.message))
+        }
 
-      return cb(null, res)
+        return cb(null, res)
 
-    });
+      });
 
   })
 
@@ -354,15 +354,15 @@ exports.plugin = function hemeraArangoStore(options) {
     let db = useDb(req.databaseName)
 
     db.collection(req.collection)
-    .replaceByExample(req.id, req.data, (err, res) => {
+      .replaceByExample(req.id, req.data, (err, res) => {
 
-      if (err) {
-        return cb(new Error(err.message))
-      }
+        if (err) {
+          return cb(new Error(err.message))
+        }
 
-      return cb(null, res)
+        return cb(null, res)
 
-    });
+      });
 
   })
 
@@ -377,15 +377,15 @@ exports.plugin = function hemeraArangoStore(options) {
     let db = useDb(req.databaseName)
 
     db.collection(req.collection)
-    .byExample(req.id, (err, res) => {
+      .byExample(req.id, (err, res) => {
 
-      if (err) {
-        return cb(new Error(err.message))
-      }
+        if (err) {
+          return cb(new Error(err.message))
+        }
 
-      return res.next(cb)
+        return res.next(cb)
 
-    });
+      });
 
   })
 
@@ -401,24 +401,25 @@ exports.plugin = function hemeraArangoStore(options) {
     let db = useDb(req.databaseName)
 
     db.collection(req.collection)
-    .byExample(req.filter, (err, res) => {
+      .byExample(req.filter, (err, res) => {
 
-      if (err) {
-        return cb(new Error(err.message))
-      }
+        if (err) {
+          return cb(new Error(err.message))
+        }
 
-      res.all(cb)
+        res.all(cb)
 
-    });
+      });
 
   })
 
 }
 
 exports.options = {
-  arango: null,
+  payloadValidator: 'hemera-parambulator'
 }
 
 exports.attributes = {
-  name: 'hemera-arango-store'
+  name: 'hemera-arango-store',
+  dependencies: ['hemera-parambulator']
 }

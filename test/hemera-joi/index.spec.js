@@ -40,6 +40,7 @@ describe('Hemera-joi', function () {
     })
 
     hemera.use(HemeraJoi)
+    hemera.setOptions('payloadValidator', 'hemera-joi')
 
     hemera.ready(() => {
 
@@ -80,7 +81,8 @@ describe('Hemera-joi', function () {
     })
 
     hemera.use(HemeraJoi)
-
+    hemera.setOptions('payloadValidator', 'hemera-joi')
+    
     hemera.ready(() => {
 
       hemera.add({

@@ -86,7 +86,13 @@ class Hemera extends EventEmitter {
     this.context$ = {}
     this.meta$ = {}
     this.delegate$ = {}
-    this.plugin$ = {}
+    this.plugin$ = {
+      options: {
+        payloadValidator: ''
+      },
+      attributes: {},
+      dependencies: []
+    }
     this.trace$ = {}
     this.request$ = {
       duration: 0,
@@ -205,11 +211,11 @@ class Hemera extends EventEmitter {
       next()
     })
 
-    this._extensions.onServerPreRequest.subscribe(function (next) {
+    this._extensions.onServerPreHandler.subscribe(function (next) {
 
       let ctx = this
 
-      ctx.emit('onServerPreRequest', ctx)
+      ctx.emit('onServerPreHandler', ctx)
 
       next()
 
@@ -271,17 +277,19 @@ class Hemera extends EventEmitter {
    */
   expose(key, object) {
 
-    if (this.plugin$.attributes) {
+    let pluginName = this.plugin$.attributes.name
 
-      if (!this._exposition[this.plugin$.attributes.name]) {
+    if (pluginName) {
 
-        this._exposition[this.plugin$.attributes.name] = {}
-        this._exposition[this.plugin$.attributes.name][key] = object
+      if (!this._exposition[pluginName]) {
+
+        this._exposition[pluginName] = {}
+        this._exposition[pluginName][key] = object
       } else {
 
-        this._exposition[this.plugin$.attributes.name][key] = object
+        this._exposition[pluginName][key] = object
       }
-    } else {
+    } else { //set as global property
 
       this._exposition[key] = object
     }
@@ -313,40 +321,11 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  ext(type, handler, globalScoped) {
+  ext(type, handler) {
 
     let self = this
 
-    this._extensions[type].subscribe(function (next) {
-
-      let currentActPlugin = this._actMeta.plugin
-      let currentPlugin = self.plugin$
-
-      // when we have a plugin context and the ext is plugin scoped only.
-      if (!globalScoped
-        && currentPlugin.attributes
-        && currentPlugin.options
-        && currentPlugin.options.privateExtensions) {
-
-        // check if the action comes from a plugin
-        if (currentActPlugin) {
-
-          if (currentPlugin.attributes.name === currentActPlugin.name
-          || currentActPlugin.dependencies.indexOf(currentPlugin.attributes.name) > -1) {
-
-            return handler.call(this, next)
-          } else {
-            return next()
-          }
-        }
-
-        return next()
-      } else {
-
-         return handler.call(this, next)
-      }
-
-    })
+    this._extensions[type].subscribe(handler)
 
   }
   /**
@@ -356,8 +335,7 @@ class Hemera extends EventEmitter {
    */
   use(params) {
 
-    // plugin scoped plugins can be used multiple times
-    if (this._plugins[params.attributes.name] && !params.options.privateExtensions) {
+    if (this._plugins[params.attributes.name]) {
       let error = new Errors.HemeraError(Constants.PLUGIN_ALREADY_IN_USE, {
         plugin: params.attributes.name
       })
@@ -368,14 +346,50 @@ class Hemera extends EventEmitter {
     // create new execution context
     let ctx = this.createContext()
     ctx.plugin$ = {}
-    ctx.plugin$.attributes = params.attributes
+    ctx.plugin$.attributes = params.attributes || {}
     ctx.plugin$.attributes.dependencies = params.attributes.dependencies || []
-    ctx.plugin$.options = params.options
+    ctx.plugin$.options = params.options || {}
+    ctx.plugin$.options.payloadValidator = params.options.payloadValidator || ''
+
     params.plugin.call(ctx, params.options)
 
     this.log.info(params.attributes.name, Constants.PLUGIN_ADDED)
     this._plugins[params.attributes.name] = ctx.plugin$.attributes
 
+  }
+
+  /**
+   *
+   *
+   * @param {any} options
+   *
+   * @memberOf Hemera
+   */
+  setOptions(key, value) {
+
+    this.plugin$.options[key] = value
+  }
+
+  /**
+   *
+   *
+   *
+   * @memberOf Hemera
+   */
+  setAttributes(key, value) {
+
+    this.plugin$.attributes[key] = value
+  }
+
+  /**
+   *
+   *
+   *
+   * @memberOf Hemera
+   */
+  setConfig(key, value) {
+
+    this._config[key] = value
   }
 
   /**
@@ -690,7 +704,7 @@ class Hemera extends EventEmitter {
       schema: schema,
       pattern: origPattern,
       action: cb,
-      plugin: this.plugin$.attributes
+      plugin: this.plugin$
     }
 
     let handler = this._catalog.lookup(origPattern)

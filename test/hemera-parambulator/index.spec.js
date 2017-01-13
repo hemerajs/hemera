@@ -38,6 +38,7 @@ describe('Hemera-parambulator', function () {
     })
 
     hemera.use(HemeraParambulator)
+    hemera.setOptions('payloadValidator', 'hemera-parambulator')
 
     hemera.ready(() => {
 
@@ -78,6 +79,7 @@ describe('Hemera-parambulator', function () {
     })
 
     hemera.use(HemeraParambulator)
+    hemera.setOptions('payloadValidator', 'hemera-parambulator')
 
     hemera.ready(() => {
 
