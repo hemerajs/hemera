@@ -365,20 +365,9 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  setOptions(key, value) {
+  setOption(key, value) {
 
     this.plugin$.options[key] = value
-  }
-
-  /**
-   *
-   *
-   *
-   * @memberOf Hemera
-   */
-  setAttributes(key, value) {
-
-    this.plugin$.attributes[key] = value
   }
 
   /**

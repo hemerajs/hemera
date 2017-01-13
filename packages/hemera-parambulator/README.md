@@ -18,6 +18,9 @@ hemera.use(require('hemera-parambulator'))
 
 hemera.ready(() => {
 
+  // Use Parambulator as payload validator
+  hemera.setOption('payloadValidator', 'hemera-parambulator')
+
   /**
    * Your Implementations
    */

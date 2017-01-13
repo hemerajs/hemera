@@ -7,7 +7,6 @@ This is a plugin to use [Joi](https://github.com/hapijs/joi) with Hemera.
 #### Example
 ```js
 const Hemera = require('./../')
-const Joi = require('joi')
 const nats = require('nats').connect()
 
 const hemera = new Hemera(nats, {
@@ -18,6 +17,10 @@ hemera.use(require('hemera-joi'))
 
 hemera.ready(() => {
 
+  // Use Joi as payload validator
+  hemera.setOption('payloadValidator', 'hemera-joi')
+
+  let Joi = hemera.exposition['hemera-joi'].joi
   /**
    * Your Implementations
    */

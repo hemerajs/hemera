@@ -23,7 +23,7 @@ hemera.use({
 
 hemera.ready(() => {
 
-  hemera.setOptions('payloadValidator', 'hemera-joi')
+  hemera.setOption('payloadValidator', 'hemera-joi')
 
   let Joi = hemera.exposition['hemera-joi'].joi
 
@@ -65,7 +65,7 @@ function myPlugin(options) {
   var hemera = this
 
   hemera.use(HemeraParambulator)
-  hemera.setOptions('payloadValidator', 'hemera-parambulator')
+  hemera.setOption('payloadValidator', 'hemera-parambulator')
 
   hemera.add({
     topic: 'math',
