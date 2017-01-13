@@ -32,7 +32,7 @@
     "queueing"
   ],
   "scripts": {
-    "setup": "npm i && lerna bootstrap",
+    "setup": "npm i && lerna bootstrap && lerna run build",
     "clean": "lerna clean",
     "release": "lerna publish -i",
     "test": "lerna run build && nyc mocha -t 5000 ./test/**/*.js ./packages/hemera-zipkin/test/**/*.js",
