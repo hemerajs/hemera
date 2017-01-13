@@ -1,6 +1,6 @@
 {
   "name": "hemera-nsq",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-parambulator": "^0.1.67",
+    "hemera-parambulator": "^0.1.68",
     "nsqjs": "0.7.x"
   },
   "devDependencies": {
