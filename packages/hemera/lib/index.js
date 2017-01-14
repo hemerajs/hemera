@@ -494,7 +494,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  reply() {
+  finish() {
 
     let self: Hemera = this;
 
@@ -513,29 +513,42 @@ class Hemera extends EventEmitter {
         self._response = error
         self.log.error(self._response)
         self._buildMessage()
-      } else {
+      }
+      else {
 
         self._buildMessage()
       }
 
-      const msg = self._encoder.encode.call(self, self._message)
-
-      // indicate that an error occurs and that the program should exit
+      // indicates that an error occurs and that the program should exit
       if (self._shouldCrash) {
 
-        // send error back to callee
-        return self.send(self._replyTo, msg, () => {
+        if (self._replyTo) {
 
-          // let it crash
-          if (self._config.crashOnFatal) {
+          const msg = self._encoder.encode.call(self, self._message)
 
-            self.fatal()
-          }
-        })
+          // send error back to callee
+          return self.send(self._replyTo, msg, () => {
+
+            // let it crash
+            if (self._config.crashOnFatal) {
+
+              self.fatal()
+            }
+          })
+
+        } else {
+
+          return self.fatal()
+        }
 
       }
 
-      return this.send(this._replyTo, msg)
+      if (self._replyTo) {
+
+        const msg = self._encoder.encode.call(self, self._message)
+
+        return this.send(this._replyTo, msg)
+      }
 
     })
 
@@ -580,8 +593,7 @@ class Hemera extends EventEmitter {
           self.log.error(error)
           self._response = error
 
-          // send message
-          return self.reply()
+          return self.finish()
         }
 
         // invalid payload
@@ -591,10 +603,10 @@ class Hemera extends EventEmitter {
             topic
           }).causedBy(self._request.error)
 
-          return self.reply(replyTo, error)
+          return self.finish(replyTo, error)
         }
 
-        let requestType = ctx._request.value.request.type
+        let requestType = self._request.value.request.type
         self._pattern = self._request.value.pattern
         self._actMeta = self._catalog.lookup(self._pattern)
 
@@ -610,8 +622,7 @@ class Hemera extends EventEmitter {
 
               self.log.error(self._response)
 
-              // send message
-              return self.reply()
+              return self.finish()
             }
 
             try {
@@ -621,7 +632,9 @@ class Hemera extends EventEmitter {
               // if request type is 'pubsub' we dont have to answer
               if (requestType === 'pubsub') {
 
-                return action(self._request.value.pattern)
+                action(self._request.value.pattern)
+
+                return self.finish()
               }
 
               // call action
@@ -633,13 +646,12 @@ class Hemera extends EventEmitter {
                     pattern: self._pattern
                   }).causedBy(err)
 
-                  return self.reply()
+                  return self.finish()
                 }
 
                 self._response = resp
 
-                // send message
-                self.reply()
+                self.finish()
               })
 
             } catch (err) {
@@ -650,7 +662,7 @@ class Hemera extends EventEmitter {
 
               self._shouldCrash = true
 
-              self.reply()
+              self.finish()
             }
 
           })
@@ -666,7 +678,7 @@ class Hemera extends EventEmitter {
           })
 
           // send error back to callee
-          self.reply()
+          self.finish()
         }
 
       })
@@ -922,7 +934,6 @@ class Hemera extends EventEmitter {
       let error = new Errors.TimeoutError(Constants.ACT_TIMEOUT_ERROR, {
         pattern
       })
-
 
       this.log.error(error)
 
