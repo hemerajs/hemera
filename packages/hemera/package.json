@@ -35,7 +35,7 @@
   ],
   "scripts": {
     "flow": "node ./node_modules/flow-bin/cli check",
-    "build": "node ./node_modules/flow-remove-types/flow-remove-types --pretty ./lib --out-dir ./build",
+    "build": "npm run flow && node ./node_modules/flow-remove-types/flow-remove-types --pretty ./lib --out-dir ./build",
     "prepublish": "npm run flow && npm run build",
     "lint": "eslint --ext .js lib"
   },

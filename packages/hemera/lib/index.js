@@ -923,6 +923,7 @@ class Hemera extends EventEmitter {
         pattern
       })
 
+
       this.log.error(error)
 
       if (typeof cb === 'function') {
