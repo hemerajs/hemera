@@ -27,5 +27,6 @@ module.exports = {
   ADD_ADDED: 'ADD - ADDED',
   BUSINESS_ERROR: 'Business error',
   FATAL_ERROR: 'Fatal error',
-  EXTENSION_ERROR: 'Extension error'
+  EXTENSION_ERROR: 'Extension error',
+  PUB_CALLBACK_REDUNDANT: 'Specify a callback as publisher is redundant'
 }

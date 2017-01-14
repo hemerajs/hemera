@@ -41,9 +41,9 @@ hemera.ready(() => {
   hemera.add({
     topic: 'rabbitmq.publisher.message',
     cmd: 'subscribe'
-  }, function (res, cb) {
+  }, function (req, cb) {
 
-    this.log.info(res, 'Data')
+    this.log.info(req, 'Data')
 
     cb()
   })

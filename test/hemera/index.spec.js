@@ -304,6 +304,63 @@ describe('Hemera', function () {
       })
     })
   })
+
+  it('Should call server function only one time (queue groups by default)', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera1 = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    let callback = Sinon.spy();
+
+    hemera1.ready(() => {
+
+      hemera1.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (req, cb) => {
+
+        cb()
+        callback()
+      })
+
+    })
+
+    const hemera2 = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera2.ready(() => {
+
+      hemera2.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (req, cb) => {
+
+        cb()
+        callback()
+      })
+
+      setTimeout(function () {
+
+        hemera2.act({
+          topic: 'email',
+          cmd: 'send',
+          email: 'foobar@gmail.com',
+          msg: 'Hi!'
+        }, function (err, resp) {
+
+          expect(callback.calledOnce).to.be.equals(true)
+          hemera1.close()
+          hemera2.close()
+          done()
+        })
+      }, 50)
+
+    })
+  })
 })
 
 describe('Timeouts', function () {
@@ -389,6 +446,156 @@ describe('Timeouts', function () {
       })
     })
   })
+})
+
+describe('Publish / Subscribe', function () {
+
+  var PORT = 6242
+  var flags = ['--user', 'derek', '--pass', 'foobar']
+  var authUrl = 'nats://derek:foobar@localhost:' + PORT
+  var noAuthUrl = 'nats://localhost:' + PORT
+  var server
+
+  // Start up our own nats-server
+  before(function (done) {
+    server = HemeraTestsuite.start_server(PORT, flags, done)
+  })
+
+  // Shutdown our server after we are done
+  after(function () {
+    server.kill()
+  })
+
+  it('Should be able to publish one message to one subscriber (1 to 1 without reply)', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.ready(() => {
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp) => {
+
+        hemera.close()
+        done()
+      })
+
+      hemera.act({
+        pubsub$: true,
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      })
+
+    })
+  })
+
+  it('Should be able to use normal publish/subscribe behaviour (1 to many)', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera1 = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    let counter = 0;
+
+    function called() {
+      counter++
+
+      if (counter === 2) {
+        hemera1.close()
+        hemera2.close()
+        done()
+      }
+
+    }
+
+    hemera1.ready(() => {
+
+      hemera1.add({
+        pubsub$: true,
+        topic: 'email',
+        cmd: 'send'
+      }, (resp) => {
+
+        called()
+      })
+
+    })
+
+    const hemera2 = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera2.ready(() => {
+
+      hemera2.add({
+        pubsub$: true,
+        topic: 'email',
+        cmd: 'send'
+      }, (resp) => {
+
+        called()
+      })
+
+      hemera2.act({
+        pubsub$: true,
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      })
+
+    })
+  })
+
+})
+
+describe('Exposing', function () {
+
+  var PORT = 6242
+  var flags = ['--user', 'derek', '--pass', 'foobar']
+  var authUrl = 'nats://derek:foobar@localhost:' + PORT
+  var noAuthUrl = 'nats://localhost:' + PORT
+  var server
+
+  // Start up our own nats-server
+  before(function (done) {
+    server = HemeraTestsuite.start_server(PORT, flags, done)
+  })
+
+  // Shutdown our server after we are done
+  after(function () {
+    server.kill()
+  })
+
+  it('Should be able to expose some propertys', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.ready(() => {
+
+      hemera.expose('test', 1)
+
+      expect(hemera.exposition.core.test).to.be.equals(1)
+
+      hemera.close()
+      done()
+
+    })
+  })
+
 })
 
 describe('Error handling', function () {
@@ -800,6 +1007,8 @@ describe('Plugin interface', function () {
 
         let hemera = this
 
+        hemera.expose('test', 1)
+
         expect(options.a).to.be.equals('1')
 
         hemera.add({
@@ -821,6 +1030,8 @@ describe('Plugin interface', function () {
         },
         options: pluginOptions
       })
+
+      expect(hemera.exposition.myPlugin.test).to.be.equals(1)
 
       hemera.act({
         topic: 'math',
@@ -904,6 +1115,9 @@ describe('Plugin interface', function () {
       })
 
       expect(hemera.plugins).to.be.equals({
+        core: {
+          name: 'core'
+        },
         myPlugin1: {
           name: 'myPlugin1',
           dependencies: []
@@ -1436,59 +1650,6 @@ describe('Tracing', function () {
       })
     })
   })
-})
-
-describe('Broadcasting', function () {
-
-  var PORT = 6242
-  var flags = ['--user', 'derek', '--pass', 'foobar']
-  var authUrl = 'nats://derek:foobar@localhost:' + PORT
-  var noAuthUrl = 'nats://localhost:' + PORT
-  var server
-
-  // Start up our own nats-server
-  before(function (done) {
-    server = HemeraTestsuite.start_server(PORT, flags, done)
-  })
-
-  // Shutdown our server after we are done
-  after(function () {
-    server.kill()
-  })
-
-  it('Simple broadcasting', function (done) {
-
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
-
-    hemera.ready(() => {
-
-      hemera.add({
-        broadcast$: true,
-        topic: 'email',
-        cmd: 'send'
-      }, (resp, cb) => {
-
-        cb()
-      })
-
-      hemera.act({
-        topic: 'email',
-        cmd: 'send',
-        email: 'foobar@gmail.com',
-        msg: 'Hi!'
-      }, (err, resp) => {
-
-        expect(err).to.be.exists()
-        hemera.close()
-        done()
-      })
-    })
-  })
-
 })
 
 describe('Extension error', function () {

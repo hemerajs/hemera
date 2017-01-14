@@ -35,8 +35,7 @@ describe('Hemera-joi', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      crashOnFatal: false,
-      logLevel: 'silent'
+      crashOnFatal: false
     })
 
     hemera.use(HemeraJoi)
@@ -76,8 +75,7 @@ describe('Hemera-joi', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      crashOnFatal: false,
-      logLevel: 'silent'
+      crashOnFatal: false
     })
 
     hemera.use(HemeraJoi)

@@ -18,6 +18,7 @@ type Request = {
   parentId: string;
   timestamp: number;
   id: string;
+  type: string;
   method?: string;
 };
 
@@ -65,6 +66,7 @@ type Pattern = {
   topic: string;
   context$: any;
   requestId$: string;
+  pubsub$: boolean;
   delegate$: any;
 }
 

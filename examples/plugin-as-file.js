@@ -10,9 +10,9 @@ exports.plugin = function myPlugin(options) {
   hemera.add({
     topic: 'math',
     cmd: 'add'
-  }, (resp, cb) => {
+  }, (req, cb) => {
 
-    cb(null, resp.a + resp.b)
+    cb(null, req.a + req.b)
   })
 
 }

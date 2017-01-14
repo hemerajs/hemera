@@ -26,9 +26,9 @@ hemera.ready(() => {
   hemera.add({
     topic: 'nsq.processPayment.payment',
     cmd: 'subscribe'
-  }, function (res, cb) {
+  }, function (req, cb) {
 
-    this.log.info(res, 'Data')
+    this.log.info(req, 'Data')
 
     cb()
   })
@@ -36,9 +36,9 @@ hemera.ready(() => {
   hemera.add({
     topic: 'nsq.newsletter.germany',
     cmd: 'subscribe'
-  }, function (res, cb) {
+  }, function (req, cb) {
 
-    this.log.info(res, 'Data')
+    this.log.info(req, 'Data')
 
     cb()
   })

@@ -34,8 +34,7 @@ describe('Hemera-msgpack', function () {
     const nats = require('nats').connect({ url: authUrl, preserveBuffers: true })
 
     const hemera = new Hemera(nats, {
-      crashOnFatal: false,
-      logLevel: 'info'
+      crashOnFatal: false
     })
 
     hemera.use(HemeraMsgpack)

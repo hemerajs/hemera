@@ -18,9 +18,9 @@ hemera.ready(() => {
   hemera.add({
     topic: 'math',
     cmd: 'add'
-  }, (resp, cb) => {
+  }, (req, cb) => {
 
-    cb(null, resp.a + resp.b)
+    cb(null, req.a + req.b)
   })
 
   hemera.act({

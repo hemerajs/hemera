@@ -79,7 +79,6 @@ class Hemera extends EventEmitter {
     this._catalog = Bloomrun()
     this._transport = transport
     this._topics = {}
-    this._plugins = {}
     this._exposition = {}
 
     // special variables for new execution context
@@ -90,19 +89,29 @@ class Hemera extends EventEmitter {
       options: {
         payloadValidator: ''
       },
-      attributes: {},
-      dependencies: []
+      attributes: {
+        name: 'core'
+      }
     }
     this.trace$ = {}
     this.request$ = {
       duration: 0,
       parentId: '',
       timestamp: 0,
+      type: 'request',
       id: ''
     }
 
-    this._encoder = { encode: DefaultEncoder.encode }
-    this._decoder = { decode: DefaultDecoder.decode }
+    this._plugins = {
+      core: this.plugin$.attributes
+    }
+
+    this._encoder = {
+      encode: DefaultEncoder.encode
+    }
+    this._decoder = {
+      decode: DefaultDecoder.decode
+    }
 
     // define extension points
     this._extensions = {
@@ -114,7 +123,7 @@ class Hemera extends EventEmitter {
     }
 
     /**
-     * Client - Extension points
+     * Will be executed before the client request is executed.
      */
     this._extensions.onClientPreRequest.subscribe(function (next) {
 
@@ -124,6 +133,7 @@ class Hemera extends EventEmitter {
 
       let prevCtx = this._prevContext
       let cleanPattern = this._cleanPattern
+      let currentTime = Util.nowHrTime()
 
       // shared context
       ctx.context$ = pattern.context$ || prevCtx.context$
@@ -138,7 +148,7 @@ class Hemera extends EventEmitter {
       ctx.trace$.parentSpanId = prevCtx.trace$.spanId
       ctx.trace$.traceId = prevCtx.trace$.traceId || Util.randomId()
       ctx.trace$.spanId = pattern.trace$ ? pattern.trace$.spanId : Util.randomId()
-      ctx.trace$.timestamp = Util.nowHrTime()
+      ctx.trace$.timestamp = currentTime
       ctx.trace$.service = pattern.topic
       ctx.trace$.method = Util.pattern(pattern)
 
@@ -146,7 +156,8 @@ class Hemera extends EventEmitter {
       let request = {
         id: pattern.requestId$ || Util.randomId(),
         parentId: ctx.request$.id,
-        timestamp: Util.nowHrTime(),
+        timestamp: currentTime,
+        type: pattern.pubsub$ === true ? 'pubsub' : 'request',
         duration: 0
       }
 
@@ -170,6 +181,9 @@ class Hemera extends EventEmitter {
       next()
     })
 
+    /**
+     * Will be executed after the client received and decoded the request.
+     */
     this._extensions.onClientPostRequest.subscribe(function (next) {
 
       let ctx = this
@@ -191,7 +205,7 @@ class Hemera extends EventEmitter {
     })
 
     /**
-     * Server - Extension points
+     * Will be executed before the server received the request.
      */
     this._extensions.onServerPreRequest.subscribe(function (next) {
 
@@ -211,6 +225,9 @@ class Hemera extends EventEmitter {
       next()
     })
 
+    /**
+     * Will be executed before the server action is executed.
+     */
     this._extensions.onServerPreHandler.subscribe(function (next) {
 
       let ctx = this
@@ -221,11 +238,15 @@ class Hemera extends EventEmitter {
 
     })
 
+    /**
+     * Will be executed before the server reply the response and build the message.
+     */
     this._extensions.onServerPreResponse.subscribe(function (next) {
 
       let ctx = this
 
       ctx.emit('onServerPreResponse', ctx)
+
       next()
 
     })
@@ -279,20 +300,15 @@ class Hemera extends EventEmitter {
 
     let pluginName = this.plugin$.attributes.name
 
-    if (pluginName) {
+    if (!this._exposition[pluginName]) {
 
-      if (!this._exposition[pluginName]) {
+      this._exposition[pluginName] = {}
+      this._exposition[pluginName][key] = object
+    } else {
 
-        this._exposition[pluginName] = {}
-        this._exposition[pluginName][key] = object
-      } else {
-
-        this._exposition[pluginName][key] = object
-      }
-    } else { //set as global property
-
-      this._exposition[key] = object
+      this._exposition[pluginName][key] = object
     }
+
   }
 
   /**
@@ -521,9 +537,10 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  subscribe(topic) {
+  subscribe(topic, subToMany, maxMessages) {
 
     let self = this
+    let options;
 
     // avoid duplicate subscribers of the emit stream
     // we use one subscriber per topic
@@ -531,10 +548,7 @@ class Hemera extends EventEmitter {
       return
     }
 
-    // queue group names allow load balancing of services
-    self.transport.subscribe(topic, {
-      'queue': 'queue.' + topic
-    }, (request, replyTo) => {
+    let handler = (request, replyTo) => {
 
       // create new execution context
       let ctx = this.createContext()
@@ -570,6 +584,7 @@ class Hemera extends EventEmitter {
           return self.reply(replyTo, error)
         }
 
+        let requestType = ctx._request.value.request.type
         self._pattern = self._request.value.pattern
         self._actMeta = self._catalog.lookup(self._pattern)
 
@@ -592,6 +607,12 @@ class Hemera extends EventEmitter {
             try {
 
               let action = self._actMeta.action.bind(self)
+
+              // if request type is 'pubsub' we dont have to answer
+              if (requestType === 'pubsub') {
+
+                return action(self._request.value.pattern)
+              }
 
               // call action
               action(self._request.value.pattern, (err, resp) => {
@@ -640,7 +661,21 @@ class Hemera extends EventEmitter {
 
       })
 
-    })
+    }
+
+    if (subToMany) {
+
+      self.transport.subscribe(topic, {
+        max: maxMessages
+      }, handler)
+    } else {
+
+      // queue group names allow load balancing of services
+      self.transport.subscribe(topic, {
+        'queue': 'queue.' + topic,
+        max: maxMessages
+      }, handler)
+    }
 
     this._topics[topic] = true
 
@@ -688,6 +723,9 @@ class Hemera extends EventEmitter {
       }
     })
 
+    // remove special $ variables from pattern
+    origPattern = Util.cleanPattern(origPattern)
+
     // create message object which represent the object behind the matched pattern
     let actMeta = {
       schema: schema,
@@ -715,7 +753,7 @@ class Hemera extends EventEmitter {
     this.log.info(origPattern, Constants.ADD_ADDED)
 
     // subscribe on topic
-    this.subscribe(pattern.topic)
+    this.subscribe(pattern.topic, pattern.pubsub$, pattern.maxMessages$)
   }
 
   /**
@@ -762,81 +800,91 @@ class Hemera extends EventEmitter {
         return
       }
 
-      // send request
-      let sid = self.sendRequest(pattern.topic, self._request, (response) => {
+      if (pattern.pubsub$ === true) {
 
-        self._response = self._decoder.decode.call(ctx, response)
+        if (typeof cb === 'function') {
+          self.log.info(Constants.PUB_CALLBACK_REDUNDANT)
+        }
 
-        try {
+        self.send(pattern.topic, self._request)
+      } else {
 
-          // if payload is invalid
-          if (self._response.error) {
+        // send request
+        let sid = self.sendRequest(pattern.topic, self._request, (response) => {
 
-            let error = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR, {
-              pattern: self._cleanPattern
-            }).causedBy(self._response.error)
+          self._response = self._decoder.decode.call(ctx, response)
 
-            self.log.error(error)
+          try {
 
-            if (typeof cb === 'function') {
-              return cb.call(self, error)
-            }
-          }
+            // if payload is invalid
+            if (self._response.error) {
 
-          // extension point 'onClientPostRequest'
-          self._extensions.onClientPostRequest.invoke(ctx, function (err) {
-
-            if (err) {
-
-              let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+              let error = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR, {
+                pattern: self._cleanPattern
+              }).causedBy(self._response.error)
 
               self.log.error(error)
 
               if (typeof cb === 'function') {
                 return cb.call(self, error)
               }
-
-              return
             }
 
-            if (typeof cb === 'function') {
+            // extension point 'onClientPostRequest'
+            self._extensions.onClientPostRequest.invoke(ctx, function (err) {
 
-              if (self._response.value.error) {
+              if (err) {
 
-                let responseError = Errio.fromObject(self._response.value.error)
-                let responseErrorCause = responseError.cause
-                let error = new Errors.BusinessError(Constants.BUSINESS_ERROR, {
-                  pattern: self._cleanPattern
-                }).causedBy(responseErrorCause ? responseError.cause : responseError)
+                let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
 
                 self.log.error(error)
 
-                return cb.call(self, responseError)
+                if (typeof cb === 'function') {
+                  return cb.call(self, error)
+                }
+
+                return
               }
 
-              cb.apply(self, [null, self._response.value.result])
+              if (typeof cb === 'function') {
+
+                if (self._response.value.error) {
+
+                  let responseError = Errio.fromObject(self._response.value.error)
+                  let responseErrorCause = responseError.cause
+                  let error = new Errors.BusinessError(Constants.BUSINESS_ERROR, {
+                    pattern: self._cleanPattern
+                  }).causedBy(responseErrorCause ? responseError.cause : responseError)
+
+                  self.log.error(error)
+
+                  return cb.call(self, responseError)
+                }
+
+                cb.apply(self, [null, self._response.value.result])
+              }
+
+            })
+
+          } catch (err) {
+
+            let error = new Errors.FatalError(Constants.FATAL_ERROR, {
+              pattern: self._cleanPattern
+            }).causedBy(err)
+
+            self.log.fatal(error)
+
+            // let it crash
+            if (self._config.crashOnFatal) {
+
+              self.fatal()
             }
-
-          })
-
-        } catch (err) {
-
-          let error = new Errors.FatalError(Constants.FATAL_ERROR, {
-            pattern: self._cleanPattern
-          }).causedBy(err)
-
-          self.log.fatal(error)
-
-          // let it crash
-          if (self._config.crashOnFatal) {
-
-            self.fatal()
           }
-        }
-      })
+        })
 
-      // handle timeout
-      self.handleTimeout(sid, pattern, cb)
+        // handle timeout
+        self.handleTimeout(sid, pattern, cb)
+      }
 
     })
 

@@ -78,6 +78,7 @@ Table of contents
   * [Extension points](#extension-points)
   * [Tracing capabilities](#tracing-capabilities)
       * [Get events](#get-events)
+  * [Publish & Subscribe](#publish-subscribe)
   * [Payload validation](#payload-validation)
   * [Plugins](#plugins)
   * [Logging](#logging)
@@ -118,12 +119,12 @@ const hemera = new Hemera(nats, { logLevel: 'info' });
 hemera.ready(() => {
 
 
-  hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
+  hemera.add({ topic: 'math', cmd: 'add' }, (req, cb) => {
 
-    cb(null, resp.a + resp.b);
+    cb(null, req.a + req.b);
   });
 
-  hemera.add({ topic: 'email', cmd: 'send' }, (resp, cb) => {
+  hemera.add({ topic: 'email', cmd: 'send' }, (req, cb) => {
 
     cb();
   })
@@ -150,8 +151,8 @@ _Topic_: The subject to subscribe. **The smallest unit of Hemera**. It's kind of
 
 #### Define your service
 ```js
-hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
-  cb(null, resp.a + resp.b);
+hemera.add({ topic: 'math', cmd: 'add' }, (req, cb) => {
+  cb(null, req.a + req.b);
 });
 ```
 
@@ -168,15 +169,15 @@ A match happens when all properties of added pattern matches with the one in the
 
 #### Matched!
 ```js
-hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
+hemera.add({ topic: 'math', cmd: 'add' }, (req, cb) => {
   cb(resp.a + resp.b)
 });
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 });
 ```
 #### Not matched!
 ```js
-hemera.add({ topic: 'math', cmd: 'add', foo: 'bar' }, (resp, cb) => {
-  cb(resp.a + resp.b)
+hemera.add({ topic: 'math', cmd: 'add', foo: 'bar' }, (req, cb) => {
+  cb(req.a + req.b)
 });
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 });
 ```
@@ -185,7 +186,7 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 });
 
 #### Reply an error
 ```js
-hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
+hemera.add({ topic: 'math', cmd: 'add' }, (req, cb) => {
   cb(new CustomError('Invalid operation'));
 });
 ```
@@ -243,12 +244,12 @@ If you want to transfer metadata to a service you can use the `meta$` property b
 E.g. you can add a JWT token as metadata to express if your action is legitimate. Data will be transfered!
 
 ```js
-hemera.add({ topic: 'math', cmd: 'add' }, function (resp, cb) {
+hemera.add({ topic: 'math', cmd: 'add' }, function (req, cb) {
     
     //Access to metadata
     let meta = this.meta$
     
-    cb(null, resp.a + resp.b);
+    cb(null, req.a + req.b);
 });
 ```
 Will set the metadata only for this `act` and all nested operations. Data will be transfered!
@@ -306,7 +307,7 @@ hemera.act({ topic: 'math', cmd: 'add', delegate$: { foo: 'bar' } })
 hemera.add({
   topic: 'math',
   cmd: 'add',
-}, function (resp, cb) {
+}, function (req, cb) {
 
   cb()
 
@@ -315,7 +316,7 @@ hemera.add({
 hemera.add({
   topic: 'math',
   cmd: 'add',
-}, function (resp, cb) {
+}, function (req, cb) {
 
   //Visible in zipkin ui
   this.delegate$.query = 'SELECT FROM User;'
@@ -380,6 +381,57 @@ hemera.on('onPreResponse', (msg) => {
 
 Times are represented in nanoseconds.
 
+### Publish & Subscribe
+
+#### One-to-many
+
+```js
+  //Subscribe
+  hemera.add({
+    pubsub$: true,
+    topic: 'math',
+    cmd: 'add',
+    a: {
+      type$: 'number'
+    }
+  }, (req) => {
+
+  })
+  //Publish
+  hemera.act({
+    pubsub$: true,
+    topic: 'math',
+    cmd: 'add',
+    a: {
+      type$: 'number'
+    }
+  });
+```
+
+#### One-to-one without reply overhead but with load-balancing (queue group names)
+
+```js
+  //Subscribe
+  hemera.add({
+    topic: 'math',
+    cmd: 'add',
+    a: {
+      type$: 'number'
+    }
+  }, (req) => {
+
+  })
+  //Publish
+  hemera.act({
+    pubsub$: true,
+    topic: 'math',
+    cmd: 'add',
+    a: {
+      type$: 'number'
+    }
+  });
+```
+
 ### Payload validation
 You can use different validators e.g [Joi example](https://github.com/hemerajs/hemera/tree/master/packages/hemera-joi)
 
@@ -390,10 +442,10 @@ hemera.add({
     a: {
       type$: 'number'
     }
-  }, (resp, cb) => {
+  }, (req, cb) => {
 
     cb(null, {
-      result: resp.a + resp.b
+      result: req.a + req.b
     });
   });
 ```
@@ -417,10 +469,10 @@ let myPlugin = function (options) {
   hemera.add({
     topic: 'math',
     cmd: 'add'
-  }, (resp, cb) => {
+  }, (req, cb) => {
 
     cb(null, {
-      result: resp.a + resp.b
+      result: req.a + req.b
     });
   });
 
@@ -484,6 +536,11 @@ message RootCause {
   string name = 2;
 }
 
+enum RequestType {
+  pubsub = 0;
+  request = 1;
+}
+
 message Error {
   string message = 1;
   string name = 2;
@@ -498,6 +555,7 @@ message Request {
   string parentId = 2;
   int64 timestamp = 3;
   int32 duration = 4;
+  RequestType type = 5;
 }
 
 message Trace {

@@ -47,9 +47,9 @@ hemera.ready(() => {
   hemera.add({
     topic: 'nsq.click.metrics',
     cmd: 'subscribe'
-  }, function (res, cb) {
+  }, function (req, cb) {
 
-    this.log.info(res, 'Data')
+    this.log.info(req, 'Data')
 
     cb()
   })

@@ -19,7 +19,7 @@ hemera.ready(() => {
   hemera.add({
     topic: 'auth',
     cmd: 'signup',
-  }, function (resp, cb) {
+  }, function (req, cb) {
 
     let userId = 1
 
@@ -29,7 +29,7 @@ hemera.ready(() => {
     this.act({
       topic: 'email',
       cmd: 'send',
-      email: resp.email,
+      email: req.email,
       message: 'Welcome!',
       delegate$: { info: 'bar' } // visible in zipkin ui
     }, function (err, resp) {
@@ -49,7 +49,7 @@ hemera.ready(() => {
   hemera.add({
     topic: 'payment',
     cmd: 'process'
-  }, function (resp, cb) {
+  }, function (req, cb) {
 
     cb(null, true)
   })
@@ -57,7 +57,7 @@ hemera.ready(() => {
   hemera.add({
     topic: 'email',
     cmd: 'send'
-  }, function (resp, cb) {
+  }, function (req, cb) {
 
     cb(null, true)
   })
