@@ -37,6 +37,8 @@
     "release": "lerna publish -i",
     "test": "lerna run build && nyc mocha -t 5000 ./test/**/*.js ./packages/hemera-zipkin/test/**/*.js",
     "coverage": "npm run test && nyc report --reporter=html",
+    "build:watch": "lerna run build && chokidar \"./packages/hemera/lib/**/*.js\" -c \"lerna run build\"",
+    "flow:watch": "lerna run flow && chokidar \"./packages/hemera/lib/**/*.js\" -c \"lerna run flow\"",
     "ci": "lerna run build && nyc mocha -t 5000 ./test/**/*.js ./packages/hemera-zipkin/test/**/*.js && nyc report --reporter=text-lcov | coveralls"
   },
   "engines": {
@@ -56,7 +58,9 @@
     "mocha-lcov-reporter": "1.2.x",
     "nats": "0.7.2",
     "nyc": "10.0.x",
-    "sinon": "1.17.x"
+    "sinon": "1.17.x",
+    "chokidar-cli": "1.2.x"
   },
-  "dependencies": {}
+  "dependencies": {
+  }
 }
