@@ -814,6 +814,7 @@ class Hemera extends EventEmitter {
         return
       }
 
+      // use simple publish mechanism instead to fire a request
       if (pattern.pubsub$ === true) {
 
         if (typeof cb === 'function') {
