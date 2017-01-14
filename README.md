@@ -383,7 +383,7 @@ Times are represented in nanoseconds.
 
 ### Publish & Subscribe
 
-#### One-to-many
+#### Normal (One-to-many)
 
 ```js
   //Subscribe
@@ -408,7 +408,7 @@ Times are represented in nanoseconds.
   });
 ```
 
-#### One-to-one without reply overhead but with load-balancing (queue group names)
+#### Special - one-to-one (but with queue group names)
 
 ```js
   //Subscribe
