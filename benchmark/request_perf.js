@@ -9,7 +9,7 @@ const authUrl = 'nats://derek:foobar@localhost:' + PORT
 const noAuthUrl = 'nats://localhost:' + PORT
 
 const loop = 50000;
-const hash = 2500;
+const hash = 5000;
 
 const nats = Nats.connect(noAuthUrl)
 const hemera = new Hemera(nats)
@@ -25,11 +25,14 @@ hemera.ready(() => {
       cmd: 'add',
       a: 1,
       b: 2
+    }, function (err, resp) {
+
     })
 
     if (i % hash === 0) {
       process.stdout.write('+');
     }
+
   }
 
   nats.flush(function () {

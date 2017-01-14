@@ -10,7 +10,7 @@ const noAuthUrl = 'nats://localhost:' + PORT
 
 let start;
 const loop = 50000;
-const hash = 2500;
+const hash = 5000;
 let received = 0;
 
 console.log('Subscribe Performance Test');
@@ -43,7 +43,7 @@ hemera.ready(() => {
 
       process.stdout.write('+')
     }
-
+    
     cb()
 
   })
