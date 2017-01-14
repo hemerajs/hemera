@@ -78,7 +78,7 @@ Table of contents
   * [Extension points](#extension-points)
   * [Tracing capabilities](#tracing-capabilities)
       * [Get events](#get-events)
-  * [Publish & Subscribe](#publish-subscribe)
+  * [Publish & Subscribe](#publish--subscribe)
   * [Payload validation](#payload-validation)
   * [Plugins](#plugins)
   * [Logging](#logging)
