@@ -24,7 +24,7 @@ hemera.ready(() => {
   for (var i = 0; i < loop; i++) {
 
     hemera.act({
-      type$: 'pubsub',
+      pubsub$: true,
       topic: 'math',
       cmd: 'add'
     })

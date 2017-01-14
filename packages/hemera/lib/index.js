@@ -513,8 +513,7 @@ class Hemera extends EventEmitter {
         self._response = error
         self.log.error(self._response)
         self._buildMessage()
-      }
-      else {
+      } else {
 
         self._buildMessage()
       }
@@ -538,7 +537,7 @@ class Hemera extends EventEmitter {
 
         } else {
 
-          return self.fatal()
+          return self.fatal()
         }
 
       }

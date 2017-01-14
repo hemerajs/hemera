@@ -1650,6 +1650,110 @@ describe('Tracing', function () {
       })
     })
   })
+
+  it.only('Should get correct tracing informations', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+
+      hemera.on('onServerPreRequest', function (ctx) {
+
+        let meta = {
+          service: ctx.trace$.service,
+          name: ctx.trace$.method
+        }
+
+        let traceData = {
+          traceId: ctx.trace$.traceId,
+          parentSpanId: ctx.trace$.parentSpanId,
+          spanId: ctx.trace$.spanId,
+          sampled: 1
+        }
+
+        expect(meta.service).to.be.equals('math')
+        expect(meta.name).to.be.equals('a:1,b:2,cmd:add,topic:math')
+
+        expect(traceData.traceId).to.be.exist()
+        expect(traceData.parentSpanId).to.be.not.exist()
+        expect(traceData.spanId).to.be.exist()
+        expect(traceData.sampled).to.be.exist()
+
+      })
+
+      hemera.on('onServerPreResponse', function (ctx) {
+
+        let meta = {
+          service: ctx.trace$.service,
+          name: ctx.trace$.method
+        }
+
+        expect(meta.service).to.be.equals('math')
+        expect(meta.name).to.be.equals('a:1,b:2,cmd:add,topic:math')
+
+      })
+
+      hemera.on('onClientPreRequest', function (ctx) {
+
+        let meta = {
+          service: ctx.trace$.service,
+          name: ctx.trace$.method
+        }
+
+        let traceData = {
+          traceId: ctx.trace$.traceId,
+          parentSpanId: ctx.trace$.parentSpanId,
+          spanId: ctx.trace$.spanId,
+          sampled: 1
+        }
+
+        expect(meta.service).to.be.equals('math')
+        expect(meta.name).to.be.equals('a:1,b:2,cmd:add,topic:math')
+
+        expect(traceData.traceId).to.be.exist()
+        expect(traceData.parentSpanId).to.be.not.exist()
+        expect(traceData.spanId).to.be.exist()
+        expect(traceData.sampled).to.be.exist()
+
+      })
+
+      hemera.on('onClientPostRequest', function (ctx) {
+
+        let meta = {
+          service: ctx.trace$.service,
+          name: ctx.trace$.method
+        }
+
+        expect(meta.service).to.be.equals('math')
+        expect(meta.name).to.be.equals('a:1,b:2,cmd:add,topic:math')
+      })
+
+      hemera.add({
+        cmd: 'add',
+        topic: 'math'
+      }, (resp, cb) => {
+
+        cb(null, resp.a + resp.b)
+      })
+
+      hemera.act({
+        cmd: 'add',
+        topic: 'math',
+        a: 1,
+        b: 2
+      }, (err, resp) => {
+
+        expect(resp).to.be.equals(3)
+        hemera.close()
+        done()
+      })
+
+    })
+
+  })
+
 })
 
 describe('Extension error', function () {
