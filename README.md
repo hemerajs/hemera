@@ -338,7 +338,7 @@ hemera.ext('extension-name', function(next) {
 ### Tracing capabilities
 Tracing in the style of [Google’s Dapper](http://static.googleusercontent.com/media/research.google.com/en//pubs/archive/36356.pdf)
 
-In any act or add you can access the property `this.request$` or `this.trace$` to get information about your current or parent call. You can listen on the `inbound` event to get detail information.
+In any act or add you can access the property `this.request$` or `this.trace$` to get information about your current or parent call.
 
 ```js
     meta: {}
