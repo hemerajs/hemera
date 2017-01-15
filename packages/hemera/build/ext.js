@@ -9,6 +9,7 @@
 'use strict'
 
 const Items = require('items')
+const _ = require('lodash')
 
 /**
  * @class Ext
@@ -33,6 +34,19 @@ class Ext {
   add(handler) {
 
     this._handler.push(handler)
+
+  }
+
+  /**
+   *
+   *
+   * @param {Array<Function>} handlers
+   *
+   * @memberOf Ext
+   */
+  addRange(handlers) {
+
+    this._handler = this._handler.concat(handlers)
 
   }
   /**

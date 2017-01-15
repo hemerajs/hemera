@@ -9,13 +9,14 @@
 'use strict'
 
 const Items = require('items')
+const _ = require('lodash')
 
 /**
  * @class Ext
  */
 class Ext {
 
-  _handler: Array<Function>;
+  _handler: Array < Function > ;
   _type: string;
 
   constructor(type: string) {
@@ -33,6 +34,19 @@ class Ext {
   add(handler: Function) {
 
     this._handler.push(handler)
+
+  }
+
+  /**
+   *
+   *
+   * @param {Array<Function>} handlers
+   *
+   * @memberOf Ext
+   */
+  addRange(handlers: Array<Function>) {
+
+    this._handler = this._handler.concat(handlers)
 
   }
   /**
