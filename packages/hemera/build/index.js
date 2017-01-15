@@ -125,7 +125,7 @@ class Hemera extends EventEmitter {
     /**
      * Will be executed before the client request is executed.
      */
-    this._extensions.onClientPreRequest.subscribe(function (next) {
+    this._extensions.onClientPreRequest.subscribe(function onClientPreRequest(next) {
 
       let ctx = this
 
@@ -184,7 +184,7 @@ class Hemera extends EventEmitter {
     /**
      * Will be executed after the client received and decoded the request.
      */
-    this._extensions.onClientPostRequest.subscribe(function (next) {
+    this._extensions.onClientPostRequest.subscribe(function onClientPostRequest(next) {
 
       let ctx = this
       let pattern = this._pattern
@@ -207,7 +207,7 @@ class Hemera extends EventEmitter {
     /**
      * Will be executed before the server received the request.
      */
-    this._extensions.onServerPreRequest.subscribe(function (next) {
+    this._extensions.onServerPreRequest.subscribe(function onServerPreRequest(next) {
 
       let msg = this._request.value
       let ctx = this
@@ -228,7 +228,7 @@ class Hemera extends EventEmitter {
     /**
      * Will be executed before the server action is executed.
      */
-    this._extensions.onServerPreHandler.subscribe(function (next) {
+    this._extensions.onServerPreHandler.subscribe(function onServerPreHandler(next) {
 
       let ctx = this
 
@@ -241,7 +241,7 @@ class Hemera extends EventEmitter {
     /**
      * Will be executed before the server reply the response and build the message.
      */
-    this._extensions.onServerPreResponse.subscribe(function (next) {
+    this._extensions.onServerPreResponse.subscribe(function onServerPreResponse(next) {
 
       let ctx = this
 
@@ -503,8 +503,7 @@ class Hemera extends EventEmitter {
         self._response = error
         self.log.error(self._response)
         self._buildMessage()
-      }
-      else {
+      } else {
 
         self._buildMessage()
       }
@@ -675,6 +674,7 @@ class Hemera extends EventEmitter {
 
     }
 
+    // standard pubsub with optional max proceed messages
     if (subToMany) {
 
       self.transport.subscribe(topic, {
@@ -701,6 +701,8 @@ class Hemera extends EventEmitter {
    */
   add(pattern, cb) {
 
+    let hasCallback = _.isFunction(cb)
+
     // topic is needed to subscribe on a subject in NATS
     if (!pattern.topic) {
 
@@ -712,7 +714,7 @@ class Hemera extends EventEmitter {
       throw (error)
     }
 
-    if (typeof cb !== 'function') {
+    if (!hasCallback) {
 
       let error = new Errors.HemeraError(Constants.MISSING_IMPLEMENTATION, {
         pattern
@@ -726,7 +728,7 @@ class Hemera extends EventEmitter {
 
     let schema = {}
 
-    // remove objects (rules) from pattern
+    // remove objects (rules) from pattern and extract scheme
     _.each(pattern, function (v, k) {
 
       if (_.isObject(v)) {
@@ -799,13 +801,15 @@ class Hemera extends EventEmitter {
 
       let self = this
 
+      let hasCallback = _.isFunction(cb)
+
       if (err) {
 
         let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
 
         self.log.error(error)
 
-        if (typeof cb === 'function') {
+        if (hasCallback) {
           return cb.call(self, error)
         }
 
@@ -815,7 +819,7 @@ class Hemera extends EventEmitter {
       // use simple publish mechanism instead to fire a request
       if (pattern.pubsub$ === true) {
 
-        if (typeof cb === 'function') {
+        if (hasCallback) {
           self.log.info(Constants.PUB_CALLBACK_REDUNDANT)
         }
 
@@ -838,7 +842,7 @@ class Hemera extends EventEmitter {
 
               self.log.error(error)
 
-              if (typeof cb === 'function') {
+              if (hasCallback) {
                 return cb.call(self, error)
               }
             }
@@ -852,14 +856,14 @@ class Hemera extends EventEmitter {
 
                 self.log.error(error)
 
-                if (typeof cb === 'function') {
+                if (hasCallback) {
                   return cb.call(self, error)
                 }
 
                 return
               }
 
-              if (typeof cb === 'function') {
+              if (hasCallback) {
 
                 if (self._response.value.error) {
 
@@ -915,13 +919,15 @@ class Hemera extends EventEmitter {
     // handle timeout
     this.timeout(sid, pattern.timeout$ || this._config.timeout, 1, () => {
 
+      let hasCallback = _.isFunction(cb)
+
       let error = new Errors.TimeoutError(Constants.ACT_TIMEOUT_ERROR, {
         pattern
       })
 
       this.log.error(error)
 
-      if (typeof cb === 'function') {
+      if (hasCallback) {
 
         try {
 

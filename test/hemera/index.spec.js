@@ -1651,7 +1651,7 @@ describe('Tracing', function () {
     })
   })
 
-  it.only('Should get correct tracing informations', function (done) {
+  it('Should get correct tracing informations', function (done) {
 
     const nats = require('nats').connect(authUrl)
 
