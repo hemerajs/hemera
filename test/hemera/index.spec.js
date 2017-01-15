@@ -556,6 +556,90 @@ describe('Publish / Subscribe', function () {
     })
   })
 
+  it('Should crash on unhandled business errors', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    var stub = Sinon.stub(hemera, "fatal")
+
+    stub.onCall(1)
+
+    stub.returns(true)
+
+    hemera.ready(() => {
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+
+        throw new Error('Shit!')
+      })
+
+      hemera.act({
+        pubsub$: true,
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      })
+
+      setTimeout(() => {
+
+        expect(stub.called).to.be.equals(true)
+
+        hemera.close()
+        done()
+
+      }, 100)
+
+    })
+  })
+
+  it('Should not crash on unhandled business errors when crashOnFatal is set to false', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, { crashOnFatal: false })
+
+    var stub = Sinon.stub(hemera, "fatal")
+
+    stub.onCall(1)
+
+    stub.returns(true)
+
+    hemera.ready(() => {
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+
+        throw new Error('Shit!')
+      })
+
+      hemera.act({
+        pubsub$: true,
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      })
+
+      setTimeout(() => {
+
+        expect(stub.called).to.be.equals(false)
+
+        hemera.close()
+        done()
+
+      }, 100)
+
+    })
+  })
+
 })
 
 describe('Exposing', function () {

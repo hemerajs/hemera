@@ -535,7 +535,7 @@ class Hemera extends EventEmitter {
             }
           })
 
-        } else {
+        } else if (self._config.crashOnFatal) {
 
           return self.fatal()
         }
