@@ -49,7 +49,7 @@
     "babel-eslint": "7.1.x",
     "code": "4.0.x",
     "coveralls": "2.11.x",
-    "eslint-plugin-flowtype": "2.29.x",
+    "eslint-plugin-flowtype": "~2.30.0",
     "hemera-testsuite": "1.0.x",
     "istanbul": "0.4.x",
     "joi": "10.0.x",
