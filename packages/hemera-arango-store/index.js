@@ -2,29 +2,7 @@
 
 const Arangojs = require('arangojs')
 const HemeraParambulator = require('hemera-parambulator')
-
-/**
- * Actions:
- *
- * Common API methods:
- *
- * create
- * remove
- * removeById
- * update
- * updateById
- * find
- * findById
- * replace
- * replaceById
- *
- * Driver specific API methods:
- *
- * executeTransaction
- * createDatabase
- * createCollection
- * executeAqlQuery
- */
+const ArangoStore = require('./store')
 
 exports.plugin = function hemeraArangoStore(options) {
 
@@ -197,16 +175,9 @@ exports.plugin = function hemeraArangoStore(options) {
 
     let db = useDb(req.databaseName)
 
-    db.collection(req.collection)
-      .save(req.data, (err, res) => {
+    const store = new ArangoStore(db)
 
-        if (err) {
-          return cb(new Error(err.message))
-        }
-
-        return cb(null, res)
-
-      });
+    store.create(req, cb)
 
   })
 
@@ -224,16 +195,9 @@ exports.plugin = function hemeraArangoStore(options) {
 
     let db = useDb(req.databaseName)
 
-    db.collection(req.collection)
-      .updateByExample(req.filter, req.data, (err, res) => {
+    const store = new ArangoStore(db)
 
-        if (err) {
-          return cb(new Error(err.message))
-        }
-
-        return cb(null, res)
-
-      });
+    store.update(req, cb)
 
   })
 
@@ -251,16 +215,9 @@ exports.plugin = function hemeraArangoStore(options) {
 
     let db = useDb(req.databaseName)
 
-    db.collection(req.collection)
-      .updateByExample(req.id, req.data, (err, res) => {
+    const store = new ArangoStore(db)
 
-        if (err) {
-          return cb(new Error(err.message))
-        }
-
-        return cb(null, res)
-
-      });
+    store.updateById(req, cb)
 
   })
 
@@ -275,17 +232,9 @@ exports.plugin = function hemeraArangoStore(options) {
 
     let db = useDb(req.databaseName)
 
-    db.collection(req.collection)
-      .removeByExample(req.filter, (err, res) => {
+    const store = new ArangoStore(db)
 
-        if (err) {
-          return cb(new Error(err.message))
-        }
-
-        return cb(null, res)
-
-      });
-
+    store.remove(req, cb)
   })
 
   hemera.add({
@@ -299,16 +248,9 @@ exports.plugin = function hemeraArangoStore(options) {
 
     let db = useDb(req.databaseName)
 
-    db.collection(req.collection)
-      .removeByExample(req.id, (err, res) => {
+    const store = new ArangoStore(db)
 
-        if (err) {
-          return cb(new Error(err.message))
-        }
-
-        return cb(null, res)
-
-      });
+    store.removeById(req, cb)
 
   })
 
@@ -326,16 +268,9 @@ exports.plugin = function hemeraArangoStore(options) {
 
     let db = useDb(req.databaseName)
 
-    db.collection(req.collection)
-      .replaceByExample(req.filter, req.data, (err, res) => {
+    const store = new ArangoStore(db)
 
-        if (err) {
-          return cb(new Error(err.message))
-        }
-
-        return cb(null, res)
-
-      });
+    store.replace(req, cb)
 
   })
 
@@ -353,16 +288,9 @@ exports.plugin = function hemeraArangoStore(options) {
 
     let db = useDb(req.databaseName)
 
-    db.collection(req.collection)
-      .replaceByExample(req.id, req.data, (err, res) => {
+    const store = new ArangoStore(db)
 
-        if (err) {
-          return cb(new Error(err.message))
-        }
-
-        return cb(null, res)
-
-      });
+    store.replaceById(req, cb)
 
   })
 
@@ -376,16 +304,9 @@ exports.plugin = function hemeraArangoStore(options) {
 
     let db = useDb(req.databaseName)
 
-    db.collection(req.collection)
-      .byExample(req.id, (err, res) => {
+    const store = new ArangoStore(db)
 
-        if (err) {
-          return cb(new Error(err.message))
-        }
-
-        return res.next(cb)
-
-      });
+    store.findById(req, cb)
 
   })
 
@@ -400,16 +321,9 @@ exports.plugin = function hemeraArangoStore(options) {
 
     let db = useDb(req.databaseName)
 
-    db.collection(req.collection)
-      .byExample(req.filter, (err, res) => {
+    const store = new ArangoStore(db)
 
-        if (err) {
-          return cb(new Error(err.message))
-        }
-
-        res.all(cb)
-
-      });
+    store.find(req, cb)
 
   })
 

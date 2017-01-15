@@ -15,7 +15,7 @@ describe('Hemera-arango-store', function () {
 
   let server
   let arangoOptions = {
-    url: 'http://127.0.0.1:8529/'
+    url: 'http://192.168.99.100:8529/'
   }
   let hemera
   let aql
@@ -47,7 +47,8 @@ describe('Hemera-arango-store', function () {
 
     arangodb = Arangojs(arangoOptions)
     HemeraArangoStore.options.arango = {
-      driver: arangodb
+      driver: arangodb,
+      url: arangoOptions.url
     }
 
     //clear and bootstrap db

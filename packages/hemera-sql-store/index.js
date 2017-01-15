@@ -2,22 +2,7 @@
 
 const Knex = require('knex')
 const HemeraParambulator = require('hemera-parambulator')
-
-/**
- * Actions:
- *
- * Common API methods:
- *
- * create
- * remove
- * removeById
- * update
- * updateById
- * find
- * findById
- * replace
- * replaceById
- */
+const SqlStore = require('./store')
 
 exports.plugin = function hemeraSqlStore(options) {
 
@@ -74,7 +59,10 @@ exports.plugin = function hemeraSqlStore(options) {
   }, function (req, cb) {
 
     let db = useDb(req.database)
-    db.table(req.table).insert(req.data).asCallback(cb);
+
+    const store = new SqlStore(db)
+
+    store.create(req, cb)
   })
 
 }
