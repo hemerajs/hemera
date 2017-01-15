@@ -17,6 +17,7 @@ const
   Bloomrun = require('bloomrun'),
   Errio = require('errio'),
   Hoek = require('hoek'),
+  Heavy = require('heavy'),
   _ = require('lodash')
 
 const
@@ -33,7 +34,10 @@ var defaultConfig: Config = {
   timeout: 2000,
   debug: false,
   crashOnFatal: true,
-  logLevel: 'silent'
+  logLevel: 'silent',
+  load: {
+    sampleInterval: 0
+  }
 }
 
 /**
@@ -52,6 +56,7 @@ class Hemera extends EventEmitter {
 
   _config: Config;
   _catalog: any;
+  _heavy: any;
   _transport: Nats;
   _topics: {
     [id: string]: boolean
@@ -83,6 +88,7 @@ class Hemera extends EventEmitter {
 
     this._config = Hoek.applyToDefaults(defaultConfig, params || {})
     this._catalog = Bloomrun()
+    this._heavy = new Heavy(this._config.load)
     this._transport = transport
     this._topics = {}
     this._exposition = {}
@@ -127,6 +133,8 @@ class Hemera extends EventEmitter {
       onServerPreRequest: new Ext('onServerPreRequest'),
       onServerPreResponse: new Ext('onServerPreResponse')
     }
+
+    this._heavy.start()
 
     /**
      * Will be executed before the client request is executed.
@@ -288,6 +296,18 @@ class Hemera extends EventEmitter {
    *
    *
    * @readonly
+   *
+   * @memberOf Hemera
+   */
+  get load(): any {
+
+    return this._heavy.load
+  }
+
+  /**
+   *
+   *
+   * @readonly
    * @type {Exposition}
    * @memberOf Hemera
    */
@@ -411,6 +431,8 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   fatal() {
+
+    this.close()
 
     process.exit(1)
   }
@@ -997,6 +1019,8 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   close() {
+
+    this._heavy.stop()
 
     return this.transport.close()
   }

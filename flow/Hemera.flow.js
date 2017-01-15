@@ -2,7 +2,8 @@ declare type Config = {
   timeout: number;
   crashOnFatal: boolean;
   logLevel: string;
-  logger?: any
+  logger?: any;
+  load?: any;
 }
 
 type PluginDefinition = {

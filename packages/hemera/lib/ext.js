@@ -49,7 +49,7 @@ class Ext {
       const bind = ctx
 
       ext.call(bind, next);
-    };
+    }
 
     Items.serial(this._handler, each, cb.bind(ctx))
 
