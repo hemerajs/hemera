@@ -1,6 +1,6 @@
 {
   "name": "hemera-arango-store",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "arangojs": "5.4.x",
-    "hemera-parambulator": "^0.1.70"
+    "hemera-parambulator": "^0.1.71"
   },
   "devDependencies": {
     "code": "4.0.x",
