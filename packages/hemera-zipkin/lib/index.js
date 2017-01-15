@@ -55,10 +55,10 @@ zipkinSimple.prototype.buildOptions = function buildOptions() {
 zipkinSimple.prototype.shouldSample = function shouldSample() {
   this.counter++
 
-    if (this.counter * this.opts.sampling >= 1) {
-      this.counter = 0
-      return true
-    }
+  if (this.counter * this.opts.sampling >= 1) {
+    this.counter = 0
+    return true
+  }
 
   return false
 }

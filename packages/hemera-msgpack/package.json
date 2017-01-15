@@ -10,5 +10,8 @@
   "license": "MIT",
   "dependencies": {
     "msgpack5": "3.4.x"
+  },
+  "devDependencies": {
+    "eslint": "^3.13.1"
   }
 }

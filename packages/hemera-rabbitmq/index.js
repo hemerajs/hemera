@@ -68,13 +68,13 @@ exports.plugin = function hemeraRabbitmq(options) {
       consume(req.type)
 
       Rabbit.publish(req.exchange, {
-          type: req.type,
-          body: req.data
-        }).then(function () {
+        type: req.type,
+        body: req.data
+      }).then(function () {
 
-          cb(null, true)
-        })
-        .catch(cb)
+        cb(null, true)
+      })
+      .catch(cb)
     })
 
   })

@@ -4,7 +4,7 @@ var msgpack = require('msgpack5')(),
   encode = msgpack.encode,
   decode = msgpack.decode
 
-exports.plugin = function hemeraMsgpack(options) {
+exports.plugin = function hemeraMsgpack() {
 
   const hemera = this
 

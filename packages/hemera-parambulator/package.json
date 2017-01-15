@@ -17,5 +17,8 @@
   "license": "MIT",
   "dependencies": {
     "parambulator": "1.5.x"
+  },
+  "devDependencies": {
+    "eslint": "^3.13.1"
   }
 }

@@ -9,14 +9,13 @@
 'use strict'
 
 const Items = require('items')
-const _ = require('lodash')
 
 /**
  * @class Ext
  */
 class Ext {
 
-  _handler: Array < Function > ;
+  _handler: Array<Function>;
   _type: string;
 
   constructor(type: string) {

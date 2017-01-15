@@ -8,7 +8,6 @@
 
 'use strict'
 
-const Items = require('items')
 const Util = require('./util')
 const Hoek = require('hoek')
 

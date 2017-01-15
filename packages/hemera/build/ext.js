@@ -9,7 +9,6 @@
 'use strict'
 
 const Items = require('items')
-const _ = require('lodash')
 
 /**
  * @class Ext

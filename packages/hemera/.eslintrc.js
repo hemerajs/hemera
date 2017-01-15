@@ -17,7 +17,6 @@ module.exports = {
   // see http://eslint.org/docs/rules/
   "rules": {
     "indent": [ "error", 2 ],
-    "quotes": [ "error", "single" ],
-    //"semi": [ "warn", "never"]
+    "quotes": [ "error", "single" ]
   }
 };

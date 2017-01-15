@@ -266,8 +266,6 @@ class Hemera extends EventEmitter {
    */
   ext(type: string, handler: Function): void {
 
-    let self = this
-
     if (!this._extensions[type]) {
       let error = new Errors.HemeraError(Constants.INVALID_EXTENSION_TYPE, {
         type
@@ -489,7 +487,6 @@ class Hemera extends EventEmitter {
   subscribe(topic: string, subToMany: boolean, maxMessages: number) {
 
     let self: Hemera = this
-    let options;
 
     // avoid duplicate subscribers of the emit stream
     // we use one subscriber per topic

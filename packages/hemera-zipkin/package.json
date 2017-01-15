@@ -28,6 +28,6 @@
     "mocha-lcov-reporter": "1.2.x",
     "istanbul": "0.4.x",
     "coveralls": "2.11.x",
-    "eslint": "3.12.x"
+    "eslint": "^3.13.1"
   }
 }
