@@ -30,7 +30,7 @@ class Ext {
    *
    * @memberOf Ext
    */
-  subscribe(handler) {
+  add(handler) {
 
     this._handler.push(handler)
 

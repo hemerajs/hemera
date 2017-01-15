@@ -1484,7 +1484,7 @@ describe('Load', function () {
     hemera.ready(() => {
 
       const load = hemera.load
-      
+
       expect(load.eventLoopDelay).to.be.number()
       expect(load.heapUsed).to.be.number()
       expect(load.rss).to.be.number()
@@ -1905,6 +1905,48 @@ describe('Extension error', function () {
     server.kill()
   })
 
+  it('Invalid extension type', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      logLevel: 'silent',
+      crashOnFatal: false
+    })
+
+    hemera.ready(() => {
+
+      let plugin = function (options) {
+
+        let hemera = this
+
+        hemera.ext('test', function (next) {
+
+        })
+
+      }
+
+      try {
+
+        hemera.use({
+          plugin: plugin,
+          attributes: {
+            name: 'myPlugin'
+          },
+          options: {}
+        })
+
+      } catch (e) {
+
+        expect(e.name).to.be.equals('HemeraError')
+        expect(e.message).to.be.equals('Invalid extension type')
+        hemera.close()
+        done()
+      }
+
+    })
+  })
+
   it('onClientPostRequest', function (done) {
 
     const nats = require('nats').connect(authUrl)
@@ -1920,7 +1962,7 @@ describe('Extension error', function () {
 
         let hemera = this
 
-        hemera._extensions.onClientPostRequest.subscribe(function (next) {
+        hemera.ext('onClientPostRequest', function (next) {
 
           next(new Error('test'))
         })
@@ -1977,7 +2019,7 @@ describe('Extension error', function () {
 
         let hemera = this
 
-        hemera._extensions.onClientPreRequest.subscribe(function (next) {
+        hemera.ext('onClientPreRequest', function (next) {
 
           next(new Error('test'))
         })
@@ -2034,7 +2076,7 @@ describe('Extension error', function () {
 
         let hemera = this
 
-        hemera._extensions.onServerPreRequest.subscribe(function (next) {
+        hemera.ext('onServerPreRequest', function (next) {
 
           next(new Error('test'))
         })
@@ -2091,7 +2133,7 @@ describe('Extension error', function () {
 
         let hemera = this
 
-        hemera._extensions.onServerPreResponse.subscribe(function (next) {
+        hemera.ext('onServerPreResponse', function (next) {
 
           next(new Error('test'))
         })

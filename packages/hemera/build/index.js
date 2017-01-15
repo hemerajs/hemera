@@ -133,7 +133,7 @@ class Hemera extends EventEmitter {
     /**
      * Will be executed before the client request is executed.
      */
-    this._extensions.onClientPreRequest.subscribe(function onClientPreRequest(next) {
+    this._extensions.onClientPreRequest.add(function onClientPreRequest(next) {
 
       let ctx = this
 
@@ -192,7 +192,7 @@ class Hemera extends EventEmitter {
     /**
      * Will be executed after the client received and decoded the request.
      */
-    this._extensions.onClientPostRequest.subscribe(function onClientPostRequest(next) {
+    this._extensions.onClientPostRequest.add(function onClientPostRequest(next) {
 
       let ctx = this
       let pattern = this._pattern
@@ -215,7 +215,7 @@ class Hemera extends EventEmitter {
     /**
      * Will be executed before the server received the request.
      */
-    this._extensions.onServerPreRequest.subscribe(function onServerPreRequest(next) {
+    this._extensions.onServerPreRequest.add(function onServerPreRequest(next) {
 
       let msg = this._request.value
       let ctx = this
@@ -236,7 +236,7 @@ class Hemera extends EventEmitter {
     /**
      * Will be executed before the server action is executed.
      */
-    this._extensions.onServerPreHandler.subscribe(function onServerPreHandler(next) {
+    this._extensions.onServerPreHandler.add(function onServerPreHandler(next) {
 
       let ctx = this
 
@@ -249,7 +249,7 @@ class Hemera extends EventEmitter {
     /**
      * Will be executed before the server reply the response and build the message.
      */
-    this._extensions.onServerPreResponse.subscribe(function onServerPreResponse(next) {
+    this._extensions.onServerPreResponse.add(function onServerPreResponse(next) {
 
       let ctx = this
 
@@ -361,7 +361,15 @@ class Hemera extends EventEmitter {
 
     let self = this
 
-    this._extensions[type].subscribe(handler)
+    if (!this._extensions[type]) {
+      let error = new Errors.HemeraError(Constants.INVALID_EXTENSION_TYPE, {
+        type
+      })
+      this.log.error(error)
+      throw (error)
+    }
+
+    this._extensions[type].add(handler)
 
   }
   /**
@@ -375,7 +383,7 @@ class Hemera extends EventEmitter {
       let error = new Errors.HemeraError(Constants.PLUGIN_ALREADY_IN_USE, {
         plugin: params.attributes.name
       })
-      this.log.info(error)
+      this.log.error(error)
       throw (error)
     }
 
