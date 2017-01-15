@@ -529,7 +529,6 @@ class Hemera extends EventEmitter {
         // check if a handler is registered with this pattern
         if (self._actMeta) {
 
-          // extension point 'onServerPreHandler'
           self._extensions.onServerPreHandler.invoke(ctx, function (err) {
 
             if (err) {
@@ -774,7 +773,6 @@ class Hemera extends EventEmitter {
               }
             }
 
-            // extension point 'onClientPostRequest'
             self._extensions.onClientPostRequest.invoke(ctx, function (err) {
 
               if (err) {
