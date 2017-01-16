@@ -10,7 +10,9 @@
   },
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "joi": "10.2.x"
+  },
   "devDependencies": {
     "eslint": "^3.13.1"
   }

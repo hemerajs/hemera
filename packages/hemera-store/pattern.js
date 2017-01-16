@@ -1,5 +1,7 @@
 'use strict'
 
+const Joi = require('joi')
+
 /**
  *
  *
@@ -22,13 +24,8 @@ class StorePattern {
     return {
       topic,
       cmd: 'create',
-      collection: {
-        required$: true,
-        type$: 'string'
-      },
-      data: {
-        type$: 'object'
-      }
+      collection: Joi.string().default(Joi.ref('table')),
+      data: Joi.object().required()
     }
   }
 
@@ -46,10 +43,8 @@ class StorePattern {
     return {
       topic,
       cmd: 'remove',
-      query: {
-        type$: 'object',
-        default$: {}
-      }
+      collection: Joi.string().default(Joi.ref('table')),
+      query: Joi.object().required()
     }
   }
 
@@ -67,10 +62,8 @@ class StorePattern {
     return {
       topic,
       cmd: 'removeById',
-      id: {
-        required$: true,
-        type$: 'object'
-      }
+      collection: Joi.string().default(Joi.ref('table')),
+      id: Joi.object().required()
     }
   }
 
@@ -88,13 +81,9 @@ class StorePattern {
     return {
       topic,
       cmd: 'update',
-      data: {
-        type$: 'object'
-      },
-      query: {
-        type$: 'object',
-        default$: {}
-      }
+      collection: Joi.string().default(Joi.ref('table')),
+      data: Joi.object().required(),
+      query: Joi.object().default({}).required()
     }
   }
 
@@ -112,13 +101,9 @@ class StorePattern {
     return {
       topic,
       cmd: 'updateById',
-      data: {
-        type$: 'object'
-      },
-      id: {
-        required$: true,
-        type$: 'object'
-      }
+      collection: Joi.string().default(Joi.ref('table')),
+      data: Joi.object().required(),
+      id: Joi.object().required()
 
     }
   }
@@ -137,14 +122,9 @@ class StorePattern {
     return {
       topic,
       cmd: 'find',
-      query: {
-        type$: 'object',
-        default$: {}
-      },
-      options: {
-        type$: 'object',
-        default$: {}
-      }
+      collection: Joi.string().default(Joi.ref('table')),
+      query: Joi.object().required(),
+      options: Joi.object().optional()
     }
   }
 
@@ -163,10 +143,8 @@ class StorePattern {
     return {
       topic,
       cmd: 'findById',
-      id: {
-        required$: true,
-        type$: 'object'
-      }
+      collection: Joi.string().default(Joi.ref('table')),
+      id: Joi.object().required()
     }
   }
 
@@ -184,13 +162,9 @@ class StorePattern {
     return {
       topic,
       cmd: 'replace',
-      data: {
-        type$: 'object'
-      },
-      query: {
-        type$: 'object',
-        default$: {}
-      }
+      collection: Joi.string().default(Joi.ref('table')),
+      data: Joi.object().required(),
+      query: Joi.object().default({}).required()
     }
   }
 
@@ -208,13 +182,9 @@ class StorePattern {
     return {
       topic,
       cmd: 'replaceById',
-      data: {
-        type$: 'object'
-      },
-      id: {
-        required$: true,
-        type$: 'object'
-      }
+      collection: Joi.string().default(Joi.ref('table')),
+      data: Joi.object().required(),
+      id: Joi.object().required()
     }
   }
 
@@ -232,10 +202,8 @@ class StorePattern {
     return {
       topic,
       cmd: 'exists',
-      query: {
-        required$: true,
-        type$: 'object'
-      }
+      collection: Joi.string().default(Joi.ref('table')),
+      query: Joi.object().required()
     }
   }
 }

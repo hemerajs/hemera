@@ -12,8 +12,8 @@
   "license": "MIT",
   "dependencies": {
     "arangojs": "5.4.x",
-    "hemera-parambulator": "0.1.x",
-    "hemera-store": "^1.0.2"
+    "hemera-joi": "0.1.x",
+    "hemera-store": "1.0.x"
   },
   "devDependencies": {
     "code": "4.0.x",

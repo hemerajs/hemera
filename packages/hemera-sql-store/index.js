@@ -1,7 +1,7 @@
 'use strict'
 
 const Knex = require('knex')
-const HemeraParambulator = require('hemera-parambulator')
+const HemeraJoi = require('hemera-joi')
 const SqlStore = require('./store')
 const StorePattern = require('hemera-store/pattern')
 
@@ -11,7 +11,7 @@ exports.plugin = function hemeraSqlStore(options) {
   const connections = {}
   const topic = 'sql-store'
 
-  hemera.use(HemeraParambulator)
+  hemera.use(HemeraJoi)
 
   hemera.expose('connectionPool', connections)
 
@@ -59,10 +59,10 @@ exports.plugin = function hemeraSqlStore(options) {
 }
 
 exports.options = {
-  payloadValidator: 'hemera-parambulator'
+  payloadValidator: 'hemera-joi'
 }
 
 exports.attributes = {
   name: 'hemera-sql-store',
-  dependencies: ['hemera-parambulator']
+  dependencies: ['hemera-joi']
 }

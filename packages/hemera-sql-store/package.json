@@ -11,8 +11,8 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-parambulator": "0.1.x",
-    "hemera-store": "^1.0.2",
+    "hemera-joi": "0.1.x",
+    "hemera-store": "1.0.x",
     "knex": "0.12.x",
     "mysql": "2.12.x",
     "pg": "6.1.x",

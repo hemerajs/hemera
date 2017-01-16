@@ -71,7 +71,7 @@ describe('Hemera-sql-store', function () {
     hemera.act({
       topic: 'sql-store',
       cmd: 'create',
-      collection: testTable,
+      table: testTable,
       data: {
         name: 'olaf'
       }

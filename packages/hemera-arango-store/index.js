@@ -1,7 +1,7 @@
 'use strict'
 
 const Arangojs = require('arangojs')
-const HemeraParambulator = require('hemera-parambulator')
+const HemeraJoi = require('hemera-joi')
 const ArangoStore = require('./store')
 const StorePattern = require('hemera-store/pattern')
 
@@ -11,7 +11,7 @@ exports.plugin = function hemeraArangoStore(options) {
   const connections = {}
   const topic = 'arango-store'
 
-  hemera.use(HemeraParambulator)
+  hemera.use(HemeraJoi)
 
   hemera.expose('aqlTemplate', Arangojs.aql)
   hemera.expose('connectionPool', connections)
@@ -255,10 +255,10 @@ exports.plugin = function hemeraArangoStore(options) {
 }
 
 exports.options = {
-  payloadValidator: 'hemera-parambulator'
+  payloadValidator: 'hemera-joi'
 }
 
 exports.attributes = {
   name: 'hemera-arango-store',
-  dependencies: ['hemera-parambulator']
+  dependencies: ['hemera-joi']
 }
