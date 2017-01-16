@@ -1,6 +1,6 @@
 {
   "name": "hemera-store",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -10,8 +10,7 @@
   },
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "eslint": "^3.13.1"
   }
