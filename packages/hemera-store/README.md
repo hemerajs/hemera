@@ -16,3 +16,4 @@ Simple API to be interoperable with most database interfaces.
   * [removeById](#removeById)
   * [replace](#replace)
   * [replaceById](#replaceById)
+  * [exists](#exists)
