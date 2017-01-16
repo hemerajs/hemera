@@ -1,122 +1,6 @@
 'use strict'
 
-
-/**
- * Common API methods:
- *
- * create
- * remove
- * removeById
- * update
- * updateById
- * find
- * findById
- * replace
- * replaceById
- *
- * @class Store
- */
-/**
- *
- *
- * @class Store
- */
-class Store {
-
-  /**
-   * Creates an instance of Store.
-   *
-   * @param {any} driver
-   * @param {any} options
-   *
-   * @memberOf Store
-   */
-  constructor(driver, options) {
-    this._driver = driver
-    this._options = options
-  }
-  /**
-   *
-   *
-   *
-   * @memberOf Store
-   */
-  create() {
-    throw (new Error('Not implemented yet'))
-  }
-  /**
-   *
-   *
-   *
-   * @memberOf Store
-   */
-  remove() {
-    throw (new Error('Not implemented yet'))
-  }
-  /**
-   *
-   *
-   *
-   * @memberOf Store
-   */
-  removeById() {
-    throw (new Error('Not implemented yet'))
-  }
-  /**
-   *
-   *
-   *
-   * @memberOf Store
-   */
-  update() {
-    throw (new Error('Not implemented yet'))
-  }
-  /**
-   *
-   *
-   *
-   * @memberOf Store
-   */
-  updateById() {
-    throw (new Error('Not implemented yet'))
-  }
-  /**
-   *
-   *
-   *
-   * @memberOf Store
-   */
-  find() {
-    throw (new Error('Not implemented yet'))
-  }
-  /**
-   *
-   *
-   *
-   * @memberOf Store
-   */
-  findById() {
-    throw (new Error('Not implemented yet'))
-  }
-  /**
-   *
-   *
-   *
-   * @memberOf Store
-   */
-  replace() {
-    throw (new Error('Not implemented yet'))
-  }
-  /**
-   *
-   *
-   *
-   * @memberOf Store
-   */
-  replaceById() {
-    throw (new Error('Not implemented yet'))
-  }
-}
+const Store = require('hemera-store')
 
 /**
  *
@@ -166,7 +50,7 @@ class ArangoStore extends Store {
    *
    * @memberOf ArangoStore
    */
-  remove(req, cb) {
+  remove(filter, cb) {
 
     this._driver.collection(req.collection)
       .removeByExample(req.filter, (err, res) => {
@@ -200,18 +84,25 @@ class ArangoStore extends Store {
 
       })
   }
-  /**
-   *
-   *
-   * @param {any} req
-   * @param {any} cb
-   *
-   * @memberOf ArangoStore
-   */
-  update(req, cb) {
+
+  update(req, data, cb) {
 
     this._driver.collection(req.collection)
-      .updateByExample(req.filter, req.data, (err, res) => {
+      .updateByExample(req.filter, data, (err, res) => {
+
+        if (err) {
+          return cb(new Error(err.message))
+        }
+
+        return cb(null, res)
+
+      })
+  }
+
+  updateById(req, data, cb) {
+
+    this._driver.collection(req.collection)
+      .updateByExample(req.id, data, (err, res) => {
 
         if (err) {
           return cb(new Error(err.message))
@@ -229,28 +120,7 @@ class ArangoStore extends Store {
    *
    * @memberOf ArangoStore
    */
-  updateById(req, cb) {
-
-    this._driver.collection(req.collection)
-      .updateByExample(req.id, req.data, (err, res) => {
-
-        if (err) {
-          return cb(new Error(err.message))
-        }
-
-        return cb(null, res)
-
-      })
-  }
-  /**
-   *
-   *
-   * @param {any} req
-   * @param {any} cb
-   *
-   * @memberOf ArangoStore
-   */
-  find(req, cb) {
+  find(req, options, cb) {
 
     this._driver.collection(req.collection)
       .byExample(req.filter, (err, res) => {
@@ -292,10 +162,10 @@ class ArangoStore extends Store {
    *
    * @memberOf ArangoStore
    */
-  replace(req, cb) {
+  replace(req, data, cb) {
 
     this._driver.collection(req.collection)
-      .replaceByExample(req.filter, req.data, (err, res) => {
+      .replaceByExample(req.filter, data, (err, res) => {
 
         if (err) {
           return cb(new Error(err.message))
@@ -313,10 +183,10 @@ class ArangoStore extends Store {
    *
    * @memberOf ArangoStore
    */
-  replaceById(req, cb) {
+  replaceById(req, data, cb) {
 
     this._driver.collection(req.collection)
-      .replaceByExample(req.id, req.data, (err, res) => {
+      .replaceByExample(req.id, data, (err, res) => {
 
         if (err) {
           return cb(new Error(err.message))

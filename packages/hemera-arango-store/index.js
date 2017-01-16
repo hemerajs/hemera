@@ -197,7 +197,7 @@ exports.plugin = function hemeraArangoStore(options) {
 
     const store = new ArangoStore(db)
 
-    store.update(req, cb)
+    store.update(req, req.data, cb)
 
   })
 
@@ -217,7 +217,7 @@ exports.plugin = function hemeraArangoStore(options) {
 
     const store = new ArangoStore(db)
 
-    store.updateById(req, cb)
+    store.updateById(req, req.data, cb)
 
   })
 
@@ -270,7 +270,7 @@ exports.plugin = function hemeraArangoStore(options) {
 
     const store = new ArangoStore(db)
 
-    store.replace(req, cb)
+    store.replace(req, req.data, cb)
 
   })
 
@@ -290,7 +290,7 @@ exports.plugin = function hemeraArangoStore(options) {
 
     const store = new ArangoStore(db)
 
-    store.replaceById(req, cb)
+    store.replaceById(req, req.data, cb)
 
   })
 
