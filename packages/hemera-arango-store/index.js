@@ -3,11 +3,13 @@
 const Arangojs = require('arangojs')
 const HemeraParambulator = require('hemera-parambulator')
 const ArangoStore = require('./store')
+const StorePattern = require('hemera-store/pattern')
 
 exports.plugin = function hemeraArangoStore(options) {
 
   const hemera = this
   const connections = {}
+  const topic = 'arango-store'
 
   hemera.use(HemeraParambulator)
 
@@ -161,17 +163,7 @@ exports.plugin = function hemeraArangoStore(options) {
 
   })
 
-  hemera.add({
-    topic: 'arango-store',
-    cmd: 'create',
-    collection: {
-      required$: true,
-      type$: 'string'
-    },
-    data: {
-      type$: 'object'
-    }
-  }, function (req, cb) {
+  hemera.add(StorePattern.create(topic), function (req, cb) {
 
     let db = useDb(req.databaseName)
 
@@ -181,17 +173,7 @@ exports.plugin = function hemeraArangoStore(options) {
 
   })
 
-  hemera.add({
-    topic: 'arango-store',
-    cmd: 'update',
-    data: {
-      type$: 'object'
-    },
-    filter: {
-      type$: 'object',
-      default$: {}
-    }
-  }, function (req, cb) {
+  hemera.add(StorePattern.update(topic), function (req, cb) {
 
     let db = useDb(req.databaseName)
 
@@ -201,17 +183,7 @@ exports.plugin = function hemeraArangoStore(options) {
 
   })
 
-  hemera.add({
-    topic: 'arango-store',
-    cmd: 'updateById',
-    data: {
-      type$: 'object'
-    },
-    id: {
-      required$: true,
-      type$: 'object'
-    }
-  }, function (req, cb) {
+  hemera.add(StorePattern.updateById(topic), function (req, cb) {
 
     let db = useDb(req.databaseName)
 
@@ -221,14 +193,7 @@ exports.plugin = function hemeraArangoStore(options) {
 
   })
 
-  hemera.add({
-    topic: 'arango-store',
-    cmd: 'remove',
-    filter: {
-      type$: 'object',
-      default$: {}
-    }
-  }, function (req, cb) {
+  hemera.add(StorePattern.remove(topic), function (req, cb) {
 
     let db = useDb(req.databaseName)
 
@@ -237,14 +202,7 @@ exports.plugin = function hemeraArangoStore(options) {
     store.remove(req, cb)
   })
 
-  hemera.add({
-    topic: 'arango-store',
-    cmd: 'removeById',
-    id: {
-      required$: true,
-      type$: 'object'
-    }
-  }, function (req, cb) {
+  hemera.add(StorePattern.removeById(topic), function (req, cb) {
 
     let db = useDb(req.databaseName)
 
@@ -254,17 +212,7 @@ exports.plugin = function hemeraArangoStore(options) {
 
   })
 
-  hemera.add({
-    topic: 'arango-store',
-    cmd: 'replace',
-    data: {
-      type$: 'object'
-    },
-    filter: {
-      type$: 'object',
-      default$: {}
-    }
-  }, function (req, cb) {
+  hemera.add(StorePattern.replace(topic), function (req, cb) {
 
     let db = useDb(req.databaseName)
 
@@ -274,17 +222,7 @@ exports.plugin = function hemeraArangoStore(options) {
 
   })
 
-  hemera.add({
-    topic: 'arango-store',
-    cmd: 'replaceById',
-    data: {
-      type$: 'object'
-    },
-    id: {
-      required$: true,
-      type$: 'object'
-    }
-  }, function (req, cb) {
+  hemera.add(StorePattern.replaceById(topic), function (req, cb) {
 
     let db = useDb(req.databaseName)
 
@@ -294,14 +232,7 @@ exports.plugin = function hemeraArangoStore(options) {
 
   })
 
-  hemera.add({
-    topic: 'arango-store',
-    cmd: 'findById',
-    id: {
-      required$: true,
-      type$: 'object'
-    }
-  }, function (req, cb) {
+  hemera.add(StorePattern.findById(topic), function (req, cb) {
 
     let db = useDb(req.databaseName)
 
@@ -311,18 +242,7 @@ exports.plugin = function hemeraArangoStore(options) {
 
   })
 
-  hemera.add({
-    topic: 'arango-store',
-    cmd: 'find',
-    filter: {
-      type$: 'object',
-      default$: {}
-    },
-    options: {
-      type$: 'object',
-      default$: {}
-    }
-  }, function (req, cb) {
+  hemera.add(StorePattern.find(topic), function (req, cb) {
 
     let db = useDb(req.databaseName)
 

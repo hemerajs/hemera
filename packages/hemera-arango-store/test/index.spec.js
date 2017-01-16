@@ -15,7 +15,7 @@ describe('Hemera-arango-store', function () {
 
   let server
   let arangoOptions = {
-    url: 'http://192.168.99.100:8529/'
+    url: 'http://root:@127.0.0.1:8529/'
   }
   let hemera
   let aql
@@ -258,7 +258,7 @@ describe('Hemera-arango-store', function () {
         data: {
           name: 'klaus'
         },
-        filter: {
+        query: {
           name: 'peter'
         }
       }, function (err, resp) {
@@ -333,7 +333,7 @@ describe('Hemera-arango-store', function () {
         cmd: 'remove',
         collection: testCollection,
         databaseName: testDatabase,
-        filter: {
+        query: {
           name: 'olaf'
         }
       }, function (err, resp) {
@@ -443,7 +443,7 @@ describe('Hemera-arango-store', function () {
         cmd: 'find',
         collection: testCollection,
         databaseName: testDatabase,
-        filter: {}
+        query: {}
       }, function (err, resp) {
 
         expect(err).to.be.not.exists()
@@ -479,7 +479,7 @@ describe('Hemera-arango-store', function () {
         data: {
           name: 'chris'
         },
-        filter: {
+        query: {
           name: 'nadine'
         }
       }, function (err, resp) {

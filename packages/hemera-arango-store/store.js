@@ -56,7 +56,7 @@ class ArangoStore extends Store {
   remove(req, cb) {
 
     this._driver.collection(req.collection)
-      .removeByExample(req.filter, (err, res) => {
+      .removeByExample(req.query, (err, res) => {
 
         if (err) {
           return cb(new Error(err.message))
@@ -101,7 +101,7 @@ class ArangoStore extends Store {
   update(req, data, cb) {
 
     this._driver.collection(req.collection)
-      .updateByExample(req.filter, data, (err, res) => {
+      .updateByExample(req.query, data, (err, res) => {
 
         if (err) {
           return cb(new Error(err.message))
@@ -146,7 +146,7 @@ class ArangoStore extends Store {
   find(req, options, cb) {
 
     this._driver.collection(req.collection)
-      .byExample(req.filter, (err, res) => {
+      .byExample(req.query, (err, res) => {
 
         if (err) {
           return cb(new Error(err.message))
@@ -190,7 +190,7 @@ class ArangoStore extends Store {
   replace(req, data, cb) {
 
     this._driver.collection(req.collection)
-      .replaceByExample(req.filter, data, (err, res) => {
+      .replaceByExample(req.query, data, (err, res) => {
 
         if (err) {
           return cb(new Error(err.message))

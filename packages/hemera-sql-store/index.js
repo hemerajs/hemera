@@ -3,11 +3,13 @@
 const Knex = require('knex')
 const HemeraParambulator = require('hemera-parambulator')
 const SqlStore = require('./store')
+const StorePattern = require('hemera-store/pattern')
 
 exports.plugin = function hemeraSqlStore(options) {
 
   const hemera = this
   const connections = {}
+  const topic = 'sql-store'
 
   hemera.use(HemeraParambulator)
 
@@ -45,18 +47,7 @@ exports.plugin = function hemeraSqlStore(options) {
   /**
    * Create a new database
    */
-  hemera.add({
-    topic: 'sql-store',
-    cmd: 'create',
-    table: {
-      required$: true,
-      type$: 'string'
-    },
-    data: {
-      required$: true,
-      type$: 'object'
-    },
-  }, function (req, cb) {
+  hemera.add(StorePattern.create(topic), function (req, cb) {
 
     let db = useDb(req.database)
 

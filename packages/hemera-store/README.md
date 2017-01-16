@@ -17,3 +17,10 @@ Simple API to be interoperable with most database interfaces.
   * [replace](#replace)
   * [replaceById](#replaceById)
   * [exists](#exists)
+
+Provide a unique pattern set for all common api methods. We had to choose for some conventions across document and table oriented stores.
+
+Table-oriented | Document-oriented | Convention
+--- | --- | ---
+Database | Database | **Database**
+Database | Collection | **Collection**
