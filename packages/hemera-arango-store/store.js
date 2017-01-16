@@ -9,6 +9,7 @@ const Store = require('hemera-store')
  * @extends {Store}
  */
 class ArangoStore extends Store {
+
   /**
    * Creates an instance of ArangoStore.
    *
@@ -21,6 +22,7 @@ class ArangoStore extends Store {
 
     super(driver, options)
   }
+
   /**
    *
    *
@@ -42,6 +44,7 @@ class ArangoStore extends Store {
 
       })
   }
+
   /**
    *
    *
@@ -50,7 +53,7 @@ class ArangoStore extends Store {
    *
    * @memberOf ArangoStore
    */
-  remove(filter, cb) {
+  remove(req, cb) {
 
     this._driver.collection(req.collection)
       .removeByExample(req.filter, (err, res) => {
@@ -63,6 +66,7 @@ class ArangoStore extends Store {
 
       })
   }
+
   /**
    *
    *
@@ -85,6 +89,15 @@ class ArangoStore extends Store {
       })
   }
 
+  /**
+   *
+   *
+   * @param {any} req
+   * @param {any} data
+   * @param {any} cb
+   *
+   * @memberOf ArangoStore
+   */
   update(req, data, cb) {
 
     this._driver.collection(req.collection)
@@ -99,6 +112,15 @@ class ArangoStore extends Store {
       })
   }
 
+  /**
+   *
+   *
+   * @param {any} req
+   * @param {any} data
+   * @param {any} cb
+   *
+   * @memberOf ArangoStore
+   */
   updateById(req, data, cb) {
 
     this._driver.collection(req.collection)
@@ -112,6 +134,7 @@ class ArangoStore extends Store {
 
       })
   }
+
   /**
    *
    *
@@ -133,6 +156,7 @@ class ArangoStore extends Store {
 
       })
   }
+
   /**
    *
    *
@@ -154,6 +178,7 @@ class ArangoStore extends Store {
 
       })
   }
+
   /**
    *
    *
@@ -175,6 +200,7 @@ class ArangoStore extends Store {
 
       })
   }
+
   /**
    *
    *

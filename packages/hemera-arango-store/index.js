@@ -298,7 +298,8 @@ exports.plugin = function hemeraArangoStore(options) {
     topic: 'arango-store',
     cmd: 'findById',
     id: {
-      required$: true
+      required$: true,
+      type$: 'object'
     }
   }, function (req, cb) {
 
@@ -316,6 +317,10 @@ exports.plugin = function hemeraArangoStore(options) {
     filter: {
       type$: 'object',
       default$: {}
+    },
+    options: {
+      type$: 'object',
+      default$: {}
     }
   }, function (req, cb) {
 
@@ -323,7 +328,7 @@ exports.plugin = function hemeraArangoStore(options) {
 
     const store = new ArangoStore(db)
 
-    store.find(req, cb)
+    store.find(req, req.options, cb)
 
   })
 

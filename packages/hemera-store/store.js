@@ -47,8 +47,8 @@ class Store {
   /**
    * Create a new entity
    *
-   * @param {any} data
-   * @param {any} cb
+   * @param {object} data
+   * @param {function} cb
    *
    * @memberOf Store
    */
@@ -59,8 +59,8 @@ class Store {
   /**
    * Removes multiple entitys
    *
-   * @param {any} query
-   * @param {any} cb
+   * @param {object} query
+   * @param {function} cb
    *
    * @memberOf Store
    */
@@ -71,8 +71,8 @@ class Store {
   /**
    * Remove an entity by id
    *
-   * @param {any} id
-   * @param {any} cb
+   * @param {object} id
+   * @param {function} cb
    *
    * @memberOf Store
    */
@@ -82,9 +82,9 @@ class Store {
   /**
    * Update an entity
    *
-   * @param {any} query
-   * @param {any} data
-   * @param {any} cb
+   * @param {object} query
+   * @param {object} data
+   * @param {function} cb
    *
    * @memberOf Store
    */
@@ -95,9 +95,9 @@ class Store {
   /**
    * Update an entity by id
    *
-   * @param {any} id
-   * @param {any} data
-   * @param {any} cb
+   * @param {object} id
+   * @param {object} data
+   * @param {function} cb
    *
    * @memberOf Store
    */
@@ -108,9 +108,9 @@ class Store {
   /**
    * Find an entity
    *
-   * @param {any} query
-   * @param {any} options
-   * @param {any} cb
+   * @param {object} query
+   * @param {object} options
+   * @param {function} cb
    *
    * @memberOf Store
    */
@@ -121,8 +121,8 @@ class Store {
   /**
    * Find an entity by id
    *
-   * @param {any} id
-   * @param {any} cb
+   * @param {object} id
+   * @param {function} cb
    *
    * @memberOf Store
    */
@@ -133,9 +133,9 @@ class Store {
   /**
    * Replace an entity
    *
-   * @param {any} query
-   * @param {any} data
-   * @param {any} cb
+   * @param {object} query
+   * @param {object} data
+   * @param {function} cb
    *
    * @memberOf Store
    */
@@ -146,9 +146,9 @@ class Store {
   /**
    * Replace an entity by id
    *
-   * @param {any} id
-   * @param {any} data
-   * @param {any} cb
+   * @param {object} id
+   * @param {object} data
+   * @param {function} cb
    *
    * @memberOf Store
    */
@@ -159,8 +159,8 @@ class Store {
   /**
    * Check if an entity exists
    *
-   * @param {any} query
-   * @param {any} cb
+   * @param {object} query
+   * @param {function} cb
    *
    * @memberOf Store
    */
