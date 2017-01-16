@@ -6,7 +6,7 @@ Simple API to be interoperable with most database interfaces.
 
 # Interface
 
-* [Store API](#Document-api)
+* [Store API](#store-api)
   * [create](#create)
   * [update](#update)
   * [updateById](#updateById)
