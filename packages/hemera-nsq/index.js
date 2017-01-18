@@ -7,6 +7,7 @@ exports.plugin = function hemeraNsqStore(options) {
 
   const hemera = this
   const readers = {}
+  const Joi = hemera.exposition['hemera-joi'].joi
 
   hemera.expose('readers', readers)
 
@@ -89,17 +90,9 @@ exports.plugin = function hemeraNsqStore(options) {
     hemera.add({
       topic: 'nsq',
       cmd: 'publish',
-      subject: {
-        required$: true,
-        type$: 'string'
-      },
-      channel: {
-        required$: true,
-        type$: 'string'
-      },
-      data: {
-        required$: true
-      },
+      subject: Joi.string().required(),
+      channel: Joi.string().required(),
+      data: Joi.object().required()
     }, function (req, cb) {
 
       w.publish(req.subject, req.data, function (err) {
@@ -120,10 +113,10 @@ exports.plugin = function hemeraNsqStore(options) {
 }
 
 exports.options = {
-  payloadValidator: 'hemera-parambulator'
+  payloadValidator: 'hemera-joi'
 }
 
 exports.attributes = {
   name: 'hemera-nsq',
-  dependencies: ['hemera-parambulator']
+  dependencies: ['hemera-joi']
 }

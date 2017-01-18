@@ -11,7 +11,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-parambulator": "^0.1.71",
+    "hemera-joi": "0.1.x",
     "nsqjs": "0.7.x"
   },
   "devDependencies": {

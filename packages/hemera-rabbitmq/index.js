@@ -7,6 +7,7 @@ exports.plugin = function hemeraRabbitmq(options) {
 
   const hemera = this
   const handlers = []
+  const Joi = hemera.exposition['hemera-joi'].joi
 
   hemera.expose('handlers', handlers)
 
@@ -52,17 +53,9 @@ exports.plugin = function hemeraRabbitmq(options) {
     hemera.add({
       topic: 'rabbitmq',
       cmd: 'publish',
-      exchange: {
-        required$: true,
-        type$: 'string'
-      },
-      type: {
-        required$: true,
-        type$: 'string'
-      },
-      data: {
-        type$: 'object'
-      }
+      exchange: Joi.string().required(),
+      type: Joi.string().required(),
+      data: Joi.object().required()
     }, function (req, cb) {
 
       consume(req.type)
@@ -83,10 +76,10 @@ exports.plugin = function hemeraRabbitmq(options) {
 }
 
 exports.options = {
-  payloadValidator: 'hemera-parambulator'
+  payloadValidator: 'hemera-joi'
 }
 
 exports.attributes = {
   name: 'hemera-rabbitmq',
-  dependencies: ['hemera-parambulator']
+  dependencies: ['hemera-joi']
 }

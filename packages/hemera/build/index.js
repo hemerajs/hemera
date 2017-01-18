@@ -1,4 +1,4 @@
-//
+// 
 
 /*!
  * hemera
@@ -46,36 +46,36 @@ var defaultConfig = {
  */
 class Hemera extends EventEmitter {
 
+  
+  
+  
+  
+  
+  
 
+  
 
+  
+  
+  
+  
+  
+  
 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  
+  
 
   constructor(transport, params) {
 
