@@ -11,8 +11,16 @@ script:
 
 env:
   - ARANGODB_VERSION=3.1 ARANGO_VERSION=30100
+  global:
+    - ES_URL=https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.1.2.deb
   
 before_install:
+
+  # Install ElasticSearch
+  #- sudo apt-get purge elasticsearch
+  #- wget --output-document=/tmp/elasticsearch.deb $ES_URL
+  #- sudo dpkg --install /tmp/elasticsearch.deb
+  #- sudo service elasticsearch start
   #- curl https://www.arangodb.com/repositories/travisCI/setup_arangodb_${ARANGODB_VERSION}.sh | bash
   - sudo apt-get install python-software-properties
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
