@@ -14,17 +14,20 @@ env:
   - ARANGODB_VERSION=3.1 ARANGO_VERSION=30100
 
 addons:
-  apt:
-    sources:
-      - elasticsearch-5.x
-    packages:
-      - elasticsearch
+  #apt:
+  #  sources:
+  #    - elasticsearch-5.x
+  #  packages:
+  #    - elasticsearch
 services:
   # Start ElasticSearch as Travis service
-  - elasticsearch
+  #- elasticsearch
+  #- postgresql
+  #- rabbitmq
+  #- mongodb
 
 before_install:
-
+  # download and install arangodb
   #- curl https://www.arangodb.com/repositories/travisCI/setup_arangodb_${ARANGODB_VERSION}.sh | bash
   - sudo apt-get install python-software-properties
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
@@ -34,9 +37,11 @@ before_install:
   - sudo update-alternatives --set gcc /usr/bin/gcc-5
 
 before_script:
+  # install nats
   - wget https://github.com/nats-io/gnatsd/releases/download/v0.9.6/gnatsd-v0.9.6-linux-amd64.zip -qO tmp.zip
   - unzip tmp.zip
   - mv gnatsd-v0.9.6-linux-amd64 gnatsd
 
 after_script:
+  # kill arangodb process
   #- kill -9 $(pgrep arangod)
