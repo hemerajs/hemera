@@ -37,20 +37,12 @@ Hemera is a small wrapper around the NATS driver. NATS is a simple, fast and rel
 
 With Hemera you have the best of both worlds. Efficient pattern matching to have the most flexibility in defining your RPC's. It doesn't matter where your server or client lives. You can add the same add as many as you want on different hosts to ensure maximal availability. Thanks to the Request Reply pattern you can work with that as if you do a normal http request. The only dependency you have is a single binary of 7MB. Mind your own business NATS do the rest for you:
 
+The key features of Hemera are:
 
-### Service Discovery
-- Any subscription is managed by NATS. You don't need any service discovery. Total location transparency.
-
-### Scalability
-- Filtering on the subject name enables services to divide work (perhaps with locality) e.g. `topic:auth:germany`
-- Queue group name allow load balancing of services.
-
-### Fault tolerance
-- Auto-heals when new services are added.
-- Configure cluster mode to be more reliable.
-
-### Load Balancing
-- Queue groups are used by default in Hemera.
+* **Service Discovery**: Any subscription is managed by NATS. You don't need any service discovery. Total location transparency.
+* **Scalability**: Filtering on the subject name enables services to divide work (perhaps with locality) e.g. `topic:auth:germany`. Queue group name allow load balancing of services.
+* **Fault tolerance**: Auto-heals when new services are added. Configure cluster mode to be more reliable.
+* **Load Balancing**: Queue groups are used by default in Hemera.
 
 \+ **Hemera** = _Pattern-driven micro services._
 
