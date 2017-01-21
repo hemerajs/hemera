@@ -5,22 +5,26 @@ node_js:
   - "4"
   - "5"
   - "6"
+  - "7"
 
 script:
   - npm run setup && npm run ci
 
 env:
   - ARANGODB_VERSION=3.1 ARANGO_VERSION=30100
-  global:
-    - ES_URL=https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.1.2.deb
-  
+
+addons:
+  apt:
+    sources:
+      - elasticsearch-5.x
+    packages:
+      - elasticsearch
+services:
+  # Start ElasticSearch as Travis service
+  - elasticsearch
+
 before_install:
 
-  # Install ElasticSearch
-  #- sudo apt-get purge elasticsearch
-  #- wget --output-document=/tmp/elasticsearch.deb $ES_URL
-  #- sudo dpkg --install /tmp/elasticsearch.deb
-  #- sudo service elasticsearch start
   #- curl https://www.arangodb.com/repositories/travisCI/setup_arangodb_${ARANGODB_VERSION}.sh | bash
   - sudo apt-get install python-software-properties
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
@@ -35,4 +39,4 @@ before_script:
   - mv gnatsd-v0.9.6-linux-amd64 gnatsd
 
 after_script:
-  - kill -9 $(pgrep arangod)
+  #- kill -9 $(pgrep arangod)
