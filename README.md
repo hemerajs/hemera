@@ -10,9 +10,25 @@
 
 A [Node.js](http://nodejs.org/) microservices toolkit for the [NATS messaging system](https://nats.io)
 
-- __Status:__ Release Candidate
 - __Website:__ https://hemerajs.github.io/hemera-site/
 
+## 📓 Getting Started
+
+Hemera is a small wrapper around the NATS driver. NATS is a simple, fast and reliable solution for the internal communication of a distributed system. It chooses simplicity and reliability over guaranteed delivery. We want to provide a toolkit to develop micro services in an easy and powerful way. We use bloom filters to provide a pattern matching RPC style. You don't have to worry about the transport. NATS is powerful.
+
+With Hemera you have the best of both worlds. Efficient pattern matching to have the most flexibility in defining your RPC's. It doesn't matter where your server or client lives. You can add the same add as many as you want on different hosts to ensure maximal availability. Thanks to the Request Reply pattern you can work with that as if you do a normal http request. The only dependency you have is a single binary of 7MB. Mind your own business NATS do the rest for you:
+
+The key features of NATS in combination with Hemera are:
+* **Lightweight**: The Hemera core is small as possible and can be extended by extensions or plugins.
+* **Service Discovery**: You don't need a service discovery all subscriptions are managed by NATS.
+* **Load Balancing**: Requests are load balanced (random) by NATS mechanism of "queue groups".
+* **Packages**: Providing reliable and modern plugins to the community.
+* **High performant**: NATS is able to handle million of requests per seconds. We based
+* **Scalability**: Filtering on the subject name enables services to divide work (perhaps with locality) e.g. `topic:auth:germany`. Queue group name allow load balancing of services.
+* **Fault tolerance**: Auto-heals when new services are added. Configure cluster mode to be more reliable.
+* **Auto-pruning**: NATS automatically handles a slow consumer and cut it off.
+* **Pattern driven**: Define the signatures of your RPC's in JSON and use the flexibility of pattern-matching.
+* **Pub/sub**: While hemera was designed as a RPC only toolkit it also support all features of NATS. This includes wildcard in subjects and normal publish and subscriptions without the overhead of a reply.
 ## Packages
 
 The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
@@ -30,21 +46,6 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 | [hemera-elasticsearch](https://github.com/hemerajs/hemera/tree/master/packages/hemera-elasticsearch) | [![npm](https://img.shields.io/npm/v/hemera-elasticsearch.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-elasticsearch)
 | [hemera-rabbitmq](https://github.com/hemerajs/hemera/tree/master/packages/hemera-rabbitmq) | [![npm](https://img.shields.io/npm/v/hemera-rabbitmq.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-rabbitmq)
 | [hemera-zipkin](https://github.com/hemerajs/hemera/tree/master/packages/hemera-zipkin) | [![npm](https://img.shields.io/npm/v/hemera-zipkin.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-zipkin)
-
-## 📓 Getting Started
-
-Hemera is a small wrapper around the NATS driver. NATS is a simple, fast and reliable solution for the internal communication of a distributed system. It chooses simplicity and reliability over guaranteed delivery. We want to provide a toolkit to develop micro services in an easy and powerful way. We use bloom filters to provide a pattern matching RPC style. You don't have to worry about the transport. NATS is powerful.
-
-With Hemera you have the best of both worlds. Efficient pattern matching to have the most flexibility in defining your RPC's. It doesn't matter where your server or client lives. You can add the same add as many as you want on different hosts to ensure maximal availability. Thanks to the Request Reply pattern you can work with that as if you do a normal http request. The only dependency you have is a single binary of 7MB. Mind your own business NATS do the rest for you:
-
-The key features of Hemera are:
-
-* **Service Discovery**: Any subscription is managed by NATS. You don't need any service discovery. Total location transparency.
-* **Scalability**: Filtering on the subject name enables services to divide work (perhaps with locality) e.g. `topic:auth:germany`. Queue group name allow load balancing of services.
-* **Fault tolerance**: Auto-heals when new services are added. Configure cluster mode to be more reliable.
-* **Load Balancing**: Queue groups are used by default in Hemera.
-
-\+ **Hemera** = _Pattern-driven micro services._
 
 Table of contents
 =================
