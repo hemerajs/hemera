@@ -30,6 +30,7 @@ The key features of NATS in combination with Hemera are:
 * **Pattern driven**: Define the signatures of your RPC's in JSON and use the flexibility of pattern-matching.
 * **PubSub**: Hemera supports all features of NATS. This includes wildcards in subjects and normal publish and fanout mechanism.
 * **Tracing**: Any distributed system need good tracing capabilities. We provide support for Zipkin a tracing system which manages both the collection and lookup of this data. Your NATS server can be monitored by cli or a dashboard.
+* **Dependencies**: NATS is a single binary of 7MB and can be deployed in seconds.
 
 ## Packages
 
