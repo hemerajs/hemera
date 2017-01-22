@@ -29,6 +29,7 @@ The key features of NATS in combination with Hemera are:
 * **Auto-pruning**: NATS automatically handles a slow consumer and cut it off.
 * **Pattern driven**: Define the signatures of your RPC's in JSON and use the flexibility of pattern-matching.
 * **PubSub**: Hemera supports all features of NATS. This includes wildcards in subjects and normal publish and fanout mechanism.
+
 ## Packages
 
 The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
