@@ -6,29 +6,25 @@
  * MIT Licensed
  */
 
-'use strict'
-
 /**
  * Module Dependencies
  */
 
-const
-  EventEmitter = require('events'),
-  Bloomrun = require('bloomrun'),
-  Errio = require('errio'),
-  Hoek = require('hoek'),
-  Heavy = require('heavy'),
-  _ = require('lodash')
+import EventEmitter from 'events'
+import Bloomrun from 'bloomrun'
+import Errio from 'errio'
+import Hoek from 'hoek'
+import Heavy from 'heavy'
+import _ from 'lodash'
 
-const
-  Errors = require('./errors'),
-  Constants = require('./constants'),
-  Ext = require('./ext'),
-  Util = require('./util'),
-  DefaultExtensions = require('./extensions'),
-  DefaultEncoder = require('./encoder'),
-  DefaultDecoder = require('./decoder'),
-  DefaultLogger = require('./logger')
+import Errors from './errors'
+import Constants from './constants'
+import Ext from './ext'
+import Util from './util'
+import DefaultExtensions from './extensions'
+import DefaultEncoder from './encoder'
+import DefaultDecoder from './decoder'
+import DefaultLogger from './logger'
 
 // config
 var defaultConfig: Config = {

@@ -6,11 +6,8 @@
  * MIT Licensed
  */
 
-'use strict'
-
-const
-  _ = require('lodash'),
-  Crypto = require('crypto')
+import _ from 'lodash'
+import Crypto from 'crypto'
 
 /**
  * @class Util
@@ -70,7 +67,7 @@ class Util {
     }
 
     args = args || {}
-    var sb = []
+    let sb = []
     _.each(args, function (v, k) {
       if (!~k.indexOf('$') && !_.isFunction(v)) {
         sb.push(k + ':' + v)

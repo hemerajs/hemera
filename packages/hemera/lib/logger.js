@@ -6,20 +6,14 @@
  * MIT Licensed
  */
 
-'use strict'
+import Hoek from 'hoek'
+import Pino from 'pino'
 
-/**
- * Module Dependencies
- */
-
-const
-  Hoek = require('hoek'),
-  Pino = require('pino'),
-  Pretty = Pino.pretty()
+const Pretty = Pino.pretty()
 
 
 //Config
-var defaultConfig = {
+let defaultConfig = {
   level: 'silent',
   levels: ['info', 'warn', 'debug', 'trace', 'error', 'fatal']
 }
@@ -38,7 +32,9 @@ class Logger {
    *
    * @memberOf Logger
    */
-  constructor(params: { level: string }) {
+  constructor(params: {
+    level: string
+  }) {
 
     let self = this
 
@@ -58,7 +54,9 @@ class Logger {
     //Set levels, create new prototype methods
     self._config.levels.forEach((level) => {
 
-      let that: { [id: string]: Function } = this
+      let that: {
+        [id: string]: Function
+      } = this
 
       that[level] = function () {
 

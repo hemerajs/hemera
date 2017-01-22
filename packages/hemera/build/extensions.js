@@ -1,4 +1,14 @@
-// 
+'use strict';
+
+var _util = require('./util');
+
+var _util2 = _interopRequireDefault(_util);
+
+var _hoek = require('hoek');
+
+var _hoek2 = _interopRequireDefault(_hoek);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /*!
  * hemera
@@ -6,121 +16,115 @@
  * MIT Licensed
  */
 
-'use strict'
-
-const Util = require('./util')
-const Hoek = require('hoek')
-
 module.exports.onClientPreRequest = [function onClientPreRequest(next) {
 
-  let ctx = this
+  var ctx = this;
 
-  let pattern = this._pattern
+  var pattern = this._pattern;
 
-  let prevCtx = this._prevContext
-  let cleanPattern = this._cleanPattern
-  let currentTime = Util.nowHrTime()
+  var prevCtx = this._prevContext;
+  var cleanPattern = this._cleanPattern;
+  var currentTime = _util2.default.nowHrTime();
 
   // shared context
-  ctx.context$ = pattern.context$ || prevCtx.context$
+  ctx.context$ = pattern.context$ || prevCtx.context$;
 
   // set metadata by passed pattern or current message context
-  ctx.meta$ = Hoek.merge(pattern.meta$ || {}, ctx.meta$)
+  ctx.meta$ = _hoek2.default.merge(pattern.meta$ || {}, ctx.meta$);
   // is only passed by msg
-  ctx.delegate$ = pattern.delegate$ || {}
+  ctx.delegate$ = pattern.delegate$ || {};
 
   // tracing
-  ctx.trace$ = pattern.trace$ || {}
-  ctx.trace$.parentSpanId = prevCtx.trace$.spanId
-  ctx.trace$.traceId = prevCtx.trace$.traceId || Util.randomId()
-  ctx.trace$.spanId = pattern.trace$ ? pattern.trace$.spanId : Util.randomId()
-  ctx.trace$.timestamp = currentTime
-  ctx.trace$.service = pattern.topic
-  ctx.trace$.method = Util.pattern(pattern)
+  ctx.trace$ = pattern.trace$ || {};
+  ctx.trace$.parentSpanId = prevCtx.trace$.spanId;
+  ctx.trace$.traceId = prevCtx.trace$.traceId || _util2.default.randomId();
+  ctx.trace$.spanId = pattern.trace$ ? pattern.trace$.spanId : _util2.default.randomId();
+  ctx.trace$.timestamp = currentTime;
+  ctx.trace$.service = pattern.topic;
+  ctx.trace$.method = _util2.default.pattern(pattern);
 
   // request
-  let request = {
-    id: pattern.requestId$ || Util.randomId(),
+  var request = {
+    id: pattern.requestId$ || _util2.default.randomId(),
     parentId: ctx.request$.id,
     timestamp: currentTime,
     type: pattern.pubsub$ === true ? 'pubsub' : 'request',
     duration: 0
-  }
+  };
 
   // build msg
-  let message = {
+  var message = {
     pattern: cleanPattern,
     meta: ctx.meta$,
     delegate: ctx.delegate$,
     trace: ctx.trace$,
     request: request
-  }
+  };
 
-  ctx._message = message
+  ctx._message = message;
 
-  ctx._request = ctx._encoder.encode.call(ctx, ctx._message)
+  ctx._request = ctx._encoder.encode.call(ctx, ctx._message);
 
-  ctx.log.info(pattern, `ACT_OUTBOUND - ID:${String(ctx._message.request.id)}`)
+  ctx.log.info(pattern, `ACT_OUTBOUND - ID:${String(ctx._message.request.id)}`);
 
-  ctx.emit('onClientPreRequest', ctx)
+  ctx.emit('onClientPreRequest', ctx);
 
-  next()
-}]
+  next();
+}];
 
 module.exports.onClientPostRequest = [function onClientPostRequest(next) {
 
-  let ctx = this
-  let pattern = this._pattern
-  let msg = ctx._response.value
+  var ctx = this;
+  var pattern = this._pattern;
+  var msg = ctx._response.value;
 
   // pass to act context
-  ctx.request$ = msg.request || {}
-  ctx.request$.service = pattern.topic
-  ctx.request$.method = Util.pattern(pattern)
-  ctx.trace$ = msg.trace || {}
-  ctx.meta$ = msg.meta || {}
+  ctx.request$ = msg.request || {};
+  ctx.request$.service = pattern.topic;
+  ctx.request$.method = _util2.default.pattern(pattern);
+  ctx.trace$ = msg.trace || {};
+  ctx.meta$ = msg.meta || {};
 
-  ctx.log.info(`ACT_INBOUND - ID:${ctx.request$.id} (${ctx.request$.duration / 1000000}ms)`)
+  ctx.log.info(`ACT_INBOUND - ID:${ctx.request$.id} (${ctx.request$.duration / 1000000}ms)`);
 
-  ctx.emit('onClientPostRequest', ctx)
+  ctx.emit('onClientPostRequest', ctx);
 
-  next()
-}]
+  next();
+}];
 
 module.exports.onServerPreRequest = [function onServerPreRequest(next) {
 
-  let msg = this._request.value
-  let ctx = this
+  var msg = this._request.value;
+  var ctx = this;
 
   if (msg) {
 
-    ctx.meta$ = msg.meta || {}
-    ctx.trace$ = msg.trace || {}
-    ctx.delegate$ = msg.delegate || {}
-    ctx.request$ = msg.request || {}
+    ctx.meta$ = msg.meta || {};
+    ctx.trace$ = msg.trace || {};
+    ctx.delegate$ = msg.delegate || {};
+    ctx.request$ = msg.request || {};
   }
 
-  ctx.emit('onServerPreRequest', ctx)
+  ctx.emit('onServerPreRequest', ctx);
 
-  next()
-}]
+  next();
+}];
 
 module.exports.onServerPreHandler = [function onServerPreHandler(next) {
 
-  let ctx = this
+  var ctx = this;
 
-  ctx.emit('onServerPreHandler', ctx)
+  ctx.emit('onServerPreHandler', ctx);
 
-  next()
-
-}]
+  next();
+}];
 
 module.exports.onServerPreResponse = [function onServerPreResponse(next) {
 
-  let ctx = this
+  var ctx = this;
 
-  ctx.emit('onServerPreResponse', ctx)
+  ctx.emit('onServerPreResponse', ctx);
 
-  next()
-
-}]
+  next();
+}];
+//# sourceMappingURL=extensions.js.map

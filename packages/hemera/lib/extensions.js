@@ -6,10 +6,8 @@
  * MIT Licensed
  */
 
-'use strict'
-
-const Util = require('./util')
-const Hoek = require('hoek')
+import Util from './util'
+import Hoek from'hoek'
 
 module.exports.onClientPreRequest = [function onClientPreRequest(next: Function) {
 

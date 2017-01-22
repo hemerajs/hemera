@@ -7,8 +7,6 @@
  * Based on https://github.com/davidmarkclements/fast-safe-stringify
  */
 
-'use strict'
-
 class Encoder {
 
   static encode(msg: any) {

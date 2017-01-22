@@ -1,0 +1,29 @@
+{
+  "env": {
+    "test": {
+      "plugins": [
+        "transform-flow-strip-types",
+        "istanbul"
+      ]
+    },
+    "development": {
+      "plugins": [
+        "syntax-flow",
+        "transform-flow-strip-types"
+      ]
+    },
+    "production": {
+      "plugins": [
+        "syntax-flow",
+        "transform-flow-comments"
+      ]
+    }
+  },
+  "presets": [
+    ["env", {
+      "targets": {
+        "node": 4
+      }
+    }]
+  ]
+}

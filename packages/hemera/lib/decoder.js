@@ -5,8 +5,6 @@
  * Based on https://github.com/mcollina/fast-json-parse
  */
 
-'use strict'
-
 class Decoder {
 
   static decode(msg) {

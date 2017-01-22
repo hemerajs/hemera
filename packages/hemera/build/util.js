@@ -1,4 +1,6 @@
-// 
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 /*!
  * hemera
@@ -6,81 +8,107 @@
  * MIT Licensed
  */
 
-'use strict'
+var _lodash = require('lodash');
 
-const
-  _ = require('lodash'),
-  Crypto = require('crypto')
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _crypto = require('crypto');
+
+var _crypto2 = _interopRequireDefault(_crypto);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
  * @class Util
  */
-class Util {
-
-  /**
-   * @returns
-   *
-   * @memberOf Util
-   */
-  static randomId() {
-
-    return Crypto.randomBytes(16).toString('hex')
+var Util = function () {
+  function Util() {
+    _classCallCheck(this, Util);
   }
 
-  /**
-   * Get high resolution time in nanoseconds
-   *
-   * @static
-   * @returns
-   *
-   * @memberOf Util
-   */
-  static nowHrTime() {
+  _createClass(Util, null, [{
+    key: 'randomId',
 
-    const hrtime = process.hrtime()
-    return Math.floor(hrtime[0] * 1000000 + hrtime[1] / 1000)
-  }
 
-  /**
-   * @static
-   * @param {any} obj
-   * @returns
-   *
-   * @memberOf Util
-   */
-  static cleanPattern(obj) {
+    /**
+     * @returns
+     *
+     * @memberOf Util
+     */
+    value: function randomId() {
 
-    if (obj === null) return obj
-
-    return _.pickBy(obj, function (val, prop) {
-      return !_.includes(prop, '$')
-    })
-  }
-
-  /**
-   * @param {any} args
-   * @returns
-   *
-   * @memberOf Util
-   */
-  static pattern(args) {
-
-    if (_.isString(args)) {
-      return args
+      return _crypto2.default.randomBytes(16).toString('hex');
     }
 
-    args = args || {}
-    var sb = []
-    _.each(args, function (v, k) {
-      if (!~k.indexOf('$') && !_.isFunction(v)) {
-        sb.push(k + ':' + v)
+    /**
+     * Get high resolution time in nanoseconds
+     *
+     * @static
+     * @returns
+     *
+     * @memberOf Util
+     */
+
+  }, {
+    key: 'nowHrTime',
+    value: function nowHrTime() {
+
+      var hrtime = process.hrtime();
+      return Math.floor(hrtime[0] * 1000000 + hrtime[1] / 1000);
+    }
+
+    /**
+     * @static
+     * @param {any} obj
+     * @returns
+     *
+     * @memberOf Util
+     */
+
+  }, {
+    key: 'cleanPattern',
+    value: function cleanPattern(obj) {
+
+      if (obj === null) return obj;
+
+      return _lodash2.default.pickBy(obj, function (val, prop) {
+        return !_lodash2.default.includes(prop, '$');
+      });
+    }
+
+    /**
+     * @param {any} args
+     * @returns
+     *
+     * @memberOf Util
+     */
+
+  }, {
+    key: 'pattern',
+    value: function pattern(args) {
+
+      if (_lodash2.default.isString(args)) {
+        return args;
       }
-    })
 
-    sb.sort()
+      args = args || {};
+      var sb = [];
+      _lodash2.default.each(args, function (v, k) {
+        if (!~k.indexOf('$') && !_lodash2.default.isFunction(v)) {
+          sb.push(k + ':' + v);
+        }
+      });
 
-    return sb.join(',')
-  }
-}
+      sb.sort();
 
-module.exports = Util
+      return sb.join(',');
+    }
+  }]);
+
+  return Util;
+}();
+
+module.exports = Util;
+//# sourceMappingURL=util.js.map

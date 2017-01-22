@@ -6,8 +6,6 @@
  * MIT Licensed
  */
 
-'use strict'
-
 // Errors messages
 module.exports = {
   JSON_PARSE_ERROR: 'Invalid JSON payload',

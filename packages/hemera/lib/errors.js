@@ -6,8 +6,6 @@
  * MIT Licensed
  */
 
-'use strict'
-
 const SuperError = require('super-error')
 
 const

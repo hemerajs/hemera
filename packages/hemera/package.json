@@ -2,7 +2,7 @@
   "name": "nats-hemera",
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "version": "0.3.9",
-  "main": "index.js",
+  "main": "build/index.js",
   "homepage": "https://hemerajs.github.io/hemera/",
   "repository": {
     "url": "git@github.com:hemerajs/hemera.git",
@@ -34,10 +34,9 @@
     "queueing"
   ],
   "scripts": {
-    "flow": "node ./node_modules/flow-bin/cli check",
-    "build": "node ./node_modules/flow-remove-types/flow-remove-types --pretty ./lib --out-dir ./build",
-    "prepublish": "npm run flow && npm run flow && npm run build",
-    "lint": "eslint --ext .js lib"
+    "lint": "eslint ./src ./test && flow",
+    "build": "babel ./lib --out-dir ./build --copy-files --source-maps",
+    "prepublish": "npm run lint && npm run build"
   },
   "engines": {
     "node": ">=4.0.0"
@@ -54,9 +53,27 @@
     "super-error": "2.0.x"
   },
   "devDependencies": {
+    "babel-cli": "^6.22.2",
+    "babel-plugin-istanbul": "^3.1.2",
+    "babel-plugin-transform-flow-comments": "^6.22.0",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-preset-env": "^1.1.8",
+    "babel-register": "^6.22.0",
     "eslint": "^3.13.1",
     "eslint-plugin-flowtype": "^2.30.0",
-    "flow-bin": "0.38.x",
-    "flow-remove-types": "1.1.x"
+    "flow-bin": "^0.38.0"
+  },
+  "nyc": {
+    "include": [
+      "lib/**/*.js"
+    ],
+    "instrument": false,
+    "reporter": [
+      "text-lcov"
+    ],
+    "require": [
+      "babel-register"
+    ],
+    "sourceMap": false
   }
 }

@@ -1,12 +1,10 @@
-// 
+'use strict';
 
 /*!
  * hemera
  * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
  * MIT Licensed
  */
-
-'use strict'
 
 // Errors messages
 module.exports = {
@@ -30,4 +28,5 @@ module.exports = {
   EXTENSION_ERROR: 'Extension error',
   PUB_CALLBACK_REDUNDANT: 'Specify a callback as publisher is redundant',
   INVALID_EXTENSION_TYPE: 'Invalid extension type'
-}
+};
+//# sourceMappingURL=constants.js.map

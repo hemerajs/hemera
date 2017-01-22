@@ -1,4 +1,4 @@
-// 
+'use strict';
 
 /*!
  * hemera
@@ -6,19 +6,16 @@
  * MIT Licensed
  */
 
-'use strict'
+var SuperError = require('super-error');
 
-const SuperError = require('super-error')
-
-const
-  HemeraError = SuperError.subclass('HemeraError'),
-  ParseError = HemeraError.subclass('HemeraParseError'),
-  TimeoutError = HemeraError.subclass('TimeoutError'),
-  ImplementationError = HemeraError.subclass('ImplementationError'),
-  BusinessError = HemeraError.subclass('BusinessError'),
-  FatalError = HemeraError.subclass('FatalError'),
-  PatternNotFound = HemeraError.subclass('PatternNotFound'),
-  PayloadValidationError = SuperError.subclass('PayloadValidationError')
+var HemeraError = SuperError.subclass('HemeraError'),
+    ParseError = HemeraError.subclass('HemeraParseError'),
+    TimeoutError = HemeraError.subclass('TimeoutError'),
+    ImplementationError = HemeraError.subclass('ImplementationError'),
+    BusinessError = HemeraError.subclass('BusinessError'),
+    FatalError = HemeraError.subclass('FatalError'),
+    PatternNotFound = HemeraError.subclass('PatternNotFound'),
+    PayloadValidationError = SuperError.subclass('PayloadValidationError');
 
 module.exports = {
   HemeraError,
@@ -29,4 +26,5 @@ module.exports = {
   FatalError,
   PatternNotFound,
   PayloadValidationError
-}
+};
+//# sourceMappingURL=errors.js.map

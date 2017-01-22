@@ -6,9 +6,7 @@
  * MIT Licensed
  */
 
-'use strict'
-
-const Items = require('items')
+import Items from 'items'
 
 /**
  * @class Ext
