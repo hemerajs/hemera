@@ -103,9 +103,7 @@ We use the Request Reply concept to realize this toolkit. [Request Reply](http:/
 
 ### Installing
 
-```
-npm i nats-hemera
-```
+[![NPM stats](https://nodei.co/npm/nats-hemera.png?downloads=true)](https://www.npmjs.org/package/nats-hemera)
 
 ### Example
 
