@@ -17,7 +17,9 @@ exports.plugin = function hemeraParambulator() {
       return next()
     }
 
-    let paramcheck = Parambulator(schema)
+    let pbSchema = schema.pb$ || schema
+
+    let paramcheck = Parambulator(pbSchema)
     paramcheck.validate(pattern, (err) => {
 
       next(err)

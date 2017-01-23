@@ -107,4 +107,47 @@ describe('Hemera-parambulator', function () {
     })
   })
 
+  it('Should be able to pass the full schema to the action', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.use(HemeraParambulator)
+    hemera.setOption('payloadValidator', 'hemera-parambulator')
+
+    hemera.ready(() => {
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send',
+        pb$: {
+          a: {
+            type$: 'number'
+          }
+        }
+      }, (resp, cb) => {
+
+        throw new Error('Shit!')
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        a: '1'
+      }, (err, resp) => {
+
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals('Extension error')
+        expect(err.cause.name).to.be.equals('Error')
+        expect(err.cause.message).to.be.equals('The value "1" is not of type \'number\' (parent: a).')
+        hemera.close()
+        done()
+      })
+    })
+  })
+
 })

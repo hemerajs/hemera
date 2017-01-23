@@ -46,3 +46,19 @@ hemera.ready(() => {
   })
 })
 ```
+
+#### Pass the full schema
+
+```js
+  hemera.add({
+    topic: 'email',
+    cmd: 'send',
+    pb$: {
+      a: {
+        type$: 'number'
+      }
+    }
+  }, (resp, cb) => {
+
+  })
+```
