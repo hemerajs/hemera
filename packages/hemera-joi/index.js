@@ -19,27 +19,15 @@ exports.plugin = function hemeraJoi() {
       return next()
     }
 
-    // pass the full schema for the action
-    if (schema.joi$) {
+    let joiSchema = schema.joi$ || schema
 
-      Joi.validate(pattern, schema.joi$, {
-        allowUnknown: true
-      }, (err, value) => {
+    Joi.validate(pattern, joiSchema, {
+      allowUnknown: true
+    }, (err, value) => {
 
-        this._request.value.pattern = value
-        next(err)
-      })
-    } else {
-
-      // schema is part of the action pattern
-      Joi.validate(pattern, schema, {
-        allowUnknown: true
-      }, (err, value) => {
-
-        this._request.value.pattern = value
-        next(err)
-      })
-    }
+      this._request.value.pattern = value
+      next(err)
+    })
 
   })
 
