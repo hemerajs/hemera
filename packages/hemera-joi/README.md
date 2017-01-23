@@ -44,3 +44,18 @@ hemera.ready(() => {
   })
 })
 ```
+
+### Pass the full schema
+```js
+  let Joi = hemera.exposition['hemera-joi'].joi
+  
+  hemera.add({
+    topic: 'math',
+    cmd: 'add',
+    joi$: Joi.object().keys({ a: Joi.number().required() })
+  }, (req, cb) => {
+
+    cb(null, req.a + req.b)
+  })
+```
+
