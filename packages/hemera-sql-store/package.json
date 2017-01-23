@@ -1,6 +1,6 @@
 {
   "name": "hemera-sql-store",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-joi": "^0.1.72",
+    "hemera-joi": "^0.1.73",
     "hemera-store": "^1.0.3",
     "knex": "0.12.x",
     "mysql": "2.12.x",
