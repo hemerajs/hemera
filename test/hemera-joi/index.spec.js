@@ -2,7 +2,6 @@
 
 const Hemera = require('../../packages/hemera'),
   HemeraJoi = require('../../packages/hemera-joi'),
-  Joi = require('joi'),
   Util = require('../../packages/hemera/build/util'),
   Code = require('code'),
   Sinon = require('sinon'),
@@ -40,6 +39,8 @@ describe('Hemera-joi', function () {
 
     hemera.use(HemeraJoi)
     hemera.setOption('payloadValidator', 'hemera-joi')
+
+    let Joi = hemera.exposition['hemera-joi'].joi
 
     hemera.ready(() => {
 
@@ -80,7 +81,9 @@ describe('Hemera-joi', function () {
 
     hemera.use(HemeraJoi)
     hemera.setOption('payloadValidator', 'hemera-joi')
-    
+
+    let Joi = hemera.exposition['hemera-joi'].joi
+
     hemera.ready(() => {
 
       hemera.add({
@@ -103,6 +106,50 @@ describe('Hemera-joi', function () {
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals(true)
 
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to pass the full joi schema to the action', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.use(HemeraJoi)
+    hemera.setOption('payloadValidator', 'hemera-joi')
+
+    let Joi = hemera.exposition['hemera-joi'].joi
+
+    hemera.ready(() => {
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send',
+        joi$: Joi.object().keys({
+          a: Joi.number().required()
+        })
+      }, (resp, cb) => {
+
+        cb()
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        a: 'dwedwed'
+      }, (err, resp) => {
+
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals('Extension error')
+        expect(err.cause.name).to.be.equals('ValidationError')
+        expect(err.cause.isJoi).to.be.equals(true)
+        expect(err.cause.message).to.be.equals('child "a" fails because ["a" must be a number]')
         hemera.close()
         done()
       })
