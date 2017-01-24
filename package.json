@@ -55,7 +55,7 @@
     "mocha": "3.2.x",
     "mocha-lcov-reporter": "1.2.x",
     "nats": "0.7.2",
-    "nyc": "10.0.x",
+    "nyc": "~10.1.0",
     "sinon": "1.17.x",
     "chokidar-cli": "1.2.x"
   }
