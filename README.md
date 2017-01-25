@@ -23,7 +23,7 @@ The key features of NATS in combination with Hemera are:
 * **Service Discovery**: You don't need a service discovery all subscriptions are managed by NATS.
 * **Load Balancing**: Requests are load balanced (random) by NATS mechanism of "queue groups".
 * **Packages**: Providing reliable and modern plugins to the community.
-* **High performant**: NATS is able to handle million of requests per seconds.
+* **High performant**: NATS is able to handle million of requests per second.
 * **Scalability**: Filtering on the subject name enables services to divide work (perhaps with locality) e.g. `topic:auth:germany`. Queue group name allow load balancing of services.
 * **Fault tolerance**: Auto-heals when new services are added. Configure cluster mode to be more reliable.
 * **Auto-pruning**: NATS automatically handles a slow consumer and cut it off.
