@@ -63,7 +63,15 @@ module.exports.onClientPreRequest = [function onClientPreRequest(next) {
 
   ctx._message = message;
 
-  ctx._request = ctx._encoder.encode.call(ctx, ctx._message);
+  var m = ctx._encoder.encode.call(ctx, ctx._message);
+
+  // throw encoding issue
+  if (m.error) {
+
+    return next(m.error);
+  }
+
+  ctx._request = m.value;
 
   ctx.log.info(pattern, `ACT_OUTBOUND - ID:${String(ctx._message.request.id)}`);
 
@@ -94,8 +102,16 @@ module.exports.onClientPostRequest = [function onClientPostRequest(next) {
 
 module.exports.onServerPreRequest = [function onServerPreRequest(next) {
 
-  var msg = this._request.value;
   var ctx = this;
+
+  var m = ctx._decoder.decode.call(ctx, ctx._request);
+
+  if (m.error) {
+
+    return next(m.error);
+  }
+
+  var msg = m.value;
 
   if (msg) {
 
@@ -104,6 +120,8 @@ module.exports.onServerPreRequest = [function onServerPreRequest(next) {
     ctx.delegate$ = msg.delegate || {};
     ctx.request$ = msg.request || {};
   }
+
+  ctx._request = m;
 
   ctx.emit('onServerPreRequest', ctx);
 

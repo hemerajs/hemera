@@ -64,4 +64,39 @@ describe('Hemera-msgpack', function () {
     })
   })
 
+  it('encode and decode complex type', function (done) {
+
+    const nats = require('nats').connect({ url: authUrl, preserveBuffers: true })
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.use(HemeraMsgpack)
+
+    hemera.ready(() => {
+
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, (resp, cb) => {
+
+        cb(null, { result: resp.a + resp.b })
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, (err, resp) => {
+
+        expect(err).to.be.not.exists()
+        expect(resp.result).to.be.equals(3)
+        hemera.close()
+        done()
+      })
+    })
+  })
+
 })

@@ -773,6 +773,8 @@ describe('Error handling', function () {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('HemeraParseError')
         expect(err.message).to.be.equals('Invalid payload')
+        expect(err.cause.name).to.be.equals('Error')
+        expect(err.cause.message).to.be.equals('TEST')
 
         stub.restore()
         hemera.close()
@@ -817,6 +819,8 @@ describe('Error handling', function () {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('HemeraParseError')
         expect(err.message).to.be.equals('Invalid payload')
+        expect(err.cause.name).to.be.equals('Error')
+        expect(err.cause.message).to.be.equals('TEST')
 
         stub.restore()
         hemera.close()

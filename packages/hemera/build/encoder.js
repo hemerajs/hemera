@@ -20,7 +20,17 @@ var Encoder = function () {
     key: 'encode',
     value: function encode(msg) {
 
-      return stringify(msg);
+      try {
+
+        return {
+          value: stringify(msg)
+        };
+      } catch (error) {
+
+        return {
+          error
+        };
+      }
     }
   }]);
 

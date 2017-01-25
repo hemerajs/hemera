@@ -58,5 +58,8 @@
     "nyc": "10.0.x",
     "sinon": "1.17.x",
     "chokidar-cli": "1.2.x"
+  },
+  "dependencies": {
+    "heapdump": "^0.3.7"
   }
 }

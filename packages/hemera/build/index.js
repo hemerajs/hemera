@@ -402,7 +402,16 @@ var Hemera = function (_EventEmitter) {
       message.request.duration = endTime - message.request.timestamp;
       message.trace.duration = endTime - message.request.timestamp;
 
-      this._message = message;
+      var m = this._encoder.encode.call(this, message);
+
+      // attach encoding issues
+      if (m.error) {
+
+        message.error = _errio2.default.toObject(m.error);
+        message.result = null;
+      }
+
+      this._message = m.value;
     }
     /**
      *
@@ -442,10 +451,8 @@ var Hemera = function (_EventEmitter) {
 
           if (self._replyTo) {
 
-            var msg = self._encoder.encode.call(self, self._message);
-
             // send error back to callee
-            return self.send(self._replyTo, msg, function () {
+            return self.send(self._replyTo, self._message, function () {
 
               // let it crash
               if (self._config.crashOnFatal) {
@@ -461,9 +468,7 @@ var Hemera = function (_EventEmitter) {
 
         if (self._replyTo) {
 
-          var _msg = self._encoder.encode.call(self, self._message);
-
-          return this.send(this._replyTo, _msg);
+          return this.send(this._replyTo, self._message);
         }
       });
     }
@@ -494,7 +499,7 @@ var Hemera = function (_EventEmitter) {
         var ctx = _this3.createContext();
         ctx._shouldCrash = false;
         ctx._replyTo = replyTo;
-        ctx._request = self._decoder.decode.call(ctx, request);
+        ctx._request = request;
         ctx._pattern = {};
         ctx._actMeta = {};
 
@@ -511,16 +516,6 @@ var Hemera = function (_EventEmitter) {
             self._response = error;
 
             return self.finish();
-          }
-
-          // invalid payload
-          if (self._request.error) {
-
-            var _error = new _errors2.default.ParseError(_constants2.default.PAYLOAD_PARSING_ERROR, {
-              topic
-            }).causedBy(self._request.error);
-
-            return self.finish(replyTo, _error);
           }
 
           var requestType = self._request.value.request.type;
@@ -640,12 +635,12 @@ var Hemera = function (_EventEmitter) {
 
       if (!hasCallback) {
 
-        var _error2 = new _errors2.default.HemeraError(_constants2.default.MISSING_IMPLEMENTATION, {
+        var _error = new _errors2.default.HemeraError(_constants2.default.MISSING_IMPLEMENTATION, {
           pattern
         });
 
-        this.log.error(_error2);
-        throw _error2;
+        this.log.error(_error);
+        throw _error;
       }
 
       var origPattern = _lodash2.default.cloneDeep(pattern);
@@ -677,12 +672,12 @@ var Hemera = function (_EventEmitter) {
       // check if pattern is already registered
       if (handler) {
 
-        var _error3 = new _errors2.default.HemeraError(_constants2.default.PATTERN_ALREADY_IN_USE, {
+        var _error2 = new _errors2.default.HemeraError(_constants2.default.PATTERN_ALREADY_IN_USE, {
           pattern
         });
 
-        this.log.error(_error3);
-        throw _error3;
+        this.log.error(_error2);
+        throw _error2;
       }
 
       // add to bloomrun
@@ -732,12 +727,12 @@ var Hemera = function (_EventEmitter) {
 
         if (err) {
 
-          var _error4 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
+          var _error3 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
 
-          self.log.error(_error4);
+          self.log.error(_error3);
 
           if (hasCallback) {
-            return cb.call(self, _error4);
+            return cb.call(self, _error3);
           }
 
           return;
@@ -763,14 +758,14 @@ var Hemera = function (_EventEmitter) {
               // if payload is invalid
               if (self._response.error) {
 
-                var _error5 = new _errors2.default.ParseError(_constants2.default.PAYLOAD_PARSING_ERROR, {
+                var _error4 = new _errors2.default.ParseError(_constants2.default.PAYLOAD_PARSING_ERROR, {
                   pattern: self._cleanPattern
                 }).causedBy(self._response.error);
 
-                self.log.error(_error5);
+                self.log.error(_error4);
 
                 if (hasCallback) {
-                  return cb.call(self, _error5);
+                  return cb.call(self, _error4);
                 }
               }
 
@@ -778,12 +773,12 @@ var Hemera = function (_EventEmitter) {
 
                 if (err) {
 
-                  var _error6 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
+                  var _error5 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
 
-                  self.log.error(_error6);
+                  self.log.error(_error5);
 
                   if (hasCallback) {
-                    return cb.call(self, _error6);
+                    return cb.call(self, _error5);
                   }
 
                   return;
@@ -795,11 +790,11 @@ var Hemera = function (_EventEmitter) {
 
                     var responseError = _errio2.default.fromObject(self._response.value.error);
                     var responseErrorCause = responseError.cause;
-                    var _error7 = new _errors2.default.BusinessError(_constants2.default.BUSINESS_ERROR, {
+                    var _error6 = new _errors2.default.BusinessError(_constants2.default.BUSINESS_ERROR, {
                       pattern: self._cleanPattern
                     }).causedBy(responseErrorCause ? responseError.cause : responseError);
 
-                    self.log.error(_error7);
+                    self.log.error(_error6);
 
                     return cb.call(self, responseError);
                   }
@@ -809,11 +804,11 @@ var Hemera = function (_EventEmitter) {
               });
             } catch (err) {
 
-              var _error8 = new _errors2.default.FatalError(_constants2.default.FATAL_ERROR, {
+              var _error7 = new _errors2.default.FatalError(_constants2.default.FATAL_ERROR, {
                 pattern: self._cleanPattern
               }).causedBy(err);
 
-              self.log.fatal(_error8);
+              self.log.fatal(_error7);
 
               // let it crash
               if (self._config.crashOnFatal) {
@@ -860,11 +855,11 @@ var Hemera = function (_EventEmitter) {
             cb.call(_this4, error);
           } catch (err) {
 
-            var _error9 = new _errors2.default.FatalError(_constants2.default.FATAL_ERROR, {
+            var _error8 = new _errors2.default.FatalError(_constants2.default.FATAL_ERROR, {
               pattern
             }).causedBy(err);
 
-            _this4.log.fatal(_error9);
+            _this4.log.fatal(_error8);
 
             // let it crash
             if (_this4._config.crashOnFatal) {

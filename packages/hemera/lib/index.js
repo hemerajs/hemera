@@ -406,7 +406,16 @@ class Hemera extends EventEmitter {
     message.request.duration = endTime - message.request.timestamp
     message.trace.duration = endTime - message.request.timestamp
 
-    this._message = message
+    let m = this._encoder.encode.call(this, message)
+
+    // attach encoding issues
+    if (m.error) {
+
+      message.error = Errio.toObject(m.error)
+      message.result = null
+    }
+
+    this._message = m.value
 
   }
   /**
@@ -444,10 +453,8 @@ class Hemera extends EventEmitter {
 
         if (self._replyTo) {
 
-          const msg = self._encoder.encode.call(self, self._message)
-
           // send error back to callee
-          return self.send(self._replyTo, msg, () => {
+          return self.send(self._replyTo, self._message, () => {
 
             // let it crash
             if (self._config.crashOnFatal) {
@@ -465,9 +472,7 @@ class Hemera extends EventEmitter {
 
       if (self._replyTo) {
 
-        const msg = self._encoder.encode.call(self, self._message)
-
-        return this.send(this._replyTo, msg)
+        return this.send(this._replyTo, self._message)
       }
 
     })
@@ -496,7 +501,7 @@ class Hemera extends EventEmitter {
       let ctx = this.createContext()
       ctx._shouldCrash = false
       ctx._replyTo = replyTo
-      ctx._request = self._decoder.decode.call(ctx, request)
+      ctx._request = request
       ctx._pattern = {}
       ctx._actMeta = {}
 
@@ -513,16 +518,6 @@ class Hemera extends EventEmitter {
           self._response = error
 
           return self.finish()
-        }
-
-        // invalid payload
-        if (self._request.error) {
-
-          let error = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR, {
-            topic
-          }).causedBy(self._request.error)
-
-          return self.finish(replyTo, error)
         }
 
         let requestType = self._request.value.request.type
