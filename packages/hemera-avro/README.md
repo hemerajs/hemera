@@ -22,7 +22,7 @@ Untagged data: Since the schema is present when data is read, considerably less 
 
 ### Implementation details:
 
-All data is transfered in the corresponding type except the payload. If you transfer a complex type like an object it is packed in a buffer and encoded/decoded to JSON. Primitive values are transfered as such type.
+All data is transfered in the corresponding type except the payload. If you transfer a complex type like an object it is packed in a buffer and encoded/decoded to JSON. Primitive values are avro specific transfered.
 
 
 #### Example
