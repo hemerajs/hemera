@@ -212,12 +212,13 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
 Fatal errors will crash your server. You should implement a gracefully shutdown and use a process watcher like PM2 to come back in a clear state. Optional you can disable this behavior by `crashOnFatal: false`
 
 ```js
-hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
- throw new Error('Upps');
-});
 hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
-   err instanceOf FatalError // true
+  throw new Error('Upps');
 });
+hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
+  err instanceOf FatalError // true
+});
+
 ```
 
 #### Listen on transport errors
