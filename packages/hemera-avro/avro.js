@@ -12,6 +12,11 @@ let schema = {
         default: ''
       },
       {
+        name: 'parentSpanId',
+        type: 'string',
+        default: ''
+      },
+      {
         name: 'spanId',
         type: 'string',
         'default': ''
@@ -51,7 +56,7 @@ let schema = {
       {
         name: 'parentId',
         type: 'string',
-        'default': ''
+        default: ''
       },
       {
         name: 'timestamp',
