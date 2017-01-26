@@ -70,7 +70,7 @@ hemera.ready(() => {
 
 ```
 
-##### Example with payload schema
+#### Example with payload schema
 
 ```js
 const Avro = require('avsc')
