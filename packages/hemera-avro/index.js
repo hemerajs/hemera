@@ -1,6 +1,6 @@
 'use strict'
 // include only serialization support
-const Avro = require('avsc/etc/browser/avsc-protocols')
+const Avro = require('avsc')
 const avroType = require('./avro')
 
 exports.plugin = function hemeraAvro() {
