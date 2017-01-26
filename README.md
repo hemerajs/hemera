@@ -69,7 +69,7 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 
 | Cache | Version |
 |--------|-------|
-| [hemera-msgpack](https://github.com/hemerajs/hemera/tree/master/packages/hemera-redis-cache) | [![npm](https://img.shields.io/npm/v/hemera-redis-cache.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-redis-cache)
+| [hemera-redis-cache](https://github.com/hemerajs/hemera/tree/master/packages/hemera-redis-cache) | [![npm](https://img.shields.io/npm/v/hemera-redis-cache.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-redis-cache)
 
 Table of contents
 =================
