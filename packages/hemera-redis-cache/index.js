@@ -80,6 +80,33 @@ exports.plugin = function hemeraRedisCache(options) {
 
   })
 
+  hemera.add({
+    topic,
+    cmd: 'expire'
+  }, function (req, cb) {
+
+    client.expire(req.key, req.ttlSeconds, cb)
+
+  })
+
+  hemera.add({
+    topic,
+    cmd: 'exists'
+  }, function (req, cb) {
+
+    client.exists(req.key, cb)
+
+  })
+
+  hemera.add({
+    topic,
+    cmd: 'ttl'
+  }, function (req, cb) {
+
+    client.ttl(req.key, cb)
+
+  })
+
 }
 
 exports.options = {

@@ -330,7 +330,10 @@ var Hemera = function (_EventEmitter) {
       this._transport.on('connect', function () {
 
         _this2.log.info(_constants2.default.TRANSPORT_CONNECTED);
-        cb.call(_this2);
+
+        if (_lodash2.default.isFunction(cb)) {
+          cb.call(_this2);
+        }
       });
     }
 
