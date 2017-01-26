@@ -31,7 +31,7 @@ The key features of NATS in combination with Hemera are:
 * **PubSub**: Hemera supports all features of NATS. This includes wildcards in subjects and normal publish and fanout mechanism.
 * **Tracing**: Any distributed system need good tracing capabilities. We provide support for Zipkin a tracing system which manages both the collection and lookup of this data.
 * **Monitoring**: Your NATS server can be monitored by cli or a dashboard.
-* **Payload validation**: Create your own validator or use existing plugins for Joi or Parambulator.
+* **Payload validation**: Create your own validator or use existing plugins for Joi and Parambulator.
 * **Metadata**: Transfer metadata across services or attach contextual data to tracing systems.
 * **Dependencies**: NATS is a single binary of 7MB and can be deployed in seconds.
 
