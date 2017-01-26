@@ -73,7 +73,8 @@ hemera.ready(() => {
 #### Example with payload schema
 
 ```js
-const Avro = require('avsc')
+// include only serialization support
+const Avro = require('avsc/etc/browser/avsc-protocols')
 const type = Avro.parse({
   name: 'Person',
   type: 'record',

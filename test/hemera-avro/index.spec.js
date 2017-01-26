@@ -3,7 +3,7 @@
 const Hemera = require('../../packages/hemera'),
   HemeraAvro = require('../../packages/hemera-avro'),
   Util = require('../../packages/hemera/build/util'),
-  Avro = require('avsc'),
+  Avro = require('avsc/etc/browser/avsc-protocols'),
   Code = require('code'),
   Sinon = require('sinon'),
   HemeraTestsuite = require('hemera-testsuite')

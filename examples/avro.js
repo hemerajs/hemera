@@ -5,7 +5,8 @@ const nats = require('nats').connect({
   preserveBuffers: true
 })
 const HemeraAvro = require('./../packages/hemera-avro')
-const Avro = require('avsc')
+// include only serialization support
+const Avro = require('avsc/etc/browser/avsc-protocols')
 const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
