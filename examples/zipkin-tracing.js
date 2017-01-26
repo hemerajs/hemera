@@ -73,6 +73,6 @@ hemera.ready(() => {
     delegate$: { foo: 'bar' } // visible in zipkin ui
   }, function (err, resp) {
 
-    this.log.info('Finished', resp)
+    this.log.info(resp, 'Finished')
   })
 })

@@ -45,7 +45,7 @@ hemera.ready(() => {
       b: resp
     }, function (err, resp) {
 
-      this.log.info('Result', resp)
+      this.log.info(resp, 'Result')
     })
   })
 
@@ -56,6 +56,6 @@ hemera.ready(() => {
     b: 20
   }, function (err, resp) {
 
-    this.log.info('Result', resp)
+    this.log.info(resp, 'Result')
   })
 })

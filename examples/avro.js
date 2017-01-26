@@ -42,6 +42,6 @@ hemera.ready(() => {
     avro$: type // how to decode the response
   }, function (err, resp) {
 
-    this.log.info('Result', resp)
+    this.log.info(resp, 'Result')
   })
 })

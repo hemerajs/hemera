@@ -20,12 +20,12 @@ exports.plugin = function hemeraRedisCache(options) {
 
   client.on('reconnecting', function (msg) {
 
-    hemera.log.info('Redis client is reconnecting', msg)
+    hemera.log.info(msg, 'Redis client is reconnecting')
   })
 
   client.on('warning', function (msg) {
 
-    hemera.log.warn('Redis client warning', msg)
+    hemera.log.warn(msg, 'Redis client warning')
   })
 
   client.on('error', function (err) {

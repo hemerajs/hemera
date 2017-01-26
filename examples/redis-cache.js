@@ -21,7 +21,7 @@ hemera.ready(() => {
     value: 'bar'
   }, function (err, resp) {
 
-    this.log.info('Result', resp)
+    this.log.info(resp, 'Result')
 
     hemera.act({
       topic: 'redis-cache',
@@ -29,7 +29,7 @@ hemera.ready(() => {
       key: 'foo'
     }, function (err, resp) {
 
-      this.log.info('Result', resp)
+      this.log.info(resp, 'Result')
     })
   })
 })
