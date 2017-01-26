@@ -40,7 +40,7 @@ exports.plugin = function hemeraRedisCache(options) {
     cmd: 'set'
   }, function (req, cb) {
 
-    client.set(req.key, req.val, cb)
+    client.set(req.key, req.value, cb)
 
   })
 
@@ -58,7 +58,16 @@ exports.plugin = function hemeraRedisCache(options) {
     cmd: 'hmset'
   }, function (req, cb) {
 
-    client.hmset(req.key, req.data, cb)
+    client.hmset(req.key, req.values, cb)
+
+  })
+
+  hemera.add({
+    topic,
+    cmd: 'hget'
+  }, function (req, cb) {
+
+    client.hget(req.key, req.values, cb)
 
   })
 
