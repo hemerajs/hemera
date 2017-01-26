@@ -9,16 +9,32 @@ exports.plugin = function hemeraAvro() {
 
   const type = Avro.parse(avroType)
 
-  hemera._decoder.decode = (msg) => {
+  hemera.ext('onClientPreRequest', function (next) {
+
+    if (this._pattern.avro$) {
+      this.meta$.avro = true
+    }
+
+    next()
+
+  })
+
+  hemera._decoder.decode = function (msg) {
 
     try {
 
       let m = type.fromBuffer(msg)
 
-      // parse buffer as json when user transfer complex type
+      // client response encoding
       if (Buffer.isBuffer(m.result)) {
 
-        m.result = JSON.parse(m.result)
+        if (m.meta.avro) {
+
+          m.result = this._pattern.avro$.fromBuffer(m.result)
+        } else {
+
+          m.result = JSON.parse(m.result)
+        }
       }
 
       return {
@@ -32,13 +48,20 @@ exports.plugin = function hemeraAvro() {
     }
   }
 
-  hemera._encoder.encode = (msg) => {
+  hemera._encoder.encode = function (msg) {
 
     try {
 
+      // server request encoding
       if (typeof msg.result === 'object') {
 
-        msg.result = new Buffer(JSON.stringify(msg.result))
+        if (this.meta$.avro) {
+
+          msg.result = this._actMeta.schema.avro$.toBuffer(msg.result)
+        } else {
+
+          msg.result = new Buffer(JSON.stringify(msg.result))
+        }
       }
 
       return {

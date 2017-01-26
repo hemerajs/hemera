@@ -63,16 +63,6 @@ module.exports.onClientPreRequest = [function onClientPreRequest(next) {
 
   ctx._message = message;
 
-  var m = ctx._encoder.encode.call(ctx, ctx._message);
-
-  // throw encoding issue
-  if (m.error) {
-
-    return next(m.error);
-  }
-
-  ctx._request = m.value;
-
   ctx.log.info(pattern, `ACT_OUTBOUND - ID:${String(ctx._message.request.id)}`);
 
   ctx.emit('onClientPreRequest', ctx);

@@ -725,9 +725,12 @@ var Hemera = function (_EventEmitter) {
 
         var hasCallback = _lodash2.default.isFunction(cb);
 
-        if (err) {
+        var m = self._encoder.encode.call(self, self._message);
 
-          var _error3 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
+        // throw encoding issue
+        if (m.error) {
+
+          var _error3 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(m.error);
 
           self.log.error(_error3);
 
@@ -737,6 +740,21 @@ var Hemera = function (_EventEmitter) {
 
           return;
         }
+
+        if (err) {
+
+          var _error4 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
+
+          self.log.error(_error4);
+
+          if (hasCallback) {
+            return cb.call(self, _error4);
+          }
+
+          return;
+        }
+
+        ctx._request = m.value;
 
         // use simple publish mechanism instead to fire a request
         if (pattern.pubsub$ === true) {
@@ -758,14 +776,14 @@ var Hemera = function (_EventEmitter) {
               // if payload is invalid
               if (self._response.error) {
 
-                var _error4 = new _errors2.default.ParseError(_constants2.default.PAYLOAD_PARSING_ERROR, {
+                var _error5 = new _errors2.default.ParseError(_constants2.default.PAYLOAD_PARSING_ERROR, {
                   pattern: self._cleanPattern
                 }).causedBy(self._response.error);
 
-                self.log.error(_error4);
+                self.log.error(_error5);
 
                 if (hasCallback) {
-                  return cb.call(self, _error4);
+                  return cb.call(self, _error5);
                 }
               }
 
@@ -773,12 +791,12 @@ var Hemera = function (_EventEmitter) {
 
                 if (err) {
 
-                  var _error5 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
+                  var _error6 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
 
-                  self.log.error(_error5);
+                  self.log.error(_error6);
 
                   if (hasCallback) {
-                    return cb.call(self, _error5);
+                    return cb.call(self, _error6);
                   }
 
                   return;
@@ -790,11 +808,11 @@ var Hemera = function (_EventEmitter) {
 
                     var responseError = _errio2.default.fromObject(self._response.value.error);
                     var responseErrorCause = responseError.cause;
-                    var _error6 = new _errors2.default.BusinessError(_constants2.default.BUSINESS_ERROR, {
+                    var _error7 = new _errors2.default.BusinessError(_constants2.default.BUSINESS_ERROR, {
                       pattern: self._cleanPattern
                     }).causedBy(responseErrorCause ? responseError.cause : responseError);
 
-                    self.log.error(_error6);
+                    self.log.error(_error7);
 
                     return cb.call(self, responseError);
                   }
@@ -804,11 +822,11 @@ var Hemera = function (_EventEmitter) {
               });
             } catch (err) {
 
-              var _error7 = new _errors2.default.FatalError(_constants2.default.FATAL_ERROR, {
+              var _error8 = new _errors2.default.FatalError(_constants2.default.FATAL_ERROR, {
                 pattern: self._cleanPattern
               }).causedBy(err);
 
-              self.log.fatal(_error7);
+              self.log.fatal(_error8);
 
               // let it crash
               if (self._config.crashOnFatal) {
@@ -855,11 +873,11 @@ var Hemera = function (_EventEmitter) {
             cb.call(_this4, error);
           } catch (err) {
 
-            var _error8 = new _errors2.default.FatalError(_constants2.default.FATAL_ERROR, {
+            var _error9 = new _errors2.default.FatalError(_constants2.default.FATAL_ERROR, {
               pattern
             }).causedBy(err);
 
-            _this4.log.fatal(_error8);
+            _this4.log.fatal(_error9);
 
             // let it crash
             if (_this4._config.crashOnFatal) {

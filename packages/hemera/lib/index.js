@@ -731,6 +731,22 @@ class Hemera extends EventEmitter {
 
       let hasCallback = _.isFunction(cb)
 
+      let m = self._encoder.encode.call(self, self._message)
+
+      // throw encoding issue
+      if (m.error) {
+
+        let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(m.error)
+
+        self.log.error(error)
+
+        if (hasCallback) {
+          return cb.call(self, error)
+        }
+
+        return
+      }
+
       if (err) {
 
         let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
@@ -743,6 +759,8 @@ class Hemera extends EventEmitter {
 
         return
       }
+
+      ctx._request = m.value
 
       // use simple publish mechanism instead to fire a request
       if (pattern.pubsub$ === true) {

@@ -46,6 +46,8 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "avsc": "^4.1.11",
+    "chokidar-cli": "1.2.x",
     "code": "4.0.x",
     "coveralls": "2.11.x",
     "hemera-testsuite": "1.0.x",
@@ -56,8 +58,7 @@
     "mocha-lcov-reporter": "1.2.x",
     "nats": "0.7.2",
     "nyc": "10.0.x",
-    "sinon": "1.17.x",
-    "chokidar-cli": "1.2.x"
+    "sinon": "1.17.x"
   },
   "dependencies": {
     "heapdump": "^0.3.7"

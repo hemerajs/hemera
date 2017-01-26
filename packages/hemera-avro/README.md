@@ -22,10 +22,10 @@ Untagged data: Since the schema is present when data is read, considerably less 
 
 ### Implementation details:
 
-All data is transfered in the corresponding type except the payload. If you transfer a complex type like an object it is packed in a buffer and encoded/decoded to JSON. Primitive values are avro specific transfered.
+All data is transfered in the corresponding type except the payload. If you transfer a complex type like an object it is packed in a buffer and encoded/decoded to JSON. Primitive values are avro specific transfered. You can also define the schema of the payload see example 2.
 
 
-#### Example
+#### Example without payload schema
 
 ```js
 'use strict'
@@ -68,4 +68,43 @@ hemera.ready(() => {
   })
 })
 
+```
+
+##### Example with payload schema
+
+```js
+const Avro = require('avsc')
+const type = Avro.parse({
+  name: 'Person',
+  type: 'record',
+  fields: [{
+    name: 'a',
+    type: 'int'
+  }]
+})
+
+hemera.ready(() => {
+
+  /**
+   * Your Implementations
+   */
+  hemera.add({
+    topic: 'peopleDirectory',
+    cmd: 'create',
+    avro$: type // how to encode the request
+  }, (req, cb) => {
+
+    cb(null, { a: 1 })
+  })
+
+  hemera.act({
+    topic: 'peopleDirectory',
+    cmd: 'create',
+    name: 'peter',
+    avro$: type // how to decode the response
+  }, function (err, resp) {
+
+    this.log.info('Result', resp)
+  })
+})
 ```

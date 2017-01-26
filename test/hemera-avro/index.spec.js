@@ -3,6 +3,7 @@
 const Hemera = require('../../packages/hemera'),
   HemeraAvro = require('../../packages/hemera-avro'),
   Util = require('../../packages/hemera/build/util'),
+  Avro = require('avsc'),
   Code = require('code'),
   Sinon = require('sinon'),
   HemeraTestsuite = require('hemera-testsuite')
@@ -31,7 +32,10 @@ describe('Hemera-avro', function () {
 
   it('encode and decode', function (done) {
 
-    const nats = require('nats').connect({ url: authUrl, preserveBuffers: true })
+    const nats = require('nats').connect({
+      url: authUrl,
+      preserveBuffers: true
+    })
 
     const hemera = new Hemera(nats, {
       crashOnFatal: false
@@ -66,7 +70,10 @@ describe('Hemera-avro', function () {
 
   it('encode and decode complex type', function (done) {
 
-    const nats = require('nats').connect({ url: authUrl, preserveBuffers: true })
+    const nats = require('nats').connect({
+      url: authUrl,
+      preserveBuffers: true
+    })
 
     const hemera = new Hemera(nats, {
       crashOnFatal: false
@@ -81,7 +88,9 @@ describe('Hemera-avro', function () {
         cmd: 'add'
       }, (resp, cb) => {
 
-        cb(null, { result: resp.a + resp.b })
+        cb(null, {
+          result: resp.a + resp.b
+        })
       })
 
       hemera.act({
@@ -93,6 +102,107 @@ describe('Hemera-avro', function () {
 
         expect(err).to.be.not.exists()
         expect(resp.result).to.be.equals(3)
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('encode and decode with schema', function (done) {
+
+    const nats = require('nats').connect({
+      url: authUrl,
+      preserveBuffers: true
+    })
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.use(HemeraAvro)
+
+    const type = Avro.parse({
+      name: 'SumResult',
+      type: 'record',
+      fields: [{
+        name: 'result',
+        type: 'int'
+      }]
+    })
+
+    hemera.ready(() => {
+
+      hemera.add({
+        topic: 'math',
+        cmd: 'add',
+        avro$: type
+      }, (resp, cb) => {
+
+        cb(null, {
+          result: resp.a + resp.b
+        })
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2,
+        avro$: type
+      }, (err, resp) => {
+
+        expect(err).to.be.not.exists()
+        expect(resp.result).to.be.equals(3)
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('schema error', function (done) {
+
+    const nats = require('nats').connect({
+      url: authUrl,
+      preserveBuffers: true
+    })
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.use(HemeraAvro)
+
+    const type = Avro.parse({
+      name: 'SumResult',
+      type: 'record',
+      fields: [{
+        name: 'result',
+        type: 'string'
+      }]
+    })
+
+    hemera.ready(() => {
+
+      hemera.add({
+        topic: 'math',
+        cmd: 'add',
+        avro$: type
+      }, (resp, cb) => {
+
+        cb(null, {
+          result: resp.a + resp.b
+        })
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2,
+        avro$: type
+      }, (err, resp) => {
+
+        expect(err).to.be.exists()
         hemera.close()
         done()
       })
