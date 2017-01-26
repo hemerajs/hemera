@@ -1,3 +1,5 @@
+'use strict'
+
 let schema = {
   name: 'Packet',
   type: 'record',
