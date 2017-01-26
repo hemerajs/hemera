@@ -346,7 +346,11 @@ class Hemera extends EventEmitter {
     this._transport.on('connect', () => {
 
       this.log.info(Constants.TRANSPORT_CONNECTED)
-      cb.call(this)
+
+      if (_.isFunction(cb)) {
+        cb.call(this)
+      }
+
     })
   }
 
