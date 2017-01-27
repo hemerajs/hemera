@@ -188,7 +188,7 @@ var Hemera = function (_EventEmitter) {
         name: _this._config.name,
         safe: true,
         level: _this._config.logLevel
-      }, _pino2.default.pretty());
+      }, Pretty);
     }
     return _this;
   }
