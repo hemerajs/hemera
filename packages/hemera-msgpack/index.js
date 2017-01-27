@@ -1,6 +1,6 @@
 'use strict'
 
-var msgpack = require('msgpack5')(),
+var msgpack = require('msgpack-lite'),
   encode = msgpack.encode,
   decode = msgpack.decode
 
