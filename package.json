@@ -56,7 +56,7 @@
     "lerna": "2.0.0-beta.32",
     "mocha": "3.2.x",
     "mocha-lcov-reporter": "1.2.x",
-    "nats": "0.7.2",
+    "nats": "0.7.4",
     "nyc": "10.0.x",
     "sinon": "1.17.x"
   },
