@@ -16,6 +16,7 @@ import Errio from 'errio'
 import Hoek from 'hoek'
 import Heavy from 'heavy'
 import _ from 'lodash'
+import Pino from 'pino'
 
 import Errors from './errors'
 import Constants from './constants'
@@ -24,12 +25,11 @@ import Util from './util'
 import DefaultExtensions from './extensions'
 import DefaultEncoder from './encoder'
 import DefaultDecoder from './decoder'
-import DefaultLogger from './logger'
 
-// config
 var defaultConfig: Config = {
   timeout: 2000,
   debug: false,
+  name: 'app',
   crashOnFatal: true,
   logLevel: 'silent',
   load: {
@@ -79,6 +79,15 @@ class Hemera extends EventEmitter {
   _encoder: Encoder;
   _decoder: Decoder;
 
+
+  /**
+   * Creates an instance of Hemera
+   *
+   * @param {Nats} transport
+   * @param {Config} params
+   *
+   * @memberOf Hemera
+   */
   constructor(transport: Nats, params: Config) {
 
     super()
@@ -90,7 +99,7 @@ class Hemera extends EventEmitter {
     this._topics = {}
     this._exposition = {}
 
-    // special variables for new execution context
+    // special variables for the new execution context
     this.context$ = {}
     this.meta$ = {}
     this.delegate$ = {}
@@ -111,6 +120,8 @@ class Hemera extends EventEmitter {
       id: ''
     }
 
+    // contains the list of all registered plugins
+    // the core is a plugin to
     this._plugins = {
       core: this.plugin$.attributes
     }
@@ -131,39 +142,44 @@ class Hemera extends EventEmitter {
       onServerPreResponse: new Ext('onServerPreResponse')
     }
 
+    // start tracking process stats
     this._heavy.start()
 
-    /**
-     * Will be executed before the client request is executed.
-     */
+    // will be executed before the client request is executed.
     this._extensions.onClientPreRequest.addRange(DefaultExtensions.onClientPreRequest)
-
-    /**
-     * Will be executed after the client received and decoded the request.
-     */
+    // will be executed after the client received and decoded the request
     this._extensions.onClientPostRequest.addRange(DefaultExtensions.onClientPostRequest)
-
-    /**
-     * Will be executed before the server received the request.
-     */
+    // will be executed before the server received the requests
     this._extensions.onServerPreRequest.addRange(DefaultExtensions.onServerPreRequest)
-
-    /**
-     * Will be executed before the server action is executed.
-     */
+    // will be executed before the server action is executed
     this._extensions.onServerPreHandler.addRange(DefaultExtensions.onServerPreHandler)
-
-    /**
-     * Will be executed before the server reply the response and build the message.
-     */
+    // will be executed before the server reply the response and build the message
     this._extensions.onServerPreResponse.addRange(DefaultExtensions.onServerPreResponse)
 
-    this.log = this._config.logger || new DefaultLogger({
-      level: this._config.logLevel
-    })
+    // use own logger
+    if (this._config.logger) {
+
+      this.log = this._config.logger
+    } else {
+
+      let Pretty = Pino.pretty()
+
+      //Leads to too much listeners in tests
+      if (this._config.logLevel !== 'silent') {
+        Pretty.pipe(process.stdout)
+      }
+
+      this.log = Pino({
+        name: this._config.name,
+        safe: true,
+        level: this._config.logLevel
+      }, Pino.pretty())
+    }
   }
 
   /**
+   * Return all registered plugins
+   *
    * @readonly
    *
    * @memberOf Hemera
@@ -176,6 +192,8 @@ class Hemera extends EventEmitter {
   }
 
   /**
+   * Return the bloomrun instance
+   *
    * @readonly
    *
    * @memberOf Hemera
@@ -186,7 +204,7 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   *
+   * Return the heavy instance
    *
    * @readonly
    *
@@ -198,7 +216,7 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   *
+   * Return the shared object of all exposed data
    *
    * @readonly
    * @type {Exposition}
@@ -210,7 +228,8 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   *
+   * Exposed data in context of the current plugin
+   * Is accessible by this.expositions[<plugin>][<key>]
    *
    * @param {string} key
    * @param {mixed} object
@@ -233,6 +252,8 @@ class Hemera extends EventEmitter {
   }
 
   /**
+   * Return the underlying NATS driver
+   *
    * @readonly
    *
    * @memberOf Hemera
@@ -243,6 +264,8 @@ class Hemera extends EventEmitter {
   }
 
   /**
+   * Return all registered topics
+   *
    * @readonly
    *
    * @memberOf Hemera
@@ -252,8 +275,10 @@ class Hemera extends EventEmitter {
   } {
     return this._topics
   }
+
   /**
-   *
+   * Add an extension. Extensions are called in serie and can only pass an error
+   * You can work with the current context manipulate something
    *
    * @param {any} type
    * @param {any} handler
@@ -273,7 +298,10 @@ class Hemera extends EventEmitter {
     this._extensions[type].add(handler)
 
   }
+
   /**
+   * Use a plugin.
+   *
    * @param {any} plugin
    *
    * @memberOf Hemera
@@ -304,7 +332,8 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   *
+   * Change the current plugin configuration
+   * e.g to set the payload validator
    *
    * @param {any} options
    *
@@ -316,7 +345,7 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   *
+   * Change the base configuration.
    *
    *
    * @memberOf Hemera
@@ -327,6 +356,8 @@ class Hemera extends EventEmitter {
   }
 
   /**
+   * Exit the process
+   *
    * @memberOf Hemera
    */
   fatal() {
@@ -337,7 +368,9 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   * @param {any} cb
+   *
+   *
+   * @param {Function} cb
    *
    * @memberOf Hemera
    */
@@ -365,7 +398,7 @@ class Hemera extends EventEmitter {
     return this.transport.timeout.apply(this.transport, arguments)
   }
   /**
-   * Add response
+   * Publishing with the NATS driver
    *
    * @returns
    *
@@ -377,7 +410,7 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   * Act
+   * Send request with the NATS driver
    *
    * @returns
    *
@@ -389,7 +422,7 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   *
+   * Build the final payload for the response
    *
    *
    * @memberOf Hemera
@@ -419,12 +452,14 @@ class Hemera extends EventEmitter {
       message.result = null
     }
 
+    // final response
     this._message = m.value
 
   }
+
   /**
-   *
-   *
+   * Last step before the response is send to the callee.
+   * The preResponse extension is invoked and previous errors are evaluated.
    *
    * @memberOf Hemera
    */
@@ -438,7 +473,6 @@ class Hemera extends EventEmitter {
       if (self._response instanceof Error) {
 
         self.log.error(self._response)
-        self._buildMessage()
       }
       // check for an extension error
       else if (err) {
@@ -446,15 +480,15 @@ class Hemera extends EventEmitter {
         let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
         self._response = error
         self.log.error(self._response)
-        self._buildMessage()
-      } else {
-
-        self._buildMessage()
       }
+
+      // create message payload
+      self._buildMessage()
 
       // indicates that an error occurs and that the program should exit
       if (self._shouldCrash) {
 
+        // only when we have an inbox othwerwise exit the service immediately
         if (self._replyTo) {
 
           // send error back to callee
@@ -474,6 +508,7 @@ class Hemera extends EventEmitter {
 
       }
 
+      // reply only when we have an inbox
       if (self._replyTo) {
 
         return this.send(this._replyTo, self._message)
@@ -484,8 +519,12 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   * @param {any} topic
-   * @returns
+   * Attach one handler to the topic subscriber.
+   * With subToMany and maxMessages you control NATS specific behaviour.
+   *
+   * @param {string} topic
+   * @param {boolean} subToMany
+   * @param {number} maxMessages
    *
    * @memberOf Hemera
    */
@@ -506,10 +545,10 @@ class Hemera extends EventEmitter {
       ctx._shouldCrash = false
       ctx._replyTo = replyTo
       ctx._request = request
+      ctx._response = {}
       ctx._pattern = {}
       ctx._actMeta = {}
 
-      //Extension point 'onServerPreRequest'
       self._extensions.onServerPreRequest.invoke(ctx, function (err) {
 
         let self: Hemera = this
@@ -517,13 +556,13 @@ class Hemera extends EventEmitter {
         if (err) {
 
           let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
-
           self.log.error(error)
           self._response = error
 
           return self.finish()
         }
 
+        // find matched RPC
         let requestType = self._request.value.request.type
         self._pattern = self._request.value.pattern
         self._actMeta = self._catalog.lookup(self._pattern)
@@ -546,7 +585,7 @@ class Hemera extends EventEmitter {
 
               let action = self._actMeta.action.bind(self)
 
-              // if request type is 'pubsub' we dont have to answer
+              // if request type is 'pubsub' we dont have to reply back
               if (requestType === 'pubsub') {
 
                 action(self._request.value.pattern)
@@ -554,7 +593,7 @@ class Hemera extends EventEmitter {
                 return self.finish()
               }
 
-              // call action
+              // execute RPC action
               action(self._request.value.pattern, (err: Error, resp) => {
 
                 if (err) {
@@ -566,6 +605,7 @@ class Hemera extends EventEmitter {
                   return self.finish()
                 }
 
+                // assign action result
                 self._response = resp
 
                 self.finish()
@@ -577,6 +617,7 @@ class Hemera extends EventEmitter {
                 pattern: self._pattern
               }).causedBy(err)
 
+              // service should exit
               self._shouldCrash = true
 
               self.finish()
@@ -622,6 +663,8 @@ class Hemera extends EventEmitter {
   }
 
   /**
+   * The topic is subscribed on NATS and can be called from any client.
+   *
    * @param {any} pattern
    * @param {any} cb
    *
@@ -658,7 +701,7 @@ class Hemera extends EventEmitter {
 
     let schema = {}
 
-    // remove objects (rules) from pattern and extract scheme
+    // remove objects (rules) from pattern and extract schema
     _.each(pattern, function (v: string, k: any) {
 
       if (_.isObject(v)) {
@@ -701,6 +744,8 @@ class Hemera extends EventEmitter {
   }
 
   /**
+   * Start an action.
+   *
    * @param {any} pattern
    * @param {any} cb
    *
@@ -857,6 +902,11 @@ class Hemera extends EventEmitter {
   }
 
   /**
+   * Handle the timeout when a pattern could not be resolved. Can have different reasons:
+   * - No one was connected at the time (service unavailable)
+   * - Service is actually still processing the request (service takes too long)
+   * - Service was processing the request but crashed (service error)
+   *
    * @param {any} sid
    * @param {any} pattern
    * @param {any} cb
@@ -902,23 +952,25 @@ class Hemera extends EventEmitter {
   }
 
   /**
+   * Create new instance of hemera but with pointer on the previous propertys
+   * so we are able to create a scope per act without lossing the reference to the core api.
+   *
    * @returns
-   * OLOO (objects-linked-to-other-objects) is a code style which creates and relates objects directly without the abstraction of classes. OLOO quite naturally * implements [[Prototype]]-based behavior delegation.
-   * More details: {@link https://github.com/getify/You-Dont-Know-JS/blob/master/this%20%26%20object%20prototypes/ch6.md}
+   *
    * @memberOf Hemera
    */
   createContext() {
 
     var self = this
 
-    // create new instance of hemera but with pointer on the previous propertys
-    // so we are able to create a scope per act without lossing the reference to the core api.
     var ctx: Hemera = Object.create(self)
 
     return ctx
   }
 
   /**
+   * Return the list of all registered actions
+   *
    * @memberOf Hemera
    */
   list(params: any) {
@@ -927,6 +979,8 @@ class Hemera extends EventEmitter {
   }
 
   /**
+   * Close the process watcher and the underlying transort driver.
+   *
    * @returns
    *
    * @memberOf Hemera

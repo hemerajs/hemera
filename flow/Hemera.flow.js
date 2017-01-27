@@ -2,8 +2,9 @@ declare type Config = {
   timeout: number;
   crashOnFatal: boolean;
   logLevel: string;
-  logger ? : any;
-  load ? : LoadConfig;
+  logger?: any;
+  name: string;
+  load? : LoadConfig;
 }
 
 declare type LoadConfig = {
