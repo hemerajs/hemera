@@ -341,7 +341,7 @@ hemera.add({
 })
 ```
 ### Extension points
-You can extend the behavior by extension.
+You can extend behavior by extensions.
 * `onClientPreRequest`,
 * `onClientPostRequest`,
 * `onServerPreHandler`,
@@ -358,7 +358,7 @@ hemera.ext('extension-name', function(next, i) {
 })
 ```
 
-You can even reply a response without to call you handler.
+You can also reply a response which will end the request-response cycle. Available in:
 
 * `onServerPreHandler`,
 * `onServerPreRequest`
