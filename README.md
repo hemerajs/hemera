@@ -718,7 +718,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Dustin Deus** - *Initial work* - [StarpTech](https://github.com/StarpTech)
+* **Dustin Deus** - [StarpTech](https://github.com/StarpTech)
 
 See also the list of [contributors](https://github.com/StarpTech/hemera/contributors) who participated in this project.
 
