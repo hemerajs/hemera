@@ -348,7 +348,7 @@ You can extend the behavior by extension.
 * `onServerPreRequest`,
 * `onServerPreResponse`
 
-`i` s the index of the handler_
+`i` s the index of the handler
 
 ```js
 hemera.ext('extension-name', function(next, i) {
