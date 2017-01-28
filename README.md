@@ -342,14 +342,48 @@ hemera.add({
 ```
 ### Extension points
 You can extend the behavior by extension.
-`onClientPreRequest`, `onClientPostRequest`, `onServerPreHandler`, `onServerPreRequest`, `onServerPreResponse`
+* `onClientPreRequest`,
+* `onClientPostRequest`,
+* `onServerPreHandler`,
+* `onServerPreRequest`,
+* `onServerPreResponse`
+
+`i` s the index of the handler_
 
 ```js
-hemera.ext('extension-name', function(next) {
+hemera.ext('extension-name', function(next, i) {
    
    let ctx = this
 
 })
+```
+
+You can even reply a response without to call you handler.
+
+* `onServerPreHandler`,
+* `onServerPreRequest`
+
+**Reply an error and finish the request**
+```js
+      hemera.ext('onServerPreHandler', function (next, i) {
+        let ctx = this
+        next(new Error('fail'))
+      })
+```
+**Reply a message and finish the request**
+```js
+      hemera.ext('onServerPreHandler', function (next, i) {
+        let ctx = this
+        next(null, { msg: 'unauthorized' })
+      })
+```
+
+**Reply a message and continue with the next extension handler**
+```js
+      hemera.ext('onServerPreRequest', function (next, i) {
+        let ctx = this
+        next(null, { msg: 'unauthorized' }, true)
+      })
 ```
 
 ### Tracing capabilities
