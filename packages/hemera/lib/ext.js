@@ -6,21 +6,22 @@
  * MIT Licensed
  */
 
-import Items from 'items'
+import Util from './util'
 
 /**
  * @class Ext
  */
 class Ext {
 
-  _handler: Array<Function>;
+  _stack: Array<Function>;
   _type: string;
 
   constructor(type: string) {
 
-    this._handler = []
+    this._stack = []
     this._type = type
   }
+
   /**
    *
    *
@@ -30,7 +31,7 @@ class Ext {
    */
   add(handler: Function) {
 
-    this._handler.push(handler)
+    this._stack.push(handler)
 
   }
 
@@ -41,9 +42,9 @@ class Ext {
    *
    * @memberOf Ext
    */
-  addRange(handlers: Array<Function>) {
+  addRange(handlers: Array<Function> ) {
 
-    this._handler = this._handler.concat(handlers)
+    this._stack = this._stack.concat(handlers)
 
   }
   /**
@@ -53,16 +54,16 @@ class Ext {
    *
    * @memberOf Ext
    */
-  invoke(ctx: any, cb: Function) {
+  invoke(ctx: Hemera, cb: Function) {
 
-    const each = (ext, next) => {
+    const each = (item, next, i) => {
 
       const bind = ctx
 
-      ext.call(bind, next);
+      item.call(bind, next, i);
     }
 
-    Items.serial(this._handler, each, cb.bind(ctx))
+    Util.serial(this._stack, each, cb.bind(ctx))
 
   }
 }

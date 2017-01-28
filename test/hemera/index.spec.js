@@ -2180,3 +2180,121 @@ describe('Extension error', function () {
   })
 
 })
+
+describe('Extension reply', function () {
+
+  var PORT = 6242
+  var flags = ['--user', 'derek', '--pass', 'foobar']
+  var authUrl = 'nats://derek:foobar@localhost:' + PORT
+  var noAuthUrl = 'nats://localhost:' + PORT
+  var server
+
+  // Start up our own nats-server
+  before(function (done) {
+    server = HemeraTestsuite.start_server(PORT, flags, done)
+  })
+
+  // Shutdown our server after we are done
+  after(function () {
+    server.kill()
+  })
+
+  it('Should reply the response', function (done) {
+
+    let ext1 = Sinon.spy();
+    let ext2 = Sinon.spy();
+    
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      logLevel: 'info'
+    })
+
+    hemera.ready(() => {
+
+      hemera.ext('onServerPreHandler', function (next, i) {
+        
+        ext1()
+        next(null, { msg: 'unauthorized' })
+      })
+
+      hemera.ext('onServerPreHandler', function (next, i) {
+        
+        ext2()
+        next(null, { msg: 'authorized' })
+      })
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+        cb()
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+
+        expect(resp).to.be.equals({ msg: 'unauthorized' })
+        expect(ext1.called).to.be.equals(true)
+        expect(ext2.called).to.be.equals(false)
+        expect(err).to.be.not.exists()
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should pass the response to the next', function (done) {
+
+    let ext1 = Sinon.spy();
+    let ext2 = Sinon.spy();
+    
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      logLevel: 'info'
+    })
+
+    hemera.ready(() => {
+
+      hemera.ext('onServerPreHandler', function (next, i) {
+        
+        ext1()
+        next(null, { msg: 'unauthorized' }, true)
+      })
+
+      hemera.ext('onServerPreHandler', function (next, i) {
+        
+        ext2()
+        next(null, { msg: 'authorized' })
+      })
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+        cb()
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+
+        expect(resp).to.be.equals({ msg: 'authorized' })
+        expect(ext1.called).to.be.equals(true)
+        expect(ext2.called).to.be.equals(true)
+        expect(err).to.be.not.exists()
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+})

@@ -118,7 +118,7 @@ module.exports.onServerPreRequest = [function onServerPreRequest(next) {
   next();
 }];
 
-module.exports.onServerPreHandler = [function onServerPreHandler(next) {
+module.exports.onServerPreHandler = [function onServerPreHandler(next, i) {
 
   var ctx = this;
 

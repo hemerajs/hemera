@@ -177,18 +177,18 @@ var Hemera = function (_EventEmitter) {
       _this.log = _this._config.logger;
     } else {
 
-      var Pretty = _pino2.default.pretty();
+      var pretty = _pino2.default.pretty();
 
       //Leads to too much listeners in tests
       if (_this._config.logLevel !== 'silent') {
-        Pretty.pipe(process.stdout);
+        pretty.pipe(process.stdout);
       }
 
       _this.log = (0, _pino2.default)({
         name: _this._config.name,
         safe: true,
         level: _this._config.logLevel
-      }, Pretty);
+      }, pretty);
     }
     return _this;
   }
@@ -541,7 +541,7 @@ var Hemera = function (_EventEmitter) {
         ctx._pattern = {};
         ctx._actMeta = {};
 
-        self._extensions.onServerPreRequest.invoke(ctx, function (err) {
+        self._extensions.onServerPreRequest.invoke(ctx, function (err, value) {
 
           var self = this;
 
@@ -554,6 +554,12 @@ var Hemera = function (_EventEmitter) {
             return self.finish();
           }
 
+          if (value) {
+
+            ctx._response = value;
+            return self.finish();
+          }
+
           // find matched RPC
           var requestType = self._request.value.request.type;
           self._pattern = self._request.value.pattern;
@@ -562,7 +568,7 @@ var Hemera = function (_EventEmitter) {
           // check if a handler is registered with this pattern
           if (self._actMeta) {
 
-            self._extensions.onServerPreHandler.invoke(ctx, function (err) {
+            self._extensions.onServerPreHandler.invoke(ctx, function (err, value) {
 
               if (err) {
 
@@ -570,6 +576,12 @@ var Hemera = function (_EventEmitter) {
 
                 self.log.error(self._response);
 
+                return self.finish();
+              }
+
+              if (value) {
+
+                ctx._response = value;
                 return self.finish();
               }
 

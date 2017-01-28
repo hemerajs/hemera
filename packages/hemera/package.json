@@ -47,7 +47,6 @@
     "errio": "1.2.x",
     "heavy": "4.0.x",
     "hoek": "4.1.x",
-    "items": "2.1.x",
     "lodash": "4.17.x",
     "pino": "3.0.x",
     "super-error": "2.0.x"

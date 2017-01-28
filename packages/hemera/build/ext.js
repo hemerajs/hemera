@@ -8,9 +8,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
  * MIT Licensed
  */
 
-var _items = require('items');
+var _util = require('./util');
 
-var _items2 = _interopRequireDefault(_items);
+var _util2 = _interopRequireDefault(_util);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -23,9 +23,10 @@ var Ext = function () {
   function Ext(type) {
     _classCallCheck(this, Ext);
 
-    this._handler = [];
+    this._stack = [];
     this._type = type;
   }
+
   /**
    *
    *
@@ -39,7 +40,7 @@ var Ext = function () {
     key: 'add',
     value: function add(handler) {
 
-      this._handler.push(handler);
+      this._stack.push(handler);
     }
 
     /**
@@ -54,7 +55,7 @@ var Ext = function () {
     key: 'addRange',
     value: function addRange(handlers) {
 
-      this._handler = this._handler.concat(handlers);
+      this._stack = this._stack.concat(handlers);
     }
     /**
      *
@@ -68,14 +69,14 @@ var Ext = function () {
     key: 'invoke',
     value: function invoke(ctx, cb) {
 
-      var each = function each(ext, next) {
+      var each = function each(item, next, i) {
 
         var bind = ctx;
 
-        ext.call(bind, next);
+        item.call(bind, next, i);
       };
 
-      _items2.default.serial(this._handler, each, cb.bind(ctx));
+      _util2.default.serial(this._stack, each, cb.bind(ctx));
     }
   }]);
 

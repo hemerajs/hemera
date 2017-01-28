@@ -549,7 +549,7 @@ class Hemera extends EventEmitter {
       ctx._pattern = {}
       ctx._actMeta = {}
 
-      self._extensions.onServerPreRequest.invoke(ctx, function (err) {
+      self._extensions.onServerPreRequest.invoke(ctx, function (err: Error, value: any) {
 
         let self: Hemera = this
 
@@ -562,6 +562,12 @@ class Hemera extends EventEmitter {
           return self.finish()
         }
 
+        if (value) {
+
+          ctx._response = value
+          return self.finish()
+        }
+
         // find matched RPC
         let requestType = self._request.value.request.type
         self._pattern = self._request.value.pattern
@@ -570,7 +576,7 @@ class Hemera extends EventEmitter {
         // check if a handler is registered with this pattern
         if (self._actMeta) {
 
-          self._extensions.onServerPreHandler.invoke(ctx, function (err: Error) {
+          self._extensions.onServerPreHandler.invoke(ctx, function (err: Error, value: any) {
 
             if (err) {
 
@@ -578,6 +584,12 @@ class Hemera extends EventEmitter {
 
               self.log.error(self._response)
 
+              return self.finish()
+            }
+
+            if (value) {
+
+              ctx._response = value
               return self.finish()
             }
 

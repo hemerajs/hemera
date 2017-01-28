@@ -111,7 +111,7 @@ module.exports.onServerPreRequest = [function onServerPreRequest(next: Function)
   next()
 }]
 
-module.exports.onServerPreHandler = [function onServerPreHandler(next: Function) {
+module.exports.onServerPreHandler = [function onServerPreHandler(next: Function, i) {
 
   let ctx: Hemera = this
 
