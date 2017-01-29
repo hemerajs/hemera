@@ -83,7 +83,7 @@ module.exports.onClientPostRequest = [function onClientPostRequest(next: Functio
   next()
 }]
 
-module.exports.onServerPreRequest = [function onServerPreRequest(next: Function) {
+module.exports.onServerPreRequest = [function onServerPreRequest(req: any, res: any, next: Function) {
 
   let ctx: Hemera = this
 
@@ -91,7 +91,7 @@ module.exports.onServerPreRequest = [function onServerPreRequest(next: Function)
 
   if(m.error) {
 
-    return next(m.error)
+    return res.send(m.error)
   }
 
   let msg = m.value
@@ -111,7 +111,7 @@ module.exports.onServerPreRequest = [function onServerPreRequest(next: Function)
   next()
 }]
 
-module.exports.onServerPreHandler = [function onServerPreHandler(next: Function, i) {
+module.exports.onServerPreHandler = [function onServerPreHandler(req: any, res: any, next: Function) {
 
   let ctx: Hemera = this
 
@@ -121,7 +121,7 @@ module.exports.onServerPreHandler = [function onServerPreHandler(next: Function,
 
 }]
 
-module.exports.onServerPreResponse = [function onServerPreResponse(next: Function) {
+module.exports.onServerPreResponse = [function onServerPreResponse(req: any, res: any, next: Function) {
 
   let ctx: Hemera = this
 

@@ -20,7 +20,7 @@ import Pino from 'pino'
 
 import Errors from './errors'
 import Constants from './constants'
-import Ext from './ext'
+import Extension from './extension'
 import Util from './util'
 import DefaultExtensions from './extensions'
 import DefaultEncoder from './encoder'
@@ -135,11 +135,11 @@ class Hemera extends EventEmitter {
 
     // define extension points
     this._extensions = {
-      onClientPreRequest: new Ext('onClientPreRequest'),
-      onClientPostRequest: new Ext('onClientPostRequest'),
-      onServerPreHandler: new Ext('onServerPreHandler'),
-      onServerPreRequest: new Ext('onServerPreRequest'),
-      onServerPreResponse: new Ext('onServerPreResponse')
+      onClientPreRequest: new Extension('onClientPreRequest'),
+      onClientPostRequest: new Extension('onClientPostRequest'),
+      onServerPreHandler: new Extension('onServerPreHandler', true),
+      onServerPreRequest: new Extension('onServerPreRequest', true),
+      onServerPreResponse: new Extension('onServerPreResponse', true)
     }
 
     // start tracking process stats
@@ -435,8 +435,8 @@ class Hemera extends EventEmitter {
       meta: this.meta$ || {},
       trace: this.trace$ || {},
       request: this.request$,
-      result: result instanceof Error ? null : result,
-      error: result instanceof Error ? Errio.toObject(result) : null
+      result: result.error ? null : result.value,
+      error: result.error ? Errio.toObject(result.error) : null
     }
 
     let endTime: number = Util.nowHrTime()
@@ -467,19 +467,24 @@ class Hemera extends EventEmitter {
 
     let self: Hemera = this;
 
-    self._extensions.onServerPreResponse.invoke(self, function (err) {
+    self._extensions.onServerPreResponse.invoke(self, function (err: Error, value: any) {
 
       // check if an error was already catched
-      if (self._response instanceof Error) {
+      if (self._response.error) {
 
-        self.log.error(self._response)
+        self.log.error(self._response.error)
       }
       // check for an extension error
       else if (err) {
 
         let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
-        self._response = error
-        self.log.error(self._response)
+        self._response.error = error
+        self.log.error(self._response.error)
+      }
+
+      if (value) {
+
+        self._response.value = value
       }
 
       // create message payload
@@ -557,14 +562,14 @@ class Hemera extends EventEmitter {
 
           let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
           self.log.error(error)
-          self._response = error
+          self._response.error = error
 
           return self.finish()
         }
 
         if (value) {
 
-          ctx._response = value
+          ctx._response.value = value
           return self.finish()
         }
 
@@ -580,16 +585,16 @@ class Hemera extends EventEmitter {
 
             if (err) {
 
-              self._response = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+              self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
 
-              self.log.error(self._response)
+              self.log.error(self._response.error)
 
               return self.finish()
             }
 
             if (value) {
 
-              ctx._response = value
+              ctx._response.value = value
               return self.finish()
             }
 
@@ -610,7 +615,7 @@ class Hemera extends EventEmitter {
 
                 if (err) {
 
-                  self._response = new Errors.BusinessError(Constants.IMPLEMENTATION_ERROR, {
+                  self._response.error = new Errors.BusinessError(Constants.IMPLEMENTATION_ERROR, {
                     pattern: self._pattern
                   }).causedBy(err)
 
@@ -618,14 +623,14 @@ class Hemera extends EventEmitter {
                 }
 
                 // assign action result
-                self._response = resp
+                self._response.value = resp
 
                 self.finish()
               })
 
             } catch (err) {
 
-              self._response = new Errors.ImplementationError(Constants.IMPLEMENTATION_ERROR, {
+              self._response.error = new Errors.ImplementationError(Constants.IMPLEMENTATION_ERROR, {
                 pattern: self._pattern
               }).causedBy(err)
 
@@ -643,7 +648,7 @@ class Hemera extends EventEmitter {
             topic
           }, Constants.PATTERN_NOT_FOUND)
 
-          self._response = new Errors.PatternNotFound(Constants.PATTERN_NOT_FOUND, {
+          self._response.error = new Errors.PatternNotFound(Constants.PATTERN_NOT_FOUND, {
             pattern: self._pattern
           })
 

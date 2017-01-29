@@ -21,11 +21,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * @class Ext
+ * @class Extension
  */
-var Ext = function () {
-  function Ext(type, server) {
-    _classCallCheck(this, Ext);
+var Extension = function () {
+  function Extension(type, server) {
+    _classCallCheck(this, Extension);
 
     this._stack = [];
     this._type = type;
@@ -37,11 +37,11 @@ var Ext = function () {
    *
    * @param {any} handler
    *
-   * @memberOf Ext
+   * @memberOf Extension
    */
 
 
-  _createClass(Ext, [{
+  _createClass(Extension, [{
     key: 'add',
     value: function add(handler) {
 
@@ -53,7 +53,7 @@ var Ext = function () {
      *
      * @param {Array<Function>} handlers
      *
-     * @memberOf Ext
+     * @memberOf Extension
      */
 
   }, {
@@ -67,7 +67,7 @@ var Ext = function () {
      *
      * @param {any} cb
      *
-     * @memberOf Ext
+     * @memberOf Extension
      */
 
   }, {
@@ -75,21 +75,22 @@ var Ext = function () {
     value: function invoke(ctx, cb) {
       var _this = this;
 
-      var each = function each(item, next, i) {
+      var each = function each(item, next, prevValue, i) {
 
         if (_this._server) {
+
           var response = new _response2.default(ctx);
           response.next = next;
           var request = new _request2.default(ctx);
 
-          item.call(ctx, request, response, next, i);
+          item.call(ctx, request, response, next, prevValue, i);
         } else {
 
-          item.call(ctx, next, i);
+          item.call(ctx, next, prevValue, i);
         }
       };
 
-      Ext.serial(this._stack, each, cb.bind(ctx));
+      Extension.serial(this._stack, each, cb.bind(ctx));
     }
     /**
      *
@@ -98,7 +99,7 @@ var Ext = function () {
      * @param {Function} method
      * @param {Function} callback
      *
-     * @memberOf Ext
+     * @memberOf Extension
      */
 
   }], [{
@@ -113,14 +114,14 @@ var Ext = function () {
 
           var i = 0;
 
-          var iterate = function iterate() {
+          var iterate = function iterate(prevValue) {
 
-            var done = function done(err, value) {
+            var done = function done(err, value, abort) {
 
               if (err) {
 
                 callback(err);
-              } else if (value) {
+              } else if (value && abort) {
 
                 callback(null, value);
               } else {
@@ -129,7 +130,7 @@ var Ext = function () {
 
                 if (i < array.length) {
 
-                  iterate();
+                  iterate(value);
                 } else {
 
                   callback(null, value);
@@ -137,7 +138,7 @@ var Ext = function () {
               }
             };
 
-            method(array[i], done, i);
+            method(array[i], done, prevValue, i);
           };
 
           iterate();
@@ -146,8 +147,8 @@ var Ext = function () {
     }
   }]);
 
-  return Ext;
+  return Extension;
 }();
 
-module.exports = Ext;
-//# sourceMappingURL=ext.js.map
+module.exports = Extension;
+//# sourceMappingURL=extension.js.map

@@ -15,7 +15,7 @@ exports.plugin = function hemeraAvro() {
       this.meta$.avro = true
     }
 
-    next()
+    return next()
 
   })
 

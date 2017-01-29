@@ -38,9 +38,9 @@ var _constants = require('./constants');
 
 var _constants2 = _interopRequireDefault(_constants);
 
-var _ext = require('./ext');
+var _extension = require('./extension');
 
-var _ext2 = _interopRequireDefault(_ext);
+var _extension2 = _interopRequireDefault(_extension);
 
 var _util = require('./util');
 
@@ -150,11 +150,11 @@ var Hemera = function (_EventEmitter) {
 
     // define extension points
     _this._extensions = {
-      onClientPreRequest: new _ext2.default('onClientPreRequest'),
-      onClientPostRequest: new _ext2.default('onClientPostRequest'),
-      onServerPreHandler: new _ext2.default('onServerPreHandler'),
-      onServerPreRequest: new _ext2.default('onServerPreRequest'),
-      onServerPreResponse: new _ext2.default('onServerPreResponse')
+      onClientPreRequest: new _extension2.default('onClientPreRequest'),
+      onClientPostRequest: new _extension2.default('onClientPostRequest'),
+      onServerPreHandler: new _extension2.default('onServerPreHandler', true),
+      onServerPreRequest: new _extension2.default('onServerPreRequest', true),
+      onServerPreResponse: new _extension2.default('onServerPreResponse', true)
     };
 
     // start tracking process stats
@@ -425,8 +425,8 @@ var Hemera = function (_EventEmitter) {
         meta: this.meta$ || {},
         trace: this.trace$ || {},
         request: this.request$,
-        result: result instanceof Error ? null : result,
-        error: result instanceof Error ? _errio2.default.toObject(result) : null
+        result: result.error ? null : result.value,
+        error: result.error ? _errio2.default.toObject(result.error) : null
       };
 
       var endTime = _util2.default.nowHrTime();
@@ -459,20 +459,25 @@ var Hemera = function (_EventEmitter) {
 
       var self = this;
 
-      self._extensions.onServerPreResponse.invoke(self, function (err) {
+      self._extensions.onServerPreResponse.invoke(self, function (err, value) {
 
         // check if an error was already catched
-        if (self._response instanceof Error) {
+        if (self._response.error) {
 
-          self.log.error(self._response);
+          self.log.error(self._response.error);
         }
         // check for an extension error
         else if (err) {
 
             var error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
-            self._response = error;
-            self.log.error(self._response);
+            self._response.error = error;
+            self.log.error(self._response.error);
           }
+
+        if (value) {
+
+          self._response.value = value;
+        }
 
         // create message payload
         self._buildMessage();
@@ -549,14 +554,14 @@ var Hemera = function (_EventEmitter) {
 
             var error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
             self.log.error(error);
-            self._response = error;
+            self._response.error = error;
 
             return self.finish();
           }
 
           if (value) {
 
-            ctx._response = value;
+            ctx._response.value = value;
             return self.finish();
           }
 
@@ -572,16 +577,16 @@ var Hemera = function (_EventEmitter) {
 
               if (err) {
 
-                self._response = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
+                self._response.error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
 
-                self.log.error(self._response);
+                self.log.error(self._response.error);
 
                 return self.finish();
               }
 
               if (value) {
 
-                ctx._response = value;
+                ctx._response.value = value;
                 return self.finish();
               }
 
@@ -602,7 +607,7 @@ var Hemera = function (_EventEmitter) {
 
                   if (err) {
 
-                    self._response = new _errors2.default.BusinessError(_constants2.default.IMPLEMENTATION_ERROR, {
+                    self._response.error = new _errors2.default.BusinessError(_constants2.default.IMPLEMENTATION_ERROR, {
                       pattern: self._pattern
                     }).causedBy(err);
 
@@ -610,13 +615,13 @@ var Hemera = function (_EventEmitter) {
                   }
 
                   // assign action result
-                  self._response = resp;
+                  self._response.value = resp;
 
                   self.finish();
                 });
               } catch (err) {
 
-                self._response = new _errors2.default.ImplementationError(_constants2.default.IMPLEMENTATION_ERROR, {
+                self._response.error = new _errors2.default.ImplementationError(_constants2.default.IMPLEMENTATION_ERROR, {
                   pattern: self._pattern
                 }).causedBy(err);
 
@@ -632,7 +637,7 @@ var Hemera = function (_EventEmitter) {
               topic
             }, _constants2.default.PATTERN_NOT_FOUND);
 
-            self._response = new _errors2.default.PatternNotFound(_constants2.default.PATTERN_NOT_FOUND, {
+            self._response.error = new _errors2.default.PatternNotFound(_constants2.default.PATTERN_NOT_FOUND, {
               pattern: self._pattern
             });
 

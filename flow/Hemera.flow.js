@@ -20,7 +20,7 @@ type PluginDefinition = {
   options: any;
 }
 
-declare class Ext {
+declare class Extension {
   _handler: Array < Function > ;
   _type: string;
 

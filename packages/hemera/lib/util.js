@@ -13,55 +13,6 @@ import Crypto from 'crypto'
  * @class Util
  */
 class Util {
-
-  /**
-   *
-   *
-   * @param {Array<Function>} array
-   * @param {Function} method
-   * @param {Function} callback
-   *
-   * @memberOf Util
-   */
-  static serial(array: Array<Function> , method: Function, callback: Function) {
-
-    if (!array.length) {
-
-      callback()
-    } else {
-
-      let i = 0;
-
-      const iterate = function () {
-
-        const done = function (err, value, pass) {
-
-          if (err) {
-
-            callback(err)
-          } else if (!pass && value) {
-
-            callback(null, value)
-          } else {
-
-            i = i + 1
-
-            if (i < array.length) {
-
-              iterate()
-            } else {
-
-              callback(null, value)
-            }
-          }
-        }
-
-        method(array[i], done, i)
-      }
-
-      iterate()
-    }
-  }
   /**
    * @returns
    *
