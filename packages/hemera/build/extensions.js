@@ -74,7 +74,7 @@ module.exports.onClientPostRequest = [function onClientPostRequest(next) {
 
   var ctx = this;
   var pattern = this._pattern;
-  var msg = ctx._response.value;
+  var msg = ctx._response.payload;
 
   // pass to act context
   ctx.request$ = msg.request || {};
@@ -94,7 +94,7 @@ module.exports.onServerPreRequest = [function onServerPreRequest(req, res, next)
 
   var ctx = this;
 
-  var m = ctx._decoder.decode.call(ctx, ctx._request);
+  var m = ctx._decoder.decode.call(ctx, ctx._request.payload);
 
   if (m.error) {
 
@@ -111,7 +111,8 @@ module.exports.onServerPreRequest = [function onServerPreRequest(req, res, next)
     ctx.request$ = msg.request || {};
   }
 
-  ctx._request = m;
+  ctx._request.payload = m.value;
+  ctx._request.error = m.error;
 
   ctx.emit('onServerPreRequest', ctx);
 

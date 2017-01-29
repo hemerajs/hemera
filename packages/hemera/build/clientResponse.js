@@ -11,23 +11,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  */
 
 /**
- * @class Request
+ * @class ClientResponse
  */
-var Request = function () {
+var ClientResponse = function () {
 
   /**
-   * Creates an instance of Request.
+   * Creates an instance of ClientResponse.
    *
    * @param {Hemera} ctx
    *
-   * @memberOf Request
+   * @memberOf ClientResponse
    */
-  function Request(ctx, _request) {
-    _classCallCheck(this, Request);
+  function ClientResponse(ctx) {
+    _classCallCheck(this, ClientResponse);
 
     this._ctx = ctx;
-    this._request = {};
-    this.payload = _request;
+    this._response = {};
   }
 
   /**
@@ -35,15 +34,41 @@ var Request = function () {
    *
    * @readonly
    * @type {*}
-   * @memberOf Request
+   * @memberOf ClientResponse
    */
 
 
-  _createClass(Request, [{
+  _createClass(ClientResponse, [{
     key: "payload",
     get: function get() {
 
-      return this._request.value;
+      return this._response.value;
+    }
+
+    /**
+     *
+     *
+     *
+     * @memberOf ClientResponse
+     */
+    ,
+    set: function set(value) {
+
+      this._response.value = value;
+    }
+
+    /**
+     *
+     *
+     *
+     * @memberOf ClientResponse
+     */
+
+  }, {
+    key: "error",
+    set: function set(error) {
+
+      this._response.error = error;
     }
 
     /**
@@ -51,43 +76,17 @@ var Request = function () {
      *
      * @readonly
      * @type {*}
-     * @memberOf Request
+     * @memberOf ClientResponse
      */
     ,
-
-
-    /**
-     *
-     *
-     *
-     * @memberOf Response
-     */
-    set: function set(value) {
-
-      this._request.value = value;
-    }
-
-    /**
-     *
-     *
-     *
-     * @memberOf Response
-     */
-
-  }, {
-    key: "error",
     get: function get() {
 
-      return this._request.error;
-    },
-    set: function set(error) {
-
-      this._request.error = error;
+      return this._response.error;
     }
   }]);
 
-  return Request;
+  return ClientResponse;
 }();
 
-module.exports = Request;
-//# sourceMappingURL=request.js.map
+module.exports = ClientResponse;
+//# sourceMappingURL=clientResponse.js.map

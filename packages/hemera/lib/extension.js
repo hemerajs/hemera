@@ -6,19 +6,16 @@
  * MIT Licensed
  */
 
-import Response from './response'
-import Request from './request'
-
 /**
  * @class Extension
  */
 class Extension {
 
-  _stack: Array<Function> ;
+  _stack: Array<Function>;
   _type: string;
   _server: boolean;
 
-  constructor(type: string, server? : boolean) {
+  constructor(type: string, server?: boolean) {
 
     this._stack = []
     this._type = type
@@ -63,14 +60,13 @@ class Extension {
 
       if (this._server) {
 
-        const response = new Response(ctx)
+        const response = ctx._response
         response.next = next
-        const request = new Request(ctx)
 
-        item.call(ctx, request, response, next, prevValue, i);
+        item.call(ctx, ctx._request, response, next, prevValue, i);
       } else {
 
-        item.call(ctx, next, prevValue, i);
+        item.call(ctx, next, i);
       }
 
     }

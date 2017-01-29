@@ -144,6 +144,26 @@ type ActMessage = {
   request: Request;
 }
 
+type ClientResponse = {
+  payload: any;
+  error: any;
+}
+
+type ClientRequest = {
+  payload: any;
+  error: any;
+}
+
+type ServerResponse = {
+  payload: any;
+  error: any;
+}
+
+type ServerRequest = {
+  payload: any;
+  error: any;
+}
+
 type ActResponse = any;
 
 type ActMeta = {

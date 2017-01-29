@@ -9,23 +9,25 @@
 import _ from 'lodash'
 
 /**
- * @class Response
+ * @class ServerResponse
  */
-class Response {
+class ServerResponse {
 
   next: Function;
-  ctx: Hemera;
+  _ctx: Hemera;
+  _response: any;
 
   /**
-   * Creates an instance of Response.
+   * Creates an instance of ServerResponse.
    *
    * @param {Hemera} ctx
    *
-   * @memberOf Response
+   * @memberOf ServerResponse
    */
   constructor(ctx: Hemera) {
 
-    this.ctx = ctx
+    this._ctx = ctx
+    this._response = {}
   }
 
   /**
@@ -33,7 +35,7 @@ class Response {
    *
    * @param {*} value
    *
-   * @memberOf Response
+   * @memberOf ServerResponse
    */
   end(value: any) {
 
@@ -56,7 +58,7 @@ class Response {
    *
    * @param {*} value
    *
-   * @memberOf Response
+   * @memberOf ServerResponse
    */
   send(value: any) {
 
@@ -79,33 +81,33 @@ class Response {
    *
    * @readonly
    * @type {*}
-   * @memberOf Response
+   * @memberOf ServerResponse
    */
   get payload(): any {
 
-    return this.ctx._response.value
+    return this._response.value
   }
 
   /**
    *
    *
    *
-   * @memberOf Response
+   * @memberOf ServerResponse
    */
-  set payload(value) {
+  set payload(value: any) {
 
-    this.ctx._response.value = value
+    this._response.value = value
   }
 
   /**
    *
    *
    *
-   * @memberOf Response
+   * @memberOf ServerResponse
    */
-  set error(error) {
+  set error(error: Error) {
 
-    this.ctx._response.error = error
+    this._response.error = error
   }
 
   /**
@@ -113,13 +115,13 @@ class Response {
    *
    * @readonly
    * @type {*}
-   * @memberOf Response
+   * @memberOf ServerResponse
    */
   get error(): any {
 
-    return this.ctx._response.error
+    return this._response.error
   }
 
 }
 
-module.exports = Response
+module.exports = ServerResponse

@@ -58,6 +58,22 @@ var _decoder = require('./decoder');
 
 var _decoder2 = _interopRequireDefault(_decoder);
 
+var _serverResponse = require('./serverResponse');
+
+var _serverResponse2 = _interopRequireDefault(_serverResponse);
+
+var _serverRequest = require('./serverRequest');
+
+var _serverRequest2 = _interopRequireDefault(_serverRequest);
+
+var _clientRequest = require('./clientRequest');
+
+var _clientRequest2 = _interopRequireDefault(_clientRequest);
+
+var _clientResponse = require('./clientResponse');
+
+var _clientResponse2 = _interopRequireDefault(_clientResponse);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -425,7 +441,7 @@ var Hemera = function (_EventEmitter) {
         meta: this.meta$ || {},
         trace: this.trace$ || {},
         request: this.request$,
-        result: result.error ? null : result.value,
+        result: result.error ? null : result.payload,
         error: result.error ? _errio2.default.toObject(result.error) : null
       };
 
@@ -476,7 +492,7 @@ var Hemera = function (_EventEmitter) {
 
         if (value) {
 
-          self._response.value = value;
+          self._response.payload = value;
         }
 
         // create message payload
@@ -541,8 +557,8 @@ var Hemera = function (_EventEmitter) {
         var ctx = _this3.createContext();
         ctx._shouldCrash = false;
         ctx._replyTo = replyTo;
-        ctx._request = request;
-        ctx._response = {};
+        ctx._request = new _serverRequest2.default(ctx, request);
+        ctx._response = new _serverResponse2.default(ctx);
         ctx._pattern = {};
         ctx._actMeta = {};
 
@@ -561,13 +577,13 @@ var Hemera = function (_EventEmitter) {
 
           if (value) {
 
-            ctx._response.value = value;
+            ctx._response.payload = value;
             return self.finish();
           }
 
           // find matched RPC
-          var requestType = self._request.value.request.type;
-          self._pattern = self._request.value.pattern;
+          var requestType = self._request.payload.request.type;
+          self._pattern = self._request.payload.pattern;
           self._actMeta = self._catalog.lookup(self._pattern);
 
           // check if a handler is registered with this pattern
@@ -586,7 +602,7 @@ var Hemera = function (_EventEmitter) {
 
               if (value) {
 
-                ctx._response.value = value;
+                ctx._response.payload = value;
                 return self.finish();
               }
 
@@ -597,13 +613,13 @@ var Hemera = function (_EventEmitter) {
                 // if request type is 'pubsub' we dont have to reply back
                 if (requestType === 'pubsub') {
 
-                  action(self._request.value.pattern);
+                  action(self._request.payload.pattern);
 
                   return self.finish();
                 }
 
                 // execute RPC action
-                action(self._request.value.pattern, function (err, resp) {
+                action(self._request.payload.pattern, function (err, resp) {
 
                   if (err) {
 
@@ -615,7 +631,7 @@ var Hemera = function (_EventEmitter) {
                   }
 
                   // assign action result
-                  self._response.value = resp;
+                  self._response.payload = resp;
 
                   self.finish();
                 });
@@ -776,8 +792,8 @@ var Hemera = function (_EventEmitter) {
       ctx._pattern = pattern;
       ctx._prevContext = this;
       ctx._cleanPattern = _util2.default.cleanPattern(pattern);
-      ctx._response = {};
-      ctx._request = {};
+      ctx._response = new _clientResponse2.default(ctx);
+      ctx._request = new _clientRequest2.default(ctx);
 
       ctx._extensions.onClientPreRequest.invoke(ctx, function onPreRequest(err) {
 
@@ -814,7 +830,8 @@ var Hemera = function (_EventEmitter) {
           return;
         }
 
-        ctx._request = m.value;
+        ctx._request.payload = m.value;
+        ctx._request.error = m.error;
 
         // use simple publish mechanism instead to fire a request
         if (pattern.pubsub$ === true) {
@@ -823,13 +840,15 @@ var Hemera = function (_EventEmitter) {
             self.log.info(_constants2.default.PUB_CALLBACK_REDUNDANT);
           }
 
-          self.send(pattern.topic, self._request);
+          self.send(pattern.topic, self._request.payload);
         } else {
 
           // send request
-          var sid = self.sendRequest(pattern.topic, self._request, function (response) {
+          var sid = self.sendRequest(pattern.topic, self._request.payload, function (response) {
 
-            self._response = self._decoder.decode.call(ctx, response);
+            var res = self._decoder.decode.call(ctx, response);
+            self._response.payload = res.value;
+            self._response.error = res.error;
 
             try {
 
@@ -864,9 +883,9 @@ var Hemera = function (_EventEmitter) {
 
                 if (hasCallback) {
 
-                  if (self._response.value.error) {
+                  if (self._response.payload.error) {
 
-                    var responseError = _errio2.default.fromObject(self._response.value.error);
+                    var responseError = _errio2.default.fromObject(self._response.payload.error);
                     var responseErrorCause = responseError.cause;
                     var _error7 = new _errors2.default.BusinessError(_constants2.default.BUSINESS_ERROR, {
                       pattern: self._cleanPattern
@@ -877,7 +896,7 @@ var Hemera = function (_EventEmitter) {
                     return cb.call(self, responseError);
                   }
 
-                  cb.apply(self, [null, self._response.value.result]);
+                  cb.apply(self, [null, self._response.payload.result]);
                 }
               });
             } catch (err) {
