@@ -11,7 +11,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  */
 
 /**
- * @class ServerRequest
+ * @class ClientRequest
  */
 var ClientRequest = function () {
 

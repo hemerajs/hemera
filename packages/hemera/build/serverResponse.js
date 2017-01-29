@@ -26,7 +26,7 @@ var ServerResponse = function () {
    *
    * @param {Hemera} ctx
    *
-   * @memberOf Response
+   * @memberOf ServerResponse
    */
   function ServerResponse(ctx) {
     _classCallCheck(this, ServerResponse);
