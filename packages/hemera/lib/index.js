@@ -125,7 +125,7 @@ class Hemera extends EventEmitter {
     }
 
     // contains the list of all registered plugins
-    // the core is a plugin to
+    // the core is also a plugin
     this._plugins = {
       core: this.plugin$.attributes
     }
@@ -486,6 +486,7 @@ class Hemera extends EventEmitter {
         self.log.error(self._response.error)
       }
 
+      // reply value from extension
       if (value) {
 
         self._response.payload = value
@@ -571,6 +572,7 @@ class Hemera extends EventEmitter {
           return self.finish()
         }
 
+        // reply value from extension
         if (value) {
 
           ctx._response.payload = value
@@ -596,6 +598,7 @@ class Hemera extends EventEmitter {
               return self.finish()
             }
 
+            // reply value from extension
             if (value) {
 
               ctx._response.payload = value
