@@ -355,7 +355,7 @@ You can extend custom behavior by extensions.
 hemera.ext('<client-extensions>', function(next, i) {
    
    let ctx = this
-
+   next(<error>)
 })
 ```
 
@@ -369,6 +369,8 @@ hemera.ext('<client-extensions>', function(next, i) {
 hemera.ext('<serverExtension>', function (req, res, next, prevValue, i) {
    
    next()
+   //res.send(<payload>)
+   //res.end(<payload>)
 })
 ```
 
