@@ -98,7 +98,7 @@ Table of contents
       * [Client](#client-extensions)
       * [Server](#server-extensions)
   * [Tracing capabilities](#tracing-capabilities)
-      * [Get events](#get-events)
+      * [Life-cycle events](#requestresponse-life-cycle-events)
   * [Publish & Subscribe](#publish--subscribe)
   * [Payload validation](#payload-validation)
   * [Plugins](#plugins)
