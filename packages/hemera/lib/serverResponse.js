@@ -22,7 +22,7 @@ class ServerResponse {
    *
    * @param {Hemera} ctx
    *
-   * @memberOf Response
+   * @memberOf ServerResponse
    */
   constructor(ctx: Hemera) {
 

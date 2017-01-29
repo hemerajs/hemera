@@ -7,7 +7,7 @@
  */
 
 /**
- * @class ServerRequest
+ * @class ClientRequest
  */
 class ClientRequest {
 
