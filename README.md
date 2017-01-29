@@ -95,6 +95,8 @@ Table of contents
       * [Context](#context)
       * [Delegate](#delegate)
   * [Extension points](#extension-points)
+      * [Client](#client-extensions)
+      * [Server](#server-extensions)
   * [Tracing capabilities](#tracing-capabilities)
       * [Get events](#get-events)
   * [Publish & Subscribe](#publish--subscribe)
@@ -341,24 +343,23 @@ hemera.add({
 })
 ```
 ### Extension points
-You can extend behavior by extensions.
+You can extend custom behavior by extensions.
+
+#### Client extensions
 * `onClientPreRequest`,
-* `onClientPostRequest`,
-* `onServerPreHandler`,
-* `onServerPreRequest`,
-* `onServerPreResponse`
+* `onClientPostRequest`
 
 `i` s the index of the handler
 
 ```js
-hemera.ext('extension-name', function(next, i) {
+hemera.ext('<client-extensions>', function(next, i) {
    
    let ctx = this
 
 })
 ```
 
-You can also reply a response which will end the request-response cycle. Available in:
+#### Server extensions
 
 * `onServerPreHandler`,
 * `onServerPreRequest`
