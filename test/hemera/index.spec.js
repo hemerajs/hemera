@@ -2180,3 +2180,123 @@ describe('Extension error', function () {
   })
 
 })
+
+
+describe.only('Middlewares', function() {
+  var PORT = 4222
+  var flags = ['--user', 'derek', '--pass', 'foobar']
+  var authUrl = 'nats://derek:foobar@localhost:' + PORT
+  var noAuthUrl = 'nats://localhost:' + PORT
+  var server
+
+  it('Should be able to use multiple middlewares and response on the last', function (done) {
+    const nats = require('nats').connect(noAuthUrl)
+    const hemera = new Hemera(nats);
+
+    hemera.ready(() => {
+
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, (req, cb, next) => {
+        next();
+      }, (req, cb, next) => {
+        next();
+      }, (req, cb) => {
+        cb(null, {
+          result: req.a + req.b
+        })
+      });
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 10,
+        b: 20
+      }, (err, resp) => {
+        expect(err).not.to.be.exists();
+        expect(resp.result).to.be.equals(30);
+
+        hemera.close()
+        done()
+      });
+    });
+  });
+
+  it('Should be able to use a cache method as middleware', function (done) {
+    const nats = require('nats').connect(noAuthUrl)
+    const hemera = new Hemera(nats);
+    let cacheValu = {};
+
+    const cache = function (req, res, next) {
+      if (cacheValu['numbers']) {
+        res(null, { cache: cacheValu['numbers'] });
+      } else {
+        next();
+      }
+    };
+    const listNumbers = function (req, res, next) {
+      cacheValu['numbers'] = [10, 20, 30, 40];
+      res(null, { server: cacheValu['numbers'] })
+    }
+
+
+    hemera.ready(() => {
+
+      hemera.add({ topic: 'math', cmd: 'numbers' }, cache, listNumbers);
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'numbers',
+      }, (err, resp) => {
+        expect(err).not.to.be.exists()
+        expect(resp.server).to.be.exists()
+        expect(resp.server).to.be.equal([10, 20, 30, 40])
+      });
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'numbers',
+      }, (err, resp) => {
+        expect(err).not.to.be.exists()
+        expect(resp.cache).to.be.exists()
+        expect(resp.cache).to.be.equal([10, 20, 30, 40])
+
+        hemera.close()
+        done()
+      });
+
+    });
+  });
+
+  it.only('Should return error if all middlewares call next', function (done) {
+    const nats = require('nats').connect(noAuthUrl)
+    const hemera = new Hemera(nats);
+    const listNumbers =
+
+
+    hemera.ready(() => {
+
+      hemera.add({
+        topic: 'math',
+        cmd: 'numbers',
+      }, function (req, res, next) {
+        next();
+      },  function (req, res, next) {
+        next();
+      });
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'numbers',
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+
+        hemera.close()
+        done()
+      });
+
+    });
+  });
+
+})
