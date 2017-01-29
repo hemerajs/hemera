@@ -362,29 +362,22 @@ You can also reply a response which will end the request-response cycle. Availab
 
 * `onServerPreHandler`,
 * `onServerPreRequest`
+* `onServerPreResponse`
 
-**Reply an error and finish the request**
 ```js
-      hemera.ext('onServerPreHandler', function (next, i) {
-        let ctx = this
-        next(new Error('fail'))
-      })
-```
-**Reply a message and finish the request**
-```js
-      hemera.ext('onServerPreHandler', function (next, i) {
-        let ctx = this
-        next(null, { msg: 'unauthorized' })
-      })
+hemera.ext('<serverExtension>', function (req, res, next, prevValue, i) {
+   
+   next()
+})
 ```
 
-**Reply a message and continue with the next extension handler**
-```js
-      hemera.ext('onServerPreRequest', function (next, i) {
-        let ctx = this
-        next(null, { msg: 'unauthorized' }, true)
-      })
-```
+* `next()` will call the next extension handler on the stack.
+* `res.send(<error> or <payload>)` will end the request-response cycle and send the data back to the callee but __other__ extensions will be called.
+* `res.end(<error> or <payload>)` will end the request-response cycle and send the data back to the callee but __no__ other extensions will be called.
+* `req` contains the current request. Its an object with two properties `payload` and `error` because decoding issues. Payload and error object can be manipulated.
+* `res`  contains the current response. Its an object with two properties `payload` and `error`. Payload and error object can be manipulated.
+* `prevValue`  contains the message from the previous extension which was passed by `send(<value>)`
+* `i`  represent the position of the handler in the stack.
 
 ### Tracing capabilities
 Tracing in the style of [Google’s Dapper](http://static.googleusercontent.com/media/research.google.com/en//pubs/archive/36356.pdf)
