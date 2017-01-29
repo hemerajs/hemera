@@ -406,23 +406,18 @@ In any act or add you can access the property `this.request$` or `this.trace$` t
     result: 50
 ```
 
-#### Get-events
+#### Request/response life-cycle events
+
+Events:
+* `onClientPreRequest`,
+* `onClientPostRequest`
+* `onServerPreHandler`,
+* `onServerPreRequest`
+* `onServerPreResponse`
 
 ```js
-hemera.on('onPreRequest', (msg) => {
-  console.log(msg)
-})
-
-hemera.on('onPostRequest', (msg) => {
-  console.log(msg)
-})
-
-hemera.on('onPreProcessing', (msg) => {
-  console.log(msg)
-})
-
-hemera.on('onPreResponse', (msg) => {
-  console.log(msg)
+hemera.on('<event>', (ctx) => {
+  console.log(ctx)
 })
 ```
 
