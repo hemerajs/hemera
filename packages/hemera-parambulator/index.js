@@ -14,7 +14,7 @@ exports.plugin = function hemeraParambulator() {
     let currentPayloadValidator = plugin.options.payloadValidator
 
     if (currentPayloadValidator !== exports.attributes.name) {
-      return next.continue()
+      return next()
     }
 
     let pbSchema = schema.pb$ || schema
