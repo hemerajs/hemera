@@ -25,6 +25,10 @@ import Util from './util'
 import DefaultExtensions from './extensions'
 import DefaultEncoder from './encoder'
 import DefaultDecoder from './decoder'
+import ServerResponse from './serverResponse'
+import ServerRequest from './serverRequest'
+import ClientRequest from './clientRequest'
+import ClientResponse from './clientResponse'
 
 var defaultConfig: Config = {
   timeout: 2000,
@@ -64,7 +68,7 @@ class Hemera extends EventEmitter {
 
   _exposition: any;
   _extensions: {
-    [id: string]: Ext
+    [id: string]: Extension
   };
   _shouldCrash: boolean;
   _replyTo: string;
@@ -429,13 +433,13 @@ class Hemera extends EventEmitter {
    */
   _buildMessage() {
 
-    let result: Response = this._response
+    let result: ServerResponse = this._response
 
     let message: Message = {
       meta: this.meta$ || {},
       trace: this.trace$ || {},
       request: this.request$,
-      result: result.error ? null : result.value,
+      result: result.error ? null : result.payload,
       error: result.error ? Errio.toObject(result.error) : null
     }
 
@@ -484,7 +488,7 @@ class Hemera extends EventEmitter {
 
       if (value) {
 
-        self._response.value = value
+        self._response.payload = value
       }
 
       // create message payload
@@ -546,11 +550,11 @@ class Hemera extends EventEmitter {
     let handler = (request: any, replyTo: string) => {
 
       // create new execution context
-      let ctx = this.createContext()
+      let ctx: Hemera = this.createContext()
       ctx._shouldCrash = false
       ctx._replyTo = replyTo
-      ctx._request = request
-      ctx._response = {}
+      ctx._request = new ServerRequest(ctx, request)
+      ctx._response = new ServerResponse(ctx)
       ctx._pattern = {}
       ctx._actMeta = {}
 
@@ -569,13 +573,13 @@ class Hemera extends EventEmitter {
 
         if (value) {
 
-          ctx._response.value = value
+          ctx._response.payload = value
           return self.finish()
         }
 
         // find matched RPC
-        let requestType = self._request.value.request.type
-        self._pattern = self._request.value.pattern
+        let requestType = self._request.payload.request.type
+        self._pattern = self._request.payload.pattern
         self._actMeta = self._catalog.lookup(self._pattern)
 
         // check if a handler is registered with this pattern
@@ -594,7 +598,7 @@ class Hemera extends EventEmitter {
 
             if (value) {
 
-              ctx._response.value = value
+              ctx._response.payload = value
               return self.finish()
             }
 
@@ -605,13 +609,13 @@ class Hemera extends EventEmitter {
               // if request type is 'pubsub' we dont have to reply back
               if (requestType === 'pubsub') {
 
-                action(self._request.value.pattern)
+                action(self._request.payload.pattern)
 
                 return self.finish()
               }
 
               // execute RPC action
-              action(self._request.value.pattern, (err: Error, resp) => {
+              action(self._request.payload.pattern, (err: Error, resp) => {
 
                 if (err) {
 
@@ -623,7 +627,7 @@ class Hemera extends EventEmitter {
                 }
 
                 // assign action result
-                self._response.value = resp
+                self._response.payload = resp
 
                 self.finish()
               })
@@ -788,8 +792,8 @@ class Hemera extends EventEmitter {
     ctx._pattern = pattern
     ctx._prevContext = this
     ctx._cleanPattern = Util.cleanPattern(pattern)
-    ctx._response = {}
-    ctx._request = {}
+    ctx._response = new ClientResponse(ctx)
+    ctx._request = new ClientRequest(ctx)
 
     ctx._extensions.onClientPreRequest.invoke(ctx, function onPreRequest(err: Error) {
 
@@ -826,7 +830,8 @@ class Hemera extends EventEmitter {
         return
       }
 
-      ctx._request = m.value
+      ctx._request.payload = m.value
+      ctx._request.error = m.error
 
       // use simple publish mechanism instead to fire a request
       if (pattern.pubsub$ === true) {
@@ -835,13 +840,15 @@ class Hemera extends EventEmitter {
           self.log.info(Constants.PUB_CALLBACK_REDUNDANT)
         }
 
-        self.send(pattern.topic, self._request)
+        self.send(pattern.topic, self._request.payload)
       } else {
 
         // send request
-        let sid = self.sendRequest(pattern.topic, self._request, (response: any) => {
+        let sid = self.sendRequest(pattern.topic, self._request.payload, (response: any) => {
 
-          self._response = self._decoder.decode.call(ctx, response)
+          let res = self._decoder.decode.call(ctx, response)
+          self._response.payload = res.value
+          self._response.error = res.error
 
           try {
 
@@ -876,9 +883,9 @@ class Hemera extends EventEmitter {
 
               if (hasCallback) {
 
-                if (self._response.value.error) {
+                if (self._response.payload.error) {
 
-                  let responseError = Errio.fromObject(self._response.value.error)
+                  let responseError = Errio.fromObject(self._response.payload.error)
                   let responseErrorCause = responseError.cause
                   let error = new Errors.BusinessError(Constants.BUSINESS_ERROR, {
                     pattern: self._cleanPattern
@@ -889,7 +896,7 @@ class Hemera extends EventEmitter {
                   return cb.call(self, responseError)
                 }
 
-                cb.apply(self, [null, self._response.value.result])
+                cb.apply(self, [null, self._response.payload.result])
               }
 
             })

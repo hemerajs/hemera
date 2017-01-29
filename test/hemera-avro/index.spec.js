@@ -38,7 +38,8 @@ describe('Hemera-avro', function () {
     })
 
     const hemera = new Hemera(nats, {
-      crashOnFatal: false
+      crashOnFatal: false,
+      logLevel: 'info'
     })
 
     hemera.use(HemeraAvro)

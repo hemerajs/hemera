@@ -67,7 +67,7 @@ module.exports.onClientPostRequest = [function onClientPostRequest(next: Functio
 
   let ctx: Hemera = this
   let pattern: Pattern = this._pattern
-  let msg = ctx._response.value
+  let msg = ctx._response.payload
 
   // pass to act context
   ctx.request$ = msg.request || {}
@@ -87,7 +87,7 @@ module.exports.onServerPreRequest = [function onServerPreRequest(req: any, res: 
 
   let ctx: Hemera = this
 
-  let m = ctx._decoder.decode.call(ctx, ctx._request)
+  let m = ctx._decoder.decode.call(ctx, ctx._request.payload)
 
   if(m.error) {
 
@@ -104,7 +104,8 @@ module.exports.onServerPreRequest = [function onServerPreRequest(req: any, res: 
     ctx.request$ = msg.request || {}
   }
 
-  ctx._request = m
+  ctx._request.payload = m.value
+  ctx._request.error = m.error
 
   ctx.emit('onServerPreRequest', ctx)
 

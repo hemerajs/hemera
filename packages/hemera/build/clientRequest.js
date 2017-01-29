@@ -11,23 +11,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  */
 
 /**
- * @class Request
+ * @class ServerRequest
  */
-var Request = function () {
+var ClientRequest = function () {
 
   /**
-   * Creates an instance of Request.
+   * Creates an instance of ClientRequest.
    *
    * @param {Hemera} ctx
    *
-   * @memberOf Request
+   * @memberOf ClientRequest
    */
-  function Request(ctx, _request) {
-    _classCallCheck(this, Request);
+  function ClientRequest(ctx) {
+    _classCallCheck(this, ClientRequest);
 
     this._ctx = ctx;
     this._request = {};
-    this.payload = _request;
   }
 
   /**
@@ -35,11 +34,11 @@ var Request = function () {
    *
    * @readonly
    * @type {*}
-   * @memberOf Request
+   * @memberOf ClientRequest
    */
 
 
-  _createClass(Request, [{
+  _createClass(ClientRequest, [{
     key: "payload",
     get: function get() {
 
@@ -51,7 +50,7 @@ var Request = function () {
      *
      * @readonly
      * @type {*}
-     * @memberOf Request
+     * @memberOf ClientRequest
      */
     ,
 
@@ -60,7 +59,7 @@ var Request = function () {
      *
      *
      *
-     * @memberOf Response
+     * @memberOf ClientRequest
      */
     set: function set(value) {
 
@@ -71,7 +70,7 @@ var Request = function () {
      *
      *
      *
-     * @memberOf Response
+     * @memberOf ClientRequest
      */
 
   }, {
@@ -86,8 +85,8 @@ var Request = function () {
     }
   }]);
 
-  return Request;
+  return ClientRequest;
 }();
 
-module.exports = Request;
-//# sourceMappingURL=request.js.map
+module.exports = ClientRequest;
+//# sourceMappingURL=clientRequest.js.map

@@ -17,21 +17,21 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * @class Response
+ * @class ServerResponse
  */
-var Response = function () {
+var ServerResponse = function () {
 
   /**
-   * Creates an instance of Response.
+   * Creates an instance of ServerResponse.
    *
    * @param {Hemera} ctx
    *
    * @memberOf Response
    */
-  function Response(ctx) {
-    _classCallCheck(this, Response);
+  function ServerResponse(ctx) {
+    _classCallCheck(this, ServerResponse);
 
-    this.ctx = ctx;
+    this._ctx = ctx;
     this._response = {};
   }
 
@@ -40,11 +40,11 @@ var Response = function () {
    *
    * @param {*} value
    *
-   * @memberOf Response
+   * @memberOf ServerResponse
    */
 
 
-  _createClass(Response, [{
+  _createClass(ServerResponse, [{
     key: 'end',
     value: function end(value) {
 
@@ -66,7 +66,7 @@ var Response = function () {
      *
      * @param {*} value
      *
-     * @memberOf Response
+     * @memberOf ServerResponse
      */
 
   }, {
@@ -91,7 +91,7 @@ var Response = function () {
      *
      * @readonly
      * @type {*}
-     * @memberOf Response
+     * @memberOf ServerResponse
      */
 
   }, {
@@ -105,7 +105,7 @@ var Response = function () {
      *
      *
      *
-     * @memberOf Response
+     * @memberOf ServerResponse
      */
     ,
     set: function set(value) {
@@ -117,7 +117,7 @@ var Response = function () {
      *
      *
      *
-     * @memberOf Response
+     * @memberOf ServerResponse
      */
 
   }, {
@@ -132,7 +132,7 @@ var Response = function () {
      *
      * @readonly
      * @type {*}
-     * @memberOf Response
+     * @memberOf ServerResponse
      */
     ,
     get: function get() {
@@ -141,8 +141,8 @@ var Response = function () {
     }
   }]);
 
-  return Response;
+  return ServerResponse;
 }();
 
-module.exports = Response;
-//# sourceMappingURL=response.js.map
+module.exports = ServerResponse;
+//# sourceMappingURL=serverResponse.js.map

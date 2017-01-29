@@ -1,24 +1,14 @@
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /*!
  * hemera
  * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
  * MIT Licensed
  */
-
-var _response = require('./response');
-
-var _response2 = _interopRequireDefault(_response);
-
-var _request = require('./request');
-
-var _request2 = _interopRequireDefault(_request);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
  * @class Extension
@@ -42,7 +32,7 @@ var Extension = function () {
 
 
   _createClass(Extension, [{
-    key: 'add',
+    key: "add",
     value: function add(handler) {
 
       this._stack.push(handler);
@@ -57,7 +47,7 @@ var Extension = function () {
      */
 
   }, {
-    key: 'addRange',
+    key: "addRange",
     value: function addRange(handlers) {
 
       this._stack = this._stack.concat(handlers);
@@ -71,7 +61,7 @@ var Extension = function () {
      */
 
   }, {
-    key: 'invoke',
+    key: "invoke",
     value: function invoke(ctx, cb) {
       var _this = this;
 
@@ -79,14 +69,13 @@ var Extension = function () {
 
         if (_this._server) {
 
-          var response = new _response2.default(ctx);
+          var response = ctx._response;
           response.next = next;
-          var request = new _request2.default(ctx);
 
-          item.call(ctx, request, response, next, prevValue, i);
+          item.call(ctx, ctx._request, response, next, prevValue, i);
         } else {
 
-          item.call(ctx, next, prevValue, i);
+          item.call(ctx, next, i);
         }
       };
 
@@ -103,7 +92,7 @@ var Extension = function () {
      */
 
   }], [{
-    key: 'serial',
+    key: "serial",
     value: function serial(array, method, callback) {
 
       if (!array.length) {
