@@ -152,7 +152,7 @@ var Hemera = function (_EventEmitter) {
     };
 
     // contains the list of all registered plugins
-    // the core is a plugin to
+    // the core is also a plugin
     _this._plugins = {
       core: _this.plugin$.attributes
     };
@@ -490,6 +490,7 @@ var Hemera = function (_EventEmitter) {
             self.log.error(self._response.error);
           }
 
+        // reply value from extension
         if (value) {
 
           self._response.payload = value;
@@ -575,6 +576,7 @@ var Hemera = function (_EventEmitter) {
             return self.finish();
           }
 
+          // reply value from extension
           if (value) {
 
             ctx._response.payload = value;
@@ -600,6 +602,7 @@ var Hemera = function (_EventEmitter) {
                 return self.finish();
               }
 
+              // reply value from extension
               if (value) {
 
                 ctx._response.payload = value;

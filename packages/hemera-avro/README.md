@@ -73,17 +73,18 @@ hemera.ready(() => {
 #### Example with payload schema
 
 ```js
-const Avro = require('avsc')
-const type = Avro.parse({
+hemera.ready(() => {
+
+  let Avro = hemera.exposition['hemera-avro'].avro
+
+  const type = Avro.parse({
   name: 'Person',
   type: 'record',
   fields: [{
-    name: 'a',
-    type: 'int'
-  }]
-})
-
-hemera.ready(() => {
+      name: 'a',
+      type: 'int'
+    }]
+  })
 
   /**
    * Your Implementations

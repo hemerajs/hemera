@@ -1,5 +1,5 @@
 'use strict'
-// include only serialization support
+
 const Avro = require('avsc')
 const avroType = require('./avro')
 
@@ -8,6 +8,8 @@ exports.plugin = function hemeraAvro() {
   const hemera = this
 
   const type = Avro.parse(avroType)
+
+  hemera.expose('avro', Avro)
 
   hemera.ext('onClientPreRequest', function (next) {
 

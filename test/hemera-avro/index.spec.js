@@ -3,7 +3,6 @@
 const Hemera = require('../../packages/hemera'),
   HemeraAvro = require('../../packages/hemera-avro'),
   Util = require('../../packages/hemera/build/util'),
-  Avro = require('avsc'),
   Code = require('code'),
   Sinon = require('sinon'),
   HemeraTestsuite = require('hemera-testsuite')
@@ -122,6 +121,8 @@ describe('Hemera-avro', function () {
 
     hemera.use(HemeraAvro)
 
+    let Avro = hemera.exposition['hemera-avro'].avro
+
     const type = Avro.parse({
       name: 'SumResult',
       type: 'record',
@@ -172,6 +173,8 @@ describe('Hemera-avro', function () {
     })
 
     hemera.use(HemeraAvro)
+
+    let Avro = hemera.exposition['hemera-avro'].avro
 
     const type = Avro.parse({
       name: 'SumResult',

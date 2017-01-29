@@ -5,24 +5,24 @@ const nats = require('nats').connect({
   preserveBuffers: true
 })
 const HemeraAvro = require('./../packages/hemera-avro')
-const Avro = require('avsc')
 const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
 hemera.use(HemeraAvro)
 
-const type = Avro.parse({
-  name: 'Person',
-  type: 'record',
-  fields: [{
-    name: 'a',
-    type: 'int'
-  }]
-})
-
 hemera.ready(() => {
 
+  let Avro = hemera.exposition['hemera-avro'].avro
+
+  const type = Avro.parse({
+    name: 'Person',
+    type: 'record',
+    fields: [{
+      name: 'a',
+      type: 'int'
+    }]
+  })
   /**
    * Your Implementations
    */
@@ -32,7 +32,9 @@ hemera.ready(() => {
     avro$: type // how to encode the request
   }, (req, cb) => {
 
-    cb(null, { a: 1 })
+    cb(null, {
+      a: 1
+    })
   })
 
   hemera.act({
