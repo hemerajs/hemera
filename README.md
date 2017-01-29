@@ -352,7 +352,7 @@ You can extend custom behavior by extensions.
 `i` s the index of the handler
 
 ```js
-hemera.ext('<client-extensions>', function(next, i) {
+hemera.ext('<client-extension>', function(next, i) {
    
    let ctx = this
    next(<error>)
@@ -366,9 +366,9 @@ hemera.ext('<client-extensions>', function(next, i) {
 * `onServerPreResponse`
 
 ```js
-hemera.ext('<serverExtension>', function (req, res, next, prevValue, i) {
+hemera.ext('<server-extension>', function (req, res, next, prevValue, i) {
    
-   next()
+   next(<error>)
    //res.send(<payload>)
    //res.end(<payload>)
 })
