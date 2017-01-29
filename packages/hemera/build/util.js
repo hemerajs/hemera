@@ -29,67 +29,13 @@ var Util = function () {
   }
 
   _createClass(Util, null, [{
-    key: 'serial',
+    key: 'randomId',
 
-
-    /**
-     *
-     *
-     * @param {Array<Function>} array
-     * @param {Function} method
-     * @param {Function} callback
-     *
-     * @memberOf Util
-     */
-    value: function serial(array, method, callback) {
-
-      if (!array.length) {
-
-        callback();
-      } else {
-        (function () {
-
-          var i = 0;
-
-          var iterate = function iterate() {
-
-            var done = function done(err, value, pass) {
-
-              if (err) {
-
-                callback(err);
-              } else if (!pass && value) {
-
-                callback(null, value);
-              } else {
-
-                i = i + 1;
-
-                if (i < array.length) {
-
-                  iterate();
-                } else {
-
-                  callback(null, value);
-                }
-              }
-            };
-
-            method(array[i], done, i);
-          };
-
-          iterate();
-        })();
-      }
-    }
     /**
      * @returns
      *
      * @memberOf Util
      */
-
-  }, {
-    key: 'randomId',
     value: function randomId() {
 
       return _crypto2.default.randomBytes(16).toString('hex');

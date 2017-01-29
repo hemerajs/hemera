@@ -2080,7 +2080,7 @@ describe('Extension error', function () {
 
         let hemera = this
 
-        hemera.ext('onServerPreRequest', function (next) {
+        hemera.ext('onServerPreRequest', function (req, res, next) {
 
           next(new Error('test'))
         })
@@ -2137,7 +2137,7 @@ describe('Extension error', function () {
 
         let hemera = this
 
-        hemera.ext('onServerPreResponse', function (next) {
+        hemera.ext('onServerPreResponse', function (req, res, next) {
 
           next(new Error('test'))
         })
@@ -2199,29 +2199,29 @@ describe('Extension reply', function () {
     server.kill()
   })
 
-  it('Should reply the response', function (done) {
+  it('Should be bale to reply an error', function (done) {
 
-    let ext1 = Sinon.spy();
-    let ext2 = Sinon.spy();
-    
+    let ext1 = Sinon.spy()
+    let ext2 = Sinon.spy()
+
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      logLevel: 'info'
-    })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
 
-      hemera.ext('onServerPreHandler', function (next, i) {
-        
+      hemera.ext('onServerPreHandler', function (req, res, next) {
+
         ext1()
-        next(null, { msg: 'unauthorized' })
+        res.send(new Error('test'))
       })
 
-      hemera.ext('onServerPreHandler', function (next, i) {
-        
+      hemera.ext('onServerPreHandler', function (req, res, next) {
+
         ext2()
-        next(null, { msg: 'authorized' })
+        res.send({
+          msg: 'authorized'
+        })
       })
 
       hemera.add({
@@ -2238,10 +2238,260 @@ describe('Extension reply', function () {
         msg: 'Hi!'
       }, (err, resp) => {
 
-        expect(resp).to.be.equals({ msg: 'unauthorized' })
+        expect(ext1.called).to.be.equals(true)
+        expect(ext2.called).to.be.equals(false)
+        expect(err).to.be.exists()
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('end', function (done) {
+
+    let ext1 = Sinon.spy()
+    let ext2 = Sinon.spy()
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+
+      hemera.ext('onServerPreHandler', function (req, res, next) {
+
+        ext1()
+        res.end({
+          msg: 'unauthorized'
+        })
+      })
+
+      hemera.ext('onServerPreHandler', function (req, res, next) {
+
+        ext2()
+        res.send({
+          msg: 'authorized'
+        })
+      })
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+        cb()
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+
+        expect(resp).to.be.equals({
+          msg: 'unauthorized'
+        })
         expect(ext1.called).to.be.equals(true)
         expect(ext2.called).to.be.equals(false)
         expect(err).to.be.not.exists()
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('send and passing value to the next extension point', function (done) {
+
+    let ext1 = Sinon.spy()
+    let ext2 = Sinon.spy()
+    let ext3 = Sinon.spy()
+    let ext4 = Sinon.spy()
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+
+      hemera.ext('onServerPreHandler', function (req, res, next) {
+
+        ext1()
+        res.send({
+          msg: 'a'
+        })
+      })
+
+      hemera.ext('onServerPreHandler', function (req, res, next, prevValue) {
+
+        ext2()
+        res.send({
+          msg: 'b' + prevValue.msg
+        })
+      })
+
+      hemera.ext('onServerPreHandler', function (req, res, next, prevValue) {
+
+        ext3()
+        res.send({
+          msg: 'c' + prevValue.msg
+        })
+      })
+
+      hemera.ext('onServerPreHandler', function (req, res, next, prevValue) {
+
+        ext4()
+
+        expect(prevValue).to.be.equals({
+          msg: 'cba'
+        })
+
+        res.end({
+          msg: 'authorized'
+        })
+      })
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+        cb()
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+
+        expect(resp).to.be.equals({
+          msg: 'authorized'
+        })
+        expect(ext1.called).to.be.equals(true)
+        expect(ext2.called).to.be.equals(true)
+        expect(ext3.called).to.be.equals(true)
+        expect(ext4.called).to.be.equals(true)
+        expect(err).to.be.not.exists()
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('send', function (done) {
+
+    let ext1 = Sinon.spy()
+    let ext2 = Sinon.spy()
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+
+      hemera.ext('onServerPreHandler', function (req, res, next) {
+
+        ext1()
+        res.send({
+          msg: 'unauthorized'
+        })
+      })
+
+      hemera.ext('onServerPreHandler', function (req, res, next) {
+
+        ext2()
+
+        res.end({
+          msg: 'authorized'
+        })
+      })
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+        cb()
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+
+        expect(resp).to.be.equals({
+          msg: 'authorized'
+        })
+        expect(ext1.called).to.be.equals(true)
+        expect(ext2.called).to.be.equals(true)
+        expect(err).to.be.not.exists()
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to access request and response in server extensions', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let ext1 = Sinon.spy()
+    let ext2 = Sinon.spy()
+    let ext3 = Sinon.spy()
+
+    hemera.ready(() => {
+
+      hemera.ext('onServerPreHandler', function (req, res, next) {
+
+        expect(req.payload).to.be.an.object()
+        expect(req.error).to.be.a.null()
+        expect(res.payload).to.be.an.undefined()
+        ext1()
+        next()
+      })
+
+      hemera.ext('onServerPreRequest', function (req, res, next) {
+
+        expect(req.payload).to.be.an.object()
+        expect(req.error).to.be.a.null()
+        expect(res.payload).to.be.an.undefined()
+        ext2()
+        next()
+      })
+
+      hemera.ext('onServerPreResponse', function (req, res, next) {
+
+        expect(req.payload).to.be.an.object()
+        expect(req.error).to.be.a.null()
+        expect(res.payload).to.be.an.object()
+        ext3()
+        next()
+      })
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+
+        cb(null, {
+          foo: 'bar'
+        })
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+
+        expect(err).to.be.not.exists()
+        expect(ext1.called).to.be.equals(true)
+        expect(ext2.called).to.be.equals(true)
+        expect(ext3.called).to.be.equals(true)
         hemera.close()
         done()
       })
@@ -2252,25 +2502,25 @@ describe('Extension reply', function () {
 
     let ext1 = Sinon.spy();
     let ext2 = Sinon.spy();
-    
+
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      logLevel: 'info'
-    })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
 
-      hemera.ext('onServerPreHandler', function (next, i) {
-        
+      hemera.ext('onServerPreHandler', function (req, res, next) {
+
         ext1()
-        next(null, { msg: 'unauthorized' }, true)
+        next()
       })
 
-      hemera.ext('onServerPreHandler', function (next, i) {
-        
+      hemera.ext('onServerPreHandler', function (req, res, next) {
+
         ext2()
-        next(null, { msg: 'authorized' })
+        res.send({
+          msg: 'authorized'
+        })
       })
 
       hemera.add({
@@ -2287,7 +2537,9 @@ describe('Extension reply', function () {
         msg: 'Hi!'
       }, (err, resp) => {
 
-        expect(resp).to.be.equals({ msg: 'authorized' })
+        expect(resp).to.be.equals({
+          msg: 'authorized'
+        })
         expect(ext1.called).to.be.equals(true)
         expect(ext2.called).to.be.equals(true)
         expect(err).to.be.not.exists()

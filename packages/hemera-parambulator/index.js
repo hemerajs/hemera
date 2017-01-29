@@ -6,11 +6,11 @@ exports.plugin = function hemeraParambulator() {
 
   var hemera = this
 
-  hemera.ext('onServerPreHandler', function (next) {
+  hemera.ext('onServerPreHandler', function (req, res, next) {
 
     let plugin = this._actMeta.plugin
     let schema = this._actMeta.schema
-    let pattern = this._request.value.pattern
+    let pattern = req.payload.pattern
     let currentPayloadValidator = plugin.options.payloadValidator
 
     if (currentPayloadValidator !== exports.attributes.name) {
@@ -22,15 +22,14 @@ exports.plugin = function hemeraParambulator() {
     let paramcheck = Parambulator(pbSchema)
     paramcheck.validate(pattern, (err) => {
 
-      next(err)
+      res.send(err)
     })
 
   })
 
 }
 
-exports.options = {
-}
+exports.options = {}
 
 exports.attributes = {
   name: 'hemera-parambulator'

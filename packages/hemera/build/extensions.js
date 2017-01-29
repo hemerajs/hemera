@@ -90,7 +90,7 @@ module.exports.onClientPostRequest = [function onClientPostRequest(next) {
   next();
 }];
 
-module.exports.onServerPreRequest = [function onServerPreRequest(next) {
+module.exports.onServerPreRequest = [function onServerPreRequest(req, res, next) {
 
   var ctx = this;
 
@@ -98,7 +98,7 @@ module.exports.onServerPreRequest = [function onServerPreRequest(next) {
 
   if (m.error) {
 
-    return next(m.error);
+    return res.send(m.error);
   }
 
   var msg = m.value;
@@ -118,7 +118,7 @@ module.exports.onServerPreRequest = [function onServerPreRequest(next) {
   next();
 }];
 
-module.exports.onServerPreHandler = [function onServerPreHandler(next, i) {
+module.exports.onServerPreHandler = [function onServerPreHandler(req, res, next) {
 
   var ctx = this;
 
@@ -127,7 +127,7 @@ module.exports.onServerPreHandler = [function onServerPreHandler(next, i) {
   next();
 }];
 
-module.exports.onServerPreResponse = [function onServerPreResponse(next) {
+module.exports.onServerPreResponse = [function onServerPreResponse(req, res, next) {
 
   var ctx = this;
 
