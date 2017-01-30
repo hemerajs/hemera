@@ -50,6 +50,10 @@ var _util = require('./util');
 
 var _util2 = _interopRequireDefault(_util);
 
+var _transport = require('./transport');
+
+var _transport2 = _interopRequireDefault(_transport);
+
 var _extensions = require('./extensions');
 
 var _extensions2 = _interopRequireDefault(_extensions);
@@ -130,7 +134,7 @@ var Hemera = function (_EventEmitter) {
     _this._config = _hoek2.default.applyToDefaults(defaultConfig, params || {});
     _this._catalog = (0, _bloomrun2.default)();
     _this._heavy = new _heavy2.default(_this._config.load);
-    _this._transport = transport;
+    _this._transport = new _transport2.default({ transport });
     _this._topics = {};
     _this._exposition = {};
 
@@ -382,7 +386,7 @@ var Hemera = function (_EventEmitter) {
     value: function ready(cb) {
       var _this2 = this;
 
-      this._transport.on('connect', function () {
+      this._transport.driver.on('connect', function () {
 
         _this2.log.info(_constants2.default.TRANSPORT_CONNECTED);
 
@@ -390,49 +394,6 @@ var Hemera = function (_EventEmitter) {
           cb.call(_this2);
         }
       });
-    }
-
-    /**
-     *
-     * @returns
-     *
-     * @memberOf Hemera
-     */
-
-  }, {
-    key: 'timeout',
-    value: function timeout() {
-
-      return this.transport.timeout.apply(this.transport, arguments);
-    }
-    /**
-     * Publishing with the NATS driver
-     *
-     * @returns
-     *
-     * @memberOf Hemera
-     */
-
-  }, {
-    key: 'send',
-    value: function send() {
-
-      return this.transport.publish.apply(this.transport, arguments);
-    }
-
-    /**
-     * Send request with the NATS driver
-     *
-     * @returns
-     *
-     * @memberOf Hemera
-     */
-
-  }, {
-    key: 'sendRequest',
-    value: function sendRequest() {
-
-      return this.transport.request.apply(this.transport, arguments);
     }
 
     /**
@@ -517,7 +478,7 @@ var Hemera = function (_EventEmitter) {
           if (self._replyTo) {
 
             // send error back to callee
-            return self.send(self._replyTo, self._message, function () {
+            return self._transport.send(self._replyTo, self._message, function () {
 
               // let it crash
               if (self._config.crashOnFatal) {
@@ -534,7 +495,7 @@ var Hemera = function (_EventEmitter) {
         // reply only when we have an inbox
         if (self._replyTo) {
 
-          return this.send(this._replyTo, self._message);
+          return this._transport.send(this._replyTo, self._message);
         }
       });
     }
@@ -680,13 +641,13 @@ var Hemera = function (_EventEmitter) {
       // standard pubsub with optional max proceed messages
       if (subToMany) {
 
-        self.transport.subscribe(topic, {
+        self._transport.subscribe(topic, {
           max: maxMessages
         }, handler);
       } else {
 
         // queue group names allow load balancing of services
-        self.transport.subscribe(topic, {
+        self._transport.subscribe(topic, {
           'queue': 'queue.' + topic,
           max: maxMessages
         }, handler);
@@ -854,11 +815,11 @@ var Hemera = function (_EventEmitter) {
             self.log.info(_constants2.default.PUB_CALLBACK_REDUNDANT);
           }
 
-          self.send(pattern.topic, self._request.payload);
+          self._transport.send(pattern.topic, self._request.payload);
         } else {
 
           // send request
-          var sid = self.sendRequest(pattern.topic, self._request.payload, function (response) {
+          var sid = self._transport.sendRequest(pattern.topic, self._request.payload, function (response) {
 
             var res = self._decoder.decode.call(ctx, response);
             self._response.payload = res.value;
@@ -954,7 +915,7 @@ var Hemera = function (_EventEmitter) {
       var _this4 = this;
 
       // handle timeout
-      this.timeout(sid, pattern.timeout$ || this._config.timeout, 1, function () {
+      this._transport.timeout(sid, pattern.timeout$ || this._config.timeout, 1, function () {
 
         var hasCallback = _lodash2.default.isFunction(cb);
 
@@ -1034,7 +995,7 @@ var Hemera = function (_EventEmitter) {
 
       this._heavy.stop();
 
-      return this.transport.close();
+      return this._transport.close();
     }
   }, {
     key: 'plugins',
@@ -1091,7 +1052,7 @@ var Hemera = function (_EventEmitter) {
     key: 'transport',
     get: function get() {
 
-      return this._transport;
+      return this._transport.driver;
     }
 
     /**

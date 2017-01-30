@@ -23,6 +23,7 @@ import Errors from './errors'
 import Constants from './constants'
 import Extension from './extension'
 import Util from './util'
+import NatsTransport from './transport'
 import DefaultExtensions from './extensions'
 import DefaultEncoder from './encoder'
 import DefaultDecoder from './decoder'
@@ -100,7 +101,7 @@ class Hemera extends EventEmitter {
     this._config = Hoek.applyToDefaults(defaultConfig, params || {})
     this._catalog = Bloomrun()
     this._heavy = new Heavy(this._config.load)
-    this._transport = transport
+    this._transport = new NatsTransport({ transport })
     this._topics = {}
     this._exposition = {}
 
@@ -272,7 +273,7 @@ class Hemera extends EventEmitter {
    */
   get transport(): Nats {
 
-    return this._transport
+    return this._transport.driver
   }
 
   /**
@@ -388,7 +389,7 @@ class Hemera extends EventEmitter {
    */
   ready(cb: Function) {
 
-    this._transport.on('connect', () => {
+    this._transport.driver.on('connect', () => {
 
       this.log.info(Constants.TRANSPORT_CONNECTED)
 
@@ -397,40 +398,6 @@ class Hemera extends EventEmitter {
       }
 
     })
-  }
-
-  /**
-   *
-   * @returns
-   *
-   * @memberOf Hemera
-   */
-  timeout() {
-
-    return this.transport.timeout.apply(this.transport, arguments)
-  }
-  /**
-   * Publishing with the NATS driver
-   *
-   * @returns
-   *
-   * @memberOf Hemera
-   */
-  send() {
-
-    return this.transport.publish.apply(this.transport, arguments)
-  }
-
-  /**
-   * Send request with the NATS driver
-   *
-   * @returns
-   *
-   * @memberOf Hemera
-   */
-  sendRequest() {
-
-    return this.transport.request.apply(this.transport, arguments)
   }
 
   /**
@@ -510,7 +477,7 @@ class Hemera extends EventEmitter {
         if (self._replyTo) {
 
           // send error back to callee
-          return self.send(self._replyTo, self._message, () => {
+          return self._transport.send(self._replyTo, self._message, () => {
 
             // let it crash
             if (self._config.crashOnFatal) {
@@ -529,7 +496,7 @@ class Hemera extends EventEmitter {
       // reply only when we have an inbox
       if (self._replyTo) {
 
-        return this.send(this._replyTo, self._message)
+        return this._transport.send(this._replyTo, self._message)
       }
 
     })
@@ -678,13 +645,13 @@ class Hemera extends EventEmitter {
     // standard pubsub with optional max proceed messages
     if (subToMany) {
 
-      self.transport.subscribe(topic, {
+      self._transport.subscribe(topic, {
         max: maxMessages
       }, handler)
     } else {
 
       // queue group names allow load balancing of services
-      self.transport.subscribe(topic, {
+      self._transport.subscribe(topic, {
         'queue': 'queue.' + topic,
         max: maxMessages
       }, handler)
@@ -851,11 +818,11 @@ class Hemera extends EventEmitter {
           self.log.info(Constants.PUB_CALLBACK_REDUNDANT)
         }
 
-        self.send(pattern.topic, self._request.payload)
+        self._transport.send(pattern.topic, self._request.payload)
       } else {
 
         // send request
-        let sid = self.sendRequest(pattern.topic, self._request.payload, (response: any) => {
+        let sid = self._transport.sendRequest(pattern.topic, self._request.payload, (response: any) => {
 
           let res = self._decoder.decode.call(ctx, response)
           self._response.payload = res.value
@@ -953,7 +920,7 @@ class Hemera extends EventEmitter {
   }, cb: Function) {
 
     // handle timeout
-    this.timeout(sid, pattern.timeout$ || this._config.timeout, 1, () => {
+    this._transport.timeout(sid, pattern.timeout$ || this._config.timeout, 1, () => {
 
       let hasCallback = _.isFunction(cb)
 
@@ -1024,7 +991,7 @@ class Hemera extends EventEmitter {
 
     this._heavy.stop()
 
-    return this.transport.close()
+    return this._transport.close()
   }
 }
 
