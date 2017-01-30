@@ -45,7 +45,7 @@ exports.plugin = function hemeraArangoStore(options) {
    * Create a new database
    */
   hemera.add({
-    topic: 'arango-store',
+    topic,
     cmd: 'createDatabase'
   }, function (req, cb) {
 
@@ -67,7 +67,7 @@ exports.plugin = function hemeraArangoStore(options) {
    * Execute a transaction
    */
   hemera.add({
-    topic: 'arango-store',
+    topic,
     cmd: 'executeTransaction'
   }, function (req, cb) {
 
@@ -91,7 +91,7 @@ exports.plugin = function hemeraArangoStore(options) {
    * Create a new collection
    */
   hemera.add({
-    topic: 'arango-store',
+    topic,
     cmd: 'createCollection'
   }, function (req, cb) {
 
@@ -121,7 +121,7 @@ exports.plugin = function hemeraArangoStore(options) {
    * Execute a AQL query and return the first result
    */
   hemera.add({
-    topic: 'arango-store',
+    topic,
     type: 'one',
     cmd: 'executeAqlQuery'
   }, function (req, cb) {
@@ -144,7 +144,7 @@ exports.plugin = function hemeraArangoStore(options) {
    * Execute a AQL query and return all results
    */
   hemera.add({
-    topic: 'arango-store',
+    topic,
     type: 'all',
     cmd: 'executeAqlQuery'
   }, function (req, cb) {

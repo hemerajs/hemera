@@ -17,6 +17,7 @@ import Hoek from 'hoek'
 import Heavy from 'heavy'
 import _ from 'lodash'
 import Pino from 'pino'
+import OnExit from 'signal-exit'
 
 import Errors from './errors'
 import Constants from './constants'
@@ -179,6 +180,13 @@ class Hemera extends EventEmitter {
         level: this._config.logLevel
       }, pretty)
     }
+
+    // no matter how a process exits log and fire event
+    OnExit((code, signal) => {
+      this.log.fatal({ code, signal }, 'process exited')
+      this.emit('teardown', { code, signal })
+      this.close()
+    })
   }
 
   /**

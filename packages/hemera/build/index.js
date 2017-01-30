@@ -30,6 +30,10 @@ var _pino = require('pino');
 
 var _pino2 = _interopRequireDefault(_pino);
 
+var _signalExit = require('signal-exit');
+
+var _signalExit2 = _interopRequireDefault(_signalExit);
+
 var _errors = require('./errors');
 
 var _errors2 = _interopRequireDefault(_errors);
@@ -206,6 +210,13 @@ var Hemera = function (_EventEmitter) {
         level: _this._config.logLevel
       }, pretty);
     }
+
+    // no matter how a process exits log and fire event
+    (0, _signalExit2.default)(function (code, signal) {
+      _this.log.fatal({ code, signal }, 'process exited');
+      _this.emit('teardown', { code, signal });
+      _this.close();
+    });
     return _this;
   }
 

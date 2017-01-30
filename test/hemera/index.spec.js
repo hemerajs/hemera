@@ -1324,7 +1324,8 @@ describe('Logging interface', function () {
     const nats = require('nats').connect(authUrl)
 
     let logger = {
-      info: function () {}
+      info: function () {},
+      fatal: function () {}
     }
 
     var logSpy = Sinon.spy(logger, 'info')

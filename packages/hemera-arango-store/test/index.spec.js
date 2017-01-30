@@ -17,11 +17,7 @@ describe('Hemera-arango-store', function () {
   let arangoOptions = {
     url: 'http://root:@127.0.0.1:8529/'
   }
-  let hemera
-  let aql
-  let arangodb
-  let testDatabase = 'test'
-  let testCollection = 'testColl'
+  let hemera, aql, arangodb, testDatabase = 'test', testCollection = 'testColl'
 
   function clearArangodb() {
 
