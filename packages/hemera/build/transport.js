@@ -104,9 +104,9 @@ var NatsTransport = function () {
 
   }, {
     key: "sendRequest",
-    value: function sendRequest(a, b, c) {
+    value: function sendRequest() {
 
-      return this.nc.request(a, b, c);
+      return this.nc.request.apply(this.nc, arguments);
     }
   }, {
     key: "driver",

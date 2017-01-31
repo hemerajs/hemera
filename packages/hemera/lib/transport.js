@@ -87,7 +87,7 @@ class NatsTransport {
    */
   sendRequest() {
 
-    return this.nc.request.ca(this.nc, arguments)
+    return this.nc.request.apply(this.nc, arguments)
   }
 }
 
