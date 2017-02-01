@@ -62,7 +62,7 @@ function decirc(val, k, stack, parent) {
   } else if (val instanceof Circle) {
 
     val.count++
-      return
+    return
   } else if (parent) {
 
     if (~stack.indexOf(val)) {
