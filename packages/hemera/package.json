@@ -50,7 +50,8 @@
     "lodash": "4.17.x",
     "pino": "3.0.x",
     "signal-exit": "3.0.x",
-    "super-error": "2.0.x"
+    "super-error": "2.0.x",
+    "tinysonic": "1.1.x"
   },
   "devDependencies": {
     "babel-cli": "^6.22.2",

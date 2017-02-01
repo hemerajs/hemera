@@ -22,10 +22,9 @@ var ClientRequest = function () {
    *
    * @memberOf ClientRequest
    */
-  function ClientRequest(ctx) {
+  function ClientRequest() {
     _classCallCheck(this, ClientRequest);
 
-    this._ctx = ctx;
     this._request = {};
   }
 

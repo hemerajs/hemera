@@ -11,20 +11,17 @@
  */
 class ServerRequest {
 
-  _ctx: Hemera;
   _request: any;
 
   /**
    * Creates an instance of ServerRequest.
    *
-   * @param {Hemera} ctx
    * @param {*} payload
    *
    * @memberOf ServerRequest
    */
-  constructor(ctx: Hemera, payload: any) {
+  constructor(payload: any) {
 
-    this._ctx = ctx
     this._request = {}
     this.payload = payload
   }

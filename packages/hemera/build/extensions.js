@@ -63,7 +63,7 @@ module.exports.onClientPreRequest = [function onClientPreRequest(next) {
 
   ctx._message = message;
 
-  ctx.log.info(pattern, `ACT_OUTBOUND - ID:${String(ctx._message.request.id)}`);
+  ctx.log.info({ outbound: ctx });
 
   ctx.emit('onClientPreRequest', ctx);
 
@@ -83,7 +83,7 @@ module.exports.onClientPostRequest = [function onClientPostRequest(next) {
   ctx.trace$ = msg.trace || {};
   ctx.meta$ = msg.meta || {};
 
-  ctx.log.info(`ACT_INBOUND - ID:${ctx.request$.id} (${ctx.request$.duration / 1000000}ms)`);
+  ctx.log.info({ inbound: ctx });
 
   ctx.emit('onClientPostRequest', ctx);
 

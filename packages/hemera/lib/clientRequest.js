@@ -11,7 +11,6 @@
  */
 class ClientRequest {
 
-  _ctx: Hemera;
   _request: any;
 
   /**
@@ -21,9 +20,8 @@ class ClientRequest {
    *
    * @memberOf ClientRequest
    */
-  constructor(ctx: Hemera) {
+  constructor() {
 
-    this._ctx = ctx
     this._request = {}
   }
 

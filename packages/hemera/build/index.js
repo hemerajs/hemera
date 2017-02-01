@@ -34,6 +34,10 @@ var _signalExit = require('signal-exit');
 
 var _signalExit2 = _interopRequireDefault(_signalExit);
 
+var _tinysonic = require('tinysonic');
+
+var _tinysonic2 = _interopRequireDefault(_tinysonic);
+
 var _errors = require('./errors');
 
 var _errors2 = _interopRequireDefault(_errors);
@@ -81,6 +85,10 @@ var _clientRequest2 = _interopRequireDefault(_clientRequest);
 var _clientResponse = require('./clientResponse');
 
 var _clientResponse2 = _interopRequireDefault(_clientResponse);
+
+var _serializer = require('./serializer');
+
+var _serializer2 = _interopRequireDefault(_serializer);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -132,9 +140,11 @@ var Hemera = function (_EventEmitter) {
     var _this = _possibleConstructorReturn(this, (Hemera.__proto__ || Object.getPrototypeOf(Hemera)).call(this));
 
     _this._config = _hoek2.default.applyToDefaults(defaultConfig, params || {});
-    _this._catalog = (0, _bloomrun2.default)();
+    _this._router = (0, _bloomrun2.default)();
     _this._heavy = new _heavy2.default(_this._config.load);
-    _this._transport = new _transport2.default({ transport });
+    _this._transport = new _transport2.default({
+      transport
+    });
     _this._topics = {};
     _this._exposition = {};
 
@@ -210,15 +220,22 @@ var Hemera = function (_EventEmitter) {
 
       _this.log = (0, _pino2.default)({
         name: _this._config.name,
-        safe: true,
-        level: _this._config.logLevel
+        safe: true, //avoid error caused by circular references
+        level: _this._config.logLevel,
+        serializers: _serializer2.default
       }, pretty);
     }
 
     // no matter how a process exits log and fire event
     (0, _signalExit2.default)(function (code, signal) {
-      _this.log.fatal({ code, signal }, 'process exited');
-      _this.emit('teardown', { code, signal });
+      _this.log.fatal({
+        code,
+        signal
+      }, 'process exited');
+      _this.emit('teardown', {
+        code,
+        signal
+      });
       _this.close();
     });
     return _this;
@@ -530,8 +547,8 @@ var Hemera = function (_EventEmitter) {
         var ctx = _this3.createContext();
         ctx._shouldCrash = false;
         ctx._replyTo = replyTo;
-        ctx._request = new _serverRequest2.default(ctx, request);
-        ctx._response = new _serverResponse2.default(ctx);
+        ctx._request = new _serverRequest2.default(request);
+        ctx._response = new _serverResponse2.default();
         ctx._pattern = {};
         ctx._actMeta = {};
 
@@ -558,7 +575,7 @@ var Hemera = function (_EventEmitter) {
           // find matched RPC
           var requestType = self._request.payload.request.type;
           self._pattern = self._request.payload.pattern;
-          self._actMeta = self._catalog.lookup(self._pattern);
+          self._actMeta = self._router.lookup(self._pattern);
 
           // check if a handler is registered with this pattern
           if (self._actMeta) {
@@ -671,6 +688,12 @@ var Hemera = function (_EventEmitter) {
 
       var hasCallback = _lodash2.default.isFunction(cb);
 
+      // check for use quick syntax for JSON objects
+      if (_lodash2.default.isString(pattern)) {
+
+        pattern = (0, _tinysonic2.default)(pattern);
+      }
+
       // topic is needed to subscribe on a subject in NATS
       if (!pattern.topic) {
 
@@ -716,7 +739,7 @@ var Hemera = function (_EventEmitter) {
         plugin: this.plugin$
       };
 
-      var handler = this._catalog.lookup(origPattern);
+      var handler = this._router.lookup(origPattern);
 
       // check if pattern is already registered
       if (handler) {
@@ -730,7 +753,7 @@ var Hemera = function (_EventEmitter) {
       }
 
       // add to bloomrun
-      this._catalog.add(origPattern, actMeta);
+      this._router.add(origPattern, actMeta);
 
       this.log.info(origPattern, _constants2.default.ADD_ADDED);
 
@@ -751,6 +774,12 @@ var Hemera = function (_EventEmitter) {
     key: 'act',
     value: function act(pattern, cb) {
 
+      // check for use quick syntax for JSON objects
+      if (_lodash2.default.isString(pattern)) {
+
+        pattern = (0, _tinysonic2.default)(pattern);
+      }
+
       // topic is needed to subscribe on a subject in NATS
       if (!pattern.topic) {
 
@@ -767,8 +796,8 @@ var Hemera = function (_EventEmitter) {
       ctx._pattern = pattern;
       ctx._prevContext = this;
       ctx._cleanPattern = _util2.default.cleanPattern(pattern);
-      ctx._response = new _clientResponse2.default(ctx);
-      ctx._request = new _clientRequest2.default(ctx);
+      ctx._response = new _clientResponse2.default();
+      ctx._request = new _clientRequest2.default();
 
       ctx._extensions.onClientPreRequest.invoke(ctx, function onPreRequest(err) {
 
@@ -978,7 +1007,7 @@ var Hemera = function (_EventEmitter) {
     key: 'list',
     value: function list(params) {
 
-      return this._catalog.list(params);
+      return this._router.list(params);
     }
 
     /**
@@ -1013,10 +1042,10 @@ var Hemera = function (_EventEmitter) {
      */
 
   }, {
-    key: 'catalog',
+    key: 'router',
     get: function get() {
 
-      return this._catalog;
+      return this._router;
     }
 
     /**

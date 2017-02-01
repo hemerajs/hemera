@@ -28,10 +28,9 @@ var ServerResponse = function () {
    *
    * @memberOf ServerResponse
    */
-  function ServerResponse(ctx) {
+  function ServerResponse() {
     _classCallCheck(this, ServerResponse);
 
-    this._ctx = ctx;
     this._response = {};
   }
 

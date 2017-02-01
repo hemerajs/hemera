@@ -18,15 +18,13 @@ var ServerRequest = function () {
   /**
    * Creates an instance of ServerRequest.
    *
-   * @param {Hemera} ctx
    * @param {*} payload
    *
    * @memberOf ServerRequest
    */
-  function ServerRequest(ctx, payload) {
+  function ServerRequest(payload) {
     _classCallCheck(this, ServerRequest);
 
-    this._ctx = ctx;
     this._request = {};
     this.payload = payload;
   }

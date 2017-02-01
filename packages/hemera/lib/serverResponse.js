@@ -14,7 +14,6 @@ import _ from 'lodash'
 class ServerResponse {
 
   next: Function;
-  _ctx: Hemera;
   _response: any;
 
   /**
@@ -24,9 +23,8 @@ class ServerResponse {
    *
    * @memberOf ServerResponse
    */
-  constructor(ctx: Hemera) {
+  constructor() {
 
-    this._ctx = ctx
     this._response = {}
   }
 

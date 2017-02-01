@@ -18,6 +18,7 @@ import Heavy from 'heavy'
 import _ from 'lodash'
 import Pino from 'pino'
 import OnExit from 'signal-exit'
+import TinySonic from 'tinysonic'
 
 import Errors from './errors'
 import Constants from './constants'
@@ -31,6 +32,7 @@ import ServerResponse from './serverResponse'
 import ServerRequest from './serverRequest'
 import ClientRequest from './clientRequest'
 import ClientResponse from './clientResponse'
+import Serializers from './serializer'
 
 var defaultConfig: Config = {
   timeout: 2000,
@@ -58,9 +60,9 @@ class Hemera extends EventEmitter {
   log: any;
 
   _config: Config;
-  _catalog: any;
+  _router: any;
   _heavy: any;
-  _transport: Nats;
+  _transport: NatsTransport;
   _topics: {
     [id: string]: boolean
   };
@@ -99,9 +101,11 @@ class Hemera extends EventEmitter {
     super()
 
     this._config = Hoek.applyToDefaults(defaultConfig, params || {})
-    this._catalog = Bloomrun()
+    this._router = Bloomrun()
     this._heavy = new Heavy(this._config.load)
-    this._transport = new NatsTransport({ transport })
+    this._transport = new NatsTransport({
+      transport
+    })
     this._topics = {}
     this._exposition = {}
 
@@ -177,15 +181,22 @@ class Hemera extends EventEmitter {
 
       this.log = Pino({
         name: this._config.name,
-        safe: true,
-        level: this._config.logLevel
+        safe: true, //avoid error caused by circular references
+        level: this._config.logLevel,
+        serializers: Serializers
       }, pretty)
     }
 
     // no matter how a process exits log and fire event
     OnExit((code, signal) => {
-      this.log.fatal({ code, signal }, 'process exited')
-      this.emit('teardown', { code, signal })
+      this.log.fatal({
+        code,
+        signal
+      }, 'process exited')
+      this.emit('teardown', {
+        code,
+        signal
+      })
       this.close()
     })
   }
@@ -211,9 +222,9 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  get catalog(): any {
+  get router(): any {
 
-    return this._catalog
+    return this._router
   }
 
   /**
@@ -529,8 +540,8 @@ class Hemera extends EventEmitter {
       let ctx: Hemera = this.createContext()
       ctx._shouldCrash = false
       ctx._replyTo = replyTo
-      ctx._request = new ServerRequest(ctx, request)
-      ctx._response = new ServerResponse(ctx)
+      ctx._request = new ServerRequest(request)
+      ctx._response = new ServerResponse()
       ctx._pattern = {}
       ctx._actMeta = {}
 
@@ -557,7 +568,7 @@ class Hemera extends EventEmitter {
         // find matched RPC
         let requestType = self._request.payload.request.type
         self._pattern = self._request.payload.pattern
-        self._actMeta = self._catalog.lookup(self._pattern)
+        self._actMeta = self._router.lookup(self._pattern)
 
         // check if a handler is registered with this pattern
         if (self._actMeta) {
@@ -675,6 +686,12 @@ class Hemera extends EventEmitter {
 
     let hasCallback = _.isFunction(cb)
 
+    // check for use quick syntax for JSON objects
+    if (_.isString(pattern)) {
+
+      pattern = TinySonic(pattern)
+    }
+
     // topic is needed to subscribe on a subject in NATS
     if (!pattern.topic) {
 
@@ -720,7 +737,7 @@ class Hemera extends EventEmitter {
       plugin: this.plugin$
     }
 
-    let handler = this._catalog.lookup(origPattern)
+    let handler = this._router.lookup(origPattern)
 
     // check if pattern is already registered
     if (handler) {
@@ -734,7 +751,7 @@ class Hemera extends EventEmitter {
     }
 
     // add to bloomrun
-    this._catalog.add(origPattern, actMeta)
+    this._router.add(origPattern, actMeta)
 
     this.log.info(origPattern, Constants.ADD_ADDED)
 
@@ -754,6 +771,13 @@ class Hemera extends EventEmitter {
     [id: string]: number
   }, cb: Function) {
 
+    // check for use quick syntax for JSON objects
+    if (_.isString(pattern)) {
+
+      pattern = TinySonic(pattern)
+    }
+
+
     // topic is needed to subscribe on a subject in NATS
     if (!pattern.topic) {
 
@@ -770,8 +794,8 @@ class Hemera extends EventEmitter {
     ctx._pattern = pattern
     ctx._prevContext = this
     ctx._cleanPattern = Util.cleanPattern(pattern)
-    ctx._response = new ClientResponse(ctx)
-    ctx._request = new ClientRequest(ctx)
+    ctx._response = new ClientResponse()
+    ctx._request = new ClientRequest()
 
     ctx._extensions.onClientPreRequest.invoke(ctx, function onPreRequest(err: Error) {
 
@@ -977,7 +1001,7 @@ class Hemera extends EventEmitter {
    */
   list(params: any) {
 
-    return this._catalog.list(params)
+    return this._router.list(params)
   }
 
   /**

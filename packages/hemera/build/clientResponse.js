@@ -18,14 +18,12 @@ var ClientResponse = function () {
   /**
    * Creates an instance of ClientResponse.
    *
-   * @param {Hemera} ctx
    *
    * @memberOf ClientResponse
    */
-  function ClientResponse(ctx) {
+  function ClientResponse() {
     _classCallCheck(this, ClientResponse);
 
-    this._ctx = ctx;
     this._response = {};
   }
 

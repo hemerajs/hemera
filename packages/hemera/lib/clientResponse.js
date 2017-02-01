@@ -11,19 +11,16 @@
  */
 class ClientResponse {
 
-  _ctx: Hemera;
   _response: any;
 
   /**
    * Creates an instance of ClientResponse.
    *
-   * @param {Hemera} ctx
    *
    * @memberOf ClientResponse
    */
-  constructor(ctx: Hemera) {
+  constructor() {
 
-    this._ctx = ctx
     this._response = {}
   }
 
