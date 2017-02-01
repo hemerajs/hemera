@@ -565,7 +565,7 @@ class Hemera extends EventEmitter {
           return self.finish()
         }
 
-        // find matched RPC
+        // find matched route
         let requestType = self._request.payload.request.type
         self._pattern = self._request.payload.pattern
         self._actMeta = self._router.lookup(self._pattern)

@@ -4,7 +4,8 @@ function inbound(ctx) {
 
   return {
     id: ctx.request$.id,
-    duration: ctx.request$.duration / 1000000
+    duration: ctx.request$.duration / 1000000,
+    pattern: ctx.request$.method
   };
 }
 

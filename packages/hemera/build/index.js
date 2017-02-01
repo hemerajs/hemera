@@ -572,7 +572,7 @@ var Hemera = function (_EventEmitter) {
             return self.finish();
           }
 
-          // find matched RPC
+          // find matched route
           var requestType = self._request.payload.request.type;
           self._pattern = self._request.payload.pattern;
           self._actMeta = self._router.lookup(self._pattern);
