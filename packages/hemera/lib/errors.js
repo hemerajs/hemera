@@ -4,7 +4,7 @@
  * MIT Licensed
  */
 
-const SuperError = require('super-error')
+import SuperError from 'super-error'
 
 const
   HemeraError = SuperError.subclass('HemeraError'),

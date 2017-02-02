@@ -1,3 +1,9 @@
+/*!
+ * hemera
+ * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
+ * MIT Licensed
+ */
+
 /**
  *
  *

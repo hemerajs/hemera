@@ -5,7 +5,7 @@
  */
 
 // Errors messages
-module.exports = {
+export default {
   JSON_PARSE_ERROR: 'Invalid JSON payload',
   ACT_TIMEOUT_ERROR: 'Timeout',
   NO_TOPIC_TO_SUBSCRIBE: 'No topic to subscribe',

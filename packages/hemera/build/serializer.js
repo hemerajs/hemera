@@ -3,6 +3,12 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+/*!
+ * hemera
+ * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
+ * MIT Licensed
+ */
+
 function inbound(ctx) {
 
   return {
