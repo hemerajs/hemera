@@ -15,8 +15,7 @@ export default class ClientResponse {
    *
    * @memberOf ClientResponse
    */
-  constructor() {
-
+  constructor () {
     this._response = {}
   }
 
@@ -27,8 +26,7 @@ export default class ClientResponse {
    * @type {*}
    * @memberOf ClientResponse
    */
-  get payload() {
-
+  get payload () {
     return this._response.value
   }
 
@@ -38,8 +36,7 @@ export default class ClientResponse {
    *
    * @memberOf ClientResponse
    */
-  set payload(value) {
-
+  set payload (value) {
     this._response.value = value
   }
 
@@ -49,8 +46,7 @@ export default class ClientResponse {
    *
    * @memberOf ClientResponse
    */
-  set error(error) {
-
+  set error (error) {
     this._response.error = error
   }
 
@@ -61,8 +57,7 @@ export default class ClientResponse {
    * @type {*}
    * @memberOf ClientResponse
    */
-  get error() {
-
+  get error () {
     return this._response.error
   }
 

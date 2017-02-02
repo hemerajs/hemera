@@ -16,8 +16,7 @@ export default class Util {
    *
    * @memberOf Util
    */
-  static randomId() {
-
+  static randomId () {
     return Crypto.randomBytes(16).toString('hex')
   }
 
@@ -29,8 +28,7 @@ export default class Util {
    *
    * @memberOf Util
    */
-  static nowHrTime() {
-
+  static nowHrTime () {
     const hrtime = process.hrtime()
     return Math.floor(hrtime[0] * 1000000 + hrtime[1] / 1000)
   }
@@ -42,8 +40,7 @@ export default class Util {
    *
    * @memberOf Util
    */
-  static cleanPattern(obj) {
-
+  static cleanPattern (obj) {
     if (obj === null) return obj
 
     return _.pickBy(obj, function (val, prop) {
@@ -57,8 +54,7 @@ export default class Util {
    *
    * @memberOf Util
    */
-  static pattern(args) {
-
+  static pattern (args) {
     if (_.isString(args)) {
       return args
     }

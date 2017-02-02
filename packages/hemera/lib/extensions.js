@@ -7,8 +7,7 @@
 import Util from './util'
 import Hoek from 'hoek'
 
-export const onClientPreRequest = [function onClientPreRequest(next) {
-
+export const onClientPreRequest = [function onClientPreRequest (next) {
   let ctx = this
 
   let pattern = this._pattern
@@ -63,8 +62,7 @@ export const onClientPreRequest = [function onClientPreRequest(next) {
   next()
 }]
 
-export const onClientPostRequest = [function onClientPostRequest(next) {
-
+export const onClientPostRequest = [function onClientPostRequest (next) {
   let ctx = this
   let pattern = this._pattern
   let msg = ctx._response.payload
@@ -85,21 +83,18 @@ export const onClientPostRequest = [function onClientPostRequest(next) {
   next()
 }]
 
-export const onServerPreRequest = [function onServerPreRequest(req, res, next) {
-
+export const onServerPreRequest = [function onServerPreRequest (req, res, next) {
   let ctx = this
 
   let m = ctx._decoder.decode.call(ctx, ctx._request.payload)
 
   if (m.error) {
-
     return res.send(m.error)
   }
 
   let msg = m.value
 
   if (msg) {
-
     ctx.meta$ = msg.meta || {}
     ctx.trace$ = msg.trace || {}
     ctx.delegate$ = msg.delegate || {}
@@ -114,22 +109,18 @@ export const onServerPreRequest = [function onServerPreRequest(req, res, next) {
   next()
 }]
 
-export const onServerPreHandler = [function onServerPreHandler(req, res, next) {
-
+export const onServerPreHandler = [function onServerPreHandler (req, res, next) {
   let ctx = this
 
   ctx.emit('onServerPreHandler', ctx)
 
   next()
-
 }]
 
-export const onServerPreResponse = [function onServerPreResponse(req, res, next) {
-
+export const onServerPreResponse = [function onServerPreResponse (req, res, next) {
   let ctx = this
 
   ctx.emit('onServerPreResponse', ctx)
 
   next()
-
 }]

@@ -16,8 +16,7 @@ export default class ServerRequest {
    *
    * @memberOf ServerRequest
    */
-  constructor(payload) {
-
+  constructor (payload) {
     this._request = {}
     this.payload = payload
   }
@@ -29,8 +28,7 @@ export default class ServerRequest {
    * @type {*}
    * @memberOf ServerRequest
    */
-  get payload() {
-
+  get payload () {
     return this._request.value
   }
 
@@ -41,8 +39,7 @@ export default class ServerRequest {
    * @type {*}
    * @memberOf ServerRequest
    */
-  get error() {
-
+  get error () {
     return this._request.error
   }
 
@@ -52,8 +49,7 @@ export default class ServerRequest {
    *
    * @memberOf ServerRequest
    */
-  set payload(value) {
-
+  set payload (value) {
     this._request.value = value
   }
 
@@ -63,8 +59,7 @@ export default class ServerRequest {
    *
    * @memberOf ServerRequest
    */
-  set error(error) {
-
+  set error (error) {
     this._request.error = error
   }
 

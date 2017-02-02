@@ -7,15 +7,12 @@
 
 export default class Encoder {
 
-  static encode(msg) {
-
+  static encode (msg) {
     try {
-
       return {
         value: stringify(msg)
       }
     } catch (error) {
-
       return {
         error
       }
@@ -23,44 +20,35 @@ export default class Encoder {
   }
 }
 
-
-function stringify(obj) {
-
+function stringify (obj) {
   decirc(obj, '', [], null)
   return JSON.stringify(obj)
 }
 
-function Circle(val, k, parent) {
-
+function Circle (val, k, parent) {
   this.val = val
   this.k = k
   this.parent = parent
   this.count = 1
 }
 
-Circle.prototype.toJSON = function toJSON() {
-
+Circle.prototype.toJSON = function toJSON () {
   if (--this.count === 0) {
-
     this.parent[this.k] = this.val
   }
   return '[Circular]'
 }
 
-function decirc(val, k, stack, parent) {
-
+function decirc (val, k, stack, parent) {
   var keys, len, i
 
   if (typeof val !== 'object' || val === null) {
-
     // not an object, nothing to do
     return
   } else if (val instanceof Circle) {
-
     val.count++
-      return
+    return
   } else if (parent) {
-
     if (~stack.indexOf(val)) {
       parent[k] = new Circle(val, k, parent)
       return

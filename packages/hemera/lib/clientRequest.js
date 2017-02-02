@@ -16,8 +16,7 @@ export default class ClientRequest {
    *
    * @memberOf ClientRequest
    */
-  constructor() {
-
+  constructor () {
     this._request = {}
   }
 
@@ -28,8 +27,7 @@ export default class ClientRequest {
    * @type {*}
    * @memberOf ClientRequest
    */
-  get payload() {
-
+  get payload () {
     return this._request.value
   }
 
@@ -40,8 +38,7 @@ export default class ClientRequest {
    * @type {*}
    * @memberOf ClientRequest
    */
-  get error() {
-
+  get error () {
     return this._request.error
   }
 
@@ -51,8 +48,7 @@ export default class ClientRequest {
    *
    * @memberOf ClientRequest
    */
-  set payload(value) {
-
+  set payload (value) {
     this._request.value = value
   }
 
@@ -62,8 +58,7 @@ export default class ClientRequest {
    *
    * @memberOf ClientRequest
    */
-  set error(error) {
-
+  set error (error) {
     this._request.error = error
   }
 

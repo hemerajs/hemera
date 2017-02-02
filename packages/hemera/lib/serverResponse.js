@@ -18,8 +18,7 @@ export default class ServerResponse {
    *
    * @memberOf ServerResponse
    */
-  constructor() {
-
+  constructor () {
     this._response = {}
   }
 
@@ -30,20 +29,16 @@ export default class ServerResponse {
    *
    * @memberOf ServerResponse
    */
-  end(value) {
-
+  end (value) {
     if (value instanceof Error) {
-
       if (_.isFunction(this.next)) {
         this.next(value)
       }
     } else {
-
       if (_.isFunction(this.next)) {
         this.next(null, value, true)
       }
     }
-
   }
 
   /**
@@ -53,20 +48,16 @@ export default class ServerResponse {
    *
    * @memberOf ServerResponse
    */
-  send(value) {
-
+  send (value) {
     if (value instanceof Error) {
-
       if (_.isFunction(this.next)) {
         this.next(value)
       }
     } else {
-
       if (_.isFunction(this.next)) {
         this.next(null, value)
       }
     }
-
   }
 
   /**
@@ -76,8 +67,7 @@ export default class ServerResponse {
    * @type {*}
    * @memberOf ServerResponse
    */
-  get payload() {
-
+  get payload () {
     return this._response.value
   }
 
@@ -87,8 +77,7 @@ export default class ServerResponse {
    *
    * @memberOf ServerResponse
    */
-  set payload(value) {
-
+  set payload (value) {
     this._response.value = value
   }
 
@@ -98,8 +87,7 @@ export default class ServerResponse {
    *
    * @memberOf ServerResponse
    */
-  set error(error) {
-
+  set error (error) {
     this._response.error = error
   }
 
@@ -110,8 +98,7 @@ export default class ServerResponse {
    * @type {*}
    * @memberOf ServerResponse
    */
-  get error() {
-
+  get error () {
     return this._response.error
   }
 
