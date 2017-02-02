@@ -1,5 +1,3 @@
-// @flow
-
 /*!
  * hemera
  * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
@@ -11,11 +9,7 @@
  */
 class Extension {
 
-  _stack: Array<Function>;
-  _type: string;
-  _server: boolean;
-
-  constructor(type: string, server?: boolean) {
+  constructor(type, server) {
 
     this._stack = []
     this._type = type
@@ -29,7 +23,7 @@ class Extension {
    *
    * @memberOf Extension
    */
-  add(handler: Function) {
+  add(handler) {
 
     this._stack.push(handler)
 
@@ -42,7 +36,7 @@ class Extension {
    *
    * @memberOf Extension
    */
-  addRange(handlers: Array<Function> ) {
+  addRange(handlers) {
 
     this._stack = this._stack.concat(handlers)
 
@@ -54,7 +48,7 @@ class Extension {
    *
    * @memberOf Extension
    */
-  invoke(ctx: Hemera, cb: Function) {
+  invoke(ctx, cb) {
 
     const each = (item, next, prevValue, i) => {
 
@@ -83,7 +77,7 @@ class Extension {
    *
    * @memberOf Extension
    */
-  static serial(array: Array<Function> , method: Function, callback: Function) {
+  static serial(array, method, callback) {
 
     if (!array.length) {
 

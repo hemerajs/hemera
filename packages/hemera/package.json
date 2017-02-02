@@ -34,7 +34,7 @@
     "queueing"
   ],
   "scripts": {
-    "lint": "eslint ./src ./test && flow",
+    "lint": "eslint ./src ./test",
     "build": "babel ./lib --out-dir ./build --copy-files --source-maps",
     "prepublish": "npm run build"
   },
@@ -57,13 +57,9 @@
     "babel-cli": "^6.22.2",
     "babel-plugin-istanbul": "^3.1.2",
     "babel-plugin-syntax-flow": "^6.18.0",
-    "babel-plugin-transform-flow-comments": "^6.22.0",
-    "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-preset-env": "^1.1.8",
     "babel-register": "^6.22.0",
-    "eslint": "^3.13.1",
-    "eslint-plugin-flowtype": "^2.30.0",
-    "flow-bin": "^0.38.0"
+    "eslint": "^3.13.1"
   },
   "nyc": {
     "include": [

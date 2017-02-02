@@ -1,5 +1,3 @@
-// @flow
-
 /*!
  * hemera
  * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
@@ -10,8 +8,6 @@
  * @class ClientRequest
  */
 class ClientRequest {
-
-  _request: any;
 
   /**
    * Creates an instance of ClientRequest.
@@ -32,7 +28,7 @@ class ClientRequest {
    * @type {*}
    * @memberOf ClientRequest
    */
-  get payload(): any {
+  get payload() {
 
     return this._request.value
   }
@@ -44,7 +40,7 @@ class ClientRequest {
    * @type {*}
    * @memberOf ClientRequest
    */
-  get error(): any {
+  get error() {
 
     return this._request.error
   }
@@ -55,7 +51,7 @@ class ClientRequest {
    *
    * @memberOf ClientRequest
    */
-  set payload(value: any) {
+  set payload(value) {
 
     this._request.value = value
   }
@@ -66,7 +62,7 @@ class ClientRequest {
    *
    * @memberOf ClientRequest
    */
-  set error(error: Error) {
+  set error(error) {
 
     this._request.error = error
   }

@@ -1,5 +1,3 @@
-// @flow
-
 /*!
  * hemera
  * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
@@ -9,11 +7,11 @@
 import Util from './util'
 import Hoek from 'hoek'
 
-module.exports.onClientPreRequest = [function onClientPreRequest(next: Function) {
+module.exports.onClientPreRequest = [function onClientPreRequest(next) {
 
-  let ctx: Hemera = this
+  let ctx = this
 
-  let pattern: Pattern = this._pattern
+  let pattern = this._pattern
 
   let prevCtx = this._prevContext
   let cleanPattern = this._cleanPattern
@@ -37,7 +35,7 @@ module.exports.onClientPreRequest = [function onClientPreRequest(next: Function)
   ctx.trace$.method = Util.pattern(pattern)
 
   // request
-  let request: Request = {
+  let request = {
     id: pattern.requestId$ || Util.randomId(),
     parentId: ctx.request$.id,
     timestamp: currentTime,
@@ -46,7 +44,7 @@ module.exports.onClientPreRequest = [function onClientPreRequest(next: Function)
   }
 
   // build msg
-  let message: ActMessage = {
+  let message = {
     pattern: cleanPattern,
     meta: ctx.meta$,
     delegate: ctx.delegate$,
@@ -56,17 +54,19 @@ module.exports.onClientPreRequest = [function onClientPreRequest(next: Function)
 
   ctx._message = message
 
-  ctx.log.info({ outbound: ctx })
+  ctx.log.info({
+    outbound: ctx
+  })
 
   ctx.emit('onClientPreRequest', ctx)
 
   next()
 }]
 
-module.exports.onClientPostRequest = [function onClientPostRequest(next: Function) {
+module.exports.onClientPostRequest = [function onClientPostRequest(next) {
 
-  let ctx: Hemera = this
-  let pattern: Pattern = this._pattern
+  let ctx = this
+  let pattern = this._pattern
   let msg = ctx._response.payload
 
   // pass to act context
@@ -76,20 +76,22 @@ module.exports.onClientPostRequest = [function onClientPostRequest(next: Functio
   ctx.trace$ = msg.trace || {}
   ctx.meta$ = msg.meta || {}
 
-  ctx.log.info({ inbound: ctx })
+  ctx.log.info({
+    inbound: ctx
+  })
 
   ctx.emit('onClientPostRequest', ctx)
 
   next()
 }]
 
-module.exports.onServerPreRequest = [function onServerPreRequest(req: any, res: any, next: Function) {
+module.exports.onServerPreRequest = [function onServerPreRequest(req, res, next) {
 
-  let ctx: Hemera = this
+  let ctx = this
 
   let m = ctx._decoder.decode.call(ctx, ctx._request.payload)
 
-  if(m.error) {
+  if (m.error) {
 
     return res.send(m.error)
   }
@@ -112,9 +114,9 @@ module.exports.onServerPreRequest = [function onServerPreRequest(req: any, res: 
   next()
 }]
 
-module.exports.onServerPreHandler = [function onServerPreHandler(req: any, res: any, next: Function) {
+module.exports.onServerPreHandler = [function onServerPreHandler(req, res, next) {
 
-  let ctx: Hemera = this
+  let ctx = this
 
   ctx.emit('onServerPreHandler', ctx)
 
@@ -122,9 +124,9 @@ module.exports.onServerPreHandler = [function onServerPreHandler(req: any, res: 
 
 }]
 
-module.exports.onServerPreResponse = [function onServerPreResponse(req: any, res: any, next: Function) {
+module.exports.onServerPreResponse = [function onServerPreResponse(req, res, next) {
 
-  let ctx: Hemera = this
+  let ctx = this
 
   ctx.emit('onServerPreResponse', ctx)
 

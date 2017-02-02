@@ -1,5 +1,3 @@
-// @flow
-
 /*!
  * hemera
  * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
@@ -48,7 +46,7 @@ class Util {
 
     if (obj === null) return obj
 
-    return _.pickBy(obj, function (val, prop: string) {
+    return _.pickBy(obj, function (val, prop) {
       return !_.includes(prop, '$')
     })
   }

@@ -1,5 +1,3 @@
-// @flow
-
 /*!
  * hemera
  * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
@@ -34,7 +32,7 @@ import ClientRequest from './clientRequest'
 import ClientResponse from './clientResponse'
 import Serializers from './serializer'
 
-var defaultConfig: Config = {
+var defaultConfig = {
   timeout: 2000,
   debug: false,
   name: 'app',
@@ -50,44 +48,6 @@ var defaultConfig: Config = {
  */
 class Hemera extends EventEmitter {
 
-  context$: Context;
-  meta$: Meta;
-  delegate$: Delegate;
-  plugin$: Plugin;
-  trace$: Trace;
-  request$: Request;
-
-  log: any;
-
-  _config: Config;
-  _router: any;
-  _heavy: any;
-  _transport: NatsTransport;
-  _topics: {
-    [id: string]: boolean
-  };
-  _plugins: {
-    [id: string]: Plugin
-  };
-
-  _exposition: any;
-  _extensions: {
-    [id: string]: Extension
-  };
-  _shouldCrash: boolean;
-  _replyTo: string;
-  _request: any;
-  _response: any;
-  _pattern: any;
-  _actMeta: any;
-  _prevContext: Hemera;
-  _cleanPattern: any;
-  _message: any;
-
-  _encoder: Encoder;
-  _decoder: Decoder;
-
-
   /**
    * Creates an instance of Hemera
    *
@@ -96,7 +56,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  constructor(transport: Nats, params: Config) {
+  constructor(transport, params) {
 
     super()
 
@@ -208,9 +168,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  get plugins(): {
-    [id: string]: any
-  } {
+  get plugins() {
 
     return this._plugins
   }
@@ -222,7 +180,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  get router(): any {
+  get router() {
 
     return this._router
   }
@@ -234,7 +192,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  get load(): any {
+  get load() {
 
     return this._heavy.load
   }
@@ -246,7 +204,7 @@ class Hemera extends EventEmitter {
    * @type {Exposition}
    * @memberOf Hemera
    */
-  get exposition(): any {
+  get exposition() {
 
     return this._exposition
   }
@@ -260,7 +218,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  expose(key: string, object: mixed) {
+  expose(key, object) {
 
     let pluginName = this.plugin$.attributes.name
 
@@ -282,7 +240,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  get transport(): Nats {
+  get transport() {
 
     return this._transport.driver
   }
@@ -294,9 +252,8 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  get topics(): {
-    [id: string]: any
-  } {
+  get topics() {
+
     return this._topics
   }
 
@@ -309,7 +266,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  ext(type: string, handler: Function): void {
+  ext(type, handler) {
 
     if (!this._extensions[type]) {
       let error = new Errors.HemeraError(Constants.INVALID_EXTENSION_TYPE, {
@@ -330,7 +287,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  use(params: PluginDefinition) {
+  use(params) {
 
     if (this._plugins[params.attributes.name]) {
       let error = new Errors.HemeraError(Constants.PLUGIN_ALREADY_IN_USE, {
@@ -363,7 +320,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  setOption(key: string, value: any) {
+  setOption(key, value) {
 
     this.plugin$.options[key] = value
   }
@@ -374,7 +331,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  setConfig(key: string, value: any) {
+  setConfig(key, value) {
 
     this._config[key] = value
   }
@@ -398,7 +355,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  ready(cb: Function) {
+  ready(cb) {
 
     this._transport.driver.on('connect', () => {
 
@@ -419,9 +376,9 @@ class Hemera extends EventEmitter {
    */
   _buildMessage() {
 
-    let result: ServerResponse = this._response
+    let result = this._response
 
-    let message: Message = {
+    let message = {
       meta: this.meta$ || {},
       trace: this.trace$ || {},
       request: this.request$,
@@ -429,7 +386,7 @@ class Hemera extends EventEmitter {
       error: result.error ? Errio.toObject(result.error) : null
     }
 
-    let endTime: number = Util.nowHrTime()
+    let endTime = Util.nowHrTime()
     message.request.duration = endTime - message.request.timestamp
     message.trace.duration = endTime - message.request.timestamp
 
@@ -455,9 +412,9 @@ class Hemera extends EventEmitter {
    */
   finish() {
 
-    let self: Hemera = this;
+    let self = this;
 
-    self._extensions.onServerPreResponse.invoke(self, function (err: Error, value: any) {
+    self._extensions.onServerPreResponse.invoke(self, function (err, value) {
 
       // check if an error was already catched
       if (self._response.error) {
@@ -524,9 +481,9 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  subscribe(topic: string, subToMany: boolean, maxMessages: number) {
+  subscribe(topic, subToMany, maxMessages) {
 
-    let self: Hemera = this
+    let self = this
 
     // avoid duplicate subscribers of the emit stream
     // we use one subscriber per topic
@@ -534,10 +491,10 @@ class Hemera extends EventEmitter {
       return
     }
 
-    let handler = (request: any, replyTo: string) => {
+    let handler = (request, replyTo) => {
 
       // create new execution context
-      let ctx: Hemera = this.createContext()
+      let ctx = this.createContext()
       ctx._shouldCrash = false
       ctx._replyTo = replyTo
       ctx._request = new ServerRequest(request)
@@ -545,9 +502,9 @@ class Hemera extends EventEmitter {
       ctx._pattern = {}
       ctx._actMeta = {}
 
-      self._extensions.onServerPreRequest.invoke(ctx, function (err: Error, value: any) {
+      self._extensions.onServerPreRequest.invoke(ctx, function (err, value) {
 
-        let self: Hemera = this
+        let self = this
 
         if (err) {
 
@@ -573,7 +530,7 @@ class Hemera extends EventEmitter {
         // check if a handler is registered with this pattern
         if (self._actMeta) {
 
-          self._extensions.onServerPreHandler.invoke(ctx, function (err: Error, value: any) {
+          self._extensions.onServerPreHandler.invoke(ctx, function (err, value) {
 
             if (err) {
 
@@ -604,7 +561,7 @@ class Hemera extends EventEmitter {
               }
 
               // execute RPC action
-              action(self._request.payload.pattern, (err: Error, resp) => {
+              action(self._request.payload.pattern, (err, resp) => {
 
                 if (err) {
 
@@ -680,9 +637,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  add(pattern: {
-    [id: string]: any
-  }, cb: Function) {
+  add(pattern, cb) {
 
     let hasCallback = _.isFunction(cb)
 
@@ -718,7 +673,7 @@ class Hemera extends EventEmitter {
     let schema = {}
 
     // remove objects (rules) from pattern and extract schema
-    _.each(pattern, function (v: string, k: any) {
+    _.each(pattern, function (v, k) {
 
       if (_.isObject(v)) {
         schema[k] = _.clone(v)
@@ -730,7 +685,7 @@ class Hemera extends EventEmitter {
     origPattern = Util.cleanPattern(origPattern)
 
     // create message object which represent the object behind the matched pattern
-    let actMeta: ActMeta = {
+    let actMeta = {
       schema: schema,
       pattern: origPattern,
       action: cb,
@@ -767,9 +722,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  act(pattern: {
-    [id: string]: number
-  }, cb: Function) {
+  act(pattern, cb) {
 
     // check for use quick syntax for JSON objects
     if (_.isString(pattern)) {
@@ -797,9 +750,9 @@ class Hemera extends EventEmitter {
     ctx._response = new ClientResponse()
     ctx._request = new ClientRequest()
 
-    ctx._extensions.onClientPreRequest.invoke(ctx, function onPreRequest(err: Error) {
+    ctx._extensions.onClientPreRequest.invoke(ctx, function onPreRequest(err) {
 
-      let self: Hemera = this
+      let self = this
 
       let hasCallback = _.isFunction(cb)
 
@@ -846,7 +799,7 @@ class Hemera extends EventEmitter {
       } else {
 
         // send request
-        let sid = self._transport.sendRequest(pattern.topic, self._request.payload, (response: any) => {
+        let sid = self._transport.sendRequest(pattern.topic, self._request.payload, (response) => {
 
           let res = self._decoder.decode.call(ctx, response)
           self._response.payload = res.value
@@ -868,7 +821,7 @@ class Hemera extends EventEmitter {
               }
             }
 
-            self._extensions.onClientPostRequest.invoke(ctx, function (err: Error) {
+            self._extensions.onClientPostRequest.invoke(ctx, function (err) {
 
               if (err) {
 
@@ -939,9 +892,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  handleTimeout(sid: number, pattern: {
-    [id: string]: number
-  }, cb: Function) {
+  handleTimeout(sid, pattern, cb) {
 
     // handle timeout
     this._transport.timeout(sid, pattern.timeout$ || this._config.timeout, 1, () => {
@@ -989,7 +940,7 @@ class Hemera extends EventEmitter {
 
     var self = this
 
-    var ctx: Hemera = Object.create(self)
+    var ctx = Object.create(self)
 
     return ctx
   }
@@ -999,7 +950,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  list(params: any) {
+  list(params) {
 
     return this._router.list(params)
   }

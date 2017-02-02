@@ -1,5 +1,3 @@
-// @flow
-
 /*!
  * hemera
  * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
@@ -11,8 +9,6 @@
  */
 class ServerRequest {
 
-  _request: any;
-
   /**
    * Creates an instance of ServerRequest.
    *
@@ -20,7 +16,7 @@ class ServerRequest {
    *
    * @memberOf ServerRequest
    */
-  constructor(payload: any) {
+  constructor(payload) {
 
     this._request = {}
     this.payload = payload
@@ -33,7 +29,7 @@ class ServerRequest {
    * @type {*}
    * @memberOf ServerRequest
    */
-  get payload(): any {
+  get payload() {
 
     return this._request.value
   }
@@ -45,7 +41,7 @@ class ServerRequest {
    * @type {*}
    * @memberOf ServerRequest
    */
-  get error(): any {
+  get error() {
 
     return this._request.error
   }
@@ -56,7 +52,7 @@ class ServerRequest {
    *
    * @memberOf ServerRequest
    */
-  set payload(value: any) {
+  set payload(value) {
 
     this._request.value = value
   }
@@ -67,7 +63,7 @@ class ServerRequest {
    *
    * @memberOf ServerRequest
    */
-  set error(error: Error) {
+  set error(error) {
 
     this._request.error = error
   }

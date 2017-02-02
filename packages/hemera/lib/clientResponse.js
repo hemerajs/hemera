@@ -1,5 +1,3 @@
-// @flow
-
 /*!
  * hemera
  * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
@@ -10,8 +8,6 @@
  * @class ClientResponse
  */
 class ClientResponse {
-
-  _response: any;
 
   /**
    * Creates an instance of ClientResponse.
@@ -31,7 +27,7 @@ class ClientResponse {
    * @type {*}
    * @memberOf ClientResponse
    */
-  get payload(): any {
+  get payload() {
 
     return this._response.value
   }
@@ -42,7 +38,7 @@ class ClientResponse {
    *
    * @memberOf ClientResponse
    */
-  set payload(value: any) {
+  set payload(value) {
 
     this._response.value = value
   }
@@ -53,7 +49,7 @@ class ClientResponse {
    *
    * @memberOf ClientResponse
    */
-  set error(error: Error) {
+  set error(error) {
 
     this._response.error = error
   }
@@ -65,7 +61,7 @@ class ClientResponse {
    * @type {*}
    * @memberOf ClientResponse
    */
-  get error(): any {
+  get error() {
 
     return this._response.error
   }

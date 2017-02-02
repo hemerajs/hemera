@@ -1,5 +1,3 @@
-// @flow
-
 /*!
  * hemera
  * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
@@ -9,7 +7,7 @@
 
 class Encoder {
 
-  static encode(msg: any) {
+  static encode(msg) {
 
     try {
 
@@ -62,7 +60,7 @@ function decirc(val, k, stack, parent) {
   } else if (val instanceof Circle) {
 
     val.count++
-    return
+      return
   } else if (parent) {
 
     if (~stack.indexOf(val)) {

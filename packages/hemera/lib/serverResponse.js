@@ -1,5 +1,3 @@
-// @flow
-
 /*!
  * hemera
  * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
@@ -12,9 +10,6 @@ import _ from 'lodash'
  * @class ServerResponse
  */
 class ServerResponse {
-
-  next: Function;
-  _response: any;
 
   /**
    * Creates an instance of ServerResponse.
@@ -35,7 +30,7 @@ class ServerResponse {
    *
    * @memberOf ServerResponse
    */
-  end(value: any) {
+  end(value) {
 
     if (value instanceof Error) {
 
@@ -58,7 +53,7 @@ class ServerResponse {
    *
    * @memberOf ServerResponse
    */
-  send(value: any) {
+  send(value) {
 
     if (value instanceof Error) {
 
@@ -81,7 +76,7 @@ class ServerResponse {
    * @type {*}
    * @memberOf ServerResponse
    */
-  get payload(): any {
+  get payload() {
 
     return this._response.value
   }
@@ -92,7 +87,7 @@ class ServerResponse {
    *
    * @memberOf ServerResponse
    */
-  set payload(value: any) {
+  set payload(value) {
 
     this._response.value = value
   }
@@ -103,7 +98,7 @@ class ServerResponse {
    *
    * @memberOf ServerResponse
    */
-  set error(error: Error) {
+  set error(error) {
 
     this._response.error = error
   }
@@ -115,7 +110,7 @@ class ServerResponse {
    * @type {*}
    * @memberOf ServerResponse
    */
-  get error(): any {
+  get error() {
 
     return this._response.error
   }
