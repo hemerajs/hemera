@@ -13,11 +13,11 @@ process.setMaxListeners(0);
 
 describe('Hemera-msgpack', function () {
 
-  var PORT = 6243
-  var flags = ['--user', 'derek', '--pass', 'foobar']
-  var authUrl = 'nats://derek:foobar@localhost:' + PORT
-  var noAuthUrl = 'nats://localhost:' + PORT
-  var server
+  const PORT = 6243
+  const flags = ['--user', 'derek', '--pass', 'foobar']
+  const authUrl = 'nats://derek:foobar@localhost:' + PORT
+  const noAuthUrl = 'nats://localhost:' + PORT
+  let server
 
   // Start up our own nats-server
   before(function (done) {
@@ -31,7 +31,10 @@ describe('Hemera-msgpack', function () {
 
   it('encode and decode', function (done) {
 
-    const nats = require('nats').connect({ url: authUrl, preserveBuffers: true })
+    const nats = require('nats').connect({
+      url: authUrl,
+      preserveBuffers: true
+    })
 
     const hemera = new Hemera(nats, {
       crashOnFatal: false
@@ -66,7 +69,10 @@ describe('Hemera-msgpack', function () {
 
   it('encode and decode complex type', function (done) {
 
-    const nats = require('nats').connect({ url: authUrl, preserveBuffers: true })
+    const nats = require('nats').connect({
+      url: authUrl,
+      preserveBuffers: true
+    })
 
     const hemera = new Hemera(nats, {
       crashOnFatal: false
@@ -81,7 +87,9 @@ describe('Hemera-msgpack', function () {
         cmd: 'add'
       }, (resp, cb) => {
 
-        cb(null, { result: resp.a + resp.b })
+        cb(null, {
+          result: resp.a + resp.b
+        })
       })
 
       hemera.act({

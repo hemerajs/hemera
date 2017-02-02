@@ -13,11 +13,11 @@ process.setMaxListeners(0);
 
 describe('Hemera-avro', function () {
 
-  var PORT = 6243
-  var flags = ['--user', 'derek', '--pass', 'foobar']
-  var authUrl = 'nats://derek:foobar@localhost:' + PORT
-  var noAuthUrl = 'nats://localhost:' + PORT
-  var server
+  const PORT = 6243
+  const flags = ['--user', 'derek', '--pass', 'foobar']
+  const authUrl = 'nats://derek:foobar@localhost:' + PORT
+  const noAuthUrl = 'nats://localhost:' + PORT
+  let server
 
   // Start up our own nats-server
   before(function (done) {
@@ -37,8 +37,7 @@ describe('Hemera-avro', function () {
     })
 
     const hemera = new Hemera(nats, {
-      crashOnFatal: false,
-      logLevel: 'info'
+      crashOnFatal: false
     })
 
     hemera.use(HemeraAvro)

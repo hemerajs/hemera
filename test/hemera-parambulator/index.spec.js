@@ -13,11 +13,11 @@ process.setMaxListeners(0);
 
 describe('Hemera-parambulator', function () {
 
-  var PORT = 6244
-  var flags = ['--user', 'derek', '--pass', 'foobar']
-  var authUrl = 'nats://derek:foobar@localhost:' + PORT
-  var noAuthUrl = 'nats://localhost:' + PORT
-  var server
+  const PORT = 6244
+  const flags = ['--user', 'derek', '--pass', 'foobar']
+  const authUrl = 'nats://derek:foobar@localhost:' + PORT
+  const noAuthUrl = 'nats://localhost:' + PORT
+  let server
 
   // Start up our own nats-server
   before(function (done) {
