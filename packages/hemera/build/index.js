@@ -60,7 +60,7 @@ var _transport2 = _interopRequireDefault(_transport);
 
 var _extensions = require('./extensions');
 
-var _extensions2 = _interopRequireDefault(_extensions);
+var DefaultExtensions = _interopRequireWildcard(_extensions);
 
 var _encoder = require('./encoder');
 
@@ -89,6 +89,8 @@ var _clientResponse2 = _interopRequireDefault(_clientResponse);
 var _serializer = require('./serializer');
 
 var _serializer2 = _interopRequireDefault(_serializer);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -193,15 +195,15 @@ var Hemera = function (_EventEmitter) {
     _this._heavy.start();
 
     // will be executed before the client request is executed.
-    _this._extensions.onClientPreRequest.addRange(_extensions2.default.onClientPreRequest);
+    _this._extensions.onClientPreRequest.addRange(DefaultExtensions.onClientPreRequest);
     // will be executed after the client received and decoded the request
-    _this._extensions.onClientPostRequest.addRange(_extensions2.default.onClientPostRequest);
+    _this._extensions.onClientPostRequest.addRange(DefaultExtensions.onClientPostRequest);
     // will be executed before the server received the requests
-    _this._extensions.onServerPreRequest.addRange(_extensions2.default.onServerPreRequest);
+    _this._extensions.onServerPreRequest.addRange(DefaultExtensions.onServerPreRequest);
     // will be executed before the server action is executed
-    _this._extensions.onServerPreHandler.addRange(_extensions2.default.onServerPreHandler);
+    _this._extensions.onServerPreHandler.addRange(DefaultExtensions.onServerPreHandler);
     // will be executed before the server reply the response and build the message
-    _this._extensions.onServerPreResponse.addRange(_extensions2.default.onServerPreResponse);
+    _this._extensions.onServerPreResponse.addRange(DefaultExtensions.onServerPreResponse);
 
     // use own logger
     if (_this._config.logger) {

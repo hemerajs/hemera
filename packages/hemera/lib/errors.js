@@ -16,7 +16,7 @@ const
   PatternNotFound = HemeraError.subclass('PatternNotFound'),
   PayloadValidationError = SuperError.subclass('PayloadValidationError')
 
-module.exports = {
+export default {
   HemeraError,
   ParseError,
   TimeoutError,

@@ -5,7 +5,7 @@
  * Based on https://github.com/davidmarkclements/fast-safe-stringify
  */
 
-class Encoder {
+export default class Encoder {
 
   static encode(msg) {
 
@@ -22,8 +22,6 @@ class Encoder {
     }
   }
 }
-
-module.exports = Encoder
 
 
 function stringify(obj) {

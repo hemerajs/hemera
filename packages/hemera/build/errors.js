@@ -1,5 +1,8 @@
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 /*!
  * hemera
  * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
@@ -17,7 +20,7 @@ var HemeraError = SuperError.subclass('HemeraError'),
     PatternNotFound = HemeraError.subclass('PatternNotFound'),
     PayloadValidationError = SuperError.subclass('PayloadValidationError');
 
-module.exports = {
+exports.default = {
   HemeraError,
   ParseError,
   TimeoutError,

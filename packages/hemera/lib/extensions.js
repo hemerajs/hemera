@@ -7,7 +7,7 @@
 import Util from './util'
 import Hoek from 'hoek'
 
-module.exports.onClientPreRequest = [function onClientPreRequest(next) {
+export const onClientPreRequest = [function onClientPreRequest(next) {
 
   let ctx = this
 
@@ -63,7 +63,7 @@ module.exports.onClientPreRequest = [function onClientPreRequest(next) {
   next()
 }]
 
-module.exports.onClientPostRequest = [function onClientPostRequest(next) {
+export const onClientPostRequest = [function onClientPostRequest(next) {
 
   let ctx = this
   let pattern = this._pattern
@@ -85,7 +85,7 @@ module.exports.onClientPostRequest = [function onClientPostRequest(next) {
   next()
 }]
 
-module.exports.onServerPreRequest = [function onServerPreRequest(req, res, next) {
+export const onServerPreRequest = [function onServerPreRequest(req, res, next) {
 
   let ctx = this
 
@@ -114,7 +114,7 @@ module.exports.onServerPreRequest = [function onServerPreRequest(req, res, next)
   next()
 }]
 
-module.exports.onServerPreHandler = [function onServerPreHandler(req, res, next) {
+export const onServerPreHandler = [function onServerPreHandler(req, res, next) {
 
   let ctx = this
 
@@ -124,7 +124,7 @@ module.exports.onServerPreHandler = [function onServerPreHandler(req, res, next)
 
 }]
 
-module.exports.onServerPreResponse = [function onServerPreResponse(req, res, next) {
+export const onServerPreResponse = [function onServerPreResponse(req, res, next) {
 
   let ctx = this
 

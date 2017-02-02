@@ -3,7 +3,7 @@
  *
  * @class Transport
  */
-class NatsTransport {
+export default class NatsTransport {
 
   /**
    * Creates an instance of NatsTransport.
@@ -90,5 +90,3 @@ class NatsTransport {
     return this.nc.request.apply(this.nc, arguments)
   }
 }
-
-module.exports = NatsTransport

@@ -9,7 +9,7 @@ import _ from 'lodash'
 /**
  * @class ServerResponse
  */
-class ServerResponse {
+export default class ServerResponse {
 
   /**
    * Creates an instance of ServerResponse.
@@ -116,5 +116,3 @@ class ServerResponse {
   }
 
 }
-
-module.exports = ServerResponse

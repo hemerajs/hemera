@@ -7,7 +7,7 @@
 /**
  * @class ServerRequest
  */
-class ServerRequest {
+export default class ServerRequest {
 
   /**
    * Creates an instance of ServerRequest.
@@ -69,5 +69,3 @@ class ServerRequest {
   }
 
 }
-
-module.exports = ServerRequest

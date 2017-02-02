@@ -7,7 +7,7 @@
 /**
  * @class Extension
  */
-class Extension {
+export default class Extension {
 
   constructor(type, server) {
 
@@ -117,5 +117,3 @@ class Extension {
     }
   }
 }
-
-module.exports = Extension

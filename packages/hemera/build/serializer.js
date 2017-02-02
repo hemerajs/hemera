@@ -1,5 +1,8 @@
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 function inbound(ctx) {
 
   return {
@@ -17,7 +20,7 @@ function outbound(ctx) {
   };
 }
 
-module.exports = {
+exports.default = {
   outbound,
   inbound
 };

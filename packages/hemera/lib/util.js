@@ -10,7 +10,7 @@ import Crypto from 'crypto'
 /**
  * @class Util
  */
-class Util {
+export default class Util {
   /**
    * @returns
    *
@@ -76,5 +76,3 @@ class Util {
     return sb.join(',')
   }
 }
-
-module.exports = Util

@@ -1,5 +1,10 @@
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.onServerPreResponse = exports.onServerPreHandler = exports.onServerPreRequest = exports.onClientPostRequest = exports.onClientPreRequest = undefined;
+
 var _util = require('./util');
 
 var _util2 = _interopRequireDefault(_util);
@@ -16,7 +21,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * MIT Licensed
  */
 
-module.exports.onClientPreRequest = [function onClientPreRequest(next) {
+var onClientPreRequest = exports.onClientPreRequest = [function onClientPreRequest(next) {
 
   var ctx = this;
 
@@ -72,7 +77,7 @@ module.exports.onClientPreRequest = [function onClientPreRequest(next) {
   next();
 }];
 
-module.exports.onClientPostRequest = [function onClientPostRequest(next) {
+var onClientPostRequest = exports.onClientPostRequest = [function onClientPostRequest(next) {
 
   var ctx = this;
   var pattern = this._pattern;
@@ -94,7 +99,7 @@ module.exports.onClientPostRequest = [function onClientPostRequest(next) {
   next();
 }];
 
-module.exports.onServerPreRequest = [function onServerPreRequest(req, res, next) {
+var onServerPreRequest = exports.onServerPreRequest = [function onServerPreRequest(req, res, next) {
 
   var ctx = this;
 
@@ -123,7 +128,7 @@ module.exports.onServerPreRequest = [function onServerPreRequest(req, res, next)
   next();
 }];
 
-module.exports.onServerPreHandler = [function onServerPreHandler(req, res, next) {
+var onServerPreHandler = exports.onServerPreHandler = [function onServerPreHandler(req, res, next) {
 
   var ctx = this;
 
@@ -132,7 +137,7 @@ module.exports.onServerPreHandler = [function onServerPreHandler(req, res, next)
   next();
 }];
 
-module.exports.onServerPreResponse = [function onServerPreResponse(req, res, next) {
+var onServerPreResponse = exports.onServerPreResponse = [function onServerPreResponse(req, res, next) {
 
   var ctx = this;
 
