@@ -534,34 +534,21 @@ Your custom logger have to support following log levels.
 ```
 
 ```
-node examples\\full-example.js
-[2017-01-12T23:24:45.739Z] INFO (app/10104 on starptech): Connected!
-[2017-01-12T23:24:45.744Z] INFO (app/10104 on starptech): ADD - ADDED
+[2017-02-04T22:19:34.156Z] INFO (app/2056 on starptech): Connected!
+[2017-02-04T22:19:34.160Z] INFO (app/2056 on starptech): ADD - ADDED
     topic: "math"
     cmd: "add"
-[2017-01-12T23:24:45.745Z] INFO (app/10104 on starptech): ADD - ADDED
-    topic: "math"
-    cmd: "sub"
-[2017-01-12T23:24:45.748Z] INFO (app/10104 on starptech): ACT_OUTBOUND - ID:d682eb25a2af958fe8ff4375bb1aab77
-    topic: "math"
-    cmd: "add"
-    a: 1
-    b: 2
-[2017-01-12T23:24:45.749Z] INFO (app/10104 on starptech): ACT_OUTBOUND - ID:1e3fa92b544310b313d845068397e185
-    topic: "math"
-    cmd: "add"
-    a: 1
-    b: 20
-[2017-01-12T23:24:45.752Z] INFO (app/10104 on starptech): ACT_INBOUND - ID:d682eb25a2af958fe8ff4375bb1aab77 (0.003282ms)
-[2017-01-12T23:24:45.753Z] INFO (app/10104 on starptech): ACT_OUTBOUND - ID:08de3e1cec1c06caba681f2298660fa4
-    topic: "math"
-    cmd: "add"
-    a: 1
-    b: 3
-[2017-01-12T23:24:45.753Z] INFO (app/10104 on starptech): ACT_INBOUND - ID:1e3fa92b544310b313d845068397e185 (0.002116ms)
-[2017-01-12T23:24:45.754Z] INFO (app/10104 on starptech): Result 21
-[2017-01-12T23:24:45.755Z] INFO (app/10104 on starptech): ACT_INBOUND - ID:08de3e1cec1c06caba681f2298660fa4 (0.001491ms)
-[2017-01-12T23:24:45.755Z] INFO (app/10104 on starptech): Result 4
+[2017-02-04T22:19:34.163Z] INFO (app/2056 on starptech):
+    outbound: {
+      "id": "5ecdad999267f031109df50f653a7f46",
+      "pattern": "a:1,b:2,cmd:add,topic:math"
+    }
+[2017-02-04T22:19:34.167Z] INFO (app/2056 on starptech):
+    inbound: {
+      "id": "5ecdad999267f031109df50f653a7f46",
+      "duration": 0.003826,
+      "pattern": "a:1,b:2,cmd:add,topic:math"
+    }
 ```
 
 ### Protocol
