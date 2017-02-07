@@ -803,7 +803,6 @@ class Hemera extends EventEmitter {
     let hasCallback = _.isFunction(cb)
     let timeout = pattern.timeout$ || self._config.timeout
 
-    // handle timeout
     self._transport.timeout(sid, timeout, 1, () => {
       let error = new Errors.TimeoutError(Constants.ACT_TIMEOUT_ERROR, {
         pattern
@@ -811,7 +810,6 @@ class Hemera extends EventEmitter {
 
       self.log.error(error)
 
-      // assign error to request payload
       self._response.error = error
 
       self._extensions.onClientPostRequest.invoke(self, function (err) {
