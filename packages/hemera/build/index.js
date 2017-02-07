@@ -285,8 +285,7 @@ var Hemera = function (_EventEmitter) {
 
 
     /**
-     * Add an extension. Extensions are called in serie and can only pass an error
-     * You can work with the current context manipulate something
+     * Add an extension. Extensions are called in serie
      *
      * @param {any} type
      * @param {any} handler
@@ -881,7 +880,6 @@ var Hemera = function (_EventEmitter) {
       var hasCallback = _lodash2.default.isFunction(cb);
       var timeout = pattern.timeout$ || self._config.timeout;
 
-      // handle timeout
       self._transport.timeout(sid, timeout, 1, function () {
         var error = new _errors2.default.TimeoutError(_constants2.default.ACT_TIMEOUT_ERROR, {
           pattern
@@ -889,7 +887,6 @@ var Hemera = function (_EventEmitter) {
 
         self.log.error(error);
 
-        // assign error to request payload
         self._response.error = error;
 
         self._extensions.onClientPostRequest.invoke(self, function (err) {

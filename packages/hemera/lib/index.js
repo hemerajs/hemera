@@ -245,8 +245,7 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   * Add an extension. Extensions are called in serie and can only pass an error
-   * You can work with the current context manipulate something
+   * Add an extension. Extensions are called in serie
    *
    * @param {any} type
    * @param {any} handler
