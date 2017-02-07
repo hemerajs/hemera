@@ -68,11 +68,14 @@ export const onClientPostRequest = [function onClientPostRequest (next) {
   let msg = ctx._response.payload
 
   // pass to act context
-  ctx.request$ = msg.request || {}
+  if (msg) {
+    ctx.request$ = msg.request || {}
+    ctx.trace$ = msg.trace || {}
+    ctx.meta$ = msg.meta || {}
+  }
+
   ctx.request$.service = pattern.topic
   ctx.request$.method = Util.pattern(pattern)
-  ctx.trace$ = msg.trace || {}
-  ctx.meta$ = msg.meta || {}
 
   ctx.log.info({
     inbound: ctx

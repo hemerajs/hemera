@@ -207,20 +207,18 @@ var Hemera = function (_EventEmitter) {
 
     // use own logger
     if (_this._config.logger) {
-
       _this.log = _this._config.logger;
     } else {
-
       var pretty = _pino2.default.pretty();
 
-      //Leads to too much listeners in tests
+      // Leads to too much listeners in tests
       if (_this._config.logLevel !== 'silent') {
         pretty.pipe(process.stdout);
       }
 
       _this.log = (0, _pino2.default)({
         name: _this._config.name,
-        safe: true, //avoid error caused by circular references
+        safe: true, // avoid error caused by circular references
         level: _this._config.logLevel,
         serializers: _serializer2.default
       }, pretty);
@@ -264,15 +262,12 @@ var Hemera = function (_EventEmitter) {
      * @memberOf Hemera
      */
     value: function expose(key, object) {
-
       var pluginName = this.plugin$.attributes.name;
 
       if (!this._exposition[pluginName]) {
-
         this._exposition[pluginName] = {};
         this._exposition[pluginName][key] = object;
       } else {
-
         this._exposition[pluginName][key] = object;
       }
     }
@@ -299,7 +294,6 @@ var Hemera = function (_EventEmitter) {
      * @memberOf Hemera
      */
     value: function ext(type, handler) {
-
       if (!this._extensions[type]) {
         var error = new _errors2.default.HemeraError(_constants2.default.INVALID_EXTENSION_TYPE, {
           type
@@ -322,7 +316,6 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'use',
     value: function use(params) {
-
       if (this._plugins[params.attributes.name]) {
         var error = new _errors2.default.HemeraError(_constants2.default.PLUGIN_ALREADY_IN_USE, {
           plugin: params.attributes.name
@@ -357,7 +350,6 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'setOption',
     value: function setOption(key, value) {
-
       this.plugin$.options[key] = value;
     }
 
@@ -371,7 +363,6 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'setConfig',
     value: function setConfig(key, value) {
-
       this._config[key] = value;
     }
 
@@ -384,7 +375,6 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'fatal',
     value: function fatal() {
-
       this.close();
 
       process.exit(1);
@@ -404,7 +394,6 @@ var Hemera = function (_EventEmitter) {
       var _this2 = this;
 
       this._transport.driver.on('connect', function () {
-
         _this2.log.info(_constants2.default.TRANSPORT_CONNECTED);
 
         if (_lodash2.default.isFunction(cb)) {
@@ -423,7 +412,6 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: '_buildMessage',
     value: function _buildMessage() {
-
       var result = this._response;
 
       var message = {
@@ -442,7 +430,6 @@ var Hemera = function (_EventEmitter) {
 
       // attach encoding issues
       if (m.error) {
-
         message.error = _errio2.default.toObject(m.error);
         message.result = null;
       }
@@ -461,27 +448,21 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'finish',
     value: function finish() {
-
       var self = this;
 
       self._extensions.onServerPreResponse.invoke(self, function (err, value) {
-
         // check if an error was already catched
         if (self._response.error) {
-
+          self.log.error(self._response.error);
+        } else if (err) {
+          // check for an extension error
+          var error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
+          self._response.error = error;
           self.log.error(self._response.error);
         }
-        // check for an extension error
-        else if (err) {
-
-            var error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
-            self._response.error = error;
-            self.log.error(self._response.error);
-          }
 
         // reply value from extension
         if (value) {
-
           self._response.payload = value;
         }
 
@@ -490,28 +471,22 @@ var Hemera = function (_EventEmitter) {
 
         // indicates that an error occurs and that the program should exit
         if (self._shouldCrash) {
-
           // only when we have an inbox othwerwise exit the service immediately
           if (self._replyTo) {
-
             // send error back to callee
             return self._transport.send(self._replyTo, self._message, function () {
-
               // let it crash
               if (self._config.crashOnFatal) {
-
                 self.fatal();
               }
             });
           } else if (self._config.crashOnFatal) {
-
             return self.fatal();
           }
         }
 
         // reply only when we have an inbox
         if (self._replyTo) {
-
           return this._transport.send(this._replyTo, self._message);
         }
       });
@@ -542,7 +517,6 @@ var Hemera = function (_EventEmitter) {
       }
 
       var handler = function handler(request, replyTo) {
-
         // create new execution context
         var ctx = _this3.createContext();
         ctx._shouldCrash = false;
@@ -553,11 +527,9 @@ var Hemera = function (_EventEmitter) {
         ctx._actMeta = {};
 
         self._extensions.onServerPreRequest.invoke(ctx, function (err, value) {
-
           var self = this;
 
           if (err) {
-
             var error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
             self.log.error(error);
             self._response.error = error;
@@ -567,7 +539,6 @@ var Hemera = function (_EventEmitter) {
 
           // reply value from extension
           if (value) {
-
             ctx._response.payload = value;
             return self.finish();
           }
@@ -579,11 +550,8 @@ var Hemera = function (_EventEmitter) {
 
           // check if a handler is registered with this pattern
           if (self._actMeta) {
-
             self._extensions.onServerPreHandler.invoke(ctx, function (err, value) {
-
               if (err) {
-
                 self._response.error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
 
                 self.log.error(self._response.error);
@@ -593,18 +561,15 @@ var Hemera = function (_EventEmitter) {
 
               // reply value from extension
               if (value) {
-
                 ctx._response.payload = value;
                 return self.finish();
               }
 
               try {
-
                 var action = self._actMeta.action.bind(self);
 
                 // if request type is 'pubsub' we dont have to reply back
                 if (requestType === 'pubsub') {
-
                   action(self._request.payload.pattern);
 
                   return self.finish();
@@ -612,9 +577,7 @@ var Hemera = function (_EventEmitter) {
 
                 // execute RPC action
                 action(self._request.payload.pattern, function (err, resp) {
-
                   if (err) {
-
                     self._response.error = new _errors2.default.BusinessError(_constants2.default.IMPLEMENTATION_ERROR, {
                       pattern: self._pattern
                     }).causedBy(err);
@@ -628,7 +591,6 @@ var Hemera = function (_EventEmitter) {
                   self.finish();
                 });
               } catch (err) {
-
                 self._response.error = new _errors2.default.ImplementationError(_constants2.default.IMPLEMENTATION_ERROR, {
                   pattern: self._pattern
                 }).causedBy(err);
@@ -640,7 +602,6 @@ var Hemera = function (_EventEmitter) {
               }
             });
           } else {
-
             self.log.info({
               topic
             }, _constants2.default.PATTERN_NOT_FOUND);
@@ -657,12 +618,10 @@ var Hemera = function (_EventEmitter) {
 
       // standard pubsub with optional max proceed messages
       if (subToMany) {
-
         self._transport.subscribe(topic, {
           max: maxMessages
         }, handler);
       } else {
-
         // queue group names allow load balancing of services
         self._transport.subscribe(topic, {
           'queue': 'queue.' + topic,
@@ -685,18 +644,15 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'add',
     value: function add(pattern, cb) {
-
       var hasCallback = _lodash2.default.isFunction(cb);
 
       // check for use quick syntax for JSON objects
       if (_lodash2.default.isString(pattern)) {
-
         pattern = (0, _tinysonic2.default)(pattern);
       }
 
       // topic is needed to subscribe on a subject in NATS
       if (!pattern.topic) {
-
         var error = new _errors2.default.HemeraError(_constants2.default.NO_TOPIC_TO_SUBSCRIBE, {
           pattern
         });
@@ -706,7 +662,6 @@ var Hemera = function (_EventEmitter) {
       }
 
       if (!hasCallback) {
-
         var _error = new _errors2.default.HemeraError(_constants2.default.MISSING_IMPLEMENTATION, {
           pattern
         });
@@ -721,7 +676,6 @@ var Hemera = function (_EventEmitter) {
 
       // remove objects (rules) from pattern and extract schema
       _lodash2.default.each(pattern, function (v, k) {
-
         if (_lodash2.default.isObject(v)) {
           schema[k] = _lodash2.default.clone(v);
           delete origPattern[k];
@@ -743,7 +697,6 @@ var Hemera = function (_EventEmitter) {
 
       // check if pattern is already registered
       if (handler) {
-
         var _error2 = new _errors2.default.HemeraError(_constants2.default.PATTERN_ALREADY_IN_USE, {
           pattern
         });
@@ -773,16 +726,13 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'act',
     value: function act(pattern, cb) {
-
       // check for use quick syntax for JSON objects
       if (_lodash2.default.isString(pattern)) {
-
         pattern = (0, _tinysonic2.default)(pattern);
       }
 
       // topic is needed to subscribe on a subject in NATS
       if (!pattern.topic) {
-
         var error = new _errors2.default.HemeraError(_constants2.default.NO_TOPIC_TO_REQUEST, {
           pattern
         });
@@ -800,7 +750,6 @@ var Hemera = function (_EventEmitter) {
       ctx._request = new _clientRequest2.default();
 
       ctx._extensions.onClientPreRequest.invoke(ctx, function onPreRequest(err) {
-
         var self = this;
 
         var hasCallback = _lodash2.default.isFunction(cb);
@@ -809,7 +758,6 @@ var Hemera = function (_EventEmitter) {
 
         // throw encoding issue
         if (m.error) {
-
           var _error3 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(m.error);
 
           self.log.error(_error3);
@@ -822,7 +770,6 @@ var Hemera = function (_EventEmitter) {
         }
 
         if (err) {
-
           var _error4 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
 
           self.log.error(_error4);
@@ -839,26 +786,21 @@ var Hemera = function (_EventEmitter) {
 
         // use simple publish mechanism instead to fire a request
         if (pattern.pubsub$ === true) {
-
           if (hasCallback) {
             self.log.info(_constants2.default.PUB_CALLBACK_REDUNDANT);
           }
 
           self._transport.send(pattern.topic, self._request.payload);
         } else {
-
           // send request
           var sid = self._transport.sendRequest(pattern.topic, self._request.payload, function (response) {
-
             var res = self._decoder.decode.call(ctx, response);
             self._response.payload = res.value;
             self._response.error = res.error;
 
             try {
-
               // if payload is invalid
               if (self._response.error) {
-
                 var _error5 = new _errors2.default.ParseError(_constants2.default.PAYLOAD_PARSING_ERROR, {
                   pattern: self._cleanPattern
                 }).causedBy(self._response.error);
@@ -871,9 +813,7 @@ var Hemera = function (_EventEmitter) {
               }
 
               self._extensions.onClientPostRequest.invoke(ctx, function (err) {
-
                 if (err) {
-
                   var _error6 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
 
                   self.log.error(_error6);
@@ -886,9 +826,7 @@ var Hemera = function (_EventEmitter) {
                 }
 
                 if (hasCallback) {
-
                   if (self._response.payload.error) {
-
                     var responseError = _errio2.default.fromObject(self._response.payload.error);
                     var responseErrorCause = responseError.cause;
                     var _error7 = new _errors2.default.BusinessError(_constants2.default.BUSINESS_ERROR, {
@@ -904,7 +842,6 @@ var Hemera = function (_EventEmitter) {
                 }
               });
             } catch (err) {
-
               var _error8 = new _errors2.default.FatalError(_constants2.default.FATAL_ERROR, {
                 pattern: self._cleanPattern
               }).causedBy(err);
@@ -913,14 +850,13 @@ var Hemera = function (_EventEmitter) {
 
               // let it crash
               if (self._config.crashOnFatal) {
-
                 self.fatal();
               }
             }
           });
 
           // handle timeout
-          self.handleTimeout(sid, pattern, cb);
+          ctx.handleTimeout(sid, pattern, cb);
         }
       });
     }
@@ -941,39 +877,44 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'handleTimeout',
     value: function handleTimeout(sid, pattern, cb) {
-      var _this4 = this;
+      var self = this;
+      var hasCallback = _lodash2.default.isFunction(cb);
+      var timeout = pattern.timeout$ || self._config.timeout;
 
       // handle timeout
-      this._transport.timeout(sid, pattern.timeout$ || this._config.timeout, 1, function () {
-
-        var hasCallback = _lodash2.default.isFunction(cb);
-
+      self._transport.timeout(sid, timeout, 1, function () {
         var error = new _errors2.default.TimeoutError(_constants2.default.ACT_TIMEOUT_ERROR, {
           pattern
         });
 
-        _this4.log.error(error);
+        self.log.error(error);
 
-        if (hasCallback) {
+        // assign error to request payload
+        self._response.error = error;
 
-          try {
+        self._extensions.onClientPostRequest.invoke(self, function (err) {
+          if (err) {
+            error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
+            self.log.error(error);
+          }
 
-            cb.call(_this4, error);
-          } catch (err) {
+          if (hasCallback) {
+            try {
+              cb.call(self, error);
+            } catch (err) {
+              var _error9 = new _errors2.default.FatalError(_constants2.default.FATAL_ERROR, {
+                pattern
+              }).causedBy(err);
 
-            var _error9 = new _errors2.default.FatalError(_constants2.default.FATAL_ERROR, {
-              pattern
-            }).causedBy(err);
+              self.log.fatal(_error9);
 
-            _this4.log.fatal(_error9);
-
-            // let it crash
-            if (_this4._config.crashOnFatal) {
-
-              _this4.fatal();
+              // let it crash
+              if (self._config.crashOnFatal) {
+                self.fatal();
+              }
             }
           }
-        }
+        });
       });
     }
 
@@ -989,7 +930,6 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'createContext',
     value: function createContext() {
-
       var self = this;
 
       var ctx = Object.create(self);
@@ -1006,7 +946,6 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'list',
     value: function list(params) {
-
       return this._router.list(params);
     }
 
@@ -1021,7 +960,6 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'close',
     value: function close() {
-
       this._heavy.stop();
 
       return this._transport.close();
@@ -1029,7 +967,6 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'plugins',
     get: function get() {
-
       return this._plugins;
     }
 
@@ -1044,7 +981,6 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'router',
     get: function get() {
-
       return this._router;
     }
 
@@ -1059,7 +995,6 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'load',
     get: function get() {
-
       return this._heavy.load;
     }
 
@@ -1074,13 +1009,11 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'exposition',
     get: function get() {
-
       return this._exposition;
     }
   }, {
     key: 'transport',
     get: function get() {
-
       return this._transport.driver;
     }
 
@@ -1095,7 +1028,6 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'topics',
     get: function get() {
-
       return this._topics;
     }
   }]);

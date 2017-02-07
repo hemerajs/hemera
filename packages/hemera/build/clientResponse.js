@@ -43,7 +43,6 @@ var ClientResponse = function () {
   _createClass(ClientResponse, [{
     key: "payload",
     get: function get() {
-
       return this._response.value;
     }
 
@@ -55,7 +54,6 @@ var ClientResponse = function () {
      */
     ,
     set: function set(value) {
-
       this._response.value = value;
     }
 
@@ -69,7 +67,6 @@ var ClientResponse = function () {
   }, {
     key: "error",
     set: function set(error) {
-
       this._response.error = error;
     }
 
@@ -82,7 +79,6 @@ var ClientResponse = function () {
      */
     ,
     get: function get() {
-
       return this._response.error;
     }
   }]);

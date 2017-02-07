@@ -39,7 +39,6 @@ var Util = function () {
      * @memberOf Util
      */
     value: function randomId() {
-
       return _crypto2.default.randomBytes(16).toString('hex');
     }
 
@@ -55,7 +54,6 @@ var Util = function () {
   }, {
     key: 'nowHrTime',
     value: function nowHrTime() {
-
       var hrtime = process.hrtime();
       return Math.floor(hrtime[0] * 1000000 + hrtime[1] / 1000);
     }
@@ -71,7 +69,6 @@ var Util = function () {
   }, {
     key: 'cleanPattern',
     value: function cleanPattern(obj) {
-
       if (obj === null) return obj;
 
       return _lodash2.default.pickBy(obj, function (val, prop) {
@@ -89,7 +86,6 @@ var Util = function () {
   }, {
     key: 'pattern',
     value: function pattern(args) {
-
       if (_lodash2.default.isString(args)) {
         return args;
       }

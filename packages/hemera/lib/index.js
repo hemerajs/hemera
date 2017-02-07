@@ -781,7 +781,7 @@ class Hemera extends EventEmitter {
         })
 
         // handle timeout
-        self.handleTimeout(sid, pattern, cb)
+        ctx.handleTimeout(sid, pattern, cb)
       }
     })
   }
@@ -799,32 +799,44 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   handleTimeout (sid, pattern, cb) {
-    // handle timeout
-    this._transport.timeout(sid, pattern.timeout$ || this._config.timeout, 1, () => {
-      let hasCallback = _.isFunction(cb)
+    let self = this
+    let hasCallback = _.isFunction(cb)
+    let timeout = pattern.timeout$ || self._config.timeout
 
+    // handle timeout
+    self._transport.timeout(sid, timeout, 1, () => {
       let error = new Errors.TimeoutError(Constants.ACT_TIMEOUT_ERROR, {
         pattern
       })
 
-      this.log.error(error)
+      self.log.error(error)
 
-      if (hasCallback) {
-        try {
-          cb.call(this, error)
-        } catch (err) {
-          let error = new Errors.FatalError(Constants.FATAL_ERROR, {
-            pattern
-          }).causedBy(err)
+      // assign error to request payload
+      self._response.error = error
 
-          this.log.fatal(error)
+      self._extensions.onClientPostRequest.invoke(self, function (err) {
+        if (err) {
+          error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+          self.log.error(error)
+        }
 
-          // let it crash
-          if (this._config.crashOnFatal) {
-            this.fatal()
+        if (hasCallback) {
+          try {
+            cb.call(self, error)
+          } catch (err) {
+            let error = new Errors.FatalError(Constants.FATAL_ERROR, {
+              pattern
+            }).causedBy(err)
+
+            self.log.fatal(error)
+
+            // let it crash
+            if (self._config.crashOnFatal) {
+              self.fatal()
+            }
           }
         }
-      }
+      })
     })
   }
 

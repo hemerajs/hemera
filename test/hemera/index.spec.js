@@ -515,6 +515,56 @@ describe('Timeouts', function () {
     })
   })
 
+  it('Should be able listen on client timeout events in onClientPostRequest', function (done) {
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false,
+      timeout: 150
+    })
+
+    let event = Sinon.spy()
+
+    hemera.ready(() => {
+
+      hemera.on('onClientPostRequest', function (ctx) {
+
+        const err = ctx._response.error
+
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('TimeoutError')
+        expect(err.message).to.be.equals('Timeout')
+
+        event()
+
+      })
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+
+        expect(err).to.be.exists()
+        expect(event.called).to.be.equals(true)
+        expect(resp).not.to.be.exists()
+        expect(err.name).to.be.equals('TimeoutError')
+        expect(err.message).to.be.equals('Timeout')
+        hemera.close()
+        done()
+      })
+    })
+  })
+
   it('Should throw timeout error when pattern is not defined on the network', function (done) {
 
     const nats = require('nats').connect(authUrl)

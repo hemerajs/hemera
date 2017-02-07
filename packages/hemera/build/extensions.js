@@ -22,7 +22,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 var onClientPreRequest = exports.onClientPreRequest = [function onClientPreRequest(next) {
-
   var ctx = this;
 
   var pattern = this._pattern;
@@ -78,17 +77,19 @@ var onClientPreRequest = exports.onClientPreRequest = [function onClientPreReque
 }];
 
 var onClientPostRequest = exports.onClientPostRequest = [function onClientPostRequest(next) {
-
   var ctx = this;
   var pattern = this._pattern;
   var msg = ctx._response.payload;
 
   // pass to act context
-  ctx.request$ = msg.request || {};
+  if (msg) {
+    ctx.request$ = msg.request || {};
+    ctx.trace$ = msg.trace || {};
+    ctx.meta$ = msg.meta || {};
+  }
+
   ctx.request$.service = pattern.topic;
   ctx.request$.method = _util2.default.pattern(pattern);
-  ctx.trace$ = msg.trace || {};
-  ctx.meta$ = msg.meta || {};
 
   ctx.log.info({
     inbound: ctx
@@ -100,20 +101,17 @@ var onClientPostRequest = exports.onClientPostRequest = [function onClientPostRe
 }];
 
 var onServerPreRequest = exports.onServerPreRequest = [function onServerPreRequest(req, res, next) {
-
   var ctx = this;
 
   var m = ctx._decoder.decode.call(ctx, ctx._request.payload);
 
   if (m.error) {
-
     return res.send(m.error);
   }
 
   var msg = m.value;
 
   if (msg) {
-
     ctx.meta$ = msg.meta || {};
     ctx.trace$ = msg.trace || {};
     ctx.delegate$ = msg.delegate || {};
@@ -129,7 +127,6 @@ var onServerPreRequest = exports.onServerPreRequest = [function onServerPreReque
 }];
 
 var onServerPreHandler = exports.onServerPreHandler = [function onServerPreHandler(req, res, next) {
-
   var ctx = this;
 
   ctx.emit('onServerPreHandler', ctx);
@@ -138,7 +135,6 @@ var onServerPreHandler = exports.onServerPreHandler = [function onServerPreHandl
 }];
 
 var onServerPreResponse = exports.onServerPreResponse = [function onServerPreResponse(req, res, next) {
-
   var ctx = this;
 
   ctx.emit('onServerPreResponse', ctx);

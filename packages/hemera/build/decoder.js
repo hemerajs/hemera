@@ -23,7 +23,6 @@ var Decoder = function () {
   _createClass(Decoder, null, [{
     key: "decode",
     value: function decode(msg) {
-
       return Parse(msg);
     }
   }]);
@@ -35,7 +34,6 @@ exports.default = Decoder;
 
 
 function Parse(data) {
-
   if (!(this instanceof Parse)) {
     return new Parse(data);
   }
@@ -44,10 +42,8 @@ function Parse(data) {
   this.value = null;
 
   try {
-
     this.value = JSON.parse(data);
   } catch (error) {
-
     this.error = error;
   }
 }

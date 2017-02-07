@@ -38,7 +38,6 @@ var Extension = function () {
   _createClass(Extension, [{
     key: "add",
     value: function add(handler) {
-
       this._stack.push(handler);
     }
 
@@ -53,7 +52,6 @@ var Extension = function () {
   }, {
     key: "addRange",
     value: function addRange(handlers) {
-
       this._stack = this._stack.concat(handlers);
     }
     /**
@@ -70,15 +68,12 @@ var Extension = function () {
       var _this = this;
 
       var each = function each(item, next, prevValue, i) {
-
         if (_this._server) {
-
           var response = ctx._response;
           response.next = next;
 
           item.call(ctx, ctx._request, response, next, prevValue, i);
         } else {
-
           item.call(ctx, next, i);
         }
       };
@@ -98,34 +93,24 @@ var Extension = function () {
   }], [{
     key: "serial",
     value: function serial(array, method, callback) {
-
       if (!array.length) {
-
         callback();
       } else {
         (function () {
-
           var i = 0;
 
           var iterate = function iterate(prevValue) {
-
             var done = function done(err, value, abort) {
-
               if (err) {
-
                 callback(err);
               } else if (value && abort) {
-
                 callback(null, value);
               } else {
-
                 i = i + 1;
 
                 if (i < array.length) {
-
                   iterate(value);
                 } else {
-
                   callback(null, value);
                 }
               }

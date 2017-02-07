@@ -44,7 +44,6 @@ var ClientRequest = function () {
   _createClass(ClientRequest, [{
     key: "payload",
     get: function get() {
-
       return this._request.value;
     }
 
@@ -65,7 +64,6 @@ var ClientRequest = function () {
      * @memberOf ClientRequest
      */
     set: function set(value) {
-
       this._request.value = value;
     }
 
@@ -79,11 +77,9 @@ var ClientRequest = function () {
   }, {
     key: "error",
     get: function get() {
-
       return this._request.error;
     },
     set: function set(error) {
-
       this._request.error = error;
     }
   }]);

@@ -48,14 +48,11 @@ var ServerResponse = function () {
   _createClass(ServerResponse, [{
     key: 'end',
     value: function end(value) {
-
       if (value instanceof Error) {
-
         if (_lodash2.default.isFunction(this.next)) {
           this.next(value);
         }
       } else {
-
         if (_lodash2.default.isFunction(this.next)) {
           this.next(null, value, true);
         }
@@ -73,14 +70,11 @@ var ServerResponse = function () {
   }, {
     key: 'send',
     value: function send(value) {
-
       if (value instanceof Error) {
-
         if (_lodash2.default.isFunction(this.next)) {
           this.next(value);
         }
       } else {
-
         if (_lodash2.default.isFunction(this.next)) {
           this.next(null, value);
         }
@@ -98,7 +92,6 @@ var ServerResponse = function () {
   }, {
     key: 'payload',
     get: function get() {
-
       return this._response.value;
     }
 
@@ -110,7 +103,6 @@ var ServerResponse = function () {
      */
     ,
     set: function set(value) {
-
       this._response.value = value;
     }
 
@@ -124,7 +116,6 @@ var ServerResponse = function () {
   }, {
     key: 'error',
     set: function set(error) {
-
       this._response.error = error;
     }
 
@@ -137,7 +128,6 @@ var ServerResponse = function () {
      */
     ,
     get: function get() {
-
       return this._response.error;
     }
   }]);
