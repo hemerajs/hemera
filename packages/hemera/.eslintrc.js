@@ -8,7 +8,7 @@ module.exports = {
     "flowtype"
   ],
   "extends": [
-    "standard",
+    "standard"
   ],
   "parserOptions": {
     "sourceType": "module"

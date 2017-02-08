@@ -447,9 +447,9 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'finish',
     value: function finish() {
-      var self = this;
+      function onServerPreResponseHandler(err, value) {
+        var self = this;
 
-      self._extensions.onServerPreResponse.invoke(self, function (err, value) {
         // check if an error was already catched
         if (self._response.error) {
           self.log.error(self._response.error);
@@ -488,7 +488,9 @@ var Hemera = function (_EventEmitter) {
         if (self._replyTo) {
           return this._transport.send(this._replyTo, self._message);
         }
-      });
+      }
+
+      this._extensions.onServerPreResponse.invoke(this, onServerPreResponseHandler);
     }
 
     /**
@@ -515,6 +517,123 @@ var Hemera = function (_EventEmitter) {
         return;
       }
 
+      /**
+       *
+       *
+       * @param {any} err
+       * @param {any} resp
+       * @returns
+       */
+      function actionHandler(err, resp) {
+        var self = this;
+
+        if (err) {
+          self._response.error = new _errors2.default.BusinessError(_constants2.default.IMPLEMENTATION_ERROR, {
+            pattern: self._pattern
+          }).causedBy(err);
+
+          return self.finish();
+        }
+
+        // assign action result
+        self._response.payload = resp;
+
+        self.finish();
+      }
+
+      /**
+       *
+       *
+       * @param {any} err
+       * @param {any} value
+       * @returns
+       */
+      function onServerPreHandler(err, value) {
+        var self = this;
+
+        if (err) {
+          self._response.error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
+
+          self.log.error(self._response.error);
+
+          return self.finish();
+        }
+
+        // reply value from extension
+        if (value) {
+          self._response.payload = value;
+          return self.finish();
+        }
+
+        try {
+          var action = self._actMeta.action.bind(self);
+
+          // if request type is 'pubsub' we dont have to reply back
+          if (self._request.payload.request.type === 'pubsub') {
+            action(self._request.payload.pattern);
+
+            return self.finish();
+          }
+
+          // execute RPC action
+          action(self._request.payload.pattern, actionHandler.bind(self));
+        } catch (err) {
+          self._response.error = new _errors2.default.ImplementationError(_constants2.default.IMPLEMENTATION_ERROR, {
+            pattern: self._pattern
+          }).causedBy(err);
+
+          // service should exit
+          self._shouldCrash = true;
+
+          self.finish();
+        }
+      }
+
+      /**
+       *
+       *
+       * @param {any} err
+       * @param {any} value
+       * @returns
+       */
+      function onServerPreRequestHandler(err, value) {
+        var self = this;
+
+        if (err) {
+          var error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
+          self.log.error(error);
+          self._response.error = error;
+
+          return self.finish();
+        }
+
+        // reply value from extension
+        if (value) {
+          self._response.payload = value;
+          return self.finish();
+        }
+
+        // find matched route
+        self._pattern = self._request.payload.pattern;
+        self._actMeta = self._router.lookup(self._pattern);
+
+        // check if a handler is registered with this pattern
+        if (self._actMeta) {
+          self._extensions.onServerPreHandler.invoke(self, onServerPreHandler);
+        } else {
+          self.log.info({
+            topic
+          }, _constants2.default.PATTERN_NOT_FOUND);
+
+          self._response.error = new _errors2.default.PatternNotFound(_constants2.default.PATTERN_NOT_FOUND, {
+            pattern: self._pattern
+          });
+
+          // send error back to callee
+          self.finish();
+        }
+      }
+
       var handler = function handler(request, replyTo) {
         // create new execution context
         var ctx = _this3.createContext();
@@ -525,94 +644,7 @@ var Hemera = function (_EventEmitter) {
         ctx._pattern = {};
         ctx._actMeta = {};
 
-        self._extensions.onServerPreRequest.invoke(ctx, function (err, value) {
-          var self = this;
-
-          if (err) {
-            var error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
-            self.log.error(error);
-            self._response.error = error;
-
-            return self.finish();
-          }
-
-          // reply value from extension
-          if (value) {
-            ctx._response.payload = value;
-            return self.finish();
-          }
-
-          // find matched route
-          var requestType = self._request.payload.request.type;
-          self._pattern = self._request.payload.pattern;
-          self._actMeta = self._router.lookup(self._pattern);
-
-          // check if a handler is registered with this pattern
-          if (self._actMeta) {
-            self._extensions.onServerPreHandler.invoke(ctx, function (err, value) {
-              if (err) {
-                self._response.error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
-
-                self.log.error(self._response.error);
-
-                return self.finish();
-              }
-
-              // reply value from extension
-              if (value) {
-                ctx._response.payload = value;
-                return self.finish();
-              }
-
-              try {
-                var action = self._actMeta.action.bind(self);
-
-                // if request type is 'pubsub' we dont have to reply back
-                if (requestType === 'pubsub') {
-                  action(self._request.payload.pattern);
-
-                  return self.finish();
-                }
-
-                // execute RPC action
-                action(self._request.payload.pattern, function (err, resp) {
-                  if (err) {
-                    self._response.error = new _errors2.default.BusinessError(_constants2.default.IMPLEMENTATION_ERROR, {
-                      pattern: self._pattern
-                    }).causedBy(err);
-
-                    return self.finish();
-                  }
-
-                  // assign action result
-                  self._response.payload = resp;
-
-                  self.finish();
-                });
-              } catch (err) {
-                self._response.error = new _errors2.default.ImplementationError(_constants2.default.IMPLEMENTATION_ERROR, {
-                  pattern: self._pattern
-                }).causedBy(err);
-
-                // service should exit
-                self._shouldCrash = true;
-
-                self.finish();
-              }
-            });
-          } else {
-            self.log.info({
-              topic
-            }, _constants2.default.PATTERN_NOT_FOUND);
-
-            self._response.error = new _errors2.default.PatternNotFound(_constants2.default.PATTERN_NOT_FOUND, {
-              pattern: self._pattern
-            });
-
-            // send error back to callee
-            self.finish();
-          }
-        });
+        ctx._extensions.onServerPreRequest.invoke(ctx, onServerPreRequestHandler);
       };
 
       // standard pubsub with optional max proceed messages
@@ -628,7 +660,7 @@ var Hemera = function (_EventEmitter) {
         }, handler);
       }
 
-      this._topics[topic] = true;
+      self._topics[topic] = true;
     }
 
     /**
@@ -740,124 +772,149 @@ var Hemera = function (_EventEmitter) {
         throw error;
       }
 
-      // create new execution context
-      var ctx = this.createContext();
-      ctx._pattern = pattern;
-      ctx._prevContext = this;
-      ctx._cleanPattern = _util2.default.cleanPattern(pattern);
-      ctx._response = new _clientResponse2.default();
-      ctx._request = new _clientRequest2.default();
-
-      ctx._extensions.onClientPreRequest.invoke(ctx, function onPreRequest(err) {
+      /**
+       *
+       *
+       * @param {any} err
+       * @returns
+       */
+      function onClientPostRequestHandler(err) {
         var self = this;
+        if (err) {
+          var _error3 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
 
-        var hasCallback = _lodash2.default.isFunction(cb);
+          self.log.error(_error3);
+
+          if (self._actCallback) {
+            return self._actCallback(_error3);
+          }
+
+          return;
+        }
+
+        if (self._actCallback) {
+          if (self._response.payload.error) {
+            var responseError = _errio2.default.fromObject(self._response.payload.error);
+            var responseErrorCause = responseError.cause;
+            var _error4 = new _errors2.default.BusinessError(_constants2.default.BUSINESS_ERROR, {
+              pattern: self._cleanPattern
+            }).causedBy(responseErrorCause ? responseError.cause : responseError);
+
+            self.log.error(_error4);
+
+            return self._actCallback(responseError);
+          }
+
+          self._actCallback(null, self._response.payload.result);
+        }
+      }
+
+      /**
+       *
+       *
+       * @param {any} response
+       * @returns
+       */
+      function sendRequestHandler(response) {
+        var self = this;
+        var res = self._decoder.decode.call(ctx, response);
+        self._response.payload = res.value;
+        self._response.error = res.error;
+
+        try {
+          // if payload is invalid
+          if (self._response.error) {
+            var _error5 = new _errors2.default.ParseError(_constants2.default.PAYLOAD_PARSING_ERROR, {
+              pattern: self._cleanPattern
+            }).causedBy(self._response.error);
+
+            self.log.error(_error5);
+
+            if (self._actCallback) {
+              return self._actCallback(_error5);
+            }
+          }
+
+          self._extensions.onClientPostRequest.invoke(self, onClientPostRequestHandler);
+        } catch (err) {
+          var _error6 = new _errors2.default.FatalError(_constants2.default.FATAL_ERROR, {
+            pattern: self._cleanPattern
+          }).causedBy(err);
+
+          self.log.fatal(_error6);
+
+          // let it crash
+          if (self._config.crashOnFatal) {
+            self.fatal();
+          }
+        }
+      }
+
+      /**
+       *
+       *
+       * @param {any} err
+       * @returns
+       */
+      function onPreRequestHandler(err) {
+        var self = this;
 
         var m = self._encoder.encode.call(self, self._message);
 
         // throw encoding issue
         if (m.error) {
-          var _error3 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(m.error);
+          var _error7 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(m.error);
 
-          self.log.error(_error3);
+          self.log.error(_error7);
 
-          if (hasCallback) {
-            return cb.call(self, _error3);
+          if (self._actCallback) {
+            return self._actCallback(_error7);
           }
 
           return;
         }
 
         if (err) {
-          var _error4 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
+          var _error8 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
 
-          self.log.error(_error4);
+          self.log.error(_error8);
 
-          if (hasCallback) {
-            return cb.call(self, _error4);
+          if (self._actCallback) {
+            return self._actCallback(_error8);
           }
 
           return;
         }
 
-        ctx._request.payload = m.value;
-        ctx._request.error = m.error;
+        self._request.payload = m.value;
+        self._request.error = m.error;
 
-        // use simple publish mechanism instead to fire a request
+        // use simple publish mechanism instead of request/reply
         if (pattern.pubsub$ === true) {
-          if (hasCallback) {
+          if (self._actCallback) {
             self.log.info(_constants2.default.PUB_CALLBACK_REDUNDANT);
           }
 
           self._transport.send(pattern.topic, self._request.payload);
         } else {
           // send request
-          var sid = self._transport.sendRequest(pattern.topic, self._request.payload, function (response) {
-            var res = self._decoder.decode.call(ctx, response);
-            self._response.payload = res.value;
-            self._response.error = res.error;
-
-            try {
-              // if payload is invalid
-              if (self._response.error) {
-                var _error5 = new _errors2.default.ParseError(_constants2.default.PAYLOAD_PARSING_ERROR, {
-                  pattern: self._cleanPattern
-                }).causedBy(self._response.error);
-
-                self.log.error(_error5);
-
-                if (hasCallback) {
-                  return cb.call(self, _error5);
-                }
-              }
-
-              self._extensions.onClientPostRequest.invoke(ctx, function (err) {
-                if (err) {
-                  var _error6 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
-
-                  self.log.error(_error6);
-
-                  if (hasCallback) {
-                    return cb.call(self, _error6);
-                  }
-
-                  return;
-                }
-
-                if (hasCallback) {
-                  if (self._response.payload.error) {
-                    var responseError = _errio2.default.fromObject(self._response.payload.error);
-                    var responseErrorCause = responseError.cause;
-                    var _error7 = new _errors2.default.BusinessError(_constants2.default.BUSINESS_ERROR, {
-                      pattern: self._cleanPattern
-                    }).causedBy(responseErrorCause ? responseError.cause : responseError);
-
-                    self.log.error(_error7);
-
-                    return cb.call(self, responseError);
-                  }
-
-                  cb.apply(self, [null, self._response.payload.result]);
-                }
-              });
-            } catch (err) {
-              var _error8 = new _errors2.default.FatalError(_constants2.default.FATAL_ERROR, {
-                pattern: self._cleanPattern
-              }).causedBy(err);
-
-              self.log.fatal(_error8);
-
-              // let it crash
-              if (self._config.crashOnFatal) {
-                self.fatal();
-              }
-            }
-          });
+          var sid = self._transport.sendRequest(pattern.topic, self._request.payload, sendRequestHandler.bind(self));
 
           // handle timeout
-          ctx.handleTimeout(sid, pattern, cb);
+          self.handleTimeout(sid, pattern);
         }
-      });
+      }
+
+      // create new execution context
+      var ctx = this.createContext();
+      ctx._pattern = pattern;
+      ctx._prevContext = this;
+      ctx._actCallback = _lodash2.default.isFunction(cb) ? cb.bind(ctx) : null;
+      ctx._cleanPattern = _util2.default.cleanPattern(pattern);
+      ctx._response = new _clientResponse2.default();
+      ctx._request = new _clientRequest2.default();
+
+      ctx._extensions.onClientPreRequest.invoke(ctx, onPreRequestHandler);
     }
 
     /**
@@ -868,51 +925,55 @@ var Hemera = function (_EventEmitter) {
      *
      * @param {any} sid
      * @param {any} pattern
-     * @param {any} cb
      *
      * @memberOf Hemera
      */
 
   }, {
     key: 'handleTimeout',
-    value: function handleTimeout(sid, pattern, cb) {
-      var self = this;
-      var hasCallback = _lodash2.default.isFunction(cb);
-      var timeout = pattern.timeout$ || self._config.timeout;
+    value: function handleTimeout(sid, pattern) {
+      var _this4 = this;
 
-      self._transport.timeout(sid, timeout, 1, function () {
+      var timeout = pattern.timeout$ || this._config.timeout;
+
+      function onClientPostRequestHandler(err) {
+        var self = this;
+        if (err) {
+          self._response.error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
+          self.log.error(self._response.error);
+        }
+
+        if (self._actCallback) {
+          try {
+            self._actCallback(self._response.error);
+          } catch (err) {
+            var error = new _errors2.default.FatalError(_constants2.default.FATAL_ERROR, {
+              pattern
+            }).causedBy(err);
+
+            self.log.fatal(error);
+
+            // let it crash
+            if (self._config.crashOnFatal) {
+              self.fatal();
+            }
+          }
+        }
+      }
+
+      var timeoutHandler = function timeoutHandler() {
         var error = new _errors2.default.TimeoutError(_constants2.default.ACT_TIMEOUT_ERROR, {
           pattern
         });
 
-        self.log.error(error);
+        _this4.log.error(error);
 
-        self._response.error = error;
+        _this4._response.error = error;
 
-        self._extensions.onClientPostRequest.invoke(self, function (err) {
-          if (err) {
-            error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
-            self.log.error(error);
-          }
+        _this4._extensions.onClientPostRequest.invoke(_this4, onClientPostRequestHandler);
+      };
 
-          if (hasCallback) {
-            try {
-              cb.call(self, error);
-            } catch (err) {
-              var _error9 = new _errors2.default.FatalError(_constants2.default.FATAL_ERROR, {
-                pattern
-              }).causedBy(err);
-
-              self.log.fatal(_error9);
-
-              // let it crash
-              if (self._config.crashOnFatal) {
-                self.fatal();
-              }
-            }
-          }
-        });
-      });
+      this._transport.timeout(sid, timeout, 1, timeoutHandler);
     }
 
     /**
