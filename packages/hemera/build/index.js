@@ -932,42 +932,48 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'handleTimeout',
     value: function handleTimeout(sid, pattern) {
-      var self = this;
-      var timeout = pattern.timeout$ || self._config.timeout;
+      var _this4 = this;
 
-      self._transport.timeout(sid, timeout, 1, function () {
+      var timeout = pattern.timeout$ || this._config.timeout;
+
+      function onClientPostRequestHandler(err) {
+        var self = this;
+        if (err) {
+          self._response.error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
+          self.log.error(self._response.error);
+        }
+
+        if (self._actCallback) {
+          try {
+            self._actCallback(self._response.error);
+          } catch (err) {
+            var error = new _errors2.default.FatalError(_constants2.default.FATAL_ERROR, {
+              pattern
+            }).causedBy(err);
+
+            self.log.fatal(error);
+
+            // let it crash
+            if (self._config.crashOnFatal) {
+              self.fatal();
+            }
+          }
+        }
+      }
+
+      var timeoutHandler = function timeoutHandler() {
         var error = new _errors2.default.TimeoutError(_constants2.default.ACT_TIMEOUT_ERROR, {
           pattern
         });
 
-        self.log.error(error);
+        _this4.log.error(error);
 
-        self._response.error = error;
+        _this4._response.error = error;
 
-        self._extensions.onClientPostRequest.invoke(self, function onClientPostRequestHandler(err) {
-          if (err) {
-            error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
-            self.log.error(error);
-          }
+        _this4._extensions.onClientPostRequest.invoke(_this4, onClientPostRequestHandler);
+      };
 
-          if (self._actCallback) {
-            try {
-              self._actCallback(error);
-            } catch (err) {
-              var _error9 = new _errors2.default.FatalError(_constants2.default.FATAL_ERROR, {
-                pattern
-              }).causedBy(err);
-
-              self.log.fatal(_error9);
-
-              // let it crash
-              if (self._config.crashOnFatal) {
-                self.fatal();
-              }
-            }
-          }
-        });
-      });
+      this._transport.timeout(sid, timeout, 1, timeoutHandler);
     }
 
     /**

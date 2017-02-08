@@ -854,42 +854,46 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   handleTimeout (sid, pattern) {
-    const self = this
-    const timeout = pattern.timeout$ || self._config.timeout
+    const timeout = pattern.timeout$ || this._config.timeout
 
-    self._transport.timeout(sid, timeout, 1, () => {
+    function onClientPostRequestHandler (err) {
+      const self = this
+      if (err) {
+        self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+        self.log.error(self._response.error)
+      }
+
+      if (self._actCallback) {
+        try {
+          self._actCallback(self._response.error)
+        } catch (err) {
+          let error = new Errors.FatalError(Constants.FATAL_ERROR, {
+            pattern
+          }).causedBy(err)
+
+          self.log.fatal(error)
+
+          // let it crash
+          if (self._config.crashOnFatal) {
+            self.fatal()
+          }
+        }
+      }
+    }
+
+    let timeoutHandler = () => {
       let error = new Errors.TimeoutError(Constants.ACT_TIMEOUT_ERROR, {
         pattern
       })
 
-      self.log.error(error)
+      this.log.error(error)
 
-      self._response.error = error
+      this._response.error = error
 
-      self._extensions.onClientPostRequest.invoke(self, function onClientPostRequestHandler (err) {
-        if (err) {
-          error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
-          self.log.error(error)
-        }
+      this._extensions.onClientPostRequest.invoke(this, onClientPostRequestHandler)
+    }
 
-        if (self._actCallback) {
-          try {
-            self._actCallback(error)
-          } catch (err) {
-            let error = new Errors.FatalError(Constants.FATAL_ERROR, {
-              pattern
-            }).causedBy(err)
-
-            self.log.fatal(error)
-
-            // let it crash
-            if (self._config.crashOnFatal) {
-              self.fatal()
-            }
-          }
-        }
-      })
-    })
+    this._transport.timeout(sid, timeout, 1, timeoutHandler)
   }
 
   /**
