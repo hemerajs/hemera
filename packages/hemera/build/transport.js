@@ -55,7 +55,6 @@ var NatsTransport = function () {
      * @memberOf NatsTransport
      */
     value: function timeout() {
-
       return this.nc.timeout.apply(this.nc, arguments);
     }
 
@@ -70,7 +69,6 @@ var NatsTransport = function () {
   }, {
     key: "send",
     value: function send() {
-
       return this.nc.publish.apply(this.nc, arguments);
     }
 
@@ -85,7 +83,6 @@ var NatsTransport = function () {
   }, {
     key: "close",
     value: function close() {
-
       return this.nc.close.apply(this.nc, arguments);
     }
 
@@ -100,7 +97,6 @@ var NatsTransport = function () {
   }, {
     key: "subscribe",
     value: function subscribe() {
-
       return this.nc.subscribe.apply(this.nc, arguments);
     }
 
@@ -115,13 +111,11 @@ var NatsTransport = function () {
   }, {
     key: "sendRequest",
     value: function sendRequest() {
-
       return this.nc.request.apply(this.nc, arguments);
     }
   }, {
     key: "driver",
     get: function get() {
-
       return this.nc;
     }
   }]);

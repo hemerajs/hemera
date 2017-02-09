@@ -9,17 +9,7 @@ var _util = require('./util');
 
 var _util2 = _interopRequireDefault(_util);
 
-var _hoek = require('hoek');
-
-var _hoek2 = _interopRequireDefault(_hoek);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/*!
- * hemera
- * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
- * MIT Licensed
- */
 
 var onClientPreRequest = exports.onClientPreRequest = [function onClientPreRequest(next) {
   var ctx = this;
@@ -34,7 +24,7 @@ var onClientPreRequest = exports.onClientPreRequest = [function onClientPreReque
   ctx.context$ = pattern.context$ || prevCtx.context$;
 
   // set metadata by passed pattern or current message context
-  ctx.meta$ = _hoek2.default.merge(pattern.meta$ || {}, ctx.meta$);
+  ctx.meta$ = Object.assign(pattern.meta$ || {}, ctx.meta$);
   // is only passed by msg
   ctx.delegate$ = pattern.delegate$ || {};
 
@@ -74,7 +64,11 @@ var onClientPreRequest = exports.onClientPreRequest = [function onClientPreReque
   ctx.emit('onClientPreRequest', ctx);
 
   next();
-}];
+}]; /*!
+     * hemera
+     * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
+     * MIT Licensed
+     */
 
 var onClientPostRequest = exports.onClientPostRequest = [function onClientPostRequest(next) {
   var ctx = this;

@@ -63,7 +63,8 @@ var Util = function () {
   }, {
     key: 'nowHrTime',
     value: function nowHrTime() {
-      return 1;
+      var hrtime = process.hrtime();
+      return Math.floor(hrtime[0] * 1000000 + hrtime[1] / 1000);
     }
 
     /**
