@@ -5,7 +5,9 @@
  */
 
 import _ from 'lodash'
-import Crypto from 'crypto'
+
+const ID_LENGTH = 16
+const ID_DIGITS = '0123456789abcdef'
 
 /**
  * @class Util
@@ -17,7 +19,16 @@ export default class Util {
    * @memberOf Util
    */
   static randomId () {
-    return Crypto.randomBytes(16).toString('hex')
+    let n = ''
+    for (let i = 0; i < ID_LENGTH; i++) {
+      const rand = Math.floor(Math.random() * ID_DIGITS.length)
+
+      // avoid leading zeroes
+      if (rand !== 0 || n.length > 0) {
+        n += ID_DIGITS[rand]
+      }
+    }
+    return n
   }
 
   /**

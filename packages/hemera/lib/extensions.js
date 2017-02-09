@@ -5,7 +5,6 @@
  */
 
 import Util from './util'
-import Hoek from 'hoek'
 
 export const onClientPreRequest = [function onClientPreRequest (next) {
   let ctx = this
@@ -20,7 +19,7 @@ export const onClientPreRequest = [function onClientPreRequest (next) {
   ctx.context$ = pattern.context$ || prevCtx.context$
 
   // set metadata by passed pattern or current message context
-  ctx.meta$ = Hoek.merge(pattern.meta$ || {}, ctx.meta$)
+  ctx.meta$ = Object.assign(pattern.meta$ || {}, ctx.meta$)
   // is only passed by msg
   ctx.delegate$ = pattern.delegate$ || {}
 

@@ -18,10 +18,8 @@ export default class NatsTransport {
    *
    * @memberOf NatsTransport
    */
-  constructor(params) {
-
+  constructor (params) {
     this.nc = params.transport
-
   }
 
   /**
@@ -31,8 +29,7 @@ export default class NatsTransport {
    *
    * @memberOf NatsTransport
    */
-  get driver() {
-
+  get driver () {
     return this.nc
   }
 
@@ -43,8 +40,7 @@ export default class NatsTransport {
    *
    * @memberOf NatsTransport
    */
-  timeout() {
-
+  timeout () {
     return this.nc.timeout.apply(this.nc, arguments)
   }
 
@@ -55,8 +51,7 @@ export default class NatsTransport {
    *
    * @memberOf NatsTransport
    */
-  send() {
-
+  send () {
     return this.nc.publish.apply(this.nc, arguments)
   }
 
@@ -67,8 +62,7 @@ export default class NatsTransport {
    *
    * @memberOf NatsTransport
    */
-  close() {
-
+  close () {
     return this.nc.close.apply(this.nc, arguments)
   }
 
@@ -79,8 +73,7 @@ export default class NatsTransport {
    *
    * @memberOf NatsTransport
    */
-  subscribe() {
-
+  subscribe () {
     return this.nc.subscribe.apply(this.nc, arguments)
   }
 
@@ -91,8 +84,7 @@ export default class NatsTransport {
    *
    * @memberOf NatsTransport
    */
-  sendRequest() {
-
+  sendRequest () {
     return this.nc.request.apply(this.nc, arguments)
   }
 }
