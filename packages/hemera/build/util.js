@@ -14,17 +14,17 @@ var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _crypto = require('crypto');
-
-var _crypto2 = _interopRequireDefault(_crypto);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var ID_LENGTH = 16;
+var ID_DIGITS = '0123456789abcdef';
+
 /**
  * @class Util
  */
+
 var Util = function () {
   function Util() {
     _classCallCheck(this, Util);
@@ -39,7 +39,16 @@ var Util = function () {
      * @memberOf Util
      */
     value: function randomId() {
-      return _crypto2.default.randomBytes(16).toString('hex');
+      var n = '';
+      for (var i = 0; i < ID_LENGTH; i++) {
+        var rand = Math.floor(Math.random() * ID_DIGITS.length);
+
+        // avoid leading zeroes
+        if (rand !== 0 || n.length > 0) {
+          n += ID_DIGITS[rand];
+        }
+      }
+      return n;
     }
 
     /**
@@ -54,8 +63,7 @@ var Util = function () {
   }, {
     key: 'nowHrTime',
     value: function nowHrTime() {
-      var hrtime = process.hrtime();
-      return Math.floor(hrtime[0] * 1000000 + hrtime[1] / 1000);
+      return 1;
     }
 
     /**
