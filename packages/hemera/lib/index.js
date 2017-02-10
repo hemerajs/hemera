@@ -89,7 +89,7 @@ class Hemera extends EventEmitter {
       id: ''
     }
 
-    //client and server locales
+    // client and server locales
     this._shouldCrash = false
     this._replyTo = ''
     this._request = null

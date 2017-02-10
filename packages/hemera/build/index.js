@@ -169,7 +169,7 @@ var Hemera = function (_EventEmitter) {
       id: ''
     };
 
-    //client and server locales
+    // client and server locales
     _this._shouldCrash = false;
     _this._replyTo = '';
     _this._request = null;
