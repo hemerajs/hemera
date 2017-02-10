@@ -169,6 +169,16 @@ var Hemera = function (_EventEmitter) {
       id: ''
     };
 
+    //client and server locales
+    _this._shouldCrash = false;
+    _this._replyTo = '';
+    _this._request = null;
+    _this._response = null;
+    _this._pattern = null;
+    _this._actMeta = null;
+    _this._actCallback = null;
+    _this._cleanPattern = '';
+
     // contains the list of all registered plugins
     // the core is also a plugin
     _this._plugins = {

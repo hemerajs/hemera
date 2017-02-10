@@ -89,6 +89,16 @@ class Hemera extends EventEmitter {
       id: ''
     }
 
+    //client and server locales
+    this._shouldCrash = false
+    this._replyTo = ''
+    this._request = null
+    this._response = null
+    this._pattern = null
+    this._actMeta = null
+    this._actCallback = null
+    this._cleanPattern = ''
+
     // contains the list of all registered plugins
     // the core is also a plugin
     this._plugins = {
