@@ -11,9 +11,9 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "couchbase": "^2.3.0",
-    "hemera-joi": "^0.1.75",
-    "hemera-store": "^1.0.3"
+    "couchbase": "2.3.x",
+    "hemera-joi": "0.1.x",
+    "hemera-store": "1.0.x"
   },
   "devDependencies": {
     "code": "4.0.x",
