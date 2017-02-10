@@ -13,6 +13,8 @@ exports.plugin = function hemeraArangoStore(options) {
 
   hemera.use(HemeraJoi)
 
+  const Joi = hemera.exposition['hemera-joi'].joi
+
   hemera.expose('aqlTemplate', Arangojs.aql)
   hemera.expose('connectionPool', connections)
 
@@ -46,7 +48,9 @@ exports.plugin = function hemeraArangoStore(options) {
    */
   hemera.add({
     topic,
-    cmd: 'createDatabase'
+    cmd: 'createDatabase',
+    name: Joi.string().required(),
+    users: Joi.array().optional()
   }, function (req, cb) {
 
     let db = useDb('_system')
@@ -68,7 +72,11 @@ exports.plugin = function hemeraArangoStore(options) {
    */
   hemera.add({
     topic,
-    cmd: 'executeTransaction'
+    cmd: 'executeTransaction',
+    collections: Joi.object().required(),
+    action: Joi.string().required(),
+    params: Joi.object().optional(),
+    lockTimeout: Joi.object().optional()
   }, function (req, cb) {
 
     let db = useDb(req.databaseName)
@@ -92,7 +100,10 @@ exports.plugin = function hemeraArangoStore(options) {
    */
   hemera.add({
     topic,
-    cmd: 'createCollection'
+    cmd: 'createCollection',
+    name: Joi.string().required(),
+    type: Joi.any().allow(['edge', '']).default(''),
+    databaseName: Joi.string().optional()
   }, function (req, cb) {
 
     let db = useDb(req.databaseName)
@@ -123,7 +134,9 @@ exports.plugin = function hemeraArangoStore(options) {
   hemera.add({
     topic,
     type: 'one',
-    cmd: 'executeAqlQuery'
+    cmd: 'executeAqlQuery',
+    databaseName: Joi.string().optional(),
+    variables: Joi.object().optional()
   }, function (req, cb) {
 
     let db = useDb(req.databaseName)
@@ -146,7 +159,9 @@ exports.plugin = function hemeraArangoStore(options) {
   hemera.add({
     topic,
     type: 'all',
-    cmd: 'executeAqlQuery'
+    cmd: 'executeAqlQuery',
+    databaseName: Joi.string().optional(),
+    variables: Joi.object().optional()
   }, function (req, cb) {
 
     let db = useDb(req.databaseName)
