@@ -63,7 +63,7 @@ class StorePattern {
       topic,
       cmd: 'removeById',
       collection: Joi.string().default(Joi.ref('table')),
-      id: Joi.object().required()
+      id: Joi.string().required()
     }
   }
 
@@ -103,8 +103,7 @@ class StorePattern {
       cmd: 'updateById',
       collection: Joi.string().default(Joi.ref('table')),
       data: Joi.object().required(),
-      id: Joi.object().required()
-
+      id: Joi.string().required()
     }
   }
 
@@ -144,7 +143,7 @@ class StorePattern {
       topic,
       cmd: 'findById',
       collection: Joi.string().default(Joi.ref('table')),
-      id: Joi.object().required()
+      id: Joi.string().required()
     }
   }
 
@@ -184,7 +183,7 @@ class StorePattern {
       cmd: 'replaceById',
       collection: Joi.string().default(Joi.ref('table')),
       data: Joi.object().required(),
-      id: Joi.object().required()
+      id: Joi.string().required()
     }
   }
 

@@ -78,7 +78,7 @@ class ArangoStore extends Store {
   removeById(req, cb) {
 
     this._driver.collection(req.collection)
-      .removeByExample(req.id, (err, res) => {
+      .removeByExample({ _id: req.id }, (err, res) => {
 
         if (err) {
           return cb(new Error(err.message))
@@ -124,7 +124,7 @@ class ArangoStore extends Store {
   updateById(req, data, cb) {
 
     this._driver.collection(req.collection)
-      .updateByExample(req.id, data, (err, res) => {
+      .updateByExample({ _id: req.id }, data, (err, res) => {
 
         if (err) {
           return cb(new Error(err.message))
@@ -168,7 +168,7 @@ class ArangoStore extends Store {
   findById(req, cb) {
 
     this._driver.collection(req.collection)
-      .byExample(req.id, (err, res) => {
+      .byExample({ _id: req.id }, (err, res) => {
 
         if (err) {
           return cb(new Error(err.message))
@@ -212,7 +212,7 @@ class ArangoStore extends Store {
   replaceById(req, data, cb) {
 
     this._driver.collection(req.collection)
-      .replaceByExample(req.id, data, (err, res) => {
+      .replaceByExample({ _id: req.id }, data, (err, res) => {
 
         if (err) {
           return cb(new Error(err.message))
