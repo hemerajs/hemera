@@ -33,9 +33,7 @@ describe('Hemera-parambulator', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraParambulator)
     hemera.setOption('payloadValidator', 'hemera-parambulator')
@@ -74,9 +72,7 @@ describe('Hemera-parambulator', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraParambulator)
     hemera.setOption('payloadValidator', 'hemera-parambulator')
@@ -111,9 +107,7 @@ describe('Hemera-parambulator', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraParambulator)
     hemera.setOption('payloadValidator', 'hemera-parambulator')
@@ -130,7 +124,7 @@ describe('Hemera-parambulator', function () {
         }
       }, (resp, cb) => {
 
-        throw new Error('Shit!')
+        cb()
       })
 
       hemera.act({
