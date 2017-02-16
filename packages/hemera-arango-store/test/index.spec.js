@@ -293,9 +293,7 @@ describe('Hemera-arango-store', function () {
         data: {
           name: 'klaus'
         },
-        id: {
-          _id: resp._id
-        }
+        id: resp._id
       }, function (err, resp) {
 
         expect(err).to.be.not.exists()
@@ -366,9 +364,7 @@ describe('Hemera-arango-store', function () {
         cmd: 'removeById',
         collection: testCollection,
         databaseName: testDatabase,
-        id: {
-          _id: resp._id
-        }
+        id: resp._id
       }, function (err, resp) {
 
         expect(err).to.be.not.exists()
@@ -403,9 +399,7 @@ describe('Hemera-arango-store', function () {
         cmd: 'findById',
         collection: testCollection,
         databaseName: testDatabase,
-        id: {
-          _id: resp._id
-        }
+        id: resp._id
       }, function (err, resp) {
 
         expect(err).to.be.not.exists()
@@ -514,9 +508,7 @@ describe('Hemera-arango-store', function () {
         data: {
           name: 'nadja'
         },
-        id: {
-          _id: resp._id
-        }
+        id: resp._id
       }, function (err, resp) {
 
         expect(err).to.be.not.exists()

@@ -33,9 +33,7 @@ describe('Hemera-joi', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraJoi)
     hemera.setOption('payloadValidator', 'hemera-joi')
@@ -75,9 +73,7 @@ describe('Hemera-joi', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraJoi)
     hemera.setOption('payloadValidator', 'hemera-joi')
@@ -116,9 +112,7 @@ describe('Hemera-joi', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraJoi)
     hemera.setOption('payloadValidator', 'hemera-joi')

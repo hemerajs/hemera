@@ -36,9 +36,7 @@ describe('Hemera-avro', function () {
       preserveBuffers: true
     })
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraAvro)
 
@@ -74,9 +72,7 @@ describe('Hemera-avro', function () {
       preserveBuffers: true
     })
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraAvro)
 
@@ -114,9 +110,7 @@ describe('Hemera-avro', function () {
       preserveBuffers: true
     })
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraAvro)
 
@@ -167,9 +161,7 @@ describe('Hemera-avro', function () {
       preserveBuffers: true
     })
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraAvro)
 

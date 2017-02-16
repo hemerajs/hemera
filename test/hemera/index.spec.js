@@ -309,9 +309,7 @@ describe('Hemera', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera1 = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera1 = new Hemera(nats)
 
     let callback = Sinon.spy();
 
@@ -328,9 +326,7 @@ describe('Hemera', function () {
 
     })
 
-    const hemera2 = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera2 = new Hemera(nats)
 
     hemera2.ready(() => {
 
@@ -481,7 +477,6 @@ describe('Timeouts', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      crashOnFatal: false,
       timeout: 150
     })
 
@@ -520,7 +515,6 @@ describe('Timeouts', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      crashOnFatal: false,
       timeout: 150
     })
 
@@ -615,9 +609,7 @@ describe('Publish / Subscribe', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
 
@@ -645,9 +637,7 @@ describe('Publish / Subscribe', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera1 = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera1 = new Hemera(nats)
 
     let counter = 0;
 
@@ -675,9 +665,7 @@ describe('Publish / Subscribe', function () {
 
     })
 
-    const hemera2 = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera2 = new Hemera(nats)
 
     hemera2.ready(() => {
 
@@ -811,9 +799,7 @@ describe('Exposing', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
 
@@ -851,9 +837,7 @@ describe('Error handling', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
 
@@ -888,9 +872,7 @@ describe('Error handling', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     var stub = Sinon.stub(hemera._decoder, "decode")
 
@@ -932,9 +914,7 @@ describe('Error handling', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
 
@@ -1059,7 +1039,6 @@ describe('Error handling', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      crashOnFatal: true,
       timeout: 20
     })
 
@@ -1133,9 +1112,7 @@ describe('Error handling', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
 
@@ -1625,7 +1602,6 @@ describe('Load', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      crashOnFatal: false,
       load: {
         sampleInterval: 1
       }
@@ -2060,8 +2036,7 @@ describe('Extension error', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      logLevel: 'silent',
-      crashOnFatal: false
+      logLevel: 'silent'
     })
 
     hemera.ready(() => {
@@ -2102,8 +2077,7 @@ describe('Extension error', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      logLevel: 'silent',
-      crashOnFatal: false
+      logLevel: 'silent'
     })
 
     hemera.ready(() => {
@@ -2159,8 +2133,7 @@ describe('Extension error', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      logLevel: 'silent',
-      crashOnFatal: false
+      logLevel: 'silent'
     })
 
     hemera.ready(() => {
@@ -2216,8 +2189,7 @@ describe('Extension error', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      logLevel: 'silent',
-      crashOnFatal: false
+      logLevel: 'silent'
     })
 
     hemera.ready(() => {
@@ -2273,8 +2245,7 @@ describe('Extension error', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      logLevel: 'silent',
-      crashOnFatal: false
+      logLevel: 'silent'
     })
 
     hemera.ready(() => {

@@ -36,9 +36,7 @@ describe('Hemera-msgpack', function () {
       preserveBuffers: true
     })
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraMsgpack)
 
@@ -74,9 +72,7 @@ describe('Hemera-msgpack', function () {
       preserveBuffers: true
     })
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraMsgpack)
 
