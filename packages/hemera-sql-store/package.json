@@ -1,6 +1,6 @@
 {
   "name": "hemera-sql-store",
-  "version": "0.0.23",
+  "version": "0.0.22",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "hemera-joi": "0.1.x",
-    "hemera-store": "^1.1.1",
+    "hemera-store": "^1.1.0",
     "knex": "0.12.x",
     "mysql": "2.12.x",
     "pg": "6.1.x",

@@ -47,98 +47,124 @@ class Store {
   /**
    * Create a new entity
    *
+   * @param {object} data
+   * @param {function} cb
    *
    * @memberOf Store
    */
-  create() {
+  create(data, cb) {
     throw (new Error('Not implemented yet'))
   }
 
   /**
    * Removes multiple entitys
    *
+   * @param {object} query
+   * @param {function} cb
    *
    * @memberOf Store
    */
-  remove() {
+  remove(query, cb) {
     throw (new Error('Not implemented yet'))
   }
 
   /**
    * Remove an entity by id
    *
+   * @param {object} id
+   * @param {function} cb
    *
    * @memberOf Store
    */
-  removeById() {
+  removeById(id, cb) {
     throw (new Error('Not implemented yet'))
   }
   /**
    * Update an entity
    *
+   * @param {object} query
+   * @param {object} data
+   * @param {function} cb
    *
    * @memberOf Store
    */
-  update() {
+  update(query, data, cb) {
     throw (new Error('Not implemented yet'))
   }
 
   /**
    * Update an entity by id
    *
+   * @param {object} id
+   * @param {object} data
+   * @param {function} cb
    *
    * @memberOf Store
    */
-  updateById() {
+  updateById(id, data, cb) {
     throw (new Error('Not implemented yet'))
   }
 
   /**
    * Find an entity
    *
+   * @param {object} query
+   * @param {object} options
+   * @param {function} cb
    *
    * @memberOf Store
    */
-  find() {
+  find(query, options, cb) {
     throw (new Error('Not implemented yet'))
   }
 
   /**
    * Find an entity by id
    *
+   * @param {object} id
+   * @param {function} cb
    *
    * @memberOf Store
    */
-  findById() {
+  findById(id, cb) {
     throw (new Error('Not implemented yet'))
   }
 
   /**
    * Replace an entity
    *
+   * @param {object} query
+   * @param {object} data
+   * @param {function} cb
    *
    * @memberOf Store
    */
-  replace() {
+  replace(query, data, cb) {
     throw (new Error('Not implemented yet'))
   }
 
   /**
    * Replace an entity by id
    *
+   * @param {object} id
+   * @param {object} data
+   * @param {function} cb
    *
    * @memberOf Store
    */
-  replaceById() {
+  replaceById(id, data, cb) {
     throw (new Error('Not implemented yet'))
   }
 
   /**
    * Check if an entity exists
    *
+   * @param {object} query
+   * @param {function} cb
+   *
    * @memberOf Store
    */
-  exists() {
+  exists(query, cb) {
     throw (new Error('Not implemented yet'))
   }
 }
