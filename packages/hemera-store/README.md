@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/hemera-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-store)
 
-Simple API to be interoperable with most database interfaces.
+Simple API to be interoperable with most database interfaces. The store has to implement the methods but it doesn't have to comply with same fixed parameters. The interface is controlled by the unified pattern.
 
 # Interface
 
