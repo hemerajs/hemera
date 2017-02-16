@@ -1,6 +1,6 @@
 {
   "name": "hemera-couchbase-store",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   "dependencies": {
     "couchbase": "2.3.x",
     "hemera-joi": "0.1.x",
-    "hemera-store": "^1.1.0"
+    "hemera-store": "^1.1.1"
   },
   "devDependencies": {
     "code": "4.0.x",
