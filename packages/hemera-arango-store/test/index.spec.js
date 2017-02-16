@@ -17,11 +17,7 @@ describe('Hemera-arango-store', function () {
   let arangoOptions = {
     url: 'http://root:@127.0.0.1:8529/'
   }
-  let hemera
-  let aql
-  let arangodb
-  let testDatabase = 'test'
-  let testCollection = 'testColl'
+  let hemera, aql, arangodb, testDatabase = 'test', testCollection = 'testColl'
 
   function clearArangodb() {
 
@@ -297,9 +293,7 @@ describe('Hemera-arango-store', function () {
         data: {
           name: 'klaus'
         },
-        id: {
-          _id: resp._id
-        }
+        id: resp._id
       }, function (err, resp) {
 
         expect(err).to.be.not.exists()
@@ -370,9 +364,7 @@ describe('Hemera-arango-store', function () {
         cmd: 'removeById',
         collection: testCollection,
         databaseName: testDatabase,
-        id: {
-          _id: resp._id
-        }
+        id: resp._id
       }, function (err, resp) {
 
         expect(err).to.be.not.exists()
@@ -407,9 +399,7 @@ describe('Hemera-arango-store', function () {
         cmd: 'findById',
         collection: testCollection,
         databaseName: testDatabase,
-        id: {
-          _id: resp._id
-        }
+        id: resp._id
       }, function (err, resp) {
 
         expect(err).to.be.not.exists()
@@ -518,9 +508,7 @@ describe('Hemera-arango-store', function () {
         data: {
           name: 'nadja'
         },
-        id: {
-          _id: resp._id
-        }
+        id: resp._id
       }, function (err, resp) {
 
         expect(err).to.be.not.exists()

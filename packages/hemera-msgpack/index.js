@@ -1,6 +1,6 @@
 'use strict'
 
-var msgpack = require('msgpack5')(),
+var msgpack = require('msgpack-lite'),
   encode = msgpack.encode,
   decode = msgpack.decode
 
@@ -8,27 +8,36 @@ exports.plugin = function hemeraMsgpack() {
 
   const hemera = this
 
-  hemera._decoder.decode = (a) => {
+  hemera._decoder.decode = (msg) => {
 
     try {
 
       return {
-        value: decode(a),
-        error: null
+        value: decode(msg)
       }
 
-    } catch (err) {
+    } catch (error) {
 
       return {
-        value: null,
-        error: err
+        error
       }
     }
   }
 
-  hemera._encoder.encode = (a) => {
+  hemera._encoder.encode = (msg) => {
 
-    return encode(a)
+    try {
+
+      return {
+        value: encode(msg)
+      }
+
+    } catch (error) {
+
+      return {
+        error
+      }
+    }
   }
 
 }

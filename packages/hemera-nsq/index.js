@@ -1,17 +1,18 @@
 'use strict'
 
 const Nsq = require('nsqjs');
-const HemeraParambulator = require('hemera-parambulator')
+const HemeraJoi = require('hemera-joi')
 
 exports.plugin = function hemeraNsqStore(options) {
 
   const hemera = this
   const readers = {}
-  const Joi = hemera.exposition['hemera-joi'].joi
 
   hemera.expose('readers', readers)
 
-  hemera.use(HemeraParambulator)
+  hemera.use(HemeraJoi)
+
+  const Joi = hemera.exposition['hemera-joi'].joi
 
   /**
    * Create a consumer which proxy all events to the next NATS subscriber

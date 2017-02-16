@@ -13,11 +13,11 @@ process.setMaxListeners(0);
 
 describe('Hemera-parambulator', function () {
 
-  var PORT = 6244
-  var flags = ['--user', 'derek', '--pass', 'foobar']
-  var authUrl = 'nats://derek:foobar@localhost:' + PORT
-  var noAuthUrl = 'nats://localhost:' + PORT
-  var server
+  const PORT = 6244
+  const flags = ['--user', 'derek', '--pass', 'foobar']
+  const authUrl = 'nats://derek:foobar@localhost:' + PORT
+  const noAuthUrl = 'nats://localhost:' + PORT
+  let server
 
   // Start up our own nats-server
   before(function (done) {
@@ -33,9 +33,7 @@ describe('Hemera-parambulator', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraParambulator)
     hemera.setOption('payloadValidator', 'hemera-parambulator')
@@ -74,9 +72,7 @@ describe('Hemera-parambulator', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraParambulator)
     hemera.setOption('payloadValidator', 'hemera-parambulator')
@@ -111,9 +107,7 @@ describe('Hemera-parambulator', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraParambulator)
     hemera.setOption('payloadValidator', 'hemera-parambulator')
@@ -130,7 +124,7 @@ describe('Hemera-parambulator', function () {
         }
       }, (resp, cb) => {
 
-        throw new Error('Shit!')
+        cb()
       })
 
       hemera.act({

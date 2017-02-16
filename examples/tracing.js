@@ -75,6 +75,6 @@ hemera.ready(() => {
     b: 20
   }, function (err, resp) {
 
-    this.log.info('Finished', resp)
+    this.log.info(resp, 'Finished')
   })
 })

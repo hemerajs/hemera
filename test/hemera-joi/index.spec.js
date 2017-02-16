@@ -13,11 +13,11 @@ process.setMaxListeners(0);
 
 describe('Hemera-joi', function () {
 
-  var PORT = 6243
-  var flags = ['--user', 'derek', '--pass', 'foobar']
-  var authUrl = 'nats://derek:foobar@localhost:' + PORT
-  var noAuthUrl = 'nats://localhost:' + PORT
-  var server
+  const PORT = 6243
+  const flags = ['--user', 'derek', '--pass', 'foobar']
+  const authUrl = 'nats://derek:foobar@localhost:' + PORT
+  const noAuthUrl = 'nats://localhost:' + PORT
+  let server
 
   // Start up our own nats-server
   before(function (done) {
@@ -33,9 +33,7 @@ describe('Hemera-joi', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraJoi)
     hemera.setOption('payloadValidator', 'hemera-joi')
@@ -75,9 +73,7 @@ describe('Hemera-joi', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraJoi)
     hemera.setOption('payloadValidator', 'hemera-joi')
@@ -116,9 +112,7 @@ describe('Hemera-joi', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraJoi)
     hemera.setOption('payloadValidator', 'hemera-joi')

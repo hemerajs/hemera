@@ -8,15 +8,14 @@ module.exports = {
     "flowtype"
   ],
   "extends": [
-    "plugin:flowtype/recommended",
-    "eslint:recommended",
+    "standard"
   ],
   "parserOptions": {
     "sourceType": "module"
   },
   // see http://eslint.org/docs/rules/
   "rules": {
-    "indent": [ "error", 2 ],
-    "quotes": [ "error", "single" ]
+    "indent": ["error", 2],
+    "quotes": ["error", "single"]
   }
 };

@@ -8,11 +8,11 @@ exports.plugin = function hemeraJoi() {
 
   hemera.expose('joi', Joi)
 
-  hemera.ext('onServerPreHandler', function (next) {
+  hemera.ext('onServerPreHandler', function (req, res, next) {
 
     let plugin = this._actMeta.plugin
     let schema = this._actMeta.schema
-    let pattern = this._request.value.pattern
+    let pattern = req.payload.pattern
     let currentPayloadValidator = plugin.options.payloadValidator
 
     if (currentPayloadValidator !== exports.attributes.name) {
@@ -25,8 +25,8 @@ exports.plugin = function hemeraJoi() {
       allowUnknown: true
     }, (err, value) => {
 
-      this._request.value.pattern = value
-      next(err)
+      req.payload.pattern = value
+      res.send(err)
     })
 
   })

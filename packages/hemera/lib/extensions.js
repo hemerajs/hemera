@@ -1,5 +1,3 @@
-// @flow
-
 /*!
  * hemera
  * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
@@ -7,13 +5,11 @@
  */
 
 import Util from './util'
-import Hoek from'hoek'
 
-module.exports.onClientPreRequest = [function onClientPreRequest(next: Function) {
+export const onClientPreRequest = [function onClientPreRequest (next) {
+  let ctx = this
 
-  let ctx: Hemera = this
-
-  let pattern: Pattern = this._pattern
+  let pattern = this._pattern
 
   let prevCtx = this._prevContext
   let cleanPattern = this._cleanPattern
@@ -23,7 +19,7 @@ module.exports.onClientPreRequest = [function onClientPreRequest(next: Function)
   ctx.context$ = pattern.context$ || prevCtx.context$
 
   // set metadata by passed pattern or current message context
-  ctx.meta$ = Hoek.merge(pattern.meta$ || {}, ctx.meta$)
+  ctx.meta$ = Object.assign(pattern.meta$ || {}, ctx.meta$)
   // is only passed by msg
   ctx.delegate$ = pattern.delegate$ || {}
 
@@ -37,7 +33,7 @@ module.exports.onClientPreRequest = [function onClientPreRequest(next: Function)
   ctx.trace$.method = Util.pattern(pattern)
 
   // request
-  let request: Request = {
+  let request = {
     id: pattern.requestId$ || Util.randomId(),
     parentId: ctx.request$.id,
     timestamp: currentTime,
@@ -46,7 +42,7 @@ module.exports.onClientPreRequest = [function onClientPreRequest(next: Function)
   }
 
   // build msg
-  let message: ActMessage = {
+  let message = {
     pattern: cleanPattern,
     meta: ctx.meta$,
     delegate: ctx.delegate$,
@@ -56,69 +52,77 @@ module.exports.onClientPreRequest = [function onClientPreRequest(next: Function)
 
   ctx._message = message
 
-  ctx._request = ctx._encoder.encode.call(ctx, ctx._message)
-
-  ctx.log.info(pattern, `ACT_OUTBOUND - ID:${String(ctx._message.request.id)}`)
+  ctx.log.info({
+    outbound: ctx
+  })
 
   ctx.emit('onClientPreRequest', ctx)
 
   next()
 }]
 
-module.exports.onClientPostRequest = [function onClientPostRequest(next: Function) {
-
-  let ctx: Hemera = this
-  let pattern: Pattern = this._pattern
-  let msg = ctx._response.value
+export const onClientPostRequest = [function onClientPostRequest (next) {
+  let ctx = this
+  let pattern = this._pattern
+  let msg = ctx._response.payload
 
   // pass to act context
-  ctx.request$ = msg.request || {}
+  if (msg) {
+    ctx.request$ = msg.request || {}
+    ctx.trace$ = msg.trace || {}
+    ctx.meta$ = msg.meta || {}
+  }
+
   ctx.request$.service = pattern.topic
   ctx.request$.method = Util.pattern(pattern)
-  ctx.trace$ = msg.trace || {}
-  ctx.meta$ = msg.meta || {}
 
-  ctx.log.info(`ACT_INBOUND - ID:${ctx.request$.id} (${ctx.request$.duration / 1000000}ms)`)
+  ctx.log.info({
+    inbound: ctx
+  })
 
   ctx.emit('onClientPostRequest', ctx)
 
   next()
 }]
 
-module.exports.onServerPreRequest = [function onServerPreRequest(next: Function) {
+export const onServerPreRequest = [function onServerPreRequest (req, res, next) {
+  let ctx = this
 
-  let msg = this._request.value
-  let ctx: Hemera = this
+  let m = ctx._decoder.decode.call(ctx, ctx._request.payload)
+
+  if (m.error) {
+    return res.send(m.error)
+  }
+
+  let msg = m.value
 
   if (msg) {
-
     ctx.meta$ = msg.meta || {}
     ctx.trace$ = msg.trace || {}
     ctx.delegate$ = msg.delegate || {}
     ctx.request$ = msg.request || {}
   }
 
+  ctx._request.payload = m.value
+  ctx._request.error = m.error
+
   ctx.emit('onServerPreRequest', ctx)
 
   next()
 }]
 
-module.exports.onServerPreHandler = [function onServerPreHandler(next: Function) {
-
-  let ctx: Hemera = this
+export const onServerPreHandler = [function onServerPreHandler (req, res, next) {
+  let ctx = this
 
   ctx.emit('onServerPreHandler', ctx)
 
   next()
-
 }]
 
-module.exports.onServerPreResponse = [function onServerPreResponse(next: Function) {
-
-  let ctx: Hemera = this
+export const onServerPreResponse = [function onServerPreResponse (req, res, next) {
+  let ctx = this
 
   ctx.emit('onServerPreResponse', ctx)
 
   next()
-
 }]

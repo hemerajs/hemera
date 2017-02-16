@@ -1,23 +1,17 @@
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.onServerPreResponse = exports.onServerPreHandler = exports.onServerPreRequest = exports.onClientPostRequest = exports.onClientPreRequest = undefined;
+
 var _util = require('./util');
 
 var _util2 = _interopRequireDefault(_util);
 
-var _hoek = require('hoek');
-
-var _hoek2 = _interopRequireDefault(_hoek);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/*!
- * hemera
- * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
- * MIT Licensed
- */
-
-module.exports.onClientPreRequest = [function onClientPreRequest(next) {
-
+var onClientPreRequest = exports.onClientPreRequest = [function onClientPreRequest(next) {
   var ctx = this;
 
   var pattern = this._pattern;
@@ -30,7 +24,7 @@ module.exports.onClientPreRequest = [function onClientPreRequest(next) {
   ctx.context$ = pattern.context$ || prevCtx.context$;
 
   // set metadata by passed pattern or current message context
-  ctx.meta$ = _hoek2.default.merge(pattern.meta$ || {}, ctx.meta$);
+  ctx.meta$ = Object.assign(pattern.meta$ || {}, ctx.meta$);
   // is only passed by msg
   ctx.delegate$ = pattern.delegate$ || {};
 
@@ -63,55 +57,70 @@ module.exports.onClientPreRequest = [function onClientPreRequest(next) {
 
   ctx._message = message;
 
-  ctx._request = ctx._encoder.encode.call(ctx, ctx._message);
-
-  ctx.log.info(pattern, `ACT_OUTBOUND - ID:${String(ctx._message.request.id)}`);
+  ctx.log.info({
+    outbound: ctx
+  });
 
   ctx.emit('onClientPreRequest', ctx);
 
   next();
-}];
+}]; /*!
+     * hemera
+     * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
+     * MIT Licensed
+     */
 
-module.exports.onClientPostRequest = [function onClientPostRequest(next) {
-
+var onClientPostRequest = exports.onClientPostRequest = [function onClientPostRequest(next) {
   var ctx = this;
   var pattern = this._pattern;
-  var msg = ctx._response.value;
+  var msg = ctx._response.payload;
 
   // pass to act context
-  ctx.request$ = msg.request || {};
+  if (msg) {
+    ctx.request$ = msg.request || {};
+    ctx.trace$ = msg.trace || {};
+    ctx.meta$ = msg.meta || {};
+  }
+
   ctx.request$.service = pattern.topic;
   ctx.request$.method = _util2.default.pattern(pattern);
-  ctx.trace$ = msg.trace || {};
-  ctx.meta$ = msg.meta || {};
 
-  ctx.log.info(`ACT_INBOUND - ID:${ctx.request$.id} (${ctx.request$.duration / 1000000}ms)`);
+  ctx.log.info({
+    inbound: ctx
+  });
 
   ctx.emit('onClientPostRequest', ctx);
 
   next();
 }];
 
-module.exports.onServerPreRequest = [function onServerPreRequest(next) {
-
-  var msg = this._request.value;
+var onServerPreRequest = exports.onServerPreRequest = [function onServerPreRequest(req, res, next) {
   var ctx = this;
 
-  if (msg) {
+  var m = ctx._decoder.decode.call(ctx, ctx._request.payload);
 
+  if (m.error) {
+    return res.send(m.error);
+  }
+
+  var msg = m.value;
+
+  if (msg) {
     ctx.meta$ = msg.meta || {};
     ctx.trace$ = msg.trace || {};
     ctx.delegate$ = msg.delegate || {};
     ctx.request$ = msg.request || {};
   }
 
+  ctx._request.payload = m.value;
+  ctx._request.error = m.error;
+
   ctx.emit('onServerPreRequest', ctx);
 
   next();
 }];
 
-module.exports.onServerPreHandler = [function onServerPreHandler(next) {
-
+var onServerPreHandler = exports.onServerPreHandler = [function onServerPreHandler(req, res, next) {
   var ctx = this;
 
   ctx.emit('onServerPreHandler', ctx);
@@ -119,8 +128,7 @@ module.exports.onServerPreHandler = [function onServerPreHandler(next) {
   next();
 }];
 
-module.exports.onServerPreResponse = [function onServerPreResponse(next) {
-
+var onServerPreResponse = exports.onServerPreResponse = [function onServerPreResponse(req, res, next) {
   var ctx = this;
 
   ctx.emit('onServerPreResponse', ctx);

@@ -5,16 +5,14 @@
  * Based on https://github.com/mcollina/fast-json-parse
  */
 
-class Decoder {
+export default class Decoder {
 
-  static decode(msg) {
-
+  static decode (msg) {
     return Parse(msg)
   }
 }
 
-function Parse(data) {
-
+function Parse (data) {
   if (!(this instanceof Parse)) {
     return new Parse(data)
   }
@@ -23,12 +21,8 @@ function Parse(data) {
   this.value = null
 
   try {
-
     this.value = JSON.parse(data)
   } catch (error) {
-
     this.error = error
   }
 }
-
-module.exports = Decoder

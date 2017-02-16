@@ -23,7 +23,7 @@ exports.plugin = function hemeraElasticSearch(options) {
 
     if (error) {
 
-      hemera.log.trace('elasticsearch cluster is down!')
+      hemera.log.trace(error, 'elasticsearch cluster is down!')
       hemera.fatal()
     } else {
       hemera.log.info('elasticsearch cluster is available')

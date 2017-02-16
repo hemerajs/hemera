@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/hemera-elasticsearch.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-elasticsearch)
 
-**Status**: In development
+**Status**: _In development_
 
 This is a plugin to use Elasticsearch with Hemera.
 This plugin is based on the official driver [elasticsearch](https://github.com/elastic/elasticsearch-js).

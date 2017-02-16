@@ -2,21 +2,14 @@
   "env": {
     "test": {
       "plugins": [
-        "transform-flow-strip-types",
         "istanbul"
       ]
     },
     "development": {
-      "plugins": [
-        "syntax-flow",
-        "transform-flow-strip-types"
-      ]
+      "plugins": []
     },
     "production": {
-      "plugins": [
-        "syntax-flow",
-        "transform-flow-comments"
-      ]
+      "plugins": []
     }
   },
   "presets": [

@@ -1,23 +1,30 @@
 'use strict';
 
-/*!
- * hemera
- * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
- * MIT Licensed
- */
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-var SuperError = require('super-error');
+var _superError = require('super-error');
 
-var HemeraError = SuperError.subclass('HemeraError'),
-    ParseError = HemeraError.subclass('HemeraParseError'),
-    TimeoutError = HemeraError.subclass('TimeoutError'),
-    ImplementationError = HemeraError.subclass('ImplementationError'),
-    BusinessError = HemeraError.subclass('BusinessError'),
-    FatalError = HemeraError.subclass('FatalError'),
-    PatternNotFound = HemeraError.subclass('PatternNotFound'),
-    PayloadValidationError = SuperError.subclass('PayloadValidationError');
+var _superError2 = _interopRequireDefault(_superError);
 
-module.exports = {
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var HemeraError = _superError2.default.subclass('HemeraError'); /*!
+                                                                 * hemera
+                                                                 * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
+                                                                 * MIT Licensed
+                                                                 */
+
+var ParseError = HemeraError.subclass('HemeraParseError');
+var TimeoutError = HemeraError.subclass('TimeoutError');
+var ImplementationError = HemeraError.subclass('ImplementationError');
+var BusinessError = HemeraError.subclass('BusinessError');
+var FatalError = HemeraError.subclass('FatalError');
+var PatternNotFound = HemeraError.subclass('PatternNotFound');
+var PayloadValidationError = _superError2.default.subclass('PayloadValidationError');
+
+exports.default = {
   HemeraError,
   ParseError,
   TimeoutError,

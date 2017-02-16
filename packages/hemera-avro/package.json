@@ -1,0 +1,17 @@
+{
+  "name": "hemera-avro",
+  "version": "1.0.7",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint index.js"
+  },
+  "author": "Dustin Deus (https://github.com/StarpTech)",
+  "license": "MIT",
+  "dependencies": {
+    "avsc": "4.1.x"
+  },
+  "devDependencies": {
+    "eslint": "^3.13.1"
+  }
+}

@@ -46,7 +46,7 @@ hemera.ready(() => {
     b: 20
   }, function (err, resp) {
 
-    this.log.info('Error', err) //Error: child "a" fails because ["a" must be a number]
+    this.log.info(err, 'Error') //Error: child "a" fails because ["a" must be a number]
   })
 
   hemera.act({
@@ -56,7 +56,7 @@ hemera.ready(() => {
     b: 5
   }, function (err, resp) {
 
-    this.log.info('Error', err) //Error: The value "ddd" is not of type 'number' (parent: a).
+    this.log.info(err, 'Error') //Error: The value "ddd" is not of type 'number' (parent: a).
   })
 })
 

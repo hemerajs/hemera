@@ -1,7 +1,9 @@
 'use strict'
 
 const Hemera = require('./../packages/hemera')
-const nats = require('nats').connect({ preserveBuffers: true })
+const nats = require('nats').connect({
+  preserveBuffers: true
+})
 const HemeraMsgpack = require('./../packages/hemera-msgpack')
 
 const hemera = new Hemera(nats, {
@@ -30,6 +32,6 @@ hemera.ready(() => {
     b: 20
   }, function (err, resp) {
 
-    this.log.info('Result', resp)
+    this.log.info(resp, 'Result')
   })
 })

@@ -5,7 +5,7 @@
 [![License MIT](https://img.shields.io/npm/l/express.svg)](http://opensource.org/licenses/MIT)
 [![Build Status](https://travis-ci.org/hemerajs/hemera.svg?branch=master)](https://travis-ci.org/hemerajs/hemera)
 [![NPM Downloads](https://img.shields.io/npm/dt/nats-hemera.svg?style=flat)](https://www.npmjs.com/package/nats-hemera)
-[![Coverage Status](https://coveralls.io/repos/github/hemerajs/hemera/badge.svg?branch=master&ts=1)](https://coveralls.io/github/hemerajs/hemera?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/hemerajs/hemera/badge.svg?branch=master&ts=9999)](https://coveralls.io/github/hemerajs/hemera?branch=master)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/hemerajs/hemera)
 
 A [Node.js](http://nodejs.org/) microservices toolkit for the [NATS messaging system](https://nats.io)
@@ -14,7 +14,7 @@ A [Node.js](http://nodejs.org/) microservices toolkit for the [NATS messaging sy
 
 ## 📓 Getting Started
 
-Hemera is a small wrapper around the NATS driver. NATS is a simple, fast and reliable solution for the internal communication of a distributed system. It chooses simplicity and reliability over guaranteed delivery. We want to provide a toolkit to develop micro services in an easy and powerful way. We use bloom filters to provide a pattern matching RPC style. You don't have to worry about the transport. NATS is powerful.
+Hemera (/ˈhɛmərə/; Ancient Greek: Ἡμέρα [hɛːméra] "day") is a small wrapper around the NATS driver. NATS is a simple, fast and reliable solution for the internal communication of a distributed system. It chooses simplicity and reliability over guaranteed delivery. We want to provide a toolkit to develop micro services in an easy and powerful way. We use bloom filters to provide a pattern matching RPC style. You don't have to worry about the transport. NATS is powerful.
 
 With Hemera you have the best of both worlds. Efficient pattern matching to have the most flexibility in defining your RPC's. It doesn't matter where your server or client lives. You can add the same add as many as you want on different hosts to ensure maximal availability. The only dependency you have is a single binary of 7MB. Mind your own business NATS do the rest for you:
 
@@ -23,7 +23,7 @@ The key features of NATS in combination with Hemera are:
 * **Service Discovery**: You don't need a service discovery all subscriptions are managed by NATS.
 * **Load Balancing**: Requests are load balanced (random) by NATS mechanism of "queue groups".
 * **Packages**: Providing reliable and modern plugins to the community.
-* **High performant**: NATS is able to handle million of requests per seconds.
+* **High performant**: NATS is able to handle million of requests per second.
 * **Scalability**: Filtering on the subject name enables services to divide work (perhaps with locality) e.g. `topic:auth:germany`. Queue group name allow load balancing of services.
 * **Fault tolerance**: Auto-heals when new services are added. Configure cluster mode to be more reliable.
 * **Auto-pruning**: NATS automatically handles a slow consumer and cut it off.
@@ -31,7 +31,8 @@ The key features of NATS in combination with Hemera are:
 * **PubSub**: Hemera supports all features of NATS. This includes wildcards in subjects and normal publish and fanout mechanism.
 * **Tracing**: Any distributed system need good tracing capabilities. We provide support for Zipkin a tracing system which manages both the collection and lookup of this data.
 * **Monitoring**: Your NATS server can be monitored by cli or a dashboard.
-* **Payload validation**: Create your own validator or use existing plugins for Joi or Parambulator.
+* **Payload validation**: Create your own validator or use existing plugins for Joi and Parambulator.
+* **Serialization**: Use JSON, Msgpack or Avro to serialize your data (dynamic or static).
 * **Metadata**: Transfer metadata across services or attach contextual data to tracing systems.
 * **Dependencies**: NATS is a single binary of 7MB and can be deployed in seconds.
 
@@ -39,19 +40,37 @@ The key features of NATS in combination with Hemera are:
 
 The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 
-| Package | Version |
+| General | Version |
 |--------|-------|
 | [nats-hemera](https://github.com/hemerajs/hemera/tree/master/packages/hemera) | [![npm](https://img.shields.io/npm/v/nats-hemera.svg?maxAge=3600)](https://www.npmjs.com/package/nats-hemera)
-| [hemera-msgpack](https://github.com/hemerajs/hemera/tree/master/packages/hemera-msgpack) | [![npm](https://img.shields.io/npm/v/hemera-msgpack.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-msgpack)
-| [hemera-joi](https://github.com/hemerajs/hemera/tree/master/packages/hemera-joi) | [![npm](https://img.shields.io/npm/v/hemera-joi.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-joi)
-| [hemera-parambulator](https://github.com/hemerajs/hemera/tree/master/packages/hemera-parambulator) | [![npm](https://img.shields.io/npm/v/hemera-parambulator.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-parambulator)
+| [hemera-zipkin](https://github.com/hemerajs/hemera/tree/master/packages/hemera-zipkin) | [![npm](https://img.shields.io/npm/v/hemera-zipkin.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-zipkin)
+| [hemera-store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store) | [![npm](https://img.shields.io/npm/v/hemera-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-store)
+
+| Messaging bridges | Version |
+|--------|-------|
+| [hemera-rabbitmq](https://github.com/hemerajs/hemera/tree/master/packages/hemera-rabbitmq) | [![npm](https://img.shields.io/npm/v/hemera-rabbitmq.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-rabbitmq)
+| [hemera-nsq](https://github.com/hemerajs/hemera/tree/master/packages/hemera-nsq) | [![npm](https://img.shields.io/npm/v/hemera-nsq.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-nsq)
+
+| Database adapter | Version |
+|--------|-------|
 | [hemera-arango-store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-arango-store) | [![npm](https://img.shields.io/npm/v/hemera-arango-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-arango-store)
 | [hemera-sql-store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-sql-store) | [![npm](https://img.shields.io/npm/v/hemera-sql-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-sql-store)
-| [hemera-store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store) | [![npm](https://img.shields.io/npm/v/hemera-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-store)
-| [hemera-nsq](https://github.com/hemerajs/hemera/tree/master/packages/hemera-nsq) | [![npm](https://img.shields.io/npm/v/hemera-nsq.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-nsq)
 | [hemera-elasticsearch](https://github.com/hemerajs/hemera/tree/master/packages/hemera-elasticsearch) | [![npm](https://img.shields.io/npm/v/hemera-elasticsearch.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-elasticsearch)
-| [hemera-rabbitmq](https://github.com/hemerajs/hemera/tree/master/packages/hemera-rabbitmq) | [![npm](https://img.shields.io/npm/v/hemera-rabbitmq.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-rabbitmq)
-| [hemera-zipkin](https://github.com/hemerajs/hemera/tree/master/packages/hemera-zipkin) | [![npm](https://img.shields.io/npm/v/hemera-zipkin.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-zipkin)
+| [hemera-couchbase-store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-couchbase-store) | [![npm](https://img.shields.io/npm/v/hemera-couchbase-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-couchbase-store)
+
+| Payload validation | Version |
+|--------|-------|
+| [hemera-joi](https://github.com/hemerajs/hemera/tree/master/packages/hemera-joi) | [![npm](https://img.shields.io/npm/v/hemera-joi.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-joi)
+| [hemera-parambulator](https://github.com/hemerajs/hemera/tree/master/packages/hemera-parambulator) | [![npm](https://img.shields.io/npm/v/hemera-parambulator.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-parambulator)
+
+| Data serialization | Version |
+|--------|-------|
+| [hemera-msgpack](https://github.com/hemerajs/hemera/tree/master/packages/hemera-msgpack) | [![npm](https://img.shields.io/npm/v/hemera-msgpack.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-msgpack)
+| [hemera-avro](https://github.com/hemerajs/hemera/tree/master/packages/hemera-avro) | [![npm](https://img.shields.io/npm/v/hemera-avro.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-avro)
+
+| Cache | Version |
+|--------|-------|
+| [hemera-redis-cache](https://github.com/hemerajs/hemera/tree/master/packages/hemera-redis-cache) | [![npm](https://img.shields.io/npm/v/hemera-redis-cache.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-redis-cache)
 
 Table of contents
 =================
@@ -77,8 +96,10 @@ Table of contents
       * [Context](#context)
       * [Delegate](#delegate)
   * [Extension points](#extension-points)
+      * [Client](#client-extensions)
+      * [Server](#server-extensions)
   * [Tracing capabilities](#tracing-capabilities)
-      * [Get events](#get-events)
+      * [Life-cycle events](#requestresponse-life-cycle-events)
   * [Publish & Subscribe](#publish--subscribe)
   * [Payload validation](#payload-validation)
   * [Plugins](#plugins)
@@ -324,16 +345,44 @@ hemera.add({
 })
 ```
 ### Extension points
-You can extend the behavior by extension.
-`onClientPreRequest`, `onClientPostRequest`, `onServerPreHandler`, `onServerPreRequest`, `onServerPreResponse`
+You can extend custom behavior by extensions.
+
+#### Client extensions
+* `onClientPreRequest`,
+* `onClientPostRequest`
+
+`i` s the index of the handler
 
 ```js
-hemera.ext('extension-name', function(next) {
+hemera.ext('<client-extension>', function(next, i) {
    
    let ctx = this
-
+   next(<error>)
 })
 ```
+
+#### Server extensions
+
+* `onServerPreHandler`,
+* `onServerPreRequest`
+* `onServerPreResponse`
+
+```js
+hemera.ext('<server-extension>', function (req, res, next, prevValue, i) {
+   
+   next(<error>)
+   //res.send(<payload>)
+   //res.end(<payload>)
+})
+```
+
+* `next()` will call the next extension handler on the stack.
+* `res.send(<error> or <payload>)` will end the request-response cycle and send the data back to the callee but __other__ extensions will be called.
+* `res.end(<error> or <payload>)` will end the request-response cycle and send the data back to the callee but __no__ other extensions will be called.
+* `req` contains the current request. Its an object with two properties `payload` and `error` because decoding issues. Payload and error object can be manipulated.
+* `res`  contains the current response. Its an object with two properties `payload` and `error`. Payload and error object can be manipulated.
+* `prevValue`  contains the message from the previous extension which was passed by `send(<value>)`
+* `i`  represent the position of the handler in the stack.
 
 ### Tracing capabilities
 Tracing in the style of [Google’s Dapper](http://static.googleusercontent.com/media/research.google.com/en//pubs/archive/36356.pdf)
@@ -359,23 +408,18 @@ In any act or add you can access the property `this.request$` or `this.trace$` t
     result: 50
 ```
 
-#### Get-events
+#### Request/response life-cycle events
+
+Events:
+* `onClientPreRequest`,
+* `onClientPostRequest`
+* `onServerPreHandler`,
+* `onServerPreRequest`
+* `onServerPreResponse`
 
 ```js
-hemera.on('onPreRequest', (msg) => {
-  console.log(msg)
-})
-
-hemera.on('onPostRequest', (msg) => {
-  console.log(msg)
-})
-
-hemera.on('onPreProcessing', (msg) => {
-  console.log(msg)
-})
-
-hemera.on('onPreResponse', (msg) => {
-  console.log(msg)
+hemera.on('<event>', (ctx) => {
+  console.log(ctx)
 })
 ```
 
@@ -491,34 +535,21 @@ Your custom logger have to support following log levels.
 ```
 
 ```
-node examples\\full-example.js
-[2017-01-12T23:24:45.739Z] INFO (app/10104 on starptech): Connected!
-[2017-01-12T23:24:45.744Z] INFO (app/10104 on starptech): ADD - ADDED
+[2017-02-04T22:19:34.156Z] INFO (app/2056 on starptech): Connected!
+[2017-02-04T22:19:34.160Z] INFO (app/2056 on starptech): ADD - ADDED
     topic: "math"
     cmd: "add"
-[2017-01-12T23:24:45.745Z] INFO (app/10104 on starptech): ADD - ADDED
-    topic: "math"
-    cmd: "sub"
-[2017-01-12T23:24:45.748Z] INFO (app/10104 on starptech): ACT_OUTBOUND - ID:d682eb25a2af958fe8ff4375bb1aab77
-    topic: "math"
-    cmd: "add"
-    a: 1
-    b: 2
-[2017-01-12T23:24:45.749Z] INFO (app/10104 on starptech): ACT_OUTBOUND - ID:1e3fa92b544310b313d845068397e185
-    topic: "math"
-    cmd: "add"
-    a: 1
-    b: 20
-[2017-01-12T23:24:45.752Z] INFO (app/10104 on starptech): ACT_INBOUND - ID:d682eb25a2af958fe8ff4375bb1aab77 (0.003282ms)
-[2017-01-12T23:24:45.753Z] INFO (app/10104 on starptech): ACT_OUTBOUND - ID:08de3e1cec1c06caba681f2298660fa4
-    topic: "math"
-    cmd: "add"
-    a: 1
-    b: 3
-[2017-01-12T23:24:45.753Z] INFO (app/10104 on starptech): ACT_INBOUND - ID:1e3fa92b544310b313d845068397e185 (0.002116ms)
-[2017-01-12T23:24:45.754Z] INFO (app/10104 on starptech): Result 21
-[2017-01-12T23:24:45.755Z] INFO (app/10104 on starptech): ACT_INBOUND - ID:08de3e1cec1c06caba681f2298660fa4 (0.001491ms)
-[2017-01-12T23:24:45.755Z] INFO (app/10104 on starptech): Result 4
+[2017-02-04T22:19:34.163Z] INFO (app/2056 on starptech):
+    outbound: {
+      "id": "5ecdad999267f031109df50f653a7f46",
+      "pattern": "a:1,b:2,cmd:add,topic:math"
+    }
+[2017-02-04T22:19:34.167Z] INFO (app/2056 on starptech):
+    inbound: {
+      "id": "5ecdad999267f031109df50f653a7f46",
+      "duration": 0.003826,
+      "pattern": "a:1,b:2,cmd:add,topic:math"
+    }
 ```
 
 ### Protocol
@@ -667,7 +698,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Dustin Deus** - *Initial work* - [StarpTech](https://github.com/StarpTech)
+* **Dustin Deus** - [StarpTech](https://github.com/StarpTech)
 
 See also the list of [contributors](https://github.com/StarpTech/hemera/contributors) who participated in this project.
 

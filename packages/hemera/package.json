@@ -1,7 +1,7 @@
 {
   "name": "nats-hemera",
   "author": "Dustin Deus (https://github.com/StarpTech)",
-  "version": "0.3.11",
+  "version": "0.4.12",
   "main": "build/index.js",
   "homepage": "https://hemerajs.github.io/hemera/",
   "repository": {
@@ -34,9 +34,9 @@
     "queueing"
   ],
   "scripts": {
-    "lint": "eslint ./src ./test && flow",
+    "lint": "eslint ./src ./test",
     "build": "babel ./lib --out-dir ./build --copy-files --source-maps",
-    "prepublish": "npm run lint && npm run build"
+    "prepublish": "npm run build"
   },
   "engines": {
     "node": ">=4.0.0"
@@ -45,24 +45,24 @@
   "dependencies": {
     "bloomrun": "3.0.x",
     "errio": "1.2.x",
+    "eslint-config-standard": "^6.2.1",
     "heavy": "4.0.x",
     "hoek": "4.1.x",
-    "items": "2.1.x",
     "lodash": "4.17.x",
     "pino": "3.0.x",
-    "super-error": "2.0.x"
+    "signal-exit": "3.0.x",
+    "super-error": "2.0.x",
+    "tinysonic": "1.1.x"
   },
   "devDependencies": {
     "babel-cli": "^6.22.2",
     "babel-plugin-istanbul": "^3.1.2",
-    "babel-plugin-syntax-flow": "^6.18.0",
-    "babel-plugin-transform-flow-comments": "^6.22.0",
-    "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-preset-env": "^1.1.8",
     "babel-register": "^6.22.0",
     "eslint": "^3.13.1",
-    "eslint-plugin-flowtype": "^2.30.0",
-    "flow-bin": "^0.38.0"
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-promise": "^3.4.0",
+    "eslint-plugin-standard": "^2.0.1"
   },
   "nyc": {
     "include": [
@@ -75,6 +75,6 @@
     "require": [
       "babel-register"
     ],
-    "sourceMap": false
+    "sourceMap": true
   }
 }

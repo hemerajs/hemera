@@ -1,5 +1,3 @@
-// @flow
-
 /*!
  * hemera
  * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
@@ -7,21 +5,30 @@
  */
 
 import _ from 'lodash'
-import Crypto from 'crypto'
+
+const ID_LENGTH = 16
+const ID_DIGITS = '0123456789abcdef'
 
 /**
  * @class Util
  */
-class Util {
-
+export default class Util {
   /**
    * @returns
    *
    * @memberOf Util
    */
-  static randomId() {
+  static randomId () {
+    let n = ''
+    for (let i = 0; i < ID_LENGTH; i++) {
+      const rand = Math.floor(Math.random() * ID_DIGITS.length)
 
-    return Crypto.randomBytes(16).toString('hex')
+      // avoid leading zeroes
+      if (rand !== 0 || n.length > 0) {
+        n += ID_DIGITS[rand]
+      }
+    }
+    return n
   }
 
   /**
@@ -32,8 +39,7 @@ class Util {
    *
    * @memberOf Util
    */
-  static nowHrTime() {
-
+  static nowHrTime () {
     const hrtime = process.hrtime()
     return Math.floor(hrtime[0] * 1000000 + hrtime[1] / 1000)
   }
@@ -45,11 +51,10 @@ class Util {
    *
    * @memberOf Util
    */
-  static cleanPattern(obj) {
-
+  static cleanPattern (obj) {
     if (obj === null) return obj
 
-    return _.pickBy(obj, function (val, prop: string) {
+    return _.pickBy(obj, function (val, prop) {
       return !_.includes(prop, '$')
     })
   }
@@ -60,8 +65,7 @@ class Util {
    *
    * @memberOf Util
    */
-  static pattern(args) {
-
+  static pattern (args) {
     if (_.isString(args)) {
       return args
     }
@@ -79,5 +83,3 @@ class Util {
     return sb.join(',')
   }
 }
-
-module.exports = Util

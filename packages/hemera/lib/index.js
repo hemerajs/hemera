@@ -1,5 +1,3 @@
-// @flow
-
 /*!
  * hemera
  * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
@@ -16,20 +14,28 @@ import Errio from 'errio'
 import Hoek from 'hoek'
 import Heavy from 'heavy'
 import _ from 'lodash'
+import Pino from 'pino'
+import OnExit from 'signal-exit'
+import TinySonic from 'tinysonic'
 
 import Errors from './errors'
 import Constants from './constants'
-import Ext from './ext'
+import Extension from './extension'
 import Util from './util'
-import DefaultExtensions from './extensions'
+import NatsTransport from './transport'
+import * as DefaultExtensions from './extensions'
 import DefaultEncoder from './encoder'
 import DefaultDecoder from './decoder'
-import DefaultLogger from './logger'
+import ServerResponse from './serverResponse'
+import ServerRequest from './serverRequest'
+import ClientRequest from './clientRequest'
+import ClientResponse from './clientResponse'
+import Serializers from './serializer'
 
-// config
-var defaultConfig: Config = {
+var defaultConfig = {
   timeout: 2000,
   debug: false,
+  name: 'app',
   crashOnFatal: true,
   logLevel: 'silent',
   load: {
@@ -42,55 +48,27 @@ var defaultConfig: Config = {
  */
 class Hemera extends EventEmitter {
 
-  context$: Context;
-  meta$: Meta;
-  delegate$: Delegate;
-  plugin$: Plugin;
-  trace$: Trace;
-  request$: Request;
-
-  log: any;
-
-  _config: Config;
-  _catalog: any;
-  _heavy: any;
-  _transport: Nats;
-  _topics: {
-    [id: string]: boolean
-  };
-  _plugins: {
-    [id: string]: Plugin
-  };
-
-  _exposition: any;
-  _extensions: {
-    [id: string]: Ext
-  };
-  _shouldCrash: boolean;
-  _replyTo: string;
-  _request: any;
-  _response: any;
-  _pattern: any;
-  _actMeta: any;
-  _prevContext: Hemera;
-  _cleanPattern: any;
-  _message: any;
-
-  _encoder: Encoder;
-  _decoder: Decoder;
-
-  constructor(transport: Nats, params: Config) {
-
+  /**
+   * Creates an instance of Hemera
+   *
+   * @param {Nats} transport
+   * @param {Config} params
+   *
+   * @memberOf Hemera
+   */
+  constructor (transport, params) {
     super()
 
     this._config = Hoek.applyToDefaults(defaultConfig, params || {})
-    this._catalog = Bloomrun()
+    this._router = Bloomrun()
     this._heavy = new Heavy(this._config.load)
-    this._transport = transport
+    this._transport = new NatsTransport({
+      transport
+    })
     this._topics = {}
     this._exposition = {}
 
-    // special variables for new execution context
+    // special variables for the new execution context
     this.context$ = {}
     this.meta$ = {}
     this.delegate$ = {}
@@ -111,6 +89,18 @@ class Hemera extends EventEmitter {
       id: ''
     }
 
+    // client and server locales
+    this._shouldCrash = false
+    this._replyTo = ''
+    this._request = null
+    this._response = null
+    this._pattern = null
+    this._actMeta = null
+    this._actCallback = null
+    this._cleanPattern = ''
+
+    // contains the list of all registered plugins
+    // the core is also a plugin
     this._plugins = {
       core: this.plugin$.attributes
     }
@@ -124,144 +114,155 @@ class Hemera extends EventEmitter {
 
     // define extension points
     this._extensions = {
-      onClientPreRequest: new Ext('onClientPreRequest'),
-      onClientPostRequest: new Ext('onClientPostRequest'),
-      onServerPreHandler: new Ext('onServerPreHandler'),
-      onServerPreRequest: new Ext('onServerPreRequest'),
-      onServerPreResponse: new Ext('onServerPreResponse')
+      onClientPreRequest: new Extension('onClientPreRequest'),
+      onClientPostRequest: new Extension('onClientPostRequest'),
+      onServerPreHandler: new Extension('onServerPreHandler', true),
+      onServerPreRequest: new Extension('onServerPreRequest', true),
+      onServerPreResponse: new Extension('onServerPreResponse', true)
     }
 
+    // start tracking process stats
     this._heavy.start()
 
-    /**
-     * Will be executed before the client request is executed.
-     */
+    // will be executed before the client request is executed.
     this._extensions.onClientPreRequest.addRange(DefaultExtensions.onClientPreRequest)
-
-    /**
-     * Will be executed after the client received and decoded the request.
-     */
+    // will be executed after the client received and decoded the request
     this._extensions.onClientPostRequest.addRange(DefaultExtensions.onClientPostRequest)
-
-    /**
-     * Will be executed before the server received the request.
-     */
+    // will be executed before the server received the requests
     this._extensions.onServerPreRequest.addRange(DefaultExtensions.onServerPreRequest)
-
-    /**
-     * Will be executed before the server action is executed.
-     */
+    // will be executed before the server action is executed
     this._extensions.onServerPreHandler.addRange(DefaultExtensions.onServerPreHandler)
-
-    /**
-     * Will be executed before the server reply the response and build the message.
-     */
+    // will be executed before the server reply the response and build the message
     this._extensions.onServerPreResponse.addRange(DefaultExtensions.onServerPreResponse)
 
-    this.log = this._config.logger || new DefaultLogger({
-      level: this._config.logLevel
+    // use own logger
+    if (this._config.logger) {
+      this.log = this._config.logger
+    } else {
+      let pretty = Pino.pretty()
+
+      // Leads to too much listeners in tests
+      if (this._config.logLevel !== 'silent') {
+        pretty.pipe(process.stdout)
+      }
+
+      this.log = Pino({
+        name: this._config.name,
+        safe: true, // avoid error caused by circular references
+        level: this._config.logLevel,
+        serializers: Serializers
+      }, pretty)
+    }
+
+    // no matter how a process exits log and fire event
+    OnExit((code, signal) => {
+      this.log.fatal({
+        code,
+        signal
+      }, 'process exited')
+      this.emit('teardown', {
+        code,
+        signal
+      })
+      this.close()
     })
   }
 
   /**
+   * Return all registered plugins
+   *
    * @readonly
    *
    * @memberOf Hemera
    */
-  get plugins(): {
-    [id: string]: any
-  } {
-
+  get plugins () {
     return this._plugins
   }
 
   /**
+   * Return the bloomrun instance
+   *
    * @readonly
    *
    * @memberOf Hemera
    */
-  get catalog(): any {
-
-    return this._catalog
+  get router () {
+    return this._router
   }
 
   /**
-   *
+   * Return the heavy instance
    *
    * @readonly
    *
    * @memberOf Hemera
    */
-  get load(): any {
-
+  get load () {
     return this._heavy.load
   }
 
   /**
-   *
+   * Return the shared object of all exposed data
    *
    * @readonly
    * @type {Exposition}
    * @memberOf Hemera
    */
-  get exposition(): any {
-
+  get exposition () {
     return this._exposition
   }
 
   /**
-   *
+   * Exposed data in context of the current plugin
+   * Is accessible by this.expositions[<plugin>][<key>]
    *
    * @param {string} key
    * @param {mixed} object
    *
    * @memberOf Hemera
    */
-  expose(key: string, object: mixed) {
-
+  expose (key, object) {
     let pluginName = this.plugin$.attributes.name
 
     if (!this._exposition[pluginName]) {
-
       this._exposition[pluginName] = {}
       this._exposition[pluginName][key] = object
     } else {
-
       this._exposition[pluginName][key] = object
     }
-
   }
 
   /**
+   * Return the underlying NATS driver
+   *
    * @readonly
    *
    * @memberOf Hemera
    */
-  get transport(): Nats {
-
-    return this._transport
+  get transport () {
+    return this._transport.driver
   }
 
   /**
+   * Return all registered topics
+   *
    * @readonly
    *
    * @memberOf Hemera
    */
-  get topics(): {
-    [id: string]: any
-  } {
+  get topics () {
     return this._topics
   }
+
   /**
-   *
+   * Add an extension. Extensions are called in serie
    *
    * @param {any} type
    * @param {any} handler
    *
    * @memberOf Hemera
    */
-  ext(type: string, handler: Function): void {
-
+  ext (type, handler) {
     if (!this._extensions[type]) {
       let error = new Errors.HemeraError(Constants.INVALID_EXTENSION_TYPE, {
         type
@@ -271,15 +272,16 @@ class Hemera extends EventEmitter {
     }
 
     this._extensions[type].add(handler)
-
   }
+
   /**
+   * Use a plugin.
+   *
    * @param {any} plugin
    *
    * @memberOf Hemera
    */
-  use(params: PluginDefinition) {
-
+  use (params) {
     if (this._plugins[params.attributes.name]) {
       let error = new Errors.HemeraError(Constants.PLUGIN_ALREADY_IN_USE, {
         plugin: params.attributes.name
@@ -300,189 +302,155 @@ class Hemera extends EventEmitter {
 
     this.log.info(params.attributes.name, Constants.PLUGIN_ADDED)
     this._plugins[params.attributes.name] = ctx.plugin$.attributes
-
   }
 
   /**
-   *
+   * Change the current plugin configuration
+   * e.g to set the payload validator
    *
    * @param {any} options
    *
    * @memberOf Hemera
    */
-  setOption(key: string, value: any) {
-
+  setOption (key, value) {
     this.plugin$.options[key] = value
   }
 
   /**
-   *
+   * Change the base configuration.
    *
    *
    * @memberOf Hemera
    */
-  setConfig(key: string, value: any) {
-
+  setConfig (key, value) {
     this._config[key] = value
   }
 
   /**
+   * Exit the process
+   *
    * @memberOf Hemera
    */
-  fatal() {
-
+  fatal () {
     this.close()
 
     process.exit(1)
   }
 
   /**
-   * @param {any} cb
+   *
+   *
+   * @param {Function} cb
    *
    * @memberOf Hemera
    */
-  ready(cb: Function) {
-
-    this._transport.on('connect', () => {
-
+  ready (cb) {
+    this._transport.driver.on('connect', () => {
       this.log.info(Constants.TRANSPORT_CONNECTED)
-      cb.call(this)
+
+      if (_.isFunction(cb)) {
+        cb.call(this)
+      }
     })
   }
 
   /**
-   *
-   * @returns
-   *
-   * @memberOf Hemera
-   */
-  timeout() {
-
-    return this.transport.timeout.apply(this.transport, arguments)
-  }
-  /**
-   * Add response
-   *
-   * @returns
-   *
-   * @memberOf Hemera
-   */
-  send() {
-
-    return this.transport.publish.apply(this.transport, arguments)
-  }
-
-  /**
-   * Act
-   *
-   * @returns
-   *
-   * @memberOf Hemera
-   */
-  sendRequest() {
-
-    return this.transport.request.apply(this.transport, arguments)
-  }
-
-  /**
-   *
+   * Build the final payload for the response
    *
    *
    * @memberOf Hemera
    */
-  _buildMessage() {
+  _buildMessage () {
+    let result = this._response
 
-    let result: Response = this._response
-
-    let message: Message = {
+    let message = {
       meta: this.meta$ || {},
       trace: this.trace$ || {},
       request: this.request$,
-      result: result instanceof Error ? null : result,
-      error: result instanceof Error ? Errio.toObject(result) : null
+      result: result.error ? null : result.payload,
+      error: result.error ? Errio.toObject(result.error) : null
     }
 
-    let endTime: number = Util.nowHrTime()
+    let endTime = Util.nowHrTime()
     message.request.duration = endTime - message.request.timestamp
     message.trace.duration = endTime - message.request.timestamp
 
-    this._message = message
+    let m = this._encoder.encode.call(this, message)
 
+    // attach encoding issues
+    if (m.error) {
+      message.error = Errio.toObject(m.error)
+      message.result = null
+    }
+
+    // final response
+    this._message = m.value
   }
+
   /**
-   *
-   *
+   * Last step before the response is send to the callee.
+   * The preResponse extension is invoked and previous errors are evaluated.
    *
    * @memberOf Hemera
    */
-  finish() {
-
-    let self: Hemera = this;
-
-    self._extensions.onServerPreResponse.invoke(self, function (err) {
+  finish () {
+    function onServerPreResponseHandler (err, value) {
+      const self = this
 
       // check if an error was already catched
-      if (self._response instanceof Error) {
-
-        self.log.error(self._response)
-        self._buildMessage()
-      }
-      // check for an extension error
-      else if (err) {
-
+      if (self._response.error) {
+        self.log.error(self._response.error)
+      } else if (err) { // check for an extension error
         let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
-        self._response = error
-        self.log.error(self._response)
-        self._buildMessage()
-      } else {
-
-        self._buildMessage()
+        self._response.error = error
+        self.log.error(self._response.error)
       }
+
+      // reply value from extension
+      if (value) {
+        self._response.payload = value
+      }
+
+      // create message payload
+      self._buildMessage()
 
       // indicates that an error occurs and that the program should exit
       if (self._shouldCrash) {
-
+        // only when we have an inbox othwerwise exit the service immediately
         if (self._replyTo) {
-
-          const msg = self._encoder.encode.call(self, self._message)
-
           // send error back to callee
-          return self.send(self._replyTo, msg, () => {
-
+          return self._transport.send(self._replyTo, self._message, () => {
             // let it crash
             if (self._config.crashOnFatal) {
-
               self.fatal()
             }
           })
-
         } else if (self._config.crashOnFatal) {
-
           return self.fatal()
         }
-
       }
 
+      // reply only when we have an inbox
       if (self._replyTo) {
-
-        const msg = self._encoder.encode.call(self, self._message)
-
-        return this.send(this._replyTo, msg)
+        return this._transport.send(this._replyTo, self._message)
       }
+    }
 
-    })
-
+    this._extensions.onServerPreResponse.invoke(this, onServerPreResponseHandler)
   }
 
   /**
-   * @param {any} topic
-   * @returns
+   * Attach one handler to the topic subscriber.
+   * With subToMany and maxMessages you control NATS specific behaviour.
+   *
+   * @param {string} topic
+   * @param {boolean} subToMany
+   * @param {number} maxMessages
    *
    * @memberOf Hemera
    */
-  subscribe(topic: string, subToMany: boolean, maxMessages: number) {
-
-    let self: Hemera = this
+  subscribe (topic, subToMany, maxMessages) {
+    const self = this
 
     // avoid duplicate subscribers of the emit stream
     // we use one subscriber per topic
@@ -490,153 +458,170 @@ class Hemera extends EventEmitter {
       return
     }
 
-    let handler = (request: any, replyTo: string) => {
+    /**
+     *
+     *
+     * @param {any} err
+     * @param {any} resp
+     * @returns
+     */
+    function actionHandler (err, resp) {
+      const self = this
 
-      // create new execution context
-      let ctx = this.createContext()
-      ctx._shouldCrash = false
-      ctx._replyTo = replyTo
-      ctx._request = self._decoder.decode.call(ctx, request)
-      ctx._pattern = {}
-      ctx._actMeta = {}
+      if (err) {
+        self._response.error = new Errors.BusinessError(Constants.IMPLEMENTATION_ERROR, {
+          pattern: self._pattern
+        }).causedBy(err)
 
-      //Extension point 'onServerPreRequest'
-      self._extensions.onServerPreRequest.invoke(ctx, function (err) {
+        return self.finish()
+      }
 
-        let self: Hemera = this
+      // assign action result
+      self._response.payload = resp
 
-        if (err) {
+      self.finish()
+    }
 
-          let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+    /**
+     *
+     *
+     * @param {any} err
+     * @param {any} value
+     * @returns
+     */
+    function onServerPreHandler (err, value) {
+      const self = this
 
-          self.log.error(error)
-          self._response = error
+      if (err) {
+        self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+
+        self.log.error(self._response.error)
+
+        return self.finish()
+      }
+
+      // reply value from extension
+      if (value) {
+        self._response.payload = value
+        return self.finish()
+      }
+
+      try {
+        let action = self._actMeta.action.bind(self)
+
+        // if request type is 'pubsub' we dont have to reply back
+        if (self._request.payload.request.type === 'pubsub') {
+          action(self._request.payload.pattern)
 
           return self.finish()
         }
 
-        // invalid payload
-        if (self._request.error) {
+        // execute RPC action
+        action(self._request.payload.pattern, actionHandler.bind(self))
+      } catch (err) {
+        self._response.error = new Errors.ImplementationError(Constants.IMPLEMENTATION_ERROR, {
+          pattern: self._pattern
+        }).causedBy(err)
 
-          let error = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR, {
-            topic
-          }).causedBy(self._request.error)
+        // service should exit
+        self._shouldCrash = true
 
-          return self.finish(replyTo, error)
-        }
+        self.finish()
+      }
+    }
 
-        let requestType = self._request.value.request.type
-        self._pattern = self._request.value.pattern
-        self._actMeta = self._catalog.lookup(self._pattern)
+    /**
+     *
+     *
+     * @param {any} err
+     * @param {any} value
+     * @returns
+     */
+    function onServerPreRequestHandler (err, value) {
+      let self = this
 
-        // check if a handler is registered with this pattern
-        if (self._actMeta) {
+      if (err) {
+        let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+        self.log.error(error)
+        self._response.error = error
 
-          self._extensions.onServerPreHandler.invoke(ctx, function (err: Error) {
+        return self.finish()
+      }
 
-            if (err) {
+      // reply value from extension
+      if (value) {
+        self._response.payload = value
+        return self.finish()
+      }
 
-              self._response = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+      // find matched route
+      self._pattern = self._request.payload.pattern
+      self._actMeta = self._router.lookup(self._pattern)
 
-              self.log.error(self._response)
+      // check if a handler is registered with this pattern
+      if (self._actMeta) {
+        self._extensions.onServerPreHandler.invoke(self, onServerPreHandler)
+      } else {
+        self.log.info({
+          topic
+        }, Constants.PATTERN_NOT_FOUND)
 
-              return self.finish()
-            }
+        self._response.error = new Errors.PatternNotFound(Constants.PATTERN_NOT_FOUND, {
+          pattern: self._pattern
+        })
 
-            try {
+        // send error back to callee
+        self.finish()
+      }
+    }
 
-              let action = self._actMeta.action.bind(self)
+    let handler = (request, replyTo) => {
+      // create new execution context
+      let ctx = this.createContext()
+      ctx._shouldCrash = false
+      ctx._replyTo = replyTo
+      ctx._request = new ServerRequest(request)
+      ctx._response = new ServerResponse()
+      ctx._pattern = {}
+      ctx._actMeta = {}
 
-              // if request type is 'pubsub' we dont have to answer
-              if (requestType === 'pubsub') {
-
-                action(self._request.value.pattern)
-
-                return self.finish()
-              }
-
-              // call action
-              action(self._request.value.pattern, (err: Error, resp) => {
-
-                if (err) {
-
-                  self._response = new Errors.BusinessError(Constants.IMPLEMENTATION_ERROR, {
-                    pattern: self._pattern
-                  }).causedBy(err)
-
-                  return self.finish()
-                }
-
-                self._response = resp
-
-                self.finish()
-              })
-
-            } catch (err) {
-
-              self._response = new Errors.ImplementationError(Constants.IMPLEMENTATION_ERROR, {
-                pattern: self._pattern
-              }).causedBy(err)
-
-              self._shouldCrash = true
-
-              self.finish()
-            }
-
-          })
-
-        } else {
-
-          self.log.info({
-            topic
-          }, Constants.PATTERN_NOT_FOUND)
-
-          self._response = new Errors.PatternNotFound(Constants.PATTERN_NOT_FOUND, {
-            pattern: self._pattern
-          })
-
-          // send error back to callee
-          self.finish()
-        }
-
-      })
-
+      ctx._extensions.onServerPreRequest.invoke(ctx, onServerPreRequestHandler)
     }
 
     // standard pubsub with optional max proceed messages
     if (subToMany) {
-
-      self.transport.subscribe(topic, {
+      self._transport.subscribe(topic, {
         max: maxMessages
       }, handler)
     } else {
-
       // queue group names allow load balancing of services
-      self.transport.subscribe(topic, {
+      self._transport.subscribe(topic, {
         'queue': 'queue.' + topic,
         max: maxMessages
       }, handler)
     }
 
-    this._topics[topic] = true
-
+    self._topics[topic] = true
   }
 
   /**
+   * The topic is subscribed on NATS and can be called from any client.
+   *
    * @param {any} pattern
    * @param {any} cb
    *
    * @memberOf Hemera
    */
-  add(pattern: {
-    [id: string]: any
-  }, cb: Function) {
+  add (pattern, cb) {
+    const hasCallback = _.isFunction(cb)
 
-    let hasCallback = _.isFunction(cb)
+    // check for use quick syntax for JSON objects
+    if (_.isString(pattern)) {
+      pattern = TinySonic(pattern)
+    }
 
     // topic is needed to subscribe on a subject in NATS
     if (!pattern.topic) {
-
       let error = new Errors.HemeraError(Constants.NO_TOPIC_TO_SUBSCRIBE, {
         pattern
       })
@@ -646,7 +631,6 @@ class Hemera extends EventEmitter {
     }
 
     if (!hasCallback) {
-
       let error = new Errors.HemeraError(Constants.MISSING_IMPLEMENTATION, {
         pattern
       })
@@ -659,9 +643,8 @@ class Hemera extends EventEmitter {
 
     let schema = {}
 
-    // remove objects (rules) from pattern and extract scheme
-    _.each(pattern, function (v: string, k: any) {
-
+    // remove objects (rules) from pattern and extract schema
+    _.each(pattern, function (v, k) {
       if (_.isObject(v)) {
         schema[k] = _.clone(v)
         delete origPattern[k]
@@ -672,18 +655,17 @@ class Hemera extends EventEmitter {
     origPattern = Util.cleanPattern(origPattern)
 
     // create message object which represent the object behind the matched pattern
-    let actMeta: ActMeta = {
+    let actMeta = {
       schema: schema,
       pattern: origPattern,
       action: cb,
       plugin: this.plugin$
     }
 
-    let handler = this._catalog.lookup(origPattern)
+    let handler = this._router.lookup(origPattern)
 
     // check if pattern is already registered
     if (handler) {
-
       let error = new Errors.HemeraError(Constants.PATTERN_ALREADY_IN_USE, {
         pattern
       })
@@ -693,7 +675,7 @@ class Hemera extends EventEmitter {
     }
 
     // add to bloomrun
-    this._catalog.add(origPattern, actMeta)
+    this._router.add(origPattern, actMeta)
 
     this.log.info(origPattern, Constants.ADD_ADDED)
 
@@ -702,18 +684,21 @@ class Hemera extends EventEmitter {
   }
 
   /**
+   * Start an action.
+   *
    * @param {any} pattern
    * @param {any} cb
    *
    * @memberOf Hemera
    */
-  act(pattern: {
-    [id: string]: number
-  }, cb: Function) {
+  act (pattern, cb) {
+    // check for use quick syntax for JSON objects
+    if (_.isString(pattern)) {
+      pattern = TinySonic(pattern)
+    }
 
     // topic is needed to subscribe on a subject in NATS
     if (!pattern.topic) {
-
       let error = new Errors.HemeraError(Constants.NO_TOPIC_TO_REQUEST, {
         pattern
       })
@@ -722,203 +707,241 @@ class Hemera extends EventEmitter {
       throw (error)
     }
 
-    // create new execution context
-    let ctx = this.createContext()
-    ctx._pattern = pattern
-    ctx._prevContext = this
-    ctx._cleanPattern = Util.cleanPattern(pattern)
-    ctx._response = {}
-    ctx._request = {}
-
-    ctx._extensions.onClientPreRequest.invoke(ctx, function onPreRequest(err: Error) {
-
-      let self: Hemera = this
-
-      let hasCallback = _.isFunction(cb)
-
+    /**
+     *
+     *
+     * @param {any} err
+     * @returns
+     */
+    function onClientPostRequestHandler (err) {
+      const self = this
       if (err) {
-
         let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
 
         self.log.error(error)
 
-        if (hasCallback) {
-          return cb.call(self, error)
+        if (self._actCallback) {
+          return self._actCallback(error)
         }
 
         return
       }
 
-      // use simple publish mechanism instead to fire a request
-      if (pattern.pubsub$ === true) {
+      if (self._actCallback) {
+        if (self._response.payload.error) {
+          let responseError = Errio.fromObject(self._response.payload.error)
+          let responseErrorCause = responseError.cause
+          let error = new Errors.BusinessError(Constants.BUSINESS_ERROR, {
+            pattern: self._cleanPattern
+          }).causedBy(responseErrorCause ? responseError.cause : responseError)
 
-        if (hasCallback) {
+          self.log.error(error)
+
+          return self._actCallback(responseError)
+        }
+
+        self._actCallback(null, self._response.payload.result)
+      }
+    }
+
+    /**
+     *
+     *
+     * @param {any} response
+     * @returns
+     */
+    function sendRequestHandler (response) {
+      const self = this
+      const res = self._decoder.decode.call(ctx, response)
+      self._response.payload = res.value
+      self._response.error = res.error
+
+      try {
+        // if payload is invalid
+        if (self._response.error) {
+          let error = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR, {
+            pattern: self._cleanPattern
+          }).causedBy(self._response.error)
+
+          self.log.error(error)
+
+          if (self._actCallback) {
+            return self._actCallback(error)
+          }
+        }
+
+        self._extensions.onClientPostRequest.invoke(self, onClientPostRequestHandler)
+      } catch (err) {
+        let error = new Errors.FatalError(Constants.FATAL_ERROR, {
+          pattern: self._cleanPattern
+        }).causedBy(err)
+
+        self.log.fatal(error)
+
+        // let it crash
+        if (self._config.crashOnFatal) {
+          self.fatal()
+        }
+      }
+    }
+
+    /**
+     *
+     *
+     * @param {any} err
+     * @returns
+     */
+    function onPreRequestHandler (err) {
+      const self = this
+
+      let m = self._encoder.encode.call(self, self._message)
+
+      // throw encoding issue
+      if (m.error) {
+        let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(m.error)
+
+        self.log.error(error)
+
+        if (self._actCallback) {
+          return self._actCallback(error)
+        }
+
+        return
+      }
+
+      if (err) {
+        let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+
+        self.log.error(error)
+
+        if (self._actCallback) {
+          return self._actCallback(error)
+        }
+
+        return
+      }
+
+      self._request.payload = m.value
+      self._request.error = m.error
+
+      // use simple publish mechanism instead of request/reply
+      if (pattern.pubsub$ === true) {
+        if (self._actCallback) {
           self.log.info(Constants.PUB_CALLBACK_REDUNDANT)
         }
 
-        self.send(pattern.topic, self._request)
+        self._transport.send(pattern.topic, self._request.payload)
       } else {
-
         // send request
-        let sid = self.sendRequest(pattern.topic, self._request, (response: any) => {
-
-          self._response = self._decoder.decode.call(ctx, response)
-
-          try {
-
-            // if payload is invalid
-            if (self._response.error) {
-
-              let error = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR, {
-                pattern: self._cleanPattern
-              }).causedBy(self._response.error)
-
-              self.log.error(error)
-
-              if (hasCallback) {
-                return cb.call(self, error)
-              }
-            }
-
-            self._extensions.onClientPostRequest.invoke(ctx, function (err: Error) {
-
-              if (err) {
-
-                let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
-
-                self.log.error(error)
-
-                if (hasCallback) {
-                  return cb.call(self, error)
-                }
-
-                return
-              }
-
-              if (hasCallback) {
-
-                if (self._response.value.error) {
-
-                  let responseError = Errio.fromObject(self._response.value.error)
-                  let responseErrorCause = responseError.cause
-                  let error = new Errors.BusinessError(Constants.BUSINESS_ERROR, {
-                    pattern: self._cleanPattern
-                  }).causedBy(responseErrorCause ? responseError.cause : responseError)
-
-                  self.log.error(error)
-
-                  return cb.call(self, responseError)
-                }
-
-                cb.apply(self, [null, self._response.value.result])
-              }
-
-            })
-
-          } catch (err) {
-
-            let error = new Errors.FatalError(Constants.FATAL_ERROR, {
-              pattern: self._cleanPattern
-            }).causedBy(err)
-
-            self.log.fatal(error)
-
-            // let it crash
-            if (self._config.crashOnFatal) {
-
-              self.fatal()
-            }
-          }
-        })
+        let sid = self._transport.sendRequest(pattern.topic, self._request.payload, sendRequestHandler.bind(self))
 
         // handle timeout
-        self.handleTimeout(sid, pattern, cb)
+        self.handleTimeout(sid, pattern)
       }
+    }
 
-    })
+    // create new execution context
+    let ctx = this.createContext()
+    ctx._pattern = pattern
+    ctx._prevContext = this
+    ctx._actCallback = _.isFunction(cb) ? cb.bind(ctx) : null
+    ctx._cleanPattern = Util.cleanPattern(pattern)
+    ctx._response = new ClientResponse()
+    ctx._request = new ClientRequest()
 
+    ctx._extensions.onClientPreRequest.invoke(ctx, onPreRequestHandler)
   }
 
   /**
+   * Handle the timeout when a pattern could not be resolved. Can have different reasons:
+   * - No one was connected at the time (service unavailable)
+   * - Service is actually still processing the request (service takes too long)
+   * - Service was processing the request but crashed (service error)
+   *
    * @param {any} sid
    * @param {any} pattern
-   * @param {any} cb
    *
    * @memberOf Hemera
    */
-  handleTimeout(sid: number, pattern: {
-    [id: string]: number
-  }, cb: Function) {
+  handleTimeout (sid, pattern) {
+    const timeout = pattern.timeout$ || this._config.timeout
 
-    // handle timeout
-    this.timeout(sid, pattern.timeout$ || this._config.timeout, 1, () => {
+    function onClientPostRequestHandler (err) {
+      const self = this
+      if (err) {
+        self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+        self.log.error(self._response.error)
+      }
 
-      let hasCallback = _.isFunction(cb)
+      if (self._actCallback) {
+        try {
+          self._actCallback(self._response.error)
+        } catch (err) {
+          let error = new Errors.FatalError(Constants.FATAL_ERROR, {
+            pattern
+          }).causedBy(err)
 
+          self.log.fatal(error)
+
+          // let it crash
+          if (self._config.crashOnFatal) {
+            self.fatal()
+          }
+        }
+      }
+    }
+
+    let timeoutHandler = () => {
       let error = new Errors.TimeoutError(Constants.ACT_TIMEOUT_ERROR, {
         pattern
       })
 
       this.log.error(error)
 
-      if (hasCallback) {
+      this._response.error = error
 
-        try {
+      this._extensions.onClientPostRequest.invoke(this, onClientPostRequestHandler)
+    }
 
-          cb.call(this, error)
-        } catch (err) {
-
-          let error = new Errors.FatalError(Constants.FATAL_ERROR, {
-            pattern
-          }).causedBy(err)
-
-          this.log.fatal(error)
-
-          // let it crash
-          if (this._config.crashOnFatal) {
-
-            this.fatal()
-          }
-        }
-      }
-    })
+    this._transport.timeout(sid, timeout, 1, timeoutHandler)
   }
 
   /**
+   * Create new instance of hemera but with pointer on the previous propertys
+   * so we are able to create a scope per act without lossing the reference to the core api.
+   *
    * @returns
-   * OLOO (objects-linked-to-other-objects) is a code style which creates and relates objects directly without the abstraction of classes. OLOO quite naturally * implements [[Prototype]]-based behavior delegation.
-   * More details: {@link https://github.com/getify/You-Dont-Know-JS/blob/master/this%20%26%20object%20prototypes/ch6.md}
+   *
    * @memberOf Hemera
    */
-  createContext() {
-
+  createContext () {
     var self = this
 
-    // create new instance of hemera but with pointer on the previous propertys
-    // so we are able to create a scope per act without lossing the reference to the core api.
-    var ctx: Hemera = Object.create(self)
+    var ctx = Object.create(self)
 
     return ctx
   }
 
   /**
+   * Return the list of all registered actions
+   *
    * @memberOf Hemera
    */
-  list(params: any) {
-
-    return this._catalog.list(params)
+  list (params) {
+    return this._router.list(params)
   }
 
   /**
+   * Close the process watcher and the underlying transort driver.
+   *
    * @returns
    *
    * @memberOf Hemera
    */
-  close() {
-
+  close () {
     this._heavy.stop()
 
-    return this.transport.close()
+    return this._transport.close()
   }
 }
 
