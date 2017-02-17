@@ -1,6 +1,6 @@
 {
   "name": "hemera-sql-store",
-  "version": "0.0.22",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
