@@ -24,10 +24,13 @@
   },
   "devDependencies": {
     "code": "4.0.x",
-    "mocha": "3.2.x",
-    "mocha-lcov-reporter": "1.2.x",
-    "istanbul": "0.4.x",
     "coveralls": "2.11.x",
-    "eslint": "^3.13.1"
+    "eslint": "^3.13.1",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-promise": "^3.4.2",
+    "eslint-plugin-standard": "^2.0.1",
+    "istanbul": "0.4.x",
+    "mocha": "3.2.x",
+    "mocha-lcov-reporter": "1.2.x"
   }
 }

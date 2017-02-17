@@ -1,22 +1,18 @@
 'use strict'
 
-const Hemera = require('../../packages/hemera'),
-  HemeraZipkin = require('../../packages/hemera-zipkin'),
-  Util = require('../../packages/hemera/build/util'),
-  Code = require('code'),
-  Sinon = require('sinon'),
-  HemeraTestsuite = require('hemera-testsuite')
+const Hemera = require('../../packages/hemera')
+const HemeraZipkin = require('../../packages/hemera-zipkin')
+const Code = require('code')
+const HemeraTestsuite = require('hemera-testsuite')
 
 const expect = Code.expect
 
-process.setMaxListeners(0);
+process.setMaxListeners(0)
 
 describe('Hemera-zipkin', function () {
-
   const PORT = 6244
   const flags = ['--user', 'derek', '--pass', 'foobar']
   const authUrl = 'nats://derek:foobar@localhost:' + PORT
-  const noAuthUrl = 'nats://localhost:' + PORT
   let server
 
   // Start up our own nats-server
@@ -30,7 +26,6 @@ describe('Hemera-zipkin', function () {
   })
 
   it('Should be able to trace', function (done) {
-
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -40,7 +35,6 @@ describe('Hemera-zipkin', function () {
     hemera.use(HemeraZipkin)
 
     hemera.ready(() => {
-
       hemera.add({
         topic: 'email',
         cmd: 'send',
@@ -48,7 +42,6 @@ describe('Hemera-zipkin', function () {
           type$: 'number'
         }
       }, (resp, cb) => {
-
         cb()
       })
 
@@ -57,12 +50,10 @@ describe('Hemera-zipkin', function () {
         cmd: 'send',
         a: '1'
       }, (err, resp) => {
-
         expect(err).to.be.not.exists()
         hemera.close()
         done()
       })
     })
   })
-
 })

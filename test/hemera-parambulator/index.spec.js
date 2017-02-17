@@ -1,22 +1,18 @@
 'use strict'
 
-const Hemera = require('../../packages/hemera'),
-  HemeraParambulator = require('../../packages/hemera-parambulator'),
-  Util = require('../../packages/hemera/build/util'),
-  Code = require('code'),
-  Sinon = require('sinon'),
-  HemeraTestsuite = require('hemera-testsuite')
+const Hemera = require('../../packages/hemera')
+const HemeraParambulator = require('../../packages/hemera-parambulator')
+const Code = require('code')
+const HemeraTestsuite = require('hemera-testsuite')
 
 const expect = Code.expect
 
-process.setMaxListeners(0);
+process.setMaxListeners(0)
 
 describe('Hemera-parambulator', function () {
-
   const PORT = 6244
   const flags = ['--user', 'derek', '--pass', 'foobar']
   const authUrl = 'nats://derek:foobar@localhost:' + PORT
-  const noAuthUrl = 'nats://localhost:' + PORT
   let server
 
   // Start up our own nats-server
@@ -30,7 +26,6 @@ describe('Hemera-parambulator', function () {
   })
 
   it('Should be able to use parambulator as payload validator', function (done) {
-
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -39,7 +34,6 @@ describe('Hemera-parambulator', function () {
     hemera.setOption('payloadValidator', 'hemera-parambulator')
 
     hemera.ready(() => {
-
       hemera.add({
         topic: 'email',
         cmd: 'send',
@@ -47,7 +41,6 @@ describe('Hemera-parambulator', function () {
           type$: 'number'
         }
       }, (resp, cb) => {
-
         throw new Error('Shit!')
       })
 
@@ -56,7 +49,6 @@ describe('Hemera-parambulator', function () {
         cmd: 'send',
         a: '1'
       }, (err, resp) => {
-
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('HemeraError')
         expect(err.message).to.be.equals('Extension error')
@@ -69,7 +61,6 @@ describe('Hemera-parambulator', function () {
   })
 
   it('Should be able to modify the payload', function (done) {
-
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -78,7 +69,6 @@ describe('Hemera-parambulator', function () {
     hemera.setOption('payloadValidator', 'hemera-parambulator')
 
     hemera.ready(() => {
-
       hemera.add({
         topic: 'email',
         cmd: 'send',
@@ -86,7 +76,6 @@ describe('Hemera-parambulator', function () {
           default$: 'hello'
         }
       }, (resp, cb) => {
-
         cb(null, resp.a)
       })
 
@@ -94,7 +83,6 @@ describe('Hemera-parambulator', function () {
         topic: 'email',
         cmd: 'send'
       }, (err, resp) => {
-
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals('hello')
         hemera.close()
@@ -104,7 +92,6 @@ describe('Hemera-parambulator', function () {
   })
 
   it('Should be able to pass the full schema to the action', function (done) {
-
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -113,7 +100,6 @@ describe('Hemera-parambulator', function () {
     hemera.setOption('payloadValidator', 'hemera-parambulator')
 
     hemera.ready(() => {
-
       hemera.add({
         topic: 'email',
         cmd: 'send',
@@ -123,7 +109,6 @@ describe('Hemera-parambulator', function () {
           }
         }
       }, (resp, cb) => {
-
         cb()
       })
 
@@ -132,7 +117,6 @@ describe('Hemera-parambulator', function () {
         cmd: 'send',
         a: '1'
       }, (err, resp) => {
-
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('HemeraError')
         expect(err.message).to.be.equals('Extension error')
@@ -143,5 +127,4 @@ describe('Hemera-parambulator', function () {
       })
     })
   })
-
 })

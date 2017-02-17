@@ -1,22 +1,18 @@
 'use strict'
 
-const Hemera = require('../../packages/hemera'),
-  HemeraMsgpack = require('../../packages/hemera-msgpack'),
-  Util = require('../../packages/hemera/build/util'),
-  Code = require('code'),
-  Sinon = require('sinon'),
-  HemeraTestsuite = require('hemera-testsuite')
+const Hemera = require('../../packages/hemera')
+const HemeraMsgpack = require('../../packages/hemera-msgpack')
+const Code = require('code')
+const HemeraTestsuite = require('hemera-testsuite')
 
 const expect = Code.expect
 
-process.setMaxListeners(0);
+process.setMaxListeners(0)
 
 describe('Hemera-msgpack', function () {
-
   const PORT = 6243
   const flags = ['--user', 'derek', '--pass', 'foobar']
   const authUrl = 'nats://derek:foobar@localhost:' + PORT
-  const noAuthUrl = 'nats://localhost:' + PORT
   let server
 
   // Start up our own nats-server
@@ -30,7 +26,6 @@ describe('Hemera-msgpack', function () {
   })
 
   it('encode and decode', function (done) {
-
     const nats = require('nats').connect({
       url: authUrl,
       preserveBuffers: true
@@ -41,12 +36,10 @@ describe('Hemera-msgpack', function () {
     hemera.use(HemeraMsgpack)
 
     hemera.ready(() => {
-
       hemera.add({
         topic: 'math',
         cmd: 'add'
       }, (resp, cb) => {
-
         cb(null, resp.a + resp.b)
       })
 
@@ -56,7 +49,6 @@ describe('Hemera-msgpack', function () {
         a: 1,
         b: 2
       }, (err, resp) => {
-
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals(3)
         hemera.close()
@@ -66,7 +58,6 @@ describe('Hemera-msgpack', function () {
   })
 
   it('encode and decode complex type', function (done) {
-
     const nats = require('nats').connect({
       url: authUrl,
       preserveBuffers: true
@@ -77,12 +68,10 @@ describe('Hemera-msgpack', function () {
     hemera.use(HemeraMsgpack)
 
     hemera.ready(() => {
-
       hemera.add({
         topic: 'math',
         cmd: 'add'
       }, (resp, cb) => {
-
         cb(null, {
           result: resp.a + resp.b
         })
@@ -94,7 +83,6 @@ describe('Hemera-msgpack', function () {
         a: 1,
         b: 2
       }, (err, resp) => {
-
         expect(err).to.be.not.exists()
         expect(resp.result).to.be.equals(3)
         hemera.close()
@@ -102,5 +90,4 @@ describe('Hemera-msgpack', function () {
       })
     })
   })
-
 })

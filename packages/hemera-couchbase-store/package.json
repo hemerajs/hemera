@@ -17,11 +17,14 @@
   },
   "devDependencies": {
     "code": "4.0.x",
+    "eslint": "^3.13.1",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-promise": "^3.4.2",
+    "eslint-plugin-standard": "^2.0.1",
     "hemera-testsuite": "1.0.x",
     "istanbul": "0.4.x",
     "mocha": "3.2.x",
     "mocha-lcov-reporter": "1.2.x",
-    "nyc": "10.0.x",
-    "eslint": "^3.13.1"
+    "nyc": "10.0.x"
   }
 }

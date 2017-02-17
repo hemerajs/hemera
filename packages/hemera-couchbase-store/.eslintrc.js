@@ -6,7 +6,7 @@ module.exports = {
   },
   "plugins": [],
   "extends": [
-    "eslint:recommended"
+    "standard"
   ],
   "parserOptions": {
     "sourceType": "module"

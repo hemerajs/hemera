@@ -96,31 +96,29 @@ var Extension = function () {
       if (!array.length) {
         callback();
       } else {
-        (function () {
-          var i = 0;
+        var i = 0;
 
-          var iterate = function iterate(prevValue) {
-            var done = function done(err, value, abort) {
-              if (err) {
-                callback(err);
-              } else if (value && abort) {
-                callback(null, value);
+        var iterate = function iterate(prevValue) {
+          var done = function done(err, value, abort) {
+            if (err) {
+              callback(err);
+            } else if (value && abort) {
+              callback(null, value);
+            } else {
+              i = i + 1;
+
+              if (i < array.length) {
+                iterate(value);
               } else {
-                i = i + 1;
-
-                if (i < array.length) {
-                  iterate(value);
-                } else {
-                  callback(null, value);
-                }
+                callback(null, value);
               }
-            };
-
-            method(array[i], done, prevValue, i);
+            }
           };
 
-          iterate();
-        })();
+          method(array[i], done, prevValue, i);
+        };
+
+        iterate();
       }
     }
   }]);

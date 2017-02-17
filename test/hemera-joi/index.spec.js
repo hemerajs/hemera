@@ -1,22 +1,18 @@
 'use strict'
 
-const Hemera = require('../../packages/hemera'),
-  HemeraJoi = require('../../packages/hemera-joi'),
-  Util = require('../../packages/hemera/build/util'),
-  Code = require('code'),
-  Sinon = require('sinon'),
-  HemeraTestsuite = require('hemera-testsuite')
+const Hemera = require('../../packages/hemera')
+const HemeraJoi = require('../../packages/hemera-joi')
+const Code = require('code')
+const HemeraTestsuite = require('hemera-testsuite')
 
 const expect = Code.expect
 
-process.setMaxListeners(0);
+process.setMaxListeners(0)
 
 describe('Hemera-joi', function () {
-
   const PORT = 6243
   const flags = ['--user', 'derek', '--pass', 'foobar']
   const authUrl = 'nats://derek:foobar@localhost:' + PORT
-  const noAuthUrl = 'nats://localhost:' + PORT
   let server
 
   // Start up our own nats-server
@@ -30,7 +26,6 @@ describe('Hemera-joi', function () {
   })
 
   it('Should be able to use joi as payload validator', function (done) {
-
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -41,13 +36,11 @@ describe('Hemera-joi', function () {
     let Joi = hemera.exposition['hemera-joi'].joi
 
     hemera.ready(() => {
-
       hemera.add({
         topic: 'email',
         cmd: 'send',
         a: Joi.number().required()
       }, (resp, cb) => {
-
         cb()
       })
 
@@ -56,7 +49,6 @@ describe('Hemera-joi', function () {
         cmd: 'send',
         a: 'dwedwed'
       }, (err, resp) => {
-
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('HemeraError')
         expect(err.message).to.be.equals('Extension error')
@@ -70,7 +62,6 @@ describe('Hemera-joi', function () {
   })
 
   it('Should be able modify payload by custom payload validator', function (done) {
-
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -81,14 +72,12 @@ describe('Hemera-joi', function () {
     let Joi = hemera.exposition['hemera-joi'].joi
 
     hemera.ready(() => {
-
       hemera.add({
         topic: 'email',
         cmd: 'send',
         a: Joi.number().required(),
         b: Joi.number().default(100)
       }, (resp, cb) => {
-
         expect(resp.b).to.be.equals(100)
         cb(null, true)
       })
@@ -98,7 +87,6 @@ describe('Hemera-joi', function () {
         cmd: 'send',
         a: 33
       }, (err, resp) => {
-
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals(true)
 
@@ -109,7 +97,6 @@ describe('Hemera-joi', function () {
   })
 
   it('Should be able to pass the full joi schema to the action', function (done) {
-
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -120,7 +107,6 @@ describe('Hemera-joi', function () {
     let Joi = hemera.exposition['hemera-joi'].joi
 
     hemera.ready(() => {
-
       hemera.add({
         topic: 'email',
         cmd: 'send',
@@ -128,7 +114,6 @@ describe('Hemera-joi', function () {
           a: Joi.number().required()
         })
       }, (resp, cb) => {
-
         cb()
       })
 
@@ -137,7 +122,6 @@ describe('Hemera-joi', function () {
         cmd: 'send',
         a: 'dwedwed'
       }, (err, resp) => {
-
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('HemeraError')
         expect(err.message).to.be.equals('Extension error')
@@ -149,5 +133,4 @@ describe('Hemera-joi', function () {
       })
     })
   })
-
 })
