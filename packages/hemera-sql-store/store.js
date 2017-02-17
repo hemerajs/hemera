@@ -1,6 +1,11 @@
 'use strict'
 
 const Store = require('hemera-store')
+const Hoek = require('hoek')
+
+const defaultConfig = {
+  idField: 'id'
+}
 
 /**
  *
@@ -19,9 +24,11 @@ class SqlStore extends Store {
    * @memberOf SqlStore
    */
   constructor (driver, options) {
+
+    options = Hoek.applyToDefaults(defaultConfig, options || {})
     super(driver, options)
   }
-  
+
   /**
    * Create a new entity
    *
@@ -58,9 +65,9 @@ class SqlStore extends Store {
    * @memberOf Store
    */
   removeById(req, cb) {
-    this._driver(req.collection).where('id', req.id).del().asCallback(cb)
+    this._driver(req.collection).where(this._options.idField, req.id).del().asCallback(cb)
   }
-  
+
   /**
    * Update an entity
    *
@@ -84,7 +91,7 @@ class SqlStore extends Store {
    * @memberOf Store
    */
   updateById(req, data, cb) {
-    this._driver(req.collection).where('id', req.id).update(data).asCallback(cb)
+    this._driver(req.collection).where(this._options.idField, req.id).update(data).asCallback(cb)
   }
 
   /**
@@ -122,8 +129,7 @@ class SqlStore extends Store {
    * @memberOf Store
    */
   findById(req, cb) {
-    this._driver(req.collection).where('id', req.id)
-    .asCallback(cb)
+    this._driver(req.collection).where(this._options.idField, req.id).asCallback(cb)
   }
 
   /**
@@ -161,9 +167,9 @@ class SqlStore extends Store {
    * @memberOf Store
    */
   exists(req, cb) {
-    this._driver(req.collection).where(req.query).first('id')
+    this._driver(req.collection).where(req.query).first(this._options.idField)
     .then(row => {
-      cb(null, {exists: row !== null})
+      cb(null, row !== null)
     })
     .catch(err => cb(err))
   }

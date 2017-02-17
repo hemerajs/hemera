@@ -54,7 +54,7 @@ exports.plugin = function hemeraSqlStore(options) {
     const store = new SqlStore(db)
 
     store.create(req, cb)
-  })  
+  })
 
   /**
    * Find a record by id
@@ -67,7 +67,7 @@ exports.plugin = function hemeraSqlStore(options) {
 
     store.findById(req, cb)
   })
-  
+
   /**
    * Update a record by id
    */
@@ -79,7 +79,7 @@ exports.plugin = function hemeraSqlStore(options) {
 
     store.updateById(req, req.data, cb)
   })
-  
+
   /**
    * Replace a record by id
    */
@@ -91,7 +91,7 @@ exports.plugin = function hemeraSqlStore(options) {
 
     store.replaceById(req, req.data, cb)
   })
-  
+
   /**
    * Update entities
    */
@@ -103,7 +103,7 @@ exports.plugin = function hemeraSqlStore(options) {
 
     store.update(req, req.data, cb)
   })
-  
+
   /**
    * Update entities
    */
@@ -115,7 +115,7 @@ exports.plugin = function hemeraSqlStore(options) {
 
     store.replace(req, req.data, cb)
   })
-  
+
   /**
    * Remove an entity by id
    */
@@ -127,7 +127,7 @@ exports.plugin = function hemeraSqlStore(options) {
 
     store.removeById(req, cb)
   })
-  
+
   /**
    * Remove by query
    */
@@ -139,7 +139,7 @@ exports.plugin = function hemeraSqlStore(options) {
 
     store.remove(req, cb)
   })
-  
+
   /**
    * find
    */
@@ -151,7 +151,7 @@ exports.plugin = function hemeraSqlStore(options) {
 
     store.find(req, req.options, cb)
   })
-  
+
   /**
    * exists
    */

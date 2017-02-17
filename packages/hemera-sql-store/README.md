@@ -25,13 +25,11 @@ npm install --save <driver>
 
 ### Start Mariadb with Docker
 
-```js
-docker run -d --name mysql -p 3306:3306 dockerfile/mariadb
+```
+cd test && docker-compose up
 ```
 
 ### Running the tests
-
-Install and start Mariadb/Mysql before starting.
 
 ```
 npm run test

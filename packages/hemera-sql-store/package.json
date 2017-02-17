@@ -13,6 +13,7 @@
   "dependencies": {
     "hemera-joi": "0.1.x",
     "hemera-store": "^1.1.0",
+    "hoek": "4.1.x",
     "knex": "0.12.x",
     "mysql": "2.12.x",
     "pg": "6.1.x",
