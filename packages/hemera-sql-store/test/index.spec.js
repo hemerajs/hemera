@@ -105,6 +105,7 @@ describe('Hemera-sql-store', function () {
     })
   })
 
+
   it('update', function (done) {
     hemera.act({
       topic: 'sql-store',
@@ -115,6 +116,40 @@ describe('Hemera-sql-store', function () {
       },
       data: {
         name: 'new new name'
+      }
+    }, (err, resp) => {
+      expect(err).to.be.not.exists()
+      expect(resp).to.be.equal(1)
+      done()
+    })
+  })
+  
+  it('replace', function (done) {
+    hemera.act({
+      topic: 'sql-store',
+      cmd: 'replace',
+      collection: testTable,
+      query: {
+        id: 1
+      },
+      data: {
+        name: 'new new name'
+      }
+    }, (err, resp) => {
+      expect(err).to.be.not.exists()
+      expect(resp).to.be.equal(1)
+      done()
+    })
+  })
+
+  it('replaceById', function (done) {
+    hemera.act({
+      topic: 'sql-store',
+      cmd: 'replaceById',
+      collection: testTable,
+      id: '2',
+      data: {
+        name: 'new name'
       }
     }, (err, resp) => {
       expect(err).to.be.not.exists()
@@ -190,6 +225,22 @@ describe('Hemera-sql-store', function () {
       expect(err).to.be.not.exists()
       expect(resp.length).to.be.greaterThan(1)
       expect(resp[0].id).to.be.greaterThan(resp[1].id)
+      done()
+    })
+  })
+  
+  it('exists', function (done) {
+    hemera.act({
+      topic: 'sql-store',
+      cmd: 'exists',
+      collection: testTable,
+      query: {
+        name: 'olaf'
+      }
+    }, (err, resp) => {
+      
+      expect(err).to.be.not.exists()
+      expect(resp.exists).to.be.true()
       done()
     })
   })

@@ -20,8 +20,6 @@ class SqlStore extends Store {
    */
   constructor (driver, options) {
     super(driver, options)
-
-    this.idField = options ? (options.idField || 'id') : 'id'
   }
   
   /**
@@ -60,7 +58,7 @@ class SqlStore extends Store {
    * @memberOf Store
    */
   removeById(req, cb) {
-    this._driver(req.collection).where(this.idField, req.id).del().asCallback(cb)
+    this._driver(req.collection).where('id', req.id).del().asCallback(cb)
   }
   
   /**
@@ -86,7 +84,7 @@ class SqlStore extends Store {
    * @memberOf Store
    */
   updateById(req, data, cb) {
-    this._driver(req.collection).where(this.idField, req.id).update(data).asCallback(cb)
+    this._driver(req.collection).where('id', req.id).update(data).asCallback(cb)
   }
 
   /**
@@ -124,46 +122,50 @@ class SqlStore extends Store {
    * @memberOf Store
    */
   findById(req, cb) {
-    this._driver(req.collection).where(this.idField, req.id)
+    this._driver(req.collection).where('id', req.id)
     .asCallback(cb)
   }
 
   /**
    * Replace an entity
    *
-   * @param {object} query
+   * @param {object} req
    * @param {object} data
    * @param {function} cb
    *
    * @memberOf Store
    */
-  replace(query, data, cb) {
-    throw (new Error('Not implemented yet'))
+  replace(req, data, cb) {
+    this.update(req, data, cb)
   }
 
   /**
    * Replace an entity by id
    *
-   * @param {object} id
+   * @param {object} req
    * @param {object} data
    * @param {function} cb
    *
    * @memberOf Store
    */
-  replaceById(id, data, cb) {
-    throw (new Error('Not implemented yet'))
+  replaceById(req, data, cb) {
+    this.updateById(req, data, cb)
   }
 
   /**
    * Check if an entity exists
    *
-   * @param {object} query
+   * @param {object} req
    * @param {function} cb
    *
    * @memberOf Store
    */
-  exists(query, cb) {
-    
+  exists(req, cb) {
+    this._driver(req.collection).where(req.query).first('id')
+    .then(row => {
+      cb(null, {exists: row !== null})
+    })
+    .catch(err => cb(err))
   }
 
 }

@@ -81,6 +81,18 @@ exports.plugin = function hemeraSqlStore(options) {
   })
   
   /**
+   * Replace a record by id
+   */
+  hemera.add(StorePattern.replaceById(topic), function (req, cb) {
+
+    let db = useDb(req.database)
+
+    const store = new SqlStore(db)
+
+    store.replaceById(req, req.data, cb)
+  })
+  
+  /**
    * Update entities
    */
   hemera.add(StorePattern.update(topic), function (req, cb) {
@@ -90,6 +102,18 @@ exports.plugin = function hemeraSqlStore(options) {
     const store = new SqlStore(db)
 
     store.update(req, req.data, cb)
+  })
+  
+  /**
+   * Update entities
+   */
+  hemera.add(StorePattern.replace(topic), function (req, cb) {
+
+    let db = useDb(req.database)
+
+    const store = new SqlStore(db)
+
+    store.replace(req, req.data, cb)
   })
   
   /**
@@ -126,6 +150,18 @@ exports.plugin = function hemeraSqlStore(options) {
     const store = new SqlStore(db)
 
     store.find(req, req.options, cb)
+  })
+  
+  /**
+   * exists
+   */
+  hemera.add(StorePattern.exists(topic), function (req, cb) {
+
+    let db = useDb(req.database)
+
+    const store = new SqlStore(db)
+
+    store.exists(req, cb)
   })
 
 }
