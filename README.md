@@ -691,6 +691,12 @@ Tyler Treat
 
 Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
 
+1. Clone repository
+2. `npm install`
+3. `lerna bootstrap`
+4. Install gnats server and make it accesible in your user path.
+5. Run tests `npm run test`
+
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
