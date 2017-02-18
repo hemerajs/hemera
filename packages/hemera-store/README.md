@@ -9,13 +9,13 @@ Simple API to be interoperable with most database interfaces. The store has to i
 * [Store API](#store-api)
   * [create](#create)
   * [update](#update)
-  * [updateById](#updateById)
+  * [updateById](#updatebyid)
   * [find](#find)
-  * [findById](#findById)
+  * [findById](#findbyid)
   * [remove](#remove)
-  * [removeById](#removeById)
+  * [removeById](#removebyid)
   * [replace](#replace)
-  * [replaceById](#replaceById)
+  * [replaceById](#replacebyid)
   * [exists](#exists)
 
 Provide a unique pattern set for all common api methods. We had to choose for some conventions across document and table oriented stores.
@@ -24,3 +24,226 @@ Table-oriented | Document-oriented | Convention
 --- | --- | ---
 Database | Database | **Database**
 Database | Collection | **Collection**
+
+
+-------------------------------------------------------
+### create
+
+The arguments are:
+
+* `topic`: is the topic to publish to `sql-store`
+* `cmd`: is the command to execute `create`
+* `collection`: the name of the table or collection `string`
+* `data`: the data which represent the entity to create `object`
+
+Example:
+```js
+hemera.act({
+  topic: 'sql-store',
+  cmd: 'create',
+  collection: 'product',
+  data: {
+    name: 'tomato'
+  }
+}, function(err, resp) ...)
+```
+
+-------------------------------------------------------
+### update
+
+The arguments are:
+
+* `topic`: is the topic to publish to `sql-store`
+* `cmd`: is the command to execute `create`
+* `collection`: the name of the table or collection `string`
+* `data`: the data which represent the entity to create `object`
+* `query`: the search criteria `object`
+
+Example:
+```js
+hemera.act({
+  topic: 'sql-store',
+  cmd: 'update',
+  collection: 'product',
+  query: {},
+  data: {
+    name: 'tomato'
+  }
+}, function(err, resp) ...)
+```
+
+-------------------------------------------------------
+### updateById
+
+The arguments are:
+
+* `topic`: is the topic to publish to `sql-store`
+* `cmd`: is the command to execute `create`
+* `collection`: the name of the table or collection `string`
+* `data`: the data which represent the entity to create `object`
+* `id`: the primary identifier of your entity `string` or `number`
+
+Example:
+```js
+hemera.act({
+  topic: 'sql-store',
+  cmd: 'updateById',
+  id: 1,
+  collection: 'product',
+  data: {
+    name: 'tomato'
+  }
+}, function(err, resp) ...)
+```
+
+-------------------------------------------------------
+### find
+
+The arguments are:
+
+* `topic`: is the topic to publish to `sql-store`
+* `cmd`: is the command to execute `create`
+* `collection`: the name of the table or collection `string`
+* `query`: the search criteria `object`
+* `options`: the search criteria `object`
+  * `limit`: maximum items to fetch `integer`
+  * `offset`: the offset `integer`
+  * `fields`: the projection settings `array<String>`
+
+Example:
+```js
+hemera.act({
+  topic: 'sql-store',
+  cmd: 'find',
+  collection: 'product',
+  query: {}
+}, function(err, resp) ...)
+```
+
+-------------------------------------------------------
+### findById
+
+The arguments are:
+
+* `topic`: is the topic to publish to `sql-store`
+* `cmd`: is the command to execute `create`
+* `collection`: the name of the table or collection `string`
+* `id`: the primary identifier of your entity `string` or `number`
+
+Example:
+```js
+hemera.act({
+  topic: 'sql-store',
+  cmd: 'updateById',
+  id: 1,
+  collection: 'product'
+}, function(err, resp) ...)
+```
+
+-------------------------------------------------------
+### remove
+
+The arguments are:
+
+* `topic`: is the topic to publish to `sql-store`
+* `cmd`: is the command to execute `create`
+* `collection`: the name of the table or collection `string`
+* `query`: the search criteria `object`
+
+Example:
+```js
+hemera.act({
+  topic: 'sql-store',
+  cmd: 'remove',
+  collection: 'product',
+  query: {}
+}, function(err, resp) ...)
+```
+
+-------------------------------------------------------
+### removeById
+
+The arguments are:
+
+* `topic`: is the topic to publish to `sql-store`
+* `cmd`: is the command to execute `create`
+* `collection`: the name of the table or collection `string`
+* `id`: the primary identifier of your entity `string` or `number`
+
+Example:
+```js
+hemera.act({
+  topic: 'sql-store',
+  cmd: 'removeById',
+  id: 1,
+  collection: 'product'
+}, function(err, resp) ...)
+```
+
+-------------------------------------------------------
+### replace
+
+The arguments are:
+
+* `topic`: is the topic to publish to `sql-store`
+* `cmd`: is the command to execute `create`
+* `collection`: the name of the table or collection `string`
+* `data`: the data which represent the entity to create `object`
+* `query`: the search criteria `object`
+
+Example:
+```js
+hemera.act({
+  topic: 'sql-store',
+  cmd: 'replace',
+  collection: 'product',
+  query: {},
+  data: {
+    name: 'tomato'
+  }
+}, function(err, resp) ...)
+```
+
+-------------------------------------------------------
+### replaceById
+
+The arguments are:
+
+* `topic`: is the topic to publish to `sql-store`
+* `cmd`: is the command to execute `create`
+* `collection`: the name of the table or collection `string`
+* `data`: the data which represent the entity to create `object`
+* `id`: the primary identifier of your entity `string` or `number`
+
+Example:
+```js
+hemera.act({
+  topic: 'sql-store',
+  cmd: 'replaceById',
+  id: 1,
+  collection: 'product',
+  data: {
+    name: 'tomato'
+  }
+}, function(err, resp) ...)
+```
+
+-------------------------------------------------------
+### exists
+
+The arguments are:
+
+* `topic`: is the topic to publish to `sql-store`
+* `cmd`: is the command to execute `create`
+* `collection`: the name of the table or collection `string`
+* `query`: the search criteria `object`
+
+Example:
+```js
+hemera.act({
+  topic: 'sql-store',
+  cmd: 'exists',
+  collection: 'product',
+  query: {}
+}, function(err, resp) ...)
+```
