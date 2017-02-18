@@ -87,13 +87,13 @@ See [Store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store
 
 * [Arango API](#couchbase-api)
   * [Collection API](#collection-api)
-    * [topic:arango-store,cmd:createCollection](#createcollection)
+    * [createCollection](#createcollection)
   * [Query API](#query-api)
     * [executeAqlQuery](#executeaqlquery)
   * [Transaction API](#transaction-api)
-    * [topic:arango-store,cmd:executeTransaction](#executetransaction)
+    * [executeTransaction](#executetransaction)
   * [Database API](#database-api)
-    * [topic:arango-store,cmd:createDatabase](#createdatabase)
+    * [createDatabase](#createdatabase)
   
  
 -------------------------------------------------------
