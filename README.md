@@ -555,8 +555,6 @@ Your custom logger have to support following log levels.
 
 ### Protocol
 
-Format: JSON
-
 ```
 message ErrorCause {
   string message = 1;
