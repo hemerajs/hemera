@@ -63,3 +63,139 @@ hemera.ready(() => {
 
 })
 ```
+
+## Interface
+
+* [Elasticsearch API](#elasticsearch-api)
+  * [search](#search)
+  * [create](#create)
+  * [delete](#delete)
+  * [count](#count)
+  * [bulk](#bulk)
+  * [refresh](#refresh)
+  
+ 
+-------------------------------------------------------
+### search
+
+The pattern is:
+
+* `topic`: is the service name to publish to `elasticsearch`
+* `cmd`: is the command to execute `search`
+* `data`: the name of the table or collection `string
+  * `index`: the name of your index `string`
+  * `body`: the search criteria `object` *(optional)*
+  * `q`: the search criteria `object` *(optional)*
+
+Example:
+```js
+hemera.act({
+  topic: 'elasticsearch',
+  cmd: 'search',
+  data: {
+    index: 'myindex',
+    q: 'title:test'
+  }
+}, function(err, resp) ...)
+```
+
+-------------------------------------------------------
+### create
+
+The pattern is:
+
+* `topic`: is the service name to publish to `elasticsearch`
+* `cmd`: is the command to execute `create`
+* `data`: options see [elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference.html#api-indices-create)
+
+Example:
+```js
+hemera.act({
+  topic: 'elasticsearch',
+  cmd: 'create',
+  data: {
+    index: 'myindex'
+  }
+}, function(err, resp) ...)
+```
+
+-------------------------------------------------------
+### delete
+
+The pattern is:
+
+* `topic`: is the service name to publish to `elasticsearch`
+* `cmd`: is the command to execute `delete`
+* `data`: options see [elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference.html#api-indices-delete)
+
+Example:
+```js
+hemera.act({
+  topic: 'elasticsearch',
+  cmd: 'delete',
+  data: {
+    index: 'myindex'
+  }
+}, function(err, resp) ...)
+```
+
+-------------------------------------------------------
+### count
+
+The pattern is:
+
+* `topic`: is the service name to publish to `elasticsearch`
+* `cmd`: is the command to execute `count`
+* `data`: options see [elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference.html#api-count)
+
+Example:
+```js
+hemera.act({
+  topic: 'elasticsearch',
+  cmd: 'count',
+  data: {
+    index: 'myindex'
+  }
+}, function(err, resp) ...)
+```
+
+-------------------------------------------------------
+### bulk
+
+The pattern is:
+
+* `topic`: is the service name to publish to `elasticsearch`
+* `cmd`: is the command to execute `bulk`
+* `data`: options see [elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference.html#api-bulk)
+
+Example:
+```js
+hemera.act({
+  topic: 'elasticsearch',
+  cmd: 'bulk',
+  data: {
+    body: {
+    }
+  }
+}, function(err, resp) ...)
+```
+
+-------------------------------------------------------
+### refresh
+
+The pattern is:
+
+* `topic`: is the service name to publish to `elasticsearch`
+* `cmd`: is the command to execute `refresh`
+* `data`: options see [elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference.html#api-refresh)
+
+Example:
+```js
+hemera.act({
+  topic: 'elasticsearch',
+  cmd: 'refresh',
+  data: {
+    index: 'myindex'
+  }
+}, function(err, resp) ...)
+```
