@@ -105,7 +105,7 @@ The pattern is:
 * `cmd`: is the command to execute `create`
 * `collection`: the name of the table or collection `string`
 * `query`: the search criteria `object`
-* `options`: the search criteria `object`
+* `options`: the search criteria `object` (*optional*)
   * `limit`: maximum items to fetch `integer`
   * `offset`: the offset `integer`
   * `fields`: the projection settings `array<String>`
