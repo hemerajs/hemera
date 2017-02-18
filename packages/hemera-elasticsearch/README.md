@@ -187,7 +187,7 @@ The pattern is:
 
 * `topic`: is the service name to publish to `elasticsearch`
 * `cmd`: is the command to execute `refresh`
-* `data`: options see [elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference.html#api-refresh)
+* `data`: options see [elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference.html#api-indices-refresh)
 
 Example:
 ```js
