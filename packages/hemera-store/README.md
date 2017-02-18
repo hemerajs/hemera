@@ -29,7 +29,7 @@ Database | Collection | **Collection**
 -------------------------------------------------------
 ### create
 
-The arguments are:
+The pattern is:
 
 * `topic`: is the topic to publish to `sql-store`
 * `cmd`: is the command to execute `create`
@@ -51,7 +51,7 @@ hemera.act({
 -------------------------------------------------------
 ### update
 
-The arguments are:
+The pattern is:
 
 * `topic`: is the topic to publish to `sql-store`
 * `cmd`: is the command to execute `create`
@@ -75,7 +75,7 @@ hemera.act({
 -------------------------------------------------------
 ### updateById
 
-The arguments are:
+The pattern is:
 
 * `topic`: is the topic to publish to `sql-store`
 * `cmd`: is the command to execute `create`
@@ -99,7 +99,7 @@ hemera.act({
 -------------------------------------------------------
 ### find
 
-The arguments are:
+The pattern is:
 
 * `topic`: is the topic to publish to `sql-store`
 * `cmd`: is the command to execute `create`
@@ -123,7 +123,7 @@ hemera.act({
 -------------------------------------------------------
 ### findById
 
-The arguments are:
+The pattern is:
 
 * `topic`: is the topic to publish to `sql-store`
 * `cmd`: is the command to execute `create`
@@ -143,7 +143,7 @@ hemera.act({
 -------------------------------------------------------
 ### remove
 
-The arguments are:
+The pattern is:
 
 * `topic`: is the topic to publish to `sql-store`
 * `cmd`: is the command to execute `create`
@@ -163,7 +163,7 @@ hemera.act({
 -------------------------------------------------------
 ### removeById
 
-The arguments are:
+The pattern is:
 
 * `topic`: is the topic to publish to `sql-store`
 * `cmd`: is the command to execute `create`
@@ -183,7 +183,7 @@ hemera.act({
 -------------------------------------------------------
 ### replace
 
-The arguments are:
+The pattern is:
 
 * `topic`: is the topic to publish to `sql-store`
 * `cmd`: is the command to execute `create`
@@ -207,7 +207,7 @@ hemera.act({
 -------------------------------------------------------
 ### replaceById
 
-The arguments are:
+The pattern is:
 
 * `topic`: is the topic to publish to `sql-store`
 * `cmd`: is the command to execute `create`
@@ -231,7 +231,7 @@ hemera.act({
 -------------------------------------------------------
 ### exists
 
-The arguments are:
+The pattern is:
 
 * `topic`: is the topic to publish to `sql-store`
 * `cmd`: is the command to execute `create`
