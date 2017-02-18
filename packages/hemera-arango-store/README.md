@@ -176,3 +176,21 @@ hemera.act({
 function(err, resp) ...)
 ```
 
+-------------------------------------------------------
+### createDatabase
+
+The pattern is:
+
+* `topic`: is the store name to publish to `arango-store`
+* `cmd`: is the command to execute `executeAqlQuery`
+* `name`: the name of the database. `string`
+
+Example:
+```js
+hemera.act({
+  topic: 'arango-store',
+  cmd: 'createDatabase',
+  name: 'test'
+},
+function(err, resp) ...)
+```
