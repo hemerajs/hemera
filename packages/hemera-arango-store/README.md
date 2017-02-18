@@ -1,6 +1,7 @@
 # Hemera-arango-store package
 
 [![npm](https://img.shields.io/npm/v/hemera-arango-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-arango-store)
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
 This is a plugin to use [Arangodb](https://github.com/arangodb) with Hemera.
 

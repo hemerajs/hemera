@@ -1,6 +1,7 @@
 # Hemera-avro package
 
 [![npm](https://img.shields.io/npm/v/hemera-avro.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-avro)
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
 This is a plugin to use [Avro](https://avro.apache.org) with Hemera.
 
