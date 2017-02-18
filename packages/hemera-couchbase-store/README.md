@@ -5,3 +5,34 @@
 This is a plugin to use [Couchbase](https://www.couchbase.com/nosql-databases/couchbase-server) with Hemera.
 
 **Status**: _In development_
+
+## Usage
+
+See [Store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store) Interface.
+
+## Database specific interface
+
+* [Couchbase API](#couchbase-api)
+  * [query](#query)
+  
+ 
+-------------------------------------------------------
+### query
+
+The pattern is:
+
+* `topic`: is the store name to publish to `couchbase-store`
+* `cmd`: is the command to execute `query`
+* `collection`: the name of the table or collection `string`
+* `bucket`: the couchbase bucket name `string` (*optional*)
+* `query`: the search criteria `string`
+* `vars`: the search variables `object` (*optional*)
+
+Example:
+```js
+hemera.act({
+  topic: 'couchbase-store',
+  cmd: 'query',
+  query: 'SELECT FROM default LIMIT 1'
+}, function(err, resp) ...)
+```
