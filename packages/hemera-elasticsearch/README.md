@@ -106,7 +106,7 @@ The pattern is:
 
 * `topic`: is the service name to publish to `elasticsearch`
 * `cmd`: is the command to execute `create`
-* `data`: options see [elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference.html#api-indices-create)
+* `data`: options see [elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference.html#api-create)
 
 Example:
 ```js
@@ -126,7 +126,7 @@ The pattern is:
 
 * `topic`: is the service name to publish to `elasticsearch`
 * `cmd`: is the command to execute `delete`
-* `data`: options see [elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference.html#api-indices-delete)
+* `data`: options see [elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference.html#api-delete)
 
 Example:
 ```js
