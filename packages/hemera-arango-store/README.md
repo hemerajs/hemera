@@ -79,13 +79,13 @@ hemera.ready(() => {
 })
 ```
 
-## Usage
+## API
 
 See [Store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store) Interface.
 
 ## Database specific interface
 
-* [Arango API](#couchbase-api)
+* [Arango API](#arango-api)
   * [Collection API](#collection-api)
     * [createCollection](#createcollection)
   * [Query API](#query-api)
