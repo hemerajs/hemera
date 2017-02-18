@@ -85,15 +85,4 @@ hemera.ready(() => {
 
 ## API
 
-## Table of Contents
-
-* [Store API](#Document-api)
-  * [topic:sql-store,cmd:create](#create)
-  * [topic:sql-store,cmd:update](#update)
-  * [topic:sql-store,cmd:updateById](#updateById)
-  * [topic:sql-store,cmd:find](#find)
-  * [topic:sql-store,cmd:findById](#findById)
-  * [topic:sql-store,cmd:remove](#remove)
-  * [topic:sql-store,cmd:removeById](#removeById)
-  * [topic:sql-store,cmd:replace](#replace)
-  * [topic:sql-store,cmd:replaceById](#replaceById)
+See [Store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store) Interface.
