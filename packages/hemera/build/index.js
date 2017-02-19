@@ -326,11 +326,8 @@ var Hemera = function (_EventEmitter) {
     key: 'use',
     value: function use(params) {
       if (this._plugins[params.attributes.name]) {
-        var error = new _errors2.default.HemeraError(_constants2.default.PLUGIN_ALREADY_IN_USE, {
-          plugin: params.attributes.name
-        });
-        this.log.error(error);
-        throw error;
+        this.log.warn(_constants2.default.PLUGIN_ALREADY_IN_USE, params.attributes.name, this._plugins[params.attributes.name].parentPlugin);
+        return;
       }
 
       // create new execution context
@@ -338,13 +335,14 @@ var Hemera = function (_EventEmitter) {
       ctx.plugin$ = {};
       ctx.plugin$.attributes = params.attributes || {};
       ctx.plugin$.attributes.dependencies = params.attributes.dependencies || [];
+      ctx.plugin$.parentPlugin = this.plugin$.attributes.name;
       ctx.plugin$.options = params.options || {};
       ctx.plugin$.options.payloadValidator = params.options.payloadValidator || '';
 
       params.plugin.call(ctx, params.options);
 
       this.log.info(params.attributes.name, _constants2.default.PLUGIN_ADDED);
-      this._plugins[params.attributes.name] = ctx.plugin$.attributes;
+      this._plugins[params.attributes.name] = ctx.plugin$;
     }
 
     /**

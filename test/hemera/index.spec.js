@@ -1165,17 +1165,102 @@ describe('Plugin interface', function () {
           name: 'core'
         },
         myPlugin1: {
-          name: 'myPlugin1',
-          dependencies: []
+          attributes: {
+            name: 'myPlugin1',
+            dependencies: []
+          },
+          parentPlugin: 'core',
+          options: {
+            a: '1',
+            payloadValidator: ''
+          }
         },
         myPlugin2: {
-          name: 'myPlugin2',
-          dependencies: []
+          attributes: {
+            name: 'myPlugin2',
+            dependencies: []
+          },
+          parentPlugin: 'core',
+          options: {
+            a: '1',
+            payloadValidator: ''
+          }
         }
       })
 
       hemera.close()
       done()
+    })
+  })
+
+  it('Should be able to use duplicate registered plugin when a plugin based on it', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      logLevel: 'info'
+    })
+
+    hemera.ready(() => {
+      let pluginOptions = {
+        a: '1'
+      }
+
+      // Plugin
+      let plugin = function (options) {
+        let hemera = this
+
+        hemera.use({
+          plugin: plugin2,
+          attributes: {
+            name: 'myPlugin2'
+          },
+          options: pluginOptions
+        })
+
+        hemera.add({
+          topic: 'math',
+          cmd: 'add'
+        }, (resp, cb) => {
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        })
+      }
+
+      // Plugin
+      let plugin2 = function (options) {
+        let hemera = this
+
+        hemera.add({
+          topic: 'math',
+          cmd: 'sub'
+        }, (resp, cb) => {
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        })
+      }
+
+      try {
+        hemera.use({
+          plugin: plugin,
+          attributes: {
+            name: 'myPlugin'
+          },
+          options: pluginOptions
+        })
+        hemera.use({
+          plugin: plugin2,
+          attributes: {
+            name: 'myPlugin2'
+          },
+          options: pluginOptions
+        })
+        hemera.close()
+        done()
+      } catch (err) {
+        expect(err).to.be.not.exists()
+      }
     })
   })
 
@@ -1232,11 +1317,10 @@ describe('Plugin interface', function () {
           },
           options: pluginOptions
         })
-      } catch (e) {
-        expect(e.name).to.be.equals('HemeraError')
-        expect(e.message).to.be.equals('Plugin is already registered')
         hemera.close()
         done()
+      } catch (err) {
+        expect(err).to.be.not.exists()
       }
     })
   })

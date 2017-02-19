@@ -22,7 +22,6 @@ hemera.use({
 })
 
 hemera.ready(() => {
-
   hemera.setOption('payloadValidator', 'hemera-joi')
 
   let Joi = hemera.exposition['hemera-joi'].joi
@@ -35,7 +34,6 @@ hemera.ready(() => {
     cmd: 'add',
     a: Joi.number().required()
   }, (req, cb) => {
-
     cb(null, req.a + req.b)
   })
 
@@ -45,8 +43,7 @@ hemera.ready(() => {
     a: 'dwed3',
     b: 20
   }, function (err, resp) {
-
-    this.log.info(err, 'Error') //Error: child "a" fails because ["a" must be a number]
+    this.log.info(err, 'Error') // Error: child "a" fails because ["a" must be a number]
   })
 
   hemera.act({
@@ -55,13 +52,11 @@ hemera.ready(() => {
     a: 'ddd',
     b: 5
   }, function (err, resp) {
-
-    this.log.info(err, 'Error') //Error: The value "ddd" is not of type 'number' (parent: a).
+    this.log.info(err, 'Error') // Error: The value "ddd" is not of type 'number' (parent: a).
   })
 })
 
-function myPlugin(options) {
-
+function myPlugin (options) {
   var hemera = this
 
   hemera.use(HemeraParambulator)
@@ -74,8 +69,6 @@ function myPlugin(options) {
       type$: 'number'
     }
   }, (req, cb) => {
-
     cb(null, req.a - req.b)
   })
-
 }

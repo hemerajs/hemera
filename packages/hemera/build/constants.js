@@ -21,7 +21,7 @@ exports.default = {
   PATTERN_NOT_FOUND: 'No handler found for this pattern',
   IMPLEMENTATION_ERROR: 'Bad implementation',
   PAYLOAD_PARSING_ERROR: 'Invalid payload',
-  PLUGIN_ALREADY_IN_USE: 'Plugin is already registered',
+  PLUGIN_ALREADY_IN_USE: 'Plugin (%s) was already registered in plugin (%s)',
   TRANSPORT_CONNECTED: 'Connected!',
   PLUGIN_ADDED: 'PLUGIN - ADDED!',
   PAYLOAD_VALIDATION_ERROR: 'Invalid payload',
