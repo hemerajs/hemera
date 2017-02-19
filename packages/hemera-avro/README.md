@@ -7,7 +7,7 @@ This is a plugin to use [Avro](https://avro.apache.org) with Hemera.
 
 Apache Avro™ is a data serialization system.
 
-#### Example without payload schema (Only the protocol schema will be checked with Avro)
+#### Example without payload schema (Only the protocol schema will be validated with Avro)
 
 ```js
 'use strict'
