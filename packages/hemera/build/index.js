@@ -545,6 +545,8 @@ var Hemera = function (_EventEmitter) {
 
         // assign action result
         self._response.payload = resp;
+        // delete error we have payload
+        self._response.error = null;
 
         self.finish();
       }
