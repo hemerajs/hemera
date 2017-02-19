@@ -1193,7 +1193,7 @@ describe('Plugin interface', function () {
     })
   })
 
-  it('Should be able to use duplicate registered plugin when a plugin based on it', function (done) {
+  it('Should be able to register the plugin twice also when another plugin based on that', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -1264,7 +1264,7 @@ describe('Plugin interface', function () {
     })
   })
 
-  it('Should be able to check duplicate registered plugins', function (done) {
+  it('Should be able to use register a plugin twice without an error', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
