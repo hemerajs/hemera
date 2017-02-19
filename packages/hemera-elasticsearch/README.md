@@ -115,7 +115,16 @@ hemera.act({
   topic: 'elasticsearch',
   cmd: 'create',
   data: {
-    index: 'myindex'
+    index: 'myindex',
+    type: 'mytype',
+    id: '1',
+    body: {
+      title: 'Test 1',
+      tags: ['y', 'z'],
+      published: true,
+      published_at: '2013-01-01',
+      counter: 1
+    }
   }
 }, function(err, resp) ...)
 ```
@@ -135,7 +144,9 @@ hemera.act({
   topic: 'elasticsearch',
   cmd: 'delete',
   data: {
-    index: 'myindex'
+    index: 'myindex',
+    type: 'mytype',
+    id: '1'
   }
 }, function(err, resp) ...)
 ```
@@ -175,8 +186,19 @@ hemera.act({
   topic: 'elasticsearch',
   cmd: 'bulk',
   data: {
-    body: {
-    }
+    body: [
+        // action description
+        { index:  { _index: 'myindex', _type: 'mytype', _id: 1 } },
+         // the document to index
+        { title: 'foo' },
+        // action description
+        { update: { _index: 'myindex', _type: 'mytype', _id: 2 } },
+        // the document to update
+        { doc: { title: 'foo' } },
+        // action description
+        { delete: { _index: 'myindex', _type: 'mytype', _id: 3 } },
+        // no document needed for this delete
+      ]
   }
 }, function(err, resp) ...)
 ```
