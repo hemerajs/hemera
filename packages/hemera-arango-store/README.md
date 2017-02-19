@@ -126,7 +126,7 @@ The pattern is:
 * `cmd`: is the command to execute `executeAqlQuery`
 * `databaseName`: the database to use against the query. `string` *(optional)*
 * `query`: the AQL query `string`
-* `type`: return one or multiple results` `one` or `all`
+* `type`: return one or multiple results `one` or `all`
 
 Example:
 ```js
