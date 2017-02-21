@@ -52,6 +52,44 @@ var Util = function () {
     }
 
     /**
+     *
+     *
+     * @static
+     * @param {any} array
+     * @param {any} method
+     * @param {any} callback
+     *
+     * @memberOf Util
+     */
+
+  }, {
+    key: 'serial',
+    value: function serial(array, method, callback) {
+      if (!array.length) {
+        callback();
+      } else {
+        var i = 0;
+        var iterate = function iterate() {
+          var done = function done(err) {
+            if (err) {
+              callback(err);
+            } else {
+              i = i + 1;
+              if (i < array.length) {
+                iterate();
+              } else {
+                callback();
+              }
+            }
+          };
+
+          method(array[i], done, i);
+        };
+
+        iterate();
+      }
+    }
+    /**
      * Get high resolution time in nanoseconds
      *
      * @static

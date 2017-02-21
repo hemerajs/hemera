@@ -99,6 +99,8 @@ Table of contents
   * [Extension points](#extension-points)
       * [Client](#client-extensions)
       * [Server](#server-extensions)
+  * [Middleware](#middleware)
+      * [Server methods](#server-methods)
   * [Tracing capabilities](#tracing-capabilities)
       * [Life-cycle events](#requestresponse-life-cycle-events)
   * [Publish & Subscribe](#publish--subscribe)
@@ -364,6 +366,8 @@ hemera.ext('<client-extension>', function(next, i) {
 
 #### Server extensions
 
+Server extensions are functions that have access to the request object (req), the response object (res), and the next extension function in the global application’s request-response cycle. You have access of the previous value of the extension function.
+
 * `onServerPreHandler`,
 * `onServerPreRequest`
 * `onServerPreResponse`
@@ -384,6 +388,27 @@ hemera.ext('<server-extension>', function (req, res, next, prevValue, i) {
 * `res`  contains the current response. Its an object with two properties `payload` and `error`. Payload and error object can be manipulated.
 * `prevValue`  contains the message from the previous extension which was passed by `send(<value>)`
 * `i`  represent the position of the handler in the stack.
+
+### Middleware
+
+Middleware functions are functions that have access to the request object (req), the response object (res), and the next middleware function in the application’s request-response cycle. The next middleware function is commonly denoted by a variable named next. If you pass an error to the next function the error will be responded.
+
+#### Server methods
+
+```js
+hemera.add({
+  topic: 'test',
+  cmd: 'add'
+}).use(function(req, resp, next) {
+//process request
+})
+.use(function(req, resp, next) {
+//process request
+})
+.end(function(req, cb) {
+   cb(null, true)
+})
+```
 
 ### Tracing capabilities
 Tracing in the style of [Google’s Dapper](http://static.googleusercontent.com/media/research.google.com/en//pubs/archive/36356.pdf)

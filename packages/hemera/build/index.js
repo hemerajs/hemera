@@ -90,6 +90,10 @@ var _serializer = require('./serializer');
 
 var _serializer2 = _interopRequireDefault(_serializer);
 
+var _add = require('./add');
+
+var _add2 = _interopRequireDefault(_add);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -563,7 +567,6 @@ var Hemera = function (_EventEmitter) {
 
         if (err) {
           self._response.error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
-
           self.log.error(self._response.error);
 
           return self.finish();
@@ -578,15 +581,27 @@ var Hemera = function (_EventEmitter) {
         try {
           var action = self._actMeta.action.bind(self);
 
-          // if request type is 'pubsub' we dont have to reply back
-          if (self._request.payload.request.type === 'pubsub') {
-            action(self._request.payload.pattern);
+          // execute add middlewares
+          _util2.default.serial(self._actMeta.middleware, function (item, next) {
+            item(self._request, self._response, next);
+          }, function (err) {
+            // middleware error
+            if (err) {
+              var error = new _errors2.default.HemeraError(_constants2.default.ADD_MIDDLEWARE_ERROR).causedBy(err);
+              self.log.error(error);
+              self._response.error = error;
+              return self.finish();
+            }
 
-            return self.finish();
-          }
+            // if request type is 'pubsub' we dont have to reply back
+            if (self._request.payload.request.type === 'pubsub') {
+              action(self._request.payload.pattern);
+              return self.finish();
+            }
 
-          // execute RPC action
-          action(self._request.payload.pattern, actionHandler.bind(self));
+            // execute RPC action
+            action(self._request.payload.pattern, actionHandler.bind(self));
+          });
         } catch (err) {
           self._response.error = new _errors2.default.ImplementationError(_constants2.default.IMPLEMENTATION_ERROR, {
             pattern: self._pattern
@@ -685,8 +700,6 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'add',
     value: function add(pattern, cb) {
-      var hasCallback = _lodash2.default.isFunction(cb);
-
       // check for use quick syntax for JSON objects
       if (_lodash2.default.isString(pattern)) {
         pattern = (0, _tinysonic2.default)(pattern);
@@ -700,15 +713,6 @@ var Hemera = function (_EventEmitter) {
 
         this.log.error(error);
         throw error;
-      }
-
-      if (!hasCallback) {
-        var _error = new _errors2.default.HemeraError(_constants2.default.MISSING_IMPLEMENTATION, {
-          pattern
-        });
-
-        this.log.error(_error);
-        throw _error;
       }
 
       var origPattern = _lodash2.default.cloneDeep(pattern);
@@ -727,23 +731,23 @@ var Hemera = function (_EventEmitter) {
       origPattern = _util2.default.cleanPattern(origPattern);
 
       // create message object which represent the object behind the matched pattern
-      var actMeta = {
+      var actMeta = new _add2.default({
         schema: schema,
         pattern: origPattern,
         action: cb,
         plugin: this.plugin$
-      };
+      });
 
       var handler = this._router.lookup(origPattern);
 
       // check if pattern is already registered
       if (handler) {
-        var _error2 = new _errors2.default.HemeraError(_constants2.default.PATTERN_ALREADY_IN_USE, {
+        var _error = new _errors2.default.HemeraError(_constants2.default.PATTERN_ALREADY_IN_USE, {
           pattern
         });
 
-        this.log.error(_error2);
-        throw _error2;
+        this.log.error(_error);
+        throw _error;
       }
 
       // add to bloomrun
@@ -753,6 +757,8 @@ var Hemera = function (_EventEmitter) {
 
       // subscribe on topic
       this.subscribe(pattern.topic, pattern.pubsub$, pattern.maxMessages$);
+
+      return actMeta;
     }
 
     /**
@@ -791,12 +797,12 @@ var Hemera = function (_EventEmitter) {
       function onClientPostRequestHandler(err) {
         var self = this;
         if (err) {
-          var _error3 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
+          var _error2 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
 
-          self.log.error(_error3);
+          self.log.error(_error2);
 
           if (self._actCallback) {
-            return self._actCallback(_error3);
+            return self._actCallback(_error2);
           }
 
           return;
@@ -806,11 +812,11 @@ var Hemera = function (_EventEmitter) {
           if (self._response.payload.error) {
             var responseError = _errio2.default.fromObject(self._response.payload.error);
             var responseErrorCause = responseError.cause;
-            var _error4 = new _errors2.default.BusinessError(_constants2.default.BUSINESS_ERROR, {
+            var _error3 = new _errors2.default.BusinessError(_constants2.default.BUSINESS_ERROR, {
               pattern: self._cleanPattern
             }).causedBy(responseErrorCause ? responseError.cause : responseError);
 
-            self.log.error(_error4);
+            self.log.error(_error3);
 
             return self._actCallback(responseError);
           }
@@ -834,24 +840,24 @@ var Hemera = function (_EventEmitter) {
         try {
           // if payload is invalid
           if (self._response.error) {
-            var _error5 = new _errors2.default.ParseError(_constants2.default.PAYLOAD_PARSING_ERROR, {
+            var _error4 = new _errors2.default.ParseError(_constants2.default.PAYLOAD_PARSING_ERROR, {
               pattern: self._cleanPattern
             }).causedBy(self._response.error);
 
-            self.log.error(_error5);
+            self.log.error(_error4);
 
             if (self._actCallback) {
-              return self._actCallback(_error5);
+              return self._actCallback(_error4);
             }
           }
 
           self._extensions.onClientPostRequest.invoke(self, onClientPostRequestHandler);
         } catch (err) {
-          var _error6 = new _errors2.default.FatalError(_constants2.default.FATAL_ERROR, {
+          var _error5 = new _errors2.default.FatalError(_constants2.default.FATAL_ERROR, {
             pattern: self._cleanPattern
           }).causedBy(err);
 
-          self.log.fatal(_error6);
+          self.log.fatal(_error5);
 
           // let it crash
           if (self._config.crashOnFatal) {
@@ -873,24 +879,24 @@ var Hemera = function (_EventEmitter) {
 
         // throw encoding issue
         if (m.error) {
-          var _error7 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(m.error);
+          var _error6 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(m.error);
 
-          self.log.error(_error7);
+          self.log.error(_error6);
 
           if (self._actCallback) {
-            return self._actCallback(_error7);
+            return self._actCallback(_error6);
           }
 
           return;
         }
 
         if (err) {
-          var _error8 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
+          var _error7 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
 
-          self.log.error(_error8);
+          self.log.error(_error7);
 
           if (self._actCallback) {
-            return self._actCallback(_error8);
+            return self._actCallback(_error7);
           }
 
           return;

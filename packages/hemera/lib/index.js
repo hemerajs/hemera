@@ -31,6 +31,7 @@ import ServerRequest from './serverRequest'
 import ClientRequest from './clientRequest'
 import ClientResponse from './clientResponse'
 import Serializers from './serializer'
+import Add from './add'
 
 var defaultConfig = {
   timeout: 2000,
@@ -494,7 +495,6 @@ class Hemera extends EventEmitter {
 
       if (err) {
         self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
-
         self.log.error(self._response.error)
 
         return self.finish()
@@ -509,15 +509,27 @@ class Hemera extends EventEmitter {
       try {
         let action = self._actMeta.action.bind(self)
 
-        // if request type is 'pubsub' we dont have to reply back
-        if (self._request.payload.request.type === 'pubsub') {
-          action(self._request.payload.pattern)
+        // execute add middlewares
+        Util.serial(self._actMeta.middleware, (item, next) => {
+          item(self._request, self._response, next)
+        }, (err) => {
+          // middleware error
+          if (err) {
+            let error = new Errors.HemeraError(Constants.ADD_MIDDLEWARE_ERROR).causedBy(err)
+            self.log.error(error)
+            self._response.error = error
+            return self.finish()
+          }
 
-          return self.finish()
-        }
+          // if request type is 'pubsub' we dont have to reply back
+          if (self._request.payload.request.type === 'pubsub') {
+            action(self._request.payload.pattern)
+            return self.finish()
+          }
 
-        // execute RPC action
-        action(self._request.payload.pattern, actionHandler.bind(self))
+          // execute RPC action
+          action(self._request.payload.pattern, actionHandler.bind(self))
+        })
       } catch (err) {
         self._response.error = new Errors.ImplementationError(Constants.IMPLEMENTATION_ERROR, {
           pattern: self._pattern
@@ -613,8 +625,6 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   add (pattern, cb) {
-    const hasCallback = _.isFunction(cb)
-
     // check for use quick syntax for JSON objects
     if (_.isString(pattern)) {
       pattern = TinySonic(pattern)
@@ -623,15 +633,6 @@ class Hemera extends EventEmitter {
     // topic is needed to subscribe on a subject in NATS
     if (!pattern.topic) {
       let error = new Errors.HemeraError(Constants.NO_TOPIC_TO_SUBSCRIBE, {
-        pattern
-      })
-
-      this.log.error(error)
-      throw (error)
-    }
-
-    if (!hasCallback) {
-      let error = new Errors.HemeraError(Constants.MISSING_IMPLEMENTATION, {
         pattern
       })
 
@@ -655,12 +656,12 @@ class Hemera extends EventEmitter {
     origPattern = Util.cleanPattern(origPattern)
 
     // create message object which represent the object behind the matched pattern
-    let actMeta = {
+    let actMeta = new Add({
       schema: schema,
       pattern: origPattern,
       action: cb,
       plugin: this.plugin$
-    }
+    })
 
     let handler = this._router.lookup(origPattern)
 
@@ -681,6 +682,8 @@ class Hemera extends EventEmitter {
 
     // subscribe on topic
     this.subscribe(pattern.topic, pattern.pubsub$, pattern.maxMessages$)
+
+    return actMeta
   }
 
   /**
