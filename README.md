@@ -400,13 +400,15 @@ hemera.add({
   topic: 'test',
   cmd: 'add'
 }).use(function(req, resp, next) {
-//process request
+  //process request
+  next()
 })
 .use(function(req, resp, next) {
-//process request
+  //process request
+  next()
 })
 .end(function(req, cb) {
-   cb(null, true)
+  cb(null, true)
 })
 ```
 
