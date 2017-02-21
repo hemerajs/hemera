@@ -58,7 +58,7 @@
     "joi": "10.0.x",
     "lerna": "2.0.0-beta.37",
     "mocha": "3.2.x",
-    "mocha-lcov-reporter": "1.2.x",
+    "mocha-lcov-reporter": "~1.3.0",
     "nats": "0.7.x",
     "nyc": "10.0.x",
     "sinon": "1.17.x"
