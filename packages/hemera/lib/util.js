@@ -32,6 +32,41 @@ export default class Util {
   }
 
   /**
+   *
+   *
+   * @static
+   * @param {any} array
+   * @param {any} method
+   * @param {any} callback
+   *
+   * @memberOf Util
+   */
+  static serial (array, method, callback) {
+    if (!array.length) {
+      callback()
+    } else {
+      let i = 0
+      const iterate = function () {
+        const done = function (err) {
+          if (err) {
+            callback(err)
+          } else {
+            i = i + 1
+            if (i < array.length) {
+              iterate()
+            } else {
+              callback()
+            }
+          }
+        }
+
+        method(array[i], done, i)
+      }
+
+      iterate()
+    }
+  }
+  /**
    * Get high resolution time in nanoseconds
    *
    * @static
