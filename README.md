@@ -366,6 +366,8 @@ hemera.ext('<client-extension>', function(next, i) {
 
 #### Server extensions
 
+Server extensions are functions that have access to the request object (req), the response object (res), and the next extension function in the global application’s request-response cycle. You have access of the previous value of the extension function.
+
 * `onServerPreHandler`,
 * `onServerPreRequest`
 * `onServerPreResponse`
@@ -389,7 +391,7 @@ hemera.ext('<server-extension>', function (req, res, next, prevValue, i) {
 
 ### Middleware
 
-Middleware functions are functions that have access to the request object (req), the response object (res), and the next middleware function in the application’s request-response cycle. The next middleware function is commonly denoted by a variable named next. If you pass an error to the next function the error will be responed
+Middleware functions are functions that have access to the request object (req), the response object (res), and the next middleware function in the application’s request-response cycle. The next middleware function is commonly denoted by a variable named next. If you pass an error to the next function the error will be responded.
 
 #### Server methods
 
