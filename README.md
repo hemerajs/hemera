@@ -1,5 +1,3 @@
-# Hemera
-
 ![Hemera](https://github.com/StarpTech/hemera/raw/master/media/hemera-logo.png)
 
 [![License MIT](https://img.shields.io/npm/l/express.svg)](http://opensource.org/licenses/MIT)
