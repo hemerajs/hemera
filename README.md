@@ -644,8 +644,8 @@ Think in small parts. A topic is like a service. You can define a service like `
 This service has actions like:
 
 ```js
-hemera.add({ topic: 'auth', cmd: 'authenticate' })
-hemera.add({ topic: 'auth', cmd: 'passwordReset' })
+hemera.add({ topic: 'auth', cmd: 'authenticate' }, ...)
+hemera.add({ topic: 'auth', cmd: 'passwordReset' }, ...)
 ...
 ```
 
