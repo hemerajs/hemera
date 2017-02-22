@@ -1,6 +1,6 @@
 # Hemera
 
-![Hemera](https://github.com/StarpTech/hemera/raw/master/media/hemera-architecture.png)
+![Hemera](https://github.com/StarpTech/hemera/raw/master/media/hemera-logo.png)
 
 [![License MIT](https://img.shields.io/npm/l/express.svg)](http://opensource.org/licenses/MIT)
 [![Build Status](https://travis-ci.org/hemerajs/hemera.svg?branch=master)](https://travis-ci.org/hemerajs/hemera)
