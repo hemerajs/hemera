@@ -4,6 +4,8 @@
  * MIT Licensed
  */
 
+import _ from 'lodash'
+
 /**
  *
  *
@@ -32,7 +34,11 @@ export default class Add {
    * @memberOf Add
    */
   use (handler) {
-    this.actMeta.middleware.push(handler)
+    if (_.isArray(handler)) {
+      this.actMeta.middleware = this.actMeta.middleware.concat(handler)
+    } else {
+      this.actMeta.middleware.push(handler)
+    }
     return this
   }
   /**
