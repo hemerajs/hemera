@@ -83,7 +83,7 @@ Table of contents
   * [Pattern matching rules](#pattern-matching-rules)
       * [Matched!](#Matched!)
       * [Not matched!](#not-matched)
-      * [Regex](#Regex)
+      * [Regex](#regex)
   * [Error handling](#error-handling)
       * [Reply an error](#reply-an-error)
       * [Error-first-callbacks](#error-first-callbacks)
