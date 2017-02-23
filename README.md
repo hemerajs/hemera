@@ -110,6 +110,7 @@ Table of contents
   * [Best practice](#best-practice)
       * [Multiple instances of your service](#create-multiple-instances-of-your-service)
       * [Clustering](#create-another-nats-server-and-create-a-cluster)
+      * [Docker](#docker)
   * [Introduction to NATS](#introduction-to-nats)
   * [NATS Limits & features](#nats-limits--features)
   * [Bridge to other messaging systems](#bridge-to-other-messaging-systems)
@@ -705,6 +706,11 @@ var servers = ['nats://nats.io:4222', 'nats://nats.io:5222', 'nats://nats.io:622
 var nc = nats.connect({'servers': servers});
 new Hemera(nc);
 ```
+
+#### Docker
+
+I prepared a setup how to use hemera in a real world scenario.
+https://github.com/hemerajs/aither
 
 ### Introduction to NATS
 
