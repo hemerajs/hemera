@@ -68,13 +68,19 @@ hemera.ready(() => {
     topic: 'rabbitmq.publisher.message',
     cmd: 'subscribe'
   }, function (req, cb) {
-
     this.log.info(req, 'Data')
-
     cb()
   })
 
   setTimeout(function () {
+    // create subscriber
+    hemera.act({
+      topic: 'rabbitmq',
+      cmd: 'subscribe',
+      type: 'publisher.message'
+    }, function (err, resp) {
+      this.log.info(resp, 'Subscriber ACK')
+    })
 
     // Send a message to Rabbitmq
     hemera.act({
@@ -87,12 +93,78 @@ hemera.ready(() => {
         amount: 50
       }
     }, function (err, resp) {
-
-      this.log.info(resp, 'ACK')
-
+      this.log.info(resp, 'Publish ACK')
     })
 
   }, 500)
 
 })
+```
+
+## Interface
+
+* [RabbitMQ API](#RabbitMQ-api)
+  * [publish](#publish)
+  * [Create subscriber](#create-subscribe)
+  * [Consume events](#consume-events)
+  
+ 
+-------------------------------------------------------
+### publish
+
+The pattern is:
+
+* `topic`: is the service name to publish to `rabbitmq`
+* `cmd`: is the command to execute `publish`
+* `exchange`: the name of the exachange `string`
+* `type`: the type `string`
+* `data`: the data to transfer `object`
+
+Example:
+```js
+hemera.act({
+  topic: 'rabbitmq',
+  cmd: 'publish',
+  exchange: 'pubsub',
+  type: 'publisher.message',
+  data: {
+    name: 'peter',
+    amount: 50
+  }
+}, ...)
+```
+
+-------------------------------------------------------
+### Create subscriber
+
+The pattern is:
+
+* `topic`: is the service name to publish to `rabbitmq`
+* `cmd`: is the command to execute `subscribe`
+* `type`: the type `string`
+
+Example:
+```js
+hemera.act({
+  topic: 'rabbitmq',
+  cmd: 'subscribe',
+  type: 'publisher.message'
+}, ...)
+```
+
+-------------------------------------------------------
+### Consume events
+
+The pattern is:
+
+* `topic`: is a combination of the serviec name and the type `rabbitmq.<type>`
+* `cmd`: is the command to execute `subscribe`
+* `type`: the type `string`
+
+Example:
+```js
+hemera.add({
+  topic: 'rabbitmq.publisher.message',
+  cmd: 'subscribe'
+}, ...)
 ```

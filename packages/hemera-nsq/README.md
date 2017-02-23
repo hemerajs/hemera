@@ -14,7 +14,7 @@ The client use JSON to transfer data.
 [Steps](http://nsq.io/deployment/docker.html)
 
 ### How does it work with NATS and Hemera
-We use a seperate topic for every NSQ Topic/Channels because with that you can listen in every hemera service for events. Every message will be delivered to the next subscriber. If you have running two instances of your hemera-amqp service and you use a __fanout__ mechanism you will execute your RPC multiple times. As you can see NSQ give you new possibilities how to distribute your data but without lossing the benefits of nats-hemera with regard to load balancing and service-discovery.
+We use a seperate topic for every NSQ Topic/Channels because with that you can listen in every hemera service for events. Every message will be forwarded to the NATS subscriber. As you can see NSQ give you new possibilities how to distribute your data but without lossing the benefits of nats-hemera with regard to load balancing and service-discovery.
 
 #### Example
 
@@ -42,34 +42,105 @@ const hemera = new Hemera(nats, {
 hemera.use(hemeraNsq)
 
 hemera.ready(() => {
-
-  // Listen to a NSQ events
-  // This action can be called multiple times.
+  // create subscriber which listen on NSQ events
+  // can be subcribed in any hemera service
   hemera.add({
-    topic: 'nsq.click.metrics',
+    topic: 'nsq.newsletter.germany',
     cmd: 'subscribe'
   }, function (req, cb) {
-
     this.log.info(req, 'Data')
 
     cb()
+  })
+
+  // create NSQ subscriber
+  hemera.act({
+    topic: 'nsq',
+    cmd: 'subscribe',
+    subject: 'newsletter',
+    channel: 'germany'
+  }, function (err, resp) {
+    this.log.info(resp, 'Subscribed ACK')
   })
 
   // Send a message to NSQ
   hemera.act({
     topic: 'nsq',
     cmd: 'publish',
-    subject: 'click',
-    channel: 'metrics',
+    subject: 'newsletter',
     data: {
-      a: 'test',
-      b: 50
+      to: 'klaus',
+      text: 'You got a gift!'
     }
   }, function (err, resp) {
-
-    this.log.info(resp, 'ACK')
-
+    this.log.info(resp, 'Publish ACK')
   })
-
 })
+```
+
+## Interface
+
+* [NSQ API](#NSQ-api)
+  * [publish](#publish)
+  * [Create subscriber](#create-subscribe)
+  * [Consume events](#consume-events)
+  
+ 
+-------------------------------------------------------
+### publish
+
+The pattern is:
+
+* `topic`: is the service name to publish to `nsq`
+* `cmd`: is the command to execute `publish`
+* `subject`: the name of the NSQ topic `string`
+* `data`: the data to transfer `object`
+
+Example:
+```js
+hemera.act({
+  topic: 'nsq',
+  cmd: 'publish',
+  subject: 'newsletter',
+  data: {
+    to: 'klaus',
+    text: 'You got a gift!'
+  }
+}, ...)
+```
+
+-------------------------------------------------------
+### Create subscriber
+
+The pattern is:
+
+* `topic`: is the service name to publish to `nsq`
+* `cmd`: is the command to execute `subscribe`
+* `subject`: the name of the NSQ topic `string`
+* `channel`: the name of the NSQ channel `string`
+
+Example:
+```js
+hemera.act({
+  topic: 'nsq',
+  cmd: 'subscribe',
+  subject: 'newsletter',
+  channel: 'germany'
+}, ...)
+```
+
+-------------------------------------------------------
+### Consume events
+
+The pattern is:
+
+* `topic`: is a combination of the subject and channel name `nsq.<subject>.<channel>`
+* `cmd`: is the command to execute `subscribe`
+
+Example:
+```js
+hemera.add({
+  topic: 'nsq.newsletter.germany',
+  cmd: 'subscribe'
+}, ...)
 ```

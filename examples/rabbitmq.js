@@ -7,23 +7,23 @@ const hemeraRabbitmq = require('./../packages/hemera-rabbitmq')
 hemeraRabbitmq.options.rabbitmq = {
   // arguments used to establish a connection to a broker
   connection: {
-    uri: 'amqp://lprrunqx:XgIUdmLJGDYATeIC7WinN7-zWiB6nvqO@spotted-monkey.rmq.cloudamqp.com/lprrunqx'
+    uri: ''
   },
 
   // define the exchanges
   exchanges: [{
-    name: "pubsub",
-    type: "fanout"
+    name: 'pubsub',
+    type: 'fanout'
   }],
   queues: [{
-    name: "payment",
+    name: 'payment',
     autoDelete: true,
     subscribe: true
   }],
   // binds exchanges and queues to one another
   bindings: [{
-    exchange: "pubsub",
-    target: "payment",
+    exchange: 'pubsub',
+    target: 'payment',
     keys: []
   }]
 }
@@ -35,20 +35,25 @@ const hemera = new Hemera(nats, {
 hemera.use(hemeraRabbitmq)
 
 hemera.ready(() => {
-
   // Listen to a Rabbitmq events
   // This action can be called multiple times.
   hemera.add({
     topic: 'rabbitmq.publisher.message',
     cmd: 'subscribe'
   }, function (req, cb) {
-
     this.log.info(req, 'Data')
-
     cb()
   })
 
   setTimeout(function () {
+    // create subscriber
+    hemera.act({
+      topic: 'rabbitmq',
+      cmd: 'subscribe',
+      type: 'publisher.message'
+    }, function (err, resp) {
+      this.log.info(resp, 'Subscriber ACK')
+    })
 
     // Send a message to Rabbitmq
     hemera.act({
@@ -61,11 +66,7 @@ hemera.ready(() => {
         amount: 50
       }
     }, function (err, resp) {
-
-      this.log.info(resp, 'ACK')
-
+      this.log.info(resp, 'Publish ACK')
     })
-
   }, 500)
-
 })

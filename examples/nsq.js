@@ -5,7 +5,7 @@ const nats = require('nats').connect()
 const hemeraNsq = require('./../packages/hemera-nsq')
 hemeraNsq.options.nsq = {
   reader: {
-    lookupdHTTPAddresses: 'http://127.0.0.1:4161'
+    lookupdHTTPAddresses: '127.0.0.1:4161'
   },
   writer: {
     url: '127.0.0.1',
@@ -20,43 +20,25 @@ const hemera = new Hemera(nats, {
 hemera.use(hemeraNsq)
 
 hemera.ready(() => {
-
-  // Listen to a NSQ events
-  // This action can be called multiple times.
-  hemera.add({
-    topic: 'nsq.processPayment.payment',
-    cmd: 'subscribe'
-  }, function (req, cb) {
-
-    this.log.info(req, 'Data')
-
-    cb()
-  })
-
+  // create subscriber which listen on NSQ events
+  // can be subcribed in any hemera service
   hemera.add({
     topic: 'nsq.newsletter.germany',
     cmd: 'subscribe'
   }, function (req, cb) {
-
     this.log.info(req, 'Data')
 
     cb()
   })
 
-  // Send a message to NSQ
+  // create NSQ subscriber
   hemera.act({
     topic: 'nsq',
-    cmd: 'publish',
-    subject: 'processPayment',
-    channel: 'payment',
-    data: {
-      name: 'peter',
-      amount: 50
-    }
+    cmd: 'subscribe',
+    subject: 'newsletter',
+    channel: 'germany'
   }, function (err, resp) {
-
-    this.log.info(resp, 'ACK')
-
+    this.log.info(resp, 'Subscribed ACK')
   })
 
   // Send a message to NSQ
@@ -64,15 +46,11 @@ hemera.ready(() => {
     topic: 'nsq',
     cmd: 'publish',
     subject: 'newsletter',
-    channel: 'germany',
     data: {
       to: 'klaus',
       text: 'You got a gift!'
     }
   }, function (err, resp) {
-
-    this.log.info(resp, 'ACK')
-
+    this.log.info(resp, 'Publish ACK')
   })
-
 })
