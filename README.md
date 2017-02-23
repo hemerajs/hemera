@@ -83,6 +83,7 @@ Table of contents
   * [Pattern matching rules](#pattern-matching-rules)
       * [Matched!](#Matched!)
       * [Not matched!](#not-matched)
+      * [Regex](#Regex)
   * [Error handling](#error-handling)
       * [Reply an error](#reply-an-error)
       * [Error-first-callbacks](#error-first-callbacks)
@@ -203,6 +204,15 @@ hemera.add({ topic: 'math', cmd: 'add', foo: 'bar' }, (req, cb) => {
   cb(req.a + req.b)
 });
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 });
+```
+
+#### Regex
+
+You can also use regex to express your pattern
+```js
+hemera.add({ topic: 'math', cmd: 'add', version: /v1\.[0-9]/ }, (req, cb) => {
+  cb(req.a + req.b)
+})
 ```
 
 ### Error handling
