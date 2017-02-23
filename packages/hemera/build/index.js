@@ -833,7 +833,7 @@ var Hemera = function (_EventEmitter) {
        */
       function sendRequestHandler(response) {
         var self = this;
-        var res = self._decoder.decode.call(ctx, response);
+        var res = self._decoder.decode.call(self, response);
         self._response.payload = res.value;
         self._response.error = res.error;
 

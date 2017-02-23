@@ -755,7 +755,7 @@ class Hemera extends EventEmitter {
      */
     function sendRequestHandler (response) {
       const self = this
-      const res = self._decoder.decode.call(ctx, response)
+      const res = self._decoder.decode.call(self, response)
       self._response.payload = res.value
       self._response.error = res.error
 
