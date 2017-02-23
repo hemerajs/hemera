@@ -689,7 +689,7 @@ hemera.add({ topic: 'auth', cmd: 'passwordReset' }, ...)
 ...
 ```
 
-#### Create multiple instances of your service.
+### Create multiple instances of your service.
 
 Now your service is scaled.
 
@@ -698,7 +698,7 @@ node service.js
 node service.js
 ```
 
-#### Create another NATS Server and create a cluster.
+### Create another NATS Server and create a cluster.
 
 Now your service is fault-tolerant.
 ```js
@@ -707,7 +707,7 @@ var nc = nats.connect({'servers': servers});
 new Hemera(nc);
 ```
 
-#### Docker
+### Docker
 
 I prepared a setup how to use hemera in a real world scenario.
 https://github.com/hemerajs/aither
