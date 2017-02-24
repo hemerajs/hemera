@@ -4,6 +4,7 @@
   "version": "0.4.17",
   "main": "build/index.js",
   "homepage": "https://hemerajs.github.io/hemera/",
+  "description": "The core package of hemera",
   "repository": {
     "url": "git@github.com:hemerajs/hemera.git",
     "type": "git"
