@@ -1,6 +1,6 @@
 {
   "name": "hemera-rabbitmq",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "This is a plugin to use Rabbitmq with Hemera",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-joi": "^0.1.76",
+    "hemera-joi": "^0.1.77",
     "rabbot": "1.0.x"
   },
   "devDependencies": {

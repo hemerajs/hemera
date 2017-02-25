@@ -1,6 +1,6 @@
 {
   "name": "hemera-avro",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "This is a plugin to use Avro with Hemera",
   "main": "index.js",
   "scripts": {
