@@ -457,11 +457,11 @@ In any act or add you can access the property `this.request$` or `this.trace$` t
 #### Request/response life-cycle events
 
 Events:
-* `onClientPreRequest`,
-* `onClientPostRequest`
-* `onServerPreHandler`,
-* `onServerPreRequest`
-* `onServerPreResponse`
+* `clientPreRequest`,
+* `clientPostRequest`
+* `serverPreHandler`,
+* `serverPreRequest`
+* `serverPreResponse`
 
 ```js
 hemera.on('<event>', () => {

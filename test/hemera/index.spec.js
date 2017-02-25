@@ -684,7 +684,7 @@ describe('Timeouts', function () {
     let event = Sinon.spy()
 
     hemera.ready(() => {
-      hemera.on('onClientPostRequest', function () {
+      hemera.on('clientPostRequest', function () {
         const ctx = this
         const err = ctx._response.error
 
@@ -2012,7 +2012,7 @@ describe('Tracing', function () {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.on('onServerPreRequest', function () {
+      hemera.on('serverPreRequest', function () {
         const ctx = this
         let meta = {
           service: ctx.trace$.service,
@@ -2035,7 +2035,7 @@ describe('Tracing', function () {
         expect(traceData.sampled).to.be.exist()
       })
 
-      hemera.on('onServerPreResponse', function () {
+      hemera.on('serverPreResponse', function () {
         const ctx = this
         let meta = {
           service: ctx.trace$.service,
@@ -2046,7 +2046,7 @@ describe('Tracing', function () {
         expect(meta.name).to.be.equals('a:1,b:2,cmd:add,topic:math')
       })
 
-      hemera.on('onClientPreRequest', function () {
+      hemera.on('clientPreRequest', function () {
         const ctx = this
         let meta = {
           service: ctx.trace$.service,
@@ -2069,7 +2069,7 @@ describe('Tracing', function () {
         expect(traceData.sampled).to.be.exist()
       })
 
-      hemera.on('onClientPostRequest', function () {
+      hemera.on('clientPostRequest', function () {
         const ctx = this
         let meta = {
           service: ctx.trace$.service,

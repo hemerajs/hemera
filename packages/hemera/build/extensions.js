@@ -61,7 +61,7 @@ var onClientPreRequest = exports.onClientPreRequest = [function onClientPreReque
     outbound: ctx
   });
 
-  ctx.emit('onClientPreRequest');
+  ctx.emit('clientPreRequest');
 
   next();
 }]; /*!
@@ -89,7 +89,7 @@ var onClientPostRequest = exports.onClientPostRequest = [function onClientPostRe
     inbound: ctx
   });
 
-  ctx.emit('onClientPostRequest');
+  ctx.emit('clientPostRequest');
 
   next();
 }];
@@ -115,7 +115,7 @@ var onServerPreRequest = exports.onServerPreRequest = [function onServerPreReque
   ctx._request.payload = m.value;
   ctx._request.error = m.error;
 
-  ctx.emit('onServerPreRequest');
+  ctx.emit('serverPreRequest');
 
   next();
 }];
@@ -123,7 +123,7 @@ var onServerPreRequest = exports.onServerPreRequest = [function onServerPreReque
 var onServerPreHandler = exports.onServerPreHandler = [function onServerPreHandler(req, res, next) {
   var ctx = this;
 
-  ctx.emit('onServerPreHandler');
+  ctx.emit('serverPreHandler');
 
   next();
 }];
@@ -131,7 +131,7 @@ var onServerPreHandler = exports.onServerPreHandler = [function onServerPreHandl
 var onServerPreResponse = exports.onServerPreResponse = [function onServerPreResponse(req, res, next) {
   var ctx = this;
 
-  ctx.emit('onServerPreResponse');
+  ctx.emit('serverPreResponse');
 
   next();
 }];

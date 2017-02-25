@@ -19,7 +19,7 @@ exports.plugin = function hemeraZipkin (options) {
 
   const Tracer = new Zipkin(config)
 
-  hemera.on('onServerPreRequest', function () {
+  hemera.on('serverPreRequest', function () {
     const ctx = this
     let meta = {
       service: ctx.trace$.service,
@@ -42,7 +42,7 @@ exports.plugin = function hemeraZipkin (options) {
     ctx._zkTrace = Tracer.send_server_recv(traceData, meta)
   })
 
-  hemera.on('onServerPreResponse', function () {
+  hemera.on('serverPreResponse', function () {
     const ctx = this
     let meta = {
       service: ctx.trace$.service,
@@ -58,7 +58,7 @@ exports.plugin = function hemeraZipkin (options) {
     Tracer.send_server_send(ctx._zkTrace, meta)
   })
 
-  hemera.on('onClientPreRequest', function () {
+  hemera.on('clientPreRequest', function () {
     const ctx = this
     let meta = {
       service: ctx.trace$.service,
@@ -81,7 +81,7 @@ exports.plugin = function hemeraZipkin (options) {
     ctx._zkTrace = Tracer.send_client_send(traceData, meta)
   })
 
-  hemera.on('onClientPostRequest', function () {
+  hemera.on('clientPostRequest', function () {
     const ctx = this
     let meta = {
       service: ctx.trace$.service,
