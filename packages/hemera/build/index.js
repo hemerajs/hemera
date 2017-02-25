@@ -465,10 +465,12 @@ var Hemera = function (_EventEmitter) {
 
         // check if an error was already catched
         if (self._response.error) {
+          self.emit('serverResponseError', self._response.error);
           self.log.error(self._response.error);
         } else if (err) {
           // check for an extension error
           var error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
+          self.emit('serverResponseError', error);
           self._response.error = error;
           self.log.error(self._response.error);
         }
@@ -800,7 +802,7 @@ var Hemera = function (_EventEmitter) {
         var self = this;
         if (err) {
           var _error2 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
-
+          self.emit('clientResponseError', _error2);
           self.log.error(_error2);
 
           if (self._actCallback) {
@@ -817,7 +819,7 @@ var Hemera = function (_EventEmitter) {
             var _error3 = new _errors2.default.BusinessError(_constants2.default.BUSINESS_ERROR, {
               pattern: self._cleanPattern
             }).causedBy(responseErrorCause ? responseError.cause : responseError);
-
+            self.emit('clientResponseError', _error3);
             self.log.error(_error3);
 
             return self._actCallback(responseError);
@@ -845,7 +847,7 @@ var Hemera = function (_EventEmitter) {
             var _error4 = new _errors2.default.ParseError(_constants2.default.PAYLOAD_PARSING_ERROR, {
               pattern: self._cleanPattern
             }).causedBy(self._response.error);
-
+            self.emit('clientResponseError', _error4);
             self.log.error(_error4);
 
             if (self._actCallback) {
@@ -858,7 +860,7 @@ var Hemera = function (_EventEmitter) {
           var _error5 = new _errors2.default.FatalError(_constants2.default.FATAL_ERROR, {
             pattern: self._cleanPattern
           }).causedBy(err);
-
+          self.emit('clientResponseError', _error5);
           self.log.fatal(_error5);
 
           // let it crash
@@ -882,7 +884,7 @@ var Hemera = function (_EventEmitter) {
         // throw encoding issue
         if (m.error) {
           var _error6 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(m.error);
-
+          self.emit('clientResponseError', _error6);
           self.log.error(_error6);
 
           if (self._actCallback) {
@@ -894,7 +896,7 @@ var Hemera = function (_EventEmitter) {
 
         if (err) {
           var _error7 = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
-
+          self.emit('clientResponseError', _error7);
           self.log.error(_error7);
 
           if (self._actCallback) {
@@ -957,7 +959,9 @@ var Hemera = function (_EventEmitter) {
       function onClientPostRequestHandler(err) {
         var self = this;
         if (err) {
-          self._response.error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
+          var error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
+          self.emit('clientResponseError', error);
+          self._response.error = error;
           self.log.error(self._response.error);
         }
 
@@ -965,11 +969,11 @@ var Hemera = function (_EventEmitter) {
           try {
             self._actCallback(self._response.error);
           } catch (err) {
-            var error = new _errors2.default.FatalError(_constants2.default.FATAL_ERROR, {
+            var _error8 = new _errors2.default.FatalError(_constants2.default.FATAL_ERROR, {
               pattern
             }).causedBy(err);
-
-            self.log.fatal(error);
+            self.emit('clientResponseError', _error8);
+            self.log.fatal(_error8);
 
             // let it crash
             if (self._config.crashOnFatal) {
@@ -983,11 +987,9 @@ var Hemera = function (_EventEmitter) {
         var error = new _errors2.default.TimeoutError(_constants2.default.ACT_TIMEOUT_ERROR, {
           pattern
         });
-
+        _this4.emit('clientResponseError', error);
         _this4.log.error(error);
-
         _this4._response.error = error;
-
         _this4._extensions.onClientPostRequest.invoke(_this4, onClientPostRequestHandler);
       };
 

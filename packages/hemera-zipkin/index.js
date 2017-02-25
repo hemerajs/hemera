@@ -3,7 +3,7 @@
 const Zipkin = require('./lib/index')
 const Hoek = require('hoek')
 
-//Config
+// Config
 let defaultConfig = {
   serverName: '',
   debug: false,
@@ -12,16 +12,15 @@ let defaultConfig = {
   path: '/api/v1/spans'
 }
 
-exports.plugin = function hemeraZipkin(options) {
-
+exports.plugin = function hemeraZipkin (options) {
   var hemera = this
 
   const config = Hoek.applyToDefaults(defaultConfig, options || {})
 
   const Tracer = new Zipkin(config)
 
-  hemera.on('onServerPreRequest', function (ctx) {
-
+  hemera.on('onServerPreRequest', function () {
+    const ctx = this
     let meta = {
       service: ctx.trace$.service,
       name: ctx.trace$.method
@@ -41,11 +40,10 @@ exports.plugin = function hemeraZipkin(options) {
     }
 
     ctx._zkTrace = Tracer.send_server_recv(traceData, meta)
-
   })
 
-  hemera.on('onServerPreResponse', function (ctx) {
-
+  hemera.on('onServerPreResponse', function () {
+    const ctx = this
     let meta = {
       service: ctx.trace$.service,
       name: ctx.trace$.method
@@ -58,11 +56,10 @@ exports.plugin = function hemeraZipkin(options) {
     Tracer.add_binary(meta, ctx.delegate$)
 
     Tracer.send_server_send(ctx._zkTrace, meta)
-
   })
 
-  hemera.on('onClientPreRequest', function (ctx) {
-
+  hemera.on('onClientPreRequest', function () {
+    const ctx = this
     let meta = {
       service: ctx.trace$.service,
       name: ctx.trace$.method
@@ -82,11 +79,10 @@ exports.plugin = function hemeraZipkin(options) {
     }
 
     ctx._zkTrace = Tracer.send_client_send(traceData, meta)
-
   })
 
-  hemera.on('onClientPostRequest', function (ctx) {
-
+  hemera.on('onClientPostRequest', function () {
+    const ctx = this
     let meta = {
       service: ctx.trace$.service,
       name: ctx.trace$.method
@@ -99,9 +95,7 @@ exports.plugin = function hemeraZipkin(options) {
     Tracer.add_binary(meta, ctx.delegate$)
 
     Tracer.send_client_recv(ctx._zkTrace, meta)
-
   })
-
 }
 
 exports.options = {}

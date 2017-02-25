@@ -56,7 +56,7 @@ export const onClientPreRequest = [function onClientPreRequest (next) {
     outbound: ctx
   })
 
-  ctx.emit('onClientPreRequest', ctx)
+  ctx.emit('onClientPreRequest')
 
   next()
 }]
@@ -80,7 +80,7 @@ export const onClientPostRequest = [function onClientPostRequest (next) {
     inbound: ctx
   })
 
-  ctx.emit('onClientPostRequest', ctx)
+  ctx.emit('onClientPostRequest')
 
   next()
 }]
@@ -106,7 +106,7 @@ export const onServerPreRequest = [function onServerPreRequest (req, res, next) 
   ctx._request.payload = m.value
   ctx._request.error = m.error
 
-  ctx.emit('onServerPreRequest', ctx)
+  ctx.emit('onServerPreRequest')
 
   next()
 }]
@@ -114,7 +114,7 @@ export const onServerPreRequest = [function onServerPreRequest (req, res, next) 
 export const onServerPreHandler = [function onServerPreHandler (req, res, next) {
   let ctx = this
 
-  ctx.emit('onServerPreHandler', ctx)
+  ctx.emit('onServerPreHandler')
 
   next()
 }]
@@ -122,7 +122,7 @@ export const onServerPreHandler = [function onServerPreHandler (req, res, next) 
 export const onServerPreResponse = [function onServerPreResponse (req, res, next) {
   let ctx = this
 
-  ctx.emit('onServerPreResponse', ctx)
+  ctx.emit('onServerPreResponse')
 
   next()
 }]

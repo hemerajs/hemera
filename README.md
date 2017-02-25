@@ -89,6 +89,7 @@ Table of contents
       * [Error-first-callbacks](#error-first-callbacks)
       * [Handle timeout errors](#handle-timeout-errors)
       * [Fatal errors](#fatal-errors)
+      * [Listen on response errors](#listen-on-response-errors)
       * [Listen on transport errors](#listen-on-transport-errors)
       * [Specify custom timeout per act](#specify-custom-timeout-per-act)
   * [Delegation](#delegation)
@@ -255,12 +256,19 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
 
 ```
 
+#### Listen on response errors
+```js
+const hemera = new Hemera(nats, { logLevel: 'info' });
+hemera.on('serverResponseError', function(error) {})
+hemera.on('clientResponseError', function(error) {})
+```
+
 #### Listen on transport errors
 ```js
 const hemera = new Hemera(nats, { logLevel: 'info' });
-hemera.transport.on('error', ...)
-hemera.transport.on('disconnect', ...)
-hemera.transport.on('connect', ...)
+hemera.transport.on('error', function(error) {})
+hemera.transport.on('disconnect', function(error) {})
+hemera.transport.on('connect', function(error) {})
 //see NATS driver for more events
 ```
 
@@ -456,8 +464,8 @@ Events:
 * `onServerPreResponse`
 
 ```js
-hemera.on('<event>', (ctx) => {
-  console.log(ctx)
+hemera.on('<event>', () => {
+  const ctx = this
 })
 ```
 

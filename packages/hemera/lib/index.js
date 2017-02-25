@@ -399,9 +399,11 @@ class Hemera extends EventEmitter {
 
       // check if an error was already catched
       if (self._response.error) {
+        self.emit('serverResponseError', self._response.error)
         self.log.error(self._response.error)
       } else if (err) { // check for an extension error
         let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+        self.emit('serverResponseError', error)
         self._response.error = error
         self.log.error(self._response.error)
       }
@@ -722,7 +724,7 @@ class Hemera extends EventEmitter {
       const self = this
       if (err) {
         let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
-
+        self.emit('clientResponseError', error)
         self.log.error(error)
 
         if (self._actCallback) {
@@ -739,7 +741,7 @@ class Hemera extends EventEmitter {
           let error = new Errors.BusinessError(Constants.BUSINESS_ERROR, {
             pattern: self._cleanPattern
           }).causedBy(responseErrorCause ? responseError.cause : responseError)
-
+          self.emit('clientResponseError', error)
           self.log.error(error)
 
           return self._actCallback(responseError)
@@ -767,7 +769,7 @@ class Hemera extends EventEmitter {
           let error = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR, {
             pattern: self._cleanPattern
           }).causedBy(self._response.error)
-
+          self.emit('clientResponseError', error)
           self.log.error(error)
 
           if (self._actCallback) {
@@ -780,7 +782,7 @@ class Hemera extends EventEmitter {
         let error = new Errors.FatalError(Constants.FATAL_ERROR, {
           pattern: self._cleanPattern
         }).causedBy(err)
-
+        self.emit('clientResponseError', error)
         self.log.fatal(error)
 
         // let it crash
@@ -804,7 +806,7 @@ class Hemera extends EventEmitter {
       // throw encoding issue
       if (m.error) {
         let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(m.error)
-
+        self.emit('clientResponseError', error)
         self.log.error(error)
 
         if (self._actCallback) {
@@ -816,7 +818,7 @@ class Hemera extends EventEmitter {
 
       if (err) {
         let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
-
+        self.emit('clientResponseError', error)
         self.log.error(error)
 
         if (self._actCallback) {
@@ -874,7 +876,9 @@ class Hemera extends EventEmitter {
     function onClientPostRequestHandler (err) {
       const self = this
       if (err) {
-        self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+        let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+        self.emit('clientResponseError', error)
+        self._response.error = error
         self.log.error(self._response.error)
       }
 
@@ -885,7 +889,7 @@ class Hemera extends EventEmitter {
           let error = new Errors.FatalError(Constants.FATAL_ERROR, {
             pattern
           }).causedBy(err)
-
+          self.emit('clientResponseError', error)
           self.log.fatal(error)
 
           // let it crash
@@ -900,11 +904,9 @@ class Hemera extends EventEmitter {
       let error = new Errors.TimeoutError(Constants.ACT_TIMEOUT_ERROR, {
         pattern
       })
-
+      this.emit('clientResponseError', error)
       this.log.error(error)
-
       this._response.error = error
-
       this._extensions.onClientPostRequest.invoke(this, onClientPostRequestHandler)
     }
 

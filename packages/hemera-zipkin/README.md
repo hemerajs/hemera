@@ -106,7 +106,7 @@ hemera.act({
     email: 'peter@gmail.com',
     password: '1234',
     
-    delegate$: { foo: 'bar' } //only primitive values
+    delegate$: { foo: 'bar' } // only primitive values
 }, function (err, resp) {
 
   this.log.info('Finished', resp)
