@@ -7,7 +7,7 @@ This is a plugin to use [Couchbase](https://www.couchbase.com/nosql-databases/co
 
 **Status**: _In development_
 
-## Start Arangodb with Docker
+## Start Couchbase with Docker
 
 ```js
 docker run -d --name db -p 8091-8094:8091-8094 -p 11210:11210 couchbase
