@@ -107,7 +107,7 @@ Table of contents
   * [Plugins](#plugins)
   * [Logging](#logging)
   * [Protocol](#protocol)
-  * [Versioning](#versioning)
+  * [Api Versioning](#api-versioning)
   * [Best practice](#best-practice)
       * [Multiple instances of your service](#create-multiple-instances-of-your-service)
       * [Clustering](#create-another-nats-server-and-create-a-cluster)
@@ -560,7 +560,13 @@ let myPlugin = function (options) {
 
 };
 
-hemera.use({ plugin: myPlugin, attributes: { name: 'myPlugin' }, options: { } })
+hemera.use({ 
+ plugin: myPlugin,
+ attributes: { 
+  name: 'myPlugin', 
+  options: {}
+ }
+})
 ```
 
 ### Logging
@@ -648,7 +654,7 @@ message Protocol {
     Delegate delegate = 6;
 }
 ```
-## Versioning
+## Api Versioning
 
 At first I recommend you to get familiar with NATS https://nats.io/documentation/
 NATS is pub/sub system. In hemera every service is located by his topic name. If you want provide a service with different versions you can represent it with the topic name 
