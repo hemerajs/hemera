@@ -12,7 +12,6 @@ const hemera = new Hemera(nats, {
 hemera.use(HemeraAvro)
 
 hemera.ready(() => {
-
   let Avro = hemera.exposition['hemera-avro'].avro
 
   const type = Avro.parse({
@@ -31,7 +30,6 @@ hemera.ready(() => {
     cmd: 'create',
     avro$: type // how to encode the request
   }, (req, cb) => {
-
     cb(null, {
       a: 1
     })
@@ -43,7 +41,6 @@ hemera.ready(() => {
     name: 'peter',
     avro$: type // how to decode the response
   }, function (err, resp) {
-
     this.log.info(resp, 'Result')
   })
 })

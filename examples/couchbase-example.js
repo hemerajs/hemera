@@ -11,14 +11,11 @@ const hemera = new Hemera(nats, {
 hemera.use(hemeraCouchbaseStore)
 
 hemera.ready(() => {
-
   hemera.act({
     topic: 'couchbase-store',
     cmd: 'query',
     query: 'SELECT * FROM default'
   }, function (err, resp) {
-
     this.log.info(resp, 'Query result')
   })
-
 })

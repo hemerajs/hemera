@@ -1,8 +1,6 @@
 'use strict'
 
-
-exports.plugin = function myPlugin(options) {
-
+exports.plugin = function myPlugin (options) {
   var hemera = this
 
   hemera.expose('somethingToExpose', 4)
@@ -11,10 +9,8 @@ exports.plugin = function myPlugin(options) {
     topic: 'math',
     cmd: 'add'
   }, (req, cb) => {
-
     cb(null, req.a + req.b)
   })
-
 }
 
 exports.options = {
@@ -24,7 +20,6 @@ exports.attributes = {
   name: 'myPlugin',
   dependencies: []
 }
-
 
 /**
  * Usage

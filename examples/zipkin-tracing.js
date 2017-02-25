@@ -12,15 +12,13 @@ const hemera = new Hemera(nats, {
 hemera.use(hemeraZipkin)
 
 hemera.ready(() => {
-
   /**
    * Your Implementations
    */
   hemera.add({
     topic: 'auth',
-    cmd: 'signup',
+    cmd: 'signup'
   }, function (req, cb) {
-
     let userId = 1
 
     // visible in zipkin ui
@@ -33,24 +31,20 @@ hemera.ready(() => {
       message: 'Welcome!',
       delegate$: { info: 'bar' } // visible in zipkin ui
     }, function (err, resp) {
-
       this.act({
         topic: 'payment',
         cmd: 'process',
         userId: userId
       }, function (err, resp) {
-
         cb(null, true)
       })
     })
-
   })
 
   hemera.add({
     topic: 'payment',
     cmd: 'process'
   }, function (req, cb) {
-
     cb(null, true)
   })
 
@@ -58,7 +52,6 @@ hemera.ready(() => {
     topic: 'email',
     cmd: 'send'
   }, function (req, cb) {
-
     cb(null, true)
   })
 
@@ -72,7 +65,6 @@ hemera.ready(() => {
     password: '1234',
     delegate$: { foo: 'bar' } // visible in zipkin ui
   }, function (err, resp) {
-
     this.log.info(resp, 'Finished')
   })
 })

@@ -8,7 +8,6 @@ const hemera = new Hemera(nats, {
 })
 
 hemera.ready(() => {
-
   /**
    * Your Implementations
    */
@@ -16,7 +15,6 @@ hemera.ready(() => {
     topic: 'math',
     cmd: 'add'
   }, (req, cb) => {
-
     cb(null, req.a + req.b)
   })
 
@@ -24,7 +22,6 @@ hemera.ready(() => {
     topic: 'math',
     cmd: 'sub'
   }, (req, cb) => {
-
     cb(null, req.a - req.b)
   })
 
@@ -37,14 +34,12 @@ hemera.ready(() => {
     a: 1,
     b: 2
   }, function (err, resp) {
-
     hemera.act({
       topic: 'math',
       cmd: 'add',
       a: 1,
       b: resp
     }, function (err, resp) {
-
       this.log.info(resp, 'Result')
     })
   })
@@ -55,7 +50,6 @@ hemera.ready(() => {
     a: 1,
     b: 20
   }, function (err, resp) {
-
     this.log.info(resp, 'Result')
   })
 })

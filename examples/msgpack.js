@@ -13,7 +13,6 @@ const hemera = new Hemera(nats, {
 hemera.use(HemeraMsgpack)
 
 hemera.ready(() => {
-
   /**
    * Your Implementations
    */
@@ -21,7 +20,6 @@ hemera.ready(() => {
     topic: 'math',
     cmd: 'add'
   }, (req, cb) => {
-
     cb(null, req.a + req.b)
   })
 
@@ -31,7 +29,6 @@ hemera.ready(() => {
     a: 1,
     b: 20
   }, function (err, resp) {
-
     this.log.info(resp, 'Result')
   })
 })

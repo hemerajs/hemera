@@ -1,14 +1,12 @@
 'use strict'
 
-function myPlugin(options) {
-
+function myPlugin (options) {
   var hemera = this
 
   hemera.add({
     topic: 'math',
     cmd: 'add'
   }, (resp, cb) => {
-
     cb(null, resp.a + resp.b)
   })
 }
@@ -23,7 +21,6 @@ const hemera = new Hemera(nats, {
 })
 
 hemera.ready(() => {
-
   hemera.expose('somethingToExpose', 4)
 
   hemera.use({

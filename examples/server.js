@@ -8,7 +8,6 @@ const hemera = new Hemera(nats, {
 })
 
 hemera.ready(() => {
-
   /**
    * Your Implementations
    */
@@ -16,7 +15,6 @@ hemera.ready(() => {
     topic: 'math',
     cmd: 'add'
   }, function (req, cb) {
-
     cb(null, req.a + req.b)
   })
 })

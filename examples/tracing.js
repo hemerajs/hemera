@@ -8,11 +8,8 @@ const hemera = new Hemera(nats, {
 })
 
 hemera.ready(() => {
-
   hemera.on('onClientPostRequest', function (ctx) {
-
     console.log(ctx.trace$)
-
   })
 
   /**
@@ -22,7 +19,6 @@ hemera.ready(() => {
     topic: 'math',
     cmd: 'add'
   }, function (req, cb) {
-
     this.act({
       topic: 'math',
       cmd: 'sub',
@@ -30,7 +26,7 @@ hemera.ready(() => {
       b: 20
     })
 
-    //Leads to timeout error
+    // Leads to timeout error
     this.act({
       topic: 'test',
       cmd: 'sub',
@@ -44,14 +40,12 @@ hemera.ready(() => {
       a: 100,
       b: 20
     }, function (err, resp) {
-
       this.act({
         topic: 'math',
         cmd: 'sub',
         a: 100,
         b: 50
       }, function (err, resp) {
-
         cb(null, resp)
       })
     })
@@ -61,7 +55,6 @@ hemera.ready(() => {
     topic: 'math',
     cmd: 'sub'
   }, function (req, cb) {
-
     cb(null, req.a - req.b)
   })
 
@@ -74,7 +67,6 @@ hemera.ready(() => {
     a: 1,
     b: 20
   }, function (err, resp) {
-
     this.log.info(resp, 'Finished')
   })
 })

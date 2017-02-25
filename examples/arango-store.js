@@ -15,7 +15,6 @@ const hemera = new Hemera(nats, {
 hemera.use(hemeraArango)
 
 hemera.ready(() => {
-
   let aql = hemera.exposition['hemera-arango-store'].aqlTemplate
 
   hemera.act({
@@ -27,7 +26,6 @@ hemera.ready(() => {
     RETURN u
 `
   }, function (err, resp) {
-
     this.log.info(resp, 'Query result')
   })
 
@@ -41,8 +39,6 @@ hemera.ready(() => {
     type: 'one',
     query: aql`INSERT ${user} INTO users`
   }, function (err, resp) {
-
     this.log.info(resp, 'Query result')
   })
-
 })

@@ -13,14 +13,12 @@ const hemera = new Hemera(nats, {
 hemera.use(HemeraRedisCache)
 
 hemera.ready(() => {
-
   hemera.act({
     topic: 'redis-cache',
     cmd: 'set',
     key: 'foo',
     value: 'bar'
   }, function (err, resp) {
-
     this.log.info(resp, 'Result')
 
     hemera.act({
@@ -28,7 +26,6 @@ hemera.ready(() => {
       cmd: 'get',
       key: 'foo'
     }, function (err, resp) {
-
       this.log.info(resp, 'Result')
     })
   })
