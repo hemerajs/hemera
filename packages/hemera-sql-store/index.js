@@ -5,8 +5,7 @@ const HemeraJoi = require('hemera-joi')
 const SqlStore = require('./store')
 const StorePattern = require('hemera-store/pattern')
 
-exports.plugin = function hemeraSqlStore(options) {
-
+exports.plugin = function hemeraSqlStore (options) {
   const hemera = this
   const connections = {}
   const topic = 'sql-store'
@@ -15,15 +14,13 @@ exports.plugin = function hemeraSqlStore(options) {
 
   hemera.expose('connectionPool', connections)
 
-  function useDb(databaseName) {
-
+  function useDb (databaseName) {
     if (connections[databaseName]) {
       return connections[databaseName]
     }
 
     if (databaseName) {
-
-      let option = Object.assign({}, options.connection);
+      let option = Object.assign({}, options.connection)
       option.database = databaseName
 
       connections[databaseName] = Knex({
@@ -41,14 +38,12 @@ exports.plugin = function hemeraSqlStore(options) {
     connections[databaseName] = options.knex.driver
 
     return connections[databaseName]
-
   }
 
   /**
    * Create a new record
    */
   hemera.add(StorePattern.create(topic), function (req, cb) {
-
     let db = useDb(req.database)
 
     const store = new SqlStore(db)
@@ -60,7 +55,6 @@ exports.plugin = function hemeraSqlStore(options) {
    * Find a record by id
    */
   hemera.add(StorePattern.findById(topic), function (req, cb) {
-
     let db = useDb(req.database)
 
     const store = new SqlStore(db)
@@ -72,7 +66,6 @@ exports.plugin = function hemeraSqlStore(options) {
    * Update a record by id
    */
   hemera.add(StorePattern.updateById(topic), function (req, cb) {
-
     let db = useDb(req.database)
 
     const store = new SqlStore(db)
@@ -84,7 +77,6 @@ exports.plugin = function hemeraSqlStore(options) {
    * Replace a record by id
    */
   hemera.add(StorePattern.replaceById(topic), function (req, cb) {
-
     let db = useDb(req.database)
 
     const store = new SqlStore(db)
@@ -96,7 +88,6 @@ exports.plugin = function hemeraSqlStore(options) {
    * Update entities
    */
   hemera.add(StorePattern.update(topic), function (req, cb) {
-
     let db = useDb(req.database)
 
     const store = new SqlStore(db)
@@ -108,7 +99,6 @@ exports.plugin = function hemeraSqlStore(options) {
    * Update entities
    */
   hemera.add(StorePattern.replace(topic), function (req, cb) {
-
     let db = useDb(req.database)
 
     const store = new SqlStore(db)
@@ -120,7 +110,6 @@ exports.plugin = function hemeraSqlStore(options) {
    * Remove an entity by id
    */
   hemera.add(StorePattern.removeById(topic), function (req, cb) {
-
     let db = useDb(req.database)
 
     const store = new SqlStore(db)
@@ -132,7 +121,6 @@ exports.plugin = function hemeraSqlStore(options) {
    * Remove by query
    */
   hemera.add(StorePattern.remove(topic), function (req, cb) {
-
     let db = useDb(req.database)
 
     const store = new SqlStore(db)
@@ -144,7 +132,6 @@ exports.plugin = function hemeraSqlStore(options) {
    * find
    */
   hemera.add(StorePattern.find(topic), function (req, cb) {
-
     let db = useDb(req.database)
 
     const store = new SqlStore(db)
@@ -156,14 +143,12 @@ exports.plugin = function hemeraSqlStore(options) {
    * exists
    */
   hemera.add(StorePattern.exists(topic), function (req, cb) {
-
     let db = useDb(req.database)
 
     const store = new SqlStore(db)
 
     store.exists(req, cb)
   })
-
 }
 
 exports.options = {
