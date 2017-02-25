@@ -1,7 +1,7 @@
 {
   "name": "hemera-arango-store",
   "version": "1.1.5",
-  "description": "",
+  "description": "This is a plugin to use Arangodb with Hemera",
   "main": "index.js",
   "scripts": {
     "lint": "eslint index.js",

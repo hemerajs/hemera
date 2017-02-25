@@ -1,7 +1,7 @@
 {
   "name": "hemera-zipkin",
   "version": "0.1.71",
-  "description": "",
+  "description": "This is a plugin to use Zipkin with Hemera",
   "main": "index.js",
   "scripts": {
     "test": "mocha -t 5000 --recursive",

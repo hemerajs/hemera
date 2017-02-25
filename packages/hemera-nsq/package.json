@@ -1,7 +1,7 @@
 {
   "name": "hemera-nsq",
   "version": "0.0.18",
-  "description": "",
+  "description": "This is a plugin to use NSQ with Hemera",
   "main": "index.js",
   "scripts": {
     "lint": "eslint index.js",

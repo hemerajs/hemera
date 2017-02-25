@@ -1,7 +1,7 @@
 {
   "name": "hemera-joi",
   "version": "0.1.76",
-  "description": "",
+  "description": "This is a plugin to use Joi with Hemera",
   "main": "index.js",
   "scripts": {
     "lint": "eslint index.js"

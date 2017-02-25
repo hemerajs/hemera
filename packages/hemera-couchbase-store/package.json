@@ -1,7 +1,7 @@
 {
   "name": "hemera-couchbase-store",
   "version": "1.0.8",
-  "description": "",
+  "description": "This is a plugin to use Couchbase with Hemera",
   "main": "index.js",
   "scripts": {
     "lint": "eslint index.js",
