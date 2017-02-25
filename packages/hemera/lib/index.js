@@ -92,6 +92,7 @@ class Hemera extends EventEmitter {
 
     // client and server locales
     this._shouldCrash = false
+    this._topic = ''
     this._replyTo = ''
     this._request = null
     this._response = null
@@ -575,7 +576,7 @@ class Hemera extends EventEmitter {
         self._extensions.onServerPreHandler.invoke(self, onServerPreHandler)
       } else {
         self.log.info({
-          topic
+          topic: self._topic
         }, Constants.PATTERN_NOT_FOUND)
 
         self._response.error = new Errors.PatternNotFound(Constants.PATTERN_NOT_FOUND, {
@@ -592,6 +593,7 @@ class Hemera extends EventEmitter {
       let ctx = this.createContext()
       ctx._shouldCrash = false
       ctx._replyTo = replyTo
+      ctx._topic = topic
       ctx._request = new ServerRequest(request)
       ctx._response = new ServerResponse()
       ctx._pattern = {}

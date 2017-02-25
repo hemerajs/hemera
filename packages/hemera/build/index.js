@@ -175,6 +175,7 @@ var Hemera = function (_EventEmitter) {
 
     // client and server locales
     _this._shouldCrash = false;
+    _this._topic = '';
     _this._replyTo = '';
     _this._request = null;
     _this._response = null;
@@ -647,7 +648,7 @@ var Hemera = function (_EventEmitter) {
           self._extensions.onServerPreHandler.invoke(self, onServerPreHandler);
         } else {
           self.log.info({
-            topic
+            topic: self._topic
           }, _constants2.default.PATTERN_NOT_FOUND);
 
           self._response.error = new _errors2.default.PatternNotFound(_constants2.default.PATTERN_NOT_FOUND, {
@@ -664,6 +665,7 @@ var Hemera = function (_EventEmitter) {
         var ctx = _this3.createContext();
         ctx._shouldCrash = false;
         ctx._replyTo = replyTo;
+        ctx._topic = topic;
         ctx._request = new _serverRequest2.default(request);
         ctx._response = new _serverResponse2.default();
         ctx._pattern = {};
