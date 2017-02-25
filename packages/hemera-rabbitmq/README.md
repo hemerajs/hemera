@@ -14,9 +14,20 @@ The client use JSON to transfer data.
 ### Support:
 - PUB/SUB
 
-### Start RabbitMQ instance
+## Start RabbitMQ instance
 
-I recommend to use the free plan to create a RabbitMQ instance on http://cloudamqp.com
+Start a rabbitmq instance via docker-compose
+```
+cd test && docker-compose up
+```
+
+## Administration
+
+Visit http://127.0.0.1:15672 and log in with
+```
+Username: user
+Password: bitnami
+```
 
 ### How does it work with NATS and Hemera
 We use a seperate topic for every RabbitMQ Topic because with that you can listen in every hemera service for events. Every message will be delivered to the next subscriber. If you have running two instances of your hemera-amqp service and you use a __fanout__ mechanism you will execute your RPC multiple times. As you can see RabbitMQ give you new possibilities how to distribute your data but without lossing the benefits of nats-hemera with regard to load balancing and service-discovery.
@@ -33,7 +44,7 @@ const hemeraRabbitmq = require('hemera-rabbitmq')
 hemeraRabbitmq.options.rabbitmq = {
   // arguments used to establish a connection to a broker
   connection: {
-    uri: '<uri>'
+    uri: 'amqp://user:bitnami@127.0.0.1:5672/?heartbeat=10'
   },
 
   // define the exchanges

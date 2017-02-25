@@ -7,7 +7,7 @@ This is a plugin to use [Arangodb](https://github.com/arangodb) with Hemera.
 
 Execute any AQL query from anywhere. For more details [ArangoDB Query Language](https://www.arangodb.com/why-arangodb/sql-aql-comparison/)
 
-### Start Arangodb with Docker
+## Start Arangodb with Docker
 
 ```js
 docker run -e ARANGO_NO_AUTH=1 -d --name arangodb-instance -d arangodb -p 8529:8529

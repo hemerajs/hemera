@@ -3,8 +3,7 @@
 const Elasticsearch = require('elasticsearch')
 const HemeraJoi = require('hemera-joi')
 
-exports.plugin = function hemeraElasticSearch(options) {
-
+exports.plugin = function hemeraElasticSearch (options) {
   const hemera = this
   const topic = 'elasticsearch'
 
@@ -20,9 +19,7 @@ exports.plugin = function hemeraElasticSearch(options) {
   client.ping({
     requestTimeout: options.elasticsearch.timeout
   }, function (error) {
-
     if (error) {
-
       hemera.log.trace(error, 'elasticsearch cluster is down!')
       hemera.fatal()
     } else {
@@ -48,7 +45,6 @@ exports.plugin = function hemeraElasticSearch(options) {
       body: Joi.object().optional()
     })
   }, function (req, cb) {
-
     client.search(req.data, cb)
   })
 
@@ -62,7 +58,6 @@ exports.plugin = function hemeraElasticSearch(options) {
       body: Joi.object().required()
     })
   }, function (req, cb) {
-
     client.create(req.data, cb)
   })
 
@@ -76,7 +71,6 @@ exports.plugin = function hemeraElasticSearch(options) {
       ignore: Joi.array().default([404]).optional()
     })
   }, function (req, cb) {
-
     client.delete(req.data, cb)
   })
 
@@ -87,7 +81,6 @@ exports.plugin = function hemeraElasticSearch(options) {
       index: Joi.string().required()
     })
   }, function (req, cb) {
-
     client.count(req.data, cb)
   })
 
@@ -98,7 +91,6 @@ exports.plugin = function hemeraElasticSearch(options) {
       body: Joi.object().required()
     })
   }, function (req, cb) {
-
     client.bulk(req.data, cb)
   })
 
@@ -110,10 +102,8 @@ exports.plugin = function hemeraElasticSearch(options) {
       body: Joi.object().required()
     })
   }, function (req, cb) {
-
     client.refresh(req.data, cb)
   })
-
 }
 
 exports.options = {

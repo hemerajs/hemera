@@ -3,7 +3,8 @@
 const Hemera = require('./../packages/hemera')
 const nats = require('nats').connect()
 const hemeraElasticsearch = require('./../packages/hemera-elasticsearch')
-
+hemeraElasticsearch.options.elasticsearch.log = 'trace'
+hemeraElasticsearch.options.elasticsearch.httpAuth = 'elastic:changeme'
 const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
@@ -11,7 +12,6 @@ const hemera = new Hemera(nats, {
 hemera.use(hemeraElasticsearch)
 
 hemera.ready(() => {
-
   hemera.act({
     topic: 'elasticsearch',
     cmd: 'create',
@@ -28,9 +28,7 @@ hemera.ready(() => {
       }
     }
   }, function (err, req) {
-
     this.log.info(req, 'Data')
-
   })
 
   hemera.act({
@@ -41,9 +39,6 @@ hemera.ready(() => {
       q: 'title:test'
     }
   }, function (err, req) {
-
     this.log.info(req, 'Data')
-
   })
-
 })

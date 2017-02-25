@@ -8,6 +8,19 @@
 This is a plugin to use Elasticsearch with Hemera.
 This plugin is based on the official driver [elasticsearch](https://github.com/elastic/elasticsearch-js).
 
+## Start elastisearch via docker
+
+```
+docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" docker.elastic.co/elasticsearch/elasticsearch:5.2.1
+```
+
+## Interface
+Visit http://127.0.0.1:9200
+```
+Username: elastic
+Password: changeme
+```
+
 #### Example
 
 ```js
@@ -18,7 +31,8 @@ const nats = require('nats').connect()
 const hemeraElasticsearch = require('hemera-elasticsearch')
 
 // configure your client
-hemeraElasticsearch.options.elasticsearch = ....
+hemeraElasticsearch.options.elasticsearch.log = 'trace'
+hemeraElasticsearch.options.elasticsearch.httpAuth = 'elastic:changeme'
 
 const hemera = new Hemera(nats, {
   logLevel: 'info'

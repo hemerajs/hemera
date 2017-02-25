@@ -7,7 +7,7 @@ const hemeraRabbitmq = require('./../packages/hemera-rabbitmq')
 hemeraRabbitmq.options.rabbitmq = {
   // arguments used to establish a connection to a broker
   connection: {
-    uri: ''
+    uri: 'amqp://user:bitnami@127.0.0.1:5672/?heartbeat=10'
   },
 
   // define the exchanges
