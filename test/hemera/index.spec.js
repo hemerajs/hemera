@@ -328,6 +328,7 @@ describe('Hemera', function () {
         next()
       })
       .end(function (req, cb) {
+        callback()
         cb(null, req.a + req.b)
       })
 
@@ -340,7 +341,7 @@ describe('Hemera', function () {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('HemeraError')
         expect(err.message).to.be.equals('Middleware error')
-        expect(callback.called).to.be.equals(false)
+        expect(callback.calledOnce).to.be.equals(false)
         hemera.close()
         done()
       })
