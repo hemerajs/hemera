@@ -43,7 +43,7 @@ hemera.ready(() => {
   hemera.add({
     topic: 'math',
     cmd: 'add',
-    auth$: { // or { enabled: false } if you want disable authentication
+    auth$: { // or { enabled: false } if you want to disable authentication
       scope: 'math'
     }
   }, function (req, cb) {

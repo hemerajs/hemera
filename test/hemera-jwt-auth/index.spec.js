@@ -81,7 +81,7 @@ describe('Hemera-jwt-auth', function () {
     })
   })
 
-  it('Should be able to act with scope as array', function (done) {
+  it('Should be able to authorize with scope as array', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -118,7 +118,7 @@ describe('Hemera-jwt-auth', function () {
     })
   })
 
-  it('Should be able to act with scope as string', function (done) {
+  it('Should be able to authorize with scope as string', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
