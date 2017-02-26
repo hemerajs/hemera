@@ -1435,9 +1435,7 @@ describe('Plugin interface', function () {
   it('Should be able to register the plugin twice also when another plugin based on that', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      logLevel: 'info'
-    })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
       let pluginOptions = {
@@ -1640,9 +1638,7 @@ describe('Metadata', function () {
   it('Should be able to pass metadata', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      logLevel: 'silent'
-    })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
       hemera.add({
@@ -1821,9 +1817,7 @@ describe('Delegate', function () {
   it('Should be able to pass data only to the next', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      logLevel: 'silent'
-    })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
       hemera.add({
@@ -1896,9 +1890,7 @@ describe('Tracing', function () {
 
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      logLevel: 'silent'
-    })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
       expect(this.parentId$).to.be.not.exists()
@@ -2121,9 +2113,7 @@ describe('Extension error', function () {
   it('Invalid extension type', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      logLevel: 'silent'
-    })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
       let plugin = function (options) {
@@ -2154,9 +2144,7 @@ describe('Extension error', function () {
   it('onClientPostRequest', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      logLevel: 'silent'
-    })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
       let plugin = function (options) {
@@ -2202,9 +2190,7 @@ describe('Extension error', function () {
   it('onClientPreRequest', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      logLevel: 'silent'
-    })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
       let plugin = function (options) {
@@ -2250,9 +2236,7 @@ describe('Extension error', function () {
   it('onServerPreRequest', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      logLevel: 'silent'
-    })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
       let plugin = function (options) {
@@ -2298,9 +2282,7 @@ describe('Extension error', function () {
   it('onServerPreResponse', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      logLevel: 'silent'
-    })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
       let plugin = function (options) {
