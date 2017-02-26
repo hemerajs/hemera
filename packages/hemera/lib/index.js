@@ -73,6 +73,7 @@ class Hemera extends EventEmitter {
     this.context$ = {}
     this.meta$ = {}
     this.delegate$ = {}
+    this.auth$ = {}
     this.plugin$ = {
       options: {
         payloadValidator: ''

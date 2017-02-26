@@ -156,6 +156,7 @@ var Hemera = function (_EventEmitter) {
     _this.context$ = {};
     _this.meta$ = {};
     _this.delegate$ = {};
+    _this.auth$ = {};
     _this.plugin$ = {
       options: {
         payloadValidator: ''

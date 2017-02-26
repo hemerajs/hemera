@@ -110,6 +110,7 @@ var onServerPreRequest = exports.onServerPreRequest = [function onServerPreReque
     ctx.trace$ = msg.trace || {};
     ctx.delegate$ = msg.delegate || {};
     ctx.request$ = msg.request || {};
+    ctx.auth$ = {};
   }
 
   ctx._request.payload = m.value;
