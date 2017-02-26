@@ -13,7 +13,7 @@ Granting and authenticating solution with JWT for Hemera
 ```js
 const Hemera = require('nats-hemera')
 const nats = require('nats').connect()
-const hemeraJwt = require('./../packages/hemera-jwt')
+const hemeraJwt = require('hemera-jwt-auth')
 hemeraJwt.options.jwt.secret = 'test'
 
 // token encoded with { scope: ['math'] }
