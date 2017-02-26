@@ -104,7 +104,25 @@ var Util = function () {
       var hrtime = process.hrtime();
       return Math.floor(hrtime[0] * 1000000 + hrtime[1] / 1000);
     }
+    /**
+     *
+     *
+     * @static
+     * @param {any} obj
+     * @returns
+     *
+     * @memberOf Util
+     */
 
+  }, {
+    key: 'extractSchema',
+    value: function extractSchema(obj) {
+      if (obj === null) return obj;
+
+      return _lodash2.default.pickBy(obj, function (val, prop) {
+        return _lodash2.default.isObject(val);
+      });
+    }
     /**
      * @static
      * @param {any} obj
@@ -119,7 +137,7 @@ var Util = function () {
       if (obj === null) return obj;
 
       return _lodash2.default.pickBy(obj, function (val, prop) {
-        return !_lodash2.default.includes(prop, '$');
+        return !_lodash2.default.includes(prop, '$') && !_lodash2.default.isObject(val);
       });
     }
 

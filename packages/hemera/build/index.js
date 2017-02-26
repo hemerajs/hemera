@@ -721,18 +721,7 @@ var Hemera = function (_EventEmitter) {
       }
 
       var origPattern = _lodash2.default.cloneDeep(pattern);
-
-      var schema = {};
-
-      // remove objects (rules) from pattern and extract schema
-      _lodash2.default.each(pattern, function (v, k) {
-        if (_lodash2.default.isObject(v)) {
-          schema[k] = _lodash2.default.clone(v);
-          delete origPattern[k];
-        }
-      });
-
-      // remove special $ variables from pattern
+      var schema = _util2.default.extractSchema(origPattern);
       origPattern = _util2.default.cleanPattern(origPattern);
 
       // create message object which represent the object behind the matched pattern

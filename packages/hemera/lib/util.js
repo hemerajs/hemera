@@ -78,7 +78,22 @@ export default class Util {
     const hrtime = process.hrtime()
     return Math.floor(hrtime[0] * 1000000 + hrtime[1] / 1000)
   }
+  /**
+   *
+   *
+   * @static
+   * @param {any} obj
+   * @returns
+   *
+   * @memberOf Util
+   */
+  static extractSchema (obj) {
+    if (obj === null) return obj
 
+    return _.pickBy(obj, function (val, prop) {
+      return _.isObject(val)
+    })
+  }
   /**
    * @static
    * @param {any} obj
@@ -90,7 +105,7 @@ export default class Util {
     if (obj === null) return obj
 
     return _.pickBy(obj, function (val, prop) {
-      return !_.includes(prop, '$')
+      return !_.includes(prop, '$') && !_.isObject(val)
     })
   }
 

@@ -35,7 +35,9 @@ exports.plugin = function hemeraJwtAuth (options) {
     const auth = ctx._actMeta.schema.auth$
 
     // if no token was passed or auth is disabled we can continue
-    if (auth === false || !ctx.meta$.jwtToken) {
+    if (!ctx.meta$.jwtToken) {
+      return next()
+    } else if (auth && auth.enabled === false) {
       return next()
     }
 

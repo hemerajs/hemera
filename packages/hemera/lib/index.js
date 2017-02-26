@@ -646,18 +646,7 @@ class Hemera extends EventEmitter {
     }
 
     let origPattern = _.cloneDeep(pattern)
-
-    let schema = {}
-
-    // remove objects (rules) from pattern and extract schema
-    _.each(pattern, function (v, k) {
-      if (_.isObject(v)) {
-        schema[k] = _.clone(v)
-        delete origPattern[k]
-      }
-    })
-
-    // remove special $ variables from pattern
+    let schema = Util.extractSchema(origPattern)
     origPattern = Util.cleanPattern(origPattern)
 
     // create message object which represent the object behind the matched pattern
