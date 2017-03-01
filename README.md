@@ -95,6 +95,7 @@ Table of contents
       * [Error-first-callbacks](#error-first-callbacks)
       * [Handle timeout errors](#handle-timeout-errors)
       * [Fatal errors](#fatal-errors)
+      * [Error propagation](#error-propagation)
       * [Listen on response errors](#listen-on-response-errors)
       * [Listen on transport errors](#listen-on-transport-errors)
       * [Specify custom timeout per act](#specify-custom-timeout-per-act)
@@ -261,6 +262,33 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
 });
 
 ```
+
+#### Error propagation
+
+If you call a service which internally call many other services and suddenly a service fails, this error must be propagated to the first callee. Hemera will chain all errors together and you are able to access the root issue with
+
+```js
+hemera.act({
+  topic: 'a',
+  cmd: 'a'
+}, (err, resp) => {
+ const error = err.rootCause
+})
+```
+Errors in the chain you can access with:
+
+```js
+hemera.act({
+  topic: 'a',
+  cmd: 'a'
+}, (err, resp) => {
+ const error = err.cause
+ const error2 = err.cause.cause
+ const error3 = err.cause.cause.cause
+})
+```
+
+
 
 #### Listen on response errors
 ```js
