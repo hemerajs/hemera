@@ -1272,7 +1272,7 @@ describe('Error handling', function () {
     })
   })
 
-  it('Nested errors', function (done) {
+  it('Error propagation', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
