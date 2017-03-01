@@ -9,7 +9,9 @@
 
 A [Node.js](http://nodejs.org/) microservices toolkit for the [NATS messaging system](https://nats.io)
 
+- __Node:__ 4.x, 5.x, 6.x, 7.x
 - __Website:__ https://hemerajs.github.io/hemera-site/
+- __Lead Maintainer:__ [Dustin Deus](https://github.com/StarpTech)
 
 ## 📓 Getting Started
 
