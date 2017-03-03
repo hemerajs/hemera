@@ -156,6 +156,6 @@ exports.options = {
 }
 
 exports.attributes = {
-  name: 'hemera-sql-store',
-  dependencies: ['hemera-joi']
+  dependencies: ['hemera-joi'],
+  pkg: require('./package.json')
 }

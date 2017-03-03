@@ -75,5 +75,5 @@ exports.options = {
 }
 
 exports.attributes = {
-  name: 'hemera-jwt-auth'
+  pkg: require('./package.json')
 }

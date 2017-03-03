@@ -27,5 +27,5 @@ exports.plugin = function hemeraParambulator () {
 exports.options = {}
 
 exports.attributes = {
-  name: 'hemera-parambulator'
+  pkg: require('./package.json')
 }

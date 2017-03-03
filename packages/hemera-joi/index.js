@@ -31,5 +31,5 @@ exports.plugin = function hemeraJoi () {
 exports.options = {}
 
 exports.attributes = {
-  name: 'hemera-joi'
+  pkg: require('./package.json')
 }

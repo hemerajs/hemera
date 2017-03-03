@@ -108,6 +108,6 @@ exports.options = {
 }
 
 exports.attributes = {
-  name: 'hemera-redis-cache',
-  dependencies: ['hemera-joi']
+  dependencies: ['hemera-joi'],
+  pkg: require('./package.json')
 }

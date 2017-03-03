@@ -1569,6 +1569,88 @@ describe('Plugin interface', function () {
     })
   })
 
+  it('Plugin name is required', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      let pluginOptions = {
+        a: '1'
+      }
+
+      // Plugin
+      let plugin = function (options) {
+        let hemera = this
+
+        hemera.add({
+          topic: 'math',
+          cmd: 'add'
+        }, (resp, cb) => {
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        })
+      }
+
+      try {
+        hemera.use({
+          plugin: plugin,
+          attributes: {},
+          options: pluginOptions
+        })
+      } catch (err) {
+        expect(err).to.exists()
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals('Plugin name is required')
+        hemera.close()
+        done()
+      }
+    })
+  })
+
+  it('Should be able to specify plugin attributes by package.json', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      let pluginOptions = {
+        a: '1'
+      }
+
+      // Plugin
+      let plugin = function (options) {
+        let hemera = this
+
+        hemera.add({
+          topic: 'math',
+          cmd: 'add'
+        }, (resp, cb) => {
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        })
+      }
+
+      const packageJson = { name: 'foo', description: 'test', version: '1.0.0' }
+
+      hemera.use({
+        plugin: plugin,
+        attributes: {
+          pkg: packageJson
+        },
+        options: pluginOptions
+      })
+
+      expect(hemera.plugins.foo.attributes.name).to.be.equals('foo')
+      expect(hemera.plugins.foo.attributes.description).to.be.equals('test')
+      expect(hemera.plugins.foo.attributes.version).to.be.equals('1.0.0')
+      hemera.close()
+      done()
+    })
+  })
+
   it('Should be able to use register a plugin twice without an error', function (done) {
     const nats = require('nats').connect(authUrl)
 

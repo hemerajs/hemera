@@ -604,9 +604,9 @@ let myPlugin = function (options) {
 
 hemera.use({ 
  plugin: myPlugin,
+ options: {},
  attributes: { 
-  name: 'myPlugin', 
-  options: {}
+  pkg: require('./package.json')
  }
 })
 ```

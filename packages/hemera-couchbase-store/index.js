@@ -4,8 +4,7 @@ const HemeraJoi = require('hemera-joi')
 const Couchbase = require('couchbase')
 const StorePattern = require('hemera-store/pattern')
 
-exports.plugin = function hemeraCouchbaseStore(options) {
-
+exports.plugin = function hemeraCouchbaseStore (options) {
   const hemera = this
   const topic = 'couchbase-store'
 
@@ -15,16 +14,12 @@ exports.plugin = function hemeraCouchbaseStore(options) {
   const cluster = new Couchbase.Cluster(options.couchbase.url)
   const N1qlQuery = Couchbase.N1qlQuery
 
-  function getBucket(name) {
-
+  function getBucket (name) {
     if (options.couchbase.bucketInstance) {
-
       return options.couchbase.bucketInstance
     } else {
-
       return cluster.openBucket(name)
     }
-
   }
 
   hemera.add({
@@ -34,13 +29,10 @@ exports.plugin = function hemeraCouchbaseStore(options) {
     query: Joi.string().required(),
     vars: Joi.array().items(Joi.string(), Joi.number()).default([])
   }, function (req, cb) {
-
     const bucket = getBucket(req.bucket)
-    const query = N1qlQuery.fromString(req.query);
-    bucket.query(query, req.vars, cb);
-
+    const query = N1qlQuery.fromString(req.query)
+    bucket.query(query, req.vars, cb)
   })
-
 }
 
 exports.options = {
@@ -52,6 +44,6 @@ exports.options = {
 }
 
 exports.attributes = {
-  name: 'hemera-couchbase-store',
-  dependencies: ['hemera-joi']
+  dependencies: ['hemera-joi'],
+  pkg: require('./package.json')
 }
