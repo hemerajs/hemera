@@ -144,8 +144,8 @@ We use the Request Reply concept to realize this toolkit. [Request Reply](http:/
 ```js
 'use strict';
 
-const Hemera = require('nats-hemera');
-const nats = require('nats').connect(authUrl);
+const Hemera = require('nats-hemera')
+const nats = require('nats').connect(authUrl)
     
 const hemera = new Hemera(nats, { logLevel: 'info' });
 
@@ -154,22 +154,22 @@ hemera.ready(() => {
 
   hemera.add({ topic: 'math', cmd: 'add' }, (req, cb) => {
 
-    cb(null, req.a + req.b);
+    cb(null, req.a + req.b)
   });
 
   hemera.add({ topic: 'email', cmd: 'send' }, (req, cb) => {
 
-    cb();
+    cb()
   })
 
 
   hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 2, timeout$: 5000 }, (err, resp) => {
     
-    console.log('Result', resp);
+    console.log('Result', resp)
   });
 
   //Without callback
-  hemera.act({ topic: 'email', cmd: 'send', email: 'foobar@mail.com', msg: 'Hi' });
+  hemera.act({ topic: 'email', cmd: 'send', email: 'foobar@mail.com', msg: 'Hi' })
 
 });
 ```
@@ -185,14 +185,14 @@ _Topic_: The subject to subscribe. **The smallest unit of Hemera**. It's kind of
 #### Define your service
 ```js
 hemera.add({ topic: 'math', cmd: 'add' }, (req, cb) => {
-  cb(null, req.a + req.b);
+  cb(null, req.a + req.b)
 });
 ```
 
 #### Call your service
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
-console.log(resp); //2
+console.log(resp) //2
 });
 ```
 
@@ -205,14 +205,14 @@ A match happens when all properties of added pattern matches with the one in the
 hemera.add({ topic: 'math', cmd: 'add' }, (req, cb) => {
   cb(resp.a + resp.b)
 });
-hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 });
+hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 })
 ```
 #### Not matched!
 ```js
 hemera.add({ topic: 'math', cmd: 'add', foo: 'bar' }, (req, cb) => {
   cb(req.a + req.b)
 });
-hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 });
+hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 })
 ```
 
 #### Regex
@@ -229,7 +229,7 @@ hemera.add({ topic: 'math', cmd: 'add', version: /v1\.[0-9]/ }, (req, cb) => {
 #### Reply an error
 ```js
 hemera.add({ topic: 'math', cmd: 'add' }, (req, cb) => {
-  cb(new CustomError('Invalid operation'));
+  cb(new CustomError('Invalid operation'))
 });
 ```
 #### Error-first-callbacks
@@ -256,7 +256,7 @@ Fatal errors will crash your server. You should implement a gracefully shutdown 
 
 ```js
 hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
-  throw new Error('Upps');
+  throw new Error('Upps')
 });
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
   err instanceOf FatalError // true
@@ -326,7 +326,7 @@ hemera.add({ topic: 'math', cmd: 'add' }, function (req, cb) {
     //Access to metadata
     let meta = this.meta$
     
-    cb(null, req.a + req.b);
+    cb(null, req.a + req.b)
 });
 ```
 Will set the metadata only for this `act` and all nested operations. Data will be transfered!
@@ -343,16 +343,16 @@ Will set the metadata on all `act`. Data will be transfered!
 hemera.meta$.token = 'ABC1234'
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1}, function (err, resp) {
     //or
-   this.meta$.token = 'ABC1234';
+   this.meta$.token = 'ABC1234'
 
-   this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 });
+   this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 })
 });
 ```
 #### Context
 If you want to set a context across all `act` you can use the `context$` property. Data will __not__ be transfered!
 
 ```js
-hemera.context$.a = 'foobar';
+hemera.context$.a = 'foobar'
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, function (err, resp) {
    
    this.context$.a // 'foobar'
@@ -360,8 +360,8 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, function (err, resp) {
    this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 }, function (err, resp) {
         
        this.context$.a // 'foobar'
-   });
-});
+   })
+})
 ```
 If you want to set a context only for this `act` and all nested `act`
 
@@ -371,8 +371,8 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, context$: 1 }, function (err
    this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 }, function (err, resp) {
         
       this.context$ // 1
-   });
-});
+   })
+})
 ```
 
 #### Delegate
@@ -530,7 +530,7 @@ Times are represented in nanoseconds.
     a: {
       type$: 'number'
     }
-  });
+  })
 ```
 
 #### Special - one-to-one (but with queue group names)
@@ -571,8 +571,8 @@ hemera.add({
 
     cb(null, {
       result: req.a + req.b
-    });
-  });
+    })
+  })
 ```
 Handling
 ```js
@@ -615,7 +615,7 @@ If you want to create without to swap it out in a seperate file.
 ```js
 let myPlugin = function (options) {
 
-  let hemera = this;
+  let hemera = this
   
   //Expose data which you can access globally with hemera.exposition.<pluginName>.<property>
   hemera.expose('magicNumber', 42)
@@ -627,10 +627,10 @@ let myPlugin = function (options) {
 
     cb(null, {
       result: req.a + req.b
-    });
-  });
+    })
+  })
 
-};
+}
 
 hemera.use({ 
  plugin: myPlugin,
