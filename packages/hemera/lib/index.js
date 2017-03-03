@@ -290,6 +290,7 @@ class Hemera extends EventEmitter {
       params.attributes = Object.assign(params.attributes, _.pick(params.attributes.pkg, ['name', 'description', 'version']))
     }
 
+    // plugin name is required
     if (!params.attributes.name) {
       let error = new Errors.HemeraError(Constants.PLUGIN_NAME_REQUIRED)
       this.log.error(error)
@@ -298,8 +299,12 @@ class Hemera extends EventEmitter {
 
     // check if plugin is already registered
     if (this._plugins[params.attributes.name]) {
-      this.log.warn(Constants.PLUGIN_ALREADY_IN_USE, params.attributes.name, this._plugins[params.attributes.name].parentPlugin)
-      return
+      // check for `multiple` attribute that when set to true tells hemera that it is safe to register your plugin more than once
+      if (params.attributes.multiple !== true) {
+        let error = new Errors.HemeraError(Constants.PLUGIN_ALREADY_REGISTERED, params.attributes.name)
+        this.log.error(error)
+        throw error
+      }
     }
 
     // create new execution context

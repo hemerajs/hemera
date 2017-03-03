@@ -21,7 +21,7 @@ exports.default = {
   IMPLEMENTATION_ERROR: 'Bad implementation',
   PAYLOAD_PARSING_ERROR: 'Invalid payload',
   ADD_MIDDLEWARE_ERROR: 'Middleware error',
-  PLUGIN_ALREADY_IN_USE: 'Plugin (%s) was already registered in plugin (%s)',
+  PLUGIN_ALREADY_REGISTERED: 'Plugin was already registered',
   TRANSPORT_CONNECTED: 'Connected!',
   PLUGIN_ADDED: 'PLUGIN - ADDED!',
   PAYLOAD_VALIDATION_ERROR: 'Invalid payload',
