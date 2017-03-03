@@ -1,6 +1,6 @@
 {
   "name": "hemera-msgpack",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "This is a plugin to use Msgpack with Hemera",
   "main": "index.js",
   "scripts": {

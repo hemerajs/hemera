@@ -1,6 +1,6 @@
 {
   "name": "hemera-redis-cache",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "This is a plugin to use Redis with Hemera",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-joi": "^0.1.77",
+    "hemera-joi": "^0.1.78",
     "redis": "2.6.x"
   },
   "devDependencies": {
