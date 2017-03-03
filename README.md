@@ -585,7 +585,7 @@ You can create a plugin in two different ways:
 
 #### Create a plugin
 
-If you want to create a own package.
+If you want to create a plugin which should be `require`
 
 ```js
 exports.plugin = function myPlugin (options) {
@@ -609,7 +609,7 @@ exports.attributes = {
 }
 ```
 
-If you want to create without to swap it out in a seperate file.
+If you want to create a plugin without to swap it out in a seperate file.
 ```js
 let myPlugin = function (options) {
 
