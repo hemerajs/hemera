@@ -13,13 +13,17 @@ Granting and authenticating solution with JWT for Hemera
 const Hemera = require('nats-hemera')
 const nats = require('nats').connect()
 const hemeraJwt = require('hemera-jwt-auth')
-hemeraJwt.options.jwt.secret = 'test'
 
 // token encoded with { scope: ['math'] }
 const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZSI6WyJtYXRoIl0sImlhdCI6MTQ4ODEyMjIwN30.UPLLbjDgkB_ajQjI7BUlpUGfZYvsqHP3NqWQIavibeQ'
 
 const hemera = new Hemera(nats)
-hemera.use(hemeraJwt)
+hemera.use(hemeraJwt, {
+  jwt: {
+    secret: 'test'
+  }
+})
+
 hemera.ready(() => {
 
   // 1. check if the token can be verified
@@ -31,7 +35,6 @@ hemera.ready(() => {
       scope: 'math' // or an array of scopes
     }
   }, function (req, cb) {
-
     // access the decoded data
     let decoded = this.auth$
 
@@ -47,7 +50,6 @@ hemera.ready(() => {
       scope: 'math'
     }
   }, function (req, cb) {
-
     // token is passed to all nested acts
     this.act({
       topic: 'math',

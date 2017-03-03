@@ -3,13 +3,16 @@
 const Hemera = require('./../packages/hemera')
 const nats = require('nats').connect()
 const hemeraElasticsearch = require('./../packages/hemera-elasticsearch')
-hemeraElasticsearch.options.elasticsearch.log = 'trace'
-hemeraElasticsearch.options.elasticsearch.httpAuth = 'elastic:changeme'
 const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
-hemera.use(hemeraElasticsearch)
+hemera.use(hemeraElasticsearch, {
+  elasticsearch: {
+    log: 'trace',
+    httpAuth: 'elastic:changeme'
+  }
+})
 
 hemera.ready(() => {
   hemera.act({

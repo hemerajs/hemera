@@ -3,21 +3,22 @@
 const Hemera = require('./../packages/hemera')
 const nats = require('nats').connect()
 const hemeraNsq = require('./../packages/hemera-nsq')
-hemeraNsq.options.nsq = {
-  reader: {
-    lookupdHTTPAddresses: '127.0.0.1:4161'
-  },
-  writer: {
-    url: '127.0.0.1',
-    port: 4150
-  }
-}
 
 const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
-hemera.use(hemeraNsq)
+hemera.use(hemeraNsq, {
+  nsq: {
+    reader: {
+      lookupdHTTPAddresses: '127.0.0.1:4161'
+    },
+    writer: {
+      url: '127.0.0.1',
+      port: 4150
+    }
+  }
+})
 
 hemera.ready(() => {
   // create subscriber which listen on NSQ events

@@ -25,7 +25,11 @@ const Hemera = require('nats-hemera')
 const nats = require('nats').connect()
 const hemeraNsq = require('hemera-nsq')
 
-hemeraNsq.options.nsq = {
+const hemera = new Hemera(nats, {
+  logLevel: 'info'
+})
+
+const options = {
   reader: {
     lookupdHTTPAddresses: 'http://127.0.0.1:4161'
   },
@@ -35,11 +39,7 @@ hemeraNsq.options.nsq = {
   }
 }
 
-const hemera = new Hemera(nats, {
-  logLevel: 'info'
-})
-
-hemera.use(hemeraNsq)
+hemera.use(hemeraNsq, { nsq: options })
 
 hemera.ready(() => {
   // create subscriber which listen on NSQ events

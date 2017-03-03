@@ -4,7 +4,7 @@ const Hemera = require('./../packages/hemera')
 const nats = require('nats').connect()
 const hemeraRabbitmq = require('./../packages/hemera-rabbitmq')
 
-hemeraRabbitmq.options.rabbitmq = {
+const options = {
   // arguments used to establish a connection to a broker
   connection: {
     uri: 'amqp://user:bitnami@127.0.0.1:5672/?heartbeat=10'
@@ -32,7 +32,9 @@ const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
-hemera.use(hemeraRabbitmq)
+hemera.use(hemeraRabbitmq, {
+  rabbitmq: options
+})
 
 hemera.ready(() => {
   // Listen to a Rabbitmq events

@@ -55,17 +55,17 @@ const knex = Knex({
     min: 0,
     max: 7
   }
-});
-
-HemeraSql.options.knex = {
-  driver: knex
-}
+})
 
 const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
-hemera.use(HemeraSql)
+hemera.use(HemeraSql, {
+  knex: {
+    driver: knex
+  }
+})
 
 hemera.ready(() => {
 

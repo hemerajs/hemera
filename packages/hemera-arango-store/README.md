@@ -35,16 +35,17 @@ npm run test
 const Hemera = require('nats-hemera')
 const nats = require('nats').connect()
 const hemeraArango = require('hemera-arango-store')
-hemeraArango.options.arango = {
-  url: 'http://127.0.0.1:8529',
-  databaseName: 'test'
-}
 
 const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
-hemera.use(hemeraArango)
+hemera.use(hemeraArango, {
+  arango: {
+    url: 'http://127.0.0.1:8529',
+    databaseName: 'test'
+  }
+})
 
 hemera.ready(() => {
 

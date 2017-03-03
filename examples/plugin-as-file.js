@@ -13,8 +13,7 @@ exports.plugin = function myPlugin (options) {
   })
 }
 
-exports.options = {
-}
+exports.options = {}
 
 exports.attributes = {
   pkg: require('./package.json'),
@@ -33,9 +32,8 @@ exports.attributes = {
   hemera.ready(() => {
 
     const plugin = require('./plugin-as-file')
-    plugin.options.a = 10
 
-    hemera.use(plugin)
+    hemera.use(plugin, { ...plugin options })
 
   })
 

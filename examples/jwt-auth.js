@@ -3,13 +3,16 @@
 const Hemera = require('./../packages/hemera')
 const nats = require('nats').connect()
 const hemeraJwt = require('./../packages/hemera-jwt-auth')
-hemeraJwt.options.jwt.secret = 'test'
 
-// token with { scope: ['math'] }
+// encoded token with { scope: ['math'] }
 const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZSI6WyJtYXRoIl0sImlhdCI6MTQ4ODEyMjIwN30.UPLLbjDgkB_ajQjI7BUlpUGfZYvsqHP3NqWQIavibeQ'
 
 const hemera = new Hemera(nats)
-hemera.use(hemeraJwt)
+hemera.use(hemeraJwt, {
+  jwt: {
+    secret: 'test'
+  }
+})
 
 hemera.ready(() => {
   hemera.add({

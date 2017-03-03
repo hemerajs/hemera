@@ -20,13 +20,14 @@ docker run -d -p 9411:9411 openzipkin/zipkin
 const Hemera = require('./../')
 const nats = require('nats').connect()
 const hemeraZipkin = require('hemera-zipkin')
-hemeraZipkin.options.host = '192.168.99.100'
 
 const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
-hemera.use(hemeraZipkin)
+hemera.use(hemeraZipkin, {
+  host: '192.168.99.100'
+})
 
 hemera.ready(() => {
 

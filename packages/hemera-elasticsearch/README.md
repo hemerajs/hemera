@@ -29,16 +29,16 @@ Password: changeme
 const Hemera = require('nats-hemera')
 const nats = require('nats').connect()
 const hemeraElasticsearch = require('hemera-elasticsearch')
-
-// configure your client
-hemeraElasticsearch.options.elasticsearch.log = 'trace'
-hemeraElasticsearch.options.elasticsearch.httpAuth = 'elastic:changeme'
-
 const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
-hemera.use(hemeraElasticsearch)
+hemera.use(hemeraElasticsearch, {
+  elasticsearch: {
+    log: 'trace',
+    httpAuth: 'elastic:changeme'
+  }
+})
 
 hemera.ready(() => {
 
@@ -58,9 +58,7 @@ hemera.ready(() => {
       }
     }
   }, function (err, req) {
-
     this.log.info(req, 'Data')
-
   })
 
   hemera.act({
@@ -71,9 +69,7 @@ hemera.ready(() => {
       q: 'title:test'
     }
   }, function (err, req) {
-
     this.log.info(req, 'Data')
-
   })
 
 })

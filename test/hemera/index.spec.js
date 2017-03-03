@@ -1658,6 +1658,8 @@ describe('Plugin interface', function () {
       let plugin = function (options) {
         let hemera = this
 
+        expect(options.a).to.be.equals('1')
+
         hemera.add({
           topic: 'math',
           cmd: 'add'
