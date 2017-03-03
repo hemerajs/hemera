@@ -142,12 +142,10 @@ We use the Request Reply concept to realize this toolkit. [Request Reply](http:/
 ### Example
 
 ```js
-'use strict';
-
 const Hemera = require('nats-hemera')
 const nats = require('nats').connect(authUrl)
     
-const hemera = new Hemera(nats, { logLevel: 'info' });
+const hemera = new Hemera(nats, { logLevel: 'info' })
 
 hemera.ready(() => {
 
@@ -155,7 +153,7 @@ hemera.ready(() => {
   hemera.add({ topic: 'math', cmd: 'add' }, (req, cb) => {
 
     cb(null, req.a + req.b)
-  });
+  })
 
   hemera.add({ topic: 'email', cmd: 'send' }, (req, cb) => {
 
@@ -166,12 +164,12 @@ hemera.ready(() => {
   hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 2, timeout$: 5000 }, (err, resp) => {
     
     console.log('Result', resp)
-  });
+  })
 
   //Without callback
   hemera.act({ topic: 'email', cmd: 'send', email: 'foobar@mail.com', msg: 'Hi' })
 
-});
+})
 ```
 
 ### Writing an application
@@ -186,14 +184,14 @@ _Topic_: The subject to subscribe. **The smallest unit of Hemera**. It's kind of
 ```js
 hemera.add({ topic: 'math', cmd: 'add' }, (req, cb) => {
   cb(null, req.a + req.b)
-});
+})
 ```
 
 #### Call your service
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
 console.log(resp) //2
-});
+})
 ```
 
 ### Pattern matching rules
@@ -204,14 +202,14 @@ A match happens when all properties of added pattern matches with the one in the
 ```js
 hemera.add({ topic: 'math', cmd: 'add' }, (req, cb) => {
   cb(resp.a + resp.b)
-});
+})
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 })
 ```
 #### Not matched!
 ```js
 hemera.add({ topic: 'math', cmd: 'add', foo: 'bar' }, (req, cb) => {
   cb(req.a + req.b)
-});
+})
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 })
 ```
 
@@ -230,13 +228,13 @@ hemera.add({ topic: 'math', cmd: 'add', version: /v1\.[0-9]/ }, (req, cb) => {
 ```js
 hemera.add({ topic: 'math', cmd: 'add' }, (req, cb) => {
   cb(new CustomError('Invalid operation'))
-});
+})
 ```
 #### Error-first-callbacks
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
  err instanceOf CustomError // true
-});
+})
 ```
 #### Handle timeout errors
 
@@ -249,7 +247,7 @@ NATS is fire and forget, reason for which a client times out could be many thing
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
  err instanceOf TimeoutError // true
-});
+})
 ```
 #### Fatal errors
 Fatal errors will crash your server. You should implement a gracefully shutdown and use a process watcher like PM2 to come back in a clear state. Optional you can disable this behavior by `crashOnFatal: false`
@@ -257,10 +255,10 @@ Fatal errors will crash your server. You should implement a gracefully shutdown 
 ```js
 hemera.add({ topic: 'math', cmd: 'add' }, (resp, cb) => {
   throw new Error('Upps')
-});
+})
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1 }, (err, resp) => {
   err instanceOf FatalError // true
-});
+})
 
 ```
 
@@ -293,14 +291,14 @@ hemera.act({
 
 #### Listen on response errors
 ```js
-const hemera = new Hemera(nats, { logLevel: 'info' });
+const hemera = new Hemera(nats, { logLevel: 'info' })
 hemera.on('serverResponseError', function(error) {})
 hemera.on('clientResponseError', function(error) {})
 ```
 
 #### Listen on transport errors
 ```js
-const hemera = new Hemera(nats, { logLevel: 'info' });
+const hemera = new Hemera(nats, { logLevel: 'info' })
 hemera.transport.on('error', function(error) {})
 hemera.transport.on('disconnect', function(error) {})
 hemera.transport.on('connect', function(error) {})
@@ -310,7 +308,7 @@ hemera.transport.on('connect', function(error) {})
 #### Specify custom timeout per act
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, timeout$: 5000 }, (err, resp) => {
-});
+})
 ```
 
 ### Delegation
@@ -327,15 +325,15 @@ hemera.add({ topic: 'math', cmd: 'add' }, function (req, cb) {
     let meta = this.meta$
     
     cb(null, req.a + req.b)
-});
+})
 ```
 Will set the metadata only for this `act` and all nested operations. Data will be transfered!
 
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1, meta$: { a: 'test' } }, function (err, resp) {
 
-   this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 });
-});
+   this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 })
+})
 ```
 Will set the metadata on all `act`. Data will be transfered!
 
@@ -346,7 +344,7 @@ hemera.act({ topic: 'math', cmd: 'add', a: 1, b: 1}, function (err, resp) {
    this.meta$.token = 'ABC1234'
 
    this.act({ topic: 'math', cmd: 'add', a: 1, b: 5 })
-});
+})
 ```
 #### Context
 If you want to set a context across all `act` you can use the `context$` property. Data will __not__ be transfered!
@@ -554,7 +552,7 @@ Times are represented in nanoseconds.
     a: {
       type$: 'number'
     }
-  });
+  })
 ```
 
 ### Payload validation
@@ -579,7 +577,7 @@ Handling
 hemera.act({ topic: 'math', cmd: 'add', a: '1' }, function (err, resp) {
         
    err instanceOf PayloadValidationError //true
-});
+})
 ```
 ### Plugins
 
