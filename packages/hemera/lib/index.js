@@ -217,7 +217,7 @@ class Hemera extends EventEmitter {
 
   /**
    * Exposed data in context of the current plugin
-   * Is accessible by this.expositions[<plugin>][<key>]
+   * It is accessible by this.expositions[<plugin>][<key>]
    *
    * @param {string} key
    * @param {mixed} object
