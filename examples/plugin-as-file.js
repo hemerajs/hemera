@@ -17,7 +17,7 @@ exports.options = {
 }
 
 exports.attributes = {
-  name: 'myPlugin',
+  pkg: require('./package.json'),
   dependencies: []
 }
 

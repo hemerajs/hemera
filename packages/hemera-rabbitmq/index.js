@@ -76,6 +76,6 @@ exports.options = {
 }
 
 exports.attributes = {
-  name: 'hemera-rabbitmq',
-  dependencies: ['hemera-joi']
+  dependencies: ['hemera-joi'],
+  pkg: require('./package.json')
 }

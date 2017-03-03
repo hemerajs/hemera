@@ -217,7 +217,7 @@ class Hemera extends EventEmitter {
 
   /**
    * Exposed data in context of the current plugin
-   * Is accessible by this.expositions[<plugin>][<key>]
+   * It is accessible by this.expositions[<plugin>][<key>]
    *
    * @param {string} key
    * @param {mixed} object
@@ -285,6 +285,18 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   use (params) {
+    // use plugin infos from package.json
+    if (_.isObject(params.attributes.pkg)) {
+      params.attributes = Object.assign(params.attributes, _.pick(params.attributes.pkg, ['name', 'description', 'version']))
+    }
+
+    if (!params.attributes.name) {
+      let error = new Errors.HemeraError(Constants.PLUGIN_NAME_REQUIRED)
+      this.log.error(error)
+      throw error
+    }
+
+    // check if plugin is already registered
     if (this._plugins[params.attributes.name]) {
       this.log.warn(Constants.PLUGIN_ALREADY_IN_USE, params.attributes.name, this._plugins[params.attributes.name].parentPlugin)
       return

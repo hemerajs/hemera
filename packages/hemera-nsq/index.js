@@ -112,6 +112,6 @@ exports.options = {
 }
 
 exports.attributes = {
-  name: 'hemera-nsq',
-  dependencies: ['hemera-joi']
+  dependencies: ['hemera-joi'],
+  pkg: require('./package.json')
 }

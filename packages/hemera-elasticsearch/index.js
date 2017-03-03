@@ -116,6 +116,6 @@ exports.options = {
 }
 
 exports.attributes = {
-  name: 'hemera-elasticsearch',
-  dependencies: ['hemera-joi']
+  dependencies: ['hemera-joi'],
+  pkg: require('./package.json')
 }

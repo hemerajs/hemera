@@ -101,5 +101,5 @@ exports.plugin = function hemeraZipkin (options) {
 exports.options = {}
 
 exports.attributes = {
-  name: 'hemera-zipkin'
+  pkg: require('./package.json')
 }

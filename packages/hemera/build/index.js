@@ -270,7 +270,7 @@ var Hemera = function (_EventEmitter) {
 
     /**
      * Exposed data in context of the current plugin
-     * Is accessible by this.expositions[<plugin>][<key>]
+     * It is accessible by this.expositions[<plugin>][<key>]
      *
      * @param {string} key
      * @param {mixed} object
@@ -331,6 +331,18 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'use',
     value: function use(params) {
+      // use plugin infos from package.json
+      if (_lodash2.default.isObject(params.attributes.pkg)) {
+        params.attributes = Object.assign(params.attributes, _lodash2.default.pick(params.attributes.pkg, ['name', 'description', 'version']));
+      }
+
+      if (!params.attributes.name) {
+        var error = new _errors2.default.HemeraError(_constants2.default.PLUGIN_NAME_REQUIRED);
+        this.log.error(error);
+        throw error;
+      }
+
+      // check if plugin is already registered
       if (this._plugins[params.attributes.name]) {
         this.log.warn(_constants2.default.PLUGIN_ALREADY_IN_USE, params.attributes.name, this._plugins[params.attributes.name].parentPlugin);
         return;

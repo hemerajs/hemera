@@ -30,6 +30,7 @@ exports.default = {
   FATAL_ERROR: 'Fatal error',
   EXTENSION_ERROR: 'Extension error',
   PUB_CALLBACK_REDUNDANT: 'Specify a callback as publisher is redundant',
-  INVALID_EXTENSION_TYPE: 'Invalid extension type'
+  INVALID_EXTENSION_TYPE: 'Invalid extension type',
+  PLUGIN_NAME_REQUIRED: 'Plugin name is required'
 };
 //# sourceMappingURL=constants.js.map

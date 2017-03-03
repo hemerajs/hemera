@@ -66,6 +66,5 @@ exports.plugin = function hemeraAvro () {
 exports.options = {}
 
 exports.attributes = {
-  name: 'hemera-avro',
-  description: 'Avro data serialization system'
+  pkg: require('./package.json')
 }
