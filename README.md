@@ -113,6 +113,7 @@ Table of contents
   * [Publish & Subscribe](#publish--subscribe)
   * [Payload validation](#payload-validation)
   * [Plugins](#plugins)
+    * [Create a plugin](#create-a-plugin)
   * [Logging](#logging)
   * [Protocol](#protocol)
   * [Api Versioning](#api-versioning)
@@ -582,6 +583,35 @@ hemera.act({ topic: 'math', cmd: 'add', a: '1' }, function (err, resp) {
 ```
 ### Plugins
 
+You can create a plugin in two different ways:
+
+#### Create a plugin
+
+If you want to create a own package.
+
+```js
+exports.plugin = function myPlugin (options) {
+  var hemera = this
+  
+  //Expose data which you can access globally with hemera.exposition.<pluginName>.<property>
+  hemera.expose('magicNumber', 42)
+
+  hemera.add({
+    topic: 'math',
+    cmd: 'add'
+  }, (req, cb) => {
+    cb(null, req.a + req.b)
+  })
+}
+
+exports.options = {}
+
+exports.attributes = {
+  pkg: require('./package.json')
+}
+```
+
+If you want to create without to swap it out in a seperate file.
 ```js
 let myPlugin = function (options) {
 
@@ -606,7 +636,9 @@ hemera.use({
  plugin: myPlugin,
  options: {},
  attributes: { 
-  pkg: require('./package.json')
+  name: 'test',
+  version: '1.0.0',
+  description: 'my first plugin'
  }
 })
 ```
