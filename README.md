@@ -114,6 +114,7 @@ Table of contents
   * [Payload validation](#payload-validation)
   * [Plugins](#plugins)
     * [Create a plugin](#create-a-plugin)
+    * [Plugin registration](#plugin-registration)
   * [Logging](#logging)
   * [Protocol](#protocol)
   * [Api Versioning](#api-versioning)
@@ -639,6 +640,27 @@ hemera.use({
   description: 'my first plugin'
  }
 })
+```
+
+#### Plugin registration
+
+Variant 1 - pass the plugin as one object
+
+```js
+hemera.use({ 
+  plugin: function() {},
+  attributes: { name: 'foo' },
+  options: { a: 1 }
+})
+```
+
+Variant 2 - Pass plugin options as second argument to the use function
+
+```js
+hemera.use({ 
+  plugin: function() {},
+  attributes: { name: 'foo' }
+}, { a: 1 })
 ```
 
 ### Logging
