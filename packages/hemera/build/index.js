@@ -330,12 +330,20 @@ var Hemera = function (_EventEmitter) {
 
   }, {
     key: 'use',
-    value: function use(params) {
+    value: function use(params, options) {
       // use plugin infos from package.json
       if (_lodash2.default.isObject(params.attributes.pkg)) {
-        params.attributes = Object.assign(params.attributes, _lodash2.default.pick(params.attributes.pkg, ['name', 'description', 'version']));
+        params.attributes = params.attributes || {};
+        params.attributes = _hoek2.default.applyToDefaults(params.attributes, _lodash2.default.pick(params.attributes.pkg, ['name', 'description', 'version']));
       }
 
+      // pass options as second argument during plugin registration
+      if (_lodash2.default.isObject(options)) {
+        params.options = params.options || {};
+        params.options = _hoek2.default.applyToDefaults(params.options, options);
+      }
+
+      // plugin name is required
       if (!params.attributes.name) {
         var error = new _errors2.default.HemeraError(_constants2.default.PLUGIN_NAME_REQUIRED);
         this.log.error(error);

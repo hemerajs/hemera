@@ -284,10 +284,17 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  use (params) {
+  use (params, options) {
     // use plugin infos from package.json
     if (_.isObject(params.attributes.pkg)) {
-      params.attributes = Object.assign(params.attributes, _.pick(params.attributes.pkg, ['name', 'description', 'version']))
+      params.attributes = params.attributes || {}
+      params.attributes = Hoek.applyToDefaults(params.attributes, _.pick(params.attributes.pkg, ['name', 'description', 'version']))
+    }
+
+    // pass options as second argument during plugin registration
+    if (_.isObject(options)) {
+      params.options = params.options || {}
+      params.options = Hoek.applyToDefaults(params.options, options)
     }
 
     // plugin name is required

@@ -1644,6 +1644,41 @@ describe('Plugin interface', function () {
     })
   })
 
+  it('Should be able to specify plugin options as second argument in use method', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      let pluginOptions = {
+        a: '1'
+      }
+
+      // Plugin
+      let plugin = function (options) {
+        let hemera = this
+
+        hemera.add({
+          topic: 'math',
+          cmd: 'add'
+        }, (resp, cb) => {
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        })
+      }
+
+      hemera.use({
+        plugin: plugin,
+        attributes: { name: 'foo', description: 'test', version: '1.0.0' }
+      }, pluginOptions)
+
+      expect(hemera.plugins.foo.options.a).to.be.equals('1')
+      hemera.close()
+      done()
+    })
+  })
+
   it('Should be able to specify plugin attributes by package.json', function (done) {
     const nats = require('nats').connect(authUrl)
 
