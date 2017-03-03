@@ -270,7 +270,7 @@ var Hemera = function (_EventEmitter) {
 
     /**
      * Exposed data in context of the current plugin
-     * Is accessible by this.expositions[<plugin>][<key>]
+     * It is accessible by this.expositions[<plugin>][<key>]
      *
      * @param {string} key
      * @param {mixed} object
@@ -333,7 +333,7 @@ var Hemera = function (_EventEmitter) {
     value: function use(params) {
       // use plugin infos from package.json
       if (_lodash2.default.isObject(params.attributes.pkg)) {
-        params.attributes = _lodash2.default.pick(params.attributes.pkg, ['name', 'description', 'version']);
+        params.attributes = Object.assign(params.attributes, _lodash2.default.pick(params.attributes.pkg, ['name', 'description', 'version']));
       }
 
       if (!params.attributes.name) {

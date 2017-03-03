@@ -287,7 +287,7 @@ class Hemera extends EventEmitter {
   use (params) {
     // use plugin infos from package.json
     if (_.isObject(params.attributes.pkg)) {
-      params.attributes = _.pick(params.attributes.pkg, ['name', 'description', 'version'])
+      params.attributes = Object.assign(params.attributes, _.pick(params.attributes.pkg, ['name', 'description', 'version']))
     }
 
     if (!params.attributes.name) {
