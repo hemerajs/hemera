@@ -586,7 +586,7 @@ You can create a plugin in two different ways:
 
 #### Create a plugin
 
-If you want to create a plugin which should be `require`
+If you want to create a plugin which can be required and passed to the `use` function.
 
 ```js
 exports.plugin = function myPlugin (options) {
@@ -644,7 +644,7 @@ hemera.use({
 
 #### Plugin registration
 
-Variant 1 - pass the plugin as one object
+Variant 1 - pass the plugin as one object. Default plugin options are preserved if you don't overwrite them.
 
 ```js
 hemera.use({ 
@@ -654,7 +654,7 @@ hemera.use({
 })
 ```
 
-Variant 2 - Pass plugin options as second argument to the use function
+Variant 2 - Pass plugin options as second argument to the use function. Default plugin options are preserved if you don't overwrite them. 
 
 ```js
 hemera.use({ 
