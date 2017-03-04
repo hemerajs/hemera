@@ -92,7 +92,8 @@ Result:
   heapUsed: 12137328,
   rss: 32841728,
   nodeEnv: 'development',
-  uptime: 0.193 }
+  uptime: 0.193,
+  ts: 1488632377418 }
 ```
 
 -------------------------------------------------------
@@ -131,7 +132,8 @@ Result:
                 "examples": [1]
             }
         },
-        "plugin": "core"
+        "plugin": "core",
+        "ts": 1488632377418
     }]
 }
 ```
