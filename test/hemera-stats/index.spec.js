@@ -15,21 +15,24 @@ describe('Hemera-stats', function () {
   const flags = ['--user', 'derek', '--pass', 'foobar']
   const authUrl = 'nats://derek:foobar@localhost:' + PORT
   let server
+  let prevNodeEnv = process.env.NODE_ENV
 
   // Start up our own nats-server
   before(function (done) {
     server = HemeraTestsuite.start_server(PORT, flags, done)
+    process.env.NODE_ENV = 'development'
   })
 
   // Shutdown our server after we are done
   after(function () {
     server.kill()
+    process.env.NODE_ENV = prevNodeEnv
   })
 
   it('Should be able to get process informations about the hemera process', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, { logLevel: 'info' })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraStats)
     hemera.use(HemeraJoi)
@@ -43,7 +46,7 @@ describe('Hemera-stats', function () {
         expect(resp.eventLoopDelay).to.be.exists()
         expect(resp.rss).to.be.exists()
         expect(resp.app).to.be.exists()
-        expect(resp.nodeEnv).to.be.exists()
+        expect(resp.nodeEnv).to.be.equals('development')
         expect(resp.uptime).to.be.exists()
         expect(resp.ts).to.be.exists()
         hemera.close()
@@ -55,7 +58,7 @@ describe('Hemera-stats', function () {
   it('Should be able to get a list of all registered server actions', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, { logLevel: 'info' })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraStats)
     hemera.use(HemeraJoi)
@@ -81,7 +84,6 @@ describe('Hemera-stats', function () {
       }, function (err, resp) {
         expect(err).to.be.not.exists()
         expect(resp.actions).to.be.an.array()
-        expect(resp.ts).to.be.exists()
         expect(resp.actions[2].schema).to.be.an.object()
         expect(resp.actions[2].schema.a.required).to.be.equals(true)
         expect(resp.actions[2].schema.a.default).to.be.equals(33)
