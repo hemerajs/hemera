@@ -9,7 +9,6 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hoek": "4.1.x"
   },
   "devDependencies": {
     "eslint": "^3.13.1",

@@ -1,7 +1,5 @@
 'use strict'
 
-const Hoek = require('hoek')
-
 exports.plugin = function hemeraStats () {
   const hemera = this
   const topic = 'stats'
@@ -32,7 +30,7 @@ exports.plugin = function hemeraStats () {
       app: hemera._config.name
     }
 
-    const list = Hoek.clone(hemera.list())
+    const list = hemera.list()
 
     info.actions = list.map((a) => {
       const schema = {}
