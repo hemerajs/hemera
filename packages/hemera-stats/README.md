@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/hemera-stats.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-stats)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
-Provide informations about process stats and registered actions of the hemera instance.
+Provide informations about process stats and registered actions of all hemera instances. This is a broadcast operation.
 
 __Schema extraction only works with the Joi validator__
 
@@ -71,6 +71,8 @@ hemera.ready(() => {
 -------------------------------------------------------
 ### Process Info
 
+You will reveive informations from all hemera instances which activate this plugin.
+
 The pattern is:
 
 * `topic`: is the store name to publish to `stats`
@@ -95,6 +97,8 @@ Result:
 
 -------------------------------------------------------
 ### Registered actions
+
+You will reveive informations from all hemera instances which activate this plugin.
 
 The pattern is:
 
