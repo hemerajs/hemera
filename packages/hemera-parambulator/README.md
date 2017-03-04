@@ -5,6 +5,8 @@
 
 This is a plugin to use [Parambulator](https://github.com/rjrodger/parambulator) with Hemera.
 
+_We prefer to use [Joi](https://github.com/hemerajs/hemera/tree/master/packages/hemera-joi) as a payload validator. The status quo of payload validation in NodeJs._
+
 #### Example
 
 ```js
