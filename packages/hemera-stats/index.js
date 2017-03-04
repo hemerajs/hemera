@@ -15,7 +15,8 @@ exports.plugin = function hemeraStats () {
       heapUsed: hemera.load.heapUsed,
       rss: hemera.load.rss,
       nodeEnv: process.env.NODE_ENV,
-      uptime: process.uptime()
+      uptime: process.uptime(),
+      ts: Date.now()
     }
 
     cb(null, info)
@@ -31,7 +32,7 @@ exports.plugin = function hemeraStats () {
     }
 
     const list = hemera.list()
-
+    info.ts = Date.now()
     info.actions = list.map((a) => {
       const schema = {}
 

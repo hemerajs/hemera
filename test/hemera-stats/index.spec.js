@@ -45,6 +45,7 @@ describe('Hemera-stats', function () {
         expect(resp.app).to.be.exists()
         expect(resp.nodeEnv).to.be.exists()
         expect(resp.uptime).to.be.exists()
+        expect(resp.ts).to.be.exists()
         hemera.close()
         done()
       })
@@ -80,6 +81,7 @@ describe('Hemera-stats', function () {
       }, function (err, resp) {
         expect(err).to.be.not.exists()
         expect(resp.actions).to.be.an.array()
+        expect(resp.ts).to.be.exists()
         expect(resp.actions[2].schema).to.be.an.object()
         expect(resp.actions[2].schema.a.required).to.be.equals(true)
         expect(resp.actions[2].schema.a.default).to.be.equals(33)
