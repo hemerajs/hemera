@@ -29,7 +29,7 @@ describe('Hemera-stats', function () {
   it('Should be able to get process informations about the hemera process', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats)
+    const hemera = new Hemera(nats, { logLevel: 'info' })
 
     hemera.use(HemeraStats)
     hemera.use(HemeraJoi)
@@ -55,7 +55,7 @@ describe('Hemera-stats', function () {
   it('Should be able to get a list of all registered server actions', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats)
+    const hemera = new Hemera(nats, { logLevel: 'info' })
 
     hemera.use(HemeraStats)
     hemera.use(HemeraJoi)
