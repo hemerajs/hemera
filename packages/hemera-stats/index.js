@@ -48,8 +48,6 @@ exports.plugin = function hemeraStats () {
               required: element._flags.presence === 'required',
               examples: element._examples
             }
-          } else {
-            break
           }
         }
       }
