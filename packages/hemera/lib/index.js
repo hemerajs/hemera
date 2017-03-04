@@ -36,7 +36,7 @@ import Add from './add'
 var defaultConfig = {
   timeout: 2000,
   debug: false,
-  name: 'app',
+  name: 'hemera-' + Util.randomId(),
   crashOnFatal: true,
   logLevel: 'silent',
   load: {
@@ -946,10 +946,14 @@ class Hemera extends EventEmitter {
   /**
    * Return the list of all registered actions
    *
+   * @param {any} pattern
+   * @param {any} options
+   * @returns
+   *
    * @memberOf Hemera
    */
-  list (params) {
-    return this._router.list(params)
+  list (pattern, options) {
+    return this._router.list(pattern, options)
   }
 
   /**

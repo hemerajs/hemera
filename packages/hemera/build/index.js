@@ -115,7 +115,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var defaultConfig = {
   timeout: 2000,
   debug: false,
-  name: 'app',
+  name: 'hemera-' + _util2.default.randomId(),
   crashOnFatal: true,
   logLevel: 'silent',
   load: {
@@ -1032,13 +1032,17 @@ var Hemera = function (_EventEmitter) {
     /**
      * Return the list of all registered actions
      *
+     * @param {any} pattern
+     * @param {any} options
+     * @returns
+     *
      * @memberOf Hemera
      */
 
   }, {
     key: 'list',
-    value: function list(params) {
-      return this._router.list(params);
+    value: function list(pattern, options) {
+      return this._router.list(pattern, options);
     }
 
     /**
