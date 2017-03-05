@@ -117,6 +117,7 @@ Table of contents
   * [Plugins](#plugins)
     * [Create a plugin](#create-a-plugin)
     * [Plugin registration](#plugin-registration)
+    * [Plugin dependencies](#plugin-dependencies)
   * [Logging](#logging)
   * [Protocol](#protocol)
   * [Api Versioning](#api-versioning)
@@ -642,6 +643,24 @@ hemera.use({
  attributes: { 
   name: 'test',
   version: '1.0.0',
+  dependencies: ['hemera-joi']
+  description: 'my first plugin'
+ }
+})
+```
+
+#### Plugin dependencies
+
+`dependencies`: an array of plugin name strings which must be registered in order for this plugin to operate. Plugins listed must be registered before the `ready` function is called. Does not provide version dependency which should be implemented using npm peer dependencies.`
+
+```
+hemera.use({ 
+ plugin: myPlugin,
+ options: {},
+ attributes: { 
+  name: 'test',
+  version: '1.0.0',
+  dependencies: ['hemera-joi']
   description: 'my first plugin'
  }
 })
