@@ -1,10 +1,12 @@
 'use strict'
 
-const Hemera = require('./../../hemera'),
-  HemeraSqlStore = require('./../index'),
-  Code = require('code'),
-  HemeraTestsuite = require('hemera-testsuite'),
-  Knex = require('knex')
+const Hemera = require('./../../hemera')
+const Nats = require('nats')
+const HemeraSqlStore = require('./../index')
+const HemeraJoi = require('hemera-joi')
+const Code = require('code')
+const HemeraTestsuite = require('hemera-testsuite')
+const Knex = require('knex')
 
 const expect = Code.expect
 
@@ -25,7 +27,7 @@ describe('Hemera-sql-store', function () {
    * @param {any} cb
    * @returns
    */
-  function setup(driver, cb) {
+  function setup (driver, cb) {
     driver.schema.dropTableIfExists(testTable).asCallback(() => {
       driver.schema.createTableIfNotExists(testTable, function (table) {
         table.increments()
@@ -36,7 +38,7 @@ describe('Hemera-sql-store', function () {
 
   before(function (done) {
     knex = Knex({
-      dialect: 'mysql', //do not use mariosql cause https://github.com/tgriesser/bookshelf/issues/415
+      dialect: 'mysql', // do not use mariosql cause https://github.com/tgriesser/bookshelf/issues/415
       connection: {
         host: '127.0.0.1',
         user: 'test',
@@ -54,22 +56,12 @@ describe('Hemera-sql-store', function () {
     }
 
     server = HemeraTestsuite.start_server(PORT, {}, () => {
-
-      // Connect to gnats
-      const nats = require('nats').connect(noAuthUrl)
-
-      // Create hemera instance
-      hemera = new Hemera(nats, {
-        crashOnFatal: false,
-        logLevel: 'silent'
-      })
-
+      const nats = Nats.connect(noAuthUrl)
+      hemera = new Hemera(nats)
+      hemera.use(HemeraJoi)
       hemera.use(HemeraSqlStore)
-
       hemera.ready(() => {
-
         setup(knex, done)
-
       })
     })
   })
@@ -88,7 +80,6 @@ describe('Hemera-sql-store', function () {
         name: 'olaf'
       }
     }, (err, resp) => {
-
       expect(err).to.be.not.exists()
       expect(resp[0]).to.be.greaterThan(0)
       done()
@@ -104,14 +95,13 @@ describe('Hemera-sql-store', function () {
         name: 'deletia'
       }
     }, (err, ids) => {
-
+      expect(err).to.be.not.exists()
       hemera.act({
         topic: 'sql-store',
         cmd: 'findById',
         collection: testTable,
         id: ids[0]
       }, (err, resp) => {
-
         expect(err).to.be.not.exists()
         expect(resp[0].id).to.be.equal(ids[0])
         done()
@@ -128,7 +118,7 @@ describe('Hemera-sql-store', function () {
         name: 'deletia'
       }
     }, (err, ids) => {
-
+      expect(err).to.be.not.exists()
       hemera.act({
         topic: 'sql-store',
         cmd: 'updateById',
@@ -145,7 +135,6 @@ describe('Hemera-sql-store', function () {
     })
   })
 
-
   it('update', function (done) {
     hemera.act({
       topic: 'sql-store',
@@ -155,7 +144,7 @@ describe('Hemera-sql-store', function () {
         name: 'deletia'
       }
     }, (err, ids) => {
-
+      expect(err).to.be.not.exists()
       hemera.act({
         topic: 'sql-store',
         cmd: 'update',
@@ -183,7 +172,7 @@ describe('Hemera-sql-store', function () {
         name: 'deletia'
       }
     }, (err, ids) => {
-
+      expect(err).to.be.not.exists()
       hemera.act({
         topic: 'sql-store',
         cmd: 'replace',
@@ -203,7 +192,6 @@ describe('Hemera-sql-store', function () {
   })
 
   it('replaceById', function (done) {
-
     hemera.act({
       topic: 'sql-store',
       cmd: 'create',
@@ -212,7 +200,7 @@ describe('Hemera-sql-store', function () {
         name: 'deletia'
       }
     }, (err, ids) => {
-
+      expect(err).to.be.not.exists()
       hemera.act({
         topic: 'sql-store',
         cmd: 'replaceById',
@@ -238,14 +226,13 @@ describe('Hemera-sql-store', function () {
         name: 'deletia'
       }
     }, (err, ids) => {
-
+      expect(err).to.be.not.exists()
       hemera.act({
         topic: 'sql-store',
         cmd: 'removeById',
         collection: testTable,
         id: ids[0]
       }, (err, resp) => {
-
         expect(err).to.be.not.exists()
         expect(resp).to.be.equal(1)
         done()
@@ -262,7 +249,7 @@ describe('Hemera-sql-store', function () {
         name: 'denora'
       }
     }, (err, ids) => {
-
+      expect(err).to.be.not.exists()
       hemera.act({
         topic: 'sql-store',
         cmd: 'remove',
@@ -271,7 +258,6 @@ describe('Hemera-sql-store', function () {
           id: ids[0]
         }
       }, (err, resp) => {
-
         expect(err).to.be.not.exists()
         expect(resp).to.be.equal(1)
         done()
@@ -280,7 +266,6 @@ describe('Hemera-sql-store', function () {
   })
 
   it('find', function (done) {
-
     hemera.act({
       topic: 'sql-store',
       cmd: 'create',
@@ -289,7 +274,6 @@ describe('Hemera-sql-store', function () {
         name: 'bernd'
       }
     }, (err, resp) => {
-
       expect(err).to.be.not.exists()
       expect(resp[0]).to.be.greaterThan(0)
 
@@ -305,7 +289,6 @@ describe('Hemera-sql-store', function () {
           limit: 2
         }
       }, (err, resp) => {
-
         expect(err).to.be.not.exists()
         expect(resp.length).to.be.equals(1)
         expect(resp[0].name).to.be.equals('bernd')
@@ -323,7 +306,6 @@ describe('Hemera-sql-store', function () {
         name: 'maria'
       }
     }, (err, resp) => {
-
       expect(err).to.be.not.exists()
       expect(resp[0]).to.be.greaterThan(0)
 
@@ -335,7 +317,6 @@ describe('Hemera-sql-store', function () {
           name: 'maria'
         }
       }, (err, resp) => {
-
         expect(err).to.be.not.exists()
         expect(resp).to.be.true()
         done()

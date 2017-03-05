@@ -15,11 +15,12 @@
     "hemera-store": "^1.1.5"
   },
   "devDependencies": {
-    "code": "4.0.x",
+    "code": "^4.0.0",
     "eslint": "^3.13.1",
     "eslint-config-standard": "^6.2.1",
     "eslint-plugin-promise": "^3.4.2",
     "eslint-plugin-standard": "^2.0.1",
+    "hemera-joi": "^0.1.78",
     "hemera-testsuite": "1.0.x",
     "istanbul": "0.4.x",
     "mocha": "3.2.x",
