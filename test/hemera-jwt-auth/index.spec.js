@@ -15,7 +15,10 @@ describe('Hemera-jwt-auth', function () {
   const flags = ['--user', 'derek', '--pass', 'foobar']
   const authUrl = 'nats://derek:foobar@localhost:' + PORT
   let server
-  // token with { scope: ['math'] }
+
+  const tokenDecoded = {
+    scope: ['math']
+  }
   const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZSI6WyJtYXRoIl0sImlhdCI6MTQ4ODEyMjIwN30.UPLLbjDgkB_ajQjI7BUlpUGfZYvsqHP3NqWQIavibeQ'
 
   // Start up our own nats-server
@@ -246,7 +249,9 @@ describe('Hemera-jwt-auth', function () {
       hemera.add({
         topic: 'math',
         cmd: 'sub',
-        auth$: { enabled: false }
+        auth$: {
+          enabled: false
+        }
       }, function (req, cb) {
         cb(null, req.a - req.b)
       })
@@ -278,6 +283,44 @@ describe('Hemera-jwt-auth', function () {
       }, function (err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals(200)
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to access decoded token in server method', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.use(HemeraJwt)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add',
+        auth$: {
+          scope: 'math'
+        }
+      }, function (req, cb) {
+        expect(this.auth$.scope).to.be.equals(['math'])
+        cb(null, req.a + req.b)
+      })
+
+      hemera.act({
+        meta$: {
+          jwtToken
+        },
+        topic: 'math',
+        cmd: 'add',
+        a: 100,
+        b: 200
+      }, function (err, resp) {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.equals(300)
         hemera.close()
         done()
       })

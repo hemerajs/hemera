@@ -1527,8 +1527,7 @@ describe('Plugin interface', function () {
           },
           parentPlugin: 'core',
           options: {
-            a: '1',
-            payloadValidator: ''
+            a: '1'
           }
         },
         myPlugin2: {
@@ -1538,8 +1537,7 @@ describe('Plugin interface', function () {
           },
           parentPlugin: 'core',
           options: {
-            a: '1',
-            payloadValidator: ''
+            a: '1'
           }
         }
       })
@@ -1644,6 +1642,32 @@ describe('Plugin interface', function () {
       expect(err).to.exists()
       expect(err.name).to.be.equals('HemeraError')
       expect(err.message).to.be.equals('Plugin was already registered')
+      hemera.close()
+      done()
+    }
+  })
+
+  it('Should thrown an error when plugin dependencies was not resolved before initialization', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let plugin = function (options) {}
+
+    try {
+      hemera.use({
+        plugin: plugin,
+        attributes: {
+          name: 'myPlugin',
+          dependencies: ['foo']
+        }
+      })
+      hemera.close()
+      done()
+    } catch (err) {
+      expect(err).to.exists()
+      expect(err.name).to.be.equals('HemeraError')
+      expect(err.message).to.be.equals('Plugin dependency not found')
       hemera.close()
       done()
     }

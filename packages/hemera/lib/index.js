@@ -75,9 +75,7 @@ class Hemera extends EventEmitter {
     this.delegate$ = {}
     this.auth$ = {}
     this.plugin$ = {
-      options: {
-        payloadValidator: ''
-      },
+      options: {},
       attributes: {
         name: 'core'
       }
@@ -333,7 +331,6 @@ class Hemera extends EventEmitter {
     ctx.plugin$.attributes.dependencies = params.attributes.dependencies || []
     ctx.plugin$.parentPlugin = this.plugin$.attributes.name
     ctx.plugin$.options = params.options || {}
-    ctx.plugin$.options.payloadValidator = params.options.payloadValidator || ''
 
     this._pluginRegistrations.push(ctx.plugin$)
 

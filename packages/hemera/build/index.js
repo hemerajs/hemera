@@ -158,9 +158,7 @@ var Hemera = function (_EventEmitter) {
     _this.delegate$ = {};
     _this.auth$ = {};
     _this.plugin$ = {
-      options: {
-        payloadValidator: ''
-      },
+      options: {},
       attributes: {
         name: 'core'
       }
@@ -381,7 +379,6 @@ var Hemera = function (_EventEmitter) {
       ctx.plugin$.attributes.dependencies = params.attributes.dependencies || [];
       ctx.plugin$.parentPlugin = this.plugin$.attributes.name;
       ctx.plugin$.options = params.options || {};
-      ctx.plugin$.options.payloadValidator = params.options.payloadValidator || '';
 
       this._pluginRegistrations.push(ctx.plugin$);
 
