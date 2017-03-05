@@ -1,7 +1,7 @@
 {
   "name": "hemera-mongo-store",
-  "version": "1.0.5",
-  "description": "Mongodb for Hemera",
+  "version": "1.0.0",
+  "description": "This is a plugin to use Mongodb with Hemera",
   "main": "index.js",
   "scripts": {
     "lint": "eslint index.js"
@@ -16,9 +16,8 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-joi": "^0.1.78",
-    "hemera-store": "^1.1.4",
-    "mongodb": "^2.2.24"
+    "hemera-store": "1.1.x",
+    "mongodb": "2.2.x"
   },
   "devDependencies": {
     "eslint-config-standard": "^6.2.1",
