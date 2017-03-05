@@ -119,6 +119,7 @@ Table of contents
     * [Plugin registration](#plugin-registration)
     * [Plugin dependencies](#plugin-dependencies)
     * [Payload validators](#payload-validators)
+    * [Shared data](#shared-data)
   * [Logging](#logging)
   * [Protocol](#protocol)
   * [Api Versioning](#api-versioning)
@@ -595,9 +596,6 @@ If you want to create a plugin which can be required and passed to the `use` fun
 ```js
 exports.plugin = function myPlugin (options, next) {
   var hemera = this
-  
-  //Expose data which you can access globally with hemera.exposition.<pluginName>.<property>
-  hemera.expose('magicNumber', 42)
 
   hemera.add({
     topic: 'math',
@@ -621,9 +619,6 @@ If you want to create a plugin without to swap it out in a seperate file.
 let myPlugin = function (options, next) {
 
   let hemera = this
-  
-  //Expose data which you can access globally with hemera.exposition.<pluginName>.<property>
-  hemera.expose('magicNumber', 42)
 
   hemera.add({
     topic: 'math',
@@ -649,7 +644,18 @@ hemera.use({
  }
 })
 ```
+#### Shared data
 
+Sometimes it is useful to share data across data. This data can be accessed from all other plugins which were initialized after that.
+
+Expose
+```js
+hemera.expose('magicNumber', 42)
+```
+Access
+```js
+hemera.exposition.pluginName.magicNumber
+```
 #### Plugin dependencies
 
 `dependencies`: an array of plugin name strings which must be registered in order for this plugin to operate. Plugins listed must be registered before the `ready` function is called. Does not provide version dependency which should be implemented using npm peer dependencies.
