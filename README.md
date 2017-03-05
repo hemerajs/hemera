@@ -651,9 +651,9 @@ hemera.use({
 
 #### Plugin dependencies
 
-`dependencies`: an array of plugin name strings which must be registered in order for this plugin to operate. Plugins listed must be registered before the `ready` function is called. Does not provide version dependency which should be implemented using npm peer dependencies.`
+`dependencies`: an array of plugin name strings which must be registered in order for this plugin to operate. Plugins listed must be registered before the `ready` function is called. Does not provide version dependency which should be implemented using npm peer dependencies.
 
-```
+```js
 hemera.use({ 
  plugin: myPlugin,
  options: {},
