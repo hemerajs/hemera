@@ -646,6 +646,8 @@ hemera.use({
 
 #### Plugin registration
 
+A plugin must be registered before the `ready` function is called. The `ready` function will initialize all plugins.
+
 Variant 1 - pass the plugin as one object. Default plugin options are preserved if you don't overwrite them.
 
 ```js
