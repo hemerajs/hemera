@@ -74,6 +74,55 @@ describe('Hemera', function () {
     })
   })
 
+  it('Should be able to add a handler and act it with complex types', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, (resp, cb) => {
+        cb(null, {
+          result: resp.a.number + resp.b.number
+        })
+      })
+
+      hemera.add({
+        topic: 'math',
+        cmd: 'multiply'
+      }, (resp, cb) => {
+        cb(null, {
+          result: resp.a.number * resp.b.number
+        })
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: { number: 1 },
+        b: { number: 2 }
+      }, (err, resp) => {
+        expect(err).not.to.be.exists()
+        expect(resp.result).to.be.equals(3)
+
+        hemera.act({
+          topic: 'math',
+          cmd: 'multiply',
+          a: { number: resp.result },
+          b: { number: 2 }
+        }, (err, resp) => {
+          expect(err).not.to.be.exists()
+          expect(resp.result).to.be.equals(6)
+
+          hemera.close()
+          done()
+        })
+      })
+    })
+  })
+
   it('Should be able to act without a callback', function (done) {
     const nats = require('nats').connect(authUrl)
 
@@ -1362,37 +1411,37 @@ describe('Plugin interface', function () {
 
     const hemera = new Hemera(nats)
 
-    hemera.ready(() => {
-      let pluginOptions = {
-        a: '1'
-      }
+    // Plugin
+    let plugin = function (options) {
+      let hemera = this
 
-      // Plugin
-      let plugin = function (options) {
-        let hemera = this
+      hemera.expose('test', 1)
 
-        hemera.expose('test', 1)
+      expect(options.a).to.be.equals('1')
 
-        expect(options.a).to.be.equals('1')
-
-        hemera.add({
-          topic: 'math',
-          cmd: 'add'
-        }, (resp, cb) => {
-          cb(null, {
-            result: resp.a + resp.b
-          })
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, (resp, cb) => {
+        cb(null, {
+          result: resp.a + resp.b
         })
-      }
-
-      hemera.use({
-        plugin: plugin,
-        attributes: {
-          name: 'myPlugin'
-        },
-        options: pluginOptions
       })
+    }
 
+    let pluginOptions = {
+      a: '1'
+    }
+
+    hemera.use({
+      plugin: plugin,
+      attributes: {
+        name: 'myPlugin'
+      },
+      options: pluginOptions
+    })
+
+    hemera.ready(() => {
       expect(hemera.exposition.myPlugin.test).to.be.equals(1)
 
       hemera.act({
@@ -1414,60 +1463,60 @@ describe('Plugin interface', function () {
 
     const hemera = new Hemera(nats)
 
+    let pluginOptions = {
+      a: '1'
+    }
+
+    // Plugin
+    let plugin1 = function (options) {
+      let hemera = this
+
+      expect(options.a).to.be.equals('1')
+
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, (resp, cb) => {
+        cb(null, {
+          result: resp.a + resp.b
+        })
+      })
+    }
+
+    hemera.use({
+      plugin: plugin1,
+      attributes: {
+        name: 'myPlugin1'
+      },
+      options: pluginOptions
+    })
+
+    // Plugin
+    let plugin2 = function (options) {
+      let hemera = this
+
+      expect(options.a).to.be.equals('1')
+
+      hemera.add({
+        topic: 'math',
+        cmd: 'add2'
+      }, (resp, cb) => {
+        cb(null, {
+          result: resp.a + resp.b
+        })
+      })
+    }
+
+    hemera.use({
+      plugin: plugin2,
+      attributes: {
+        name: 'myPlugin2'
+      },
+      options: pluginOptions
+    })
+
     hemera.ready(() => {
-      let pluginOptions = {
-        a: '1'
-      }
-
-      // Plugin
-      let plugin1 = function (options) {
-        let hemera = this
-
-        expect(options.a).to.be.equals('1')
-
-        hemera.add({
-          topic: 'math',
-          cmd: 'add'
-        }, (resp, cb) => {
-          cb(null, {
-            result: resp.a + resp.b
-          })
-        })
-      }
-
-      hemera.use({
-        plugin: plugin1,
-        attributes: {
-          name: 'myPlugin1'
-        },
-        options: pluginOptions
-      })
-
-      // Plugin
-      let plugin2 = function (options) {
-        let hemera = this
-
-        expect(options.a).to.be.equals('1')
-
-        hemera.add({
-          topic: 'math',
-          cmd: 'add2'
-        }, (resp, cb) => {
-          cb(null, {
-            result: resp.a + resp.b
-          })
-        })
-      }
-
-      hemera.use({
-        plugin: plugin2,
-        attributes: {
-          name: 'myPlugin2'
-        },
-        options: pluginOptions
-      })
-
-      expect(hemera.plugins).to.be.equals({
+      expect(JSON.parse(JSON.stringify(hemera.plugins))).to.include({
         core: {
           name: 'core'
         },
@@ -1505,49 +1554,47 @@ describe('Plugin interface', function () {
 
     const hemera = new Hemera(nats)
 
-    hemera.ready(() => {
-      let pluginOptions = {
-        a: '1'
-      }
+    let pluginOptions = {
+      a: '1'
+    }
 
-      // Plugin
-      let plugin = function (options) {
-        let hemera = this
+    // Plugin
+    let plugin = function (options) {
+      let hemera = this
 
-        hemera.use({
-          plugin: plugin2,
-          attributes: {
-            name: 'myPlugin2'
-          },
-          options: pluginOptions
-        })
-      }
+      hemera.use({
+        plugin: plugin2,
+        attributes: {
+          name: 'myPlugin2'
+        },
+        options: pluginOptions
+      })
+    }
 
-      // Plugin
-      let plugin2 = function (options) {}
+    // Plugin
+    let plugin2 = function (options) {}
 
-      try {
-        hemera.use({
-          plugin: plugin,
-          attributes: {
-            name: 'myPlugin'
-          },
-          options: pluginOptions
-        })
-        hemera.use({
-          plugin: plugin2,
-          attributes: {
-            name: 'myPlugin2',
-            multiple: true
-          },
-          options: pluginOptions
-        })
-        hemera.close()
-        done()
-      } catch (err) {
-        expect(err).to.be.not.exists()
-      }
-    })
+    try {
+      hemera.use({
+        plugin: plugin,
+        attributes: {
+          name: 'myPlugin'
+        },
+        options: pluginOptions
+      })
+      hemera.use({
+        plugin: plugin2,
+        attributes: {
+          name: 'myPlugin2',
+          multiple: true
+        },
+        options: pluginOptions
+      })
+      hemera.close()
+      done()
+    } catch (err) {
+      expect(err).to.be.not.exists()
+    }
   })
 
   it('Should thrown an error when the plugin is registered twice when multiple attribute is not set to true', function (done) {
@@ -1555,53 +1602,51 @@ describe('Plugin interface', function () {
 
     const hemera = new Hemera(nats)
 
-    hemera.ready(() => {
-      let pluginOptions = {
-        a: '1'
-      }
+    let pluginOptions = {
+      a: '1'
+    }
 
-      // Plugin
-      let plugin = function (options) {
-        let hemera = this
+    // Plugin
+    let plugin = function (options) {
+      let hemera = this
 
-        hemera.use({
-          plugin: plugin2,
-          attributes: {
-            name: 'myPlugin2'
-          },
-          options: pluginOptions
-        })
-      }
+      hemera.use({
+        plugin: plugin2,
+        attributes: {
+          name: 'myPlugin2'
+        },
+        options: pluginOptions
+      })
+    }
 
-      // Plugin
-      let plugin2 = function (options) {}
+    // Plugin
+    let plugin2 = function (options) {}
 
-      try {
-        hemera.use({
-          plugin: plugin,
-          attributes: {
-            name: 'myPlugin'
-          },
-          options: pluginOptions
-        })
-        hemera.use({
-          plugin: plugin2,
-          attributes: {
-            name: 'myPlugin2',
-            multiple: false
-          },
-          options: pluginOptions
-        })
-        hemera.close()
-        done()
-      } catch (err) {
-        expect(err).to.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Plugin was already registered')
-        hemera.close()
-        done()
-      }
-    })
+    try {
+      hemera.use({
+        plugin: plugin,
+        attributes: {
+          name: 'myPlugin'
+        },
+        options: pluginOptions
+      })
+      hemera.use({
+        plugin: plugin2,
+        attributes: {
+          name: 'myPlugin2',
+          multiple: false
+        },
+        options: pluginOptions
+      })
+      hemera.close()
+      done()
+    } catch (err) {
+      expect(err).to.exists()
+      expect(err.name).to.be.equals('HemeraError')
+      expect(err.message).to.be.equals('Plugin was already registered')
+      hemera.close()
+      done()
+    }
   })
 
   it('Plugin name is required', function (done) {
@@ -1609,39 +1654,37 @@ describe('Plugin interface', function () {
 
     const hemera = new Hemera(nats)
 
-    hemera.ready(() => {
-      let pluginOptions = {
-        a: '1'
-      }
+    let pluginOptions = {
+      a: '1'
+    }
 
-      // Plugin
-      let plugin = function (options) {
-        let hemera = this
+    // Plugin
+    let plugin = function (options) {
+      let hemera = this
 
-        hemera.add({
-          topic: 'math',
-          cmd: 'add'
-        }, (resp, cb) => {
-          cb(null, {
-            result: resp.a + resp.b
-          })
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, (resp, cb) => {
+        cb(null, {
+          result: resp.a + resp.b
         })
-      }
+      })
+    }
 
-      try {
-        hemera.use({
-          plugin: plugin,
-          attributes: {},
-          options: pluginOptions
-        })
-      } catch (err) {
-        expect(err).to.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Plugin name is required')
-        hemera.close()
-        done()
-      }
-    })
+    try {
+      hemera.use({
+        plugin: plugin,
+        attributes: {},
+        options: pluginOptions
+      })
+    } catch (err) {
+      expect(err).to.exists()
+      expect(err.name).to.be.equals('HemeraError')
+      expect(err.message).to.be.equals('Plugin name is required')
+      hemera.close()
+      done()
+    }
   })
 
   it('Should be able to specify plugin options as second argument in use method', function (done) {
@@ -1649,32 +1692,36 @@ describe('Plugin interface', function () {
 
     const hemera = new Hemera(nats)
 
-    hemera.ready(() => {
-      let pluginOptions = {
-        a: '1'
-      }
+    let pluginOptions = {
+      a: '1'
+    }
 
-      // Plugin
-      let plugin = function (options) {
-        let hemera = this
+    // Plugin
+    let plugin = function (options) {
+      let hemera = this
 
-        expect(options.a).to.be.equals('1')
+      expect(options.a).to.be.equals('1')
 
-        hemera.add({
-          topic: 'math',
-          cmd: 'add'
-        }, (resp, cb) => {
-          cb(null, {
-            result: resp.a + resp.b
-          })
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, (resp, cb) => {
+        cb(null, {
+          result: resp.a + resp.b
         })
+      })
+    }
+
+    hemera.use({
+      plugin: plugin,
+      attributes: {
+        name: 'foo',
+        description: 'test',
+        version: '1.0.0'
       }
+    }, pluginOptions)
 
-      hemera.use({
-        plugin: plugin,
-        attributes: { name: 'foo', description: 'test', version: '1.0.0' }
-      }, pluginOptions)
-
+    hemera.ready(() => {
       expect(hemera.plugins.foo.options.a).to.be.equals('1')
       hemera.close()
       done()
@@ -1686,36 +1733,40 @@ describe('Plugin interface', function () {
 
     const hemera = new Hemera(nats)
 
-    hemera.ready(() => {
-      let pluginOptions = {
-        a: '1'
-      }
+    let pluginOptions = {
+      a: '1'
+    }
 
-      // Plugin
-      let plugin = function (options) {
-        let hemera = this
+    // Plugin
+    let plugin = function (options) {
+      let hemera = this
 
-        hemera.add({
-          topic: 'math',
-          cmd: 'add'
-        }, (resp, cb) => {
-          cb(null, {
-            result: resp.a + resp.b
-          })
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, (resp, cb) => {
+        cb(null, {
+          result: resp.a + resp.b
         })
-      }
-
-      const packageJson = { name: 'foo', description: 'test', version: '1.0.0' }
-
-      hemera.use({
-        plugin: plugin,
-        attributes: {
-          pkg: packageJson,
-          dependencies: ['bar']
-        },
-        options: pluginOptions
       })
+    }
 
+    const packageJson = {
+      name: 'foo',
+      description: 'test',
+      version: '1.0.0'
+    }
+
+    hemera.use({
+      plugin: plugin,
+      attributes: {
+        pkg: packageJson,
+        dependencies: ['bar']
+      },
+      options: pluginOptions
+    })
+
+    hemera.ready(() => {
       expect(hemera.plugins.foo.attributes.name).to.be.equals('foo')
       expect(hemera.plugins.foo.attributes.description).to.be.equals('test')
       expect(hemera.plugins.foo.attributes.version).to.be.equals('1.0.0')
@@ -2280,22 +2331,8 @@ describe('Extension error', function () {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      let plugin = function (options) {
-        let hemera = this
-
-        hemera.ext('test', function (next) {
-
-        })
-      }
-
       try {
-        hemera.use({
-          plugin: plugin,
-          attributes: {
-            name: 'myPlugin'
-          },
-          options: {}
-        })
+        hemera.ext('test', function (next) {})
       } catch (e) {
         expect(e.name).to.be.equals('HemeraError')
         expect(e.message).to.be.equals('Invalid extension type')
@@ -2310,30 +2347,30 @@ describe('Extension error', function () {
 
     const hemera = new Hemera(nats)
 
-    hemera.ready(() => {
-      let plugin = function (options) {
-        let hemera = this
+    let plugin = function (options) {
+      let hemera = this
 
-        hemera.ext('onClientPostRequest', function (next) {
-          next(new Error('test'))
-        })
-
-        hemera.add({
-          cmd: 'add',
-          topic: 'math'
-        }, (resp, cb) => {
-          cb(null, resp.a + resp.b)
-        })
-      }
-
-      hemera.use({
-        plugin: plugin,
-        attributes: {
-          name: 'myPlugin'
-        },
-        options: {}
+      hemera.ext('onClientPostRequest', function (next) {
+        next(new Error('test'))
       })
 
+      hemera.add({
+        cmd: 'add',
+        topic: 'math'
+      }, (resp, cb) => {
+        cb(null, resp.a + resp.b)
+      })
+    }
+
+    hemera.use({
+      plugin: plugin,
+      attributes: {
+        name: 'myPlugin'
+      },
+      options: {}
+    })
+
+    hemera.ready(() => {
       hemera.act({
         topic: 'math',
         cmd: 'add',
@@ -2356,30 +2393,30 @@ describe('Extension error', function () {
 
     const hemera = new Hemera(nats)
 
-    hemera.ready(() => {
-      let plugin = function (options) {
-        let hemera = this
+    let plugin = function (options) {
+      let hemera = this
 
-        hemera.ext('onClientPreRequest', function (next) {
-          next(new Error('test'))
-        })
-
-        hemera.add({
-          cmd: 'add',
-          topic: 'math'
-        }, (resp, cb) => {
-          cb(null, resp.a + resp.b)
-        })
-      }
-
-      hemera.use({
-        plugin: plugin,
-        attributes: {
-          name: 'myPlugin'
-        },
-        options: {}
+      hemera.ext('onClientPreRequest', function (next) {
+        next(new Error('test'))
       })
 
+      hemera.add({
+        cmd: 'add',
+        topic: 'math'
+      }, (resp, cb) => {
+        cb(null, resp.a + resp.b)
+      })
+    }
+
+    hemera.use({
+      plugin: plugin,
+      attributes: {
+        name: 'myPlugin'
+      },
+      options: {}
+    })
+
+    hemera.ready(() => {
       hemera.act({
         topic: 'math',
         cmd: 'add',
@@ -2402,30 +2439,30 @@ describe('Extension error', function () {
 
     const hemera = new Hemera(nats)
 
-    hemera.ready(() => {
-      let plugin = function (options) {
-        let hemera = this
+    let plugin = function (options) {
+      let hemera = this
 
-        hemera.ext('onServerPreRequest', function (req, res, next) {
-          next(new Error('test'))
-        })
-
-        hemera.add({
-          cmd: 'add',
-          topic: 'math'
-        }, (resp, cb) => {
-          cb(null, resp.a + resp.b)
-        })
-      }
-
-      hemera.use({
-        plugin: plugin,
-        attributes: {
-          name: 'myPlugin'
-        },
-        options: {}
+      hemera.ext('onServerPreRequest', function (req, res, next) {
+        next(new Error('test'))
       })
 
+      hemera.add({
+        cmd: 'add',
+        topic: 'math'
+      }, (resp, cb) => {
+        cb(null, resp.a + resp.b)
+      })
+    }
+
+    hemera.use({
+      plugin: plugin,
+      attributes: {
+        name: 'myPlugin'
+      },
+      options: {}
+    })
+
+    hemera.ready(() => {
       hemera.act({
         topic: 'math',
         cmd: 'add',
@@ -2448,30 +2485,30 @@ describe('Extension error', function () {
 
     const hemera = new Hemera(nats)
 
-    hemera.ready(() => {
-      let plugin = function (options) {
-        let hemera = this
+    let plugin = function (options) {
+      let hemera = this
 
-        hemera.ext('onServerPreResponse', function (req, res, next) {
-          next(new Error('test'))
-        })
-
-        hemera.add({
-          cmd: 'add',
-          topic: 'math'
-        }, (resp, cb) => {
-          cb(null, resp.a + resp.b)
-        })
-      }
-
-      hemera.use({
-        plugin: plugin,
-        attributes: {
-          name: 'myPlugin'
-        },
-        options: {}
+      hemera.ext('onServerPreResponse', function (req, res, next) {
+        next(new Error('test'))
       })
 
+      hemera.add({
+        cmd: 'add',
+        topic: 'math'
+      }, (resp, cb) => {
+        cb(null, resp.a + resp.b)
+      })
+    }
+
+    hemera.use({
+      plugin: plugin,
+      attributes: {
+        name: 'myPlugin'
+      },
+      options: {}
+    })
+
+    hemera.ready(() => {
       hemera.act({
         topic: 'math',
         cmd: 'add',

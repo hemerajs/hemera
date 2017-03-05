@@ -101,6 +101,7 @@ class Hemera extends EventEmitter {
     this._actMeta = null
     this._actCallback = null
     this._cleanPattern = ''
+    this._pluginRegistrations = []
 
     // contains the list of all registered plugins
     // the core is also a plugin
@@ -317,13 +318,14 @@ class Hemera extends EventEmitter {
     // create new execution context
     let ctx = this.createContext()
     ctx.plugin$ = {}
+    ctx.plugin$.register = params.plugin.bind(ctx)
     ctx.plugin$.attributes = params.attributes || {}
     ctx.plugin$.attributes.dependencies = params.attributes.dependencies || []
     ctx.plugin$.parentPlugin = this.plugin$.attributes.name
     ctx.plugin$.options = params.options || {}
     ctx.plugin$.options.payloadValidator = params.options.payloadValidator || ''
 
-    params.plugin.call(ctx, params.options)
+    this._pluginRegistrations.push(ctx.plugin$)
 
     this.log.info(params.attributes.name, Constants.PLUGIN_ADDED)
     this._plugins[params.attributes.name] = ctx.plugin$
@@ -352,6 +354,16 @@ class Hemera extends EventEmitter {
   }
 
   /**
+   *
+   *
+   * @readonly
+   *
+   * @memberOf Hemera
+   */
+  get config () {
+    return this._config
+  }
+  /**
    * Exit the process
    *
    * @memberOf Hemera
@@ -373,9 +385,22 @@ class Hemera extends EventEmitter {
     this._transport.driver.on('connect', () => {
       this.log.info(Constants.TRANSPORT_CONNECTED)
 
-      if (_.isFunction(cb)) {
-        cb.call(this)
+      const each = (item, next) => {
+        if (item.register.length < 2) {
+          item.register(item.options)
+          return next()
+        }
+        item.register(item.options, next)
       }
+
+      Util.serial(this._pluginRegistrations, each, (err) => {
+        if (err) {
+          throw err
+        }
+        if (_.isFunction(cb)) {
+          cb.call(this)
+        }
+      })
     })
   }
 
@@ -866,7 +891,7 @@ class Hemera extends EventEmitter {
     ctx._pattern = pattern
     ctx._prevContext = this
     ctx._actCallback = _.isFunction(cb) ? cb.bind(ctx) : null
-    ctx._cleanPattern = Util.cleanPattern(pattern)
+    ctx._cleanPattern = Util.cleanFromSpecialVars(pattern)
     ctx._response = new ClientResponse()
     ctx._request = new ClientRequest()
 

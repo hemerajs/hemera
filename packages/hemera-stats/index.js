@@ -10,7 +10,7 @@ exports.plugin = function hemeraStats () {
     pubsub$: true
   }, function (resp, cb) {
     const info = {
-      app: hemera._config.name,
+      app: hemera.config.name,
       eventLoopDelay: hemera.load.eventLoopDelay,
       heapUsed: hemera.load.heapUsed,
       rss: hemera.load.rss,
@@ -28,7 +28,7 @@ exports.plugin = function hemeraStats () {
     pubsub$: true
   }, function (resp, cb) {
     const info = {
-      app: hemera._config.name
+      app: hemera.config.name
     }
 
     const list = hemera.list()

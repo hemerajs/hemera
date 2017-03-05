@@ -33,9 +33,8 @@ describe('Hemera-joi', function () {
     hemera.use(HemeraJoi)
     hemera.setOption('payloadValidator', 'hemera-joi')
 
-    let Joi = hemera.exposition['hemera-joi'].joi
-
     hemera.ready(() => {
+      let Joi = hemera.exposition['hemera-joi'].joi
       hemera.add({
         topic: 'email',
         cmd: 'send',
@@ -69,9 +68,8 @@ describe('Hemera-joi', function () {
     hemera.use(HemeraJoi)
     hemera.setOption('payloadValidator', 'hemera-joi')
 
-    let Joi = hemera.exposition['hemera-joi'].joi
-
     hemera.ready(() => {
+      let Joi = hemera.exposition['hemera-joi'].joi
       hemera.add({
         topic: 'email',
         cmd: 'send',
@@ -104,9 +102,8 @@ describe('Hemera-joi', function () {
     hemera.use(HemeraJoi)
     hemera.setOption('payloadValidator', 'hemera-joi')
 
-    let Joi = hemera.exposition['hemera-joi'].joi
-
     hemera.ready(() => {
+      let Joi = hemera.exposition['hemera-joi'].joi
       hemera.add({
         topic: 'email',
         cmd: 'send',

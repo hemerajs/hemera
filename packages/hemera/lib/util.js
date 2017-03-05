@@ -110,6 +110,21 @@ export default class Util {
   }
 
   /**
+   * @static
+   * @param {any} obj
+   * @returns
+   *
+   * @memberOf Util
+   */
+  static cleanFromSpecialVars (obj) {
+    if (obj === null) return obj
+
+    return _.pickBy(obj, function (val, prop) {
+      return !_.includes(prop, '$')
+    })
+  }
+
+  /**
    * @param {any} args
    * @returns
    *

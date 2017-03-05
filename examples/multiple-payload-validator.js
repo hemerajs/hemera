@@ -12,6 +12,24 @@ const hemera = new Hemera(nats, {
 })
 
 hemera.use(HemeraJoi)
+
+function myPlugin (options) {
+  var hemera = this
+
+  hemera.use(HemeraParambulator)
+  hemera.setOption('payloadValidator', 'hemera-parambulator')
+
+  hemera.add({
+    topic: 'math',
+    cmd: 'sub',
+    a: {
+      type$: 'number'
+    }
+  }, (req, cb) => {
+    cb(null, req.a - req.b)
+  })
+}
+
 hemera.use({
   plugin: myPlugin,
   attributes: {
@@ -55,20 +73,3 @@ hemera.ready(() => {
     this.log.info(err, 'Error') // Error: The value "ddd" is not of type 'number' (parent: a).
   })
 })
-
-function myPlugin (options) {
-  var hemera = this
-
-  hemera.use(HemeraParambulator)
-  hemera.setOption('payloadValidator', 'hemera-parambulator')
-
-  hemera.add({
-    topic: 'math',
-    cmd: 'sub',
-    a: {
-      type$: 'number'
-    }
-  }, (req, cb) => {
-    cb(null, req.a - req.b)
-  })
-}

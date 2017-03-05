@@ -15,8 +15,7 @@ class Store {
    *
    * @memberOf Store
    */
-  constructor(driver, options) {
-
+  constructor (driver, options) {
     this._driver = driver
     this._options = options
   }
@@ -28,8 +27,7 @@ class Store {
    *
    * @memberOf Store
    */
-  get driver() {
-
+  get driver () {
     return this._driver
   }
 
@@ -40,8 +38,7 @@ class Store {
    *
    * @memberOf Store
    */
-  get options() {
-
+  get options () {
     return this._options
   }
   /**
@@ -50,7 +47,7 @@ class Store {
    *
    * @memberOf Store
    */
-  create() {
+  create () {
     throw (new Error('Not implemented yet'))
   }
 
@@ -60,7 +57,7 @@ class Store {
    *
    * @memberOf Store
    */
-  remove() {
+  remove () {
     throw (new Error('Not implemented yet'))
   }
 
@@ -70,7 +67,7 @@ class Store {
    *
    * @memberOf Store
    */
-  removeById() {
+  removeById () {
     throw (new Error('Not implemented yet'))
   }
   /**
@@ -79,7 +76,7 @@ class Store {
    *
    * @memberOf Store
    */
-  update() {
+  update () {
     throw (new Error('Not implemented yet'))
   }
 
@@ -89,7 +86,7 @@ class Store {
    *
    * @memberOf Store
    */
-  updateById() {
+  updateById () {
     throw (new Error('Not implemented yet'))
   }
 
@@ -99,7 +96,7 @@ class Store {
    *
    * @memberOf Store
    */
-  find() {
+  find () {
     throw (new Error('Not implemented yet'))
   }
 
@@ -109,7 +106,7 @@ class Store {
    *
    * @memberOf Store
    */
-  findById() {
+  findById () {
     throw (new Error('Not implemented yet'))
   }
 
@@ -119,7 +116,7 @@ class Store {
    *
    * @memberOf Store
    */
-  replace() {
+  replace () {
     throw (new Error('Not implemented yet'))
   }
 
@@ -129,7 +126,7 @@ class Store {
    *
    * @memberOf Store
    */
-  replaceById() {
+  replaceById () {
     throw (new Error('Not implemented yet'))
   }
 
@@ -138,7 +135,7 @@ class Store {
    *
    * @memberOf Store
    */
-  exists() {
+  exists () {
     throw (new Error('Not implemented yet'))
   }
 }

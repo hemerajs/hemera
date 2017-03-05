@@ -28,12 +28,10 @@ exports.attributes = {
   const nats = require('nats').connect()
 
   const hemera = new Hemera(nats, { logLevel: 'info' })
+  const plugin = require('./plugin-as-file')
+  hemera.use(plugin, { ...plugin options })
 
   hemera.ready(() => {
-
-    const plugin = require('./plugin-as-file')
-
-    hemera.use(plugin, { ...plugin options })
 
   })
 

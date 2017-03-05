@@ -19,16 +19,16 @@ const nats = require('nats').connect()
 const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
+hemera.expose('somethingToExpose', 4)
+hemera.use({
+  plugin: myPlugin,
+  attributes: {
+    name: 'myPlugin',
+    dependencies: []
+  },
+  options: {}
+})
 
 hemera.ready(() => {
-  hemera.expose('somethingToExpose', 4)
-
-  hemera.use({
-    plugin: myPlugin,
-    attributes: {
-      name: 'myPlugin',
-      dependencies: []
-    },
-    options: {}
-  })
+  // now you can use the plugin
 })

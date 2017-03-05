@@ -142,6 +142,24 @@ var Util = function () {
     }
 
     /**
+     * @static
+     * @param {any} obj
+     * @returns
+     *
+     * @memberOf Util
+     */
+
+  }, {
+    key: 'cleanFromSpecialVars',
+    value: function cleanFromSpecialVars(obj) {
+      if (obj === null) return obj;
+
+      return _lodash2.default.pickBy(obj, function (val, prop) {
+        return !_lodash2.default.includes(prop, '$');
+      });
+    }
+
+    /**
      * @param {any} args
      * @returns
      *

@@ -184,6 +184,7 @@ var Hemera = function (_EventEmitter) {
     _this._actMeta = null;
     _this._actCallback = null;
     _this._cleanPattern = '';
+    _this._pluginRegistrations = [];
 
     // contains the list of all registered plugins
     // the core is also a plugin
@@ -363,13 +364,14 @@ var Hemera = function (_EventEmitter) {
       // create new execution context
       var ctx = this.createContext();
       ctx.plugin$ = {};
+      ctx.plugin$.register = params.plugin.bind(ctx);
       ctx.plugin$.attributes = params.attributes || {};
       ctx.plugin$.attributes.dependencies = params.attributes.dependencies || [];
       ctx.plugin$.parentPlugin = this.plugin$.attributes.name;
       ctx.plugin$.options = params.options || {};
       ctx.plugin$.options.payloadValidator = params.options.payloadValidator || '';
 
-      params.plugin.call(ctx, params.options);
+      this._pluginRegistrations.push(ctx.plugin$);
 
       this.log.info(params.attributes.name, _constants2.default.PLUGIN_ADDED);
       this._plugins[params.attributes.name] = ctx.plugin$;
@@ -404,13 +406,21 @@ var Hemera = function (_EventEmitter) {
     }
 
     /**
-     * Exit the process
+     *
+     *
+     * @readonly
      *
      * @memberOf Hemera
      */
 
   }, {
     key: 'fatal',
+
+    /**
+     * Exit the process
+     *
+     * @memberOf Hemera
+     */
     value: function fatal() {
       this.close();
 
@@ -433,9 +443,22 @@ var Hemera = function (_EventEmitter) {
       this._transport.driver.on('connect', function () {
         _this2.log.info(_constants2.default.TRANSPORT_CONNECTED);
 
-        if (_lodash2.default.isFunction(cb)) {
-          cb.call(_this2);
-        }
+        var each = function each(item, next) {
+          if (item.register.length < 2) {
+            item.register(item.options);
+            return next();
+          }
+          item.register(item.options, next);
+        };
+
+        _util2.default.serial(_this2._pluginRegistrations, each, function (err) {
+          if (err) {
+            throw err;
+          }
+          if (_lodash2.default.isFunction(cb)) {
+            cb.call(_this2);
+          }
+        });
       });
     }
 
@@ -944,7 +967,7 @@ var Hemera = function (_EventEmitter) {
       ctx._pattern = pattern;
       ctx._prevContext = this;
       ctx._actCallback = _lodash2.default.isFunction(cb) ? cb.bind(ctx) : null;
-      ctx._cleanPattern = _util2.default.cleanPattern(pattern);
+      ctx._cleanPattern = _util2.default.cleanFromSpecialVars(pattern);
       ctx._response = new _clientResponse2.default();
       ctx._request = new _clientRequest2.default();
 
@@ -1125,6 +1148,11 @@ var Hemera = function (_EventEmitter) {
     key: 'topics',
     get: function get() {
       return this._topics;
+    }
+  }, {
+    key: 'config',
+    get: function get() {
+      return this._config;
     }
   }]);
 

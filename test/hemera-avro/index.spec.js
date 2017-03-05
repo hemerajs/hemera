@@ -101,18 +101,18 @@ describe('Hemera-avro', function () {
 
     hemera.use(HemeraAvro)
 
-    let Avro = hemera.exposition['hemera-avro'].avro
-
-    const type = Avro.parse({
-      name: 'SumResult',
-      type: 'record',
-      fields: [{
-        name: 'result',
-        type: 'int'
-      }]
-    })
-
     hemera.ready(() => {
+      let Avro = hemera.exposition['hemera-avro'].avro
+
+      const type = Avro.parse({
+        name: 'SumResult',
+        type: 'record',
+        fields: [{
+          name: 'result',
+          type: 'int'
+        }]
+      })
+
       hemera.add({
         topic: 'math',
         cmd: 'add',
@@ -148,18 +148,18 @@ describe('Hemera-avro', function () {
 
     hemera.use(HemeraAvro)
 
-    let Avro = hemera.exposition['hemera-avro'].avro
-
-    const type = Avro.parse({
-      name: 'SumResult',
-      type: 'record',
-      fields: [{
-        name: 'result',
-        type: 'string'
-      }]
-    })
-
     hemera.ready(() => {
+      let Avro = hemera.exposition['hemera-avro'].avro
+
+      const type = Avro.parse({
+        name: 'SumResult',
+        type: 'record',
+        fields: [{
+          name: 'result',
+          type: 'string'
+        }]
+      })
+
       hemera.add({
         topic: 'math',
         cmd: 'add',
