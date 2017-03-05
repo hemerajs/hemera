@@ -591,7 +591,7 @@ You can create a plugin in two different ways:
 If you want to create a plugin which can be required and passed to the `use` function.
 
 ```js
-exports.plugin = function myPlugin (options) {
+exports.plugin = function myPlugin (options, next) {
   var hemera = this
   
   //Expose data which you can access globally with hemera.exposition.<pluginName>.<property>
@@ -603,6 +603,8 @@ exports.plugin = function myPlugin (options) {
   }, (req, cb) => {
     cb(null, req.a + req.b)
   })
+  
+  next()
 }
 
 exports.options = {}
@@ -614,7 +616,7 @@ exports.attributes = {
 
 If you want to create a plugin without to swap it out in a seperate file.
 ```js
-let myPlugin = function (options) {
+let myPlugin = function (options, next) {
 
   let hemera = this
   
@@ -630,7 +632,8 @@ let myPlugin = function (options) {
       result: req.a + req.b
     })
   })
-
+  
+  next()
 }
 
 hemera.use({ 
