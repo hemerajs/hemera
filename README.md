@@ -687,6 +687,14 @@ hemera.use({
 }, { a: 1 })
 ```
 
+#### Payload validators
+
+Plugins can have different payload validations. This feature depends on the implementation of the validator. In Joi and Parambulator the option `payloadValidator` will be used to check which validator your plugin used. E.g when you don't set the payloadValidator in the options you can change it in the corresponding plugin with:
+
+```js
+hemera.setOption('payloadValidator', 'hemera-joi')
+```
+
 ### Logging
 
 Hemera used Pino logger by default but you can also use your own [example](https://github.com/hemerajs/hemera/blob/master/examples/custom-logger.js)
