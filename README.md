@@ -117,6 +117,8 @@ Table of contents
   * [Plugins](#plugins)
     * [Create a plugin](#create-a-plugin)
     * [Plugin registration](#plugin-registration)
+    * [Plugin dependencies](#plugin-dependencies)
+    * [Payload validators](#payload-validators)
   * [Logging](#logging)
   * [Protocol](#protocol)
   * [Api Versioning](#api-versioning)
@@ -642,6 +644,24 @@ hemera.use({
  attributes: { 
   name: 'test',
   version: '1.0.0',
+  dependencies: ['hemera-joi']
+  description: 'my first plugin'
+ }
+})
+```
+
+#### Plugin dependencies
+
+`dependencies`: an array of plugin name strings which must be registered in order for this plugin to operate. Plugins listed must be registered before the `ready` function is called. Does not provide version dependency which should be implemented using npm peer dependencies.
+
+```js
+hemera.use({ 
+ plugin: myPlugin,
+ options: {},
+ attributes: { 
+  name: 'test',
+  version: '1.0.0',
+  dependencies: ['hemera-joi']
   description: 'my first plugin'
  }
 })
@@ -650,8 +670,7 @@ hemera.use({
 #### Plugin registration
 
 A plugin must be registered before the `ready` function is called. The `ready` function will initialize all plugins.
-
-Variant 1 - pass the plugin as one object. Default plugin options are preserved if you don't overwrite them.
+Default plugin options are preserved if you don't overwrite them.
 
 ```js
 hemera.use({ 
@@ -661,13 +680,20 @@ hemera.use({
 })
 ```
 
-Variant 2 - Pass plugin options as second argument to the use function. Default plugin options are preserved if you don't overwrite them. 
-
+Pass plugin options as second argument to the use function.
 ```js
 hemera.use({ 
   plugin: function() {},
   attributes: { name: 'foo' }
 }, { a: 1 })
+```
+
+#### Payload validators
+
+Registered plugins can have different payload validators. This feature depends on the implementation of the validator. In Joi and Parambulator the option `payloadValidator` will be used to check which validator your plugin used. E.g when you don't set the payloadValidator in the options you can change it later in the corresponding plugin with:
+
+```js
+hemera.setOption('payloadValidator', 'hemera-joi')
 ```
 
 ### Logging
