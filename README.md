@@ -118,6 +118,7 @@ Table of contents
     * [Create a plugin](#create-a-plugin)
     * [Plugin registration](#plugin-registration)
     * [Plugin dependencies](#plugin-dependencies)
+    * [Payload validators](#payload-validators)
   * [Logging](#logging)
   * [Protocol](#protocol)
   * [Api Versioning](#api-versioning)
