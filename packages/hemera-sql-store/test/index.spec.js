@@ -290,8 +290,10 @@ describe('Hemera-sql-store', function () {
         }
       }, (err, resp) => {
         expect(err).to.be.not.exists()
-        expect(resp.length).to.be.equals(1)
-        expect(resp[0].name).to.be.equals('bernd')
+        expect(resp.result.length).to.be.equals(1)
+        expect(resp.result[0].name).to.be.equals('bernd')
+        expect(resp.orderBy).to.be.equals('id desc')
+        expect(resp.limit).to.be.equals(2)
         done()
       })
     })

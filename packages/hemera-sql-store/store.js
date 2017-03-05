@@ -116,7 +116,15 @@ class SqlStore extends Store {
     if (options.fields) {
       queryBuilder.select(options.fields)
     }
-    queryBuilder.asCallback(cb)
+    queryBuilder.asCallback(function (err, resp) {
+      if (err) {
+        return cb(err)
+      }
+      const result = Object.assign({
+        result: resp
+      }, options)
+      cb(err, result)
+    })
   }
 
   /**
@@ -167,10 +175,10 @@ class SqlStore extends Store {
    */
   exists (req, cb) {
     this._driver(req.collection).where(req.query).first(this._options.idField)
-    .then(row => {
-      cb(null, row !== null)
-    })
-    .catch(err => cb(err))
+      .then(row => {
+        cb(null, row !== null)
+      })
+      .catch(err => cb(err))
   }
 
 }
