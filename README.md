@@ -566,18 +566,16 @@ You can use different validators e.g [Joi example](https://github.com/hemerajs/h
 
 ```js
 hemera.add({
-    topic: 'math',
-    cmd: 'add',
-    a: {
-      type$: 'number'
-    }
-  }, (req, cb) => {
+  topic: 'math',
+  cmd: 'add',
+  a: Joi.number().required(),
+  b: Joi.number().required()
+}, (req, cb) => {
 
-    cb(null, {
-      result: req.a + req.b
-    })
-  })
+  cb(null, req.a + req.b)
+})
 ```
+
 Handling
 ```js
 hemera.act({ topic: 'math', cmd: 'add', a: '1' }, function (err, resp) {
