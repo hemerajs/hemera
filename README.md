@@ -690,7 +690,7 @@ hemera.use({
 
 #### Payload validators
 
-Plugins can have different payload validations. This feature depends on the implementation of the validator. In Joi and Parambulator the option `payloadValidator` will be used to check which validator your plugin used. E.g when you don't set the payloadValidator in the options you can change it in the corresponding plugin with:
+Registered plugins can have different payload validators. This feature depends on the implementation of the validator. In Joi and Parambulator the option `payloadValidator` will be used to check which validator your plugin used. E.g when you don't set the payloadValidator in the options you can change it later in the corresponding plugin with:
 
 ```js
 hemera.setOption('payloadValidator', 'hemera-joi')
