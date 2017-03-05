@@ -13,7 +13,7 @@ Use cases:
 - Get a list of all registered server actions and create an API Documentation
 - Get a list of all registered server actions and create a realtime dashboard
 
-If you want to get a list of all active subscriber, connections you can use the [NATS http interface](http://nats.io/documentation/server/gnatsd-monitoring/) it will respond a JSON object.
+If you want to get a list of all active subscriber, connections you can use the [NATS HTTP Interface](http://nats.io/documentation/server/gnatsd-monitoring/) it will respond a JSON object.
 
 #### Example
 
