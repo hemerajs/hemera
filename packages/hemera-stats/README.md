@@ -71,11 +71,11 @@ hemera.ready(() => {
 -------------------------------------------------------
 ### Process Info
 
-You will reveive informations from all hemera instances which activate this plugin.
+You will reveive informations from all hemera instances which has activated this plugin.
 
 The pattern is:
 
-* `topic`: is the store name to publish to `stats`
+* `topic`: is the topic name to publish to `stats`
 * `cmd`: is the command to execute `processInfo`
 
 Example:
@@ -99,11 +99,11 @@ Result:
 -------------------------------------------------------
 ### Registered actions
 
-You will reveive informations from all hemera instances which activate this plugin.
+You will reveive informations from all hemera instances which has activated this plugin.
 
 The pattern is:
 
-* `topic`: is the store name to publish to `stats`
+* `topic`: is the topic name to publish to `stats`
 * `cmd`: is the command to execute `registeredActions`
 
 Example:
