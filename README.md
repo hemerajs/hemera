@@ -700,7 +700,7 @@ hemera.expose('magicNumber', 42)
 ```
 Access
 ```js
-hemera.exposition.pluginName.magicNumber
+hemera.exposition.pluginName.magicNumber //42
 ```
 
 ### Logging
