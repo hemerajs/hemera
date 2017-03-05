@@ -1,6 +1,6 @@
 {
   "name": "hemera-mongo-store",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This is a plugin to use Mongodb with Hemera",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-store": "1.1.x",
+    "hemera-store": "^1.1.5",
     "mongodb": "2.2.x"
   },
   "devDependencies": {

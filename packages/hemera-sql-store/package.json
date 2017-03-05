@@ -1,6 +1,6 @@
 {
   "name": "hemera-sql-store",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "This is a plugin to use SQL with Hemera",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "hemera-joi": "^0.1.78",
-    "hemera-store": "^1.1.4",
+    "hemera-store": "^1.1.5",
     "hoek": "4.1.x",
     "knex": "0.12.x",
     "mysql": "2.12.x",
