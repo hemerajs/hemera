@@ -644,18 +644,6 @@ hemera.use({
  }
 })
 ```
-#### Shared data
-
-Sometimes it is useful to share data across data. This data can be accessed from all other plugins which were initialized after that.
-
-Expose
-```js
-hemera.expose('magicNumber', 42)
-```
-Access
-```js
-hemera.exposition.pluginName.magicNumber
-```
 #### Plugin dependencies
 
 `dependencies`: an array of plugin name strings which must be registered in order for this plugin to operate. Plugins listed must be registered before the `ready` function is called. Does not provide version dependency which should be implemented using npm peer dependencies.
@@ -700,6 +688,19 @@ Registered plugins can have different payload validators. This feature depends o
 
 ```js
 hemera.setOption('payloadValidator', 'hemera-joi')
+```
+
+#### Shared data
+
+Sometimes it is useful to share data across plugins. This data can be accessed from all other plugins which were initialized after that.
+
+Expose
+```js
+hemera.expose('magicNumber', 42)
+```
+Access
+```js
+hemera.exposition.pluginName.magicNumber
 ```
 
 ### Logging
