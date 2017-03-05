@@ -9,7 +9,6 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-joi": "^0.1.78",
     "redis": "2.6.x"
   },
   "devDependencies": {

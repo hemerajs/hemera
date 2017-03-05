@@ -1,15 +1,12 @@
 'use strict'
 
 const Nsq = require('nsqjs')
-const HemeraJoi = require('hemera-joi')
 
 exports.plugin = function hemeraNsqStore (options) {
   const hemera = this
   const readers = {}
 
   hemera.expose('readers', readers)
-
-  hemera.use(HemeraJoi)
 
   const Joi = hemera.exposition['hemera-joi'].joi
 

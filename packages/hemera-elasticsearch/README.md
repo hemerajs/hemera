@@ -27,12 +27,14 @@ Password: changeme
 'use strict'
 
 const Hemera = require('nats-hemera')
+const HemeraJoi = require('hemera-joi')
 const nats = require('nats').connect()
 const hemeraElasticsearch = require('hemera-elasticsearch')
 const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
+hemera.use(HemeraJoi)
 hemera.use(hemeraElasticsearch, {
   elasticsearch: {
     log: 'trace',

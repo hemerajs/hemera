@@ -1,7 +1,7 @@
 'use strict'
 
-const MongoClient = require('mongodb').MongoClient
-const ObjectID = require('mongodb').ObjectID
+const Mongodb = require('mongodb')
+const ObjectID = Mongodb.ObjectID
 const MongoStore = require('./store')
 const StorePattern = require('hemera-store/pattern')
 
@@ -9,7 +9,7 @@ exports.plugin = function hemeraMongoStore (options, next) {
   const hemera = this
   const topic = 'mongo-store'
 
-  MongoClient.connect(options.mongo.url, options.mongos.options, function (err, db) {
+  Mongodb.MongoClient.connect(options.mongo.url, options.mongos.options, function (err, db) {
     if (err) throw err
 
     hemera.add(StorePattern.create(topic), function (req, cb) {
@@ -90,7 +90,6 @@ exports.plugin = function hemeraMongoStore (options, next) {
 }
 
 exports.options = {
-  payloadValidator: 'hemera-joi',
   mongos: {},
   mongo: {
     url: 'mongodb://localhost:27017/'
@@ -98,6 +97,6 @@ exports.options = {
 }
 
 exports.attributes = {
-  dependencies: ['hemera-joi'],
+  dependencies: [],
   pkg: require('./package.json')
 }

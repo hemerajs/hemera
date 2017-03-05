@@ -1,12 +1,9 @@
 'use strict'
 
 const Rabbit = require('rabbot')
-const HemeraJoi = require('hemera-joi')
 
 exports.plugin = function hemeraRabbitmq (options) {
   const hemera = this
-
-  hemera.use(HemeraJoi)
 
   const handlers = []
   const Joi = hemera.exposition['hemera-joi'].joi

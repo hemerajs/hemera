@@ -1,6 +1,7 @@
 'use strict'
 
 const Hemera = require('./../packages/hemera')
+const hemeraJoi = require('./../packages/hemera-joi')
 const nats = require('nats').connect()
 const hemeraRabbitmq = require('./../packages/hemera-rabbitmq')
 
@@ -32,6 +33,7 @@ const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
+hemera.use(hemeraJoi)
 hemera.use(hemeraRabbitmq, {
   rabbitmq: options
 })

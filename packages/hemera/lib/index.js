@@ -315,6 +315,16 @@ class Hemera extends EventEmitter {
       }
     }
 
+    // check plugin dependenciess
+    if (params.attributes.dependencies) {
+      params.attributes.dependencies.forEach((dep) => {
+        if (!this._plugins[dep]) {
+          this.log.error(Constants.PLUGIN_DEPENDENCY_MISSING, params.attributes.name, dep, dep)
+          throw new Errors.HemeraError(Constants.PLUGIN_DEPENDENCY_NOT_FOUND)
+        }
+      })
+    }
+
     // create new execution context
     let ctx = this.createContext()
     ctx.plugin$ = {}

@@ -32,7 +32,9 @@ class MongoStore extends Store {
    * @memberOf MongoStore
    */
   create (req, cb) {
-    this._driver.insertOne(req.data, this.options.mongo, cb)
+    this._driver.insertOne(req.data, this.options.mongo, function (err, resp) {
+      cb(err, resp.result)
+    })
   }
 
   /**
@@ -44,7 +46,9 @@ class MongoStore extends Store {
    * @memberOf MongoStore
    */
   remove (req, cb) {
-    this._driver.deleteMany(req.query, this.options.mongo, cb)
+    this._driver.deleteMany(req.query, this.options.mongo, function (err, resp) {
+      cb(err, resp.result)
+    })
   }
 
   /**
@@ -56,7 +60,9 @@ class MongoStore extends Store {
    * @memberOf MongoStore
    */
   removeById (req, cb) {
-    this._driver.findOneAndDelete({ _id: this.ObjectID(req.id) }, this.options.mongo, cb)
+    this._driver.findOneAndDelete({ _id: this.ObjectID(req.id) }, this.options.mongo, function (err, resp) {
+      cb(err, resp.result)
+    })
   }
 
   /**
@@ -69,7 +75,9 @@ class MongoStore extends Store {
    * @memberOf MongoStore
    */
   update (req, data, cb) {
-    this._driver.findOneAndUpdate(req.query, data, this.options.mongo, cb)
+    this._driver.findOneAndUpdate(req.query, data, this.options.mongo, function (err, resp) {
+      cb(err, resp.result)
+    })
   }
 
   /**
@@ -82,7 +90,9 @@ class MongoStore extends Store {
    * @memberOf MongoStore
    */
   updateById (req, data, cb) {
-    this._driver.findOneAndUpdate({ _id: this.ObjectID(req.id) }, data, this.options.mongo, cb)
+    this._driver.findOneAndUpdate({ _id: this.ObjectID(req.id) }, data, this.options.mongo, function (err, resp) {
+      cb(err, resp.result)
+    })
   }
 
   /**
@@ -94,7 +104,9 @@ class MongoStore extends Store {
    * @memberOf MongoStore
    */
   find (req, options, cb) {
-    this._driver.find(req.query, options).toArray(cb)
+    this._driver.find(req.query, options).toArray(function (err, resp) {
+      cb(err, resp.result)
+    })
   }
 
   /**
@@ -106,7 +118,9 @@ class MongoStore extends Store {
    * @memberOf MongoStore
    */
   findById (req, cb) {
-    this._driver.findOne({ _id: this.ObjectID(req.id) }, this.options.mongo, cb)
+    this._driver.findOne({ _id: this.ObjectID(req.id) }, this.options.mongo, function (err, resp) {
+      cb(err, resp.result)
+    })
   }
 
   /**
@@ -118,7 +132,9 @@ class MongoStore extends Store {
    * @memberOf MongoStore
    */
   replace (req, data, cb) {
-    this._driver.updateMany(req.query, data, Object.assign(this.options.mongo, { upsert: true }), cb)
+    this._driver.updateMany(req.query, data, Object.assign(this.options.mongo, { upsert: true }), function (err, resp) {
+      cb(err, resp.result)
+    })
   }
 
   /**
@@ -130,7 +146,9 @@ class MongoStore extends Store {
    * @memberOf MongoStore
    */
   replaceById (req, data, cb) {
-    this._driver.findOneAndReplace({ _id: this.ObjectID(req.id) }, data, this.options.mongo, cb)
+    this._driver.findOneAndReplace({ _id: this.ObjectID(req.id) }, data, this.options.mongo, function (err, resp) {
+      cb(err, resp.result)
+    })
   }
 
 }

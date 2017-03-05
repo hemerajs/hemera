@@ -11,8 +11,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "elasticsearch": "12.1.x",
-    "hemera-joi": "^0.1.78"
+    "elasticsearch": "12.1.x"
   },
   "devDependencies": {
     "code": "4.0.x",

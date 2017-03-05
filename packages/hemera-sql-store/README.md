@@ -43,6 +43,7 @@ npm run test
 
 const Hemera = require('nats-hemera')
 const nats = require('nats').connect()
+const HemeraJoi = require('hemera-joi')
 const knex = Knex({
   dialect: 'mysql' || 'pg' || 'pg-hstore',
   connection: {
@@ -61,6 +62,7 @@ const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
+hemera.use(HemeraJoi)
 hemera.use(HemeraSql, {
   knex: {
     driver: knex

@@ -1,14 +1,11 @@
 'use strict'
 
 const Redis = require('redis')
-const HemeraJoi = require('hemera-joi')
 
 exports.plugin = function hemeraRedisCache (options) {
   const hemera = this
   const client = Redis.createClient(options.redis)
   const topic = 'redis-cache'
-
-  hemera.use(HemeraJoi)
 
   const Joi = hemera.exposition['hemera-joi'].joi
 

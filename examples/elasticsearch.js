@@ -1,12 +1,14 @@
 'use strict'
 
 const Hemera = require('./../packages/hemera')
+const hemeraJoi = require('./../packages/hemera-joi')
 const nats = require('nats').connect()
 const hemeraElasticsearch = require('./../packages/hemera-elasticsearch')
 const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
+hemera.use(hemeraJoi)
 hemera.use(hemeraElasticsearch, {
   elasticsearch: {
     log: 'trace',

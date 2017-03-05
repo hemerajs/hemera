@@ -1,7 +1,6 @@
 'use strict'
 
 const Arangojs = require('arangojs')
-const HemeraJoi = require('hemera-joi')
 const ArangoStore = require('./store')
 const StorePattern = require('hemera-store/pattern')
 
@@ -9,9 +8,6 @@ exports.plugin = function hemeraArangoStore (options) {
   const hemera = this
   const connections = {}
   const topic = 'arango-store'
-
-  hemera.use(HemeraJoi)
-
   const Joi = hemera.exposition['hemera-joi'].joi
 
   hemera.expose('aqlTemplate', Arangojs.aql)

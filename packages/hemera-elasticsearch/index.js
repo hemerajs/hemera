@@ -1,14 +1,10 @@
 'use strict'
 
 const Elasticsearch = require('elasticsearch')
-const HemeraJoi = require('hemera-joi')
 
 exports.plugin = function hemeraElasticSearch (options) {
   const hemera = this
   const topic = 'elasticsearch'
-
-  hemera.use(HemeraJoi)
-
   const Joi = hemera.exposition['hemera-joi'].joi
 
   const client = new Elasticsearch.Client(options.elasticsearch)

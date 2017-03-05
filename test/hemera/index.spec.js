@@ -1731,7 +1731,7 @@ describe('Plugin interface', function () {
   it('Should be able to specify plugin attributes by package.json', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats)
+    const hemera = new Hemera(nats, { logLevel: 'info' })
 
     let pluginOptions = {
       a: '1'
@@ -1761,7 +1761,7 @@ describe('Plugin interface', function () {
       plugin: plugin,
       attributes: {
         pkg: packageJson,
-        dependencies: ['bar']
+        dependencies: []
       },
       options: pluginOptions
     })
@@ -1770,7 +1770,7 @@ describe('Plugin interface', function () {
       expect(hemera.plugins.foo.attributes.name).to.be.equals('foo')
       expect(hemera.plugins.foo.attributes.description).to.be.equals('test')
       expect(hemera.plugins.foo.attributes.version).to.be.equals('1.0.0')
-      expect(hemera.plugins.foo.attributes.dependencies).to.be.equals(['bar'])
+      expect(hemera.plugins.foo.attributes.dependencies).to.be.equals([])
       expect(hemera.plugins.foo.options).to.be.equals(pluginOptions)
       hemera.close()
       done()

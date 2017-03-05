@@ -332,6 +332,8 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'use',
     value: function use(params, options) {
+      var _this2 = this;
+
       // use plugin infos from package.json
       if (_lodash2.default.isObject(params.attributes.pkg)) {
         params.attributes = params.attributes || {};
@@ -359,6 +361,16 @@ var Hemera = function (_EventEmitter) {
           this.log.error(_error);
           throw _error;
         }
+      }
+
+      // check plugin dependenciess
+      if (params.attributes.dependencies) {
+        params.attributes.dependencies.forEach(function (dep) {
+          if (!_this2._plugins[dep]) {
+            _this2.log.error(_constants2.default.PLUGIN_DEPENDENCY_MISSING, params.attributes.name, dep, dep);
+            throw new _errors2.default.HemeraError(_constants2.default.PLUGIN_DEPENDENCY_NOT_FOUND);
+          }
+        });
       }
 
       // create new execution context
@@ -438,10 +450,10 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'ready',
     value: function ready(cb) {
-      var _this2 = this;
+      var _this3 = this;
 
       this._transport.driver.on('connect', function () {
-        _this2.log.info(_constants2.default.TRANSPORT_CONNECTED);
+        _this3.log.info(_constants2.default.TRANSPORT_CONNECTED);
 
         var each = function each(item, next) {
           if (item.register.length < 2) {
@@ -451,12 +463,12 @@ var Hemera = function (_EventEmitter) {
           item.register(item.options, next);
         };
 
-        _util2.default.serial(_this2._pluginRegistrations, each, function (err) {
+        _util2.default.serial(_this3._pluginRegistrations, each, function (err) {
           if (err) {
             throw err;
           }
           if (_lodash2.default.isFunction(cb)) {
-            cb.call(_this2);
+            cb.call(_this3);
           }
         });
       });
@@ -570,7 +582,7 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'subscribe',
     value: function subscribe(topic, subToMany, maxMessages) {
-      var _this3 = this;
+      var _this4 = this;
 
       var self = this;
 
@@ -712,7 +724,7 @@ var Hemera = function (_EventEmitter) {
 
       var handler = function handler(request, replyTo) {
         // create new execution context
-        var ctx = _this3.createContext();
+        var ctx = _this4.createContext();
         ctx._shouldCrash = false;
         ctx._replyTo = replyTo;
         ctx._topic = topic;
@@ -989,7 +1001,7 @@ var Hemera = function (_EventEmitter) {
   }, {
     key: 'handleTimeout',
     value: function handleTimeout(sid, pattern) {
-      var _this4 = this;
+      var _this5 = this;
 
       var timeout = pattern.timeout$ || this._config.timeout;
 
@@ -1024,10 +1036,10 @@ var Hemera = function (_EventEmitter) {
         var error = new _errors2.default.TimeoutError(_constants2.default.ACT_TIMEOUT_ERROR, {
           pattern
         });
-        _this4.emit('clientResponseError', error);
-        _this4.log.error(error);
-        _this4._response.error = error;
-        _this4._extensions.onClientPostRequest.invoke(_this4, onClientPostRequestHandler);
+        _this5.emit('clientResponseError', error);
+        _this5.log.error(error);
+        _this5._response.error = error;
+        _this5._extensions.onClientPostRequest.invoke(_this5, onClientPostRequestHandler);
       };
 
       this._transport.timeout(sid, timeout, 1, timeoutHandler);

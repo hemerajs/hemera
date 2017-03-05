@@ -1,6 +1,7 @@
 'use strict'
 
 const Hemera = require('./../packages/hemera')
+const hemeraJoi = require('./../packages/hemera-joi')
 const nats = require('nats').connect({
   preserveBuffers: true
 })
@@ -10,6 +11,7 @@ const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
+hemera.use(hemeraJoi)
 hemera.use(HemeraRedisCache)
 
 hemera.ready(() => {

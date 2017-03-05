@@ -11,7 +11,6 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-joi": "^0.1.78",
     "rabbot": "1.0.x"
   },
   "devDependencies": {

@@ -1,14 +1,11 @@
 'use strict'
 
-const HemeraJoi = require('hemera-joi')
 const Couchbase = require('couchbase')
 const StorePattern = require('hemera-store/pattern')
 
 exports.plugin = function hemeraCouchbaseStore (options) {
   const hemera = this
   const topic = 'couchbase-store'
-
-  hemera.use(HemeraJoi)
 
   const Joi = hemera.exposition['hemera-joi'].joi
   const cluster = new Couchbase.Cluster(options.couchbase.url)

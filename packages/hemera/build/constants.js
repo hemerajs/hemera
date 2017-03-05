@@ -31,6 +31,8 @@ exports.default = {
   EXTENSION_ERROR: 'Extension error',
   PUB_CALLBACK_REDUNDANT: 'Specify a callback as publisher is redundant',
   INVALID_EXTENSION_TYPE: 'Invalid extension type',
-  PLUGIN_NAME_REQUIRED: 'Plugin name is required'
+  PLUGIN_NAME_REQUIRED: 'Plugin name is required',
+  PLUGIN_DEPENDENCY_MISSING: 'Plugin `%s` requires `%s` as dependency. Please install via `npm install --save %s`',
+  PLUGIN_DEPENDENCY_NOT_FOUND: 'Plugin dependency not found'
 };
 //# sourceMappingURL=constants.js.map

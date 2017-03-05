@@ -22,8 +22,9 @@ We use a seperate topic for every NSQ Topic/Channels because with that you can l
 'use strict'
 
 const Hemera = require('nats-hemera')
+const HemeraJoi = require('hemera-joi')
 const nats = require('nats').connect()
-const hemeraNsq = require('hemera-nsq')
+const HemeraNsq = require('hemera-nsq')
 
 const hemera = new Hemera(nats, {
   logLevel: 'info'
@@ -39,7 +40,8 @@ const options = {
   }
 }
 
-hemera.use(hemeraNsq, { nsq: options })
+hemera.use(HemeraJoi)
+hemera.use(HemeraNsq, { nsq: options })
 
 hemera.ready(() => {
   // create subscriber which listen on NSQ events

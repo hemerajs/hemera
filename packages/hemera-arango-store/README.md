@@ -33,14 +33,16 @@ npm run test
 'use strict'
 
 const Hemera = require('nats-hemera')
+const HemeraJoi = require('hemera-joi')
 const nats = require('nats').connect()
-const hemeraArango = require('hemera-arango-store')
+const HemeraArango = require('hemera-arango-store')
 
 const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
-hemera.use(hemeraArango, {
+hemera.use(HemeraJoi)
+hemera.use(HemeraArango, {
   arango: {
     url: 'http://127.0.0.1:8529',
     databaseName: 'test'

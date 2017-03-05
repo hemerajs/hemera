@@ -1,6 +1,7 @@
 'use strict'
 
 const Hemera = require('./../packages/hemera')
+const hemeraJoi = require('./../packages/hemera-joi')
 const nats = require('nats').connect()
 const hemeraCouchbaseStore = require('./../packages/hemera-couchbase-store')
 
@@ -8,6 +9,7 @@ const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
+hemera.use(hemeraJoi)
 hemera.use(hemeraCouchbaseStore)
 
 hemera.ready(() => {

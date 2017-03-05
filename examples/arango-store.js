@@ -2,12 +2,14 @@
 
 const Hemera = require('./../packages/hemera')
 const nats = require('nats').connect()
+const hemeraJoi = require('./../packages/hemera-joi')
 const hemeraArango = require('./../packages/hemera-arango-store')
 
 const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
+hemera.use(hemeraJoi)
 hemera.use(hemeraArango, {
   arango: {
     url: 'http://127.0.0.1:8529',
