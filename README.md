@@ -21,6 +21,7 @@ With Hemera you have the best of both worlds. Efficient pattern matching to have
 
 The key features of NATS in combination with Hemera are:
 * **Lightweight**: The Hemera core is small as possible and can be extended by extensions or plugins.
+* **Location transparency**: A service may be instantiated in different locations at different times. An application interacting with an service and does not know the service physical location.
 * **Service Discovery**: You don't need a service discovery all subscriptions are managed by NATS.
 * **Load Balancing**: Requests are load balanced (random) by NATS mechanism of "queue groups".
 * **Packages**: Providing reliable and modern plugins to the community.
