@@ -462,7 +462,9 @@ var Hemera = function (_EventEmitter) {
 
         _util2.default.serial(_this3._pluginRegistrations, each, function (err) {
           if (err) {
-            throw err;
+            var error = new _errors2.default.HemeraError(_constants2.default.PLUGIN_REGISTRATION_ERROR);
+            _this3.log.error(error);
+            throw error;
           }
           if (_lodash2.default.isFunction(cb)) {
             cb.call(_this3);

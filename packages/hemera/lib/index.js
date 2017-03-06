@@ -300,7 +300,7 @@ class Hemera extends EventEmitter {
     if (!params.attributes.name) {
       let error = new Errors.HemeraError(Constants.PLUGIN_NAME_REQUIRED)
       this.log.error(error)
-      throw error
+      throw (error)
     }
 
     // check if plugin is already registered
@@ -309,7 +309,7 @@ class Hemera extends EventEmitter {
       if (params.attributes.multiple !== true) {
         let error = new Errors.HemeraError(Constants.PLUGIN_ALREADY_REGISTERED, params.attributes.name)
         this.log.error(error)
-        throw error
+        throw (error)
       }
     }
 
@@ -402,7 +402,9 @@ class Hemera extends EventEmitter {
 
       Util.serial(this._pluginRegistrations, each, (err) => {
         if (err) {
-          throw err
+          let error = new Errors.HemeraError(Constants.PLUGIN_REGISTRATION_ERROR)
+          this.log.error(error)
+          throw (error)
         }
         if (_.isFunction(cb)) {
           cb.call(this)
