@@ -38,6 +38,48 @@ The key features of NATS in combination with Hemera are:
 * **Metadata**: Transfer metadata across services or attach contextual data to tracing systems.
 * **Dependencies**: NATS is a single binary of 7MB and can be deployed in seconds.
 
+## Example
+
+```js
+const Hemera = require('nats-hemera')
+const HemeraMongo = require('hemera-mongo-store')
+const HemeraJoi = require('hemera-joi')
+const nats = require('nats').connect(authUrl)
+
+const hemera = new Hemera(nats, { logLevel: 'info' })
+hemera.use(HemeraMongo)
+hemera.use(HemeraJoi)
+
+hemera.ready(() => {
+
+  hemera.add({ 
+    topic: 'math',
+    cmd: 'add',
+    a: Joi.number().required(),
+    b: Joi.number().required()
+  }, (req, cb) => {
+    cb(null, req.a + req.b)
+  })
+
+  hemera.add({ 
+    topic: 'email',
+    cmd: 'send'
+  }, (req, cb) => {
+    cb()
+  })
+
+  hemera.act({ 
+    topic: 'math',
+    cmd: 'add',
+    a: 1,
+    b: 2
+  }, (err, resp) => {
+    hemera.log.info(resp)
+  })
+
+})
+```
+
 ## Packages
 
 The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
