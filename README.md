@@ -38,7 +38,7 @@ The key features of NATS in combination with Hemera are:
 * **Metadata**: Transfer metadata across services or attach contextual data to tracing systems.
 * **Dependencies**: NATS is a single binary of 7MB and can be deployed in seconds.
 
-## Example
+## What Hemera code looks like
 
 ```js
 const Hemera = require('nats-hemera')
