@@ -121,6 +121,24 @@
                     <p class="section-content">
                         <p>For more information see <a href="http://nats.io/documentation/faq/">NATS Frequently Asked Questions</a></p>
                     </p>
+                    <h4 class="section-h4">Qualities of Service</h4>
+                    <ul>
+                        <li>
+                            <p><strong>At Most Once Delivery (TCP reliability)</strong> - In the basic NATS platform, if a subscriber
+                                is not listening on the subject (no subject match), or is not active when the message is
+                                sent, the message is not received. NATS is a fire-and-forget messaging system. If you need
+                                higher levels of service, you can either use <a href="/documentation/streaming/nats-streaming-intro/">NATS Streaming</a>,
+                                or build the additional reliability into your client(s) yourself.</p>
+                        </li>
+
+                        <li>
+                            <p><strong>At Least Once Delivery (<a href="/documentation/streaming/nats-streaming-intro/">NATS Streaming</a>)</strong>                                - Some applications require higher levels of service and more stringent delivery guarantees,
+                                at the potential cost of lower message throughput and higher end-to-end delivery latency.
+                                These applications rely on the underlying messaging transport to ensure that messages are
+                                delivered to subscribers irrespective of network outages or whether or not a subscriber is
+                                offline at a particular instant in time.</p>
+                        </li>
+                    </ul>
                 </div>
                 <!-- END CONTENT -->
 

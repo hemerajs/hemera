@@ -120,7 +120,12 @@
                     <hr>
 
                     <p class="section-content">
-                        A match happens when all properties of added pattern matches with the one in the passed object.
+                        NATS supports two flavors of request reply messaging: point-to-point or one-to-many. Point-to-point involves the fastest
+                        or first to respond. In a one-to-many exchange, you set a limit on the number of responses the requestor
+                        may receive. In a request-response exchange, publish request operation publishes a message with a
+                        reply subject expecting a response on that reply subject. You can request to automatically wait for
+                        a response inline. The request creates an inbox and performs a request call with the inbox reply
+                        and returns the first reply received. This is optimized in the case of multiple responses.
                     </p>
                     <h4 class="section-h4">Request</h4>
                     <pre>
@@ -141,6 +146,20 @@ hemera.add({
   cmd: "add",
   a: Joi.number().required(),
   b: Joi.number().required()
+}, function (req, cb) {
+  cb(null, req.a + req.b)
+})
+</code>
+                    </pre>
+                    <h4 class="section-h4">Auto-unsubscribe after <code>maxMessages$</code> messages received</h4>
+                    <pre>
+<code class="javascript">
+hemera.add({ 
+  topic: "math",
+  cmd: "add",
+  a: Joi.number().required(),
+  b: Joi.number().required(),
+  maxMessages$: 1
 }, function (req, cb) {
   cb(null, req.a + req.b)
 })

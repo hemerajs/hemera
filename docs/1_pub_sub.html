@@ -120,7 +120,11 @@
                     <hr>
 
                     <p class="section-content">
-
+                        NATS implements a publish subscribe message distribution model. NATS publish subscribe is a one-to-many communication. A
+                        publisher sends a message on a subject. Any active subscriber listening on that subject receives
+                        the message. Subscribers can register interest in wildcard subjects. In an asynchronous exchange,
+                        messages are delivered to the subscriber’s message handler. If there is no handler, the subscription
+                        is synchronous and the client may be blocked until it can process the message.
                     </p>
                     <h4 class="section-h4">Normal (One-to-many)</h4>
                     <pre>
@@ -173,6 +177,19 @@ hemera.act({
 })
 </code>
                     </pre>
+                    <h4 class="section-h4">Auto-unsubscribe after <code>maxMessages$</code> messages received</h4>
+                    <pre>
+<code class="javascript">
+hemera.add({ 
+  pubsub$: true,
+  topic: "math",
+  cmd: "add",
+  a: Joi.number().required(),
+  b: Joi.number().required(),
+  maxMessages$: 1
+}, function (req, cb) {
+  cb(null, req.a + req.b)
+})
                 </div>
                 <!-- END CONTENT -->
 
