@@ -55,7 +55,7 @@
                         <h4>1. Basics</h4>
                         <ul>
                             <li><a href="1_request_reply.html"><span>Request & Reply</span></a></li>
-                            <li><a href="1_pattern_matching.html" class="active"><span>Pattern matching</span></a></li>
+                            <li><a href="1_pattern_matching.html"><span>Pattern matching</span></a></li>
                             <li><a href="1_pub_sub.html"><span>Publish & Subscribe</span></a></li>
                             <li><a href="1_payload_validation.html"><span>Payload validation</span></a></li>
                             <li><a href="1_middleware.html"><span>Middleware</span></a></li>
@@ -85,7 +85,7 @@
 
                         <h4>4. Internals</h4>
                         <ul>
-                            <li><a href="4_overview.html"><span>Protocol</span></a></li>
+                            <li><a href="4_overview.html" class="active"><span>Protocol</span></a></li>
                         </ul>
 
                         <h4>5. ADVANCED</h4>
@@ -116,31 +116,71 @@
 
                 <!-- BEGIN CONTENT -->
                 <div class="col-sm-9 border-left section-right">
-                    <h1 class="section-header">Pattern matching</h1>
+                    <h1 class="section-header">Protocol</h1>
                     <hr>
 
                     <p class="section-content">
-                        A match happens when all properties of added pattern matches with the one in the passed object.
                     </p>
-                    <h4 class="section-h4">Matched</h4>
+                    <h4 class="section-h4">Definition</h4>
                     <pre>
-<code class="javascript">
-hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
-  cb(resp.a + resp.b)
-})
-hemera.act({ topic: "math", cmd: "add", a: 1, b: 1 })
+<code>
+message ErrorCause {
+  string message = 1;
+  string name = 2;
+}
+
+message RootCause {
+  string message = 1;
+  string name = 2;
+}
+
+enum RequestType {
+  pubsub = 0;
+  request = 1;
+}
+
+message Error {
+  string message = 1;
+  string name = 2;
+  Pattern pattern = 3;
+  ErrorCause cause = 4;
+  RootCause rootCause = 5;
+  string ownStack = 6;
+}
+
+message Request {
+  string id = 1;
+  string parentId = 2;
+  int64 timestamp = 3;
+  int32 duration = 4;
+  RequestType type = 5;
+}
+
+message Trace {
+  string traceId = 1;
+  string spanId = 2;
+  int64 timestamp = 3;
+  string service = 4;
+  string method = 5;
+  int32 duration = 6;
+}
+
+message Pattern = Object;
+message Result = Any;
+message Delegate = Object;
+message Meta = Object;
+
+message Protocol {
+    Trace trace = 1;
+    Request request = 2;
+    Result result = 3;
+    Error error = 4;
+    Meta meta = 5;
+    Delegate delegate = 6;
+}
 </code>
                     </pre>
-                    <h4 class="section-h4">Not Matched</h4>
-                    <p>Because <code>foo:"bar"</code> is required.</p>
-                    <pre>
-<code class="javascript">
-hemera.add({ topic: "math", cmd: "add", foo: "bar" }, function (req, cb) {
-  cb(resp.a + resp.b)
-})
-hemera.act({ topic: "math", cmd: "add", a: 1, b: 1 })
-</code>
-                    </pre>
+
                 </div>
                 <!-- END CONTENT -->
 

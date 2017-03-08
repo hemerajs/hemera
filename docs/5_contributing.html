@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hemera</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800">
+    <link rel="stylesheet" href="scripts/highlight/styles/github-gist.css">
+    <link rel="stylesheet" href="stylesheets/styles.css">
+</head>
+
+<body>
+
+    <!-- BEGIN NAVIGATION BAR -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                    aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+                <a class="navbar-brand" href="https://hemerajs.github.io/hemera/"><img src="images/logo.png" width="32px" height="36px"></a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="active"><a href="index.html">Hemera</a></li>
+                    <li><a href="https://hemerajs.github.io/hemera/">GitHub</a></li>
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </nav>
+    <!-- END NAVIGATION BAR -->
+
+    <div class="container body-container">
+        <div class="main-content">
+            <div class="row">
+
+                <!-- BEGIN SIDEBAR -->
+                <div class="col-sm-3 border-right section-left">
+                    <div saveheight="1" class="sidebar-nav">
+                        <h4>INTRODUCTION</h4>
+                        <ul>
+                            <li><a href="index.html"><span>Introduction</span></a></li>
+                            <li><a href="getting-started.html"><span>Getting Started</span></a></li>
+                            <li><a href="packages.html"><span>Packages</span></a></li>
+                        </ul>
+
+                        <h4>1. Basics</h4>
+                        <ul>
+                            <li><a href="1_request_reply.html"><span>Request & Reply</span></a></li>
+                            <li><a href="1_pattern_matching.html"><span>Pattern matching</span></a></li>
+                            <li><a href="1_pub_sub.html"><span>Publish & Subscribe</span></a></li>
+                            <li><a href="1_payload_validation.html"><span>Payload validation</span></a></li>
+                            <li><a href="1_middleware.html"><span>Middleware</span></a></li>
+                            <li><a href="1_extension_points.html"><span>Extension Points</span></a></li>
+                            <li><a href="1_logging.html"><span>Logging</span></a></li>
+                            <li><a href="1_plugins.html"><span>Plugins</span></a></li>
+                            <li><a href="1_metadata.html"><span>Metadata</span></a></li>
+                            <li><a href="1_context.html"><span>Context</span></a></li>
+                            <li><a href="1_delegate.html"><span>Delegate</span></a></li>
+                        </ul>
+
+                        <h4>2. ERROR HANDLING</h4>
+                        <ul>
+                            <li><a href="2_basic.html"><span>Basic</span></a></li>
+                            <li><a href="2_timeout_errors.html"><span>Timeout errors</span></a></li>
+                            <li><a href="2_fatal_errors.html"><span>Fatal errors</span></a></li>
+                            <li><a href="2_error_propagation.html"><span>Error propagation</span></a></li>
+                            <li><a href="2_transport_errors.html"><span>Listen on transport errors</span></a></li>
+                            <li><a href="2_response_errors.html"><span>Listen on response errors</span></a></li>
+                            <li><a href="2_custom_timeout.html"><span>Custom timeout per Act</span></a></li>
+                        </ul>
+                        <h4>3. TRACING</h4>
+                        <ul>
+                            <li><a href="3_life_cycle_events.html"><span>Life-cycle events</span></a></li>
+                        </ul>
+
+                        <h4>4. Internals</h4>
+                        <ul>
+                            <li><a href="4_overview.html"><span>Protocol</span></a></li>
+                        </ul>
+
+                        <h4>5. ADVANCED</h4>
+                        <ul>
+                            <li><a href="5_clustering.html"><span>Clustering</span></a></li>
+                            <li><a href="5_api_versioning.html"><span>API Versioning</span></a></li>
+                            <li><a href="5_nats_limits.html"><span>Nats limits & features</span></a></li>
+                            <li><a href="5_testing.html"><span>Testing</span></a></li>
+                            <li><a href="5_bridge.html"><span>Bridge</span></a></li>
+                            <li><a href="5_nginx_integration_for_nats.html"><span>Nginx integration for NATS</span></a></li>
+                            <li><a href="5_contributing.html" class="active"><span>Contributing</span></a></li>
+                        </ul>
+
+                        <h4>6. TOOLING</h4>
+                        <ul>
+                            <li><a href="6_monitoring.html"><span>Monitoring</span></a></li>
+                            <li><a href="6_zipkin.html"><span>Zipkin</span></a></li>
+                            <li><a href="6_cli.html"><span>CLI</span></a></li>
+                        </ul>
+                        <h4>7. BEST PRACTICE</h4>
+                        <ul>
+                            <li><a href="7_docker.html"><span>Docker</span></a></li>
+                        </ul>
+
+                    </div>
+                </div>
+                <!-- END SIDEBAR -->
+
+                <!-- BEGIN CONTENT -->
+                <div class="col-sm-9 border-left section-right">
+                    <h1 class="section-header">Contributing</h1>
+                    <hr>
+
+                    <p class="section-content">
+                    </p>
+                    <h4 class="section-h4"></h4>
+                    <article class="markdown-body entry-content" itemprop="text">
+
+                        <p>When contributing to this repository, please first discuss the change you wish to make via issue,
+                            email, or any other method with the owners of this repository before making a change. </p>
+
+                        <p>Please note we have a code of conduct, please follow it in all your interactions with the project.</p>
+
+                        <h2>
+                            <a id="user-content-pull-request-process" class="anchor" href="#pull-request-process" aria-hidden="true">
+                            </a>Pull Request Process</h2>
+
+                        <ol>
+                            <li>Ensure any install or build dependencies are removed before the end of the layer when doing a
+                                build.
+                            </li>
+                            <li>Update the README.md with details of changes to the interface, this includes new environment
+                                variables, exposed ports, useful file locations and container parameters.</li>
+                            <li>Increase the version numbers in any examples files and the README.md to the new version that
+                                this Pull Request would represent. The versioning scheme we use is <a href="http://semver.org/">SemVer</a>.</li>
+                            <li>You may merge the Pull Request in once you have the sign-off of two other developers, or if you
+                                do not have permission to do that, you may request the second reviewer to merge it for you.</li>
+                        </ol>
+
+                        <h2>
+                            <a id="user-content-code-of-conduct" class="anchor" href="#code-of-conduct" aria-hidden="true">
+                            </a>Code of Conduct</h2>
+
+                        <h3>
+                            <a id="user-content-our-pledge" class="anchor" href="#our-pledge" aria-hidden="true">
+                            </a>Our Pledge</h3>
+
+                        <p>In the interest of fostering an open and welcoming environment, we as contributors and maintainers
+                            pledge to making participation in our project and our community a harassment-free experience
+                            for everyone, regardless of age, body size, disability, ethnicity, gender identity and expression,
+                            level of experience, nationality, personal appearance, race, religion, or sexual identity and
+                            orientation.
+                        </p>
+
+                        <h3>
+                            <a id="user-content-our-standards" class="anchor" href="#our-standards" aria-hidden="true">
+                            </a>Our Standards</h3>
+
+                        <p>Examples of behavior that contributes to creating a positive environment include:
+                        </p>
+
+                        <ul>
+                            <li>Using welcoming and inclusive language</li>
+                            <li>Being respectful of differing viewpoints and experiences</li>
+                            <li>Gracefully accepting constructive criticism</li>
+                            <li>Focusing on what is best for the community</li>
+                            <li>Showing empathy towards other community members</li>
+                        </ul>
+
+                        <p>Examples of unacceptable behavior by participants include:</p>
+
+                        <ul>
+                            <li>The use of sexualized language or imagery and unwelcome sexual attention or advances
+                            </li>
+                            <li>Trolling, insulting/derogatory comments, and personal or political attacks</li>
+                            <li>Public or private harassment</li>
+                            <li>Publishing others' private information, such as a physical or electronic address, without explicit
+                                permission
+                            </li>
+                            <li>Other conduct which could reasonably be considered inappropriate in a professional setting</li>
+                        </ul>
+
+                        <h3>
+                            <a id="user-content-our-responsibilities" class="anchor" href="#our-responsibilities" aria-hidden="true">
+                            </a>Our Responsibilities</h3>
+
+                        <p>Project maintainers are responsible for clarifying the standards of acceptable behavior and are expected
+                            to take appropriate and fair corrective action in response to any instances of unacceptable behavior.</p>
+
+                        <p>Project maintainers have the right and responsibility to remove, edit, or reject comments, commits,
+                            code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct,
+                            or to ban temporarily or permanently any contributor for other behaviors that they deem inappropriate,
+                            threatening, offensive, or harmful.</p>
+
+                        <h3>
+                            <a id="user-content-scope" class="anchor" href="#scope" aria-hidden="true">
+                            </a>Scope</h3>
+
+                        <p>This Code of Conduct applies both within project spaces and in public spaces when an individual is
+                            representing the project or its community. Examples of representing a project or community include
+                            using an official project e-mail address, posting via an official social media account, or acting
+                            as an appointed representative at an online or offline event. Representation of a project may
+                            be further defined and clarified by project maintainers.</p>
+
+                        <h3>
+                            <a id="user-content-enforcement" class="anchor" href="#enforcement" aria-hidden="true">
+                            </a>Enforcement</h3>
+
+                        <p>Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting
+                            the project team at [INSERT EMAIL ADDRESS]. All complaints will be reviewed and investigated
+                            and will result in a response that is deemed necessary and appropriate to the circumstances.
+                            The project team is obligated to maintain confidentiality with regard to the reporter of an incident.
+                            Further details of specific enforcement policies may be posted separately.</p>
+
+                        <p>Project maintainers who do not follow or enforce the Code of Conduct in good faith may face temporary
+                            or permanent repercussions as determined by other members of the project's leadership.</p>
+
+                        <h3>
+                            <a id="user-content-attribution" class="anchor" href="#attribution" aria-hidden="true">
+                            </a>Attribution</h3>
+
+                        <p>This Code of Conduct is adapted from the <a href="http://contributor-covenant.org">Contributor Covenant</a>,
+                            version 1.4, available at <a href="http://contributor-covenant.org/version/1/4/">http://contributor-covenant.org/version/1/4</a></p>
+                    </article>
+                </div>
+                <!-- END CONTENT -->
+
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /main-content -->
+    </div>
+    <!-- /container -->
+
+    <!-- BEGIN FOOTER -->
+    <footer class="navbar-fixed-bottom">
+        <div class="container footer">
+            <p>
+            </p>
+        </div>
+    </footer>
+    <!-- END FOOTER -->
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- Highlights JS -->
+    <script src="scripts/highlight/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script>
+
+</body>
+
+</html>

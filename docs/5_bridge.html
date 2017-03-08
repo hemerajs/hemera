@@ -55,7 +55,7 @@
                         <h4>1. Basics</h4>
                         <ul>
                             <li><a href="1_request_reply.html"><span>Request & Reply</span></a></li>
-                            <li><a href="1_pattern_matching.html" class="active"><span>Pattern matching</span></a></li>
+                            <li><a href="1_pattern_matching.html"><span>Pattern matching</span></a></li>
                             <li><a href="1_pub_sub.html"><span>Publish & Subscribe</span></a></li>
                             <li><a href="1_payload_validation.html"><span>Payload validation</span></a></li>
                             <li><a href="1_middleware.html"><span>Middleware</span></a></li>
@@ -77,7 +77,6 @@
                             <li><a href="2_response_errors.html"><span>Listen on response errors</span></a></li>
                             <li><a href="2_custom_timeout.html"><span>Custom timeout per Act</span></a></li>
                         </ul>
-
                         <h4>3. TRACING</h4>
                         <ul>
                             <li><a href="3_life_cycle_events.html"><span>Life-cycle events</span></a></li>
@@ -94,7 +93,7 @@
                             <li><a href="5_api_versioning.html"><span>API Versioning</span></a></li>
                             <li><a href="5_nats_limits.html"><span>Nats limits & features</span></a></li>
                             <li><a href="5_testing.html"><span>Testing</span></a></li>
-                            <li><a href="5_bridge.html"><span>Bridge</span></a></li>
+                            <li><a href="5_bridge.html" class="active"><span>Bridge</span></a></li>
                             <li><a href="5_nginx_integration_for_nats.html"><span>Nginx integration for NATS</span></a></li>
                             <li><a href="5_contributing.html"><span>Contributing</span></a></li>
                         </ul>
@@ -116,31 +115,20 @@
 
                 <!-- BEGIN CONTENT -->
                 <div class="col-sm-9 border-left section-right">
-                    <h1 class="section-header">Pattern matching</h1>
+                    <h1 class="section-header">Bridge</h1>
                     <hr>
 
                     <p class="section-content">
-                        A match happens when all properties of added pattern matches with the one in the passed object.
+                        <p>If you need message delivery or another guarantee which NATS cannot provide you are able to plugin
+                            any other messaging system. E.g we provide plugins for RabbitMQ and NSQ.</p>
                     </p>
-                    <h4 class="section-h4">Matched</h4>
-                    <pre>
-<code class="javascript">
-hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
-  cb(resp.a + resp.b)
-})
-hemera.act({ topic: "math", cmd: "add", a: 1, b: 1 })
-</code>
-                    </pre>
-                    <h4 class="section-h4">Not Matched</h4>
-                    <p>Because <code>foo:"bar"</code> is required.</p>
-                    <pre>
-<code class="javascript">
-hemera.add({ topic: "math", cmd: "add", foo: "bar" }, function (req, cb) {
-  cb(resp.a + resp.b)
-})
-hemera.act({ topic: "math", cmd: "add", a: 1, b: 1 })
-</code>
-                    </pre>
+                    <h4 class="section-h4"></h4>
+                    <img src="https://github.com/StarpTech/hemera/raw/master/media/hemera-rabbitmq-nsq.png" alt="Hemera">
+                    <blockquote>
+                        <p> We can always build stronger guarantees on top, but we can’t always remove them from below." Tyler
+                            Treat
+                        </p>
+                    </blockquote>
                 </div>
                 <!-- END CONTENT -->
 

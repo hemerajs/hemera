@@ -55,7 +55,7 @@
                         <h4>1. Basics</h4>
                         <ul>
                             <li><a href="1_request_reply.html"><span>Request & Reply</span></a></li>
-                            <li><a href="1_pattern_matching.html" class="active"><span>Pattern matching</span></a></li>
+                            <li><a href="1_pattern_matching.html"><span>Pattern matching</span></a></li>
                             <li><a href="1_pub_sub.html"><span>Publish & Subscribe</span></a></li>
                             <li><a href="1_payload_validation.html"><span>Payload validation</span></a></li>
                             <li><a href="1_middleware.html"><span>Middleware</span></a></li>
@@ -77,7 +77,6 @@
                             <li><a href="2_response_errors.html"><span>Listen on response errors</span></a></li>
                             <li><a href="2_custom_timeout.html"><span>Custom timeout per Act</span></a></li>
                         </ul>
-
                         <h4>3. TRACING</h4>
                         <ul>
                             <li><a href="3_life_cycle_events.html"><span>Life-cycle events</span></a></li>
@@ -91,7 +90,7 @@
                         <h4>5. ADVANCED</h4>
                         <ul>
                             <li><a href="5_clustering.html"><span>Clustering</span></a></li>
-                            <li><a href="5_api_versioning.html"><span>API Versioning</span></a></li>
+                            <li><a href="5_api_versioning.html" class="active"><span>API Versioning</span></a></li>
                             <li><a href="5_nats_limits.html"><span>Nats limits & features</span></a></li>
                             <li><a href="5_testing.html"><span>Testing</span></a></li>
                             <li><a href="5_bridge.html"><span>Bridge</span></a></li>
@@ -116,31 +115,54 @@
 
                 <!-- BEGIN CONTENT -->
                 <div class="col-sm-9 border-left section-right">
-                    <h1 class="section-header">Pattern matching</h1>
+                    <h1 class="section-header">API Versioning</h1>
                     <hr>
 
                     <p class="section-content">
-                        A match happens when all properties of added pattern matches with the one in the passed object.
+                        <p>At first I recommend you to get familiar with NATS https://nats.io/documentation/ NATS is pub/sub
+                            system. In hemera every service is located by his topic name. If you want provide a service with
+                            different versions you can represent it with the topic name</p>
                     </p>
-                    <h4 class="section-h4">Matched</h4>
+                    <h4 class="section-h4">On service level</h4>
                     <pre>
 <code class="javascript">
-hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
-  cb(resp.a + resp.b)
-})
-hemera.act({ topic: "math", cmd: "add", a: 1, b: 1 })
+hemera.add({ topic: "math:v1.0" })
 </code>
                     </pre>
-                    <h4 class="section-h4">Not Matched</h4>
-                    <p>Because <code>foo:"bar"</code> is required.</p>
+                    <p>or with wildcards. For more infos see <a href="https://nats.io/documentation/internals/nats-protocol/">Nats protocol</a></p>
                     <pre>
 <code class="javascript">
-hemera.add({ topic: "math", cmd: "add", foo: "bar" }, function (req, cb) {
-  cb(resp.a + resp.b)
-})
-hemera.act({ topic: "math", cmd: "add", a: 1, b: 1 })
+hemera.add({ topic: "math:v1.*" })
 </code>
                     </pre>
+                    <h4 class="section-h4">On application level</h4>
+                    <p>You can also express you different version with a different pattern so that your service is always accessible
+                        via the same topic. I prefer this solution because you have the most flexbility and less effort but
+                        this orientates on the complexity of both versions.</p>
+                    <pre>
+<code class="javascript">
+hemera.add({
+topic: "math",
+cmd:" add", 
+version: "1"
+})
+</code>
+                    </pre>
+                    <p>or with regex</p>
+                    <pre>
+<code class="javascript">
+hemera.add({
+topic: "math",
+cmd:" add", 
+version: /1\.[0-9]/
+})
+</code>
+                    </pre>
+                    <h4 class="section-h4">On server level</h4>
+                    <p>E.g different regions should only have access to api version 1.0. You can connect those clients with
+                        a different NATS server which exposed a restricted set of services. After a certain period of time
+                        you can also combine both server to a cluster. This use case is very special but possible. You have
+                        three options how to deal with versioning.</p>
                 </div>
                 <!-- END CONTENT -->
 

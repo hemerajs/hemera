@@ -55,7 +55,7 @@
                         <h4>1. Basics</h4>
                         <ul>
                             <li><a href="1_request_reply.html"><span>Request & Reply</span></a></li>
-                            <li><a href="1_pattern_matching.html" class="active"><span>Pattern matching</span></a></li>
+                            <li><a href="1_pattern_matching.html"><span>Pattern matching</span></a></li>
                             <li><a href="1_pub_sub.html"><span>Publish & Subscribe</span></a></li>
                             <li><a href="1_payload_validation.html"><span>Payload validation</span></a></li>
                             <li><a href="1_middleware.html"><span>Middleware</span></a></li>
@@ -77,7 +77,6 @@
                             <li><a href="2_response_errors.html"><span>Listen on response errors</span></a></li>
                             <li><a href="2_custom_timeout.html"><span>Custom timeout per Act</span></a></li>
                         </ul>
-
                         <h4>3. TRACING</h4>
                         <ul>
                             <li><a href="3_life_cycle_events.html"><span>Life-cycle events</span></a></li>
@@ -101,7 +100,7 @@
 
                         <h4>6. TOOLING</h4>
                         <ul>
-                            <li><a href="6_monitoring.html"><span>Monitoring</span></a></li>
+                            <li><a href="6_monitoring.html" class="active"><span>Monitoring</span></a></li>
                             <li><a href="6_zipkin.html"><span>Zipkin</span></a></li>
                             <li><a href="6_cli.html"><span>CLI</span></a></li>
                         </ul>
@@ -116,31 +115,35 @@
 
                 <!-- BEGIN CONTENT -->
                 <div class="col-sm-9 border-left section-right">
-                    <h1 class="section-header">Pattern matching</h1>
+                    <h1 class="section-header">Monitoring</h1>
                     <hr>
 
                     <p class="section-content">
-                        A match happens when all properties of added pattern matches with the one in the passed object.
                     </p>
-                    <h4 class="section-h4">Matched</h4>
-                    <pre>
-<code class="javascript">
-hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
-  cb(resp.a + resp.b)
-})
-hemera.act({ topic: "math", cmd: "add", a: 1, b: 1 })
-</code>
-                    </pre>
-                    <h4 class="section-h4">Not Matched</h4>
-                    <p>Because <code>foo:"bar"</code> is required.</p>
-                    <pre>
-<code class="javascript">
-hemera.add({ topic: "math", cmd: "add", foo: "bar" }, function (req, cb) {
-  cb(resp.a + resp.b)
-})
-hemera.act({ topic: "math", cmd: "add", a: 1, b: 1 })
-</code>
-                    </pre>
+                    <h4 class="section-h4">Hemera-board</h4>
+                    <p>Easy and beautiful tool to monitor you app <a href="https://github.com/hemerajs/hemera-board">hemera-board</a></p>
+                    <h4 class="section-h4">Hemera-cli</h4>
+                    <p> Use the <a href="https://github.com/hemerajs/hemera-cli">hemera-cli</a> in combination with the <a href="https://github.com/hemerajs/hemera/tree/master/packages/hemera-stats">hemera-stats</a>                        plugin to observe your services.</p>
+                    <article class="markdown-body entry-content" itemprop="text">
+
+                        <h3>
+                            <a id="user-content-list-services" class="anchor" href="#list-services" aria-hidden="true">
+                            </a>List services</h3>
+
+                        <p>
+                            <a href="https://github.com/hemerajs/hemera-cli/blob/master/media/hemera-cli.png?raw=true" target="_blank"><img src="https://github.com/hemerajs/hemera-cli/raw/master/media/hemera-cli.png?raw=true" alt="Hemera"
+                                    style="max-width:100%;"></a>
+                        </p>
+
+                        <h3>
+                            <a id="user-content-list-actions" class="anchor" href="#list-actions" aria-hidden="true">
+                            </a>List actions</h3>
+
+                        <p>
+                            <a href="https://github.com/hemerajs/hemera-cli/blob/master/media/actions.png?raw=true" target="_blank"><img src="https://github.com/hemerajs/hemera-cli/raw/master/media/actions.png?raw=true" alt="Hemera"
+                                    style="max-width:100%;"></a>
+                        </p>
+                    </article>
                 </div>
                 <!-- END CONTENT -->
 
