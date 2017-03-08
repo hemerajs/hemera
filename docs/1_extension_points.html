@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hemera</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800">
+    <link rel="stylesheet" href="scripts/highlight/styles/github-gist.css">
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <script src="https://use.fontawesome.com/2e9ff283e5.js"></script>
+</head>
+
+<body>
+
+    <!-- BEGIN NAVIGATION BAR -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                    aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+                <a class="navbar-brand" href="https://github.com/hemerajs/hemera/docs"><img src="images/logo.png" width="32px" height="36px"></a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="active"><a href="index.html">Hemera</a></li>
+                    <li><a href="https://github.com/hemera/hemerajs">GitHub</a></li>
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </nav>
+    <!-- END NAVIGATION BAR -->
+
+    <div class="container body-container">
+        <div class="main-content">
+            <div class="row">
+
+                <!-- BEGIN SIDEBAR -->
+                <div class="col-sm-3 border-right section-left">
+                    <div saveheight="1" class="sidebar-nav">
+                        <h4>INTRODUCTION</h4>
+                        <ul>
+                            <li><a href="index.html"><span>Introduction</span></a></li>
+                            <li><a href="getting-started.html"><span>Getting Started</span></a></li>
+                            <li><a href="packages.html"><span>Packages</span></a></li>
+                        </ul>
+
+                        <h4>1. Basics</h4>
+                        <ul>
+                            <li><a href="1_pattern_matching.html"><span>Pattern matching</span></a></li>
+                            <li><a href="1_pub_sub.html"><span>Publish & Subscribe</span></a></li>
+                            <li><a href="1_payload_validation.html"><span>Payload validation</span></a></li>
+                            <li><a href="1_middleware.html"><span>Middleware</span></a></li>
+                            <li><a href="1_extension_points.html" class="active"><span>Extension Points</span></a></li>
+                            <li><a href="1_logging.html"><span>Logging</span></a></li>
+                            <li><a href="1_plugins.html"><span>Plugins</span></a></li>
+                            <li><a href="1_metadata.html"><span>Metadata</span></a></li>
+                            <li><a href="1_context.html"><span>Context</span></a></li>
+                            <li><a href="1_delegate.html"><span>Delegate</span></a></li>
+                        </ul>
+
+                        <h4>2. ERROR HANDLING</h4>
+                        <ul>
+                            <li><a href="2_reply.html"><span>Reply an error</span></a></li>
+                            <li><a href="2_error_first_callbacks.html"><span>Error-first-callbacks</span></a></li>
+                            <li><a href="2_timeout_errors.html"><span>Timeout errors</span></a></li>
+                            <li><a href="2_fatal_errors.html"><span>Fatal errors</span></a></li>
+                            <li><a href="2_error_propagation.html"><span>Error propagation</span></a></li>
+                            <li><a href="2_transport_errors.html"><span>Listen on transport errors</span></a></li>
+                            <li><a href="2_response_errros.html"><span>Listen on response errors</span></a></li>
+                            <li><a href="2_custom_timeout.html"><span>Custom timeout per Act</span></a></li>
+                        </ul>
+
+                        <h4>3. TRACING</h4>
+                        <ul>
+                            <li><a href="3_life_cycle_events.html"><span>Life-cycle events</span></a></li>
+                        </ul>
+
+                        <h4>4. Internals</h4>
+                        <ul>
+                            <li><a href="4_overview.html"><span>Protocol</span></a></li>
+                        </ul>
+
+                        <h4>5. ADVANCED</h4>
+                        <ul>
+                            <li><a href="5_clustering.html"><span>Clustering</span></a></li>
+                            <li><a href="5_api_versioning.html"><span>API Versioning</span></a></li>
+                            <li><a href="5_nats_limits.html"><span>Nats limits & features</span></a></li>
+                            <li><a href="5_unit-test.html"><span>Unit test</span></a></li>
+                            <li><a href="5_bridge.html"><span>Bridge to other messaging systems</span></a></li>
+                            <li><a href="5_nginx_integration_for_nats.html"><span>Nginx integration for NATS</span></a></li>
+                            <li><a href="5_contributing.html"><span>Contributing</span></a></li>
+                        </ul>
+
+                        <h4>6. TOOLING</h4>
+                        <ul>
+                            <li><a href="6_monitoring.html"><span>Monitoring</span></a></li>
+                            <li><a href="6_cli.html"><span>CLI</span></a></li>
+                        </ul>
+                        <h4>7. BEST PRACTICE</h4>
+                        <ul>
+                            <li><a href="7_docker.html"><span>Docker</span></a></li>
+                        </ul>
+
+                    </div>
+                </div>
+                <!-- END SIDEBAR -->
+
+                <!-- BEGIN CONTENT -->
+                <div class="col-sm-9 border-left section-right">
+                    <h1 class="section-header">Extension Points</h1>
+                    <hr>
+
+                    <p class="section-content">
+                        You can extend custom behavior by extensions.
+                    </p>
+                    <h4 class="section-h4">Client</h4>
+                    <p style="color: #5b9bd5;"><i class="fa fa-info" aria-hidden="true"></i> Available extensions</p>
+                    <ul style="">
+                        <li style="color: #5b9bd5; margin: 8px 0;"><code>onClientPreRequest</code></li>
+                        <li style="color: #5b9bd5; margin: 8px 0;"><code>onClientPostRequest</code></li>
+                    </ul>
+                    <br>
+                    <pre>
+<code class="javascript">
+hemera.ext("onClientPreRequest", function(next, i) {
+
+   let ctx = this
+   next()
+})
+</code>
+                    </pre>
+                    <ul>
+                        <li><code>i</code> s the index of the handler.</li>
+                    </ul>
+                    <br>
+                    <h4 class="section-h4">Server</h4>
+                    <p style="color: #5b9bd5;"><i class="fa fa-info" aria-hidden="true"></i> Available extensions</p>
+                    <ul style="">
+                        <li style="color: #5b9bd5; margin: 8px 0;"><code>onServerPreHandler</code></li>
+                        <li style="color: #5b9bd5; margin: 8px 0;"><code>onServerPreRequest</code></li>
+                        <li style="color: #5b9bd5; margin: 8px 0;"><code>onServerPreResponse</code></li>
+                    </ul>
+                    <br>
+                    <pre>
+<code class="javascript">
+hemera.ext("onServerPreHandler", function(next, i) {
+
+   let ctx = this
+   next()
+})
+</code>
+                    </pre>
+                    <br>
+                    <ul>
+                        <li>
+                            <code>next()</code> will call the next extension handler on the stack.</li>
+                        <li>
+                            <code>res.send(&lt;error&gt; or &lt;payload&gt;)</code> will end the request-response cycle and
+                            send the data back to the callee but <strong>other</strong> extensions will be called.</li>
+                        <li>
+                            <code>res.end(&lt;error&gt; or &lt;payload&gt;)</code> will end the request-response cycle and
+                            send the data back to the callee but <strong>no</strong> other extensions will be called.</li>
+                        <li>
+                            <code>req</code> contains the current request. Its an object with two properties <code>payload</code>                            and <code>error</code> because decoding issues. Payload and error object can be manipulated.</li>
+                        <li>
+                            <code>res</code> contains the current response. Its an object with two properties <code>payload</code>                            and <code>error</code>. Payload and error object can be manipulated.</li>
+                        <li>
+                            <code>prevValue</code> contains the message from the previous extension which was passed by <code>send(&lt;value&gt;)</code>
+                        </li>
+                        <li>
+                            <code>i</code> represent the position of the handler in the stack.</li>
+                    </ul>
+
+                </div>
+                <!-- END CONTENT -->
+
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /main-content -->
+    </div>
+    <!-- /container -->
+
+    <!-- BEGIN FOOTER -->
+    <footer class="navbar-fixed-bottom">
+        <div class="container footer">
+            <p>
+            </p>
+        </div>
+    </footer>
+    <!-- END FOOTER -->
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- Highlights JS -->
+    <script src="scripts/highlight/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script>
+
+</body>
+
+</html>
