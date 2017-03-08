@@ -57,7 +57,7 @@
                             <li><a href="1_request_reply.html"><span>Request & Reply</span></a></li>
                             <li><a href="1_pattern_matching.html"><span>Pattern matching</span></a></li>
                             <li><a href="1_pub_sub.html"><span>Publish & Subscribe</span></a></li>
-                            <li><a href="1_payload_validation.html" class="active"><span>Payload validation</span></a></li>
+                            <li><a href="1_payload_validation.html"><span>Payload validation</span></a></li>
                             <li><a href="1_middleware.html"><span>Middleware</span></a></li>
                             <li><a href="1_extension_points.html"><span>Extension Points</span></a></li>
                             <li><a href="1_logging.html"><span>Logging</span></a></li>
@@ -69,7 +69,7 @@
 
                         <h4>2. ERROR HANDLING</h4>
                         <ul>
-                            <li><a href="2_basic.html"><span>Basic</span></a></li>
+                            <li><a href="2_basic.html" class="active"><span>Basic</span></a></li>
                             <li><a href="2_timeout_errors.html"><span>Timeout errors</span></a></li>
                             <li><a href="2_fatal_errors.html"><span>Fatal errors</span></a></li>
                             <li><a href="2_error_propagation.html"><span>Error propagation</span></a></li>
@@ -115,37 +115,28 @@
 
                 <!-- BEGIN CONTENT -->
                 <div class="col-sm-9 border-left section-right">
-                    <h1 class="section-header">Payload validation</h1>
+                    <h1 class="section-header">Basic</h1>
                     <hr>
 
                     <p class="section-content">
-                        You can use different validators e.g Joi
+                        <p>Hemera follows strictly the error-first-callback convention.</p>
                     </p>
-                    <h4 class="section-h4">Joi validator</h4>
+                    <h4 class="section-h4">Reply an error</h4>
                     <pre>
 <code class="javascript">
-hemera.add({
-  topic: "math",
-  cmd: "add",
-  a: Joi.number().required(),
-  b: Joi.number().required()
-}, function (req, cb) {
-
-  cb(null, req.a + req.b)
+hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
+  cb(new CustomError("Invalid operation"))
 })
 </code>
                     </pre>
-                    <h4 class="section-h4">Handling</h4>
-                    <p><code>foo:"bar"</code> is required.</p>
+                                       <h4 class="section-h4">Error-first-callbacks</h4>
                     <pre>
 <code class="javascript">
-hemera.act({ topic: "math", cmd: "add", a: "1" }, function (err, resp) {
-
-   err instanceOf PayloadValidationError
+hemera.act({ topic: "math", cmd: "add", a: 1, b: 1 }, function (err, resp) {
+ err instanceOf CustomError // true
 })
 </code>
                     </pre>
-
                 </div>
                 <!-- END CONTENT -->
 
