@@ -71,6 +71,9 @@ hemera.ready(() => {
 })
 ```
 
+## Documentation
+There is an extensive <a href="https://hemerajs.github.io/hemera/">documentation</a> or look in the <a href="https://github.com/hemerajs/hemera/tree/master/examples">Examples</a>. 
+
 ## Packages
 
 The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
@@ -113,6 +116,3 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 | Granting / Authenticating | Version |
 |--------|-------|
 | [hemera-jwt-auth](https://github.com/hemerajs/hemera/tree/master/packages/hemera-jwt-auth) | [![npm](https://img.shields.io/npm/v/hemera-jwt-auth.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-jwt-auth)
-
-## Documentation
-There is an extensive <a href="https://hemerajs.github.io/hemera/">documentation</a> or look in the <a href="https://github.com/hemerajs/hemera/tree/master/examples">Examples</a>. 
