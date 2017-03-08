@@ -113,6 +113,19 @@ var NatsTransport = function () {
     value: function sendRequest() {
       return this.nc.request.apply(this.nc, arguments);
     }
+    /**
+     *
+     *
+     * @returns
+     *
+     * @memberOf NatsTransport
+     */
+
+  }, {
+    key: "sendOneRequest",
+    value: function sendOneRequest() {
+      return this.nc.requestOne.apply(this.nc, arguments);
+    }
   }, {
     key: "driver",
     get: function get() {

@@ -127,13 +127,24 @@
                         a response inline. The request creates an inbox and performs a request call with the inbox reply
                         and returns the first reply received. This is optimized in the case of multiple responses.
                     </p>
-                    <h4 class="section-h4">Request</h4>
+                    <h4 class="section-h4">Request (point-to-point) by default</h4>
                     <pre>
 <code class="javascript">
 hemera.act({ 
     topic: "math", 
     cmd: "add", 
     a: 1, b: 1 
+}, function(err, resp) {
+})
+</code></pre>
+                    <h4 class="section-h4">Request (one-to-many) with <code>maxMessages$</code></h4>
+                    <pre>
+<code class="javascript">
+hemera.act({ 
+    topic: "math", 
+    cmd: "add", 
+    a: 1, b: 1,
+    maxMessages$: 10
 }, function(err, resp) {
 })
 </code>

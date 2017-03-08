@@ -887,8 +887,11 @@ class Hemera extends EventEmitter {
 
         self._transport.send(pattern.topic, self._request.payload)
       } else {
+        const opt_options = {}
+        // limit on the number of responses the requestor may receive
+        opt_options.max = ctx._pattern.maxMessages$ || 1;
         // send request
-        let sid = self._transport.sendRequest(pattern.topic, self._request.payload, sendRequestHandler.bind(self))
+        let sid = self._transport.sendRequest(pattern.topic, self._request.payload, opt_options, sendRequestHandler.bind(self))
 
         // handle timeout
         self.handleTimeout(sid, pattern)

@@ -609,7 +609,7 @@ describe('Timeouts', function () {
     server.kill()
   })
 
-  it('Issue #39 - Should get the correct results even when the answers are responded after a timeout', function (done) {
+  it('Issue #39 - Should get only one response even when a answers is responded after a timeout', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -654,6 +654,71 @@ describe('Timeouts', function () {
         topic: 'test',
         cmd: 'B',
         timeout$: 150
+      }, function (err, resp) {
+        if (err) {
+          bError++
+        } else {
+          bResult++
+        }
+      })
+
+      setTimeout(() => {
+        expect(aError).to.be.equals(1)
+        expect(aResult).to.be.equals(1)
+        expect(bError).to.be.equals(1)
+        expect(bResult).to.be.equals(0)
+        hemera.close()
+        done()
+      }, 300)
+    })
+  })
+
+  it('Issue #39 - Should get the correct results even when a answer is responded after a timeout', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let aError = 0
+    let bError = 0
+    let aResult = 0
+    let bResult = 0
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'test',
+        cmd: 'A'
+      }, (resp, cb) => {
+        setTimeout(() => {
+          cb(null, {
+            ok: true
+          })
+        }, 250)
+      })
+
+      hemera.add({
+        topic: 'test',
+        cmd: 'B'
+      }, function (resp, cb) {
+        this.act({
+          topic: 'test',
+          cmd: 'A',
+          timeout$: 100
+        }, function (err, res) {
+          if (err) {
+            aError++
+            cb(err)
+          } else {
+            aResult++
+            cb(null, res)
+          }
+        })
+      })
+
+      hemera.act({
+        topic: 'test',
+        cmd: 'B',
+        timeout$: 150,
+        maxMessages$: 10
       }, function (err, resp) {
         if (err) {
           bError++
