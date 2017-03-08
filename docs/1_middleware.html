@@ -54,6 +54,7 @@
 
                         <h4>1. Basics</h4>
                         <ul>
+                            <li><a href="1_request_reply.html"><span>Request & Reply</span></a></li>
                             <li><a href="1_pattern_matching.html"><span>Pattern matching</span></a></li>
                             <li><a href="1_pub_sub.html"><span>Publish & Subscribe</span></a></li>
                             <li><a href="1_payload_validation.html"><span>Payload validation</span></a></li>
@@ -119,9 +120,11 @@
                     <hr>
 
                     <p class="section-content">
-Middleware functions are functions that have access to the request object (req), the response object (res), and the next middleware function in the application’s request-response cycle. The next middleware function is commonly denoted by a variable named next. If you pass an error to the <code>next</code> function the error will be responded.
+                        Middleware functions are functions that have access to the request object (req), the response object (res), and the next
+                        middleware function in the application’s request-response cycle. The next middleware function is
+                        commonly denoted by a variable named next. If you pass an error to the <code>next</code>                        function the error will be responded.
                     </p>
-                                        <h4 class="section-h4"></h4>
+                    <h4 class="section-h4"></h4>
                     <pre>
 <code class="javascript">
 hemera.add({

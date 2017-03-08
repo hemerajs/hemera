@@ -54,6 +54,7 @@
 
                         <h4>1. Basics</h4>
                         <ul>
+                            <li><a href="1_request_reply.html"><span>Request & Reply</span></a></li>
                             <li><a href="1_pattern_matching.html"><span>Pattern matching</span></a></li>
                             <li><a href="1_pub_sub.html"><span>Publish & Subscribe</span></a></li>
                             <li><a href="1_payload_validation.html"><span>Payload validation</span></a></li>
@@ -119,8 +120,10 @@
                     <hr>
 
                     <p class="section-content">
-<p>If you want to pass data only to the <code>add</code> you can use <code>delegate$</code>. This feature is used to transfer contextual data to tracing systems.</p></p>
-                                        <h4 class="section-h4"></h4>
+                        <p>If you want to pass data only to the <code>add</code> you can use <code>delegate$</code>. This feature
+                            is used to transfer contextual data to tracing systems.</p>
+                    </p>
+                    <h4 class="section-h4"></h4>
                     <pre>
 <code class="javascript">
 hemera.act({ topic: "math", cmd: "add", delegate$: { foo: "bar" } })
