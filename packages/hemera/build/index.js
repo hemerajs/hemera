@@ -966,6 +966,7 @@ var Hemera = function (_EventEmitter) {
           self._transport.send(pattern.topic, self._request.payload);
         } else {
           var opt_options = {};
+          // limit on the number of responses the requestor may receive
           opt_options.max = ctx._pattern.maxMessages$ || 1;
           // send request
           var sid = self._transport.sendRequest(pattern.topic, self._request.payload, opt_options, sendRequestHandler.bind(self));
