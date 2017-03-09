@@ -120,7 +120,9 @@
                     <hr>
 
                     <p class="section-content">
-                        This interface is everywhere available it's part of the core.
+                        Hemera used <a href="https://github.com/pinojs/pino">Pino</a> logger by default but you can also
+                        use your own.
+                        <h4 class="section-h4">Logging</h4>
                         <pre>
 <code class="javascript">
 hemera.log.info("fooBar")
@@ -135,9 +137,15 @@ hemera.act({
 </code>
 </pre>
                     </p>
-                    <h4 class="section-h4">Custom logger</h4>
-                    <p> Hemera used Pino logger by default but you can also use your own. Your custom logger have to support
-                        following log levels.</p>
+                    <h4 class="section-h4">Set log levels</h4>
+                    <pre>
+<code class="javascript">
+const hemera = new Hemera(nats, {
+  logLevel: "info"
+})
+</code>
+</pre>
+                    <h4 class="section-h4">Log level</h4>
                     <pre>
 <code class="javascript">
 ["info", "warn", "debug", "trace", "error", "fatal"]
@@ -163,6 +171,21 @@ hemera.act({
     }
 </code>
                     </pre>
+                    <h4 class="section-h4">Use custom logger</h4>
+                    <pre>
+<code class="javascript">
+class Logger {
+  info (msg) {
+    console.log(msg)
+  }
+}
+
+const hemera = new Hemera(nats, {
+  logLevel: "info",
+  logger: new Logger()
+})
+</code>
+</pre>
 
                 </div>
                 <!-- END CONTENT -->
