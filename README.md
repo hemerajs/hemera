@@ -117,3 +117,36 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 | Granting / Authenticating | Version |
 |--------|-------|
 | [hemera-jwt-auth](https://github.com/hemerajs/hemera/tree/master/packages/hemera-jwt-auth) | [![npm](https://img.shields.io/npm/v/hemera-jwt-auth.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-jwt-auth)
+
+## Built With
+
+* [Bloomrun](https://github.com/mcollina/bloomrun) - A js pattern matcher based on bloom filters
+* [Node Nats Driver](https://github.com/nats-io/node-nats) - Node.js client for NATS, the cloud native messaging system.
+
+## Contributing
+
+Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+
+1. Clone repository
+2. `npm install`
+3. `lerna bootstrap`
+4. Install gnats server and make it accesible in your user path.
+5. Run tests `npm run test`
+
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+
+## Authors
+
+* **Dustin Deus** - [StarpTech](https://github.com/StarpTech)
+
+See also the list of [contributors](https://github.com/StarpTech/hemera/contributors) who participated in this project.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Inspiration
+
+[Seneca](https://github.com/senecajs/seneca) - A microservices toolkit for Node.js.
