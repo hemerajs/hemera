@@ -120,13 +120,29 @@
                     <hr>
 
                     <p class="section-content">
-                        Hemera used Pino logger by default but you can also use your own. Your custom logger have to support following log levels.
+                        This interface is everywhere available it's part of the core.
                         <pre>
+<code class="javascript">
+hemera.log.info("fooBar")
+hemera.log.error("fooBar")
+
+hemera.act({
+  topic: "a",
+  cmd: "a"
+}, function (err, resp) {
+ this.log.error(err.rootCause)
+})
+</code>
+</pre>
+                    </p>
+                    <h4 class="section-h4">Custom logger</h4>
+                    <p> Hemera used Pino logger by default but you can also use your own. Your custom logger have to support
+                        following log levels.</p>
+                    <pre>
 <code class="javascript">
 ["info", "warn", "debug", "trace", "error", "fatal"]
 </code>
 </pre>
-                    </p>
                     <h4 class="section-h4">Logging output example</h4>
                     <pre>
 <code>
