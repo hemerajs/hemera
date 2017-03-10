@@ -87,14 +87,4 @@ export default class NatsTransport {
   sendRequest() {
     return this.nc.request.apply(this.nc, arguments)
   }
-  /**
-   *
-   *
-   * @returns
-   *
-   * @memberOf NatsTransport
-   */
-  sendOneRequest() {
-    return this.nc.requestOne.apply(this.nc, arguments)
-  }
 }
