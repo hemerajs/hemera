@@ -149,7 +149,7 @@ hemera.ext("onClientPreRequest", function(next, i) {
                     <br>
                     <pre>
 <code class="javascript">
-hemera.ext("onServerPreHandler", function(next, i) {
+hemera.ext("onServerPreHandler", function(req, res, next, prevValue) {
 
    let ctx = this
    next()
