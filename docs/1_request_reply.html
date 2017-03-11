@@ -124,6 +124,14 @@
                         a response inline. The request creates an inbox and performs a request call with the inbox reply
                         and returns the first reply received. This is optimized in the case of multiple responses.
                     </p>
+                    <br>
+                    <h4 class="section-header">NATS Queueing</h4>
+                    <p>
+                        Hemera using queue groups by default. All subscribers with the same queue name form the queue group. In Hemera a group name is the name of the topic.
+                        As messages on the registered subject are published, one member of the group is chosen randomly to
+                        receive the message. Although queue groups have multiple subscribers, each message is only consumed
+                        by only one. This allows us to load-balancing the traffic by NATS.
+                    </p>
                     <h4 class="section-h4">Request (point-to-point) by default</h4>
                     <pre>
 <code class="javascript">
