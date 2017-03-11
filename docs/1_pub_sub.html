@@ -123,7 +123,7 @@
                         messages are delivered to the subscriber’s message handler. If there is no handler, the subscription
                         is synchronous and the client may be blocked until it can process the message.
                     </p>
-                    <h4 class="section-h4">Normal (One-to-many)</h4>
+                    <h4 class="section-h4">Normal (one-to-many)</h4>
                     <pre>
 <code class="javascript">
 //Subscribe
@@ -149,7 +149,7 @@ hemera.act({
 })
 </code>
                     </pre>
-                    <h4 class="section-h4">Special - One-to-one</h4>
+                    <h4 class="section-h4">Special - one-to-one</h4>
                     <p>We are able to publish messages without to create an INBOX in NATS. We can publish messages to the specific queue group <code>math</code> so only one subscriber will proceed the message. This has big performance benefits in comparison with the request-reply model.</p>
                     <pre>
 <code class="javascript">
