@@ -149,7 +149,8 @@ hemera.act({
 })
 </code>
                     </pre>
-                    <h4 class="section-h4">Special - one-to-one (but with queue group names)</h4>
+                    <h4 class="section-h4">Special - One-to-one</h4>
+                    <p>We are able to publish messages without to create an INBOX in NATS. We can publish messages to the specific queue group <code>math</code> so only one subscriber will proceed the message. This has big performance benefits in comparison with the request-reply model.</p>
                     <pre>
 <code class="javascript">
 //Subscribe
