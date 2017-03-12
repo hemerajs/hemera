@@ -82,7 +82,7 @@
                         <h4>3. Internals</h4>
                         <ul>
                             <li><a href="4_overview.html"><span>Protocol</span></a></li>
-                            <li><a href="4_api.html"><span>API</span></a></li>
+                            <li><a href="4_api.html" class="active"><span>API</span></a></li>
                         </ul>
 
                         <h4>4. ADVANCED</h4>
@@ -91,7 +91,7 @@
                             <li><a href="5_api_versioning.html"><span>API Versioning</span></a></li>
                             <li><a href="5_nats_limits.html"><span>Nats limits & features</span></a></li>
                             <li><a href="5_testing.html"><span>Testing</span></a></li>
-                            <li><a href="5_bridge.html" class="active"><span>Bridge</span></a></li>
+                            <li><a href="5_bridge.html"><span>Bridge</span></a></li>
                             <li><a href="5_nginx_integration_for_nats.html"><span>Nginx integration for NATS</span></a></li>
                             <li><a href="5_contributing.html"><span>Contributing</span></a></li>
                             <li><a href="5_hemera_vs_seneca.html"><span>Hemera vs Seneca</span></a></li>
@@ -114,20 +114,118 @@
 
                 <!-- BEGIN CONTENT -->
                 <div class="col-sm-9 border-left section-right">
-                    <h1 class="section-header">Bridge</h1>
+                    <h1 class="section-header">API</h1>
                     <hr>
-
                     <p class="section-content">
-                        <p>If you need message delivery or another guarantee which NATS cannot provide you are able to plugin
-                            any other messaging system. E.g we provide plugins for <a href="https://github.com/hemerajs/hemera/tree/master/packages/hemera-rabbitmq">RabbitMQ</a> and <a href="https://github.com/hemerajs/hemera/tree/master/packages/hemera-nsq">NSQ</a>.</p>
                     </p>
-                    <h4 class="section-h4"></h4>
-                    <img src="https://github.com/StarpTech/hemera/raw/master/media/hemera-rabbitmq-nsq.png" alt="Hemera">
-                    <blockquote>
-                        <p> "We can always build stronger guarantees on top, but we can’t always remove them from below." Tyler
-                            Treat
-                        </p>
-                    </blockquote>
+                    <h4 class="section-h4">Global Interface</h4>
+                    <h4 class="section-header">context$</h4>
+                    <p>Will be shared across nested actions.</p>
+                    <h4 class="section-header">meta$</h4>
+                    <p>Will be shared across nested actions. <b>Data will be transfered.</b></p>
+                    <h4 class="section-header">delegate$</h4>
+                    <p>Will be shared across nested actions but the called service don't pass it to the next. <b>Data will be transfered.</b></p>
+                    <h4 class="section-header">auth$</h4>
+                    <p>Will be used to store sensitive data e.g plugins which provide authentication or authorization mechanism.</p>
+                    <h4 class="section-header">plugin$</h4>
+                    <p>Returns the current plugin instance.</p>
+                    <ul>
+                        <li><code>register</code> <i>Function</i></li>
+                        <li><code>attributes</code> <i>Object</i></li>
+                        <ul>
+                            <li><code>name</code> <i>String</i></li>
+                            <li><code>dependencies</code> <i>String | Array&lt;String&gt;</i></li>
+                        </ul>
+                        <li><code>parentPlugin</code> <i>String</i></li>
+                        <li><code>options</code> <i>Object</i></li>
+                    </ul>
+                    <h4 class="section-header">trace$</h4>
+                    <p>Returns current tracing informations</p>
+                    <ul>
+                        <li><code>duration</code> <i>Number</i></li>
+                        <li><code>parentId</code> <i>String</i></li>
+                        <li><code>timestamp</code> <i>Number</i></li>
+                        <li><code>type</code> <i>request | pubsub</i></li>
+                        <li><code>id</code> <i>String</i></li>
+                    </ul>
+                    <h4 class="section-header">plugins</h4>
+                    <p>Returns the list of all registered plugins.</p>
+                    <h4 class="section-header">router</h4>
+                    <p>Returns the bloomrun instance.</p>
+                    <h4 class="section-header">load</h4>
+                    <p>Returns the load instance.</p>
+                    <h4 class="section-header">config</h4>
+                    <p>Returns the config.</p>
+                    <h4 class="section-header">list(pattern: Object, options: Object)</h4>
+                    <p>Returns the list of registered actions.</p>
+                    <h4 class="section-header">topics</h4>
+                    <p>Returns all registered topics.</p>
+                    <h4 class="section-header">transport</h4>
+                    <p>Returns the current node-nats instance.</p>
+                    <h4 class="section-header">ready(handler: Function)</h4>
+                    <p>Ready event.</p>
+                    <h4 class="section-header">act(pattern: Object, handler: Function)</h4>
+                    <p>Call a service method.</p>
+                    <h4 class="section-header">add(pattern: Object, handler: Function)</h4>
+                    <p>Register a service method.</p>
+                    <h4 class="section-header">ext(type: String, handler: Function)</h4>
+                    <p>Register an extension.</p>
+                    <h4 class="section-header">use(params: Object, handler: Function)</h4>
+                    <p>Register a plugin.</p>
+                    <h4 class="section-header">expose(key: String, object: Object)</h4>
+                    <p>Exposed data which can be accessed from all plugins.</p>
+                    <h4 class="section-header">setOption(key: String, value: Any)</h4>
+                    <p>Updates the plugin option value.</p>
+                    <h4 class="section-header">setConfig(key: String, value: Any)</h4>
+                    <p>Updates the config value.</p>
+                    <h4 class="section-header">close()</h4>
+                    <p>Close the NATS and hemera instance.</p>
+                    <h4 class="section-header">transport</h4>
+                    <p>Returns the current node-nats instance.</p>
+                    <h4 class="section-h4">Server method interface</h4>
+                    <h4 class="section-header">_actMeta</h4>
+                    <p>Returns the metadata of the server method.</p>
+                    <ul>
+                        <li><code>schema</code> <i>Object</i></li>
+                        <li><code>pattern</code> <i>Object</i></li>
+                        <li><code>action</code> <i>Function</i></li>
+                        <li><code>plugin</code> <i>Object</i></li>
+                    </ul>
+                    <h4 class="section-header">_topic</h4>
+                    <p>Returns the current topic name.</p>
+                    <h4 class="section-header">_request</h4>
+                    <p>Returns the current request object.</p>
+                    <ul>
+                        <li><code>payload</code> <i>Object</i></li>
+                        <li><code>error</code> <i>Object</i></li>
+                    </ul>
+                    <h4 class="section-header">_response</h4>
+                    <p>Returns the current response object.</p>
+                    <ul>
+                        <li><code>payload</code> <i>Object</i></li>
+                        <li><code>error</code> <i>Object</i></li>
+                    </ul>
+                    <h4 class="section-header">_pattern</h4>
+                    <p>Returns the pattern of the server method.</p>
+                    <h4 class="section-h4">Client method interface</h4>
+                    <h4 class="section-header">_actCallback</h4>
+                    <p>Returns the callback of the action.</p>
+                    <h4 class="section-header">_cleanPattern</h4>
+                    <p>Returns the pattern.</p>
+                    <h4 class="section-header">_request</h4>
+                    <p>Returns the current request object.</p>
+                    <ul>
+                        <li><code>payload</code> <i>Object</i></li>
+                        <li><code>error</code> <i>Object</i></li>
+                    </ul>
+                    <h4 class="section-header">_response</h4>
+                    <p>Returns the current response object.</p>
+                    <ul>
+                        <li><code>payload</code> <i>Object</i></li>
+                        <li><code>error</code> <i>Object</i></li>
+                    </ul>
+                    <h4 class="section-header">_pattern</h4>
+                    <p>Returns the pattern of the server method.</p>
                 </div>
                 <!-- END CONTENT -->
 
