@@ -101,8 +101,12 @@ describe('Hemera', function () {
       hemera.act({
         topic: 'math',
         cmd: 'add',
-        a: { number: 1 },
-        b: { number: 2 }
+        a: {
+          number: 1
+        },
+        b: {
+          number: 2
+        }
       }, (err, resp) => {
         expect(err).not.to.be.exists()
         expect(resp.result).to.be.equals(3)
@@ -110,8 +114,12 @@ describe('Hemera', function () {
         hemera.act({
           topic: 'math',
           cmd: 'multiply',
-          a: { number: resp.result },
-          b: { number: 2 }
+          a: {
+            number: resp.result
+          },
+          b: {
+            number: 2
+          }
         }, (err, resp) => {
           expect(err).not.to.be.exists()
           expect(resp.result).to.be.equals(6)
@@ -1400,6 +1408,7 @@ describe('Error handling', function () {
           topic: 'b',
           cmd: 'b'
         }, function (err, resp) {
+          expect(err).to.be.exists()
           this.act({
             topic: 'c',
             cmd: 'c'
@@ -1820,7 +1829,9 @@ describe('Plugin interface', function () {
   it('Should be able to specify plugin attributes by package.json', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, { logLevel: 'info' })
+    const hemera = new Hemera(nats, {
+      logLevel: 'info'
+    })
 
     let pluginOptions = {
       a: '1'
@@ -1942,7 +1953,9 @@ describe('Metadata', function () {
   it('Should be able to pass metadata', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats)
+    const hemera = new Hemera(nats, {
+      logLevel: 'silent'
+    })
 
     hemera.ready(() => {
       hemera.add({
@@ -1989,6 +2002,7 @@ describe('Metadata', function () {
         }
       }, function (err, resp) {
         expect(err).to.be.not.exists()
+        expect(this.meta$.a).to.be.equals('test')
 
         this.act({
           topic: 'math',
@@ -1997,6 +2011,7 @@ describe('Metadata', function () {
           b: 2
         }, function (err, resp) {
           expect(err).to.be.not.exists()
+          expect(this.meta$.a).to.be.equals('test')
           hemera.close()
           done()
         })
