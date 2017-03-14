@@ -1,3 +1,5 @@
+'use strict'
+
 /**
  * Run mocha ./examples/unittest.js
  */
@@ -33,7 +35,7 @@ describe('Math', function () {
         a: 1,
         b: 2
       }
-      // call action  but beware the scope is not set
+      // call action but be aware that the scope is not set
       payload.action(request, function (err, result) {
         expect(err).to.be.not.exists()
         expect(result).to.be.equals(3)
