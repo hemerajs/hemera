@@ -61,6 +61,5 @@
     "nats": "0.7.x",
     "nyc": "10.0.x",
     "sinon": "1.17.x"
-  },
-  "dependencies": {}
+  }
 }
