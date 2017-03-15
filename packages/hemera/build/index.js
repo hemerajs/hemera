@@ -765,6 +765,8 @@ var Hemera = function (_EventEmitter) {
       var self = this;
       if (self._topics[topic]) {
         self._transport.unsubscribe(topic, maxMessages);
+        // release topic
+        delete self._topics[topic];
         return true;
       }
 
