@@ -109,6 +109,20 @@ var NatsTransport = function () {
      */
 
   }, {
+    key: "unsubscribe",
+    value: function unsubscribe() {
+      return this.nc.unsubscribe.apply(this.nc, arguments);
+    }
+
+    /**
+     *
+     *
+     * @returns
+     *
+     * @memberOf NatsTransport
+     */
+
+  }, {
     key: "sendRequest",
     value: function sendRequest() {
       return this.nc.request.apply(this.nc, arguments);

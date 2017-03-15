@@ -665,18 +665,35 @@ class Hemera extends EventEmitter {
 
     // standard pubsub with optional max proceed messages
     if (subToMany) {
-      self._transport.subscribe(topic, {
+      self._topics[topic] = self._transport.subscribe(topic, {
         max: maxMessages
       }, handler)
     } else {
       // queue group names allow load balancing of services
-      self._transport.subscribe(topic, {
+      self._topics[topic] = self._transport.subscribe(topic, {
         'queue': 'queue.' + topic,
         max: maxMessages
       }, handler)
     }
+  }
 
-    self._topics[topic] = true
+  /**
+   * Unsubscribe a topic from NATS
+   *
+   * @param {any} topic
+   * @param {any} maxMessages
+   * @returns
+   *
+   * @memberOf Hemera
+   */
+  remove (topic, maxMessages) {
+    const self = this
+    if (self._topics[topic]) {
+      self._transport.unsubscribe(topic, maxMessages)
+      return true
+    }
+
+    return false
   }
 
   /**
@@ -889,7 +906,7 @@ class Hemera extends EventEmitter {
       } else {
         const optOptions = {}
         // limit on the number of responses the requestor may receive
-        optOptions.max = ctx._pattern.maxMessages$ || 1;
+        optOptions.max = ctx._pattern.maxMessages$ || 1
         // send request
         let sid = self._transport.sendRequest(pattern.topic, self._request.payload, optOptions, sendRequestHandler.bind(self))
 
