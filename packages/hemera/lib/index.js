@@ -530,7 +530,7 @@ class Hemera extends EventEmitter {
       const self = this
 
       if (err) {
-        self._response.error = new Errors.BusinessError(Constants.IMPLEMENTATION_ERROR, {
+        self._response.error = new Errors.BusinessError(Constants.BUSINESS_ERROR, {
           pattern: self._pattern
         }).causedBy(err)
 

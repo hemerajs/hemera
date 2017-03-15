@@ -602,7 +602,7 @@ var Hemera = function (_EventEmitter) {
         var self = this;
 
         if (err) {
-          self._response.error = new _errors2.default.BusinessError(_constants2.default.IMPLEMENTATION_ERROR, {
+          self._response.error = new _errors2.default.BusinessError(_constants2.default.BUSINESS_ERROR, {
             pattern: self._pattern
           }).causedBy(err);
 

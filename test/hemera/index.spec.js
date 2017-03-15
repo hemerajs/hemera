@@ -1161,7 +1161,7 @@ describe('Error handling', function () {
       }, (err, resp) => {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('BusinessError')
-        expect(err.message).to.be.equals('Bad implementation')
+        expect(err.message).to.be.equals('Business error')
         expect(err.cause.name).to.be.equals('Error')
         expect(err.cause.message).to.be.equals('Uups')
         expect(err.ownStack).to.be.exists()
@@ -1509,13 +1509,13 @@ describe('Error handling', function () {
         expect(err.rootCause.message).to.be.equals('B Error')
 
         expect(err.name).to.be.equals('BusinessError')
-        expect(err.message).to.be.equals('Bad implementation')
+        expect(err.message).to.be.equals('Business error')
 
         expect(err.cause.name).to.be.equals('BusinessError')
-        expect(err.cause.message).to.be.equals('Bad implementation')
+        expect(err.cause.message).to.be.equals('Business error')
 
         expect(err.cause.cause.name).to.be.equals('BusinessError')
-        expect(err.cause.cause.message).to.be.equals('Bad implementation')
+        expect(err.cause.cause.message).to.be.equals('Business error')
 
         expect(err.cause.cause.cause.name).to.be.equals('Error')
         expect(err.cause.cause.cause.message).to.be.equals('B Error')
@@ -3088,7 +3088,7 @@ describe('Response error events', function () {
       hemera.on('serverResponseError', function (err) {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('BusinessError')
-        expect(err.message).to.be.equals('Bad implementation')
+        expect(err.message).to.be.equals('Business error')
         expect(err.cause.name).to.be.equals('Error')
         expect(err.cause.message).to.be.equals('test')
         hemera.close()
