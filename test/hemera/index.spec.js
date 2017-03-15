@@ -552,6 +552,7 @@ describe('Unsubscribe NATS topic', function () {
       })
 
       const result = hemera.remove('math')
+      expect(hemera.topics.math).to.be.not.exists()
       expect(result).to.be.equals(true)
       hemera.close()
       done()
@@ -573,7 +574,8 @@ describe('Unsubscribe NATS topic', function () {
         })
       })
 
-      const result = hemera.remove('math:1')
+      const result = hemera.remove('math1')
+      expect(hemera.topics.math1).to.be.not.exists()
       expect(result).to.be.equals(false)
       hemera.close()
       done()
