@@ -14,10 +14,10 @@ const hemera = new Hemera(nats, {
  */
 
 hemera.ready(() => {
-  // Receive in NodeJs
+  // Receive in NodeJs client
   hemera.transport.subscribe('math', function (req) {
     hemera.log.info(req)
   })
-  // Publish from Golang
+  // Publish from Golang client
   hemera.transport.publish('math', 'test')
 })
