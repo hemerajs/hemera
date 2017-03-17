@@ -688,8 +688,9 @@ class Hemera extends EventEmitter {
    */
   remove (topic, maxMessages) {
     const self = this
-    if (self._topics[topic]) {
-      self._transport.unsubscribe(topic, maxMessages)
+    const subId = self._topics[topic]
+    if (subId) {
+      self._transport.unsubscribe(subId, maxMessages)
       // release topic
       delete self._topics[topic]
       return true
