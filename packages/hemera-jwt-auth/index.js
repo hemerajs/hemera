@@ -2,8 +2,6 @@
 
 const JWT = require('jsonwebtoken')
 const Hoek = require('hoek')
-const SuperError = require('super-error')
-const JwtError = SuperError.subclass('JwtError')
 
 /**
  *
@@ -27,6 +25,8 @@ function isSubset (scope, subset) {
 
 exports.plugin = function hemeraJwtAuth (options) {
   const hemera = this
+
+  const JwtError = hemera.createError('JwtError')
 
   hemera.ext('onServerPreHandler', function (req, res, next, prevValue, i) {
     const ctx = this

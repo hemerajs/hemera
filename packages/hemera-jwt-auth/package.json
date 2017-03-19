@@ -17,8 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "hoek": "4.1.x",
-    "jsonwebtoken": "7.3.x",
-    "super-error": "2.0.x"
+    "jsonwebtoken": "7.3.x"
   },
   "devDependencies": {
     "eslint-config-standard": "^6.2.1",
