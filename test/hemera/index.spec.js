@@ -9,6 +9,8 @@ const expect = Code.expect
 
 process.setMaxListeners(0)
 
+const UnauthorizedError = Hemera.createError('Unauthorized')
+
 describe('Hemera', function () {
   var PORT = 6242
   var flags = ['--user', 'derek', '--pass', 'foobar']
@@ -368,12 +370,10 @@ describe('Hemera', function () {
     })
   })
 
-  it('Should be able to pass a custom super error to the an middleware handler', function (done) {
+  it('Should be able to pass a custom super error to the middleware handler', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
-
-    const UnauthorizedError = Hemera.createError('Unauthorized')
 
     hemera.ready(() => {
       hemera.add({
@@ -398,6 +398,7 @@ describe('Hemera', function () {
         expect(err.message).to.be.equals('Middleware error')
         expect(err.cause.name).to.be.equals('Unauthorized')
         expect(err.cause.message).to.be.equals('test')
+        expect(err.cause instanceof UnauthorizedError).to.be.equals(true)
         hemera.close()
         done()
       })
@@ -1185,8 +1186,6 @@ describe('Error handling', function () {
 
     const hemera = new Hemera(nats)
 
-    const UnauthorizedError = Hemera.createError('Unauthorized')
-
     hemera.ready(() => {
       hemera.add({
         topic: 'email',
@@ -1673,8 +1672,6 @@ describe('Error handling', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
-
-    const UnauthorizedError = Hemera.createError('Unauthorized')
 
     hemera.ready(() => {
       hemera.add({
@@ -2723,8 +2720,6 @@ describe('Extension error', function () {
 
     const hemera = new Hemera(nats)
 
-    const UnauthorizedError = Hemera.createError('Unauthorized')
-
     let plugin = function (options) {
       let hemera = this
 
@@ -2816,8 +2811,6 @@ describe('Extension error', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
-
-    const UnauthorizedError = Hemera.createError('Unauthorized')
 
     let plugin = function (options) {
       let hemera = this
@@ -2911,8 +2904,6 @@ describe('Extension error', function () {
 
     const hemera = new Hemera(nats)
 
-    const UnauthorizedError = Hemera.createError('Unauthorized')
-
     let plugin = function (options) {
       let hemera = this
 
@@ -3004,8 +2995,6 @@ describe('Extension error', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
-
-    const UnauthorizedError = Hemera.createError('Unauthorized')
 
     let plugin = function (options) {
       let hemera = this

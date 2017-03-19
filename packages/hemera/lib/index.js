@@ -389,8 +389,8 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  static createError () {
-    return SuperError.subclass.apply(SuperError, arguments)
+  static createError (name) {
+    return SuperError.subclass(name)
   }
 
   /**
@@ -629,9 +629,16 @@ class Hemera extends EventEmitter {
           action(self._request.payload.pattern, actionHandler.bind(self))
         })
       } catch (err) {
-        self._response.error = new Errors.ImplementationError(Constants.IMPLEMENTATION_ERROR, {
-          pattern: self._pattern
-        }).causedBy(err)
+        // try to get rootCause then cause and last the thrown error
+        if (err instanceof SuperError) {
+          self._response.error = new Errors.ImplementationError(Constants.IMPLEMENTATION_ERROR, {
+            pattern: self._pattern
+          }).causedBy(err.rootCause || err.cause || err)
+        } else {
+          self._response.error = new Errors.ImplementationError(Constants.IMPLEMENTATION_ERROR, {
+            pattern: self._pattern
+          }).causedBy(err)
+        }
 
         // service should exit
         self._shouldCrash = true

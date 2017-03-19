@@ -702,9 +702,16 @@ var Hemera = function (_EventEmitter) {
             action(self._request.payload.pattern, actionHandler.bind(self));
           });
         } catch (err) {
-          self._response.error = new _errors2.default.ImplementationError(_constants2.default.IMPLEMENTATION_ERROR, {
-            pattern: self._pattern
-          }).causedBy(err);
+          // try to get rootCause then cause and last the thrown error
+          if (err instanceof _superError2.default) {
+            self._response.error = new _errors2.default.ImplementationError(_constants2.default.IMPLEMENTATION_ERROR, {
+              pattern: self._pattern
+            }).causedBy(err.rootCause || err.cause || err);
+          } else {
+            self._response.error = new _errors2.default.ImplementationError(_constants2.default.IMPLEMENTATION_ERROR, {
+              pattern: self._pattern
+            }).causedBy(err);
+          }
 
           // service should exit
           self._shouldCrash = true;
@@ -1233,8 +1240,8 @@ var Hemera = function (_EventEmitter) {
     }
   }], [{
     key: 'createError',
-    value: function createError() {
-      return _superError2.default.subclass.apply(_superError2.default, arguments);
+    value: function createError(name) {
+      return _superError2.default.subclass(name);
     }
   }]);
 
