@@ -141,9 +141,9 @@ hemera.act({
   topic: "a",
   cmd: "a"
 }, function (err, resp) {
- const error = err.cause
- const error2 = err.cause.cause
- const error3 = err.cause.cause.cause
+ const error1 = err.cause
+ const error2 = err.cause
+ const root = err.rootCause
 })
 </code>
                     </pre>

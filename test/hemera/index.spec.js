@@ -1209,6 +1209,7 @@ describe('Error handling', function () {
         expect(err.cause.name).to.be.equals('Unauthorized')
         expect(err.cause.message).to.be.equals('Unauthorized action')
         expect(err.cause.code).to.be.equals(444)
+        expect(err.cause instanceof UnauthorizedError).to.be.equals(true)
         hemera.close()
         done()
       })
