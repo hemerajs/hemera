@@ -3537,6 +3537,42 @@ describe('Response error events', function () {
     })
   })
 
+  it('client response error result with a custom super error', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.ready(() => {
+      hemera.on('clientResponseError', function (err) {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('FatalError')
+        expect(err.message).to.be.equals('Fatal error')
+        expect(err.cause.name).to.be.equals('Unauthorized')
+        expect(err.cause.message).to.be.equals('test')
+        hemera.close()
+        done()
+      })
+
+      hemera.add({
+        cmd: 'add',
+        topic: 'math'
+      }, (resp, cb) => {
+        cb()
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, function () {
+        throw new UnauthorizedError('test')
+      })
+    })
+  })
+
   it('client response extension error', function (done) {
     const nats = require('nats').connect(authUrl)
 
