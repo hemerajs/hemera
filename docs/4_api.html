@@ -148,11 +148,11 @@
                         <li><code>type</code> <i>request | pubsub</i></li>
                         <li><code>id</code> <i>String</i></li>
                     </ul>
-                    <h4 class="section-header">plugins</h4>
+                    <h4 class="section-header"><i class="accessor">get</i> plugins</h4>
                     <p>Returns the list of all registered plugins.</p>
-                    <h4 class="section-header">router</h4>
+                    <h4 class="section-header"><i class="accessor">get</i> router</h4>
                     <p>Returns the bloomrun instance.</p>
-                    <h4 class="section-header">load</h4>
+                    <h4 class="section-header"><i class="accessor">get</i> load</h4>
                     <p>Returns the load instance.</p>
                     <h4 class="section-header">config</h4>
                     <p>Returns the config.</p>
@@ -165,12 +165,16 @@
                     </ul>
                     <h4 class="section-header">list(pattern: Object, options: Object)</h4>
                     <p>Returns the list of registered actions.</p>
-                    <h4 class="section-header">topics</h4>
+                    <h4 class="section-header"><i class="accessor">get</i> topics</h4>
                     <p>Returns all registered topics.</p>
-                    <h4 class="section-header">transport</h4>
+                    <h4 class="section-header"><i class="accessor">get</i> errors</h4>
+                    <p>Returns all default error objects.</p>
+                    <h4 class="section-header"><i class="accessor">get</i> transport</h4>
                     <p>Returns the current node-nats instance.</p>
                     <h4 class="section-header">ready(handler: Function)</h4>
                     <p>Ready event.</p>
+                    <h4 class="section-header"><i class="accessor">static</i> createError(name: String)</h4>
+                    <p>Create a custom error object.</p>
                     <h4 class="section-header">act(pattern: Object, handler: Function)</h4>
                     <p>Call a service method.</p>
                     <h4 class="section-header">add(pattern: Object, handler: Function)</h4>
@@ -187,8 +191,6 @@
                     <p>Updates the config value.</p>
                     <h4 class="section-header">close()</h4>
                     <p>Close the NATS and hemera instance.</p>
-                    <h4 class="section-header">transport</h4>
-                    <p>Returns the current node-nats instance.</p>
                     <h4 class="section-h4">Server method interface</h4>
                     <h4 class="section-header">_actMeta</h4>
                     <p>Returns the metadata of the server method.</p>

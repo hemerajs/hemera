@@ -38,6 +38,10 @@ var _tinysonic = require('tinysonic');
 
 var _tinysonic2 = _interopRequireDefault(_tinysonic);
 
+var _superError = require('super-error');
+
+var _superError2 = _interopRequireDefault(_superError);
+
 var _errors = require('./errors');
 
 var _errors2 = _interopRequireDefault(_errors);
@@ -437,15 +441,24 @@ var Hemera = function (_EventEmitter) {
     }
 
     /**
+     * Create a custom super error object
      *
-     *
-     * @param {Function} cb
+     * @readonly
      *
      * @memberOf Hemera
      */
 
   }, {
     key: 'ready',
+
+
+    /**
+     *
+     *
+     * @param {Function} cb
+     *
+     * @memberOf Hemera
+     */
     value: function ready(cb) {
       var _this3 = this;
 
@@ -522,15 +535,20 @@ var Hemera = function (_EventEmitter) {
       function onServerPreResponseHandler(err, value) {
         var self = this;
 
-        // check if an error was already catched
+        // check if an error was already wrapped
         if (self._response.error) {
           self.emit('serverResponseError', self._response.error);
           self.log.error(self._response.error);
         } else if (err) {
           // check for an extension error
-          var error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
-          self.emit('serverResponseError', error);
-          self._response.error = error;
+          if (err instanceof _superError2.default) {
+            // try to get rootCause then cause and last the thrown error
+            self._response.error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err.rootCause || err.cause || err);
+          } else {
+            self._response.error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
+          }
+
+          self.emit('serverResponseError', self._response.error);
           self.log.error(self._response.error);
         }
 
@@ -602,9 +620,18 @@ var Hemera = function (_EventEmitter) {
         var self = this;
 
         if (err) {
-          self._response.error = new _errors2.default.BusinessError(_constants2.default.BUSINESS_ERROR, {
-            pattern: self._pattern
-          }).causedBy(err);
+          if (err instanceof _superError2.default) {
+            // try to get rootCause then cause and last the thrown error
+            self._response.error = new _errors2.default.BusinessError(_constants2.default.BUSINESS_ERROR, {
+              pattern: self._pattern,
+              app: self._config.name
+            }).causedBy(err.rootCause || err.cause || err);
+          } else {
+            self._response.error = new _errors2.default.BusinessError(_constants2.default.BUSINESS_ERROR, {
+              pattern: self._pattern,
+              app: self._config.name
+            }).causedBy(err);
+          }
 
           return self.finish();
         }
@@ -628,7 +655,13 @@ var Hemera = function (_EventEmitter) {
         var self = this;
 
         if (err) {
-          self._response.error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
+          if (err instanceof _superError2.default) {
+            // try to get rootCause then cause and last the thrown error
+            self._response.error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err.rootCause || err.cause || err);
+          } else {
+            self._response.error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
+          }
+
           self.log.error(self._response.error);
 
           return self.finish();
@@ -649,9 +682,13 @@ var Hemera = function (_EventEmitter) {
           }, function (err) {
             // middleware error
             if (err) {
-              var error = new _errors2.default.HemeraError(_constants2.default.ADD_MIDDLEWARE_ERROR).causedBy(err);
-              self.log.error(error);
-              self._response.error = error;
+              if (err instanceof _superError2.default) {
+                // try to get rootCause then cause and last the thrown error
+                self._response.error = new _errors2.default.HemeraError(_constants2.default.ADD_MIDDLEWARE_ERROR).causedBy(err.rootCause || err.cause || err);
+              } else {
+                self._response.error = new _errors2.default.HemeraError(_constants2.default.ADD_MIDDLEWARE_ERROR).causedBy(err);
+              }
+              self.log.error(self._response.error);
               return self.finish();
             }
 
@@ -665,9 +702,16 @@ var Hemera = function (_EventEmitter) {
             action(self._request.payload.pattern, actionHandler.bind(self));
           });
         } catch (err) {
-          self._response.error = new _errors2.default.ImplementationError(_constants2.default.IMPLEMENTATION_ERROR, {
-            pattern: self._pattern
-          }).causedBy(err);
+          // try to get rootCause then cause and last the thrown error
+          if (err instanceof _superError2.default) {
+            self._response.error = new _errors2.default.ImplementationError(_constants2.default.IMPLEMENTATION_ERROR, {
+              pattern: self._pattern
+            }).causedBy(err.rootCause || err.cause || err);
+          } else {
+            self._response.error = new _errors2.default.ImplementationError(_constants2.default.IMPLEMENTATION_ERROR, {
+              pattern: self._pattern
+            }).causedBy(err);
+          }
 
           // service should exit
           self._shouldCrash = true;
@@ -687,9 +731,12 @@ var Hemera = function (_EventEmitter) {
         var self = this;
 
         if (err) {
-          var error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
-          self.log.error(error);
-          self._response.error = error;
+          if (err instanceof _superError2.default) {
+            // try to get rootCause then cause and last the thrown error
+            self._response.error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err.rootCause || err.cause || err);
+          } else {
+            self._response.error = new _errors2.default.HemeraError(_constants2.default.EXTENSION_ERROR).causedBy(err);
+          }
 
           return self.finish();
         }
@@ -1190,6 +1237,26 @@ var Hemera = function (_EventEmitter) {
     key: 'config',
     get: function get() {
       return this._config;
+    }
+  }], [{
+    key: 'createError',
+    value: function createError(name) {
+      return _superError2.default.subclass(name);
+    }
+
+    /**
+     * Return all hemera errors
+     *
+     * @readonly
+     * @static
+     *
+     * @memberOf Hemera
+     */
+
+  }, {
+    key: 'errors',
+    get: function get() {
+      return _errors2.default;
     }
   }]);
 
