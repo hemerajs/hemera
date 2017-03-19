@@ -1171,6 +1171,40 @@ describe('Error handling', function () {
     })
   })
 
+  it('Should be able to transfer the error code', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+        const a = new Error('Uups')
+        a.code = 444
+        cb(a)
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('BusinessError')
+        expect(err.message).to.be.equals('Business error')
+        expect(err.cause.name).to.be.equals('Error')
+        expect(err.cause.message).to.be.equals('Uups')
+        expect(err.cause.code).to.be.equals(444)
+        expect(err.ownStack).to.be.exists()
+        hemera.close()
+        done()
+      })
+    })
+  })
+
   it('Should be able to handle parsing errors', function (done) {
     const nats = require('nats').connect(authUrl)
 
