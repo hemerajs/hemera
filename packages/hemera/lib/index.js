@@ -17,6 +17,7 @@ import _ from 'lodash'
 import Pino from 'pino'
 import OnExit from 'signal-exit'
 import TinySonic from 'tinysonic'
+import SuperError from 'super-error'
 
 import Errors from './errors'
 import Constants from './constants'
@@ -384,6 +385,17 @@ class Hemera extends EventEmitter {
   /**
    *
    *
+   * @readonly
+   *
+   * @memberOf Hemera
+   */
+  static createError () {
+    return SuperError.subclass.apply(SuperError, arguments)
+  }
+
+  /**
+   *
+   *
    * @param {Function} cb
    *
    * @memberOf Hemera
@@ -456,14 +468,19 @@ class Hemera extends EventEmitter {
     function onServerPreResponseHandler (err, value) {
       const self = this
 
-      // check if an error was already catched
+      // check if an error was already wrapped
       if (self._response.error) {
         self.emit('serverResponseError', self._response.error)
         self.log.error(self._response.error)
       } else if (err) { // check for an extension error
-        let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
-        self.emit('serverResponseError', error)
-        self._response.error = error
+        if (err instanceof SuperError) {
+          // try to get rootCause then cause and last the thrown error
+          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err.rootCause || err.cause || err)
+        } else {
+          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+        }
+
+        self.emit('serverResponseError', self._response.error)
         self.log.error(self._response.error)
       }
 
@@ -530,9 +547,18 @@ class Hemera extends EventEmitter {
       const self = this
 
       if (err) {
-        self._response.error = new Errors.BusinessError(Constants.BUSINESS_ERROR, {
-          pattern: self._pattern
-        }).causedBy(err)
+        if (err instanceof SuperError) {
+          // try to get rootCause then cause and last the thrown error
+          self._response.error = new Errors.BusinessError(Constants.BUSINESS_ERROR, {
+            pattern: self._pattern,
+            app: self._config.name
+          }).causedBy(err.rootCause || err.cause || err)
+        } else {
+          self._response.error = new Errors.BusinessError(Constants.BUSINESS_ERROR, {
+            pattern: self._pattern,
+            app: self._config.name
+          }).causedBy(err)
+        }
 
         return self.finish()
       }
@@ -556,7 +582,13 @@ class Hemera extends EventEmitter {
       const self = this
 
       if (err) {
-        self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+        if (err instanceof SuperError) {
+          // try to get rootCause then cause and last the thrown error
+          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err.rootCause || err.cause || err)
+        } else {
+          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+        }
+
         self.log.error(self._response.error)
 
         return self.finish()
@@ -577,9 +609,13 @@ class Hemera extends EventEmitter {
         }, (err) => {
           // middleware error
           if (err) {
-            let error = new Errors.HemeraError(Constants.ADD_MIDDLEWARE_ERROR).causedBy(err)
-            self.log.error(error)
-            self._response.error = error
+            if (err instanceof SuperError) {
+              // try to get rootCause then cause and last the thrown error
+              self._response.error = new Errors.HemeraError(Constants.ADD_MIDDLEWARE_ERROR).causedBy(err.rootCause || err.cause || err)
+            } else {
+              self._response.error = new Errors.HemeraError(Constants.ADD_MIDDLEWARE_ERROR).causedBy(err)
+            }
+            self.log.error(self._response.error)
             return self.finish()
           }
 
@@ -615,9 +651,12 @@ class Hemera extends EventEmitter {
       let self = this
 
       if (err) {
-        let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
-        self.log.error(error)
-        self._response.error = error
+        if (err instanceof SuperError) {
+          // try to get rootCause then cause and last the thrown error
+          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err.rootCause || err.cause || err)
+        } else {
+          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+        }
 
         return self.finish()
       }

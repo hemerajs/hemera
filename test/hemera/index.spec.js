@@ -360,6 +360,44 @@ describe('Hemera', function () {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('HemeraError')
         expect(err.message).to.be.equals('Middleware error')
+        expect(err.cause.name).to.be.equals('Error')
+        expect(err.cause.message).to.be.equals('test')
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to pass a custom super error to the an middleware handler', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    const UnauthorizedError = Hemera.createError('Unauthorized')
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      })
+        .use(function (req, resp, next) {
+          next(new UnauthorizedError('test'))
+        })
+        .end(function (req, cb) {
+          cb(null, req.a + req.b)
+        })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, function (err, resp) {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals('Middleware error')
+        expect(err.cause.name).to.be.equals('Unauthorized')
+        expect(err.cause.message).to.be.equals('test')
         hemera.close()
         done()
       })
@@ -398,6 +436,8 @@ describe('Hemera', function () {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('HemeraError')
         expect(err.message).to.be.equals('Middleware error')
+        expect(err.cause.name).to.be.equals('Error')
+        expect(err.cause.message).to.be.equals('test')
         expect(callback.calledOnce).to.be.equals(false)
         hemera.close()
         done()
@@ -1140,6 +1180,41 @@ describe('Error handling', function () {
     server.kill()
   })
 
+  it('Should be able pass a custom super error', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    const UnauthorizedError = Hemera.createError('Unauthorized')
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+        const err = new UnauthorizedError('Unauthorized action')
+        err.code = 444
+        cb(err)
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('BusinessError')
+        expect(err.message).to.be.equals('Business error')
+        expect(err.cause.name).to.be.equals('Unauthorized')
+        expect(err.cause.message).to.be.equals('Unauthorized action')
+        expect(err.cause.code).to.be.equals(444)
+        hemera.close()
+        done()
+      })
+    })
+  })
+
   it('Should be able to serialize and deserialize an error back to the callee', function (done) {
     const nats = require('nats').connect(authUrl)
 
@@ -1183,6 +1258,7 @@ describe('Error handling', function () {
       }, (resp, cb) => {
         const a = new Error('Uups')
         a.code = 444
+        a.test = 'hallo'
         cb(a)
       })
 
@@ -1195,6 +1271,42 @@ describe('Error handling', function () {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('BusinessError')
         expect(err.message).to.be.equals('Business error')
+        expect(err.cause.name).to.be.equals('Error')
+        expect(err.cause.message).to.be.equals('Uups')
+        expect(err.cause.code).to.be.equals(444)
+        expect(err.ownStack).to.be.exists()
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to transfer additional error data', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+        const a = new Error('Uups')
+        a.code = 444
+        a.test = 'hallo'
+        cb(a)
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('BusinessError')
+        expect(err.message).to.be.equals('Business error')
+        expect(err.cause.test).to.be.equals('hallo')
         expect(err.cause.name).to.be.equals('Error')
         expect(err.cause.message).to.be.equals('Uups')
         expect(err.cause.code).to.be.equals(444)
@@ -1544,15 +1656,79 @@ describe('Error handling', function () {
 
         expect(err.name).to.be.equals('BusinessError')
         expect(err.message).to.be.equals('Business error')
+        expect(err.pattern.topic).to.be.exists('b')
+        expect(err.app).to.be.exists()
 
-        expect(err.cause.name).to.be.equals('BusinessError')
-        expect(err.cause.message).to.be.equals('Business error')
+        expect(err.cause.name).to.be.equals('Error')
+        expect(err.cause.message).to.be.equals('B Error')
 
-        expect(err.cause.cause.name).to.be.equals('BusinessError')
-        expect(err.cause.cause.message).to.be.equals('Business error')
+        hemera.close()
+        done()
+      })
+    })
+  })
 
-        expect(err.cause.cause.cause.name).to.be.equals('Error')
-        expect(err.cause.cause.cause.message).to.be.equals('B Error')
+  it('Error propagation with super errors', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    const UnauthorizedError = Hemera.createError('Unauthorized')
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'a',
+        cmd: 'a'
+      }, function (resp, cb) {
+        this.act({
+          topic: 'b',
+          cmd: 'b'
+        }, function (err, resp) {
+          expect(err).to.be.exists()
+          this.act({
+            topic: 'c',
+            cmd: 'c'
+          }, function (err, resp) {
+            cb(err, resp)
+          })
+        })
+      })
+      hemera.add({
+        topic: 'b',
+        cmd: 'b'
+      }, (resp, cb) => {
+        const a = new UnauthorizedError('test')
+        a.test = 444
+        cb(a)
+      })
+      hemera.add({
+        topic: 'c',
+        cmd: 'c'
+      }, function (resp, cb) {
+        this.act({
+          topic: 'b',
+          cmd: 'b'
+        }, function (err, resp) {
+          cb(err, resp)
+        })
+      })
+
+      hemera.act({
+        topic: 'a',
+        cmd: 'a'
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+
+        // In a chain of nested wrapped errors, the original unwrapped cause can be accessed through the rootCause property of each SuperError instance in the chain.
+        expect(err.rootCause.name).to.be.equals('Unauthorized')
+        expect(err.rootCause.message).to.be.equals('test')
+
+        expect(err.name).to.be.equals('BusinessError')
+        expect(err.message).to.be.equals('Business error')
+
+        expect(err.cause.name).to.be.equals('Unauthorized')
+        expect(err.cause.message).to.be.equals('test')
+        expect(err.cause.test).to.be.equals(444)
 
         hemera.close()
         done()
@@ -1926,9 +2102,7 @@ describe('Plugin interface', function () {
   it('Should be able to specify plugin attributes by package.json', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      logLevel: 'info'
-    })
+    const hemera = new Hemera(nats)
 
     let pluginOptions = {
       a: '1'
@@ -2543,7 +2717,55 @@ describe('Extension error', function () {
     })
   })
 
-  it('onClientPostRequest', function (done) {
+  it('Should be able to pass a super error to onClientPostRequest', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    const UnauthorizedError = Hemera.createError('Unauthorized')
+
+    let plugin = function (options) {
+      let hemera = this
+
+      hemera.ext('onClientPostRequest', function (next) {
+        next(new UnauthorizedError('test'))
+      })
+
+      hemera.add({
+        cmd: 'add',
+        topic: 'math'
+      }, (resp, cb) => {
+        cb(null, resp.a + resp.b)
+      })
+    }
+
+    hemera.use({
+      plugin: plugin,
+      attributes: {
+        name: 'myPlugin'
+      },
+      options: {}
+    })
+
+    hemera.ready(() => {
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals('Extension error')
+        expect(err.cause.name).to.be.equals('Unauthorized')
+        expect(err.cause.message).to.be.equals('test')
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to pass an error to onClientPostRequest', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -2589,7 +2811,55 @@ describe('Extension error', function () {
     })
   })
 
-  it('onClientPreRequest', function (done) {
+  it('Should be able to pass a custom super error to onClientPreRequest', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    const UnauthorizedError = Hemera.createError('Unauthorized')
+
+    let plugin = function (options) {
+      let hemera = this
+
+      hemera.ext('onClientPreRequest', function (next) {
+        next(new UnauthorizedError('test'))
+      })
+
+      hemera.add({
+        cmd: 'add',
+        topic: 'math'
+      }, (resp, cb) => {
+        cb(null, resp.a + resp.b)
+      })
+    }
+
+    hemera.use({
+      plugin: plugin,
+      attributes: {
+        name: 'myPlugin'
+      },
+      options: {}
+    })
+
+    hemera.ready(() => {
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals('Extension error')
+        expect(err.cause.name).to.be.equals('Unauthorized')
+        expect(err.cause.message).to.be.equals('test')
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to pass an error to onClientPreRequest', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -2635,7 +2905,55 @@ describe('Extension error', function () {
     })
   })
 
-  it('onServerPreRequest', function (done) {
+  it('Should be able to pass a custom super error to onServerPreRequest', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    const UnauthorizedError = Hemera.createError('Unauthorized')
+
+    let plugin = function (options) {
+      let hemera = this
+
+      hemera.ext('onServerPreRequest', function (req, res, next) {
+        next(new UnauthorizedError('test'))
+      })
+
+      hemera.add({
+        cmd: 'add',
+        topic: 'math'
+      }, (resp, cb) => {
+        cb(null, resp.a + resp.b)
+      })
+    }
+
+    hemera.use({
+      plugin: plugin,
+      attributes: {
+        name: 'myPlugin'
+      },
+      options: {}
+    })
+
+    hemera.ready(() => {
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals('Extension error')
+        expect(err.cause.name).to.be.equals('Unauthorized')
+        expect(err.cause.message).to.be.equals('test')
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to pass an error to onServerPreRequest', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -2681,7 +2999,55 @@ describe('Extension error', function () {
     })
   })
 
-  it('onServerPreResponse', function (done) {
+  it('Should be able to pass a custom super error to onServerPreResponse', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    const UnauthorizedError = Hemera.createError('Unauthorized')
+
+    let plugin = function (options) {
+      let hemera = this
+
+      hemera.ext('onServerPreResponse', function (req, res, next) {
+        next(new UnauthorizedError('test'))
+      })
+
+      hemera.add({
+        cmd: 'add',
+        topic: 'math'
+      }, (resp, cb) => {
+        cb(null, resp.a + resp.b)
+      })
+    }
+
+    hemera.use({
+      plugin: plugin,
+      attributes: {
+        name: 'myPlugin'
+      },
+      options: {}
+    })
+
+    hemera.ready(() => {
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals('Extension error')
+        expect(err.cause.name).to.be.equals('Unauthorized')
+        expect(err.cause.message).to.be.equals('test')
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to pass an error to onServerPreResponse', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
