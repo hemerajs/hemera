@@ -441,7 +441,7 @@ var Hemera = function (_EventEmitter) {
     }
 
     /**
-     *
+     * Create a custom super error object
      *
      * @readonly
      *
@@ -1242,6 +1242,21 @@ var Hemera = function (_EventEmitter) {
     key: 'createError',
     value: function createError(name) {
       return _superError2.default.subclass(name);
+    }
+
+    /**
+     * Return all hemera errors
+     *
+     * @readonly
+     * @static
+     *
+     * @memberOf Hemera
+     */
+
+  }, {
+    key: 'errors',
+    get: function get() {
+      return _errors2.default;
     }
   }]);
 

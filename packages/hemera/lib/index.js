@@ -383,7 +383,7 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   *
+   * Create a custom super error object
    *
    * @readonly
    *
@@ -391,6 +391,18 @@ class Hemera extends EventEmitter {
    */
   static createError (name) {
     return SuperError.subclass(name)
+  }
+
+  /**
+   * Return all hemera errors
+   *
+   * @readonly
+   * @static
+   *
+   * @memberOf Hemera
+   */
+  static get errors () {
+    return Errors
   }
 
   /**

@@ -1181,6 +1181,18 @@ describe('Error handling', function () {
     server.kill()
   })
 
+  it('Should return all hemera error objects', function (done) {
+    expect(Hemera.errors.HemeraError).to.be.exists()
+    expect(Hemera.errors.ParseError).to.be.exists()
+    expect(Hemera.errors.TimeoutError).to.be.exists()
+    expect(Hemera.errors.ImplementationError).to.be.exists()
+    expect(Hemera.errors.BusinessError).to.be.exists()
+    expect(Hemera.errors.FatalError).to.be.exists()
+    expect(Hemera.errors.PatternNotFound).to.be.exists()
+    expect(Hemera.errors.PayloadValidationError).to.be.exists()
+    done()
+  })
+
   it('Should be able pass a custom super error', function (done) {
     const nats = require('nats').connect(authUrl)
 

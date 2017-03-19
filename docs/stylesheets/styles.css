@@ -220,3 +220,10 @@ pre {
 .bg-red {
 	background-color: #fff3f3;
 }
+.accessor  {
+	background: #dedede;
+	padding: 2px 5px 2px 5px;
+	color: #fff;
+	border-radius: 5px;
+	margin-right: 2px;
+}
