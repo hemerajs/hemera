@@ -441,7 +441,7 @@ var Hemera = function (_EventEmitter) {
     }
 
     /**
-     * Create a custom super error object
+     * Create a custom super error object without to start hemera
      *
      * @readonly
      *
@@ -453,7 +453,7 @@ var Hemera = function (_EventEmitter) {
 
 
     /**
-     * Create a custom super error object
+     * Create a custom super error object in a running hemera instance
      *
      * @param {any} name
      * @returns
