@@ -18,7 +18,9 @@ describe('Math', function () {
       logLevel: 'info'
     })
 
+    // Should return the payload "hello" when someone call the pattern "topic:test"
     Act.stub(hemera, { topic: 'test' }, null, 'hello')
+    // Should execute the server method with the pattern topic:math,cmd:add,a:1,b:2"
     Add.stub(hemera, { topic: 'math', cmd: 'add' }, { a: 1, b: 2 }, function (err, result) {
       expect(err).to.be.not.exists()
       expect(result).to.be.equals('3hello')
