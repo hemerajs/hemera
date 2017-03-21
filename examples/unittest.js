@@ -18,45 +18,36 @@ describe('Math', function () {
       logLevel: 'info'
     })
 
-    // Should return the payload "hello" when someone call the pattern "topic:test"
-    Act.stub(hemera, { topic: 'test' }, null, 'hello')
+    // stub act calls
+    Act.stub(hemera, { topic: 'math', cmd: 'sub', a: 10, b: 5 }, null, 5)
+    Act.stub(hemera, { topic: 'math', cmd: 'add', a: 1, b: 2 }, null, 3)
 
     hemera.ready(function () {
       hemera.add({
         topic: 'math',
         cmd: 'add'
       }, function (args, cb) {
-        this.act({ topic: 'test' }, function (err, resp) {
-          this.log.info('hello')
+        this.act({ topic: 'math', cmd: 'sub', a: 10, b: 5 }, function (err, resp) {
           cb(err, args.a + args.b + resp)
         })
-      })
-
-      hemera.add({
-        topic: 'math',
-        cmd: 'sub'
-      }, function (args, cb) {
-        cb(null, args.a - args.b)
       })
       
       // Important stub when "add" was already added
       // Should execute the server method with the pattern topic:math,cmd:add,a:1,b:2"
       Add.stub(hemera, { topic: 'math', cmd: 'add' }, { a: 1, b: 2 }, function (err, result) {
         expect(err).to.be.not.exists()
-        expect(result).to.be.equals('3hello')
-      })
-
-      Add.stub(hemera, { topic: 'math', cmd: 'sub' }, { a: 20, b: 10 }, function (err, result) {
-        expect(err).to.be.not.exists()
-        expect(result).to.be.equals(10)
-        done()
+        expect(result).to.be.equals(8)
       })
 
       hemera.act({
         topic: 'math',
-        cmd: 'add'
-      }, function() {
-        this.act({ topic: 'math', cmd: 'sub' })
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, function(err, result) {
+        expect(err).to.be.not.exists()
+        expect(result).to.be.equals(3)
+        done()
       })
 
     })
