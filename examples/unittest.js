@@ -29,15 +29,15 @@ describe('Math', function () {
       })
 
       // stub act calls
-      Act.stub(hemera, { topic: 'math', cmd: 'sub', a: 100, b: 50 }, null, 5)
+      Act.stub(hemera, { topic: 'math', cmd: 'sub', a: 100, b: 50 }, null, 50)
       Act.stub(hemera, { topic: 'math', cmd: 'add' }, new Error('wrong arguments'))
-      Act.stub(hemera, { topic: 'math', cmd: 'add', a: 100, b: 200 }, null, 3)
+      Act.stub(hemera, { topic: 'math', cmd: 'add', a: 100, b: 200 }, null, 300)
 
       // Important run it when "add" was already added
       // Should execute the server method with the pattern topic:math,cmd:add,a:100,b:200"
       Add.run(hemera, { topic: 'math', cmd: 'add' }, { a: 100, b: 200 }, function (err, result) {
         expect(err).to.be.not.exists()
-        expect(result).to.be.equals(295)
+        expect(result).to.be.equals(250)
       })
 
       hemera.act({
@@ -47,7 +47,7 @@ describe('Math', function () {
         b: 200
       }, function(err, result) {
         expect(err).to.be.not.exists()
-        expect(result).to.be.equals(3)
+        expect(result).to.be.equals(300)
         done()
       })
 

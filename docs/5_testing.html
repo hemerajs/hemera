@@ -181,57 +181,56 @@ describe("Basic", function () {
                     <h4 class="section-h4">Unit test</h4>
                     <pre>
 <code class="javascript">
-const Hemera = require('nats-hemera')
-const Nats = require('hemera-testsuite/natsStub')
-const Act = require('hemera-testsuite/actStub')
-const Add = require('hemera-testsuite/addStub')
-const Code = require('code')
+const Hemera = require("nats-hemera")
+const Nats = require("hemera-testsuite/natsStub")
+const Act = require("hemera-testsuite/actStub")
+const Add = require("hemera-testsuite/addStub")
+const Code = require("code")
 const expect = Code.expect
 
-describe('Math', function () {
-  it('Should do some math operations', function (done) {
+describe("Math", function () {
+  it("Should do some math operations", function (done) {
     const nats = new Nats()
     const hemera = new Hemera(nats, {
-      logLevel: 'info'
+      logLevel: "info"
     })
 
     hemera.ready(function () {
       hemera.add({
-        topic: 'math',
-        cmd: 'add'
+        topic: "math",
+        cmd: "add"
       }, function (args, cb) {
-        this.act({ topic: 'math', cmd: 'sub', a: 100, b: 50 }, function (err, resp) {
+        this.act({ topic: "math", cmd: "sub", a: 100, b: 50 }, function (err, resp) {
           cb(err, args.a + args.b - resp)
         })
       })
 
       // stub act calls
-      Act.stub(hemera, { topic: 'math', cmd: 'sub', a: 100, b: 50 }, null, 5)
-      Act.stub(hemera, { topic: 'math', cmd: 'add' }, new Error('wrong arguments'))
-      Act.stub(hemera, { topic: 'math', cmd: 'add', a: 100, b: 200 }, null, 3)
+      Act.stub(hemera, { topic: "math", cmd: "sub", a: 100, b: 50 }, null, 50)
+      Act.stub(hemera, { topic: "math", cmd: "add" }, new Error("wrong arguments"))
+      Act.stub(hemera, { topic: "math", cmd: "add", a: 100, b: 200 }, null, 300)
 
       // Important run it when "add" was already added
       // Should execute the server method with the pattern topic:math,cmd:add,a:100,b:200"
-      Add.run(hemera, { topic: 'math', cmd: 'add' }, { a: 100, b: 200 }, function (err, result) {
+      Add.run(hemera, { topic: "math", cmd: "add" }, { a: 100, b: 200 }, function (err, result) {
         expect(err).to.be.not.exists()
-        expect(result).to.be.equals(295)
+        expect(result).to.be.equals(250)
       })
 
       hemera.act({
-        topic: 'math',
-        cmd: 'add',
+        topic: "math",
+        cmd: "add",
         a: 100,
         b: 200
       }, function(err, result) {
         expect(err).to.be.not.exists()
-        expect(result).to.be.equals(3)
+        expect(result).to.be.equals(300)
         done()
       })
 
     })
   })
 })
-
 </code>
                     </pre>
 
