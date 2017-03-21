@@ -6,14 +6,15 @@
 
 const Hemera = require('./../packages/hemera')
 const Nats = require('hemera-testsuite/natsStub')
-const Act = require('hemera-testsuite/actStub')
-const Add = require('hemera-testsuite/addStub')
+const ActStub = require('hemera-testsuite/actStub')
+const AddStub = require('hemera-testsuite/addStub')
 const Code = require('code')
 const expect = Code.expect
 
 describe('Math', function () {
   it('Should do some math operations', function (done) {
     const nats = new Nats()
+    const actStub = new ActStub()
     const hemera = new Hemera(nats, {
       logLevel: 'info'
     })
@@ -29,13 +30,13 @@ describe('Math', function () {
       })
 
       // stub act calls
-      Act.stub(hemera, { topic: 'math', cmd: 'sub', a: 100, b: 50 }, null, 50)
-      Act.stub(hemera, { topic: 'math', cmd: 'add' }, new Error('wrong arguments'))
-      Act.stub(hemera, { topic: 'math', cmd: 'add', a: 100, b: 200 }, null, 300)
+      actStub.stub(hemera, { topic: 'math', cmd: 'sub', a: 100, b: 50 }, null, 50)
+      actStub.stub(hemera, { topic: 'math', cmd: 'add' }, new Error('wrong arguments'))
+      actStub.stub(hemera, { topic: 'math', cmd: 'add', a: 100, b: 200 }, null, 300)
 
       // Important run it when "add" was already added
       // Should execute the server method with the pattern topic:math,cmd:add,a:100,b:200"
-      Add.run(hemera, { topic: 'math', cmd: 'add' }, { a: 100, b: 200 }, function (err, result) {
+      AddStub.run(hemera, { topic: 'math', cmd: 'add' }, { a: 100, b: 200 }, function (err, result) {
         expect(err).to.be.not.exists()
         expect(result).to.be.equals(250)
       })
@@ -45,12 +46,11 @@ describe('Math', function () {
         cmd: 'add',
         a: 100,
         b: 200
-      }, function(err, result) {
+      }, function (err, result) {
         expect(err).to.be.not.exists()
         expect(result).to.be.equals(300)
         done()
       })
-
     })
   })
 })
