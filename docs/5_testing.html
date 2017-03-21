@@ -209,8 +209,8 @@ describe('Math', function () {
       Act.stub(hemera, { topic: 'math', cmd: 'sub', a: 100, b: 50 }, null, 5)
       Act.stub(hemera, { topic: 'math', cmd: 'add', a: 100, b: 200 }, null, 3)
 
-      // Important stub when "add" was already added
-      // Should execute the server method with the pattern topic:math,cmd:add,a:1,b:2"
+      // Important run it when "add" was already added
+      // Should execute the server method with the pattern topic:math,cmd:add,a:100,b:200"
       Add.run(hemera, { topic: 'math', cmd: 'add' }, { a: 100, b: 200 }, function (err, result) {
         expect(err).to.be.not.exists()
         expect(result).to.be.equals(295)
