@@ -30,6 +30,7 @@ describe('Math', function () {
 
       // stub act calls
       Act.stub(hemera, { topic: 'math', cmd: 'sub', a: 100, b: 50 }, null, 5)
+      Act.stub(hemera, { topic: 'math', cmd: 'add' }, new Error('wrong arguments'))
       Act.stub(hemera, { topic: 'math', cmd: 'add', a: 100, b: 200 }, null, 3)
 
       // Important run it when "add" was already added
