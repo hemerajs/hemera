@@ -721,7 +721,7 @@ describe('Timeouts', function () {
     server.kill()
   })
 
-  it('Issue #39 - Should get only one response even when a answers is responded after a timeout', function (done) {
+  it('Should not receive more messages when the INBOX timeouts', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -776,7 +776,7 @@ describe('Timeouts', function () {
 
       setTimeout(() => {
         expect(aError).to.be.equals(1)
-        expect(aResult).to.be.equals(1)
+        expect(aResult).to.be.equals(0)
         expect(bError).to.be.equals(1)
         expect(bResult).to.be.equals(0)
         hemera.close()
@@ -785,7 +785,7 @@ describe('Timeouts', function () {
     })
   })
 
-  it('Issue #39 - Should get the correct results even when a answer is responded after a timeout', function (done) {
+  it('Should not receive more messages with maxMessages$ set when the INBOX timeouts', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -841,9 +841,9 @@ describe('Timeouts', function () {
 
       setTimeout(() => {
         expect(aError).to.be.equals(1)
-        expect(aResult).to.be.equals(1)
+        expect(aResult).to.be.equals(0)
         expect(bError).to.be.equals(1)
-        expect(bResult).to.be.equals(1)
+        expect(bResult).to.be.equals(0)
         hemera.close()
         done()
       }, 300)
