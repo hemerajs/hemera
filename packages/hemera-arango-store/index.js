@@ -10,6 +10,7 @@ exports.plugin = function hemeraArangoStore (options) {
   const topic = 'arango-store'
   const Joi = hemera.exposition['hemera-joi'].joi
 
+  hemera.expose('arango', Arangojs)
   hemera.expose('aqlTemplate', Arangojs.aql)
   hemera.expose('useDb', useDb)
 
