@@ -10,6 +10,9 @@ exports.plugin = function hemeraCouchbaseStore (options) {
   const Joi = hemera.exposition['hemera-joi'].joi
   const cluster = new Couchbase.Cluster(options.couchbase.url)
   const N1qlQuery = Couchbase.N1qlQuery
+  
+  hemera.expose('openBucket', getBucket)
+  hemera.expose('couchbase', Couchbase)
 
   function getBucket (name) {
     if (options.couchbase.bucketInstance) {
