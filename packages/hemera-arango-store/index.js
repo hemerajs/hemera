@@ -11,7 +11,7 @@ exports.plugin = function hemeraArangoStore (options) {
   const Joi = hemera.exposition['hemera-joi'].joi
 
   hemera.expose('aqlTemplate', Arangojs.aql)
-  hemera.expose('connectionPool', connections)
+  hemera.expose('useDb', useDb)
 
   /**
    * Create pool of database connections
