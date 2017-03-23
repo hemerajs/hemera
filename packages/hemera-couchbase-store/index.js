@@ -12,6 +12,7 @@ exports.plugin = function hemeraCouchbaseStore (options) {
   const N1qlQuery = Couchbase.N1qlQuery
   
   hemera.expose('openBucket', getBucket)
+  hemera.expose('cluster', cluster)
   hemera.expose('couchbase', Couchbase)
 
   function getBucket (name) {
