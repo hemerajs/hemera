@@ -8,6 +8,8 @@ exports.plugin = function hemeraRedisCache (options) {
   const topic = 'redis-cache'
 
   const Joi = hemera.exposition['hemera-joi'].joi
+  
+  hemera.expose('client', client)
 
   client.on('ready', function () {
     hemera.log.info('Redis Cache is ready')
