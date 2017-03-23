@@ -12,6 +12,9 @@ exports.plugin = function hemeraMongoStore (options, next) {
   Mongodb.MongoClient.connect(options.mongo.url, options.mongos.options, function (err, db) {
     if (err) throw err
 
+    hemera.expose('db', db)
+    hemera.expose('mongodb', Mongodb)
+    
     hemera.add({
       topic,
       cmd: 'dropCollection'
