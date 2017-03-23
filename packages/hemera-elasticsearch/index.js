@@ -2,7 +2,7 @@
 
 const Elasticsearch = require('elasticsearch')
 
-exports.plugin = function hemeraElasticSearch (options) {
+exports.plugin = function hemeraElasticSearch (options, next) {
   const hemera = this
   const topic = 'elasticsearch'
   const Joi = hemera.exposition['hemera-joi'].joi
@@ -19,7 +19,9 @@ exports.plugin = function hemeraElasticSearch (options) {
       hemera.log.trace(error, 'elasticsearch cluster is down!')
       hemera.fatal()
     } else {
+      hemera.expose('client', client)
       hemera.log.info('elasticsearch cluster is available')
+      next()
     }
   })
 
