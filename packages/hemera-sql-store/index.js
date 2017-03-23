@@ -8,8 +8,8 @@ exports.plugin = function hemeraSqlStore (options) {
   const hemera = this
   const connections = {}
   const topic = 'sql-store'
-
-  hemera.expose('connectionPool', connections)
+  
+  hemera.expose('useDb', useDb)
 
   function useDb (databaseName) {
     if (connections[databaseName]) {
