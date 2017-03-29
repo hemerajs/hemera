@@ -456,7 +456,8 @@ var Hemera = function (_EventEmitter) {
 
 
     /**
-     * Decorate the current context with a method or other value
+     * Decorate the root instance with a method or other value
+     * Value is globaly accesible
      *
      * @param {any} prop
      * @param {any} value
