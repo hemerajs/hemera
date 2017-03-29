@@ -187,6 +187,9 @@ var Hemera = function (_EventEmitter) {
     _this._actCallback = null;
     _this._cleanPattern = '';
     _this._pluginRegistrations = [];
+    _this._decorations = {};
+    // create reference to root hemera instance
+    _this._root = _this;
 
     // contains the list of all registered plugins
     // the core is also a plugin
@@ -449,8 +452,28 @@ var Hemera = function (_EventEmitter) {
      */
 
   }, {
-    key: 'createError',
+    key: 'decorate',
 
+
+    /**
+     * Decorate the current context with a method or other value
+     *
+     * @param {any} prop
+     * @param {any} value
+     *
+     * @memberOf Hemera
+     */
+    value: function decorate(prop, value) {
+      if (this._decorations[prop]) {
+        throw new Error(_constants2.default.DECORATION_ALREADY_DEFINED);
+      } else if (this[prop]) {
+        throw new Error(_constants2.default.OVERRIDE_BUILTIN_METHOD_NOT_ALLOWED);
+      }
+
+      this._decorations[prop] = { plugin: this.plugin$, value };
+      // decorate root hemera instance
+      this._root[prop] = value;
+    }
 
     /**
      * Create a custom super error object in a running hemera instance
@@ -460,6 +483,9 @@ var Hemera = function (_EventEmitter) {
      *
      * @memberOf Hemera
      */
+
+  }, {
+    key: 'createError',
     value: function createError(name) {
       return _superError2.default.subclass(name);
     }
@@ -803,6 +829,7 @@ var Hemera = function (_EventEmitter) {
         ctx._response = new _serverResponse2.default();
         ctx._pattern = {};
         ctx._actMeta = {};
+        ctx._isServer = true;
 
         ctx._extensions.onServerPreRequest.invoke(ctx, onServerPreRequestHandler);
       };
@@ -1079,6 +1106,7 @@ var Hemera = function (_EventEmitter) {
       ctx._cleanPattern = _util2.default.cleanFromSpecialVars(pattern);
       ctx._response = new _clientResponse2.default();
       ctx._request = new _clientRequest2.default();
+      ctx._isServer = false;
 
       ctx._extensions.onClientPreRequest.invoke(ctx, onPreRequestHandler);
     }

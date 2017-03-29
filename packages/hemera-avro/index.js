@@ -44,7 +44,7 @@ exports.plugin = function hemeraAvro () {
   hemera._encoder.encode = function (msg) {
     try {
       // server request encoding
-      if (typeof msg.result === 'object') {
+      if (this._isServer) {
         if (this.meta$.avro) {
           msg.result = this._actMeta.schema.avro$.toBuffer(msg.result)
         } else {

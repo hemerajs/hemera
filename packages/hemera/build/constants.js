@@ -34,6 +34,8 @@ exports.default = {
   PLUGIN_NAME_REQUIRED: 'Plugin name is required',
   PLUGIN_DEPENDENCY_MISSING: 'Plugin `%s` requires `%s` as dependency. Please install via `npm install --save %s`',
   PLUGIN_DEPENDENCY_NOT_FOUND: 'Plugin dependency not found',
-  PLUGIN_REGISTRATION_ERROR: 'Error during plugin registration'
+  PLUGIN_REGISTRATION_ERROR: 'Error during plugin registration',
+  DECORATION_ALREADY_DEFINED: 'Server decoration already defined',
+  OVERRIDE_BUILTIN_METHOD_NOT_ALLOWED: 'Cannot override the built-in server interface method'
 };
 //# sourceMappingURL=constants.js.map

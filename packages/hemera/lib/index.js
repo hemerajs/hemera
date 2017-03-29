@@ -101,6 +101,9 @@ class Hemera extends EventEmitter {
     this._actCallback = null
     this._cleanPattern = ''
     this._pluginRegistrations = []
+    this._decorations = {}
+    // create reference to root hemera instance
+    this._root = this
 
     // contains the list of all registered plugins
     // the core is also a plugin
@@ -391,6 +394,26 @@ class Hemera extends EventEmitter {
    */
   static createError (name) {
     return SuperError.subclass(name)
+  }
+
+  /**
+   * Decorate the current context with a method or other value
+   *
+   * @param {any} prop
+   * @param {any} value
+   *
+   * @memberOf Hemera
+   */
+  decorate (prop, value) {
+    if (this._decorations[prop]) {
+      throw new Error(Constants.DECORATION_ALREADY_DEFINED)
+    } else if (this[prop]) {
+      throw new Error(Constants.OVERRIDE_BUILTIN_METHOD_NOT_ALLOWED)
+    }
+
+    this._decorations[prop] = { plugin: this.plugin$, value }
+    // decorate root hemera instance
+    this._root[prop] = value
   }
 
   /**
@@ -729,6 +752,7 @@ class Hemera extends EventEmitter {
       ctx._response = new ServerResponse()
       ctx._pattern = {}
       ctx._actMeta = {}
+      ctx._isServer = true
 
       ctx._extensions.onServerPreRequest.invoke(ctx, onServerPreRequestHandler)
     }
@@ -996,6 +1020,7 @@ class Hemera extends EventEmitter {
     ctx._cleanPattern = Util.cleanFromSpecialVars(pattern)
     ctx._response = new ClientResponse()
     ctx._request = new ClientRequest()
+    ctx._isServer = false
 
     ctx._extensions.onClientPreRequest.invoke(ctx, onPreRequestHandler)
   }
