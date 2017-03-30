@@ -47,7 +47,7 @@
   "devDependencies": {
     "chokidar-cli": "1.2.x",
     "code": "4.0.x",
-    "coveralls": "2.11.x",
+    "coveralls": "~2.13.0",
     "eslint": "^3.13.1",
     "eslint-config-standard": "^6.2.1",
     "eslint-plugin-promise": "^3.4.2",
