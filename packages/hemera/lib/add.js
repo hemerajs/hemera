@@ -4,7 +4,7 @@
  * MIT Licensed
  */
 
-import _ from 'lodash'
+const _ = require('lodash')
 
 /**
  *
@@ -12,7 +12,7 @@ import _ from 'lodash'
  * @export
  * @class Add
  */
-export default class Add {
+class Add {
 
   /**
    * Creates an instance of Add.
@@ -112,3 +112,5 @@ export default class Add {
   }
 
 }
+
+module.exports = Add

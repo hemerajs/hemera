@@ -4,7 +4,7 @@
  * MIT Licensed
  */
 
-import _ from 'lodash'
+const _ = require('lodash')
 
 const ID_LENGTH = 16
 const ID_DIGITS = '0123456789abcdef'
@@ -12,7 +12,7 @@ const ID_DIGITS = '0123456789abcdef'
 /**
  * @class Util
  */
-export default class Util {
+class Util {
   /**
    * @returns
    *
@@ -148,3 +148,5 @@ export default class Util {
     return sb.join(',')
   }
 }
+
+module.exports = Util

@@ -4,12 +4,12 @@
  * MIT Licensed
  */
 
-import _ from 'lodash'
+const _ = require('lodash')
 
 /**
  * @class ServerResponse
  */
-export default class ServerResponse {
+class ServerResponse {
 
   /**
    * Creates an instance of ServerResponse.
@@ -103,3 +103,5 @@ export default class ServerResponse {
   }
 
 }
+
+module.exports = ServerResponse

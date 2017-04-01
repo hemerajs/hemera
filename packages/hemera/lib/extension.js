@@ -7,7 +7,7 @@
 /**
  * @class Extension
  */
-export default class Extension {
+class Extension {
 
   constructor (type, server) {
     this._stack = []
@@ -96,3 +96,5 @@ export default class Extension {
     }
   }
 }
+
+module.exports = Extension

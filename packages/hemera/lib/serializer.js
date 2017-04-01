@@ -19,7 +19,7 @@ function outbound (ctx) {
   }
 }
 
-export default {
+module.exports = {
   outbound,
   inbound
 }

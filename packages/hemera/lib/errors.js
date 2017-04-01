@@ -4,7 +4,7 @@
  * MIT Licensed
  */
 
-import SuperError from 'super-error'
+const SuperError = require('super-error')
 
 const HemeraError = SuperError.subclass('HemeraError')
 const ParseError = HemeraError.subclass('HemeraParseError')
@@ -15,7 +15,7 @@ const FatalError = HemeraError.subclass('FatalError')
 const PatternNotFound = HemeraError.subclass('PatternNotFound')
 const PayloadValidationError = SuperError.subclass('PayloadValidationError')
 
-export default {
+module.exports = {
   HemeraError,
   ParseError,
   TimeoutError,

@@ -5,7 +5,7 @@
  * Based on https://github.com/mcollina/fast-json-parse
  */
 
-export default class Decoder {
+class Decoder {
 
   static decode (msg) {
     return Parse(msg)
@@ -26,3 +26,5 @@ function Parse (data) {
     this.error = error
   }
 }
+
+module.exports = Decoder

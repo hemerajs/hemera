@@ -5,7 +5,7 @@
  * Based on https://github.com/davidmarkclements/fast-safe-stringify
  */
 
-export default class Encoder {
+class Encoder {
 
   static encode (msg) {
     try {
@@ -66,3 +66,5 @@ function decirc (val, k, stack, parent) {
   }
   stack.pop()
 }
+
+module.exports = Encoder

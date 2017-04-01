@@ -4,9 +4,9 @@
  * MIT Licensed
  */
 
-import Util from './util'
+const Util = require('./util')
 
-export const onClientPreRequest = [function onClientPreRequest (next) {
+module.exports.onClientPreRequest = [function onClientPreRequest (next) {
   let ctx = this
 
   let pattern = this._pattern
@@ -61,7 +61,7 @@ export const onClientPreRequest = [function onClientPreRequest (next) {
   next()
 }]
 
-export const onClientPostRequest = [function onClientPostRequest (next) {
+module.exports.onClientPostRequest = [function onClientPostRequest (next) {
   let ctx = this
   let pattern = this._pattern
   let msg = ctx._response.payload
@@ -85,7 +85,7 @@ export const onClientPostRequest = [function onClientPostRequest (next) {
   next()
 }]
 
-export const onServerPreRequest = [function onServerPreRequest (req, res, next) {
+module.exports.onServerPreRequest = [function onServerPreRequest (req, res, next) {
   let ctx = this
 
   let m = ctx._decoder.decode.call(ctx, ctx._request.payload)
@@ -112,7 +112,7 @@ export const onServerPreRequest = [function onServerPreRequest (req, res, next) 
   next()
 }]
 
-export const onServerPreHandler = [function onServerPreHandler (req, res, next) {
+module.exports.onServerPreHandler = [function onServerPreHandler (req, res, next) {
   let ctx = this
 
   ctx.emit('serverPreHandler')
@@ -120,7 +120,7 @@ export const onServerPreHandler = [function onServerPreHandler (req, res, next) 
   next()
 }]
 
-export const onServerPreResponse = [function onServerPreResponse (req, res, next) {
+module.exports.onServerPreResponse = [function onServerPreResponse (req, res, next) {
   let ctx = this
 
   ctx.emit('serverPreResponse')

@@ -7,7 +7,7 @@
 /**
  * @class ClientRequest
  */
-export default class ClientRequest {
+class ClientRequest {
 
   /**
    * Creates an instance of ClientRequest.
@@ -63,3 +63,5 @@ export default class ClientRequest {
   }
 
 }
+
+module.exports = ClientRequest

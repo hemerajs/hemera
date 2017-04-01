@@ -8,31 +8,31 @@
  * Module Dependencies
  */
 
-import EventEmitter from 'events'
-import Bloomrun from 'bloomrun'
-import Errio from 'errio'
-import Hoek from 'hoek'
-import Heavy from 'heavy'
-import _ from 'lodash'
-import Pino from 'pino'
-import OnExit from 'signal-exit'
-import TinySonic from 'tinysonic'
-import SuperError from 'super-error'
+const EventEmitter = require('events')
+const Bloomrun = require('bloomrun')
+const Errio = require('errio')
+const Hoek = require('hoek')
+const Heavy = require('heavy')
+const _ = require('lodash')
+const Pino = require('pino')
+const OnExit = require('signal-exit')
+const TinySonic = require('tinysonic')
+const SuperError = require('super-error')
 
-import Errors from './errors'
-import Constants from './constants'
-import Extension from './extension'
-import Util from './util'
-import NatsTransport from './transport'
-import * as DefaultExtensions from './extensions'
-import DefaultEncoder from './encoder'
-import DefaultDecoder from './decoder'
-import ServerResponse from './serverResponse'
-import ServerRequest from './serverRequest'
-import ClientRequest from './clientRequest'
-import ClientResponse from './clientResponse'
-import Serializers from './serializer'
-import Add from './add'
+const Errors = require('./errors')
+const Constants = require('./constants')
+const Extension = require('./extension')
+const Util = require('./util')
+const NatsTransport = require('./transport')
+const DefaultExtensions = require('./extensions')
+const DefaultEncoder = require('./encoder')
+const DefaultDecoder = require('./decoder')
+const ServerResponse = require('./serverResponse')
+const ServerRequest = require('./serverRequest')
+const ClientRequest = require('./clientRequest')
+const ClientResponse = require('./clientResponse')
+const Serializers = require('./serializer')
+const Add = require('./add')
 
 var defaultConfig = {
   timeout: 2000,
