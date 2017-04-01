@@ -35,7 +35,7 @@
     "queueing"
   ],
   "scripts": {
-    "lint": "eslint ./src ./test",
+    "lint": "eslint ./lib",
     "prepublish": "npm run lint"
   },
   "engines": {
