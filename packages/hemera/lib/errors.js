@@ -1,10 +1,15 @@
-/*!
- * hemera
- * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
- * MIT Licensed
+'use strict'
+
+/**
+ * Copyright 2016-present, Dustin Deus (deusdustin@gmail.com)
+ * All rights reserved.
+ *
+ * This source code is licensed under the MIT-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
  */
 
-import SuperError from 'super-error'
+const SuperError = require('super-error')
 
 const HemeraError = SuperError.subclass('HemeraError')
 const ParseError = HemeraError.subclass('HemeraParseError')
@@ -15,7 +20,7 @@ const FatalError = HemeraError.subclass('FatalError')
 const PatternNotFound = HemeraError.subclass('PatternNotFound')
 const PayloadValidationError = SuperError.subclass('PayloadValidationError')
 
-export default {
+module.exports = {
   HemeraError,
   ParseError,
   TimeoutError,

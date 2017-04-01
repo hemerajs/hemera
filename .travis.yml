@@ -10,7 +10,7 @@ script:
   - npm run setup && npm run ci
 
 env:
-  - ARANGODB_VERSION=3.1 ARANGO_VERSION=30100
+  #- ARANGODB_VERSION=3.1 ARANGO_VERSION=30100
 
 addons:
   #apt:

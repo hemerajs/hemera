@@ -1,11 +1,16 @@
-/*!
- * hemera
- * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
- * MIT Licensed
+'use strict'
+
+/**
+ * Copyright 2016-present, Dustin Deus (deusdustin@gmail.com)
+ * All rights reserved.
+ *
+ * This source code is licensed under the MIT-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
  */
 
 // Errors messages
-export default {
+module.exports = {
   JSON_PARSE_ERROR: 'Invalid JSON payload',
   ACT_TIMEOUT_ERROR: 'Timeout',
   NO_TOPIC_TO_SUBSCRIBE: 'No topic to subscribe',

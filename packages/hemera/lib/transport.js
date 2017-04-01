@@ -1,7 +1,12 @@
-/*!
- * hemera
- * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
- * MIT Licensed
+'use strict'
+
+/**
+ * Copyright 2016-present, Dustin Deus (deusdustin@gmail.com)
+ * All rights reserved.
+ *
+ * This source code is licensed under the MIT-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
  */
 
 /**
@@ -9,7 +14,7 @@
  *
  * @class Transport
  */
-export default class NatsTransport {
+class NatsTransport {
 
   /**
    * Creates an instance of NatsTransport.
@@ -99,3 +104,5 @@ export default class NatsTransport {
     return this.nc.request.apply(this.nc, arguments)
   }
 }
+
+module.exports = NatsTransport

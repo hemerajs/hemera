@@ -1,15 +1,20 @@
-/*!
- * hemera
- * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
- * MIT Licensed
+'use strict'
+
+/**
+ * Copyright 2016-present, Dustin Deus (deusdustin@gmail.com)
+ * All rights reserved.
+ *
+ * This source code is licensed under the MIT-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
  */
 
-import _ from 'lodash'
+const _ = require('lodash')
 
 /**
  * @class ServerResponse
  */
-export default class ServerResponse {
+class ServerResponse {
 
   /**
    * Creates an instance of ServerResponse.
@@ -103,3 +108,5 @@ export default class ServerResponse {
   }
 
 }
+
+module.exports = ServerResponse

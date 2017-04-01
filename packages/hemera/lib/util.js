@@ -1,10 +1,15 @@
-/*!
- * hemera
- * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
- * MIT Licensed
+'use strict'
+
+/**
+ * Copyright 2016-present, Dustin Deus (deusdustin@gmail.com)
+ * All rights reserved.
+ *
+ * This source code is licensed under the MIT-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
  */
 
-import _ from 'lodash'
+const _ = require('lodash')
 
 const ID_LENGTH = 16
 const ID_DIGITS = '0123456789abcdef'
@@ -12,7 +17,7 @@ const ID_DIGITS = '0123456789abcdef'
 /**
  * @class Util
  */
-export default class Util {
+class Util {
   /**
    * @returns
    *
@@ -148,3 +153,5 @@ export default class Util {
     return sb.join(',')
   }
 }
+
+module.exports = Util

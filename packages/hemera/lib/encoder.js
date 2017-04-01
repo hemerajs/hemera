@@ -1,11 +1,15 @@
-/*!
- * hemera
- * Copyright(c) 2016 Dustin Deus (deusdustin@gmail.com)
- * MIT Licensed
- * Based on https://github.com/davidmarkclements/fast-safe-stringify
+'use strict'
+
+/**
+ * Copyright 2016-present, Dustin Deus (deusdustin@gmail.com)
+ * All rights reserved.
+ *
+ * This source code is licensed under the MIT-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
  */
 
-export default class Encoder {
+class Encoder {
 
   static encode (msg) {
     try {
@@ -66,3 +70,5 @@ function decirc (val, k, stack, parent) {
   }
   stack.pop()
 }
+
+module.exports = Encoder

@@ -32,13 +32,13 @@
     "queueing"
   ],
   "scripts": {
-    "setup": "npm i && lerna bootstrap && lerna run build",
+    "setup": "npm i && lerna bootstrap",
     "clean": "lerna clean",
     "release": "lerna publish -i",
-    "test": "lerna run build && nyc mocha -t 5000 \"./test/**/*.js\" \"./packages/hemera-zipkin/test/**/*.js\"",
+    "test": "nyc mocha -t 5000 \"./test/**/*.js\" \"./packages/hemera-zipkin/test/**/*.js\"",
     "coverage": "npm run test && nyc report --reporter=html",
-    "build:watch": "lerna run build && chokidar \"./packages/hemera/lib/**/*.js\" -c \"lerna run build\"",
-    "ci": "lerna run build && nyc mocha -t 5000 \"./test/**/*.js\" \"./packages/hemera-zipkin/test/**/*.js\" && nyc report --reporter=text-lcov | coveralls"
+    "build:watch": "chokidar \"./packages/hemera/lib/**/*.js\" -c \"lerna run build\"",
+    "ci": "nyc mocha -t 5000 \"./test/**/*.js\" \"./packages/hemera-zipkin/test/**/*.js\" && nyc report --reporter=text-lcov | coveralls"
   },
   "engines": {
     "node": ">=4.0.0"

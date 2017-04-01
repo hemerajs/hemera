@@ -2,7 +2,7 @@
   "name": "nats-hemera",
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "version": "0.10.2",
-  "main": "build/index.js",
+  "main": "lib/index.js",
   "homepage": "https://hemerajs.github.io/hemera/",
   "description": "The core package of hemera",
   "repository": {
@@ -35,9 +35,8 @@
     "queueing"
   ],
   "scripts": {
-    "lint": "eslint ./src ./test",
-    "build": "babel ./lib --out-dir ./build --copy-files --source-maps",
-    "prepublish": "npm run build"
+    "lint": "eslint ./lib",
+    "prepublish": "npm run lint"
   },
   "engines": {
     "node": ">=4.0.0"
@@ -55,10 +54,6 @@
     "tinysonic": "1.1.x"
   },
   "devDependencies": {
-    "babel-cli": "^6.22.2",
-    "babel-plugin-istanbul": "^3.1.2",
-    "babel-preset-env": "^1.1.8",
-    "babel-register": "^6.22.0",
     "eslint": "^3.13.1",
     "eslint-config-standard": "^6.2.1",
     "eslint-plugin-promise": "^3.4.2",
