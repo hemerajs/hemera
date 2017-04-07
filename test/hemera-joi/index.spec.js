@@ -352,4 +352,39 @@ describe('Hemera-joi pre/post', function () {
       })
     })
   })
+
+  it('Should only manipulate response payload when a response was set', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.use(HemeraJoi)
+    hemera.setOption('payloadValidator', 'hemera-joi')
+
+    hemera.ready(() => {
+      let Joi = hemera.exposition['hemera-joi'].joi
+      hemera.add({
+        topic: 'email',
+        cmd: 'send',
+        joi$: {
+          post: {
+            c: Joi.number().default(100)
+          }
+        }
+      }, (resp, cb) => {
+        cb(null)
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        a: 1
+      }, (err, resp) => {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.not.exists()
+        hemera.close()
+        done()
+      })
+    })
+  })
 })
