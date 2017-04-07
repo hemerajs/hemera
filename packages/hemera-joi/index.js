@@ -56,6 +56,10 @@ exports.plugin = function hemeraJoi () {
     if (schema.joi$) {
       if (schema.joi$.post) {
         joiSchema = schema.joi$.post
+        // when no response was set but we want to support default values by joi
+        if (response === undefined) {
+          response = {}
+        }
       } else {
         return next()
       }

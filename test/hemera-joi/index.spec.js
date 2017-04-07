@@ -353,7 +353,7 @@ describe('Hemera-joi pre/post', function () {
     })
   })
 
-  it('Should only manipulate response payload when a response was set', function (done) {
+  it('Should extend the response payload with default values also when no response was set', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -381,7 +381,7 @@ describe('Hemera-joi pre/post', function () {
         a: 1
       }, (err, resp) => {
         expect(err).to.be.not.exists()
-        expect(resp).to.be.not.exists()
+        expect(resp.c).to.be.equals(100)
         hemera.close()
         done()
       })
