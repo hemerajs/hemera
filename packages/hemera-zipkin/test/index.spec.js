@@ -11,15 +11,14 @@ const Client = new Zipkin({
   sampling: 1
 })
 
-function now() {
+function now () {
   return new Date().getTime() * TO_MICROSECONDS
 }
 
-function noop() {}
+function noop () {}
 
 describe('Zipkin client', function () {
-
-  beforeEach(function resetTransport(done) {
+  beforeEach(function resetTransport (done) {
     Client.options({
       transport: noop
     })
@@ -27,10 +26,8 @@ describe('Zipkin client', function () {
   })
 
   describe('options', function () {
-
     it('is possible to swap transport', function (done) {
-
-      function dummyTransport(data) {
+      function dummyTransport (data) {
         expect(data).to.include(['traceId', 'name', 'id', 'annotations'])
         done()
       }
@@ -43,7 +40,6 @@ describe('Zipkin client', function () {
         service: 'test service',
         name: 'test name'
       })
-
     })
 
     it('it cant sets to http batch transport', function (done) {
@@ -63,13 +59,10 @@ describe('Zipkin client', function () {
 
       done()
     })
-
   })
 
   describe('Trace data manipulation', function () {
-
     describe('getChild', function () {
-
       it('should return data for child span', function (done) {
         const traceData = Client.getChild({
           traceId: 'test traceId',
@@ -130,13 +123,10 @@ describe('Zipkin client', function () {
         expect(traceData.parentSpanId).to.be.null()
         done()
       })
-
     })
-
   })
 
   describe('Standard annotations', function () {
-
     describe('sendClientSend', function () {
       const traceData = {
         traceId: 'test traceId',
@@ -147,9 +137,7 @@ describe('Zipkin client', function () {
       }
 
       it('sends data to zipkin', function (done) {
-
-        function testTransport(data) {
-
+        function testTransport (data) {
           try {
             expect(data).to.part.include({
               traceId: 'test traceId',
@@ -182,7 +170,6 @@ describe('Zipkin client', function () {
           service: 'test service',
           name: 'test name'
         })
-
       })
 
       it('should create a new trace if none passed', function (done) {
@@ -195,11 +182,10 @@ describe('Zipkin client', function () {
         expect(data.parentSpanId).to.be.null()
         expect(data.spanId).to.be.equal(data.traceId)
         done()
-
       })
 
       it('should not send data for not sampled traces', function (done) {
-        function testTransport() {
+        function testTransport () {
           done('Shouldn\'t receive data')
         }
 
@@ -220,7 +206,6 @@ describe('Zipkin client', function () {
         expect(Client.send_client_send).to.equal(Client.sendClientSend)
         done()
       })
-
     })
 
     describe('sendClientRecv', function () {
@@ -233,8 +218,7 @@ describe('Zipkin client', function () {
       }
 
       it('sends data to zipkin', function (done) {
-
-        function testTransport(data) {
+        function testTransport (data) {
           try {
             expect(data).to.part.include({
               traceId: 'test traceId',
@@ -267,14 +251,12 @@ describe('Zipkin client', function () {
           service: 'test service',
           name: 'test name'
         })
-
       })
 
       it('provides a camel case alias', function (done) {
         expect(Client.send_client_recv).to.equal(Client.sendClientRecv)
         done()
       })
-
     })
 
     describe('sendServerSend', function () {
@@ -287,8 +269,7 @@ describe('Zipkin client', function () {
       }
 
       it('sends data to zipkin', function (done) {
-
-        function testTransport(data) {
+        function testTransport (data) {
           try {
             expect(data).to.part.include({
               traceId: 'test traceId',
@@ -321,7 +302,6 @@ describe('Zipkin client', function () {
           service: 'test service',
           name: 'test name'
         })
-
       })
 
       it('sends the duration on server only traces', function (done) {
@@ -334,7 +314,7 @@ describe('Zipkin client', function () {
           serverOnly: true
         }
 
-        function testTransport(data) {
+        function testTransport (data) {
           try {
             expect(data).to.part.include({
               traceId: 'test traceId',
@@ -367,14 +347,12 @@ describe('Zipkin client', function () {
           service: 'test service',
           name: 'test name'
         })
-
       })
 
       it('provides a camel case alias', function (done) {
         expect(Client.send_server_send).to.equal(Client.sendServerSend)
         done()
       })
-
     })
 
     describe('sendServerRecv', function () {
@@ -387,8 +365,7 @@ describe('Zipkin client', function () {
       }
 
       it('sends data to zipkin', function (done) {
-
-        function testTransport(data) {
+        function testTransport (data) {
           try {
             expect(data).to.part.include({
               traceId: 'test traceId',
@@ -421,12 +398,10 @@ describe('Zipkin client', function () {
           service: 'test service',
           name: 'test name'
         })
-
       })
 
       it('sends timestamp and creates a serverOnly trace if no trace passed in', function (done) {
-
-        function testTransport(data) {
+        function testTransport (data) {
           try {
             expect(data).to.part.include({
               name: 'test name',
@@ -459,16 +434,12 @@ describe('Zipkin client', function () {
         })
 
         expect(data.serverOnly).to.be.true()
-
       })
 
       it('provides a camel case alias', function (done) {
         expect(Client.send_server_recv).to.equal(Client.sendServerRecv)
         done()
       })
-
     })
-
   })
-
 })
