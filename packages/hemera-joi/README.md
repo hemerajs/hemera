@@ -60,3 +60,27 @@ hemera.ready(() => {
   })
 ```
 
+### Pre and Post validation
+```js
+  let Joi = hemera.exposition['hemera-joi'].joi
+  
+  hemera.add({
+    topic: 'math',
+    cmd: 'add',
+    joi$: {
+      pre: {
+        a: Joi.number().required()
+      },
+      post: {
+        foo: Joi.number().default(500)
+      }
+    }
+  }, (req, cb) => {
+
+    cb(null, { result: req.a + req.b })
+  })
+
+  // response will be { result: <number>, foo: 500 }
+```
+
+
