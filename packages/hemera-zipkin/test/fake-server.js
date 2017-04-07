@@ -3,8 +3,7 @@
 const Http = require('http')
 const EventEmitter = require('events')
 
-
-function fakeServer() {
+function fakeServer () {
   const fake = new EventEmitter()
   const server = Http.createServer(function (req, res) {
     const body = []

@@ -4,7 +4,6 @@ const Code = require('code')
 const Transport = require('./../../lib/transports/http-batch')
 const FakeServer = require('./../fake-server')
 
-
 const expect = Code.expect
 
 const FAKE_SERVER_PORT = 9090
@@ -18,9 +17,7 @@ const options = {
 }
 
 describe('Transports', function () {
-
   describe('http-batch', function () {
-
     let fakeServer
 
     before(function (done) {
@@ -38,7 +35,6 @@ describe('Transports', function () {
     })
 
     it('sends received data to the correct url in batches', function (done) {
-
       fakeServer.on('request', function (data) {
         var expectedBatchSize = 2
 
@@ -65,12 +61,10 @@ describe('Transports', function () {
         traceId: 'test trace 2',
         id: 'test span 2'
       }, options)
-
     })
 
     it('sends queued data on inactivity', function (done) {
       fakeServer.on('request', function (data) {
-
         expect(data.url).to.equal('/api/v1/spans')
         expect(data.body).to.be.an.array()
         expect(data.body).to.have.length(1)
@@ -87,7 +81,5 @@ describe('Transports', function () {
         id: 'test span 3'
       }, options)
     })
-
   })
-
 })
