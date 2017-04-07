@@ -151,3 +151,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Inspiration
 
 [Seneca](https://github.com/senecajs/seneca) - A microservices toolkit for Node.js.
+
+## Support
+
+[![Support via PayPal](https://cdn.rawgit.com/twolfson/paypal-github-button/1.0.0/dist/button.svg)](https://paypal.me/payinstant/5)
