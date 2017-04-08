@@ -1,6 +1,6 @@
 {
   "name": "hemera-couchbase-store",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "This is a plugin to use Couchbase with Hemera",
   "main": "index.js",
   "scripts": {
@@ -20,7 +20,7 @@
     "eslint-config-standard": "^6.2.1",
     "eslint-plugin-promise": "^3.4.2",
     "eslint-plugin-standard": "^2.0.1",
-    "hemera-joi": "^1.0.0",
+    "hemera-joi": "^1.0.1",
     "hemera-testsuite": "1.0.x",
     "istanbul": "0.4.x",
     "mocha": "3.2.x",
