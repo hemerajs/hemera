@@ -1,4 +1,3 @@
-
 import events = require('events');
 
 export interface Pattern {
@@ -32,6 +31,7 @@ export interface AddMeta {
 
 declare class Hemera extends events.EventEmitter {
   constructor(transport:object, params:object);
+
 	ready(callback: Function): void;
   act(pattern: string | Pattern, callback: Function): void;
   add(pattern: string | Pattern, callback: Function): AddMeta;
@@ -55,4 +55,27 @@ declare class Hemera extends events.EventEmitter {
   config: any;
   topics: any;
   transport: any;
+
+  context$: any;
+  meta$: any;
+  delegate$: any;
+  auth$: any;
+  plugin$: PluginDefinition;
+  trace$: any;
+  request$: any;
+
+  _shouldCrash: boolean;
+  _topic: string;
+  _replyTo: string;
+  _request: any;
+  _response: any;
+  _pattern: Pattern;
+  _actMeta: any;
+  _actCallback: Function;
+  _cleanPattern: Pattern;
+  _root: Hemera;
+  _encoder: any;
+  _decoder: any;
+  _extensions: Map<string, any>;
+
 }
