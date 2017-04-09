@@ -3,7 +3,8 @@
 const Parambulator = require('parambulator')
 
 exports.plugin = function hemeraParambulator () {
-  var hemera = this
+  const hemera = this
+  const PreValidationError = hemera.createError('PreValidationError')
 
   hemera.ext('onServerPreHandler', function (req, res, next) {
     let plugin = this._actMeta.plugin
@@ -19,7 +20,10 @@ exports.plugin = function hemeraParambulator () {
 
     let paramcheck = Parambulator(pbSchema)
     paramcheck.validate(pattern, (err) => {
-      res.send(err)
+      if (err) {
+        return res.send(new PreValidationError({ message: err.message, details: err.parambulator }))
+      }
+      res.send()
     })
   })
 }
