@@ -3,11 +3,11 @@
 const Joi = require('joi')
 
 exports.plugin = function hemeraJoi () {
-  var hemera = this
-
-  hemera.expose('joi', Joi)
+  const hemera = this
   const PreValidationError = hemera.createError('PreValidationError')
   const PostValidationError = hemera.createError('PostValidationError')
+
+  hemera.expose('joi', Joi)
 
   hemera.ext('onServerPreHandler', function (req, res, next) {
     let plugin = this._actMeta.plugin
