@@ -1,10 +1,10 @@
 ![Hemera](https://github.com/StarpTech/hemera/raw/master/media/hemera-logo.png)
 
-[![License MIT](https://img.shields.io/npm/l/express.svg)](http://opensource.org/licenses/MIT)
-[![Build Status](https://travis-ci.org/hemerajs/hemera.svg?branch=master)](https://travis-ci.org/hemerajs/hemera)
-[![NPM Downloads](https://img.shields.io/npm/dt/nats-hemera.svg?style=flat)](https://www.npmjs.com/package/nats-hemera)
-[![Coverage Status](https://coveralls.io/repos/github/hemerajs/hemera/badge.svg?branch=master&ts=9999)](https://coveralls.io/github/hemerajs/hemera?branch=master)
-[![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/hemerajs/hemera)
+[![License MIT](https://img.shields.io/npm/l/express.svg?style=flat-square)](http://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.org/hemerajs/hemera.svg?branch=master&style=flat-square)](https://travis-ci.org/hemerajs/hemera)
+[![NPM Downloads](https://img.shields.io/npm/dt/nats-hemera.svg?style=flat-square)](https://www.npmjs.com/package/nats-hemera)
+[![Coverage Status](https://coveralls.io/repos/github/hemerajs/hemera/badge.svg?branch=master&ts=9999&style=flat-square)](https://coveralls.io/github/hemerajs/hemera?branch=master)
+[![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square)](https://gitter.im/hemerajs/hemera)
 
 [![js-standard-style](https://raw.githubusercontent.com/feross/standard/master/badge.png)](https://github.com/feross/standard)
 
