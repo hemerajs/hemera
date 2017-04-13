@@ -73,7 +73,16 @@ hemera.ready(() => {
 ```
 
 ## Documentation
-There is an extensive <a href="https://hemerajs.github.io/hemera/">documentation</a> or look in the <a href="https://github.com/hemerajs/hemera/tree/master/examples">Examples</a>. 
+There is an extensive <a href="https://hemerajs.github.io/hemera/">documentation</a> or look in the <a href="https://github.com/hemerajs/hemera/tree/master/examples">Examples</a>.
+
+## Get Involved
+
+- **Contributing**: Pull requests are welcome!
+    - Read [`CONTRIBUTING.md`](.github/CONTRIBUTING.md) and check out our [help-wanted](https://github.com/hemerajs/hemera/issues?q=is%3Aissue+is%3Aopen+label%3Astatus%3Ahelp-wanted) issues
+    - Submit github issues for any feature enhancements, bugs or documentation problems
+- **Support**: Join our [gitter chat](https://gitter.im/hemerajs/hemera) to ask questions to get support from the maintainers and other Hemera developers
+    - Questions/comments can also be posted as [github issues](https://github.com/marko-js/hemerajs/hemera/issues)
+- **Discuss**: Tweet using the `#HemeraJs` hashtag
 
 ## Packages
 
@@ -125,13 +134,7 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-1. Clone repository
-2. `npm install`
-3. `lerna bootstrap`
-4. Install gnats server and make it accesible in your user path.
-5. Run tests `npm run test`
+Please read [CONTRIBUTING.md](https://github.com/hemerajs/hemera/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Versioning
 
