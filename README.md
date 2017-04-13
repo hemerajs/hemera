@@ -127,11 +127,6 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 |--------|-------|
 | [hemera-jwt-auth](https://github.com/hemerajs/hemera/tree/master/packages/hemera-jwt-auth) | [![npm](https://img.shields.io/npm/v/hemera-jwt-auth.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-jwt-auth)
 
-## Built With
-
-* [Bloomrun](https://github.com/mcollina/bloomrun) - A js pattern matcher based on bloom filters
-* [Node Nats Driver](https://github.com/nats-io/node-nats) - Node.js client for NATS, the cloud native messaging system.
-
 ## Contributing
 
 Please read [CONTRIBUTING.md](https://github.com/hemerajs/hemera/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
