@@ -3,8 +3,6 @@
 [![npm](https://img.shields.io/npm/v/hemera-sql-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-sql-store)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
-**Status**: _In development_
-
 This is a plugin to use a SQL Database with Hemera.
 This plugin is based on [Knex](http://knexjs.org/).
 

@@ -5,8 +5,6 @@
 
 This is a plugin to use [Couchbase](https://www.couchbase.com/nosql-databases/couchbase-server) with Hemera.
 
-**Status**: _In development_
-
 ## Start Couchbase with Docker
 
 ```js
