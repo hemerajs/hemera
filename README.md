@@ -56,6 +56,8 @@ hemera.use(HemeraJoi)
 
 hemera.ready(() => {
 
+  let Joi = hemera.exposition['hemera-joi'].joi
+
   hemera.add({ 
     topic: 'math',
     cmd: 'add',
