@@ -45,7 +45,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "lerna": "^2.0.0-rc.1",
+    "lerna": "^2.0.0-rc.2",
     "chokidar-cli": "1.2.x",
     "code": "4.0.x",
     "coveralls": "2.11.x",
