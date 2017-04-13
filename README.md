@@ -2,7 +2,6 @@
 
 [![License MIT](https://img.shields.io/npm/l/express.svg?style=flat-square&maxAge=3600)](http://opensource.org/licenses/MIT)
 [![Build Status](https://travis-ci.org/hemerajs/hemera.svg?branch=master&style=flat-square)](https://travis-ci.org/hemerajs/hemera)
-[![NPM Downloads](https://img.shields.io/npm/dt/nats-hemera.svg?style=flat-square&maxAge=3600)](https://www.npmjs.com/package/nats-hemera)
 [![Coverage Status](https://coveralls.io/repos/github/hemerajs/hemera/badge.svg?branch=master&ts=9999&style=flat-square)](https://coveralls.io/github/hemerajs/hemera?branch=master)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square&maxAge=3600)](https://gitter.im/hemerajs/hemera)
 
