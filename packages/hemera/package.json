@@ -48,10 +48,10 @@
     "heavy": "4.0.x",
     "hoek": "4.1.x",
     "lodash": "4.17.x",
-    "pino": "3.0.x",
+    "pino": "4.2.x",
     "signal-exit": "3.0.x",
     "super-error": "2.0.x",
-    "tinysonic": "1.1.x"
+    "tinysonic": "1.2.x"
   },
   "devDependencies": {
     "eslint": "^3.13.1",

@@ -14,7 +14,7 @@ exports.plugin = function hemeraMongoStore (options, next) {
 
     hemera.expose('db', db)
     hemera.expose('mongodb', Mongodb)
-    
+
     hemera.add({
       topic,
       cmd: 'dropCollection'
