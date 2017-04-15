@@ -45,7 +45,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "lerna": "^2.0.0-rc.1",
+    "async": "^2.3.0",
     "chokidar-cli": "1.2.x",
     "code": "4.0.x",
     "coveralls": "2.11.x",
@@ -56,6 +56,7 @@
     "hemera-testsuite": "1.1.x",
     "istanbul": "0.4.x",
     "joi": "10.0.x",
+    "lerna": "^2.0.0-rc.1",
     "mocha": "3.2.x",
     "mocha-lcov-reporter": "1.2.x",
     "nats": "0.7.x",
