@@ -47,12 +47,15 @@ exports.plugin = function hemeraAvro () {
     try {
       // server request encoding
       if (this._isServer) {
-        if (this.meta$.avro) {
-          // payload is encoded with avro schema
-          msg.result = this._actMeta.schema.avro$.toBuffer(msg.result)
-        } else {
-          // payload are bytes
-          msg.result = new Buffer(JSON.stringify(msg.result))
+        // do not encode when result is just 'null', default value of property `result` is already null
+        if (msg.result !== null) {
+          if (this.meta$.avro) {
+            // payload is encoded with avro schema
+            msg.result = this._actMeta.schema.avro$.toBuffer(msg.result)
+          } else {
+            // payload are bytes
+            msg.result = new Buffer(JSON.stringify(msg.result))
+          }
         }
       }
 

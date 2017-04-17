@@ -188,4 +188,53 @@ describe('Hemera-avro', function () {
       })
     })
   })
+
+  it('decode custom error', function (done) {
+    const nats = require('nats').connect({
+      url: authUrl,
+      preserveBuffers: true
+    })
+
+    const hemera = new Hemera(nats)
+
+    hemera.use(HemeraAvro)
+
+    hemera.ready(() => {
+      let Avro = hemera.exposition['hemera-avro'].avro
+
+      const type = Avro.parse({
+        name: 'SumResult',
+        type: 'record',
+        fields: [{
+          name: 'result',
+          type: 'int'
+        }]
+      })
+
+      hemera.add({
+        topic: 'math',
+        cmd: 'add',
+        avro$: type
+      }, (resp, cb) => {
+        cb(new Error('test'))
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2,
+        avro$: type
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('BusinessError')
+        expect(err.message).to.be.equals('Business error')
+        expect(err.cause.name).to.be.equals('Error')
+        expect(err.cause.message).to.be.equals('test')
+
+        hemera.close()
+        done()
+      })
+    })
+  })
 })

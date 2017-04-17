@@ -83,8 +83,8 @@ let schema = {
     }
   }, {
     name: 'result',
-    type: ['string', 'boolean', 'double', 'bytes'],
-    default: ''
+    type: ['null', 'string', 'boolean', 'double', 'bytes'],
+    default: null
   },
   {
     name: 'error',
@@ -111,6 +111,14 @@ let schema = {
         name: 'stack',
         type: 'string',
         default: ''
+      },
+      {
+        name: 'details',
+        type: {
+          type: 'map',
+          values: ['string', 'boolean', 'double']
+        },
+        default: {}
       },
       {
         name: 'cause',
