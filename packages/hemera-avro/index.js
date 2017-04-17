@@ -5,12 +5,12 @@ const avroType = require('./avro')
 
 exports.plugin = function hemeraAvro () {
   const hemera = this
-
   const type = Avro.parse(avroType)
 
   hemera.expose('avro', Avro)
 
   hemera.ext('onClientPreRequest', function (next) {
+    // mark that request as "avro encoded" so we can easily determine how decode the response
     if (this._pattern.avro$) {
       this.meta$.avro = true
     }
@@ -25,8 +25,10 @@ exports.plugin = function hemeraAvro () {
       // client response encoding
       if (Buffer.isBuffer(m.result)) {
         if (m.meta.avro) {
+          // response is decoded with avro schema
           m.result = this._pattern.avro$.fromBuffer(m.result)
         } else {
+          // response are bytes
           m.result = JSON.parse(m.result)
         }
       }
@@ -46,8 +48,10 @@ exports.plugin = function hemeraAvro () {
       // server request encoding
       if (this._isServer) {
         if (this.meta$.avro) {
+          // payload is encoded with avro schema
           msg.result = this._actMeta.schema.avro$.toBuffer(msg.result)
         } else {
+          // payload are bytes
           msg.result = new Buffer(JSON.stringify(msg.result))
         }
       }

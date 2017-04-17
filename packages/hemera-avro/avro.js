@@ -21,7 +21,7 @@ let schema = {
       {
         name: 'spanId',
         type: 'string',
-        'default': ''
+        default: ''
       },
       {
         name: 'timestamp',
@@ -81,10 +81,10 @@ let schema = {
       }
       ]
     }
-    }, {
-      name: 'result',
-      type: ['string', 'boolean', 'double', 'bytes'],
-      default: ''
+  }, {
+    name: 'result',
+    type: ['string', 'boolean', 'double', 'bytes'],
+    default: ''
   },
   {
     name: 'error',
@@ -112,16 +112,20 @@ let schema = {
         type: 'string',
         default: ''
       },
-      { name: 'cause', type: ['null', 'Error'], default: null }
+      {
+        name: 'cause',
+        type: ['null', 'Error'],
+        default: null
+      }
       ]
-    },'null']
+    }, 'null']
   }, {
     name: 'meta',
     default: {},
     type: [{
       type: 'map',
       values: ['string', 'boolean', 'double']
-    }],
+    }]
   },
   {
     name: 'pattern',
@@ -129,7 +133,7 @@ let schema = {
     type: [{
       type: 'map',
       values: ['string', 'boolean', 'double']
-    }],
+    }]
   },
   {
     name: 'delegate',
