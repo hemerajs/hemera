@@ -280,7 +280,6 @@ describe('Hemera-avro', function () {
         b: 2,
         avro$: type
       }, (err, resp) => {
-        console.log(err)
         expect(err.name).to.be.equals('BusinessError')
         expect(err.message).to.be.equals('Business error')
         expect(err.cause.name).to.be.equals('Custom')

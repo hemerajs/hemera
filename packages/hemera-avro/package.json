@@ -9,7 +9,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "avsc": "4.1.x"
+    "avsc": "5.0.x"
   },
   "devDependencies": {
     "eslint": "^3.13.1",
