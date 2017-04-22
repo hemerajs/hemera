@@ -140,7 +140,7 @@ hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
 </code>
                     </pre>
                     <p>How can I deal with them in a proper way? Read this <a href="https://strongloop.com/strongblog/async-error-handling-expressjs-es7-promises-generators/">article</a> about async error handling in express its very useful.</p>
-                    <h4 class="section-h4">For these cases, use the next function to propagate errors:</h4>
+                    <h4 class="section-h4">For these cases, use the callback function to propagate errors:</h4>
                     <pre>
 <code class="javascript">
 hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
@@ -148,7 +148,7 @@ hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
 })
 </code>
                     </pre>
-                    <h4 class="section-h4">Hemera strictly follows the Error-first-callback  convention.</h4>
+                    <h4 class="section-h4">Hemera strictly follows the Error-first-callback convention.</h4>
                     <pre>
 <code class="javascript">
 hemera.act({ topic: "math", cmd: "add", a: 1, b: 1 }, function (err, resp) {
