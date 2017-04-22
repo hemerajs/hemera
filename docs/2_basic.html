@@ -118,9 +118,29 @@
                     <hr>
 
                     <p class="section-content">
-                        <p>Hemera follows strictly the error-first-callback convention.</p>
                     </p>
-                    <h4 class="section-h4">Reply an error</h4>
+                    <h4 class="section-h4">Synchronous errors</h4>
+                    <p>By default, Hemera will catch any exception thrown within the initial synchronous execution of a request and pass it along to the next error-handling middleware or gracefully exit the process:</p>
+                    <pre>
+<code class="javascript">
+hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
+  throw new Error()
+})
+</code>
+                    </pre>
+                    <h4 class="section-h4">Asynchronous errors</h4>
+                    <p>In asynchronous code, Hemera cannot catch exceptions as you’ve lost your stack once you have entered a callback:</p>
+                    <pre>
+<code class="javascript">
+hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
+  process.nextTick(() => {
+      throw new Error()
+  })
+})
+</code>
+                    </pre>
+                    <p>How can I deal with them in a proper way? Read this <a href="https://strongloop.com/strongblog/async-error-handling-expressjs-es7-promises-generators/">article</a> about async error handling in express its very useful.</p>
+                    <h4 class="section-h4">For these cases, use the next function to propagate errors:</h4>
                     <pre>
 <code class="javascript">
 hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
@@ -128,7 +148,7 @@ hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
 })
 </code>
                     </pre>
-                    <h4 class="section-h4">Error-first-callbacks</h4>
+                    <h4 class="section-h4">Hemera strictly follows the Error-first-callback  convention.</h4>
                     <pre>
 <code class="javascript">
 hemera.act({ topic: "math", cmd: "add", a: 1, b: 1 }, function (err, resp) {
