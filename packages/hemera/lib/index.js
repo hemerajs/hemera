@@ -1094,9 +1094,9 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   createContext () {
-    var self = this
+    const self = this
 
-    var ctx = Object.create(self)
+    const ctx = Object.create(self)
 
     return ctx
   }
