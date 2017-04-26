@@ -3,16 +3,12 @@ os: Visual Studio 2015
 environment:
   matrix:
     - nodejs_version: '4'
-      PYTHON3: "C:\\Python34"
-      PYTHON3_VERSION: "3.4.3"
-      PYTHON3_ARCH: "64"
 
       # PYTHON2.7 REQUIRED FOR NODE-GYP & ELECTRON
       PYTHON2: "C:\\Python27"
       PYTHON2_VERSION: "2.7.9"
       PYTHON2_ARCH: "64"
 
-  PIP3: C:\\Python34\Scripts\pip
   PIP2: C:\\Python27\Scripts\pip
 
   npm_config_arch: x64
@@ -32,11 +28,6 @@ init:
   - cmd: wmic OS get OSArchitecture
   - cmd: npm config set msvs_version 2015 --global
 
-  - cmd: ECHO %PYTHON3% %PYTHON3_VERSION% %PYTHON3_ARCH%
-  - cmd: "%PYTHON3%\\python --version"
-  - cmd: "%PYTHON3%\\python -c \"import struct; print(struct.calcsize('P') * 8)\""
-  - cmd: "%PYTHON3%\\python -m pip install --upgrade pip"
-
   - cmd: ECHO %PYTHON2% %PYTHON2_VERSION% %PYTHON2_ARCH%
   - cmd: "%PYTHON2%\\python --version"
   - cmd: "%PYTHON2%\\python -c \"import struct; print(struct.calcsize('P') * 8)\""
@@ -50,24 +41,16 @@ init:
   - cmd: npm --version
 
   # SET THE RELEVANT PYTHON AND PIP LOCATIONS IN THE PATH
-  - cmd: set PATH=%PYTHON3%;%PYTHON3%\scripts;%PYTHON2%;%PYTHON2%\scripts;%PATH%
+  - cmd: set PATH=%PYTHON2%;%PYTHON2%\scripts;%PATH%
   - cmd: ECHO Path - %PATH%
-  - ps: cp C:\Python34\python.exe C:\Python34\python3.4.exe
 
 install:
   # Install gnats
-  - appveyor DownloadFile https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
-  - appveyor DownloadFile https://github.com/nats-io/gnatsd/releases/download/v0.9.2/gnatsd-v0.9.2-windows-386.zip
-  - 7z e gnatsd-v0.9.2-windows-386.zip gnatsd.exe -r -oc:\projects\hemera\build
+  - appveyor DownloadFile https://github.com/nats-io/gnatsd/releases/download/v0.9.6/gnatsd-v0.9.6-windows-386.zip
+  - 7z e gnatsd-v0.9.6-windows-386.zip gnatsd.exe -r -oc:\projects\hemera\build
   - cmd: set PATH=%PATH%;C:\projects\hemera\build
 
-  # NOTE: OTONE-FRONTEND NOW CLONED INTO C:\\PROJECTS\OTOONE-FRONTEND
-
-  # 1. INSTALL PYTHON DEPENDENCIES
-  #- cmd: "%PIP3% install -r requirements.txt"
-
   - cmd: "%PIP2% freeze"
-  - cmd: "%PIP3% freeze"
 
   # ADDITIONAL NPM PREP FOR ELECTRON APP BUILD
   - cmd: npm config list
