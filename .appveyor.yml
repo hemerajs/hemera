@@ -1,16 +1,69 @@
+os: Visual Studio 2015
+
 environment:
   matrix:
     - nodejs_version: '4'
-    - nodejs_version: '6'
     - nodejs_version: '7'
 
-install:
-  - ps: Install-Product node $env:nodejs_version
+    # PYTHON2.7 REQUIRED FOR NODE-GYP & ELECTRON
+    PYTHON2: "C:\\Python27"
+    PYTHON2_VERSION: "2.7.9"
+    PYTHON2_ARCH: "64"
 
-test_script:
-  - node --version
-  - npm --version
+  PIP3: C:\\Python34\Scripts\pip
+  PIP2: C:\\Python27\Scripts\pip
+
+  npm_config_arch: x64
+
+platform: x64
+
+configuration: Release
+
+init:
+  - cmd: node --version
+  - cmd: npm --version
+
+  - "ECHO Installed SDKs:"
+  - ps: "ls \"C:/Program Files/Microsoft SDKs/Windows\""
+
+  - cmd: ECHO Processor architecture - %PROCESSOR_ARCHITECTURE%
+  - cmd: wmic OS get OSArchitecture
+  - cmd: npm config set msvs_version 2015 --global
+
+  - cmd: ECHO %PYTHON3% %PYTHON3_VERSION% %PYTHON3_ARCH%
+  - cmd: "%PYTHON3%\\python --version"
+  - cmd: "%PYTHON3%\\python -c \"import struct; print(struct.calcsize('P') * 8)\""
+  - cmd: "%PYTHON3%\\python -m pip install --upgrade pip"
+
+  - cmd: ECHO %PYTHON2% %PYTHON2_VERSION% %PYTHON2_ARCH%
+  - cmd: "%PYTHON2%\\python --version"
+  - cmd: "%PYTHON2%\\python -c \"import struct; print(struct.calcsize('P') * 8)\""
+  - cmd: "%PYTHON2%\\python -m pip install --upgrade pip"
+
+  - ps:  Install-Product node $env:nodejs_version
+  - cmd: node --version
+  - cmd: npm --version
+    # CRITICAL FOR NODE-GYP TO WORK
+  - cmd: npm -g install npm@latest
+  - cmd: npm --version
+
+  # SET THE RELEVANT PYTHON AND PIP LOCATIONS IN THE PATH
+  - cmd: set PATH=%PYTHON3%;%PYTHON3%\scripts;%PYTHON2%;%PYTHON2%\scripts;%PATH%
+  - cmd: ECHO Path - %PATH%
+  - ps: cp C:\Python34\python.exe C:\Python34\python3.4.exe
+
+install:
+
+  - cmd: "%PIP2% freeze"
+  - cmd: "%PIP3% freeze"
+
+  # ADDITIONAL NPM PREP FOR ELECTRON APP BUILD
+  - cmd: npm config list
+  - cmd: npm config set python %PYTHON2%\python.exe --global
+
   - npm run setup
   - npm run test
+
+
 
 build: off
