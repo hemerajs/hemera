@@ -1,11 +1,5 @@
 os: Visual Studio 2015
 
-install:
-  - appveyor DownloadFile https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
-  - appveyor DownloadFile https://github.com/nats-io/gnatsd/releases/download/v0.9.2/gnatsd-v0.9.2-windows-386.zip
-  - 7z e gnatsd-v0.9.2-windows-386.zip gnatsd.exe -r -oc:\projects\hemera\build
-  - cmd: set PATH=%PATH%;C:\projects\hemera\build
-
 environment:
   matrix:
     - nodejs_version: '4'
@@ -61,6 +55,12 @@ init:
   - ps: cp C:\Python34\python.exe C:\Python34\python3.4.exe
 
 install:
+  # Install gnats
+  - appveyor DownloadFile https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+  - appveyor DownloadFile https://github.com/nats-io/gnatsd/releases/download/v0.9.2/gnatsd-v0.9.2-windows-386.zip
+  - 7z e gnatsd-v0.9.2-windows-386.zip gnatsd.exe -r -oc:\projects\hemera\build
+  - cmd: set PATH=%PATH%;C:\projects\hemera\build
+
   # NOTE: OTONE-FRONTEND NOW CLONED INTO C:\\PROJECTS\OTOONE-FRONTEND
 
   # 1. INSTALL PYTHON DEPENDENCIES
