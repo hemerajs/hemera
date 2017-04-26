@@ -3,12 +3,14 @@ os: Visual Studio 2015
 environment:
   matrix:
     - nodejs_version: '4'
-    - nodejs_version: '7'
+      PYTHON3: "C:\\Python34"
+      PYTHON3_VERSION: "3.4.3"
+      PYTHON3_ARCH: "64"
 
-    # PYTHON2.7 REQUIRED FOR NODE-GYP & ELECTRON
-    PYTHON2: "C:\\Python27"
-    PYTHON2_VERSION: "2.7.9"
-    PYTHON2_ARCH: "64"
+      # PYTHON2.7 REQUIRED FOR NODE-GYP & ELECTRON
+      PYTHON2: "C:\\Python27"
+      PYTHON2_VERSION: "2.7.9"
+      PYTHON2_ARCH: "64"
 
   PIP3: C:\\Python34\Scripts\pip
   PIP2: C:\\Python27\Scripts\pip
@@ -40,7 +42,7 @@ init:
   - cmd: "%PYTHON2%\\python -c \"import struct; print(struct.calcsize('P') * 8)\""
   - cmd: "%PYTHON2%\\python -m pip install --upgrade pip"
 
-  - ps:  Install-Product node $env:nodejs_version
+  - ps: Install-Product node 6.0.0 x64
   - cmd: node --version
   - cmd: npm --version
     # CRITICAL FOR NODE-GYP TO WORK
@@ -53,6 +55,10 @@ init:
   - ps: cp C:\Python34\python.exe C:\Python34\python3.4.exe
 
 install:
+  # NOTE: OTONE-FRONTEND NOW CLONED INTO C:\\PROJECTS\OTOONE-FRONTEND
+
+  # 1. INSTALL PYTHON DEPENDENCIES
+  - cmd: "%PIP3% install -r requirements.txt"
 
   - cmd: "%PIP2% freeze"
   - cmd: "%PIP3% freeze"
