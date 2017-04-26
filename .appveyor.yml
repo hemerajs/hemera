@@ -58,7 +58,7 @@ install:
   # NOTE: OTONE-FRONTEND NOW CLONED INTO C:\\PROJECTS\OTOONE-FRONTEND
 
   # 1. INSTALL PYTHON DEPENDENCIES
-  - cmd: "%PIP3% install -r requirements.txt"
+  #- cmd: "%PIP3% install -r requirements.txt"
 
   - cmd: "%PIP2% freeze"
   - cmd: "%PIP3% freeze"
