@@ -141,7 +141,7 @@ Please read [CONTRIBUTING.md](https://github.com/hemerajs/hemera/blob/master/CON
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/hemerajs/hemera/tags). 
+We use [SemVer](http://semver.org/) for versioning. Available versions [tags on this repository](https://github.com/hemerajs/hemera/tags). 
 
 ## Authors
 
