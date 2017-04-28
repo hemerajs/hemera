@@ -5,7 +5,6 @@ const Hoek = require('hoek')
 
 // Config
 let defaultConfig = {
-  serverName: '',
   debug: false,
   host: '127.0.0.1',
   port: '9411',
@@ -27,7 +26,7 @@ exports.plugin = function hemeraZipkin (options) {
     }
 
     Tracer.add_binary(meta, {
-      serverName: config.name
+      serverName: ctx.config.name
     })
 
     Tracer.add_binary(meta, ctx.delegate$)
@@ -50,7 +49,7 @@ exports.plugin = function hemeraZipkin (options) {
     }
 
     Tracer.add_binary(meta, {
-      serverName: config.name
+      serverName: ctx.config.name
     })
 
     Tracer.add_binary(meta, ctx.delegate$)
@@ -66,7 +65,7 @@ exports.plugin = function hemeraZipkin (options) {
     }
 
     Tracer.add_binary(meta, {
-      serverName: config.name
+      serverName: ctx.config.name
     })
 
     Tracer.add_binary(meta, ctx.delegate$)
@@ -89,7 +88,7 @@ exports.plugin = function hemeraZipkin (options) {
     }
 
     Tracer.add_binary(meta, {
-      serverName: config.name
+      serverName: ctx.config.name
     })
 
     Tracer.add_binary(meta, ctx.delegate$)
