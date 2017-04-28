@@ -27,7 +27,7 @@ exports.plugin = function hemeraZipkin (options) {
     }
 
     Tracer.add_binary(meta, {
-      serverName: config.serverName
+      serverName: config.name
     })
 
     Tracer.add_binary(meta, ctx.delegate$)
@@ -50,7 +50,7 @@ exports.plugin = function hemeraZipkin (options) {
     }
 
     Tracer.add_binary(meta, {
-      serverName: config.serverName
+      serverName: config.name
     })
 
     Tracer.add_binary(meta, ctx.delegate$)
@@ -66,7 +66,7 @@ exports.plugin = function hemeraZipkin (options) {
     }
 
     Tracer.add_binary(meta, {
-      serverName: config.serverName
+      serverName: config.name
     })
 
     Tracer.add_binary(meta, ctx.delegate$)
@@ -89,7 +89,7 @@ exports.plugin = function hemeraZipkin (options) {
     }
 
     Tracer.add_binary(meta, {
-      serverName: config.serverName
+      serverName: config.name
     })
 
     Tracer.add_binary(meta, ctx.delegate$)
