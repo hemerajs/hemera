@@ -1091,7 +1091,6 @@ class Hemera extends EventEmitter {
 
       try {
         self._execute(self._response.error)
-        return
       } catch (err) {
         let error = new Errors.FatalError(Constants.FATAL_ERROR, {
           pattern
