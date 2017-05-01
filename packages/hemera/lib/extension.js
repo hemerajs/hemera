@@ -78,45 +78,6 @@ class Extension {
   /**
    *
    *
-   * @param {any} array
-   * @param {any} method
-   * @param {any} callback
-   *
-   * @memberOf Extension
-   */
-  static parallel (array, method, callback) {
-    if (!array.length) {
-      callback()
-    } else {
-      let count = 0
-      let abort = false
-      let errored = false
-
-      const done = function (err, value, cancel) {
-        if (!errored && !abort) {
-          if (err) {
-            errored = true
-            callback(err)
-          } else if (value && cancel) {
-            abort = true
-            callback(null, value)
-          } else {
-            count = count + 1
-            if (count === array.length) {
-              callback(null, value)
-            }
-          }
-        }
-      }
-
-      for (let i = 0; i < array.length; ++i) {
-        method(array[i], done, i)
-      }
-    }
-  }
-  /**
-   *
-   *
    * @param {Array<Function>} array
    * @param {Function} method
    * @param {Function} callback
