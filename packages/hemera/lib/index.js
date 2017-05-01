@@ -23,6 +23,7 @@ const Pino = require('pino')
 const OnExit = require('signal-exit')
 const TinySonic = require('tinysonic')
 const SuperError = require('super-error')
+const Co = require('co')
 
 const Errors = require('./errors')
 const Constants = require('./constants')
@@ -42,6 +43,7 @@ const Add = require('./add')
 var defaultConfig = {
   timeout: 2000,
   debug: false,
+  generators: false,
   name: 'hemera-' + Util.randomId(),
   crashOnFatal: true,
   logLevel: 'silent',
@@ -104,6 +106,7 @@ class Hemera extends EventEmitter {
     this._pattern = null
     this._actMeta = null
     this._actCallback = null
+    this._execute = null
     this._cleanPattern = ''
     this._pluginRegistrations = []
     this._decorations = {}
@@ -417,7 +420,10 @@ class Hemera extends EventEmitter {
       throw new Error(Constants.OVERRIDE_BUILTIN_METHOD_NOT_ALLOWED)
     }
 
-    this._decorations[prop] = { plugin: this.plugin$, value }
+    this._decorations[prop] = {
+      plugin: this.plugin$,
+      value
+    }
     // decorate root hemera instance
     this._root[prop] = value
   }
@@ -679,7 +685,11 @@ class Hemera extends EventEmitter {
           }
 
           // execute RPC action
-          action(self._request.payload.pattern, actionHandler.bind(self))
+          if (self._config.generators) {
+            action(self._request.payload.pattern).then(x => actionHandler.call(self, null, x)).catch(e => actionHandler.call(self, e))
+          } else {
+            action(self._request.payload.pattern, actionHandler.bind(self))
+          }
         })
       } catch (err) {
         // try to get rootCause then cause and last the thrown error
@@ -831,9 +841,15 @@ class Hemera extends EventEmitter {
     let actMeta = new Add({
       schema: schema,
       pattern: origPattern,
-      action: cb,
       plugin: this.plugin$
     })
+
+    // support yield
+    if (this._config.generators) {
+      actMeta.action = Co.wrap(cb)
+    } else {
+      actMeta.action = cb
+    }
 
     let handler = this._router.lookup(origPattern)
 
@@ -895,28 +911,24 @@ class Hemera extends EventEmitter {
         self.emit('clientResponseError', error)
         self.log.error(error)
 
-        if (self._actCallback) {
-          return self._actCallback(error)
-        }
-
+        self._execute(error)
         return
       }
 
-      if (self._actCallback) {
-        if (self._response.payload.error) {
-          let responseError = Errio.fromObject(self._response.payload.error)
-          let responseErrorCause = responseError.cause
-          let error = new Errors.BusinessError(Constants.BUSINESS_ERROR, {
-            pattern: self._cleanPattern
-          }).causedBy(responseErrorCause ? responseError.cause : responseError)
-          self.emit('clientResponseError', error)
-          self.log.error(error)
+      if (self._response.payload.error) {
+        let responseError = Errio.fromObject(self._response.payload.error)
+        let responseErrorCause = responseError.cause
+        let error = new Errors.BusinessError(Constants.BUSINESS_ERROR, {
+          pattern: self._cleanPattern
+        }).causedBy(responseErrorCause ? responseError.cause : responseError)
+        self.emit('clientResponseError', error)
+        self.log.error(error)
 
-          return self._actCallback(responseError)
-        }
-
-        self._actCallback(null, self._response.payload.result)
+        self._execute(responseError)
+        return
       }
+
+      self._execute(null, self._response.payload.result)
     }
 
     /**
@@ -940,9 +952,8 @@ class Hemera extends EventEmitter {
           self.emit('clientResponseError', error)
           self.log.error(error)
 
-          if (self._actCallback) {
-            return self._actCallback(error)
-          }
+          self._execute(error)
+          return
         }
 
         self._extensions.onClientPostRequest.invoke(self, onClientPostRequestHandler)
@@ -977,10 +988,7 @@ class Hemera extends EventEmitter {
         self.emit('clientResponseError', error)
         self.log.error(error)
 
-        if (self._actCallback) {
-          return self._actCallback(error)
-        }
-
+        self._execute(error)
         return
       }
 
@@ -989,10 +997,7 @@ class Hemera extends EventEmitter {
         self.emit('clientResponseError', error)
         self.log.error(error)
 
-        if (self._actCallback) {
-          return self._actCallback(error)
-        }
-
+        self._execute(error)
         return
       }
 
@@ -1009,7 +1014,7 @@ class Hemera extends EventEmitter {
       } else {
         const optOptions = {}
         // limit on the number of responses the requestor may receive
-        optOptions.max = ctx._pattern.maxMessages$ || 1
+        optOptions.max = self._pattern.maxMessages$ || 1
         // send request
         let sid = self._transport.sendRequest(pattern.topic, self._request.payload, optOptions, sendRequestHandler.bind(self))
 
@@ -1018,17 +1023,43 @@ class Hemera extends EventEmitter {
       }
     }
 
-    // create new execution context
-    let ctx = this.createContext()
-    ctx._pattern = pattern
-    ctx._prevContext = this
-    ctx._actCallback = _.isFunction(cb) ? cb.bind(ctx) : null
-    ctx._cleanPattern = Util.cleanFromSpecialVars(pattern)
-    ctx._response = new ClientResponse()
-    ctx._request = new ClientRequest()
-    ctx._isServer = false
+    return new Promise((resolve, reject) => {
+      // create new execution context
+      let ctx = this.createContext()
+      ctx._pattern = pattern
+      ctx._prevContext = this
+      ctx._cleanPattern = Util.cleanFromSpecialVars(pattern)
+      ctx._response = new ClientResponse()
+      ctx._request = new ClientRequest()
+      ctx._isServer = false
+      ctx._execute = (err, result) => {
+        if (ctx._actCallback) {
+          if (this._config.generators) {
+            ctx._actCallback(err, result).then(x => resolve(x)).catch(x => reject(x))
+          } else {
+            ctx._actCallback(err, result)
+          }
+        } else {
+          if (this._config.generators) {
+            if (err) {
+              reject(err)
+            } else {
+              resolve(result)
+            }
+          }
+        }
+      }
 
-    ctx._extensions.onClientPreRequest.invoke(ctx, onPreRequestHandler)
+      if (cb) {
+        if (this._config.generators) {
+          ctx._actCallback = Co.wrap(cb.bind(ctx))
+        } else {
+          ctx._actCallback = cb.bind(ctx)
+        }
+      }
+
+      ctx._extensions.onClientPreRequest.invoke(ctx, onPreRequestHandler)
+    })
   }
 
   /**
@@ -1054,20 +1085,19 @@ class Hemera extends EventEmitter {
         self.log.error(self._response.error)
       }
 
-      if (self._actCallback) {
-        try {
-          self._actCallback(self._response.error)
-        } catch (err) {
-          let error = new Errors.FatalError(Constants.FATAL_ERROR, {
-            pattern
-          }).causedBy(err)
-          self.emit('clientResponseError', error)
-          self.log.fatal(error)
+      try {
+        self._execute(self._response.error)
+        return
+      } catch (err) {
+        let error = new Errors.FatalError(Constants.FATAL_ERROR, {
+          pattern
+        }).causedBy(err)
+        self.emit('clientResponseError', error)
+        self.log.fatal(error)
 
           // let it crash
-          if (self._config.crashOnFatal) {
-            self.fatal()
-          }
+        if (self._config.crashOnFatal) {
+          self.fatal()
         }
       }
     }
