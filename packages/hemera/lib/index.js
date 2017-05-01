@@ -128,11 +128,11 @@ class Hemera extends EventEmitter {
 
     // define extension points
     this._extensions = {
-      onClientPreRequest: new Extension('onClientPreRequest'),
-      onClientPostRequest: new Extension('onClientPostRequest'),
-      onServerPreHandler: new Extension('onServerPreHandler', true),
-      onServerPreRequest: new Extension('onServerPreRequest', true),
-      onServerPreResponse: new Extension('onServerPreResponse', true)
+      onClientPreRequest: new Extension('onClientPreRequest', { server: false, generators: this._config.generators }),
+      onClientPostRequest: new Extension('onClientPostRequest', { server: false, generators: this._config.generators }),
+      onServerPreHandler: new Extension('onServerPreHandler', { server: true, generators: this._config.generators }),
+      onServerPreRequest: new Extension('onServerPreRequest', { server: true, generators: this._config.generators }),
+      onServerPreResponse: new Extension('onServerPreResponse', { server: true, generators: this._config.generators })
     }
 
     // start tracking process stats

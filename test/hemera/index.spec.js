@@ -3428,6 +3428,122 @@ describe('Extension error', function () {
   })
 })
 
+describe('Generator / Promise support in extension', function () {
+  var PORT = 6242
+  var flags = ['--user', 'derek', '--pass', 'foobar']
+  var authUrl = 'nats://derek:foobar@localhost:' + PORT
+  var server
+
+  // Start up our own nats-server
+  before(function (done) {
+    server = HemeraTestsuite.start_server(PORT, flags, done)
+  })
+
+  // Shutdown our server after we are done
+  after(function () {
+    server.kill()
+  })
+
+  it('Should be able to yield in extension', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, { generators: true })
+
+    hemera.ready(() => {
+      hemera.ext('onServerPreHandler', function* (req, res) {
+        const result = yield Promise.resolve(true)
+        return result
+      })
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+        cb()
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.equals(true)
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to return an error', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, { generators: true })
+
+    hemera.ready(() => {
+      hemera.ext('onServerPreHandler', function* (req, res) {
+        const result = yield Promise.reject(new Error('test'))
+        return result
+      })
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+        cb()
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.cause.name).to.be.equals('Error')
+        expect(err.cause.message).to.be.equals('test')
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to catch a thrown error', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, { generators: true })
+
+    hemera.ready(() => {
+      hemera.ext('onServerPreHandler', function* (req, res) {
+        throw new Error('test')
+      })
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+        cb()
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.cause.name).to.be.equals('Error')
+        expect(err.cause.message).to.be.equals('test')
+        hemera.close()
+        done()
+      })
+    })
+  })
+})
+
 describe('Extension reply', function () {
   var PORT = 6242
   var flags = ['--user', 'derek', '--pass', 'foobar']
