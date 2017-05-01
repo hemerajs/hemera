@@ -1225,6 +1225,246 @@ describe('Publish / Subscribe', function () {
   })
 })
 
+describe('Generator / Promise support', function () {
+  var PORT = 6242
+  var flags = ['--user', 'derek', '--pass', 'foobar']
+  var authUrl = 'nats://derek:foobar@localhost:' + PORT
+  var server
+
+  // Start up our own nats-server
+  before(function (done) {
+    server = HemeraTestsuite.start_server(PORT, flags, done)
+  })
+
+  // Shutdown our server after we are done
+  after(function () {
+    server.kill()
+  })
+
+  it('Should be able to yield in add', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      generators: true
+    })
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function* (resp) {
+        return yield {
+          result: resp.a + resp.b
+        }
+      })
+
+      hemera.add({
+        topic: 'math',
+        cmd: 'multiply'
+      }, function* (resp) {
+        return yield {
+          result: resp.a * resp.b
+        }
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, (err, resp) => {
+        expect(err).not.to.be.exists()
+        expect(resp.result).to.be.equals(3)
+
+        hemera.act({
+          topic: 'math',
+          cmd: 'multiply',
+          a: resp.result,
+          b: 2
+        }, (err, resp) => {
+          expect(err).not.to.be.exists()
+          expect(resp.result).to.be.equals(6)
+
+          hemera.close()
+          done()
+        })
+      })
+    })
+  })
+
+  it('Should be able to yield an act', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      generators: true
+    })
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function* (resp) {
+        const mult = yield this.act({
+          topic: 'math',
+          cmd: 'multiply',
+          a: 1,
+          b: 2
+        })
+
+        expect(mult).to.be.equals({ result: 2 })
+
+        return yield {
+          result: resp.a + resp.b
+        }
+      })
+
+      hemera.add({
+        topic: 'math',
+        cmd: 'multiply'
+      }, function* (resp) {
+        return yield {
+          result: resp.a * resp.b
+        }
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, function (err, resp) {
+        expect(err).not.to.be.exists()
+        expect(resp.result).to.be.equals(3)
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to propagate errors in add', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      generators: true
+    })
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function* (resp) {
+        return yield Promise.reject(new Error('test'))
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, function (err, resp) {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('BusinessError')
+        expect(err.cause.name).to.be.equals('Error')
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to chain an act', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      generators: true
+    })
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function* (resp) {
+        return yield Promise.resolve({ result: true })
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, function* (err, resp) {
+        return resp
+      })
+      .then(function (resp) {
+        expect(resp).to.be.equals({ result: true })
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to catch an error in act', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      generators: true
+    })
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function* (resp) {
+        return yield Promise.resolve({ result: true })
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, function* (err, resp) {
+        return yield Promise.reject(new Error('test'))
+      })
+      .catch(function (err) {
+        expect(err).to.be.exists()
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to catch an uncaught error in act', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      generators: true
+    })
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function* (resp) {
+        return yield Promise.resolve({ result: true })
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, function* (err, resp) {
+        throw new Error('test')
+      })
+      .catch(function (err) {
+        expect(err).to.be.exists()
+        hemera.close()
+        done()
+      })
+    })
+  })
+})
+
 describe('Exposing', function () {
   var PORT = 6242
   var flags = ['--user', 'derek', '--pass', 'foobar']

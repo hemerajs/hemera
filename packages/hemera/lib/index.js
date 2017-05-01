@@ -844,7 +844,6 @@ class Hemera extends EventEmitter {
       plugin: this.plugin$
     })
 
-    // support yield
     if (this._config.generators) {
       actMeta.action = Co.wrap(cb)
     } else {
