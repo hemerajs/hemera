@@ -1022,24 +1022,31 @@ class Hemera extends EventEmitter {
       }
     }
 
-    return new Promise((resolve, reject) => {
-      // create new execution context
-      let ctx = this.createContext()
-      ctx._pattern = pattern
-      ctx._prevContext = this
-      ctx._cleanPattern = Util.cleanFromSpecialVars(pattern)
-      ctx._response = new ClientResponse()
-      ctx._request = new ClientRequest()
-      ctx._isServer = false
-      ctx._execute = (err, result) => {
-        if (ctx._actCallback) {
-          if (this._config.generators) {
+    // create new execution context
+    let ctx = this.createContext()
+    ctx._pattern = pattern
+    ctx._prevContext = this
+    ctx._cleanPattern = Util.cleanFromSpecialVars(pattern)
+    ctx._response = new ClientResponse()
+    ctx._request = new ClientRequest()
+    ctx._isServer = false
+
+    if (cb) {
+      if (this._config.generators) {
+        ctx._actCallback = Co.wrap(cb.bind(ctx))
+      } else {
+        ctx._actCallback = cb.bind(ctx)
+      }
+    }
+
+    if (this._config.generators) {
+      ctx._extensions.onClientPreRequest.invoke(ctx, onPreRequestHandler)
+
+      return new Promise((resolve, reject) => {
+        ctx._execute = (err, result) => {
+          if (ctx._actCallback) {
             ctx._actCallback(err, result).then(x => resolve(x)).catch(x => reject(x))
           } else {
-            ctx._actCallback(err, result)
-          }
-        } else {
-          if (this._config.generators) {
             if (err) {
               reject(err)
             } else {
@@ -1047,18 +1054,16 @@ class Hemera extends EventEmitter {
             }
           }
         }
-      }
+      })
+    }
 
-      if (cb) {
-        if (this._config.generators) {
-          ctx._actCallback = Co.wrap(cb.bind(ctx))
-        } else {
-          ctx._actCallback = cb.bind(ctx)
-        }
+    ctx._execute = (err, result) => {
+      if (ctx._actCallback) {
+        ctx._actCallback(err, result)
       }
+    }
 
-      ctx._extensions.onClientPreRequest.invoke(ctx, onPreRequestHandler)
-    })
+    ctx._extensions.onClientPreRequest.invoke(ctx, onPreRequestHandler)
   }
 
   /**
@@ -1094,7 +1099,7 @@ class Hemera extends EventEmitter {
         self.emit('clientResponseError', error)
         self.log.fatal(error)
 
-          // let it crash
+        // let it crash
         if (self._config.crashOnFatal) {
           self.fatal()
         }
