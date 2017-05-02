@@ -65,18 +65,15 @@ hemera.ready(() => {
     cmd: 'add',
     a: Joi.number().required(),
     b: Joi.number().required()
-  }, (req, cb) => {
-    cb(null, req.a + req.b)
+  }, function* (req) => {
+    return yield Promise.resolve(req.a + req.b)
   })
 
-  hemera.act({ 
-    topic: 'math',
-    cmd: 'add',
-    a: 1,
-    b: 2
-  }, (err, resp) => {
-    hemera.log.info(resp)
-  })
+  const a = hemera.act({ topic: 'math', cmd: 'add', a: 10, b: 30 })
+  const b = hemera.act({ topic: 'math', cmd: 'add', a: 10, b: 60 })
+  
+  Promise.all([a, b])
+    .then(x => hemera.log.info(x))
 
 })
 ```
