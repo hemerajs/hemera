@@ -10,7 +10,7 @@ const hemera = new Hemera(nats, {
 
 hemera.ready(() => {
 
-  // You can also mix but not clean code
+  // You can also mix but this is not clean code
   hemera.add({
     topic: 'math',
     cmd: 'divide'
