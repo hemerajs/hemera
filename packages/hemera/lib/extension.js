@@ -1,7 +1,7 @@
 'use strict'
 
 const Co = require('co')
-const isGeneratorFn = require('is-generator-function')
+const IsGeneratorFn = require('is-generator-function')
 
 /**
  * Copyright 2016-present, Dustin Deus (deusdustin@gmail.com)
@@ -32,7 +32,7 @@ class Extension {
    */
   add (handler) {
     if (this._options.generators) {
-      if (isGeneratorFn(handler)) {
+      if (IsGeneratorFn(handler)) {
         this._stack.push(function () {
         // -3 because (req, res, next, prevValue, index)
           const next = arguments[arguments.length - 3]

@@ -24,7 +24,7 @@ const OnExit = require('signal-exit')
 const TinySonic = require('tinysonic')
 const SuperError = require('super-error')
 const Co = require('co')
-const isGeneratorFn = require('is-generator-function')
+const IsGeneratorFn = require('is-generator-function')
 
 const Errors = require('./errors')
 const Constants = require('./constants')
@@ -846,7 +846,7 @@ class Hemera extends EventEmitter {
     })
 
     if (this._config.generators) {
-      if (!isGeneratorFn(cb)) {
+      if (!IsGeneratorFn(cb)) {
         actMeta.action = cb
         actMeta.isGenFunc = false
       } else {
