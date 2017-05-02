@@ -38,7 +38,7 @@ class MongoStore extends Store {
           return cb(err)
         }
         const result = {
-          _id: resp.insertedIds.toString()
+          _ids: resp.insertedIds
         }
         cb(err, result)
       })

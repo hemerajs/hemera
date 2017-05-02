@@ -62,6 +62,23 @@ describe('Hemera-mongo-store', function () {
     })
   })
 
+  it('create', function (done) {
+    hemera.act({
+      topic,
+      cmd: 'create',
+      collection: testCollection,
+      data: [
+        { name: 'peter' }, { name: 'parker' }
+      ]
+    }, function (err, resp) {
+      expect(err).to.be.not.exists()
+      expect(resp).to.be.an.object()
+      expect(resp._ids).to.be.an.array().length(2)
+
+      done()
+    })
+  })
+
   it('update', function (done) {
     hemera.act({
       topic,
