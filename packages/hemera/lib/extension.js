@@ -1,5 +1,8 @@
 'use strict'
 
+const Co = require('co')
+const IsGeneratorFn = require('is-generator-function')
+
 /**
  * Copyright 2016-present, Dustin Deus (deusdustin@gmail.com)
  * All rights reserved.
@@ -14,10 +17,10 @@
  */
 class Extension {
 
-  constructor (type, server) {
+  constructor (type, options) {
     this._stack = []
+    this._options = options
     this._type = type
-    this._server = server
   }
 
   /**
@@ -28,7 +31,19 @@ class Extension {
    * @memberOf Extension
    */
   add (handler) {
-    this._stack.push(handler)
+    if (this._options.generators) {
+      if (IsGeneratorFn(handler)) {
+        this._stack.push(function () {
+        // -3 because (req, res, next, prevValue, index)
+          const next = arguments[arguments.length - 3]
+          return Co(handler.apply(this, arguments)).then(x => next(null, x)).catch(next)
+        })
+      } else {
+        this._stack.push(handler)
+      }
+    } else {
+      this._stack.push(handler)
+    }
   }
 
   /**
@@ -50,11 +65,13 @@ class Extension {
    */
   invoke (ctx, cb) {
     const each = (item, next, prevValue, i) => {
-      if (this._server) {
+      if (this._options.server) {
         const response = ctx._response
+        const request = ctx._request
+        // pass next handler to response object so that the user can abort the response with msg or error
         response.next = next
 
-        item.call(ctx, ctx._request, response, next, prevValue, i)
+        item.call(ctx, request, response, next, prevValue, i)
       } else {
         item.call(ctx, next, i)
       }
@@ -62,6 +79,7 @@ class Extension {
 
     Extension.serial(this._stack, each, cb.bind(ctx))
   }
+
   /**
    *
    *

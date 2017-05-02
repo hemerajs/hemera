@@ -44,10 +44,12 @@
   "license": "MIT",
   "dependencies": {
     "bloomrun": "3.0.x",
+    "co": "4.6.x",
     "errio": "1.2.x",
     "fast-safe-stringify": "1.1.x",
     "heavy": "4.0.x",
     "hoek": "4.1.x",
+    "is-generator-function": "1.0.x",
     "lodash": "4.17.x",
     "pino": "4.2.x",
     "signal-exit": "3.0.x",
