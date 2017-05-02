@@ -53,7 +53,7 @@ const Hemera = require('nats-hemera')
 const HemeraJoi = require('hemera-joi')
 const nats = require('nats').connect(authUrl)
 
-const hemera = new Hemera(nats, { logLevel: 'info' })
+const hemera = new Hemera(nats, { logLevel: 'info', generators: true })
 hemera.use(HemeraJoi)
 
 hemera.ready(() => {
