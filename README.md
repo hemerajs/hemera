@@ -51,7 +51,7 @@ The key features of NATS in combination with Hemera are:
 ```js
 const Hemera = require('nats-hemera')
 const HemeraJoi = require('hemera-joi')
-const nats = require('nats').connect(authUrl)
+const nats = require('nats').connect()
 
 const hemera = new Hemera(nats, { logLevel: 'info', generators: true })
 hemera.use(HemeraJoi)
@@ -65,13 +65,13 @@ hemera.ready(() => {
     cmd: 'add',
     a: Joi.number().required(),
     b: Joi.number().required()
-  }, function* (req) => {
+  }, function* (req) {
     return yield Promise.resolve(req.a + req.b)
   })
 
   const a = hemera.act({ topic: 'math', cmd: 'add', a: 10, b: 30 })
   const b = hemera.act({ topic: 'math', cmd: 'add', a: 10, b: 60 })
-  
+
   Promise.all([a, b])
     .then(x => hemera.log.info(x))
 
