@@ -20,7 +20,7 @@ describe('Hemera-mongo-store', function () {
     server = HemeraTestsuite.start_server(PORT, {}, () => {
       const nats = Nats.connect(noAuthUrl)
       hemera = new Hemera(nats, {
-        logLevel: 'info'
+        logLevel: 'silent'
       })
       hemera.use(HemeraMongoStore, {
         mongo: {
@@ -57,6 +57,23 @@ describe('Hemera-mongo-store', function () {
       expect(err).to.be.not.exists()
       expect(resp).to.be.an.object()
       expect(resp._id).to.be.exists()
+
+      done()
+    })
+  })
+
+  it('create multiple documents', function (done) {
+    hemera.act({
+      topic,
+      cmd: 'create',
+      collection: testCollection,
+      data: [
+        { name: 'peter' }, { name: 'parker' }
+      ]
+    }, function (err, resp) {
+      expect(err).to.be.not.exists()
+      expect(resp).to.be.an.object()
+      expect(resp._ids).to.be.an.array().length(2)
 
       done()
     })
