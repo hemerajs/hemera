@@ -32,15 +32,27 @@ class MongoStore extends Store {
    * @memberOf MongoStore
    */
   create (req, cb) {
-    this._driver.insertOne(req.data, this.options.mongo, function (err, resp) {
-      if (err) {
-        return cb(err)
-      }
-      const result = {
-        _id: resp.insertedId.toString()
-      }
-      cb(err, result)
-    })
+    if (req.data instanceof Array) {
+      this._driver.insertMany(req.data, this.options.mongo, function (err, resp) {
+        if (err) {
+          return cb(err)
+        }
+        const result = {
+          _id: resp.insertedIds.toString()
+        }
+        cb(err, result)
+      })
+    } else if (req.data instanceof Object) {
+      this._driver.insertOne(req.data, this.options.mongo, function (err, resp) {
+        if (err) {
+          return cb(err)
+        }
+        const result = {
+          _id: resp.insertedId.toString()
+        }
+        cb(err, result)
+      })
+    }
   }
 
   /**
