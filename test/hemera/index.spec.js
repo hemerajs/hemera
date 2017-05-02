@@ -165,9 +165,9 @@ describe('Hemera', function () {
 
     hemera.ready(() => {
       hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      })
+          topic: 'math',
+          cmd: 'add'
+        })
         .use(function (req, resp, next) {
           next()
         })
@@ -197,9 +197,9 @@ describe('Hemera', function () {
 
     hemera.ready(() => {
       hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      })
+          topic: 'math',
+          cmd: 'add'
+        })
         .use(function (req, resp, next) {
           callback()
           next()
@@ -235,9 +235,9 @@ describe('Hemera', function () {
 
     hemera.ready(() => {
       hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      })
+          topic: 'math',
+          cmd: 'add'
+        })
         .use([function (req, resp, next) {
           callback()
           next()
@@ -343,9 +343,9 @@ describe('Hemera', function () {
 
     hemera.ready(() => {
       hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      })
+          topic: 'math',
+          cmd: 'add'
+        })
         .use(function (req, resp, next) {
           next(new Error('test'))
         })
@@ -377,9 +377,9 @@ describe('Hemera', function () {
 
     hemera.ready(() => {
       hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      })
+          topic: 'math',
+          cmd: 'add'
+        })
         .use(function (req, resp, next) {
           next(new UnauthorizedError('test'))
         })
@@ -413,9 +413,9 @@ describe('Hemera', function () {
 
     hemera.ready(() => {
       hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      })
+          topic: 'math',
+          cmd: 'add'
+        })
         .use(function (req, resp, next) {
           next(new Error('test'))
         })
@@ -1109,7 +1109,7 @@ describe('Publish / Subscribe', function () {
 
     let counter = 0
 
-    function called () {
+    function called() {
       counter++
 
       if (counter === 2) {
@@ -1292,6 +1292,57 @@ describe('Generator / Promise support', function () {
     })
   })
 
+  it('Should be able to use none generator function in add', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      generators: true
+    })
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function (resp, reply) {
+        reply(null, {
+          result: resp.a + resp.b
+        })
+      })
+
+      hemera.add({
+        topic: 'math',
+        cmd: 'multiply'
+      }, function (resp, reply) {
+        reply(null, {
+          result: resp.a * resp.b
+        })
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, (err, resp) => {
+        expect(err).not.to.be.exists()
+        expect(resp.result).to.be.equals(3)
+
+        hemera.act({
+          topic: 'math',
+          cmd: 'multiply',
+          a: resp.result,
+          b: 2
+        }, (err, resp) => {
+          expect(err).not.to.be.exists()
+          expect(resp.result).to.be.equals(6)
+
+          hemera.close()
+          done()
+        })
+      })
+    })
+  })
+
   it('Should be able to yield an act', function (done) {
     const nats = require('nats').connect(authUrl)
 
@@ -1311,7 +1362,9 @@ describe('Generator / Promise support', function () {
           b: 2
         })
 
-        expect(mult).to.be.equals({ result: 2 })
+        expect(mult).to.be.equals({
+          result: 2
+        })
 
         return yield {
           result: resp.a + resp.b
@@ -1383,22 +1436,26 @@ describe('Generator / Promise support', function () {
         topic: 'math',
         cmd: 'add'
       }, function* (resp) {
-        return yield Promise.resolve({ result: true })
+        return yield Promise.resolve({
+          result: true
+        })
       })
 
       hemera.act({
-        topic: 'math',
-        cmd: 'add',
-        a: 1,
-        b: 2
-      }, function* (err, resp) {
-        return resp
-      })
-      .then(function (resp) {
-        expect(resp).to.be.equals({ result: true })
-        hemera.close()
-        done()
-      })
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        }, function* (err, resp) {
+          return resp
+        })
+        .then(function (resp) {
+          expect(resp).to.be.equals({
+            result: true
+          })
+          hemera.close()
+          done()
+        })
     })
   })
 
@@ -1414,22 +1471,24 @@ describe('Generator / Promise support', function () {
         topic: 'math',
         cmd: 'add'
       }, function* (resp) {
-        return yield Promise.resolve({ result: true })
+        return yield Promise.resolve({
+          result: true
+        })
       })
 
       hemera.act({
-        topic: 'math',
-        cmd: 'add',
-        a: 1,
-        b: 2
-      }, function* (err, resp) {
-        return yield Promise.reject(new Error('test'))
-      })
-      .catch(function (err) {
-        expect(err).to.be.exists()
-        hemera.close()
-        done()
-      })
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        }, function* (err, resp) {
+          return yield Promise.reject(new Error('test'))
+        })
+        .catch(function (err) {
+          expect(err).to.be.exists()
+          hemera.close()
+          done()
+        })
     })
   })
 
@@ -1445,22 +1504,24 @@ describe('Generator / Promise support', function () {
         topic: 'math',
         cmd: 'add'
       }, function* (resp) {
-        return yield Promise.resolve({ result: true })
+        return yield Promise.resolve({
+          result: true
+        })
       })
 
       hemera.act({
-        topic: 'math',
-        cmd: 'add',
-        a: 1,
-        b: 2
-      }, function* (err, resp) {
-        throw new Error('test')
-      })
-      .catch(function (err) {
-        expect(err).to.be.exists()
-        hemera.close()
-        done()
-      })
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        }, function* (err, resp) {
+          throw new Error('test')
+        })
+        .catch(function (err) {
+          expect(err).to.be.exists()
+          hemera.close()
+          done()
+        })
     })
   })
 })
@@ -3447,7 +3508,9 @@ describe('Generator / Promise support in extension', function () {
   it('Should be able to yield in extension', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, { generators: true })
+    const hemera = new Hemera(nats, {
+      generators: true
+    })
 
     hemera.ready(() => {
       hemera.ext('onServerPreHandler', function* (req, res) {
@@ -3476,10 +3539,45 @@ describe('Generator / Promise support in extension', function () {
     })
   })
 
+  it('Should be able to use none generator function in extensions', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      generators: true
+    })
+
+    hemera.ready(() => {
+      hemera.ext('onServerPreHandler', function (req, res, next) {
+        next(null, true)
+      })
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+        cb()
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.equals(true)
+        hemera.close()
+        done()
+      })
+    })
+  })
+
   it('Should be able to return an error', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, { generators: true })
+    const hemera = new Hemera(nats, {
+      generators: true
+    })
 
     hemera.ready(() => {
       hemera.ext('onServerPreHandler', function* (req, res) {
@@ -3513,7 +3611,9 @@ describe('Generator / Promise support in extension', function () {
   it('Should be able to catch a thrown error', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, { generators: true })
+    const hemera = new Hemera(nats, {
+      generators: true
+    })
 
     hemera.ready(() => {
       hemera.ext('onServerPreHandler', function* (req, res) {

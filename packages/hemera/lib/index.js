@@ -24,6 +24,7 @@ const OnExit = require('signal-exit')
 const TinySonic = require('tinysonic')
 const SuperError = require('super-error')
 const Co = require('co')
+const isGeneratorFn = require('is-generator-function')
 
 const Errors = require('./errors')
 const Constants = require('./constants')
@@ -685,7 +686,7 @@ class Hemera extends EventEmitter {
           }
 
           // execute RPC action
-          if (self._config.generators) {
+          if (self._config.generators && self._actMeta.isGenFunc) {
             action(self._request.payload.pattern).then(x => actionHandler.call(self, null, x)).catch(e => actionHandler.call(self, e))
           } else {
             action(self._request.payload.pattern, actionHandler.bind(self))
@@ -845,7 +846,13 @@ class Hemera extends EventEmitter {
     })
 
     if (this._config.generators) {
-      actMeta.action = Co.wrap(cb)
+      if (!isGeneratorFn(cb)) {
+        actMeta.action = cb
+        actMeta.isGenFunc = false
+      } else {
+        actMeta.action = Co.wrap(cb)
+        actMeta.isGenFunc = true
+      }
     } else {
       actMeta.action = cb
     }

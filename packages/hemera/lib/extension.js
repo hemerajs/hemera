@@ -1,6 +1,7 @@
 'use strict'
 
 const Co = require('co')
+const isGeneratorFn = require('is-generator-function')
 
 /**
  * Copyright 2016-present, Dustin Deus (deusdustin@gmail.com)
@@ -31,11 +32,15 @@ class Extension {
    */
   add (handler) {
     if (this._options.generators) {
-      this._stack.push(function () {
+      if (isGeneratorFn(handler)) {
+        this._stack.push(function () {
         // -3 because (req, res, next, prevValue, index)
-        const next = arguments[arguments.length - 3]
-        return Co(handler.apply(this, arguments)).then(x => next(null, x)).catch(next)
-      })
+          const next = arguments[arguments.length - 3]
+          return Co(handler.apply(this, arguments)).then(x => next(null, x)).catch(next)
+        })
+      } else {
+        this._stack.push(handler)
+      }
     } else {
       this._stack.push(handler)
     }
@@ -63,7 +68,7 @@ class Extension {
       if (this._options.server) {
         const response = ctx._response
         const request = ctx._request
-        // pass next handler to response object to react on errors
+        // pass next handler to response object so that the user can abort the response with msg or error
         response.next = next
 
         item.call(ctx, request, response, next, prevValue, i)
