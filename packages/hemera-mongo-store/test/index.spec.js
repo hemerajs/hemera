@@ -62,7 +62,7 @@ describe('Hemera-mongo-store', function () {
     })
   })
 
-  it('create', function (done) {
+  it('create multiple documents', function (done) {
     hemera.act({
       topic,
       cmd: 'create',
