@@ -20,7 +20,7 @@ describe('Hemera-mongo-store', function () {
     server = HemeraTestsuite.start_server(PORT, {}, () => {
       const nats = Nats.connect(noAuthUrl)
       hemera = new Hemera(nats, {
-        logLevel: 'info'
+        logLevel: 'silent'
       })
       hemera.use(HemeraMongoStore, {
         mongo: {
