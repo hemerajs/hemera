@@ -9,6 +9,11 @@ const hemera = new Hemera(nats, {
 })
 
 hemera.ready(() => {
+  hemera.ext('onServerPreRequest', function* (req, res, next) {
+    yield Promise.resolve(true)
+    next()
+  })
+
   hemera.add({
     topic: 'math',
     cmd: 'sub'
