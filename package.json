@@ -52,7 +52,7 @@
     "eslint-config-standard": "10.2.x",
     "eslint-plugin-promise": "3.5.x",
     "eslint-plugin-standard": "3.0.x",
-    "hemera-testsuite": "1.1.x",
+    "hemera-testsuite": "~1.1.4",
     "istanbul": "0.4.x",
     "joi": "10.4.x",
     "lerna": "^2.0.0-rc.4",
