@@ -1,0 +1,34 @@
+{
+  "name": "hemera-controlplane",
+  "version": "0.0.0",
+  "description": "This is a plugin to scale your workers remotly with Hemera",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -t 5000 --recursive",
+    "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec -t 5000 --recursive",
+    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report text-lcov -- -R spec | node ./node_modules/coveralls/bin/coveralls.js",
+    "lint": "eslint --ext .js lib test"
+  },
+  "repository": {
+    "url": "git@github.com:hemerajs/hemera.git",
+    "type": "git"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "author": "Dustin Deus (https://github.com/StarpTech)",
+  "license": "MIT",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "code": "4.0.x",
+    "coveralls": "2.11.x",
+    "eslint": "^3.13.1",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-promise": "^3.4.2",
+    "eslint-plugin-standard": "^2.0.1",
+    "istanbul": "0.4.x",
+    "mocha": "3.2.x",
+    "mocha-lcov-reporter": "1.2.x"
+  }
+}
