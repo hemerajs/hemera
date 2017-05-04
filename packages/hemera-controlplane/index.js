@@ -85,6 +85,15 @@ exports.plugin = function hemeraZipkin (options) {
     this.log.debug('All workers killed!')
     reply(null, { success: true })
   })
+
+  hemera.add({
+    topic,
+    cmd: 'list',
+    service: options.service
+  }, function (req, reply) {
+    const list = workers.map(item => item.pid)
+    reply(null, { success: true, list })
+  })
 }
 
 exports.options = {

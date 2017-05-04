@@ -7,7 +7,7 @@ This is a plugin to scale your workers remotly with Hemera. This package allows 
 
 __Status:__ Experimental
 
-#### 1. Start your worker
+#### Start your worker
 
 ```js
 'use strict'
@@ -36,7 +36,7 @@ hemera.ready(() => {
 })
 ```
 
-#### 1. Scale your worker
+#### Scale your worker
 
 ```js
 'use strict'
@@ -59,7 +59,7 @@ hemera.ready(() => {
 })
 ```
 
-#### 1. Scale your worker down
+#### Scale your worker down
 
 ```js
 'use strict'
@@ -82,7 +82,7 @@ hemera.ready(() => {
 })
 ```
 
-#### 3. Kill all workers but keep the parent process
+#### Kill all workers but keep the parent process
 
 ```js
 'use strict'
@@ -105,7 +105,7 @@ hemera.ready(() => {
 })
 ```
 
-#### 3. Exit a worker by PID
+#### Exit a worker by PID
 
 ```js
 'use strict'
@@ -125,6 +125,29 @@ hemera.ready(() => {
     pid: 1
   }, (err, req) => {
     hemera.log.info(req, 'Result') // {"success":true}
+  })
+})
+```
+
+#### Get list of all running workers
+
+```js
+'use strict'
+
+const Hemera = require('nats-hemera')
+const nats = require('nats').connect()
+
+const hemera = new Hemera(nats, {
+  logLevel: 'debug'
+})
+
+hemera.ready(() => {
+  hemera.act({
+    topic: 'controlplane',
+    cmd: 'list',
+    service: 'math'
+  }, (err, req) => {
+    hemera.log.info(req, 'Result') // {"success":true, list: [5500]}
   })
 })
 ```
