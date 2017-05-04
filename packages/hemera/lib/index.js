@@ -48,6 +48,10 @@ var defaultConfig = {
   name: 'hemera-' + Util.randomId(),
   crashOnFatal: true,
   logLevel: 'silent',
+  bloomrun: {
+    indexing: 'inserting',
+    lookupBeforeAdd: true
+  },
   load: {
     sampleInterval: 0
   }
@@ -70,7 +74,7 @@ class Hemera extends EventEmitter {
     super()
 
     this._config = Hoek.applyToDefaults(defaultConfig, params || {})
-    this._router = Bloomrun()
+    this._router = Bloomrun(this._config.bloomrun)
     this._heavy = new Heavy(this._config.load)
     this._transport = new NatsTransport({
       transport
@@ -860,7 +864,7 @@ class Hemera extends EventEmitter {
     let handler = this._router.lookup(origPattern)
 
     // check if pattern is already registered
-    if (handler) {
+    if (this._config.bloomrun.lookupBeforeAdd && handler) {
       let error = new Errors.HemeraError(Constants.PATTERN_ALREADY_IN_USE, {
         pattern
       })
