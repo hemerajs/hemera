@@ -1,6 +1,6 @@
 {
   "name": "hemera-controlplane",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "This is a plugin to scale your workers remotly with Hemera",
   "main": "index.js",
   "scripts": {
