@@ -34,6 +34,16 @@ exports.plugin = function hemeraControlplane (options) {
     process.send({ plugin: 'controlplane', event: 'online', pid: process.pid })
   }
 
+  function removeWorkerByPid (workers, pid) {
+    const workerIndex = workers.findIndex((p) => {
+      return p.pid === pid
+    })
+    if (workerIndex > -1) {
+      workers[workerIndex].removeAllListeners()
+      workers.splice(workerIndex, 1)
+    }
+  }
+
   hemera.add({
     topic,
     cmd: 'scaleUp',
@@ -57,12 +67,7 @@ exports.plugin = function hemeraControlplane (options) {
       })
 
       worker.once('exit', (code) => {
-        const workerIndex = workers.findIndex((p) => {
-          return p.pid === worker.pid
-        })
-        if (workerIndex > -1) {
-          workers.splice(workerIndex, 1)
-        }
+        removeWorkerByPid(workers, worker.pid)
       })
       worker.once('error', (code) => {
         reply(null, { success: false, code, pid: worker.pid })
@@ -85,18 +90,14 @@ exports.plugin = function hemeraControlplane (options) {
         if (m.plugin === 'controlplane') {
           if (m.event === 'exit') {
             this.log.debug(`Scale down. PID(${m.pid})`)
+            worker.removeAllListeners()
             reply(null, { success: true, pid: m.pid })
           }
         }
       })
 
       worker.once('exit', (code) => {
-        const workerIndex = workers.findIndex((p) => {
-          return p.pid === worker.pid
-        })
-        if (workerIndex > -1) {
-          workers.splice(workerIndex, 1)
-        }
+        removeWorkerByPid(workers, worker.pid)
       })
       worker.once('error', (code) => {
         reply(null, { success: false, code, pid: worker.pid })
@@ -128,14 +129,14 @@ exports.plugin = function hemeraControlplane (options) {
         if (m.plugin === 'controlplane') {
           if (m.event === 'exit') {
             this.log.debug(`Scale down. PID(${m.pid})`)
-            workers.splice(workerIndex, 1)
+            removeWorkerByPid(workers, worker.pid)
             reply(null, { success: true, pid: m.pid })
           }
         }
       })
 
       worker.once('exit', (code) => {
-        reply(null, { success: false, code, pid: worker.pid })
+        removeWorkerByPid(workers, worker.pid)
       })
       worker.once('error', (code) => {
         reply(null, { success: false, code, pid: worker.pid })
@@ -164,6 +165,7 @@ exports.plugin = function hemeraControlplane (options) {
           if (m.plugin === 'controlplane') {
             if (m.event === 'exit') {
               self.log.debug(`Scale down. PID(${m.pid})`)
+              worker.removeAllListeners()
               // continue
               kill(workers)
             }
