@@ -52,7 +52,8 @@ hemera.ready(() => {
   hemera.act({
     topic: 'controlplane',
     cmd: 'scaleUp',
-    service: 'math'
+    service: 'math',
+    maxMessages$: 2 // receive further error events when the creation of the worker fails
   }, (err, req) => {
     hemera.log.info(req, 'Result') // {"success":true,"pid":5500}
   })
@@ -75,7 +76,8 @@ hemera.ready(() => {
   hemera.act({
     topic: 'controlplane',
     cmd: 'scaleDown',
-    service: 'math'
+    service: 'math',
+    maxMessages$: 2 // receive further error events when the killing of the worker fails
   }, (err, req) => {
     hemera.log.info(req, 'Result') // {"success":true,"pid":5500}
   })
@@ -122,7 +124,8 @@ hemera.ready(() => {
     topic: 'controlplane',
     cmd: 'killByPid',
     service: 'math',
-    pid: 1
+    pid: 1,
+    maxMessages$: 2 // receive further error events when killing of the worker fails
   }, (err, req) => {
     hemera.log.info(req, 'Result') // {"success":true}
   })
@@ -151,3 +154,8 @@ hemera.ready(() => {
   })
 })
 ```
+
+### TODO
+
+- [X] Use IPC to guarantee that process was started or exited.
+- [ ] Add more tests

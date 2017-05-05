@@ -11,7 +11,8 @@ hemera.ready(() => {
   hemera.act({
     topic: 'controlplane',
     cmd: 'scaleUp',
-    service: 'math'
+    service: 'math',
+    maxMessages$: 2 // receive further error events when the creation of the worker fails
   }, function (err, resp) {
     this.log.info('result', resp || err)
   })

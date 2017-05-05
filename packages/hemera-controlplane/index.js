@@ -19,6 +19,21 @@ exports.plugin = function hemeraControlplane (options) {
     throw result.error
   }
 
+  // IPC
+  process.on('message', (m) => {
+    if (m.plugin === 'controlplane') {
+      if (m.cmd === 'exit') {
+        process.send({ plugin: 'controlplane', event: 'exit', pid: process.pid })
+        hemera.fatal()
+      }
+    }
+  })
+
+  // send online status in child process
+  if (process.send) {
+    process.send({ plugin: 'controlplane', event: 'online', pid: process.pid })
+  }
+
   hemera.add({
     topic,
     cmd: 'scaleUp',
@@ -29,18 +44,23 @@ exports.plugin = function hemeraControlplane (options) {
       // script must be passed as second argument
       const worker = fork(process.argv[1])
 
-      worker.on('exit', (code) => {
-        hemera.emit(`${topic}.exit`, code)
-      })
-      worker.on('error', (code) => {
-        hemera.emit(`${topic}.error`, code)
+      // wait until process is ready
+      worker.once('message', (m) => {
+        this.log.debug('IPC received!')
+        if (m.plugin === 'controlplane') {
+          if (m.event === 'online') {
+            this.log.debug(`Scale Up. PID(${m.pid})`)
+            workers.push(worker)
+            reply(null, { success: true, pid: m.pid })
+          }
+        }
       })
 
-      this.log.debug(`Scale Up. PID(${worker.pid})`)
-      workers.push(worker)
-      reply(null, { success: true, pid: worker.pid })
+      worker.once('error', (code) => {
+        reply(null, { success: false, code, pid: worker.pid })
+      })
     } else {
-      reply(null, { success: false })
+      reply(null, { success: false, msg: 'limit reached' })
     }
   })
 
@@ -51,11 +71,25 @@ exports.plugin = function hemeraControlplane (options) {
   }, function (req, reply) {
     const worker = workers.shift()
     if (worker) {
-      this.log.debug(`Scale down. PID(${worker.pid})`)
-      worker.kill()
-      reply(null, { success: true, pid: worker.pid })
+      // wait until process is ready
+      worker.once('message', (m) => {
+        this.log.debug('IPC received!')
+        if (m.plugin === 'controlplane') {
+          if (m.event === 'exit') {
+            this.log.debug(`Scale down. PID(${m.pid})`)
+            reply(null, { success: true, pid: m.pid })
+          }
+        }
+      })
+
+      worker.once('error', (code) => {
+        reply(null, { success: false, code, pid: worker.pid })
+      })
+
+      // send ipc command
+      worker.send({ plugin: topic, cmd: 'exit' })
     } else {
-      reply(null, { success: false })
+      reply(null, { success: false, msg: 'worker not found' })
     }
   })
 
@@ -71,10 +105,24 @@ exports.plugin = function hemeraControlplane (options) {
 
     if (workerIndex > -1) {
       const worker = workers[workerIndex]
-      this.log.debug(`Killed PID(${worker.pid})`)
-      worker.kill()
-      workers.splice(workerIndex, 1)
-      reply(null, { success: true, pid: worker.pid })
+
+      // wait until process is ready
+      worker.once('message', (m) => {
+        this.log.debug('IPC received!')
+        if (m.plugin === 'controlplane') {
+          if (m.event === 'exit') {
+            this.log.debug(`Scale down. PID(${m.pid})`)
+            workers.splice(workerIndex, 1)
+            reply(null, { success: true, pid: m.pid })
+          }
+        }
+      })
+
+      worker.once('error', (code) => {
+        reply(null, { success: false, code, pid: worker.pid })
+      })
+
+      worker.send({ plugin: topic, cmd: 'exit' })
     } else {
       reply(null, { success: false, pid: req.pid, reason: 'Worker not found!' })
     }
@@ -85,7 +133,7 @@ exports.plugin = function hemeraControlplane (options) {
     cmd: 'down',
     service: options.service
   }, function (req, reply) {
-    workers.forEach(x => x.kill())
+    workers.forEach(w => w.send({ plugin: topic, cmd: 'exit' }))
     workers = []
     this.log.debug('All workers killed!')
     reply(null, { success: true })

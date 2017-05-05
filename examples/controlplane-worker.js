@@ -6,7 +6,7 @@ const HemeraControlPlane = require('./../packages/hemera-controlplane')
 const HemeraJoi = require('./../packages/hemera-joi')
 
 const hemera = new Hemera(nats, {
-  logLevel: 'debug'
+  logLevel: 'info'
 })
 
 hemera.use(HemeraJoi)
