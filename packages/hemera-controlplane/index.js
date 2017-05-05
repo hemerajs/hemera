@@ -56,6 +56,14 @@ exports.plugin = function hemeraControlplane (options) {
         }
       })
 
+      worker.once('exit', (code) => {
+        const workerIndex = workers.findIndex((p) => {
+          return p.pid === worker.pid
+        })
+        if (workerIndex > -1) {
+          workers.splice(workerIndex, 1)
+        }
+      })
       worker.once('error', (code) => {
         reply(null, { success: false, code, pid: worker.pid })
       })
@@ -71,7 +79,7 @@ exports.plugin = function hemeraControlplane (options) {
   }, function (req, reply) {
     const worker = workers.shift()
     if (worker) {
-      // wait until process is ready
+      // wait until process was terminated
       worker.once('message', (m) => {
         this.log.debug('IPC received!')
         if (m.plugin === 'controlplane') {
@@ -82,6 +90,14 @@ exports.plugin = function hemeraControlplane (options) {
         }
       })
 
+      worker.once('exit', (code) => {
+        const workerIndex = workers.findIndex((p) => {
+          return p.pid === worker.pid
+        })
+        if (workerIndex > -1) {
+          workers.splice(workerIndex, 1)
+        }
+      })
       worker.once('error', (code) => {
         reply(null, { success: false, code, pid: worker.pid })
       })
@@ -106,7 +122,7 @@ exports.plugin = function hemeraControlplane (options) {
     if (workerIndex > -1) {
       const worker = workers[workerIndex]
 
-      // wait until process is ready
+      // wait until process was terminated
       worker.once('message', (m) => {
         this.log.debug('IPC received!')
         if (m.plugin === 'controlplane') {
@@ -118,6 +134,9 @@ exports.plugin = function hemeraControlplane (options) {
         }
       })
 
+      worker.once('exit', (code) => {
+        reply(null, { success: false, code, pid: worker.pid })
+      })
       worker.once('error', (code) => {
         reply(null, { success: false, code, pid: worker.pid })
       })
@@ -133,10 +152,40 @@ exports.plugin = function hemeraControlplane (options) {
     cmd: 'down',
     service: options.service
   }, function (req, reply) {
-    workers.forEach(w => w.send({ plugin: topic, cmd: 'exit' }))
-    workers = []
-    this.log.debug('All workers killed!')
-    reply(null, { success: true })
+    const self = this
+    function kill (workers) {
+      const worker = workers.shift()
+
+      if (worker) {
+        // wait until process was terminated
+        worker.once('message', (m) => {
+          self.log.debug('IPC received!')
+
+          if (m.plugin === 'controlplane') {
+            if (m.event === 'exit') {
+              self.log.debug(`Scale down. PID(${m.pid})`)
+              // continue
+              kill(workers)
+            }
+          }
+        })
+
+        worker.once('error', (code) => {
+          self.log.error(`Worker could not be killed. PID(${worker.pid}), CODE(${code})`)
+          // continue
+          kill(workers)
+        })
+
+        // kill
+        worker.send({ plugin: topic, cmd: 'exit' })
+      } else {
+        self.log.debug('All workers killed!')
+        reply(null, { success: true })
+      }
+    }
+
+    // start
+    kill(workers)
   })
 
   hemera.add({
