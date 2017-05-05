@@ -3,15 +3,14 @@
 const fork = require('child_process').fork
 const Os = require('os')
 
-const workers = []
+let workers = []
 const forkCount = 0
 const cpuCount = Os.cpus().length
 
-exports.plugin = function hemeraZipkin (options) {
+exports.plugin = function hemeraControlplane (options) {
   const hemera = this
   const topic = 'controlplane'
   const Joi = hemera.exposition['hemera-joi'].joi
-  const WorkerNotFoundError = hemera.createError('WorkerNotFoundError')
 
   // name of the service is required
   const result = Joi.validate(options, { service: Joi.string().required() }, { allowUnknown: true })
@@ -62,17 +61,22 @@ exports.plugin = function hemeraZipkin (options) {
 
   hemera.add({
     topic,
-    cmd: 'exitByPid',
+    cmd: 'killByPid',
     service: options.service,
     pid: Joi.number().required()
   }, function (req, reply) {
-    const worker = workers.filter(x => x.pid === req.pid)
-    if (worker) {
+    const workerIndex = workers.findIndex((p) => {
+      return p.pid === req.pid
+    })
+
+    if (workerIndex > -1) {
+      const worker = workers[workerIndex]
       this.log.debug(`Killed PID(${worker.pid})`)
       worker.kill()
+      workers.splice(workerIndex, 1)
       reply(null, { success: true, pid: worker.pid })
     } else {
-      reply(new WorkerNotFoundError('Worker not found!'))
+      reply(null, { success: false, pid: req.pid, reason: 'Worker not found!' })
     }
   })
 
@@ -82,6 +86,7 @@ exports.plugin = function hemeraZipkin (options) {
     service: options.service
   }, function (req, reply) {
     workers.forEach(x => x.kill())
+    workers = []
     this.log.debug('All workers killed!')
     reply(null, { success: true })
   })

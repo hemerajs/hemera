@@ -120,7 +120,7 @@ const hemera = new Hemera(nats, {
 hemera.ready(() => {
   hemera.act({
     topic: 'controlplane',
-    cmd: 'exitByPid',
+    cmd: 'killByPid',
     service: 'math',
     pid: 1
   }, (err, req) => {

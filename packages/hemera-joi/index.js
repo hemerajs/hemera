@@ -42,6 +42,11 @@ exports.plugin = function hemeraJoi () {
   })
 
   hemera.ext('onServerPreResponse', function (req, res, next) {
+    // actMeta can be null when pattern was not found
+    if (!this._actMeta) {
+      return next()
+    }
+
     let plugin = this._actMeta.plugin
     let schema = this._actMeta.schema
     let response = res.payload
