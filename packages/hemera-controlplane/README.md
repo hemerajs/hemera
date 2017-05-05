@@ -7,6 +7,11 @@ This is a plugin to scale your workers remotly with Hemera. This package allows 
 
 __Status:__ Experimental
 
+- Create easy multiple workers of your hemera service
+- When parent worker exit all child workers will exit
+- `online` and `exit` status are guaranteed via IPC
+- Receive further events e.g when a worker exists fast after it was successfully created
+
 #### Start your worker
 
 ```js
