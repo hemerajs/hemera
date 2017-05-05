@@ -1,6 +1,6 @@
 {
   "name": "hemera-joi",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "This is a plugin to use Joi with Hemera",
   "main": "index.js",
   "scripts": {
@@ -16,9 +16,9 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "joi": "10.0.x",
     "eslint": "^3.13.1",
-    "eslint-config-standard": "^6.2.1"
+    "eslint-config-standard": "^6.2.1",
+    "joi": "10.0.x"
   },
   "devDependencies": {
     "eslint-config-standard": "^6.2.1",
