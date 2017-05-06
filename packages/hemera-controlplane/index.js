@@ -4,7 +4,6 @@ const fork = require('child_process').fork
 const Os = require('os')
 
 let workers = []
-const forkCount = 0
 const cpuCount = Os.cpus().length
 
 exports.plugin = function hemeraControlplane (options) {
@@ -50,7 +49,7 @@ exports.plugin = function hemeraControlplane (options) {
     service: options.service
   }, function (req, reply) {
     // limit forks by count of processors
-    if (forkCount <= cpuCount) {
+    if (workers.length < cpuCount) {
       // script must be passed as second argument
       const worker = fork(process.argv[1])
 
