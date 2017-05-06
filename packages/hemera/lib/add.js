@@ -10,7 +10,6 @@
  */
 
 const _ = require('lodash')
-const IsGeneratorFn = require('is-generator-function')
 const Co = require('co')
 const Util = require('./util')
 
@@ -43,7 +42,7 @@ class Add {
    */
   _use (handler) {
     if (this.options.generators) {
-      if (IsGeneratorFn(handler)) {
+      if (Util.isGeneratorFunction(handler)) {
         this.actMeta.middleware.push(function () {
         // -1 because (req, res, next)
           const next = arguments[arguments.length - 1]
@@ -136,7 +135,7 @@ class Add {
    */
   set action (action) {
     if (this.options.generators) {
-      if (!IsGeneratorFn(action)) {
+      if (!Util.isGeneratorFunction(action)) {
         this.actMeta.action = action
         this.isGenFunc = false
       } else {

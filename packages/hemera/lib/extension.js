@@ -1,7 +1,7 @@
 'use strict'
 
 const Co = require('co')
-const IsGeneratorFn = require('is-generator-function')
+const IsGeneratorFn = require('./util').isGeneratorFunction
 const _ = require('lodash')
 
 /**

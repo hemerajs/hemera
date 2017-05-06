@@ -845,8 +845,11 @@ class Hemera extends EventEmitter {
       plugin: this.plugin$
     }, { generators: this._config.generators })
 
+    // cb is null when we use chaining syntax
+    if (cb) {
     // set callback
-    actMeta.action = cb
+      actMeta.action = cb
+    }
 
     let handler = this._router.lookup(origPattern)
 

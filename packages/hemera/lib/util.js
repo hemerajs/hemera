@@ -152,6 +152,35 @@ class Util {
 
     return sb.join(',')
   }
+
+  /**
+   *
+   *
+   * @static
+   * @param {any} obj
+   * @returns
+   *
+   * @memberof Util
+   */
+  static isGenerator (obj) {
+    return typeof obj.next === 'function' && typeof obj.throw === 'function'
+  }
+
+  /**
+   *
+   *
+   * @static
+   * @param {any} obj
+   * @returns
+   *
+   * @memberof Util
+   */
+  static isGeneratorFunction (obj) {
+    var constructor = obj.constructor
+    if (!constructor) return false
+    if (constructor.name === 'GeneratorFunction' || constructor.displayName === 'GeneratorFunction') return true
+    return Util.isGenerator(constructor.prototype)
+  }
 }
 
 module.exports = Util

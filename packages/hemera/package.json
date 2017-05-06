@@ -49,7 +49,6 @@
     "fast-safe-stringify": "1.1.x",
     "heavy": "4.0.x",
     "hoek": "4.1.x",
-    "is-generator-function": "1.0.x",
     "lodash": "4.17.x",
     "pino": "4.2.x",
     "signal-exit": "3.0.x",
