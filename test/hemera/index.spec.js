@@ -227,6 +227,40 @@ describe('Hemera', function () {
     })
   })
 
+  it('Should be able to use locals on the serverRequest object', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, { logLevel: 'info' })
+
+    hemera.ready(() => {
+      hemera.add({
+          topic: 'math',
+          cmd: 'add'
+        })
+        .use(function (req, resp, next) {
+          const a = { a: 1 }
+          req.locals.test = a
+          next()
+        })
+        .end(function (req, cb) {
+          expect(this._request.locals).to.be.equals({ test: { a: 1 } })
+          cb(null, req.a + req.b)
+        })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, function (err, resp) {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.equals(3)
+        hemera.close()
+        done()
+      })
+    })
+  })
+
   it('Should be able to pass an array of middleware function for a server method', function (done) {
     const nats = require('nats').connect(authUrl)
 
@@ -1288,6 +1322,170 @@ describe('Generator / Promise support', function () {
   // Shutdown our server after we are done
   after(function () {
     server.kill()
+  })
+
+  it('Should be able to yield in add middleware', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      generators: true
+    })
+
+    hemera.ready(() => {
+      hemera.add({
+          topic: 'math',
+          cmd: 'add'
+        })
+        .use(function* (req, resp) {
+          const a = yield { a: 1 }
+          req.locals.test = a
+        })
+        .end(function (req, cb) {
+          expect(this._request.locals).to.be.equals({ test: { a: 1 } })
+          cb(null, req.a + req.b)
+        })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, function (err, resp) {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.equals(3)
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to yield in end function of the middleware', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      generators: true
+    })
+
+    hemera.ready(() => {
+      hemera.add({
+          topic: 'math',
+          cmd: 'add'
+        })
+        .end(function* (req) {
+          return yield Promise.resolve(req.a + req.b)
+        })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, function (err, resp) {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.equals(3)
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to yield an error in add middleware', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      generators: true
+    })
+
+    hemera.ready(() => {
+      hemera.add({
+          topic: 'math',
+          cmd: 'add'
+        })
+        .use(function* (req, resp) {
+          yield Promise.reject(new Error('test'))
+        })
+        .end(function (req, cb) {
+          cb(null, req.a + req.b)
+        })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, function (err, resp) {
+        expect(err).to.be.exists()
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to use an array of generator function in add middleware', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      generators: true
+    })
+
+    hemera.ready(() => {
+      hemera.add({
+          topic: 'math',
+          cmd: 'add'
+        })
+        .use([function* (req, resp) {
+          yield Promise.resolve(true)
+        },function* (req, resp) {
+          yield Promise.resolve(true)
+        }])
+        .end(function (req, cb) {
+          cb(null, req.a + req.b)
+        })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, function (err, resp) {
+        expect(err).to.be.not.exists()
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to use a none generator function in add middleware', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      generators: true
+    })
+
+    hemera.ready(() => {
+      hemera.add({
+          topic: 'math',
+          cmd: 'add'
+        })
+        .use(function (req, resp, next) {
+          next()
+        })
+        .end(function (req, cb) {
+          cb(null, req.a + req.b)
+        })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, function (err, resp) {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.equals(3)
+        hemera.close()
+        done()
+      })
+    })
   })
 
   it('Should be able to yield in add', function (done) {

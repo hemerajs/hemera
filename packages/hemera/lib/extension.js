@@ -2,6 +2,7 @@
 
 const Co = require('co')
 const IsGeneratorFn = require('is-generator-function')
+const _ = require('lodash')
 
 /**
  * Copyright 2016-present, Dustin Deus (deusdustin@gmail.com)
@@ -28,9 +29,9 @@ class Extension {
    *
    * @param {any} handler
    *
-   * @memberOf Extension
+   * @memberof Extension
    */
-  add (handler) {
+  _add (handler) {
     if (this._options.generators) {
       if (IsGeneratorFn(handler)) {
         this._stack.push(function () {
@@ -45,17 +46,21 @@ class Extension {
       this._stack.push(handler)
     }
   }
-
   /**
    *
    *
-   * @param {Array<Function>} handlers
+   * @param {any} handler
    *
    * @memberOf Extension
    */
-  addRange (handlers) {
-    this._stack = this._stack.concat(handlers)
+  add (handler) {
+    if (_.isArray(handler)) {
+      handler.forEach(h => this._add(h))
+    } else {
+      this._add(handler)
+    }
   }
+
   /**
    *
    *

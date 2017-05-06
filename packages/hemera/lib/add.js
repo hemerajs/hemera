@@ -10,6 +10,8 @@
  */
 
 const _ = require('lodash')
+const IsGeneratorFn = require('is-generator-function')
+const Co = require('co')
 
 /**
  *
@@ -25,11 +27,34 @@ class Add {
    *
    * @memberOf Add
    */
-  constructor (actMeta) {
+  constructor (actMeta, options) {
     this.actMeta = actMeta
+    this.options = options
     this.actMeta.middleware = actMeta.middleware || []
   }
 
+  /**
+   *
+   *
+   * @param {any} handler
+   *
+   * @memberof Add
+   */
+  _use (handler) {
+    if (this.options.generators) {
+      if (IsGeneratorFn(handler)) {
+        this.actMeta.middleware.push(function () {
+        // -1 because (req, res, next)
+          const next = arguments[arguments.length - 1]
+          return Co(handler.apply(this, arguments)).then(x => next(null, x)).catch(next)
+        })
+      } else {
+        this.actMeta.middleware.push(handler)
+      }
+    } else {
+      this.actMeta.middleware.push(handler)
+    }
+  }
   /**
    *
    *
@@ -40,10 +65,11 @@ class Add {
    */
   use (handler) {
     if (_.isArray(handler)) {
-      this.actMeta.middleware = this.actMeta.middleware.concat(handler)
+      handler.forEach(h => this._use(h))
     } else {
-      this.actMeta.middleware.push(handler)
+      this._use(handler)
     }
+
     return this
   }
   /**
@@ -54,7 +80,7 @@ class Add {
    * @memberOf Add
    */
   end (cb) {
-    this.actMeta.action = cb
+    this.action = cb
   }
   /**
    *
@@ -93,7 +119,17 @@ class Add {
    * @memberOf Add
    */
   set action (action) {
-    this.actMeta.action = action
+    if (this.options.generators) {
+      if (!IsGeneratorFn(action)) {
+        this.actMeta.action = action
+        this.isGenFunc = false
+      } else {
+        this.actMeta.action = Co.wrap(action)
+        this.isGenFunc = true
+      }
+    } else {
+      this.actMeta.action = action
+    }
   }
   /**
    *
