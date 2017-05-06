@@ -12,6 +12,7 @@
 const _ = require('lodash')
 const IsGeneratorFn = require('is-generator-function')
 const Co = require('co')
+const Util = require('./util')
 
 /**
  *
@@ -81,6 +82,21 @@ class Add {
    */
   end (cb) {
     this.action = cb
+  }
+
+  /**
+   *
+   *
+   * @param {any} request
+   * @param {any} response
+   * @param {any} cb
+   *
+   * @memberof Add
+   */
+  invokeMiddleware (request, response, cb) {
+    Util.serial(this.middleware, (item, next) => {
+      item(request, response, next)
+    }, cb)
   }
   /**
    *
