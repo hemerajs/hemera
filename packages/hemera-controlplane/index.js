@@ -89,7 +89,7 @@ exports.plugin = function hemeraControlplane (options) {
         if (m.plugin === 'controlplane') {
           if (m.event === 'exit') {
             this.log.debug(`Scale down. PID(${m.pid})`)
-            worker.removeAllListeners()
+            removeWorkerByPid(workers, m.pid)
             reply(null, { success: true, pid: m.pid })
           }
         }
