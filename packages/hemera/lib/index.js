@@ -24,7 +24,6 @@ const OnExit = require('signal-exit')
 const TinySonic = require('tinysonic')
 const SuperError = require('super-error')
 const Co = require('co')
-const IsGeneratorFn = require('is-generator-function')
 
 const Errors = require('./errors')
 const Constants = require('./constants')
