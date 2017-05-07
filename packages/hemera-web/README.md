@@ -57,7 +57,7 @@ Payload: a=1&bd=2
 #### Error handling
 
 ```js
-const customError = hemera.createError('CustomError')
+const CustomError = hemera.createError('CustomError')
 const error = new CustomError()
 error.statusCode = 404
 cb(error)
