@@ -6,6 +6,7 @@ const {
 const Micro = require('micro')
 const Hoek = require('hoek')
 const Url = require('url')
+const _ = require('lodash')
 
 const contentTypeJson = ['application/json', 'application/javascript']
 
@@ -48,7 +49,11 @@ class HttpMicro {
         }
       }
 
-      return await this._hemera.act(pattern)
+      res.setHeader('content-type', 'application/json')
+
+      return await this._hemera.act(pattern).catch((err) => {
+        return { error: _.omit(err, ['stack', 'ownStack']) }
+      })
     })
   }
 
