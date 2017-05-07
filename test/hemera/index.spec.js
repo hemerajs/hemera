@@ -2235,7 +2235,7 @@ describe('Error handling', function () {
         topic: 'email',
         cmd: 'send'
       }, (resp, cb) => {
-        cb(null, true)
+        cb(new Error('test'))
       })
 
       hemera.act({
