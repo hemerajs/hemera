@@ -3,7 +3,7 @@
 const Hemera = require('./../packages/hemera')
 const Nats = require('nats')
 
-const PORT = 6242
+const PORT = 4222
 const noAuthUrl = 'nats://localhost:' + PORT
 
 let start
@@ -41,7 +41,7 @@ hemera1.ready(() => {
     topic: 'math',
     cmd: 'add'
   }, function (req, reply) {
-
+    
     // response with big file
     return reply(null, payloadExtraBig)
   })
