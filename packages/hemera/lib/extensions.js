@@ -40,7 +40,7 @@ module.exports.onClientPreRequest = [function onClientPreRequest (next) {
   // request
   let request = {
     id: pattern.requestId$ || Util.randomId(),
-    parentId: ctx.request$.id,
+    parentId: ctx.request$.id || pattern.requestParentId$,
     timestamp: currentTime,
     type: pattern.pubsub$ === true ? 'pubsub' : 'request',
     duration: 0

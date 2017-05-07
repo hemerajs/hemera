@@ -44,6 +44,12 @@ class HttpMicro {
       }
 
       const contentType = req.headers['content-type']
+      const xRequestId = req.headers['x-request-id']
+
+      // for tracing
+      if (xRequestId) {
+        pattern.requestParentId$ = xRequestId
+      }
 
       // include json payload to pattern
       if (contentTypeJson.indexOf(contentType) > -1) {
@@ -78,7 +84,8 @@ class HttpMicro {
    * @memberof HttpMicro
    */
   listen () {
-    this._server.listen(this._options.url)
+    this._hemera.log.info(`HTTP Server listening on: ${this._options.host}:${this._options.port}`)
+    this._server.listen(this._options.port, this._options.host)
   }
 }
 

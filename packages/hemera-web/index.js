@@ -8,7 +8,8 @@ exports.plugin = function hemeraWeb (options) {
 }
 
 exports.options = {
-  url: 3000,
+  port: 3000,
+  host: '127.0.0.1',
   pattern: {}
 }
 

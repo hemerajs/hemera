@@ -6,7 +6,10 @@ const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
-hemera.use(HemeraWeb)
+hemera.use(HemeraWeb, {
+  port: 3000,
+  host: 'localhost'
+})
 
 hemera.ready(() => {
   hemera.add({

@@ -18,7 +18,11 @@ const nats = require('nats').connect()
 const hemeraWeb = require('hemera-web')
 
 const hemera = new Hemera(nats)
-hemera.use(hemeraWeb)
+hemera.use(hemeraWeb, {
+  port: 3000,
+  host: '127.0.0.1',
+  pattern: {} // default pattern
+})
 
 hemera.ready(() => {
   hemera.add({
