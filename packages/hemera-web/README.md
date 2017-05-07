@@ -5,6 +5,7 @@ Http route mapping for Hemera microservices. Based on [Micro](https://github.com
 - High Performance
 - Respect Body and Query data
 - Transport small binary or text data in the pattern
+- Returns correct Hemera errors and without stack traces
 
 [![npm](https://img.shields.io/npm/v/hemera-web.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-web)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
@@ -48,4 +49,28 @@ Body:
 http://localhost:3000?topic=math&cmd=add
 
 Payload: a=1&bd=2
+```
+#### Hemera error payload
+```json
+{
+  "error": {
+    "name": "BusinessError",
+    "message": "Business error",
+    "pattern": {
+      "topic": "math",
+      "cmd": "sub",
+      "a": 33,
+      "b": 33333
+    },
+    "app": "hemera-3021105c79c4afcd",
+    "cause": {
+      "name": "Error",
+      "message": "test"
+    },
+    "rootCause": {
+      "name": "Error",
+      "message": "test"
+    }
+  }
+}
 ```
