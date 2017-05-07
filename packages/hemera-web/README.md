@@ -54,7 +54,7 @@ http://localhost:3000?topic=math&cmd=add
 
 Payload: a=1&bd=2
 ```
-#### Error handling
+### Error handling
 
 ```js
 const CustomError = hemera.createError('CustomError')
