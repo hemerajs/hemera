@@ -78,12 +78,12 @@ _Status Code_: __404__
     },
     "app": "hemera-3021105c79c4afcd",
     "cause": {
-      "name": "Error",
-      "message": "test"
+      "name": "CustomError",
+      "message": "CustomError"
     },
     "rootCause": {
-      "name": "Error",
-      "message": "test"
+      "name": "CustomError",
+      "message": "CustomError"
     }
   }
 }
