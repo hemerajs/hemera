@@ -63,6 +63,7 @@ class HttpMicro {
       }
 
       return this._hemera.act(pattern).catch((err) => {
+        res.statusCode = err.statusCode || 500
         return {
           error: _.omit(err, ['stack', 'ownStack'])
         }
