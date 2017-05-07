@@ -1,0 +1,26 @@
+{
+  "name": "hemera-web",
+  "version": "0.0.0",
+  "description": "Http route mapping for Hemera microservices.",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint index.js",
+    "test": "nyc mocha -t 5000 ./test/**/*.js",
+    "coverage": "npm run test && nyc report --reporter=html"
+  },
+  "author": "Dustin Deus (https://github.com/StarpTech)",
+  "license": "MIT",
+  "devDependencies": {
+    "code": "4.0.x",
+    "eslint": "3.19.x",
+    "eslint-config-standard": "10.2.x",
+    "eslint-plugin-promise": "3.5.x",
+    "eslint-plugin-standard": "3.0.x",
+    "mocha": "3.3.x",
+    "mocha-lcov-reporter": "1.3.x"
+  },
+  "dependencies": {
+    "hoek": "4.1.x",
+    "micro": "7.3.x"
+  }
+}
