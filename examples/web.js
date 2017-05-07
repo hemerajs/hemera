@@ -9,12 +9,13 @@ const hemera = new Hemera(nats, {
 hemera.use(HemeraWeb)
 
 hemera.ready(() => {
-
   hemera.add({
     topic: 'math',
     cmd: 'add'
   }, (req, cb) => {
-    cb(null, { result: req.a + req.b})
+    cb(null, {
+      result: req.a + req.b
+    })
   })
 
   hemera.add({
@@ -23,5 +24,4 @@ hemera.ready(() => {
   }, (req, cb) => {
     cb(new Error('test'))
   })
-
 })
