@@ -69,6 +69,7 @@ _Status Code_: __404__
   "error": {
     "name": "BusinessError",
     "message": "Business error",
+    "statusCode:": 404,
     "pattern": {
       "topic": "math",
       "cmd": "sub",
