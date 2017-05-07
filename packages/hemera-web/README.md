@@ -2,8 +2,8 @@
 Http route mapping for Hemera microservices. Based on [Micro](https://github.com/zeit/micro)
 
 - Depends on Micro with just ~100 lines of code 
-- High Performance
-- Respect Body and Query data
+- High Performance, no middleware, just HTTP
+- Respect `Body` and `Query` data as pattern
 - Transport small binary or text data in the pattern
 - Returns correct Hemera errors and without stack traces
 
@@ -59,8 +59,8 @@ Payload: a=1&bd=2
     "pattern": {
       "topic": "math",
       "cmd": "sub",
-      "a": 33,
-      "b": 33333
+      "a": 1,
+      "b": 2
     },
     "app": "hemera-3021105c79c4afcd",
     "cause": {
