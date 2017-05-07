@@ -54,7 +54,16 @@ http://localhost:3000?topic=math&cmd=add
 
 Payload: a=1&bd=2
 ```
-#### Hemera error payload
+#### Error handling
+
+```js
+const customError = hemera.createError('CustomError')
+const error = new CustomError()
+error.statusCode = 404
+cb(error)
+```
+#### Results in
+_Status Code_: __404__
 ```json
 {
   "error": {
