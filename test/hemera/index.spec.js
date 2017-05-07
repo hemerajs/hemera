@@ -165,9 +165,9 @@ describe('Hemera', function () {
 
     hemera.ready(() => {
       hemera.add({
-          topic: 'math',
-          cmd: 'add'
-        })
+        topic: 'math',
+        cmd: 'add'
+      })
         .use(function (req, resp, next) {
           next()
         })
@@ -197,9 +197,9 @@ describe('Hemera', function () {
 
     hemera.ready(() => {
       hemera.add({
-          topic: 'math',
-          cmd: 'add'
-        })
+        topic: 'math',
+        cmd: 'add'
+      })
         .use(function (req, resp, next) {
           callback()
           next()
@@ -234,9 +234,9 @@ describe('Hemera', function () {
 
     hemera.ready(() => {
       hemera.add({
-          topic: 'math',
-          cmd: 'add'
-        })
+        topic: 'math',
+        cmd: 'add'
+      })
         .use(function (req, resp, next) {
           const a = { a: 1 }
           req.locals.test = a
@@ -269,9 +269,9 @@ describe('Hemera', function () {
 
     hemera.ready(() => {
       hemera.add({
-          topic: 'math',
-          cmd: 'add'
-        })
+        topic: 'math',
+        cmd: 'add'
+      })
         .use([function (req, resp, next) {
           callback()
           next()
@@ -377,9 +377,9 @@ describe('Hemera', function () {
 
     hemera.ready(() => {
       hemera.add({
-          topic: 'math',
-          cmd: 'add'
-        })
+        topic: 'math',
+        cmd: 'add'
+      })
         .use(function (req, resp, next) {
           next(new Error('test'))
         })
@@ -411,9 +411,9 @@ describe('Hemera', function () {
 
     hemera.ready(() => {
       hemera.add({
-          topic: 'math',
-          cmd: 'add'
-        })
+        topic: 'math',
+        cmd: 'add'
+      })
         .use(function (req, resp, next) {
           next(new UnauthorizedError('test'))
         })
@@ -447,9 +447,9 @@ describe('Hemera', function () {
 
     hemera.ready(() => {
       hemera.add({
-          topic: 'math',
-          cmd: 'add'
-        })
+        topic: 'math',
+        cmd: 'add'
+      })
         .use(function (req, resp, next) {
           next(new Error('test'))
         })
@@ -1134,6 +1134,7 @@ describe('Streaming', function () {
         cmd: 'add',
         maxMessages$: -1
       }, function (err, resp) {
+        expect(err).to.be.not.exists()
         results.push(resp)
         if (results.length === 100) {
           hemera.close()
@@ -1142,7 +1143,6 @@ describe('Streaming', function () {
       })
     })
   })
-
 })
 
 describe('Publish / Subscribe', function () {
@@ -1192,7 +1192,7 @@ describe('Publish / Subscribe', function () {
 
     let counter = 0
 
-    function called() {
+    function called () {
       counter++
 
       if (counter === 2) {
@@ -1333,10 +1333,10 @@ describe('Generator / Promise support', function () {
 
     hemera.ready(() => {
       hemera.add({
-          topic: 'math',
-          cmd: 'add'
-        })
-        .use(function* (req, resp) {
+        topic: 'math',
+        cmd: 'add'
+      })
+        .use(function * (req, resp) {
           const a = yield { a: 1 }
           req.locals.test = a
         })
@@ -1368,10 +1368,10 @@ describe('Generator / Promise support', function () {
 
     hemera.ready(() => {
       hemera.add({
-          topic: 'math',
-          cmd: 'add'
-        })
-        .end(function* (req) {
+        topic: 'math',
+        cmd: 'add'
+      })
+        .end(function * (req) {
           return yield Promise.resolve(req.a + req.b)
         })
 
@@ -1398,10 +1398,10 @@ describe('Generator / Promise support', function () {
 
     hemera.ready(() => {
       hemera.add({
-          topic: 'math',
-          cmd: 'add'
-        })
-        .use(function* (req, resp) {
+        topic: 'math',
+        cmd: 'add'
+      })
+        .use(function * (req, resp) {
           yield Promise.reject(new Error('test'))
         })
         .end(function (req, cb) {
@@ -1430,12 +1430,12 @@ describe('Generator / Promise support', function () {
 
     hemera.ready(() => {
       hemera.add({
-          topic: 'math',
-          cmd: 'add'
-        })
-        .use([function* (req, resp) {
+        topic: 'math',
+        cmd: 'add'
+      })
+        .use([function * (req, resp) {
           yield Promise.resolve(true)
-        },function* (req, resp) {
+        }, function * (req, resp) {
           yield Promise.resolve(true)
         }])
         .end(function (req, cb) {
@@ -1464,9 +1464,9 @@ describe('Generator / Promise support', function () {
 
     hemera.ready(() => {
       hemera.add({
-          topic: 'math',
-          cmd: 'add'
-        })
+        topic: 'math',
+        cmd: 'add'
+      })
         .use(function (req, resp, next) {
           next()
         })
@@ -1499,7 +1499,7 @@ describe('Generator / Promise support', function () {
       hemera.add({
         topic: 'math',
         cmd: 'add'
-      }, function* (resp) {
+      }, function * (resp) {
         return yield {
           result: resp.a + resp.b
         }
@@ -1508,7 +1508,7 @@ describe('Generator / Promise support', function () {
       hemera.add({
         topic: 'math',
         cmd: 'multiply'
-      }, function* (resp) {
+      }, function * (resp) {
         return yield {
           result: resp.a * resp.b
         }
@@ -1601,7 +1601,7 @@ describe('Generator / Promise support', function () {
       hemera.add({
         topic: 'math',
         cmd: 'add'
-      }, function* (resp) {
+      }, function * (resp) {
         const mult = yield this.act({
           topic: 'math',
           cmd: 'multiply',
@@ -1621,7 +1621,7 @@ describe('Generator / Promise support', function () {
       hemera.add({
         topic: 'math',
         cmd: 'multiply'
-      }, function* (resp) {
+      }, function * (resp) {
         return yield {
           result: resp.a * resp.b
         }
@@ -1652,7 +1652,7 @@ describe('Generator / Promise support', function () {
       hemera.add({
         topic: 'math',
         cmd: 'add'
-      }, function* (resp) {
+      }, function * (resp) {
         return yield Promise.reject(new Error('test'))
       })
 
@@ -1682,20 +1682,21 @@ describe('Generator / Promise support', function () {
       hemera.add({
         topic: 'math',
         cmd: 'add'
-      }, function* (resp) {
+      }, function * (resp) {
         return yield Promise.resolve({
           result: true
         })
       })
 
       hemera.act({
-          topic: 'math',
-          cmd: 'add',
-          a: 1,
-          b: 2
-        }, function* (err, resp) {
-          return resp
-        })
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, function * (err, resp) {
+        expect(err).to.be.not.exists()
+        return resp
+      })
         .then(function (resp) {
           expect(resp).to.be.equals({
             result: true
@@ -1717,20 +1718,21 @@ describe('Generator / Promise support', function () {
       hemera.add({
         topic: 'math',
         cmd: 'add'
-      }, function* (resp) {
+      }, function * (resp) {
         return yield Promise.resolve({
           result: true
         })
       })
 
       hemera.act({
-          topic: 'math',
-          cmd: 'add',
-          a: 1,
-          b: 2
-        }, function* (err, resp) {
-          return yield Promise.reject(new Error('test'))
-        })
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, function * (err, resp) {
+        expect(err).to.be.not.exists()
+        return yield Promise.reject(new Error('test'))
+      })
         .catch(function (err) {
           expect(err).to.be.exists()
           hemera.close()
@@ -1750,20 +1752,21 @@ describe('Generator / Promise support', function () {
       hemera.add({
         topic: 'math',
         cmd: 'add'
-      }, function* (resp) {
+      }, function * (resp) {
         return yield Promise.resolve({
           result: true
         })
       })
 
       hemera.act({
-          topic: 'math',
-          cmd: 'add',
-          a: 1,
-          b: 2
-        }, function* (err, resp) {
-          throw new Error('test')
-        })
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, function * (err, resp) {
+        expect(err).to.be.not.exists()
+        throw new Error('test')
+      })
         .catch(function (err) {
           expect(err).to.be.exists()
           hemera.close()
@@ -2232,7 +2235,7 @@ describe('Error handling', function () {
         topic: 'email',
         cmd: 'send'
       }, (resp, cb) => {
-        cb(true)
+        cb(null, true)
       })
 
       hemera.act({
@@ -3359,22 +3362,25 @@ describe('Pattern matching', function () {
       try {
         hemera.add({
           topic: 'TOPIC',
-          cmd: 'CMD',
+          cmd: 'CMD'
         }, (err, next) => {
+          expect(err).to.be.not.exists()
           next()
         })
         hemera.add({
           topic: 'TOPIC',
           cmd: 'CMD',
-          type: 'TYPE1',
+          type: 'TYPE1'
         }, (err, next) => {
+          expect(err).to.be.not.exists()
           next()
         })
         hemera.add({
           topic: 'TOPIC',
           cmd: 'CMD',
-          type: 'TYPE2',
+          type: 'TYPE2'
         }, (err, next) => {
+          expect(err).to.be.not.exists()
           next()
         })
       } catch (e) {
@@ -3398,22 +3404,25 @@ describe('Pattern matching', function () {
     hemera.ready(() => {
       hemera.add({
         topic: 'TOPIC',
-        cmd: 'CMD',
+        cmd: 'CMD'
       }, (err, next) => {
+        expect(err).to.be.not.exists()
         next()
       })
       hemera.add({
         topic: 'TOPIC',
         cmd: 'CMD',
-        type: 'TYPE1',
+        type: 'TYPE1'
       }, (err, next) => {
+        expect(err).to.be.not.exists()
         next()
       })
       hemera.add({
         topic: 'TOPIC',
         cmd: 'CMD',
-        type: 'TYPE2',
+        type: 'TYPE2'
       }, (err, next) => {
+        expect(err).to.be.not.exists()
         next()
       })
       hemera.close()
@@ -3434,34 +3443,37 @@ describe('Pattern matching', function () {
     hemera.ready(() => {
       hemera.add({
         topic: 'TOPIC',
-        cmd: 'CMD',
+        cmd: 'CMD'
       }, (err, next) => {
+        expect(err).to.be.not.exists()
         next()
       })
       hemera.add({
         topic: 'TOPIC',
         cmd: 'CMD',
-        type: 'TYPE1',
+        type: 'TYPE1'
       }, (err, next) => {
+        expect(err).to.be.not.exists()
         next()
       })
       hemera.add({
         topic: 'TOPIC',
         cmd: 'CMD',
-        type: 'TYPE2',
+        type: 'TYPE2'
       }, (err, next) => {
+        expect(err).to.be.not.exists()
         next()
       })
 
       const a = hemera.router.lookup({
         topic: 'TOPIC',
         cmd: 'CMD',
-        type: 'TYPE2',
+        type: 'TYPE2'
       })
 
       expect(a.actMeta.pattern).to.be.equals({
         topic: 'TOPIC',
-        cmd: 'CMD',
+        cmd: 'CMD'
       })
 
       hemera.close()
@@ -3482,42 +3494,44 @@ describe('Pattern matching', function () {
     hemera.ready(() => {
       hemera.add({
         topic: 'TOPIC',
-        cmd: 'CMD',
+        cmd: 'CMD'
       }, (err, next) => {
+        expect(err).to.be.not.exists()
         next()
       })
       hemera.add({
         topic: 'TOPIC',
         cmd: 'CMD',
-        type: 'TYPE1',
+        type: 'TYPE1'
       }, (err, next) => {
+        expect(err).to.be.not.exists()
         next()
       })
       hemera.add({
         topic: 'TOPIC',
         cmd: 'CMD',
-        type: 'TYPE2',
+        type: 'TYPE2'
       }, (err, next) => {
+        expect(err).to.be.not.exists()
         next()
       })
 
       const a = hemera.router.lookup({
         topic: 'TOPIC',
         cmd: 'CMD',
-        type: 'TYPE2',
+        type: 'TYPE2'
       })
 
       expect(a.actMeta.pattern).to.be.equals({
         topic: 'TOPIC',
         cmd: 'CMD',
-        type: 'TYPE2',
+        type: 'TYPE2'
       })
 
       hemera.close()
       done()
     })
   })
-
 })
 
 describe('Extension error', function () {
@@ -3946,7 +3960,7 @@ describe('Generator / Promise support in extension', function () {
     })
 
     hemera.ready(() => {
-      hemera.ext('onServerPreHandler', function* (req, res) {
+      hemera.ext('onServerPreHandler', function * (req, res) {
         const result = yield Promise.resolve(true)
         return result
       })
@@ -4013,7 +4027,7 @@ describe('Generator / Promise support in extension', function () {
     })
 
     hemera.ready(() => {
-      hemera.ext('onServerPreHandler', function* (req, res) {
+      hemera.ext('onServerPreHandler', function * (req, res) {
         const result = yield Promise.reject(new Error('test'))
         return result
       })
@@ -4049,7 +4063,7 @@ describe('Generator / Promise support in extension', function () {
     })
 
     hemera.ready(() => {
-      hemera.ext('onServerPreHandler', function* (req, res) {
+      hemera.ext('onServerPreHandler', function * (req, res) {
         throw new Error('test')
       })
 
