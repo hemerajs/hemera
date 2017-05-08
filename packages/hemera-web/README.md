@@ -34,11 +34,13 @@ hemera.ready(() => {
 })
 ```
 
-#### Try as GET Request
+### Examples
+
+- GET Request
 ```
 http://localhost:3000?topic=math&cmd=add&a=1&b=2
 ```
-#### Try as POST Request
+- POST Request
 ```
 http://localhost:3000?topic=math&cmd=add
 
@@ -48,7 +50,7 @@ Body:
   "b": 2
 }
 ```
-#### Try as application/x-www-form-urlencoded POST Request
+- application/x-www-form-urlencoded
 ```
 http://localhost:3000?topic=math&cmd=add
 
