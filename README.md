@@ -90,6 +90,10 @@ There is an extensive <a href="https://hemerajs.github.io/hemera/">documentation
     - Questions/comments can also be posted as [github issues](https://github.com/hemerajs/hemera/issues)
 - **Discuss**: Tweet using the `#HemeraJs` hashtag
 
+## Be aware of your requirements
+
+Hemera has not been designed for high performance on a single process. It has been designed to create lots of microservices doesn't matter where they live. It choose simplicity and reliability as primary goals. It act together with NATS as central nervous system of your distributed system. Transport independency was not considered to be a relevant factor. Therefore we use pattern matching which is very powerful. The fact that Hemera needs a broker is an argument which should be taken into consideration when you compare hemera with other frameworks. The relevant difference between microservice frameworks like senecajs, molecure is not the performance or modularity its about the complexity you need to manage. Hemera is expert in providing an interface to work with lots of services in the network, NATS is the expert to deliver the message at the right place. Hemera is still a subscriber of NATS with some magic in routing and extensions. We don't have to worry about all different aspects in a distributed system like routing, load-balance, service-discovery, clustering. 
+
 ## Packages
 
 The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
