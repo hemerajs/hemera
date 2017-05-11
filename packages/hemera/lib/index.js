@@ -472,13 +472,13 @@ class Hemera extends EventEmitter {
       throw (error)
     })
     this._transport.driver.on('reconnect', () => {
-      this.log.info(Constants.TRANSPORT_CONN_RECONNECTED)
+      this.log.info(Constants.TRANSPORT_RECONNECTED)
     })
     this._transport.driver.on('reconnecting', () => {
-      this.log.warn(Constants.TRANSPORT_CONN_RECONNECTING)
+      this.log.warn(Constants.TRANSPORT_RECONNECTING)
     })
     this._transport.driver.on('close', () => {
-      this.log.warn(Constants.TRANSPORT_CONN_CLOSED)
+      this.log.warn(Constants.TRANSPORT_CLOSED)
     })
     this._transport.driver.on('connect', () => {
       this.log.info(Constants.TRANSPORT_CONNECTED)

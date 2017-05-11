@@ -1,17 +1,17 @@
 'use strict'
 
-var Wreck = require('wreck')
+const Wreck = require('wreck')
 
-var HTTP_OK = 200
-var HTTP_RECEIVED = 202
+const HTTP_OK = 200
+const HTTP_RECEIVED = 202
 
-var DEFAULT_BATCH_SIZE = 5
-var DEFAULT_BATCH_TIMEOUT = 1000
+const DEFAULT_BATCH_SIZE = 5
+const DEFAULT_BATCH_TIMEOUT = 1000
 
-var queue = []
-var timer = null
+const queue = []
+let timer = null
 
-function send(body, options) {
+function send (body, options) {
   clearTimeout(timer)
   timer = null
 
@@ -22,7 +22,7 @@ function send(body, options) {
   const path = 'http://' + options.host + ':' + options.port + options.path
   Wreck.post(path, {
     payload: body
-  }, function sent(err, response, body) {
+  }, function sent (err, response, body) {
     if (!options.debug) {
       return
     }
@@ -37,11 +37,11 @@ function send(body, options) {
   })
 }
 
-function flush(options) {
+function flush (options) {
   send(queue.splice(0, queue.length), options)
 }
 
-function httpBatchTransport(data, options) {
+function httpBatchTransport (data, options) {
   queue.push(data)
 
   if (queue.length >= (options.batchSize || DEFAULT_BATCH_SIZE)) {
@@ -52,6 +52,5 @@ function httpBatchTransport(data, options) {
     }, options.batchTimeout || DEFAULT_BATCH_TIMEOUT)
   }
 }
-
 
 module.exports = httpBatchTransport
