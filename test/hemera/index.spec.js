@@ -230,7 +230,7 @@ describe('Hemera', function () {
   it('Should be able to use locals on the serverRequest object', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, { logLevel: 'info' })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
       hemera.add({
