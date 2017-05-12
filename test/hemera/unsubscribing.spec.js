@@ -1,3 +1,5 @@
+'use strict'
+
 describe('Unsubscribe NATS topic', function () {
   var PORT = 6242
   var flags = ['--user', 'derek', '--pass', 'foobar']
