@@ -22,6 +22,6 @@ hemera.ready(() => {
     a: 1,
     b: 2
   }, function (err, resp) {
-    console.log(err.cause instanceof UnauthorizedError)
+    console.log(err instanceof UnauthorizedError)
   })
 })
