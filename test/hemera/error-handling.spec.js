@@ -50,12 +50,10 @@ describe('Error handling', function () {
         msg: 'Hi!'
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('BusinessError')
-        expect(err.message).to.be.equals('Business error')
-        expect(err.cause.name).to.be.equals('Unauthorized')
-        expect(err.cause.message).to.be.equals('Unauthorized action')
-        expect(err.cause.code).to.be.equals(444)
-        expect(err.cause instanceof UnauthorizedError).to.be.equals(true)
+        expect(err.name).to.be.equals('Unauthorized')
+        expect(err.message).to.be.equals('Unauthorized action')
+        expect(err.code).to.be.equals(444)
+        expect(err instanceof UnauthorizedError).to.be.equals(true)
         hemera.close()
         done()
       })
@@ -269,6 +267,36 @@ describe('Error handling', function () {
         expect(err.cause.name).to.be.equals('Error')
         expect(err.cause.message).to.be.equals('Shit!')
         expect(err.ownStack).to.be.exists()
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to handle business errors with super errors', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+        throw new UnauthorizedError('Shit!')
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('Unauthorized')
+        expect(err.message).to.be.equals('Shit!')
         hemera.close()
         done()
       })

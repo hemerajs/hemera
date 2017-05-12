@@ -417,11 +417,9 @@ describe('Hemera', function () {
         b: 2
       }, function (err, resp) {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Middleware error')
-        expect(err.cause.name).to.be.equals('Unauthorized')
-        expect(err.cause.message).to.be.equals('test')
-        expect(err.cause instanceof UnauthorizedError).to.be.equals(true)
+        expect(err.name).to.be.equals('Unauthorized')
+        expect(err.message).to.be.equals('test')
+        expect(err instanceof UnauthorizedError).to.be.equals(true)
         hemera.close()
         done()
       })

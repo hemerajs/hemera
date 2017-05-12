@@ -283,6 +283,33 @@ describe('Plugin interface', function () {
     }
   })
 
+  it('Should thrown plugin error during initialization', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let plugin = function (options, next) { next(new Error('test')) }
+
+    try {
+      hemera.use({
+        plugin: plugin,
+        attributes: {
+          name: 'myPlugin'
+        }
+      })
+      hemera.close()
+      done()
+    } catch (err) {
+      expect(err).to.exists()
+      expect(err.name).to.be.equals('HemeraError')
+      expect(err.message).to.be.equals('Error during plugin registration')
+      expect(err.cause).to.be.equals('Error')
+      expect(err.cause).to.be.equals('test')
+      hemera.close()
+      done()
+    }
+  })
+
   it('Plugin name is required', function (done) {
     const nats = require('nats').connect(authUrl)
 

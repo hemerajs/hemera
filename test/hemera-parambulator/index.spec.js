@@ -43,11 +43,9 @@ describe('Hemera-parambulator', function () {
         a: '1'
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Extension error')
-        expect(err.cause.name).to.be.equals('PreValidationError')
-        expect(err.cause.message).to.be.equals('The value "1" is not of type \'number\' (parent: a).')
-        expect(err.cause.details).to.be.exists()
+        expect(err.name).to.be.equals('PreValidationError')
+        expect(err.message).to.be.equals('The value "1" is not of type \'number\' (parent: a).')
+        expect(err.details).to.be.exists()
         hemera.close()
         done()
       })
@@ -112,11 +110,9 @@ describe('Hemera-parambulator', function () {
         a: '1'
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Extension error')
-        expect(err.cause.name).to.be.equals('PreValidationError')
-        expect(err.cause.message).to.be.equals('The value "1" is not of type \'number\' (parent: a).')
-        expect(err.cause.details).to.be.exists()
+        expect(err.name).to.be.equals('PreValidationError')
+        expect(err.message).to.be.equals('The value "1" is not of type \'number\' (parent: a).')
+        expect(err.details).to.be.exists()
         hemera.close()
         done()
       })

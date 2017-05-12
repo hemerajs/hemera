@@ -433,6 +433,66 @@ describe('Generator / Promise support', function () {
     })
   })
 
+  it('Should throw when rejection is unhandled', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      generators: true
+    })
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function * (resp) {
+        return yield Promise.reject(new Error('test'))
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      })
+
+      setTimeout(() => {
+        hemera.close()
+        done()
+      }, 50)
+    })
+  })
+
+  it('Should be able to return result without to handle it', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      generators: true
+    })
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function * (resp) {
+        return yield Promise.resolve({
+          result: true
+        })
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      })
+
+      setTimeout(() => {
+        hemera.close()
+        done()
+      }, 50)
+    })
+  })
+
   it('Should be able to catch an uncaught error in act', function (done) {
     const nats = require('nats').connect(authUrl)
 
