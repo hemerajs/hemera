@@ -134,21 +134,17 @@ describe('Error propagation', function () {
 
         expect(err.rootCause.name).to.be.equals('Error')
         expect(err.rootCause.message).to.be.equals('B Error')
-        expect(err.rootCause.hops[0]).to.part.include(
-          {
-            pattern: { topic: 'b', cmd: 'b' },
-            app: 'hemera-starptech'
-          })
-        expect(err.rootCause.hops[1]).to.part.include(
-          {
-            pattern: { topic: 'c', cmd: 'c' },
-            app: 'hemera-starptech'
-          })
-        expect(err.rootCause.hops[2]).to.part.include(
-          {
-            pattern: { topic: 'a', cmd: 'a' },
-            app: 'hemera-starptech'
-          })
+        expect(err.rootCause.hops[0].pattern).to.be.equals({ topic: 'b', cmd: 'b' })
+        expect(err.rootCause.hops[0].app).to.be.exists()
+        expect(err.rootCause.hops[0].ts).to.be.exists()
+
+        expect(err.rootCause.hops[1].pattern).to.be.equals({ topic: 'c', cmd: 'c' })
+        expect(err.rootCause.hops[1].app).to.be.exists()
+        expect(err.rootCause.hops[1].ts).to.be.exists()
+
+        expect(err.rootCause.hops[2].pattern).to.be.equals({ topic: 'a', cmd: 'a' })
+        expect(err.rootCause.hops[2].app).to.be.exists()
+        expect(err.rootCause.hops[2].ts).to.be.exists()
 
         hemera.close()
         done()
@@ -209,21 +205,17 @@ describe('Error propagation', function () {
         expect(err.message).to.be.equals('test')
         expect(err.test).to.be.equals(444)
 
-        expect(err.hops[0]).to.part.include(
-          {
-            pattern: { topic: 'b', cmd: 'b' },
-            app: 'hemera-starptech'
-          })
-        expect(err.hops[1]).to.part.include(
-          {
-            pattern: { topic: 'c', cmd: 'c' },
-            app: 'hemera-starptech'
-          })
-        expect(err.hops[2]).to.part.include(
-          {
-            pattern: { topic: 'a', cmd: 'a' },
-            app: 'hemera-starptech'
-          })
+        expect(err.hops[0].pattern).to.be.equals({ topic: 'b', cmd: 'b' })
+        expect(err.hops[0].app).to.be.exists()
+        expect(err.hops[0].ts).to.be.exists()
+
+        expect(err.hops[1].pattern).to.be.equals({ topic: 'c', cmd: 'c' })
+        expect(err.hops[1].app).to.be.exists()
+        expect(err.hops[1].ts).to.be.exists()
+
+        expect(err.hops[2].pattern).to.be.equals({ topic: 'a', cmd: 'a' })
+        expect(err.hops[2].app).to.be.exists()
+        expect(err.hops[2].ts).to.be.exists()
 
         hemera.close()
         done()
