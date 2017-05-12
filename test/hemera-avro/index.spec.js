@@ -1,3 +1,5 @@
+'use strict'
+
 const HemeraAvro = require('../../packages/hemera-avro')
 
 describe('Hemera-avro', function () {

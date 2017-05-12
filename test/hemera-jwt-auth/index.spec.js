@@ -1,3 +1,5 @@
+'use strict'
+
 const HemeraJwt = require('../../packages/hemera-jwt-auth')
 HemeraJwt.options.jwt.secret = 'test'
 

@@ -1,3 +1,5 @@
+'use strict'
+
 const HemeraParambulator = require('../../packages/hemera-parambulator')
 
 describe('Hemera-parambulator', function () {

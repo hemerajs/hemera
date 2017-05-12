@@ -1,3 +1,5 @@
+'use strict'
+
 const HemeraMsgpack = require('../../packages/hemera-msgpack')
 
 describe('Hemera-msgpack', function () {

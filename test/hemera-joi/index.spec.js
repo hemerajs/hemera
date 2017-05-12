@@ -1,3 +1,5 @@
+'use strict'
+
 const HemeraJoi = require('../../packages/hemera-joi')
 
 describe('Hemera-joi', function () {

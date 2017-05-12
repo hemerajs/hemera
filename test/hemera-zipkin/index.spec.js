@@ -1,3 +1,5 @@
+'use strict'
+
 const HemeraZipkin = require('../../packages/hemera-zipkin')
 const Code = require('code')
 

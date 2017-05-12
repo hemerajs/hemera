@@ -1,3 +1,5 @@
+'use strict'
+
 const HemeraStats = require('../../packages/hemera-stats')
 const HemeraJoi = require('../../packages/hemera-joi')
 
