@@ -663,7 +663,6 @@ class Hemera extends EventEmitter {
         }
 
         if (err instanceof SuperError) {
-          // pass only root issue when available
           self._response.error = err.rootCause || err.cause || err
         } else {
           self._response.error = new Errors.BusinessError(Constants.BUSINESS_ERROR, self.errorDetails).causedBy(err)
@@ -974,7 +973,7 @@ class Hemera extends EventEmitter {
       self._response.error = res.error
 
       try {
-        // if payload is invalid
+        // decoding error
         if (self._response.error) {
           let error = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR, self.errorDetails).causedBy(self._response.error)
           self.emit('clientResponseError', error)
@@ -986,7 +985,12 @@ class Hemera extends EventEmitter {
 
         self._extensions.onClientPostRequest.invoke(self, onClientPostRequestHandler)
       } catch (err) {
-        let error = new Errors.FatalError(Constants.FATAL_ERROR, self.errorDetails).causedBy(err)
+        let error = null
+        if (err instanceof SuperError) {
+          error = err.rootCause || err.cause || err
+        } else {
+          error = new Errors.FatalError(Constants.FATAL_ERROR, self.errorDetails).causedBy(err)
+        }
         self.emit('clientResponseError', error)
         self.log.fatal(error)
 
@@ -1008,7 +1012,7 @@ class Hemera extends EventEmitter {
 
       let m = self._encoder.encode.call(self, self._message)
 
-      // throw encoding issue
+      // encoding issue
       if (m.error) {
         let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(m.error)
         self.emit('clientResponseError', error)
@@ -1142,7 +1146,12 @@ class Hemera extends EventEmitter {
       try {
         self._execute(self._response.error)
       } catch (err) {
-        let error = new Errors.FatalError(Constants.FATAL_ERROR, self.errorDetails).causedBy(err)
+        let error = null
+        if (err instanceof SuperError) {
+          error = err.rootCause || err.cause || err
+        } else {
+          error = new Errors.FatalError(Constants.FATAL_ERROR, self.errorDetails).causedBy(err)
+        }
         self.emit('clientResponseError', error)
         self.log.fatal(error)
 
