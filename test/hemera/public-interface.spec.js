@@ -1,4 +1,4 @@
-describe('public interface', function () {
+describe('Public interface', function () {
   var PORT = 6242
   var flags = ['--user', 'derek', '--pass', 'foobar']
   var authUrl = 'nats://derek:foobar@localhost:' + PORT
