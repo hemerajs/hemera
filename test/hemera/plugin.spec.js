@@ -310,6 +310,31 @@ describe('Plugin interface', function () {
     }
   })
 
+  it('Should thrown super plugin error during initialization', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let plugin = function (options, next) { next(new UnauthorizedError('Shit!')) }
+
+    try {
+      hemera.use({
+        plugin: plugin,
+        attributes: {
+          name: 'myPlugin'
+        }
+      })
+      hemera.close()
+      done()
+    } catch (err) {
+      expect(err).to.exists()
+      expect(err.name).to.be.equals('Unauthorized')
+      expect(err.message).to.be.equals('Shit!')
+      hemera.close()
+      done()
+    }
+  })
+
   it('Plugin name is required', function (done) {
     const nats = require('nats').connect(authUrl)
 

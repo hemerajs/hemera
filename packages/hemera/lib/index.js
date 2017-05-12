@@ -517,7 +517,12 @@ class Hemera extends EventEmitter {
 
       Util.serial(this._pluginRegistrations, each, (err) => {
         if (err) {
-          let error = new Errors.HemeraError(Constants.PLUGIN_REGISTRATION_ERROR).causedBy(err)
+          let error = null
+          if (err instanceof SuperError) {
+            error = err.rootCause || err.cause || err
+          } else {
+            error = new Errors.HemeraError(Constants.PLUGIN_REGISTRATION_ERROR).causedBy(err)
+          }
           this.log.error(error)
           throw (error)
         }
