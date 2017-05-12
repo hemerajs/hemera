@@ -1,13 +1,4 @@
-'use strict'
-
-const Hemera = require('../../packages/hemera')
 const HemeraAvro = require('../../packages/hemera-avro')
-const Code = require('code')
-const HemeraTestsuite = require('hemera-testsuite')
-
-const expect = Code.expect
-
-process.setMaxListeners(0)
 
 describe('Hemera-avro', function () {
   const PORT = 6243

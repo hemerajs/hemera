@@ -1,12 +1,5 @@
-'use strict'
-
-const Hemera = require('../../packages/hemera')
 const HemeraJwt = require('../../packages/hemera-jwt-auth')
 HemeraJwt.options.jwt.secret = 'test'
-const Code = require('code')
-const HemeraTestsuite = require('hemera-testsuite')
-
-const expect = Code.expect
 
 process.setMaxListeners(0)
 

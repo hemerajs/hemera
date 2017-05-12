@@ -1,12 +1,5 @@
-'use strict'
-
-const Hemera = require('../../packages/hemera')
 const HemeraStats = require('../../packages/hemera-stats')
 const HemeraJoi = require('../../packages/hemera-joi')
-const Code = require('code')
-const HemeraTestsuite = require('hemera-testsuite')
-
-const expect = Code.expect
 
 process.setMaxListeners(0)
 
