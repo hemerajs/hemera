@@ -14,6 +14,7 @@
  */
 
 const EventEmitter = require('events')
+const Os = require('os')
 const Bloomrun = require('bloomrun')
 const Errio = require('errio')
 const Hoek = require('hoek')
@@ -44,7 +45,7 @@ var defaultConfig = {
   timeout: 2000,
   debug: false,
   generators: false,
-  name: 'hemera-' + Util.randomId(),
+  name: 'hemera-' + Os.hostname(),
   crashOnFatal: true,
   logLevel: 'silent',
   bloomrun: {
@@ -448,6 +449,27 @@ class Hemera extends EventEmitter {
   }
 
   /**
+   *
+   *
+   * @readonly
+   *
+   * @memberof Hemera
+   */
+  get errorDetails () {
+    if (this._isServer) {
+      return {
+        app: this._config.name,
+        pattern: this._actMeta ? this._actMeta.pattern : false // PatternNotFound
+      }
+    } else {
+      return {
+        app: this._config.name,
+        pattern: this._pattern
+      }
+    }
+  }
+
+  /**
    * Return all hemera errors
    *
    * @readonly
@@ -554,9 +576,9 @@ class Hemera extends EventEmitter {
       } else if (err) { // check for an extension error
         if (err instanceof SuperError) {
           // try to get rootCause then cause and last the thrown error
-          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err.rootCause || err.cause || err)
+          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err.rootCause || err.cause || err)
         } else {
-          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err)
         }
 
         self.emit('serverResponseError', self._response.error)
@@ -628,15 +650,9 @@ class Hemera extends EventEmitter {
       if (err) {
         if (err instanceof SuperError) {
           // try to get rootCause then cause and last the thrown error
-          self._response.error = new Errors.BusinessError(Constants.BUSINESS_ERROR, {
-            pattern: self._pattern,
-            app: self._config.name
-          }).causedBy(err.rootCause || err.cause || err)
+          self._response.error = new Errors.BusinessError(Constants.BUSINESS_ERROR, self.errorDetails).causedBy(err.rootCause || err.cause || err)
         } else {
-          self._response.error = new Errors.BusinessError(Constants.BUSINESS_ERROR, {
-            pattern: self._pattern,
-            app: self._config.name
-          }).causedBy(err)
+          self._response.error = new Errors.BusinessError(Constants.BUSINESS_ERROR, self.errorDetails).causedBy(err)
         }
 
         return self.finish()
@@ -663,9 +679,9 @@ class Hemera extends EventEmitter {
       if (err) {
         if (err instanceof SuperError) {
           // try to get rootCause then cause and last the thrown error
-          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err.rootCause || err.cause || err)
+          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err.rootCause || err.cause || err)
         } else {
-          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err)
         }
 
         self.log.error(self._response.error)
@@ -687,9 +703,9 @@ class Hemera extends EventEmitter {
           if (err) {
             if (err instanceof SuperError) {
               // try to get rootCause then cause and last the thrown error
-              self._response.error = new Errors.HemeraError(Constants.ADD_MIDDLEWARE_ERROR).causedBy(err.rootCause || err.cause || err)
+              self._response.error = new Errors.HemeraError(Constants.ADD_MIDDLEWARE_ERROR, self.errorDetails).causedBy(err.rootCause || err.cause || err)
             } else {
-              self._response.error = new Errors.HemeraError(Constants.ADD_MIDDLEWARE_ERROR).causedBy(err)
+              self._response.error = new Errors.HemeraError(Constants.ADD_MIDDLEWARE_ERROR, self.errorDetails).causedBy(err)
             }
             self.log.error(self._response.error)
             return self.finish()
@@ -711,13 +727,9 @@ class Hemera extends EventEmitter {
       } catch (err) {
         // try to get rootCause then cause and last the thrown error
         if (err instanceof SuperError) {
-          self._response.error = new Errors.ImplementationError(Constants.IMPLEMENTATION_ERROR, {
-            pattern: self._pattern
-          }).causedBy(err.rootCause || err.cause || err)
+          self._response.error = new Errors.ImplementationError(Constants.IMPLEMENTATION_ERROR, self.errorDetails).causedBy(err.rootCause || err.cause || err)
         } else {
-          self._response.error = new Errors.ImplementationError(Constants.IMPLEMENTATION_ERROR, {
-            pattern: self._pattern
-          }).causedBy(err)
+          self._response.error = new Errors.ImplementationError(Constants.IMPLEMENTATION_ERROR, self.errorDetails).causedBy(err)
         }
 
         // service should exit
@@ -737,12 +749,14 @@ class Hemera extends EventEmitter {
     function onServerPreRequestHandler (err, value) {
       let self = this
 
+      self._pattern = self._request.payload.pattern
+
       if (err) {
         if (err instanceof SuperError) {
           // try to get rootCause then cause and last the thrown error
-          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err.rootCause || err.cause || err)
+          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err.rootCause || err.cause || err)
         } else {
-          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err)
         }
 
         return self.finish()
@@ -755,7 +769,6 @@ class Hemera extends EventEmitter {
       }
 
       // find matched route
-      self._pattern = self._request.payload.pattern
       self._actMeta = self._router.lookup(self._pattern)
 
       // check if a handler is registered with this pattern
@@ -766,9 +779,7 @@ class Hemera extends EventEmitter {
           topic: self._topic
         }, Constants.PATTERN_NOT_FOUND)
 
-        self._response.error = new Errors.PatternNotFound(Constants.PATTERN_NOT_FOUND, {
-          pattern: self._pattern
-        })
+        self._response.error = new Errors.PatternNotFound(Constants.PATTERN_NOT_FOUND, self.errorDetails)
 
         // send error back to callee
         self.finish()
@@ -843,7 +854,8 @@ class Hemera extends EventEmitter {
     // topic is needed to subscribe on a subject in NATS
     if (!pattern.topic) {
       let error = new Errors.HemeraError(Constants.NO_TOPIC_TO_SUBSCRIBE, {
-        pattern
+        pattern,
+        app: this._config.name
       })
 
       this.log.error(error)
@@ -872,7 +884,8 @@ class Hemera extends EventEmitter {
     // check if pattern is already registered
     if (this._config.bloomrun.lookupBeforeAdd && handler) {
       let error = new Errors.HemeraError(Constants.PATTERN_ALREADY_IN_USE, {
-        pattern
+        pattern,
+        app: this._config.name
       })
 
       this.log.error(error)
@@ -902,16 +915,6 @@ class Hemera extends EventEmitter {
     // check for use quick syntax for JSON objects
     if (_.isString(pattern)) {
       pattern = TinySonic(pattern)
-    }
-
-    // topic is needed to subscribe on a subject in NATS
-    if (!pattern.topic) {
-      let error = new Errors.HemeraError(Constants.NO_TOPIC_TO_REQUEST, {
-        pattern
-      })
-
-      this.log.error(error)
-      throw (error)
     }
 
     /**
@@ -1036,10 +1039,10 @@ class Hemera extends EventEmitter {
           optOptions.max = 1
         }
         // send request
-        let sid = self._transport.sendRequest(pattern.topic, self._request.payload, optOptions, sendRequestHandler.bind(self))
+        self._sid = self._transport.sendRequest(pattern.topic, self._request.payload, optOptions, sendRequestHandler.bind(self))
 
         // handle timeout
-        self.handleTimeout(sid, pattern)
+        self.handleTimeout()
       }
     }
 
@@ -1051,6 +1054,14 @@ class Hemera extends EventEmitter {
     ctx._response = new ClientResponse()
     ctx._request = new ClientRequest()
     ctx._isServer = false
+
+    // topic is needed to subscribe on a subject in NATS
+    if (!pattern.topic) {
+      let error = new Errors.HemeraError(Constants.NO_TOPIC_TO_REQUEST, ctx.errorDetails)
+
+      this.log.error(error)
+      throw (error)
+    }
 
     if (cb) {
       if (this._config.generators) {
@@ -1098,8 +1109,9 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  handleTimeout (sid, pattern) {
-    const timeout = pattern.timeout$ || this._config.timeout
+  handleTimeout () {
+    const self = this
+    const timeout = self._pattern.timeout$ || this._config.timeout
 
     function onClientPostRequestHandler (err) {
       const self = this
@@ -1113,9 +1125,7 @@ class Hemera extends EventEmitter {
       try {
         self._execute(self._response.error)
       } catch (err) {
-        let error = new Errors.FatalError(Constants.FATAL_ERROR, {
-          pattern
-        }).causedBy(err)
+        let error = new Errors.FatalError(Constants.FATAL_ERROR, self.errorDetails).causedBy(err)
         self.emit('clientResponseError', error)
         self.log.fatal(error)
 
@@ -1127,16 +1137,14 @@ class Hemera extends EventEmitter {
     }
 
     let timeoutHandler = () => {
-      let error = new Errors.TimeoutError(Constants.ACT_TIMEOUT_ERROR, {
-        pattern
-      })
-      this.emit('clientResponseError', error)
-      this.log.error(error)
-      this._response.error = error
-      this._extensions.onClientPostRequest.invoke(this, onClientPostRequestHandler)
+      const error = new Errors.TimeoutError(Constants.ACT_TIMEOUT_ERROR, self.errorDetails)
+      self.emit('clientResponseError', error)
+      self.log.error(error)
+      self._response.error = error
+      self._extensions.onClientPostRequest.invoke(self, onClientPostRequestHandler)
     }
 
-    this._transport.timeout(sid, timeout, 1, timeoutHandler)
+    self._transport.timeout(self._sid, timeout, 1, timeoutHandler)
   }
 
   /**

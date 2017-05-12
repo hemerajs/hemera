@@ -11,9 +11,17 @@ module.exports = {
   "parserOptions": {
     "sourceType": "module"
   },
+  "globals": {
+    "Hemera": true,
+    "expect": true,
+    "HemeraTestsuite": true,
+    "Sinon": true,
+    "Code": true,
+    "UnauthorizedError": true
+  },
   // see http://eslint.org/docs/rules/
   "rules": {
-    "indent": [ "error", 2 ],
-    "quotes": [ "error", "single" ]
+    "indent": ["error", 2],
+    "quotes": ["error", "single"]
   }
 };
