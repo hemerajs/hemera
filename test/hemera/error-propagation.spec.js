@@ -86,7 +86,7 @@ describe('Error propagation', function () {
   it('Error propagation', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats)
+    const hemera = new Hemera(nats, { logLevel: 'silent' })
 
     hemera.ready(() => {
       hemera.add({
@@ -134,15 +134,18 @@ describe('Error propagation', function () {
 
         expect(err.rootCause.name).to.be.equals('Error')
         expect(err.rootCause.message).to.be.equals('B Error')
-        expect(err.rootCause.hops[0].pattern).to.be.equals({ topic: 'b', cmd: 'b' })
+        expect(err.rootCause.hops[0].method).to.be.equals('cmd:b,topic:b')
+        expect(err.rootCause.hops[0].service).to.be.equals('b')
         expect(err.rootCause.hops[0].app).to.be.exists()
         expect(err.rootCause.hops[0].ts).to.be.exists()
 
-        expect(err.rootCause.hops[1].pattern).to.be.equals({ topic: 'c', cmd: 'c' })
+        expect(err.rootCause.hops[1].method).to.be.equals('cmd:c,topic:c')
+        expect(err.rootCause.hops[1].service).to.be.equals('c')
         expect(err.rootCause.hops[1].app).to.be.exists()
         expect(err.rootCause.hops[1].ts).to.be.exists()
 
-        expect(err.rootCause.hops[2].pattern).to.be.equals({ topic: 'a', cmd: 'a' })
+        expect(err.rootCause.hops[2].method).to.be.equals('cmd:a,topic:a')
+        expect(err.rootCause.hops[2].service).to.be.equals('a')
         expect(err.rootCause.hops[2].app).to.be.exists()
         expect(err.rootCause.hops[2].ts).to.be.exists()
 
@@ -205,15 +208,18 @@ describe('Error propagation', function () {
         expect(err.message).to.be.equals('test')
         expect(err.test).to.be.equals(444)
 
-        expect(err.hops[0].pattern).to.be.equals({ topic: 'b', cmd: 'b' })
+        expect(err.hops[0].method).to.be.equals('cmd:b,topic:b')
+        expect(err.hops[0].service).to.be.equals('b')
         expect(err.hops[0].app).to.be.exists()
         expect(err.hops[0].ts).to.be.exists()
 
-        expect(err.hops[1].pattern).to.be.equals({ topic: 'c', cmd: 'c' })
+        expect(err.hops[1].method).to.be.equals('cmd:c,topic:c')
+        expect(err.hops[1].service).to.be.equals('c')
         expect(err.hops[1].app).to.be.exists()
         expect(err.hops[1].ts).to.be.exists()
 
-        expect(err.hops[2].pattern).to.be.equals({ topic: 'a', cmd: 'a' })
+        expect(err.hops[2].method).to.be.equals('cmd:a,topic:a')
+        expect(err.hops[2].service).to.be.equals('a')
         expect(err.hops[2].app).to.be.exists()
         expect(err.hops[2].ts).to.be.exists()
 

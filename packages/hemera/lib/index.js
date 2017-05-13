@@ -48,6 +48,7 @@ var defaultConfig = {
   name: 'hemera-' + Os.hostname(),
   crashOnFatal: true,
   logLevel: 'silent',
+  maxRecursion: 0,
   bloomrun: {
     indexing: 'inserting',
     lookupBeforeAdd: true
@@ -655,7 +656,8 @@ class Hemera extends EventEmitter {
 
       if (err) {
         const errorDetails = {
-          pattern: self._actMeta.pattern,
+          service: self.trace$.service,
+          method: self.trace$.method,
           app: self._config.name,
           ts: Util.nowHrTime()
         }
