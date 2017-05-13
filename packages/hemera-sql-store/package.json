@@ -19,7 +19,7 @@
     "pg-hstore": "2.3.x"
   },
   "peerDependencies": {
-    "nats-hemera": "1.x",
+    "nats-hemera": "1.x || 2.x",
     "hemera-joi": "1.x"
   },
   "devDependencies": {

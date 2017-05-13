@@ -15,7 +15,7 @@
     "hemera-store": "^1.1.6"
   },
   "peerDependencies": {
-    "nats-hemera": "1.x",
+    "nats-hemera": "1.x || 2.x",
     "hemera-joi": "1.x"
   },
   "devDependencies": {

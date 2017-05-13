@@ -12,7 +12,7 @@
     "msgpack-lite": "0.1.x"
   },
   "peerDependencies": {
-    "nats-hemera": "1.x"
+    "nats-hemera": "1.x || 2.x"
   },
   "devDependencies": {
     "eslint": "^3.13.1",

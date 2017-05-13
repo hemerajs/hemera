@@ -20,7 +20,7 @@
     "mocha-lcov-reporter": "1.3.x"
   },
   "peerDependencies": {
-    "nats-hemera": "1.x"
+    "nats-hemera": "1.x || 2.x"
   },
   "dependencies": {
     "hoek": "4.1.x",
