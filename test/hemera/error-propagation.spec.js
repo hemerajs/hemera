@@ -35,14 +35,8 @@ describe('Error propagation', function () {
       }, (err, resp) => {
         expect(err).to.be.exists()
 
-        expect(err.rootCause.name).to.be.equals('Error')
-        expect(err.rootCause.message).to.be.equals('B Error')
-
-        expect(err.name).to.be.equals('BusinessError')
-        expect(err.message).to.be.equals('Business error')
-
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('B Error')
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('B Error')
 
         hemera.close()
         done()
@@ -102,7 +96,7 @@ describe('Error propagation', function () {
             topic: 'c',
             cmd: 'c'
           }, function (err, resp) {
-            cb(err.rootCause, resp)
+            cb(err, resp)
           })
         })
       })
@@ -120,7 +114,7 @@ describe('Error propagation', function () {
           topic: 'b',
           cmd: 'b'
         }, function (err, resp) {
-          cb(err.rootCause, resp)
+          cb(err, resp)
         })
       })
 
@@ -130,24 +124,23 @@ describe('Error propagation', function () {
       }, (err, resp) => {
         expect(err).to.be.exists()
 
-        expect(err.cause).to.be.exists()
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('B Error')
 
-        expect(err.rootCause.name).to.be.equals('Error')
-        expect(err.rootCause.message).to.be.equals('B Error')
-        expect(err.rootCause.hops[0].method).to.be.equals('cmd:b,topic:b')
-        expect(err.rootCause.hops[0].service).to.be.equals('b')
-        expect(err.rootCause.hops[0].app).to.be.exists()
-        expect(err.rootCause.hops[0].ts).to.be.exists()
+        expect(err.hops[0].method).to.be.equals('cmd:b,topic:b')
+        expect(err.hops[0].service).to.be.equals('b')
+        expect(err.hops[0].app).to.be.exists()
+        expect(err.hops[0].ts).to.be.exists()
 
-        expect(err.rootCause.hops[1].method).to.be.equals('cmd:c,topic:c')
-        expect(err.rootCause.hops[1].service).to.be.equals('c')
-        expect(err.rootCause.hops[1].app).to.be.exists()
-        expect(err.rootCause.hops[1].ts).to.be.exists()
+        expect(err.hops[1].method).to.be.equals('cmd:c,topic:c')
+        expect(err.hops[1].service).to.be.equals('c')
+        expect(err.hops[1].app).to.be.exists()
+        expect(err.hops[1].ts).to.be.exists()
 
-        expect(err.rootCause.hops[2].method).to.be.equals('cmd:a,topic:a')
-        expect(err.rootCause.hops[2].service).to.be.equals('a')
-        expect(err.rootCause.hops[2].app).to.be.exists()
-        expect(err.rootCause.hops[2].ts).to.be.exists()
+        expect(err.hops[2].method).to.be.equals('cmd:a,topic:a')
+        expect(err.hops[2].service).to.be.equals('a')
+        expect(err.hops[2].app).to.be.exists()
+        expect(err.hops[2].ts).to.be.exists()
 
         hemera.close()
         done()

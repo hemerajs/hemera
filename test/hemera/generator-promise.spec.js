@@ -355,8 +355,8 @@ describe('Generator / Promise support', function () {
         b: 2
       }, function (err, resp) {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('BusinessError')
-        expect(err.cause.name).to.be.equals('Error')
+        expect(err.name).to.be.equals('Error')
+        expect(err.name).to.be.equals('Error')
         hemera.close()
         done()
       })
@@ -638,9 +638,8 @@ describe('Generator / Promise support in extension', function () {
         msg: 'Hi!'
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('test')
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
         hemera.close()
         done()
       })
@@ -673,9 +672,8 @@ describe('Generator / Promise support in extension', function () {
         msg: 'Hi!'
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('test')
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
         hemera.close()
         done()
       })

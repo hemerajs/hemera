@@ -57,6 +57,7 @@ describe('Hemera default config', function () {
 
     expect(hemera.config).to.be.equals(defaultConfig)
 
+    hemera.close()
     done()
   })
 })

@@ -80,11 +80,8 @@ describe('Error handling', function () {
         msg: 'Hi!'
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('BusinessError')
-        expect(err.message).to.be.equals('Business error')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('Uups')
-        expect(err.ownStack).to.be.exists()
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('Uups')
         hemera.close()
         done()
       })
@@ -114,12 +111,9 @@ describe('Error handling', function () {
         msg: 'Hi!'
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('BusinessError')
-        expect(err.message).to.be.equals('Business error')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('Uups')
-        expect(err.cause.code).to.be.equals(444)
-        expect(err.ownStack).to.be.exists()
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('Uups')
+        expect(err.code).to.be.equals(444)
         hemera.close()
         done()
       })
@@ -149,13 +143,10 @@ describe('Error handling', function () {
         msg: 'Hi!'
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('BusinessError')
-        expect(err.message).to.be.equals('Business error')
-        expect(err.cause.test).to.be.equals('hallo')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('Uups')
-        expect(err.cause.code).to.be.equals(444)
-        expect(err.ownStack).to.be.exists()
+        expect(err.test).to.be.equals('hallo')
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('Uups')
+        expect(err.code).to.be.equals(444)
         hemera.close()
         done()
       })
@@ -262,11 +253,8 @@ describe('Error handling', function () {
         msg: 'Hi!'
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('ImplementationError')
-        expect(err.message).to.be.equals('Bad implementation')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('Shit!')
-        expect(err.ownStack).to.be.exists()
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('Shit!')
         hemera.close()
         done()
       })
@@ -365,11 +353,8 @@ describe('Error handling', function () {
         msg: 'Hi!'
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('ImplementationError')
-        expect(err.message).to.be.equals('Bad implementation')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('Shit!')
-        expect(err.ownStack).to.be.exists()
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('Shit!')
         hemera.close()
         done()
       })

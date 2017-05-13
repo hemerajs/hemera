@@ -113,10 +113,8 @@ describe('Extension error', function () {
         b: 2
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Extension error')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('test')
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
         hemera.close()
         done()
       })
@@ -203,10 +201,8 @@ describe('Extension error', function () {
         b: 2
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Extension error')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('test')
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
         hemera.close()
         done()
       })
@@ -293,10 +289,8 @@ describe('Extension error', function () {
         b: 2
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Extension error')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('test')
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
         hemera.close()
         done()
       })
@@ -383,10 +377,8 @@ describe('Extension error', function () {
         b: 2
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Extension error')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('test')
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
         hemera.close()
         done()
       })
