@@ -19,6 +19,9 @@
     "hoek": "4.1.x",
     "jsonwebtoken": "7.3.x"
   },
+  "peerDependencies": {
+    "nats-hemera": "1.x"
+  },
   "devDependencies": {
     "eslint-config-standard": "^6.2.1",
     "eslint-plugin-promise": "^3.4.2",

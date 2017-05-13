@@ -19,6 +19,10 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {},
+  "peerDependencies": {
+    "nats-hemera": "1.x",
+    "hemera-joi": "1.x"
+  },
   "devDependencies": {
     "code": "4.0.x",
     "coveralls": "2.11.x",

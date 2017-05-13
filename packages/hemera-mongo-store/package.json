@@ -21,6 +21,9 @@
     "hemera-store": "^1.1.6",
     "mongodb": "2.2.x"
   },
+  "peerDependencies": {
+    "nats-hemera": "1.x"
+  },
   "devDependencies": {
     "code": "^4.0.0",
     "eslint": "^3.13.1",

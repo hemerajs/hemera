@@ -8,7 +8,7 @@ exports.plugin = function hemeraRedisCache (options) {
   const topic = 'redis-cache'
 
   const Joi = hemera.exposition['hemera-joi'].joi
-  
+
   hemera.expose('client', client)
 
   client.on('ready', function () {
@@ -107,6 +107,5 @@ exports.options = {
 }
 
 exports.attributes = {
-  dependencies: ['hemera-joi'],
   pkg: require('./package.json')
 }

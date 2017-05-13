@@ -18,6 +18,10 @@
     "pg": "6.1.x",
     "pg-hstore": "2.3.x"
   },
+  "peerDependencies": {
+    "nats-hemera": "1.x",
+    "hemera-joi": "1.x"
+  },
   "devDependencies": {
     "code": "4.0.x",
     "eslint": "^3.13.1",

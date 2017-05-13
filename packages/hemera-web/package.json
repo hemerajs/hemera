@@ -19,6 +19,9 @@
     "mocha": "3.3.x",
     "mocha-lcov-reporter": "1.3.x"
   },
+  "peerDependencies": {
+    "nats-hemera": "1.x"
+  },
   "dependencies": {
     "hoek": "4.1.x",
     "lodash": "4.17.x",

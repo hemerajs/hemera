@@ -22,6 +22,9 @@
     "hoek": "4.1.x",
     "wreck": "10.0.x"
   },
+  "peerDependencies": {
+    "nats-hemera": "1.x"
+  },
   "devDependencies": {
     "code": "4.0.x",
     "coveralls": "2.11.x",

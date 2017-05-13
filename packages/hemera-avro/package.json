@@ -11,6 +11,9 @@
   "dependencies": {
     "avsc": "5.0.x"
   },
+  "peerDependencies": {
+    "nats-hemera": "1.x"
+  },
   "devDependencies": {
     "eslint": "^3.13.1",
     "eslint-config-standard": "^6.2.1",

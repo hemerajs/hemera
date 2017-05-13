@@ -108,6 +108,5 @@ exports.options = {
 }
 
 exports.attributes = {
-  dependencies: [],
   pkg: require('./package.json')
 }

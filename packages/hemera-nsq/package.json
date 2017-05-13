@@ -13,6 +13,10 @@
   "dependencies": {
     "nsqjs": "0.7.x"
   },
+  "peerDependencies": {
+    "nats-hemera": "1.x",
+    "hemera-joi": "1.x"
+  },
   "devDependencies": {
     "code": "4.0.x",
     "eslint": "^3.13.1",
