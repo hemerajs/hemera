@@ -240,6 +240,142 @@ describe('Timeouts', function () {
     })
   })
 
+  it('Should crash when an unexpected error thrown during timeout issue', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      timeout: 20
+    })
+
+    var stub = Sinon.stub(hemera, 'fatal')
+
+    stub.onCall(1)
+
+    stub.returns(true)
+
+    hemera.ready(() => {
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+        // Fatal Error will be throw after the server proceed the msg
+        setTimeout(() => {
+          expect(stub.called).to.be.equals(true)
+          stub.restore()
+          hemera.close()
+          done()
+        }, 500)
+
+        throw (new Error('Test'))
+      })
+    })
+  })
+
+  it('Should crash when an unexpected super error thrown during timeout issue', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      timeout: 20
+    })
+
+    var stub = Sinon.stub(hemera, 'fatal')
+
+    stub.onCall(1)
+
+    stub.returns(true)
+
+    hemera.ready(() => {
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+        // Fatal Error will be throw after the server proceed the msg
+        setTimeout(() => {
+          expect(stub.called).to.be.equals(true)
+          stub.restore()
+          hemera.close()
+          done()
+        }, 500)
+
+        throw (new UnauthorizedError('test'))
+      })
+    })
+  })
+
+  it('Should be able handle super error in extension onClientPostRequest', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      timeout: 150
+    })
+
+    hemera.ready(() => {
+      hemera.ext('onClientPostRequest', function (next) {
+        next(new UnauthorizedError('test'))
+      })
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('Unauthorized')
+        expect(err.message).to.be.equals('test')
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able handle error in extension onClientPostRequest', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      timeout: 150
+    })
+
+    hemera.ready(() => {
+      hemera.ext('onClientPostRequest', function (next) {
+        next(new Error('test'))
+      })
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
+        hemera.close()
+        done()
+      })
+    })
+  })
+
   it('Should throw timeout error when pattern is not defined on the network', function (done) {
     const nats = require('nats').connect(authUrl)
 

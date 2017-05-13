@@ -24,10 +24,8 @@ describe('Response error events', function () {
     hemera.ready(() => {
       hemera.on('serverResponseError', function (err) {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Extension error')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('test')
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
         hemera.close()
         done()
       })
@@ -60,10 +58,8 @@ describe('Response error events', function () {
     hemera.ready(() => {
       hemera.on('serverResponseError', function (err) {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('BusinessError')
-        expect(err.message).to.be.equals('Business error')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('test')
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
         hemera.close()
         done()
       })
@@ -94,10 +90,8 @@ describe('Response error events', function () {
     hemera.ready(() => {
       hemera.on('clientResponseError', function (err) {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('FatalError')
-        expect(err.message).to.be.equals('Fatal error')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('test')
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
         hemera.close()
         done()
       })
@@ -130,10 +124,8 @@ describe('Response error events', function () {
     hemera.ready(() => {
       hemera.on('clientResponseError', function (err) {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('FatalError')
-        expect(err.message).to.be.equals('Fatal error')
-        expect(err.cause.name).to.be.equals('Unauthorized')
-        expect(err.cause.message).to.be.equals('test')
+        expect(err.name).to.be.equals('Unauthorized')
+        expect(err.message).to.be.equals('test')
         hemera.close()
         done()
       })
@@ -164,10 +156,8 @@ describe('Response error events', function () {
     hemera.ready(() => {
       hemera.on('clientResponseError', function (err) {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Extension error')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('test')
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
         hemera.close()
         done()
       })

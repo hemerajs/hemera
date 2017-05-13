@@ -13,6 +13,10 @@
   "dependencies": {
     "rabbot": "1.0.x"
   },
+  "peerDependencies": {
+    "nats-hemera": "1.x || 2.x",
+    "hemera-joi": "1.x"
+  },
   "devDependencies": {
     "code": "4.0.x",
     "eslint": "^3.13.1",

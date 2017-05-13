@@ -11,6 +11,7 @@
 
 const Util = require('./util')
 const Constants = require('./constants')
+const Errors = require('./errors')
 
 module.exports.onClientPreRequest = [function onClientPreRequest (next) {
   let ctx = this
@@ -37,6 +38,23 @@ module.exports.onClientPreRequest = [function onClientPreRequest (next) {
   ctx.trace$.timestamp = currentTime
   ctx.trace$.service = pattern.topic
   ctx.trace$.method = Util.pattern(pattern)
+
+  // detect recursion
+  if (this._config.maxRecursion > 1) {
+    const callSignature = `${ctx.trace$.traceId}:${ctx.trace$.method}`
+    if (ctx.meta$ && ctx.meta$.referrers) {
+      let count = ctx.meta$.referrers[callSignature]
+      count += 1
+      ctx.meta$.referrers[callSignature] = count
+      if (count > this._config.maxRecursion) {
+        ctx.meta$.referrers[callSignature] = 0
+        return next(new Errors.MaxRecursionError({ count: --count }))
+      }
+    } else {
+      ctx.meta$.referrers = {}
+      ctx.meta$.referrers[callSignature] = 1
+    }
+  }
 
   // request
   let request = {
@@ -114,6 +132,17 @@ module.exports.onServerPreRequest = [function onServerPreRequest (req, res, next
   ctx._request.error = m.error
 
   ctx.emit('serverPreRequest')
+
+  next()
+}, function onServerPreRequestLoadTest (req, res, next) {
+  let ctx = this
+
+  if (ctx._config.load.checkPolicy) {
+    const error = this._loadPolicy.check()
+    if (error) {
+      return next(new Errors.ProcessLoadError(error.message, error.details, ctx._heavy.load))
+    }
+  }
 
   next()
 }]

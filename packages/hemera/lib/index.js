@@ -42,18 +42,34 @@ const Serializers = require('./serializer')
 const Add = require('./add')
 
 var defaultConfig = {
-  timeout: 2000,
-  debug: false,
-  generators: false,
-  name: 'hemera-' + Os.hostname(),
-  crashOnFatal: true,
+  timeout: 2000, // max execution time of a request
+  generators: false, // promise and generators support
+  name: 'hemera-' + Os.hostname(), // node name
+  crashOnFatal: true, // Should gracefully exit the process at unhandled exceptions
   logLevel: 'silent',
+  maxRecursion: 0, // Max recursive method calls
+  errio: {
+    recursive: true, // Recursively serialize and deserialize nested errors
+    inherited: true, // Include inherited properties
+    stack: true,    // Include stack property
+    private: false,  // Include properties with leading or trailing underscores
+    exclude: [],     // Property names to exclude (low priority)
+    include: []      // Property names to include (high priority)
+  },
   bloomrun: {
-    indexing: 'inserting',
-    lookupBeforeAdd: true
+    indexing: 'inserting', // Pattern indexing method "inserting" or "depth"
+    lookupBeforeAdd: true // Should throw an error when pattern matched with existign set
   },
   load: {
-    sampleInterval: 0
+    checkPolicy: true,
+    process: {
+      sampleInterval: 0  // Frequency of load sampling in milliseconds (zero is no sampling)
+    },
+    policy: {
+      maxHeapUsedBytes: 0,  // Reject requests when V8 heap is over size in bytes (zero is no max)
+      maxRssBytes: 0,       // Reject requests when process RSS is over size in bytes (zero is no max)
+      maxEventLoopDelay: 0  // Milliseconds of delay after which requests are rejected (zero is no max)
+    }
   }
 }
 
@@ -75,7 +91,7 @@ class Hemera extends EventEmitter {
 
     this._config = Hoek.applyToDefaults(defaultConfig, params || {})
     this._router = Bloomrun(this._config.bloomrun)
-    this._heavy = new Heavy(this._config.load)
+    this._heavy = new Heavy(this._config.load.process)
     this._transport = new NatsTransport({
       transport
     })
@@ -139,6 +155,12 @@ class Hemera extends EventEmitter {
       onServerPreRequest: new Extension('onServerPreRequest', { server: true, generators: this._config.generators }),
       onServerPreResponse: new Extension('onServerPreResponse', { server: true, generators: this._config.generators })
     }
+
+    // errio settings
+    Errio.setDefaults(this._config.errio)
+
+    // create load policy
+    this._loadPolicy = this._heavy.policy(this._config.load.policy)
 
     // start tracking process stats
     this._heavy.start()
@@ -330,22 +352,11 @@ class Hemera extends EventEmitter {
       }
     }
 
-    // check plugin dependenciess
-    if (params.attributes.dependencies) {
-      params.attributes.dependencies.forEach((dep) => {
-        if (!this._plugins[dep]) {
-          this.log.error(Constants.PLUGIN_DEPENDENCY_MISSING, params.attributes.name, dep, dep)
-          throw new Errors.HemeraError(Constants.PLUGIN_DEPENDENCY_NOT_FOUND)
-        }
-      })
-    }
-
     // create new execution context
     let ctx = this.createContext()
     ctx.plugin$ = {}
     ctx.plugin$.register = params.plugin.bind(ctx)
     ctx.plugin$.attributes = params.attributes || {}
-    ctx.plugin$.attributes.dependencies = params.attributes.dependencies || []
     ctx.plugin$.parentPlugin = this.plugin$.attributes.name
     ctx.plugin$.options = params.options || {}
 
@@ -459,11 +470,13 @@ class Hemera extends EventEmitter {
     if (this._isServer) {
       return {
         app: this._config.name,
+        isServer: this._isServer,
         pattern: this._actMeta ? this._actMeta.pattern : false // PatternNotFound
       }
     } else {
       return {
         app: this._config.name,
+        isServer: this._isServer,
         pattern: this._pattern
       }
     }
@@ -515,9 +528,12 @@ class Hemera extends EventEmitter {
 
       Util.serial(this._pluginRegistrations, each, (err) => {
         if (err) {
-          let error = new Errors.HemeraError(Constants.PLUGIN_REGISTRATION_ERROR)
-          this.log.error(error)
-          throw (error)
+          if (err instanceof SuperError) {
+            err = err.rootCause || err.cause || err
+          }
+          const internalError = new Errors.HemeraError(Constants.PLUGIN_REGISTRATION_ERROR).causedBy(err)
+          this.log.error(internalError)
+          throw (internalError)
         }
         if (_.isFunction(cb)) {
           cb.call(this)
@@ -561,7 +577,7 @@ class Hemera extends EventEmitter {
 
   /**
    * Last step before the response is send to the callee.
-   * The preResponse extension is invoked and previous errors are evaluated.
+   * The preResponse extension is dispatched and previous errors are evaluated.
    *
    * @memberOf Hemera
    */
@@ -575,14 +591,14 @@ class Hemera extends EventEmitter {
         self.log.error(self._response.error)
       } else if (err) { // check for an extension error
         if (err instanceof SuperError) {
-          // try to get rootCause then cause and last the thrown error
-          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err.rootCause || err.cause || err)
+          self._response.error = err.rootCause || err.cause || err
         } else {
-          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err)
+          self._response.error = err
         }
 
+        const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err)
+        self.log.error(internalError)
         self.emit('serverResponseError', self._response.error)
-        self.log.error(self._response.error)
       }
 
       // reply value from extension
@@ -615,7 +631,7 @@ class Hemera extends EventEmitter {
       }
     }
 
-    this._extensions.onServerPreResponse.invoke(this, onServerPreResponseHandler)
+    this._extensions.onServerPreResponse.dispatch(this, onServerPreResponseHandler)
   }
 
   /**
@@ -648,11 +664,24 @@ class Hemera extends EventEmitter {
       const self = this
 
       if (err) {
-        if (err instanceof SuperError) {
-          // try to get rootCause then cause and last the thrown error
-          self._response.error = new Errors.BusinessError(Constants.BUSINESS_ERROR, self.errorDetails).causedBy(err.rootCause || err.cause || err)
+        const errorDetails = {
+          service: self.trace$.service,
+          method: self.trace$.method,
+          app: self._config.name,
+          ts: Util.nowHrTime()
+        }
+
+        // collect hops
+        if (err.hops) {
+          err.hops.push(errorDetails)
         } else {
-          self._response.error = new Errors.BusinessError(Constants.BUSINESS_ERROR, self.errorDetails).causedBy(err)
+          err.hops = [errorDetails]
+        }
+
+        if (err instanceof SuperError) {
+          self._response.error = err.rootCause || err.cause || err
+        } else {
+          self._response.error = err
         }
 
         return self.finish()
@@ -678,13 +707,13 @@ class Hemera extends EventEmitter {
 
       if (err) {
         if (err instanceof SuperError) {
-          // try to get rootCause then cause and last the thrown error
-          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err.rootCause || err.cause || err)
+          self._response.error = err.rootCause || err.cause || err
         } else {
-          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err)
+          self._response.error = err
         }
 
-        self.log.error(self._response.error)
+        const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err)
+        self.log.error(internalError)
 
         return self.finish()
       }
@@ -698,16 +727,18 @@ class Hemera extends EventEmitter {
       try {
         let action = self._actMeta.action.bind(self)
 
-        self._actMeta.invokeMiddleware(self._request, self._response, (err) => {
+        self._actMeta.dispatch(self._request, self._response, (err) => {
           // middleware error
           if (err) {
             if (err instanceof SuperError) {
-              // try to get rootCause then cause and last the thrown error
-              self._response.error = new Errors.HemeraError(Constants.ADD_MIDDLEWARE_ERROR, self.errorDetails).causedBy(err.rootCause || err.cause || err)
+              self._response.error = err.rootCause || err.cause || err
             } else {
-              self._response.error = new Errors.HemeraError(Constants.ADD_MIDDLEWARE_ERROR, self.errorDetails).causedBy(err)
+              self._response.error = err
             }
-            self.log.error(self._response.error)
+
+            const internalError = new Errors.HemeraError(Constants.ADD_MIDDLEWARE_ERROR, self.errorDetails).causedBy(err)
+            self.log.error(internalError)
+
             return self.finish()
           }
 
@@ -725,11 +756,10 @@ class Hemera extends EventEmitter {
           }
         })
       } catch (err) {
-        // try to get rootCause then cause and last the thrown error
         if (err instanceof SuperError) {
-          self._response.error = new Errors.ImplementationError(Constants.IMPLEMENTATION_ERROR, self.errorDetails).causedBy(err.rootCause || err.cause || err)
+          self._response.error = err.rootCause || err.cause || err
         } else {
-          self._response.error = new Errors.ImplementationError(Constants.IMPLEMENTATION_ERROR, self.errorDetails).causedBy(err)
+          self._response.error = err
         }
 
         // service should exit
@@ -753,10 +783,9 @@ class Hemera extends EventEmitter {
 
       if (err) {
         if (err instanceof SuperError) {
-          // try to get rootCause then cause and last the thrown error
-          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err.rootCause || err.cause || err)
+          self._response.error = err.rootCause || err.cause || err
         } else {
-          self._response.error = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err)
+          self._response.error = err
         }
 
         return self.finish()
@@ -773,7 +802,7 @@ class Hemera extends EventEmitter {
 
       // check if a handler is registered with this pattern
       if (self._actMeta) {
-        self._extensions.onServerPreHandler.invoke(self, onServerPreHandler)
+        self._extensions.onServerPreHandler.dispatch(self, onServerPreHandler)
       } else {
         self.log.info({
           topic: self._topic
@@ -798,7 +827,7 @@ class Hemera extends EventEmitter {
       ctx._actMeta = {}
       ctx._isServer = true
 
-      ctx._extensions.onServerPreRequest.invoke(ctx, onServerPreRequestHandler)
+      ctx._extensions.onServerPreRequest.dispatch(ctx, onServerPreRequestHandler)
     }
 
     // standard pubsub with optional max proceed messages
@@ -919,31 +948,35 @@ class Hemera extends EventEmitter {
 
     /**
      *
-     *
      * @param {any} err
      * @returns
      */
     function onClientPostRequestHandler (err) {
       const self = this
+      // extension error
       if (err) {
-        let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+        let error = null
+        if (err instanceof SuperError) {
+          error = err.rootCause || err.cause || err
+        } else {
+          error = err
+        }
+        const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err)
+        self.log.error(internalError)
         self.emit('clientResponseError', error)
-        self.log.error(error)
 
         self._execute(error)
         return
       }
 
       if (self._response.payload.error) {
-        let responseError = Errio.fromObject(self._response.payload.error)
-        let responseErrorCause = responseError.cause
-        let error = new Errors.BusinessError(Constants.BUSINESS_ERROR, {
-          pattern: self._cleanPattern
-        }).causedBy(responseErrorCause ? responseError.cause : responseError)
-        self.emit('clientResponseError', error)
-        self.log.error(error)
+        let error = Errio.fromObject(self._response.payload.error)
 
-        self._execute(responseError)
+        const internalError = new Errors.BusinessError(Constants.BUSINESS_ERROR, self.errorDetails).causedBy(error)
+        self.log.error(internalError)
+        self.emit('clientResponseError', error)
+
+        self._execute(error)
         return
       }
 
@@ -963,25 +996,28 @@ class Hemera extends EventEmitter {
       self._response.error = res.error
 
       try {
-        // if payload is invalid
+        // decoding error
         if (self._response.error) {
-          let error = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR, {
-            pattern: self._cleanPattern
-          }).causedBy(self._response.error)
-          self.emit('clientResponseError', error)
+          let error = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR, self.errorDetails).causedBy(self._response.error)
           self.log.error(error)
+          self.emit('clientResponseError', error)
 
           self._execute(error)
           return
         }
 
-        self._extensions.onClientPostRequest.invoke(self, onClientPostRequestHandler)
+        self._extensions.onClientPostRequest.dispatch(self, onClientPostRequestHandler)
       } catch (err) {
-        let error = new Errors.FatalError(Constants.FATAL_ERROR, {
-          pattern: self._cleanPattern
-        }).causedBy(err)
+        let error = null
+        if (err instanceof SuperError) {
+          error = err.rootCause || err.cause || err
+        } else {
+          error = err
+        }
+
+        const internalError = new Errors.FatalError(Constants.FATAL_ERROR, self.errorDetails).causedBy(err)
+        self.log.fatal(internalError)
         self.emit('clientResponseError', error)
-        self.log.fatal(error)
 
         // let it crash
         if (self._config.crashOnFatal) {
@@ -1001,20 +1037,26 @@ class Hemera extends EventEmitter {
 
       let m = self._encoder.encode.call(self, self._message)
 
-      // throw encoding issue
+      // encoding issue
       if (m.error) {
-        let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(m.error)
-        self.emit('clientResponseError', error)
+        let error = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR).causedBy(m.error)
         self.log.error(error)
+        self.emit('clientResponseError', error)
 
         self._execute(error)
         return
       }
 
       if (err) {
-        let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+        let error = null
+        if (err instanceof SuperError) {
+          error = err.rootCause || err.cause || err
+        } else {
+          error = err
+        }
+        const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+        self.log.error(internalError)
         self.emit('clientResponseError', error)
-        self.log.error(error)
 
         self._execute(error)
         return
@@ -1072,7 +1114,7 @@ class Hemera extends EventEmitter {
     }
 
     if (this._config.generators) {
-      ctx._extensions.onClientPreRequest.invoke(ctx, onPreRequestHandler)
+      ctx._extensions.onClientPreRequest.dispatch(ctx, onPreRequestHandler)
 
       return new Promise((resolve, reject) => {
         ctx._execute = (err, result) => {
@@ -1095,7 +1137,7 @@ class Hemera extends EventEmitter {
       }
     }
 
-    ctx._extensions.onClientPreRequest.invoke(ctx, onPreRequestHandler)
+    ctx._extensions.onClientPreRequest.dispatch(ctx, onPreRequestHandler)
   }
 
   /**
@@ -1116,18 +1158,32 @@ class Hemera extends EventEmitter {
     function onClientPostRequestHandler (err) {
       const self = this
       if (err) {
-        let error = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
-        self.emit('clientResponseError', error)
+        let error = null
+        if (err instanceof SuperError) {
+          error = err.rootCause || err.cause || err
+        } else {
+          error = err
+        }
+
+        const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+        self.log.error(internalError)
         self._response.error = error
-        self.log.error(self._response.error)
+        self.emit('clientResponseError', error)
       }
 
       try {
         self._execute(self._response.error)
       } catch (err) {
-        let error = new Errors.FatalError(Constants.FATAL_ERROR, self.errorDetails).causedBy(err)
+        let error = null
+        if (err instanceof SuperError) {
+          error = err.rootCause || err.cause || err
+        } else {
+          error = err
+        }
+
+        const internalError = new Errors.FatalError(Constants.FATAL_ERROR, self.errorDetails).causedBy(err)
+        self.log.fatal(internalError)
         self.emit('clientResponseError', error)
-        self.log.fatal(error)
 
         // let it crash
         if (self._config.crashOnFatal) {
@@ -1138,10 +1194,10 @@ class Hemera extends EventEmitter {
 
     let timeoutHandler = () => {
       const error = new Errors.TimeoutError(Constants.ACT_TIMEOUT_ERROR, self.errorDetails)
-      self.emit('clientResponseError', error)
       self.log.error(error)
       self._response.error = error
-      self._extensions.onClientPostRequest.invoke(self, onClientPostRequestHandler)
+      self.emit('clientResponseError', error)
+      self._extensions.onClientPostRequest.dispatch(self, onClientPostRequestHandler)
     }
 
     self._transport.timeout(self._sid, timeout, 1, timeoutHandler)

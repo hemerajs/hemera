@@ -355,8 +355,8 @@ describe('Generator / Promise support', function () {
         b: 2
       }, function (err, resp) {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('BusinessError')
-        expect(err.cause.name).to.be.equals('Error')
+        expect(err.name).to.be.equals('Error')
+        expect(err.name).to.be.equals('Error')
         hemera.close()
         done()
       })
@@ -430,6 +430,66 @@ describe('Generator / Promise support', function () {
           hemera.close()
           done()
         })
+    })
+  })
+
+  it('Should throw when rejection is unhandled', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      generators: true
+    })
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function * (resp) {
+        return yield Promise.reject(new Error('test'))
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      })
+
+      setTimeout(() => {
+        hemera.close()
+        done()
+      }, 50)
+    })
+  })
+
+  it('Should be able to return result without to handle it', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      generators: true
+    })
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function * (resp) {
+        return yield Promise.resolve({
+          result: true
+        })
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      })
+
+      setTimeout(() => {
+        hemera.close()
+        done()
+      }, 50)
     })
   })
 
@@ -578,9 +638,8 @@ describe('Generator / Promise support in extension', function () {
         msg: 'Hi!'
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('test')
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
         hemera.close()
         done()
       })
@@ -613,9 +672,8 @@ describe('Generator / Promise support in extension', function () {
         msg: 'Hi!'
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('test')
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
         hemera.close()
         done()
       })

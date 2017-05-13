@@ -183,10 +183,8 @@ describe('Hemera-jwt-auth', function () {
         b: 200
       }, function (err, resp) {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Extension error')
-        expect(err.cause.name).to.be.equals('JwtError')
-        expect(err.cause.message).to.be.equals('Invalid scope')
+        expect(err.name).to.be.equals('JwtError')
+        expect(err.message).to.be.equals('Invalid scope')
         hemera.close()
         done()
       })
@@ -221,10 +219,8 @@ describe('Hemera-jwt-auth', function () {
         b: 200
       }, function (err, resp) {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Extension error')
-        expect(err.cause.name).to.be.equals('JwtError')
-        expect(err.cause.message).to.be.equals('Invalid auth$ options')
+        expect(err.name).to.be.equals('JwtError')
+        expect(err.message).to.be.equals('Invalid auth$ options')
         hemera.close()
         done()
       })

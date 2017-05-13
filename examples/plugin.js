@@ -11,8 +11,6 @@ function myPlugin (options) {
   })
 }
 
-'use strict'
-
 const Hemera = require('./../packages/hemera')
 const nats = require('nats').connect()
 
@@ -23,8 +21,7 @@ hemera.expose('somethingToExpose', 4)
 hemera.use({
   plugin: myPlugin,
   attributes: {
-    name: 'myPlugin',
-    dependencies: []
+    name: 'myPlugin'
   },
   options: {}
 })

@@ -18,15 +18,19 @@ const ImplementationError = HemeraError.subclass('ImplementationError')
 const BusinessError = HemeraError.subclass('BusinessError')
 const FatalError = HemeraError.subclass('FatalError')
 const PatternNotFound = HemeraError.subclass('PatternNotFound')
-const PayloadValidationError = SuperError.subclass('PayloadValidationError')
+const MaxRecursionError = HemeraError.subclass('MaxRecursionError')
+const PayloadValidationError = HemeraError.subclass('PayloadValidationError')
+const ProcessLoadError = HemeraError.subclass('ProcessLoadError')
 
 module.exports = {
   HemeraError,
+  MaxRecursionError,
   ParseError,
   TimeoutError,
   ImplementationError,
   BusinessError,
   FatalError,
   PatternNotFound,
-  PayloadValidationError
+  PayloadValidationError,
+  ProcessLoadError
 }

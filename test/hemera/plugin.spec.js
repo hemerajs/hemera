@@ -132,8 +132,7 @@ describe('Plugin interface', function () {
         },
         myPlugin1: {
           attributes: {
-            name: 'myPlugin1',
-            dependencies: []
+            name: 'myPlugin1'
           },
           parentPlugin: 'core',
           options: {
@@ -142,8 +141,7 @@ describe('Plugin interface', function () {
         },
         myPlugin2: {
           attributes: {
-            name: 'myPlugin2',
-            dependencies: []
+            name: 'myPlugin2'
           },
           parentPlugin: 'core',
           options: {
@@ -257,19 +255,18 @@ describe('Plugin interface', function () {
     }
   })
 
-  it('Should thrown an error when plugin dependencies was not resolved before initialization', function (done) {
+  it('Should thrown plugin error during initialization', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
-    let plugin = function (options) {}
+    let plugin = function (options, next) { next(new Error('test')) }
 
     try {
       hemera.use({
         plugin: plugin,
         attributes: {
-          name: 'myPlugin',
-          dependencies: ['foo']
+          name: 'myPlugin'
         }
       })
       hemera.close()
@@ -277,7 +274,34 @@ describe('Plugin interface', function () {
     } catch (err) {
       expect(err).to.exists()
       expect(err.name).to.be.equals('HemeraError')
-      expect(err.message).to.be.equals('Plugin dependency not found')
+      expect(err.message).to.be.equals('Error during plugin registration')
+      expect(err.cause).to.be.equals('Error')
+      expect(err.cause).to.be.equals('test')
+      hemera.close()
+      done()
+    }
+  })
+
+  it('Should thrown super plugin error during initialization', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let plugin = function (options, next) { next(new UnauthorizedError('Shit!')) }
+
+    try {
+      hemera.use({
+        plugin: plugin,
+        attributes: {
+          name: 'myPlugin'
+        }
+      })
+      hemera.close()
+      done()
+    } catch (err) {
+      expect(err).to.exists()
+      expect(err.name).to.be.equals('Unauthorized')
+      expect(err.message).to.be.equals('Shit!')
       hemera.close()
       done()
     }
@@ -394,8 +418,7 @@ describe('Plugin interface', function () {
     hemera.use({
       plugin: plugin,
       attributes: {
-        pkg: packageJson,
-        dependencies: []
+        pkg: packageJson
       },
       options: pluginOptions
     })
@@ -404,7 +427,6 @@ describe('Plugin interface', function () {
       expect(hemera.plugins.foo.attributes.name).to.be.equals('foo')
       expect(hemera.plugins.foo.attributes.description).to.be.equals('test')
       expect(hemera.plugins.foo.attributes.version).to.be.equals('1.0.0')
-      expect(hemera.plugins.foo.attributes.dependencies).to.be.equals([])
       expect(hemera.plugins.foo.options).to.be.equals(pluginOptions)
       hemera.close()
       done()

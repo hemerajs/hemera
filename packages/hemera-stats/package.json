@@ -9,6 +9,9 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {},
+  "peerDependencies": {
+    "nats-hemera": "1.x || 2.x"
+  },
   "devDependencies": {
     "eslint": "^3.13.1",
     "eslint-config-standard": "^6.2.1",

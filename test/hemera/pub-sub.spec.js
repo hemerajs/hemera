@@ -40,6 +40,30 @@ describe('Publish / Subscribe', function () {
     })
   })
 
+  it('Should be able to publish even with a callback', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp) => {
+        hemera.close()
+        done()
+      })
+
+      hemera.act({
+        pubsub$: true,
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, () => {})
+    })
+  })
+
   it('Should be able to use normal publish/subscribe behaviour (1 to many)', function (done) {
     const nats = require('nats').connect(authUrl)
 

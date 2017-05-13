@@ -42,11 +42,9 @@ describe('Hemera-joi', function () {
         a: 'dwedwed'
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Extension error')
-        expect(err.cause.name).to.be.equals('PreValidationError')
-        expect(err.cause.details).to.be.exists()
-        expect(err.cause.message).to.be.equals('child "a" fails because ["a" must be a number]')
+        expect(err.name).to.be.equals('PreValidationError')
+        expect(err.details).to.be.exists()
+        expect(err.message).to.be.equals('child "a" fails because ["a" must be a number]')
         hemera.close()
         done()
       })
@@ -86,11 +84,9 @@ describe('Hemera-joi', function () {
         a: 1
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Extension error')
-        expect(err.cause.name).to.be.equals('PostValidationError')
-        expect(err.cause.details).to.be.exists()
-        expect(err.cause.message).to.be.equals('child "b" fails because ["b" is required]')
+        expect(err.name).to.be.equals('PostValidationError')
+        expect(err.details).to.be.exists()
+        expect(err.message).to.be.equals('child "b" fails because ["b" is required]')
         hemera.close()
         done()
       })
@@ -157,11 +153,9 @@ describe('Hemera-joi', function () {
         a: 'dwedwed'
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Extension error')
-        expect(err.cause.name).to.be.equals('PreValidationError')
-        expect(err.cause.details).to.be.exists()
-        expect(err.cause.message).to.be.equals('child "a" fails because ["a" must be a number]')
+        expect(err.name).to.be.equals('PreValidationError')
+        expect(err.details).to.be.exists()
+        expect(err.message).to.be.equals('child "a" fails because ["a" must be a number]')
         hemera.close()
         done()
       })
@@ -218,11 +212,9 @@ describe('Hemera-joi pre/post', function () {
         a: 1
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Extension error')
-        expect(err.cause.name).to.be.equals('PostValidationError')
-        expect(err.cause.details).to.be.exists()
-        expect(err.cause.message).to.be.equals('child "b" fails because ["b" is required]')
+        expect(err.name).to.be.equals('PostValidationError')
+        expect(err.details).to.be.exists()
+        expect(err.message).to.be.equals('child "b" fails because ["b" is required]')
         hemera.close()
         done()
       })
@@ -262,11 +254,9 @@ describe('Hemera-joi pre/post', function () {
         a: 1
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Extension error')
-        expect(err.cause.name).to.be.equals('PreValidationError')
-        expect(err.cause.details).to.be.exists()
-        expect(err.cause.message).to.be.equals('child "c" fails because ["c" is required]')
+        expect(err.name).to.be.equals('PreValidationError')
+        expect(err.details).to.be.exists()
+        expect(err.message).to.be.equals('child "c" fails because ["c" is required]')
         hemera.close()
         done()
       })

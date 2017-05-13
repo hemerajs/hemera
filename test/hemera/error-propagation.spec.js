@@ -16,10 +16,71 @@ describe('Error propagation', function () {
     server.kill()
   })
 
-  it('Error propagation', function (done) {
+  it('Error propagation depth 1', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'a',
+        cmd: 'a'
+      }, function (resp, cb) {
+        cb(new Error('B Error'))
+      })
+
+      hemera.act({
+        topic: 'a',
+        cmd: 'a'
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('B Error')
+
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Error propagation depth 1 with super errors', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'a',
+        cmd: 'a'
+      }, function (resp, cb) {
+        const a = new UnauthorizedError('test')
+        a.test = 444
+        cb(a)
+      })
+
+      hemera.act({
+        topic: 'a',
+        cmd: 'a'
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+
+        expect(err.rootCause).to.be.not.exists()
+        expect(err.cause).to.be.not.exists()
+
+        expect(err.name).to.be.equals('Unauthorized')
+        expect(err.message).to.be.equals('test')
+
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Error propagation', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, { logLevel: 'silent' })
 
     hemera.ready(() => {
       hemera.add({
@@ -63,17 +124,23 @@ describe('Error propagation', function () {
       }, (err, resp) => {
         expect(err).to.be.exists()
 
-        // In a chain of nested wrapped errors, the original unwrapped cause can be accessed through the rootCause property of each SuperError instance in the chain.
-        expect(err.rootCause.name).to.be.equals('Error')
-        expect(err.rootCause.message).to.be.equals('B Error')
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('B Error')
 
-        expect(err.name).to.be.equals('BusinessError')
-        expect(err.message).to.be.equals('Business error')
-        expect(err.pattern.topic).to.be.exists('b')
-        expect(err.app).to.be.exists()
+        expect(err.hops[0].method).to.be.equals('cmd:b,topic:b')
+        expect(err.hops[0].service).to.be.equals('b')
+        expect(err.hops[0].app).to.be.exists()
+        expect(err.hops[0].ts).to.be.exists()
 
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('B Error')
+        expect(err.hops[1].method).to.be.equals('cmd:c,topic:c')
+        expect(err.hops[1].service).to.be.equals('c')
+        expect(err.hops[1].app).to.be.exists()
+        expect(err.hops[1].ts).to.be.exists()
+
+        expect(err.hops[2].method).to.be.equals('cmd:a,topic:a')
+        expect(err.hops[2].service).to.be.equals('a')
+        expect(err.hops[2].app).to.be.exists()
+        expect(err.hops[2].ts).to.be.exists()
 
         hemera.close()
         done()
@@ -130,16 +197,24 @@ describe('Error propagation', function () {
       }, (err, resp) => {
         expect(err).to.be.exists()
 
-        // In a chain of nested wrapped errors, the original unwrapped cause can be accessed through the rootCause property of each SuperError instance in the chain.
-        expect(err.rootCause.name).to.be.equals('Unauthorized')
-        expect(err.rootCause.message).to.be.equals('test')
+        expect(err.name).to.be.equals('Unauthorized')
+        expect(err.message).to.be.equals('test')
+        expect(err.test).to.be.equals(444)
 
-        expect(err.name).to.be.equals('BusinessError')
-        expect(err.message).to.be.equals('Business error')
+        expect(err.hops[0].method).to.be.equals('cmd:b,topic:b')
+        expect(err.hops[0].service).to.be.equals('b')
+        expect(err.hops[0].app).to.be.exists()
+        expect(err.hops[0].ts).to.be.exists()
 
-        expect(err.cause.name).to.be.equals('Unauthorized')
-        expect(err.cause.message).to.be.equals('test')
-        expect(err.cause.test).to.be.equals(444)
+        expect(err.hops[1].method).to.be.equals('cmd:c,topic:c')
+        expect(err.hops[1].service).to.be.equals('c')
+        expect(err.hops[1].app).to.be.exists()
+        expect(err.hops[1].ts).to.be.exists()
+
+        expect(err.hops[2].method).to.be.equals('cmd:a,topic:a')
+        expect(err.hops[2].service).to.be.equals('a')
+        expect(err.hops[2].app).to.be.exists()
+        expect(err.hops[2].ts).to.be.exists()
 
         hemera.close()
         done()

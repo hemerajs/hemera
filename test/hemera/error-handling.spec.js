@@ -50,12 +50,10 @@ describe('Error handling', function () {
         msg: 'Hi!'
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('BusinessError')
-        expect(err.message).to.be.equals('Business error')
-        expect(err.cause.name).to.be.equals('Unauthorized')
-        expect(err.cause.message).to.be.equals('Unauthorized action')
-        expect(err.cause.code).to.be.equals(444)
-        expect(err.cause instanceof UnauthorizedError).to.be.equals(true)
+        expect(err.name).to.be.equals('Unauthorized')
+        expect(err.message).to.be.equals('Unauthorized action')
+        expect(err.code).to.be.equals(444)
+        expect(err instanceof UnauthorizedError).to.be.equals(true)
         hemera.close()
         done()
       })
@@ -82,11 +80,8 @@ describe('Error handling', function () {
         msg: 'Hi!'
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('BusinessError')
-        expect(err.message).to.be.equals('Business error')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('Uups')
-        expect(err.ownStack).to.be.exists()
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('Uups')
         hemera.close()
         done()
       })
@@ -116,12 +111,9 @@ describe('Error handling', function () {
         msg: 'Hi!'
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('BusinessError')
-        expect(err.message).to.be.equals('Business error')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('Uups')
-        expect(err.cause.code).to.be.equals(444)
-        expect(err.ownStack).to.be.exists()
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('Uups')
+        expect(err.code).to.be.equals(444)
         hemera.close()
         done()
       })
@@ -151,13 +143,10 @@ describe('Error handling', function () {
         msg: 'Hi!'
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('BusinessError')
-        expect(err.message).to.be.equals('Business error')
-        expect(err.cause.test).to.be.equals('hallo')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('Uups')
-        expect(err.cause.code).to.be.equals(444)
-        expect(err.ownStack).to.be.exists()
+        expect(err.test).to.be.equals('hallo')
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('Uups')
+        expect(err.code).to.be.equals(444)
         hemera.close()
         done()
       })
@@ -264,11 +253,38 @@ describe('Error handling', function () {
         msg: 'Hi!'
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('ImplementationError')
-        expect(err.message).to.be.equals('Bad implementation')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('Shit!')
-        expect(err.ownStack).to.be.exists()
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('Shit!')
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to handle business errors with super errors', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+        throw new UnauthorizedError('Shit!')
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('Unauthorized')
+        expect(err.message).to.be.equals('Shit!')
         hemera.close()
         done()
       })
@@ -315,40 +331,6 @@ describe('Error handling', function () {
     })
   })
 
-  it('Should crash when an unexpected error thrown during timeout issue', function (done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats, {
-      timeout: 20
-    })
-
-    var stub = Sinon.stub(hemera, 'fatal')
-
-    stub.onCall(1)
-
-    stub.returns(true)
-
-    hemera.ready(() => {
-      hemera.act({
-        topic: 'email',
-        cmd: 'send',
-        email: 'foobar@gmail.com',
-        msg: 'Hi!'
-      }, (err, resp) => {
-        expect(err).to.be.exists()
-        // Fatal Error will be throw after the server proceed the msg
-        setTimeout(() => {
-          expect(stub.called).to.be.equals(true)
-          stub.restore()
-          hemera.close()
-          done()
-        }, 500)
-
-        throw (new Error('Test'))
-      })
-    })
-  })
-
   it('Should crash on unhandled business errors', function (done) {
     const nats = require('nats').connect(authUrl)
 
@@ -371,11 +353,8 @@ describe('Error handling', function () {
         msg: 'Hi!'
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('ImplementationError')
-        expect(err.message).to.be.equals('Bad implementation')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('Shit!')
-        expect(err.ownStack).to.be.exists()
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('Shit!')
         hemera.close()
         done()
       })
