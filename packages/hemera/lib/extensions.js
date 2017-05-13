@@ -134,6 +134,17 @@ module.exports.onServerPreRequest = [function onServerPreRequest (req, res, next
   ctx.emit('serverPreRequest')
 
   next()
+}, function onServerPreRequestLoadTest (req, res, next) {
+  let ctx = this
+
+  if (ctx._config.load.checkPolicy) {
+    const error = this._loadPolicy.check()
+    if (error) {
+      return next(new Errors.ProcessLoadError(error.message, error.details, ctx._heavy.load))
+    }
+  }
+
+  next()
 }]
 
 module.exports.onServerPreHandler = [function onServerPreHandler (req, res, next) {

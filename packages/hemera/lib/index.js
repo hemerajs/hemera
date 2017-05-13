@@ -42,19 +42,34 @@ const Serializers = require('./serializer')
 const Add = require('./add')
 
 var defaultConfig = {
-  timeout: 2000,
-  debug: false,
-  generators: false,
-  name: 'hemera-' + Os.hostname(),
-  crashOnFatal: true,
+  timeout: 2000, // max execution time of a request
+  generators: false, // promise and generators support
+  name: 'hemera-' + Os.hostname(), // node name
+  crashOnFatal: true, // Should gracefully exit the process at unhandled exceptions
   logLevel: 'silent',
-  maxRecursion: 0,
+  maxRecursion: 0, // Max recursive method calls
+  errio: {
+    recursive: true, // Recursively serialize and deserialize nested errors
+    inherited: true, // Include inherited properties
+    stack: true,    // Include stack property
+    private: false,  // Include properties with leading or trailing underscores
+    exclude: [],     // Property names to exclude (low priority)
+    include: []      // Property names to include (high priority)
+  },
   bloomrun: {
-    indexing: 'inserting',
-    lookupBeforeAdd: true
+    indexing: 'inserting', // Pattern indexing method "inserting" or "depth"
+    lookupBeforeAdd: true // Should throw an error when pattern matched with existign set
   },
   load: {
-    sampleInterval: 0
+    checkPolicy: true,
+    process: {
+      sampleInterval: 0  // Frequency of load sampling in milliseconds (zero is no sampling)
+    },
+    policy: {
+      maxHeapUsedBytes: 0,  // Reject requests when V8 heap is over size in bytes (zero is no max)
+      maxRssBytes: 0,       // Reject requests when process RSS is over size in bytes (zero is no max)
+      maxEventLoopDelay: 0  // Milliseconds of delay after which requests are rejected (zero is no max)
+    }
   }
 }
 
@@ -76,7 +91,7 @@ class Hemera extends EventEmitter {
 
     this._config = Hoek.applyToDefaults(defaultConfig, params || {})
     this._router = Bloomrun(this._config.bloomrun)
-    this._heavy = new Heavy(this._config.load)
+    this._heavy = new Heavy(this._config.load.process)
     this._transport = new NatsTransport({
       transport
     })
@@ -140,6 +155,12 @@ class Hemera extends EventEmitter {
       onServerPreRequest: new Extension('onServerPreRequest', { server: true, generators: this._config.generators }),
       onServerPreResponse: new Extension('onServerPreResponse', { server: true, generators: this._config.generators })
     }
+
+    // errio settings
+    Errio.setDefaults(this._config.errio)
+
+    // create load policy
+    this._loadPolicy = this._heavy.policy(this._config.load.policy)
 
     // start tracking process stats
     this._heavy.start()
@@ -569,7 +590,7 @@ class Hemera extends EventEmitter {
 
   /**
    * Last step before the response is send to the callee.
-   * The preResponse extension is invoked and previous errors are evaluated.
+   * The preResponse extension is dispatched and previous errors are evaluated.
    *
    * @memberOf Hemera
    */
@@ -622,7 +643,7 @@ class Hemera extends EventEmitter {
       }
     }
 
-    this._extensions.onServerPreResponse.invoke(this, onServerPreResponseHandler)
+    this._extensions.onServerPreResponse.dispatch(this, onServerPreResponseHandler)
   }
 
   /**
@@ -717,7 +738,7 @@ class Hemera extends EventEmitter {
       try {
         let action = self._actMeta.action.bind(self)
 
-        self._actMeta.invokeMiddleware(self._request, self._response, (err) => {
+        self._actMeta.dispatch(self._request, self._response, (err) => {
           // middleware error
           if (err) {
             if (err instanceof SuperError) {
@@ -789,7 +810,7 @@ class Hemera extends EventEmitter {
 
       // check if a handler is registered with this pattern
       if (self._actMeta) {
-        self._extensions.onServerPreHandler.invoke(self, onServerPreHandler)
+        self._extensions.onServerPreHandler.dispatch(self, onServerPreHandler)
       } else {
         self.log.info({
           topic: self._topic
@@ -814,7 +835,7 @@ class Hemera extends EventEmitter {
       ctx._actMeta = {}
       ctx._isServer = true
 
-      ctx._extensions.onServerPreRequest.invoke(ctx, onServerPreRequestHandler)
+      ctx._extensions.onServerPreRequest.dispatch(ctx, onServerPreRequestHandler)
     }
 
     // standard pubsub with optional max proceed messages
@@ -990,7 +1011,7 @@ class Hemera extends EventEmitter {
           return
         }
 
-        self._extensions.onClientPostRequest.invoke(self, onClientPostRequestHandler)
+        self._extensions.onClientPostRequest.dispatch(self, onClientPostRequestHandler)
       } catch (err) {
         let error = null
         if (err instanceof SuperError) {
@@ -1095,7 +1116,7 @@ class Hemera extends EventEmitter {
     }
 
     if (this._config.generators) {
-      ctx._extensions.onClientPreRequest.invoke(ctx, onPreRequestHandler)
+      ctx._extensions.onClientPreRequest.dispatch(ctx, onPreRequestHandler)
 
       return new Promise((resolve, reject) => {
         ctx._execute = (err, result) => {
@@ -1118,7 +1139,7 @@ class Hemera extends EventEmitter {
       }
     }
 
-    ctx._extensions.onClientPreRequest.invoke(ctx, onPreRequestHandler)
+    ctx._extensions.onClientPreRequest.dispatch(ctx, onPreRequestHandler)
   }
 
   /**
@@ -1174,7 +1195,7 @@ class Hemera extends EventEmitter {
       self.emit('clientResponseError', error)
       self.log.error(error)
       self._response.error = error
-      self._extensions.onClientPostRequest.invoke(self, onClientPostRequestHandler)
+      self._extensions.onClientPostRequest.dispatch(self, onClientPostRequestHandler)
     }
 
     self._transport.timeout(self._sid, timeout, 1, timeoutHandler)

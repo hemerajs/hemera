@@ -92,7 +92,7 @@ class Add {
    *
    * @memberof Add
    */
-  invokeMiddleware (request, response, cb) {
+  dispatch (request, response, cb) {
     Util.serial(this.middleware, (item, next) => {
       item(request, response, next)
     }, cb)
