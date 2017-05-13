@@ -10,7 +10,8 @@ const FooBarError = hemera.createError('FooBarError')
 /**
  * IMPORTANT
  * - Always use hemera errors
- * - Wrap node errors with `causedBy`
+ * - If you wrap errors only the root issue will reach the requestor
+ * - Any additional error data except private _ properties are tranfered
  */
 
 hemera.ready(() => {
@@ -18,7 +19,9 @@ hemera.ready(() => {
     topic: 'math',
     cmd: 'div'
   }, function (req, cb) {
-    const err = new FooBarError('foo').causedBy(new FooBarError('bar'))
+    const bar = new FooBarError('bar')
+    bar.test = 'test'
+    const err = new FooBarError('foo').causedBy(bar)
     cb(err)
   })
 
@@ -42,10 +45,9 @@ hemera.ready(() => {
     topic: 'math',
     cmd: 'add'
   }, function (err, resp) {
-    this.log.debug('Instance of: %s', err instanceof Hemera.errors.BusinessError)
+    this.log.debug('Instance of: %s', err instanceof Error)
     this.log.debug('Error: %s', err.name)
-    this.log.debug('Error cause: %s', err.cause.name)
-    this.log.debug('Error cause message: %s', err.cause.message)
+    this.log.debug('Error message: %s', err.message)
   })
 
   hemera.act({
@@ -54,8 +56,8 @@ hemera.ready(() => {
   }, function (err, resp) {
     this.log.debug('Instance of: %s', err instanceof Error)
     this.log.debug('Error: %s', err.name)
-    this.log.debug('Error cause: %s', err.name)
-    this.log.debug('Error cause message: %s', err.message)
+    this.log.debug('Error: %s', err.name)
+    this.log.debug('Error message: %s', err.message)
   })
 
   hemera.act({
@@ -64,7 +66,7 @@ hemera.ready(() => {
   }, function (err, resp) {
     this.log.debug('Instance of: %s', err instanceof FooBarError)
     this.log.debug('Error: %s', err.name)
-    this.log.debug('Error cause: %s', err.name)
-    this.log.debug('Error cause message: %s', err.message)
+    this.log.debug('Error data: %s', err.test)
+    this.log.debug('Error message: %s', err.message)
   })
 })
