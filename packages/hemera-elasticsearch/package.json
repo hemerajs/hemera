@@ -1,6 +1,6 @@
 {
   "name": "hemera-elasticsearch",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "This is a plugin to use Elasticsearch with Hemera",
   "main": "index.js",
   "scripts": {
@@ -14,8 +14,8 @@
     "elasticsearch": "12.1.x"
   },
   "peerDependencies": {
-    "nats-hemera": "1.x || 2.x",
-    "hemera-joi": "1.x"
+    "hemera-joi": "1.x",
+    "nats-hemera": "1.x || 2.x"
   },
   "devDependencies": {
     "code": "4.0.x",

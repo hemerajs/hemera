@@ -1,6 +1,6 @@
 {
   "name": "hemera-redis-cache",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "This is a plugin to use Redis with Hemera",
   "main": "index.js",
   "scripts": {
@@ -12,8 +12,8 @@
     "redis": "2.6.x"
   },
   "peerDependencies": {
-    "nats-hemera": "1.x || 2.x",
-    "hemera-joi": "1.x"
+    "hemera-joi": "1.x",
+    "nats-hemera": "1.x || 2.x"
   },
   "devDependencies": {
     "eslint": "^3.13.1",

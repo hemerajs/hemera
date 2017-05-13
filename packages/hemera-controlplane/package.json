@@ -1,6 +1,6 @@
 {
   "name": "hemera-controlplane",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "This is a plugin to scale your workers remotly with Hemera",
   "main": "index.js",
   "scripts": {
@@ -20,8 +20,8 @@
   "license": "MIT",
   "dependencies": {},
   "peerDependencies": {
-    "nats-hemera": "1.x || 2.x",
-    "hemera-joi": "1.x"
+    "hemera-joi": "1.x",
+    "nats-hemera": "1.x || 2.x"
   },
   "devDependencies": {
     "code": "4.0.x",

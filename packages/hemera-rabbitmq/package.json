@@ -1,6 +1,6 @@
 {
   "name": "hemera-rabbitmq",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "This is a plugin to use Rabbitmq with Hemera",
   "main": "index.js",
   "scripts": {
@@ -14,8 +14,8 @@
     "rabbot": "1.0.x"
   },
   "peerDependencies": {
-    "nats-hemera": "1.x || 2.x",
-    "hemera-joi": "1.x"
+    "hemera-joi": "1.x",
+    "nats-hemera": "1.x || 2.x"
   },
   "devDependencies": {
     "code": "4.0.x",
