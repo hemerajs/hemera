@@ -6,7 +6,7 @@ Changelog
 ## 1.2.0
 
 ### Summary
-hemera 1.2.0 is focused on error handling
+hemera 1.2.0 is focused on error handling, plugin dependencies
 
 - **Upgrade time:** low - none to a couple of hours for most users
 - **Complexity:** low - requires following the list of changes to verifying their impact
@@ -78,3 +78,20 @@ hemera.act({
 ```
 
 2. All logs are wrapped with the correct Hemera error subclass
+
+3. If you create a plugin declare you dependencies as [peerDependencies](https://nodejs.org/en/blog/npm/peer-dependencies/) instead with `dependencies` configuration
+
+**Old:**
+```js
+exports.attributes = {
+  dependencies: ['hemera-joi']
+  pkg: require('./package.json')
+}
+```
+**New:**
+```js
+"peerDependencies": {
+  "hemera-joi": "^1.0.4",
+  "nats-hemera": "1.x || 2.x"
+}
+```
