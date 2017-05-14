@@ -6,7 +6,7 @@ Changelog
 ### 1.2.2
 
 #### Summary
-Throw only on NATS connection issues. Complete NATS connection error codes. Ensure that we covers all possible cases.
+Throw only on NATS connection issues. Complete NATS connection error codes. Ensure that we cover all possible cases.
 
 ### 1.2.1
 
