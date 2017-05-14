@@ -79,7 +79,7 @@ hemera.act({
 
 2. All logs are wrapped with the correct Hemera error subclass
 
-3. If you create a plugin declare you dependencies as [peerDependencies](https://nodejs.org/en/blog/npm/peer-dependencies/) instead with `dependencies` configuration
+3. Plugin dependencies are declared with [peerDependencies](https://nodejs.org/en/blog/npm/peer-dependencies/) instead with `dependencies` property in the plugin.
 
 **Old:**
 ```js
