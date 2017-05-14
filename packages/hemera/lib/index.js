@@ -504,7 +504,12 @@ class Hemera extends EventEmitter {
   ready (cb) {
     this._transport.driver.on('error', (error) => {
       this.log.error(error, Constants.TRANSPORT_ERROR)
-      throw (error)
+      this.log.error('NATS Code: \'%s\', Message: %s', error.code, error.message)
+
+      // exit only on connection issues
+      if (error.code === Constants.NATS_CODE_CONN_ERR) {
+        throw (error)
+      }
     })
     this._transport.driver.on('reconnect', () => {
       this.log.info(Constants.TRANSPORT_RECONNECTED)
