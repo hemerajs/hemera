@@ -122,7 +122,7 @@
             <p>If you call a service which internally call many other services and suddenly a service fails, this error must
               be propagated to the first callee. Hemera will aggregate all errors together and that you are able to identify the root
               issue.</p>
-              <p>In order to avoid storing very long error chains we do not collect all errors in the chain but the root issue and the hemera core error. The rootCause is set when more than two errors were involved.</p>
+              <p>In order to avoid storing very long error chains we do not collect all errors in the chain but the root issue.</p>
           </p>
           <h4 class="section-h4">Example</h4>
           <pre>
@@ -131,9 +131,7 @@ hemera.act({
   topic: "a",
   cmd: "a"
 }, function (err, resp) {
- const error1 = err // BusinessError
- const error2 = err.cause // CustomError
- const root = err.rootCause // CustomError
+ const error = err // BusinessError
 })
 </code>
                     </pre>

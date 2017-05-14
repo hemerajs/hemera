@@ -130,7 +130,7 @@ hemera.add({ topic: "math", cmd: "add" }, function (resp, cb) {
 })
 
 hemera.act({ topic: "math", cmd: "add", a: 1, b: 1 }, function (err, resp) {
-  err instanceOf FatalError // true
+  err instanceOf Error // true
 })
 </code>
                     </pre>

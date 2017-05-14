@@ -168,16 +168,13 @@ hemera.use({
  attributes: { 
   name: "test",
   version: "1.0.0",
-  dependencies: ["hemera-joi"]
   description: "my first plugin"
  }
 })
 </code>
                     </pre>
                     <h4 class="section-h4">Plugin dependencies</h4>
-                    <p><code>dependencies</code>: an array of plugin name strings which must be registered in order for this
-                        plugin to operate. Plugins listed must be registered before the <code>ready</code> function is called.
-                        Does not provide version dependency which should be implemented using npm peer dependencies.</p>
+                    <p><code>dependencies</code>: are managed by <a href="https://nodejs.org/en/blog/npm/peer-dependencies/">peerDepenencies</a></p>
                     <pre>
 <code class="javascript">
 hemera.use({ 
@@ -186,7 +183,6 @@ hemera.use({
  attributes: { 
   name: "test",
   version: "1.0.0",
-  dependencies: ["hemera-joi"]
   description: "my first plugin"
  }
 })
