@@ -137,7 +137,7 @@ describe('Hemera-arango-store', function () {
       cmd: 'executeAqlQuery',
       type: 'one',
       databaseName: testDatabase,
-      query: aql `INSERT ${user} INTO testColl return NEW`
+      query: aql`INSERT ${user} INTO testColl return NEW`
     }, function (err, resp) {
       expect(err).to.be.not.exists()
       expect(resp).to.be.an.object()

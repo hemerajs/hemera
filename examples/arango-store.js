@@ -12,7 +12,7 @@ const hemera = new Hemera(nats, {
 hemera.use(hemeraJoi)
 hemera.use(hemeraArango, {
   arango: {
-    url: 'http://127.0.0.1:8529',
+    url: 'http://root:@127.0.0.1:8529',
     databaseName: 'test'
   }
 })

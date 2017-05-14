@@ -3,6 +3,35 @@ Changelog
 
 # 1.x
 
+### 1.2.3
+
+#### Summary
+Manage plugin dependencies. The `dependencies` attribute is used to identify the dependencies of a plugin. When the plugin could not be resolved a warning appears and an error is thrown. Does not provide version dependency which should be implemented using npm peer dependencies.
+
+```
+exports.plugin = function myPlugin (options) {
+  var hemera = this
+
+  hemera.add({
+    topic: 'math',
+    cmd: 'add'
+  }, (req, cb) => {
+    cb(null, req.a + req.b)
+  })
+}
+
+exports.options = {}
+
+exports.attributes = {
+  dependencies: ['hemera-joi'],
+  pkg: require('./package.json')
+}
+```
+**Error Message**
+```
+ Plugin `myPlugin` requires `hemera-foo` as dependency. Please install with 'npm install --save hemera-foo'
+```
+
 ### 1.2.2
 
 #### Summary
