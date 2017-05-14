@@ -65,9 +65,6 @@ describe('Error propagation', function () {
       }, (err, resp) => {
         expect(err).to.be.exists()
 
-        expect(err.rootCause).to.be.not.exists()
-        expect(err.cause).to.be.not.exists()
-
         expect(err.name).to.be.equals('Unauthorized')
         expect(err.message).to.be.equals('test')
 
