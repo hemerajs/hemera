@@ -14,7 +14,7 @@ hemera 1.2.0 is focused on error handling, plugin dependencies
 - **Dependencies:** low - existing plugins will work as-is
 
 ### Breaking Changes
-You get the exact error you have sent. Errors are wrapped only for framework errors (Parsing errors, Plugin registration errors) or logging.
+You get the exact error you have sent. Errors are wrapped only for framework errors (Parsing errors, Plugin registration errors, Timeout errors) or logging.
 
 ### New Feature
 
@@ -26,7 +26,7 @@ You get the exact error you have sent. Errors are wrapped only for framework err
 
 ### Migration Checklist
 
-1. Pull the wrapped error one level up. For any case except for: HemeraParseError, HemeraError "Error during plugin registration"
+1. Pull the wrapped error one level up. For any case except for: HemeraParseError, HemeraError "Error during plugin registration, TimeoutError"
 
 **Old:**
 ```js
