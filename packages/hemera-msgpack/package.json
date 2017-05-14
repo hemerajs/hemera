@@ -11,13 +11,12 @@
   "dependencies": {
     "msgpack-lite": "0.1.x"
   },
-  "peerDependencies": {
-    "nats-hemera": "1.x || 2.x"
-  },
   "devDependencies": {
-    "eslint": "^3.13.1",
-    "eslint-config-standard": "^6.2.1",
-    "eslint-plugin-promise": "^3.4.2",
-    "eslint-plugin-standard": "^2.0.1"
+    "eslint": "3.19.x",
+    "eslint-config-standard": "10.2.x",
+    "eslint-plugin-import": "2.2.x",
+    "eslint-plugin-node": "4.2.x",
+    "eslint-plugin-promise": "3.5.x",
+    "eslint-plugin-standard": "3.0.x"
   }
 }

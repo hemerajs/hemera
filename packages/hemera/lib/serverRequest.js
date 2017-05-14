@@ -13,7 +13,6 @@
  * @class ServerRequest
  */
 class ServerRequest {
-
   /**
    * Creates an instance of ServerRequest.
    *
@@ -79,7 +78,6 @@ class ServerRequest {
   set error (error) {
     this._request.error = error
   }
-
 }
 
 module.exports = ServerRequest

@@ -50,15 +50,20 @@
     "heavy": "4.0.x",
     "hoek": "4.1.x",
     "lodash": "4.17.x",
-    "pino": "4.2.x",
+    "pino": "4.5.x",
     "signal-exit": "3.0.x",
     "super-error": "2.0.x",
     "tinysonic": "1.2.x"
   },
   "devDependencies": {
-    "eslint": "^3.13.1",
-    "eslint-config-standard": "^6.2.1",
-    "eslint-plugin-promise": "^3.4.2",
-    "eslint-plugin-standard": "^2.0.1"
+    "eslint": "3.19.x",
+    "eslint-config-standard": "10.2.x",
+    "eslint-plugin-import": "2.2.x",
+    "eslint-plugin-node": "4.2.x",
+    "eslint-plugin-promise": "3.5.x",
+    "eslint-plugin-standard": "3.0.x"
+  },
+  "peerDependencies": {
+    "nats":">= 0.7.2"
   }
 }

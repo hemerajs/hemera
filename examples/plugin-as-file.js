@@ -16,6 +16,7 @@ exports.plugin = function myPlugin (options) {
 exports.options = {}
 
 exports.attributes = {
+  dependencies: ['hemera-joi'],
   pkg: require('./package.json')
 }
 

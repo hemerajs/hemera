@@ -132,7 +132,8 @@ describe('Plugin interface', function () {
         },
         myPlugin1: {
           attributes: {
-            name: 'myPlugin1'
+            name: 'myPlugin1',
+            dependencies: []
           },
           parentPlugin: 'core',
           options: {
@@ -141,7 +142,8 @@ describe('Plugin interface', function () {
         },
         myPlugin2: {
           attributes: {
-            name: 'myPlugin2'
+            name: 'myPlugin2',
+            dependencies: []
           },
           parentPlugin: 'core',
           options: {
@@ -260,7 +262,9 @@ describe('Plugin interface', function () {
 
     const hemera = new Hemera(nats)
 
-    let plugin = function (options, next) { next(new Error('test')) }
+    let plugin = function (options, next) {
+      next(new Error('test'))
+    }
 
     try {
       hemera.use({
@@ -287,7 +291,9 @@ describe('Plugin interface', function () {
 
     const hemera = new Hemera(nats)
 
-    let plugin = function (options, next) { next(new UnauthorizedError('Shit!')) }
+    let plugin = function (options, next) {
+      next(new UnauthorizedError('Shit!'))
+    }
 
     try {
       hemera.use({
@@ -431,5 +437,29 @@ describe('Plugin interface', function () {
       hemera.close()
       done()
     })
+  })
+
+  it('Should thrown an error when plugin dependencies was not resolved before initialization', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let plugin = function (options) {}
+
+    try {
+      hemera.use({
+        plugin: plugin,
+        attributes: {
+          name: 'myPlugin',
+          dependencies: ['hemera-foo']
+        }
+      })
+    } catch (err) {
+      expect(err).to.exists()
+      expect(err.name).to.be.equals('HemeraError')
+      expect(err.message).to.be.equals('Plugin dependency not found')
+      hemera.close()
+      done()
+    }
   })
 })

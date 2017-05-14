@@ -15,7 +15,6 @@ const _ = require('lodash')
  * @class ServerResponse
  */
 class ServerResponse {
-
   /**
    * Creates an instance of ServerResponse.
    *
@@ -106,7 +105,6 @@ class ServerResponse {
   get error () {
     return this._response.error
   }
-
 }
 
 module.exports = ServerResponse

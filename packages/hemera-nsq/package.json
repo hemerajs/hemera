@@ -11,22 +11,21 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "nsqjs": "0.7.x"
-  },
-  "peerDependencies": {
-    "hemera-joi": "1.x",
-    "nats-hemera": "1.x || 2.x"
+    "nsqjs": "0.7.x",
+    "hemera-joi": "1.x"
   },
   "devDependencies": {
     "code": "4.0.x",
-    "eslint": "^3.13.1",
-    "eslint-config-standard": "^6.2.1",
-    "eslint-plugin-promise": "^3.4.2",
-    "eslint-plugin-standard": "^2.0.1",
-    "hemera-testsuite": "1.0.x",
+    "eslint": "3.19.x",
+    "eslint-config-standard": "10.2.x",
+    "eslint-plugin-import": "2.2.x",
+    "eslint-plugin-node": "4.2.x",
+    "eslint-plugin-promise": "3.5.x",
+    "eslint-plugin-standard": "3.0.x",
+    "hemera-testsuite": "1.1.x",
     "istanbul": "0.4.x",
-    "mocha": "3.2.x",
-    "mocha-lcov-reporter": "1.2.x",
-    "nyc": "10.0.x"
+    "mocha": "3.3.x",
+    "mocha-lcov-reporter": "1.3.x",
+    "nyc": "10.3.x"
   }
 }

@@ -21,7 +21,8 @@ hemera.expose('somethingToExpose', 4)
 hemera.use({
   plugin: myPlugin,
   attributes: {
-    name: 'myPlugin'
+    name: 'myPlugin',
+    dependencies: []
   },
   options: {}
 })

@@ -77,7 +77,6 @@ var defaultConfig = {
  * @class Hemera
  */
 class Hemera extends EventEmitter {
-
   /**
    * Creates an instance of Hemera
    *
@@ -342,21 +341,30 @@ class Hemera extends EventEmitter {
       throw (error)
     }
 
-    // check if plugin is already registered
-    if (this._plugins[params.attributes.name]) {
-      // check for `multiple` attribute that when set to true tells hemera that it is safe to register your plugin more than once
-      if (params.attributes.multiple !== true) {
-        let error = new Errors.HemeraError(Constants.PLUGIN_ALREADY_REGISTERED, params.attributes.name)
-        this.log.error(error)
-        throw (error)
-      }
+    // check plugin dependenciess
+    if (params.attributes.dependencies) {
+      params.attributes.dependencies.forEach((dep) => {
+        if (!this._plugins[dep]) {
+          this.log.error(Constants.PLUGIN_DEPENDENCY_MISSING, params.attributes.name, dep, dep)
+          throw new Errors.HemeraError(Constants.PLUGIN_DEPENDENCY_NOT_FOUND)
+        }
+      })
     }
+
+    // check dependencies
+    _.each(params.attributes.dependencies, (pluginName) => {
+      if (!this._plugins[pluginName]) {
+        this.log.error(Constants.PLUGIN_DEPENDENCY_MISSING, params.attributes.name, pluginName, pluginName)
+        throw new Errors.HemeraError(Constants.PLUGIN_DEPENDENCY_NOT_FOUND)
+      }
+    })
 
     // create new execution context
     let ctx = this.createContext()
     ctx.plugin$ = {}
     ctx.plugin$.register = params.plugin.bind(ctx)
     ctx.plugin$.attributes = params.attributes || {}
+    ctx.plugin$.attributes.dependencies = params.attributes.dependencies || []
     ctx.plugin$.parentPlugin = this.plugin$.attributes.name
     ctx.plugin$.options = params.options || {}
 

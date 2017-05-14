@@ -17,7 +17,6 @@ const _ = require('lodash')
  * @class Extension
  */
 class Extension {
-
   constructor (type, options) {
     this._stack = []
     this._options = options

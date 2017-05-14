@@ -13,7 +13,6 @@
  * @class ClientRequest
  */
 class ClientRequest {
-
   /**
    * Creates an instance of ClientRequest.
    *
@@ -66,7 +65,6 @@ class ClientRequest {
   set error (error) {
     this._request.error = error
   }
-
 }
 
 module.exports = ClientRequest

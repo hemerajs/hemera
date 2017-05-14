@@ -20,7 +20,6 @@ const Util = require('./util')
  * @class Add
  */
 class Add {
-
   /**
    * Creates an instance of Add.
    * @param {any} actMeta
@@ -166,7 +165,6 @@ class Add {
   get plugin () {
     return this.actMeta.plugin
   }
-
 }
 
 module.exports = Add
