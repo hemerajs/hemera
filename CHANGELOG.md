@@ -3,6 +3,11 @@ Changelog
 
 # 1.x
 
+### 1.2.1
+
+#### Summary
+Throw only NATS connection issues. Authorization and Protocol issues are logged but don't lead to a process termination.
+
 ## 1.2.0
 
 ### Summary
