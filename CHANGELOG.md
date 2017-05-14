@@ -8,7 +8,7 @@ Changelog
 #### Summary
 Manage plugin dependencies. The `dependencies` attribute is used to identify the dependencies of a plugin. When the plugin could not be resolved a warning appears and an error is thrown. Does not provide version dependency which should be implemented using npm peer dependencies.
 
-```
+```js
 exports.plugin = function myPlugin (options) {
   var hemera = this
 
