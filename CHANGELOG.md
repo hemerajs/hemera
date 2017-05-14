@@ -5,7 +5,7 @@ Changelog
 
 ## 1.2.0
 
-#### Summary
+### Summary
 hemera 1.2.0 is focused on error handling
 
 - **Upgrade time:** low - none to a couple of hours for most users
@@ -13,10 +13,10 @@ hemera 1.2.0 is focused on error handling
 - **Risk:** medium - type checks on error will fail because the hemera error was stripped
 - **Dependencies:** low - existing plugins will work as-is
 
-#### Breaking Changes
+### Breaking Changes
 You get the exact error you have sent. Errors are wrapped only for framework errors (Parsing errors, Plugin registration errors) or logging.
 
-#### New Feature
+### New Feature
 
 - Enable Server policy to abort requests when the server is not able to respond cause (max memory, busy event-loop). [Example](https://github.com/hemerajs/hemera/blob/master/test/hemera/load-policy.js)
 - Long stack traces by default.
@@ -24,7 +24,7 @@ You get the exact error you have sent. Errors are wrapped only for framework err
 - Enrich errors logs with details (pattern, app-name, timestamp).
 - Track network hops in error to identify which clients was involved. - Detect message loops (abort the request and return an error). [Example](https://github.com/hemerajs/hemera/blob/master/test/hemera/error-propagation.spec.js)
 
-#### Migration Checklist
+### Migration Checklist
 
 1. Pull the wrapped error one level up. For any case except for: HemeraParseError, HemeraError "Error during plugin registration"
 
