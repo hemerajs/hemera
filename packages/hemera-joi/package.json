@@ -1,6 +1,6 @@
 {
   "name": "hemera-joi",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "This is a plugin to use Joi with Hemera",
   "main": "index.js",
   "scripts": {

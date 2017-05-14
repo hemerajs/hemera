@@ -1,6 +1,6 @@
 {
   "name": "hemera-zipkin",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "This is a plugin to use Zipkin with Hemera",
   "main": "index.js",
   "scripts": {
@@ -23,8 +23,8 @@
     "wreck": "10.0.x"
   },
   "devDependencies": {
-    "coveralls": "2.11.x",
     "code": "4.0.x",
+    "coveralls": "2.11.x",
     "eslint": "3.19.x",
     "eslint-config-standard": "10.2.x",
     "eslint-plugin-import": "2.2.x",

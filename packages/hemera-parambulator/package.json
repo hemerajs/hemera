@@ -1,6 +1,6 @@
 {
   "name": "hemera-parambulator",
-  "version": "0.1.79",
+  "version": "0.1.80",
   "description": "This is a plugin to use Parambulator with Hemera",
   "main": "index.js",
   "scripts": {
