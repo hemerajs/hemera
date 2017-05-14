@@ -19,7 +19,7 @@ You get the exact error you have sent. Errors are wrapped only for framework err
 ### New Feature
 
 - Enable Server policy to abort requests when the server is not able to respond cause (max memory, busy event-loop). [Example](https://github.com/hemerajs/hemera/blob/master/test/hemera/load-policy.js)
-- Long stack traces by default.
+- Long stack traces by default. [Configurable](https://github.com/hemerajs/hemera/blob/master/packages/hemera/lib/index.js#L54)
 - Detect message loops (abort the request and return an error). [Example](https://github.com/hemerajs/hemera/blob/master/test/hemera/message-loops.js)
 - Enrich errors logs with details (pattern, app-name, timestamp).
 - Track network hops in error to identify which clients was involved. - Detect message loops (abort the request and return an error). [Example](https://github.com/hemerajs/hemera/blob/master/test/hemera/error-propagation.spec.js)
