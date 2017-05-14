@@ -123,12 +123,14 @@
                     <h4 class="section-h4">Example</h4>
                     <pre>
 <code class="javascript">
-var servers = ["nats://nats.io:4222", "nats://nats.io:5222", "nats://nats.io:6222"];
-var nc = nats.connect({"servers": servers});
+const servers = ["nats://nats.io:4222", "nats://nats.io:5222", "nats://nats.io:6222"];
+const nc = nats.connect({"servers": servers});
 new Hemera(nc);
 </code>
 </pre>
                     <p>For more information see <a href="https://github.com/nats-io/node-nats#clustered-usage">Clustered Usage</a></p>
+                    <h4 class="section-h4">Since node-nats 0.7.18 the Discovered Servers Api is supported</h4>
+                    <p>It allows the client to discover new servers without to restart.</p>
                 </div>
                 <!-- END CONTENT -->
 
