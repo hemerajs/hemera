@@ -1,9 +1,80 @@
 Changelog
 =========
 
-# 2.x
+# 1.x
 
-## 2.0.x
+## 1.2.0
 
+#### Summary
+hemera 1.2.0 is focused on error handling
 
-### 2.0.0
+- **Upgrade time:** low - none to a couple of hours for most users
+- **Complexity:** low - requires following the list of changes to verifying their impact
+- **Risk:** medium - type checks on error will fail because the hemera error was stripped
+- **Dependencies:** low - existing plugins will work as-is
+
+#### Breaking Changes
+You get the exact error you have sent. Errors are wrapped only for framework errors (Parsing errors, Plugin registration errors) or logging.
+
+#### New Feature
+
+- Enable Server policy to abort requests when the server is not able to respond cause (max memory, busy event-loop). [Example](https://github.com/hemerajs/hemera/blob/master/test/hemera/load-policy.js)
+- Long stack traces by default.
+- Detect message loops (abort the request and return an error). [Example](https://github.com/hemerajs/hemera/blob/master/test/hemera/message-loops.js)
+- Enrich errors logs with details (pattern, app-name, timestamp).
+- Track network hops in error to identify which clients was involved. - Detect message loops (abort the request and return an error). [Example](https://github.com/hemerajs/hemera/blob/master/test/hemera/error-propagation.spec.js)
+
+#### Migration Checklist
+
+1. Pull the wrapped error one level up. For any case except for: HemeraParseError, HemeraError "Error during plugin registration"
+
+**Old:**
+```js
+hemera.add({
+  topic: 'email',
+  cmd: 'send'
+}, (resp, cb) => {
+  cb(new Error('Uups'))
+})
+
+hemera.act({
+  topic: 'email',
+  cmd: 'send',
+  email: 'foobar@gmail.com',
+  msg: 'Hi!'
+}, (err, resp) => {
+  expect(err).to.be.exists()
+  expect(err.name).to.be.equals('BusinessError')
+  expect(err.message).to.be.equals('Business Error') 
+  expect(err.cause.name).to.be.equals('Error')
+  expect(err.cause.message).to.be.equals('Uups')
+  hemera.close()
+  done()
+})
+```
+
+**New:**
+
+```js
+hemera.add({
+  topic: 'email',
+  cmd: 'send'
+}, (resp, cb) => {
+  cb(new Error('Uups'))
+})
+
+hemera.act({
+  topic: 'email',
+  cmd: 'send',
+  email: 'foobar@gmail.com',
+  msg: 'Hi!'
+}, (err, resp) => {
+  expect(err).to.be.exists()
+  expect(err.name).to.be.equals('Error')
+  expect(err.message).to.be.equals('Uups')
+  hemera.close()
+  done()
+})
+```
+
+2. All logs are wrapped with the correct Hemera error subclass
