@@ -506,8 +506,8 @@ class Hemera extends EventEmitter {
       this.log.error(error, Constants.TRANSPORT_ERROR)
       this.log.error('NATS Code: \'%s\', Message: %s', error.code, error.message)
 
-      // exit only on connection issues
-      if (error.code === Constants.NATS_CODE_CONN_ERR) {
+      // exit only on connection issues. Authorization and protocol issues don't lead to process termination
+      if (Constants.NATS_CONN_ERROR_CODES.indexOf(error.code) > -1) {
         throw (error)
       }
     })
