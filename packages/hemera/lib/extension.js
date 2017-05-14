@@ -1,9 +1,5 @@
 'use strict'
 
-const Co = require('co')
-const IsGeneratorFn = require('./util').isGeneratorFunction
-const _ = require('lodash')
-
 /**
  * Copyright 2016-present, Dustin Deus (deusdustin@gmail.com)
  * All rights reserved.
@@ -12,6 +8,10 @@ const _ = require('lodash')
  * LICENSE file in the root directory of this source tree.
  *
  */
+
+const Co = require('co')
+const IsGeneratorFn = require('./util').isGeneratorFunction
+const _ = require('lodash')
 
 /**
  * @class Extension

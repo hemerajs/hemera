@@ -13,7 +13,13 @@ const Util = require('./util')
 const Constants = require('./constants')
 const Errors = require('./errors')
 
-module.exports.onClientPreRequest = [function onClientPreRequest (next) {
+/**
+ *
+ *
+ * @param {any} next
+ * @returns
+ */
+function onClientPreRequest (next) {
   let ctx = this
 
   let pattern = this._pattern
@@ -48,7 +54,9 @@ module.exports.onClientPreRequest = [function onClientPreRequest (next) {
       ctx.meta$.referrers[callSignature] = count
       if (count > this._config.maxRecursion) {
         ctx.meta$.referrers[callSignature] = 0
-        return next(new Errors.MaxRecursionError({ count: --count }))
+        return next(new Errors.MaxRecursionError({
+          count: --count
+        }))
       }
     } else {
       ctx.meta$.referrers = {}
@@ -83,9 +91,14 @@ module.exports.onClientPreRequest = [function onClientPreRequest (next) {
   ctx.emit('clientPreRequest')
 
   next()
-}]
+}
 
-module.exports.onClientPostRequest = [function onClientPostRequest (next) {
+/**
+ *
+ *
+ * @param {any} next
+ */
+function onClientPostRequest (next) {
   let ctx = this
   let pattern = this._pattern
   let msg = ctx._response.payload
@@ -107,9 +120,17 @@ module.exports.onClientPostRequest = [function onClientPostRequest (next) {
   ctx.emit('clientPostRequest')
 
   next()
-}]
+}
 
-module.exports.onServerPreRequest = [function onServerPreRequest (req, res, next) {
+/**
+ *
+ *
+ * @param {any} req
+ * @param {any} res
+ * @param {any} next
+ * @returns
+ */
+function onServerPreRequest (req, res, next) {
   let ctx = this
 
   let m = ctx._decoder.decode.call(ctx, ctx._request.payload)
@@ -134,31 +155,54 @@ module.exports.onServerPreRequest = [function onServerPreRequest (req, res, next
   ctx.emit('serverPreRequest')
 
   next()
-}, function onServerPreRequestLoadTest (req, res, next) {
+}
+
+/**
+ *
+ *
+ * @param {any} req
+ * @param {any} res
+ * @param {any} next
+ * @returns
+ */
+function onServerPreRequestLoadTest (req, res, next) {
   let ctx = this
 
   if (ctx._config.load.checkPolicy) {
     const error = this._loadPolicy.check()
     if (error) {
-      return next(new Errors.ProcessLoadError(error.message, error.details, ctx._heavy.load))
+      return next(new Errors.ProcessLoadError(error.message, error.data))
     }
   }
 
   next()
-}]
+}
 
-module.exports.onServerPreHandler = [function onServerPreHandler (req, res, next) {
+/**
+ *
+ *
+ * @param {any} req
+ * @param {any} res
+ * @param {any} next
+ */
+function onServerPreHandler (req, res, next) {
   let ctx = this
 
   ctx.emit('serverPreHandler')
 
   next()
-}]
+}
 
-module.exports.onServerPreResponse = [function onServerPreResponse (req, res, next) {
+function onServerPreResponse (req, res, next) {
   let ctx = this
 
   ctx.emit('serverPreResponse')
 
   next()
-}]
+}
+
+module.exports.onClientPreRequest = [onClientPreRequest]
+module.exports.onClientPostRequest = [onClientPostRequest]
+module.exports.onServerPreRequest = [onServerPreRequest, onServerPreRequestLoadTest]
+module.exports.onServerPreHandler = [onServerPreHandler]
+module.exports.onServerPreResponse = [onServerPreResponse]
