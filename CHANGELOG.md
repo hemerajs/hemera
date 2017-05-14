@@ -3,10 +3,15 @@ Changelog
 
 # 1.x
 
+### 1.2.2
+
+#### Summary
+Throw only on NATS connection. Complete NATS connection error codes. Ensure that we covers all possible cases.
+
 ### 1.2.1
 
 #### Summary
-Throw only NATS connection issues. Authorization and Protocol issues are logged but don't lead to a process termination.
+Throw only on NATS connection issues. Authorization and Protocol issues are logged but don't lead to a process termination.
 
 ## 1.2.0
 
