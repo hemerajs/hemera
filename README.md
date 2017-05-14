@@ -140,6 +140,10 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 |--------|-------|
 | [hemera-jwt-auth](https://github.com/hemerajs/hemera/tree/master/packages/hemera-jwt-auth) | [![npm](https://img.shields.io/npm/v/hemera-jwt-auth.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-jwt-auth)
 
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md)
+
 ## Contributing
 
 Please read [CONTRIBUTING.md](https://github.com/hemerajs/hemera/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
