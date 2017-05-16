@@ -3,6 +3,14 @@ Changelog
 
 # 1.x
 
+### 1.2.4
+
+#### Summary
+- Fixed util.pattern, don't concatenate objects to `[object Object]`
+- Add tests 
+- Rename some files to *.spec.js
+- Remove referrers meta$ property after recursion error to reduce payload size
+
 ### 1.2.3
 
 #### Summary
