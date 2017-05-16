@@ -228,4 +228,31 @@ describe('Tracing', function () {
       })
     })
   })
+
+  it('Should extract trace method from pattern', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'TOPIC',
+        cmd: 'CMD'
+      }, function (err, next) {
+        next()
+      })
+      hemera.act({
+        topic: 'TOPIC',
+        cmd: 'CMD',
+        a: {
+          b: 1
+        },
+        timeout$: 5000
+      }, function (err, resp) {
+        expect(this.trace$.method).to.be.equals('cmd:CMD,topic:TOPIC')
+        hemera.close()
+        done()
+      })
+    })
+  })
 })

@@ -53,7 +53,7 @@ function onClientPreRequest (next) {
       count += 1
       ctx.meta$.referrers[callSignature] = count
       if (count > this._config.maxRecursion) {
-        ctx.meta$.referrers[callSignature] = 0
+        ctx.meta$.referrers = null
         return next(new Errors.MaxRecursionError({
           count: --count
         }))

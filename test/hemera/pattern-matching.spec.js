@@ -144,6 +144,39 @@ describe('Pattern matching', function () {
     })
   })
 
+  it('Should not send config $ variables', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'TOPIC',
+        cmd: 'CMD'
+      }, function (err, next) {
+        expect(this._pattern).to.be.equals({
+          topic: 'TOPIC',
+          cmd: 'CMD',
+          a: {
+            b: 1
+          }
+        })
+        next()
+      })
+      hemera.act({
+        topic: 'TOPIC',
+        cmd: 'CMD',
+        a: {
+          b: 1
+        },
+        timeout$: 5000
+      }, function (err, resp) {
+        hemera.close()
+        done()
+      })
+    })
+  })
+
   it('Pattern matching in depth order', function (done) {
     const nats = require('nats').connect(authUrl)
 

@@ -271,9 +271,10 @@ describe('Message loop detection', function () {
           this.act({
             topic: 'a',
             cmd: 'a'
-          }, (err) => {
+          }, function (err) {
             if (err instanceof Hemera.errors.MaxRecursionError) {
               expect(err.count).to.be.equals(2)
+              expect(this.meta$.referrers).to.be.not.exists()
               n = 0
               this.act({
                 topic: 'a',
