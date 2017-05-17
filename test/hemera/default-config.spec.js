@@ -31,10 +31,10 @@ describe('Hemera default config', function () {
       errio: {
         recursive: true, // Recursively serialize and deserialize nested errors
         inherited: true, // Include inherited properties
-        stack: true, // Include stack property
-        private: false, // Include properties with leading or trailing underscores
-        exclude: [], // Property names to exclude (low priority)
-        include: [] // Property names to include (high priority)
+        stack: true,    // Include stack property
+        private: false,  // Include properties with leading or trailing underscores
+        exclude: [],     // Property names to exclude (low priority)
+        include: []      // Property names to include (high priority)
       },
       bloomrun: {
         indexing: 'inserting', // Pattern indexing method "inserting" or "depth"
@@ -43,13 +43,20 @@ describe('Hemera default config', function () {
       load: {
         checkPolicy: true,
         process: {
-          sampleInterval: 0 // Frequency of load sampling in milliseconds (zero is no sampling)
+          sampleInterval: 0  // Frequency of load sampling in milliseconds (zero is no sampling)
         },
         policy: {
-          maxHeapUsedBytes: 0, // Reject requests when V8 heap is over size in bytes (zero is no max)
-          maxRssBytes: 0, // Reject requests when process RSS is over size in bytes (zero is no max)
-          maxEventLoopDelay: 0 // Milliseconds of delay after which requests are rejected (zero is no max)
+          maxHeapUsedBytes: 0,  // Reject requests when V8 heap is over size in bytes (zero is no max)
+          maxRssBytes: 0,       // Reject requests when process RSS is over size in bytes (zero is no max)
+          maxEventLoopDelay: 0  // Milliseconds of delay after which requests are rejected (zero is no max)
         }
+      },
+      circuitBreaker: {
+        enabled: false,
+        minSuccesses: 1,
+        halfOpenTime: 5 * 1000,
+        resetIntervalTime: 15 * 1000,
+        maxFailures: 3
       }
     }
 

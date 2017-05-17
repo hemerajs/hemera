@@ -27,6 +27,7 @@ const SuperError = require('super-error')
 const Co = require('co')
 
 const Errors = require('./errors')
+const CircuitBreaker = require('./circuitBreaker')
 const Constants = require('./constants')
 const Extension = require('./extension')
 const Util = require('./util')
@@ -70,6 +71,13 @@ var defaultConfig = {
       maxRssBytes: 0,       // Reject requests when process RSS is over size in bytes (zero is no max)
       maxEventLoopDelay: 0  // Milliseconds of delay after which requests are rejected (zero is no max)
     }
+  },
+  circuitBreaker: {
+    enabled: false,
+    minSuccesses: 1,
+    halfOpenTime: 5 * 1000,
+    resetIntervalTime: 15 * 1000,
+    maxFailures: 3
   }
 }
 
@@ -600,9 +608,16 @@ class Hemera extends EventEmitter {
 
       // check if an error was already wrapped
       if (self._response.error) {
+        // don't handle circuit breaker error as failure
+        if (self._config.circuitBreaker.enabled && !(self._response.error instanceof Errors.CircuitBreakerError)) {
+          self._circuitBreaker.failure()
+        }
         self.emit('serverResponseError', self._response.error)
         self.log.error(self._response.error)
       } else if (err) { // check for an extension error
+        if (self._config.circuitBreaker.enabled) {
+          self._circuitBreaker.failure()
+        }
         if (err instanceof SuperError) {
           self._response.error = err.rootCause || err.cause || err
         } else {
@@ -612,6 +627,8 @@ class Hemera extends EventEmitter {
         const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err)
         self.log.error(internalError)
         self.emit('serverResponseError', self._response.error)
+      } else if (self._config.circuitBreaker.enabled) {
+        self._circuitBreaker.success()
       }
 
       // reply value from extension
@@ -792,7 +809,21 @@ class Hemera extends EventEmitter {
     function onServerPreRequestHandler (err, value) {
       let self = this
 
+      // icnoming pattern
       self._pattern = self._request.payload.pattern
+      // find matched route
+      self._actMeta = self._router.lookup(self._pattern)
+
+      if (self._config.circuitBreaker.enabled && self._actMeta) {
+        // get circuit breaker of server method
+        self._circuitBreaker = self._actMeta.actMeta.circuitBreaker
+        if (!self._circuitBreaker.available()) {
+          // trigger halp open timer
+          self._circuitBreaker.failure()
+          self._response.error = new Errors.CircuitBreakerError(`Circuit breaker is ${self._circuitBreaker.state}`, { state: self._circuitBreaker.state })
+          return self.finish()
+        }
+      }
 
       if (err) {
         if (err instanceof SuperError) {
@@ -809,9 +840,6 @@ class Hemera extends EventEmitter {
         self._response.payload = value
         return self.finish()
       }
-
-      // find matched route
-      self._actMeta = self._router.lookup(self._pattern)
 
       // check if a handler is registered with this pattern
       if (self._actMeta) {
@@ -839,6 +867,7 @@ class Hemera extends EventEmitter {
       ctx._pattern = {}
       ctx._actMeta = {}
       ctx._isServer = true
+      ctx._circuitBreaker = null
 
       ctx._extensions.onServerPreRequest.dispatch(ctx, onServerPreRequestHandler)
     }
@@ -912,7 +941,8 @@ class Hemera extends EventEmitter {
     let actMeta = new Add({
       schema: schema,
       pattern: origPattern,
-      plugin: this.plugin$
+      plugin: this.plugin$,
+      circuitBreaker: new CircuitBreaker(this._config.circuitBreaker)
     }, { generators: this._config.generators })
 
     // cb is null when we use chaining syntax
