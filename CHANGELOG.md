@@ -3,6 +3,25 @@ Changelog
 
 # 1.x
 
+### 1.2.5
+
+#### Summary
+- Implement [circuit breaker](https://docs.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker) per server method (add)
+- Add tests for callback and promise error handling
+
+Configurable:
+```js
+circuitBreaker: {
+  enabled: false,
+  minSuccesses: 1, // Minimum successes in the half-open state to change to close state
+  halfOpenTime: 5 * 1000, // The duration when the server is ready to try further calls after changing to open state
+  resetIntervalTime: 15 * 1000, // Frequency of reseting the circuit breaker to close state in milliseconds
+  maxFailures: 3 // The threshold when the circuit breaker change to open state
+}
+```
+
+#### 
+
 ### 1.2.4
 
 #### Summary
