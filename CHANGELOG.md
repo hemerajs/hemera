@@ -3,22 +3,19 @@ Changelog
 
 # 1.x
 
+### 1.2.6
+
+#### Summary
+- Move circuit breaker middleware only on client side [circuit breaker](https://docs.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker)
+- Add tests for callback and promise error handling
+- Add test for timeouts
+- Circuit breaker is disabled by default and is [configurable](https://github.com/hemerajs/hemera/blob/master/packages/hemera/lib/index.js#L74)
+
 ### 1.2.5
 
 #### Summary
-- Implement [circuit breaker](https://docs.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker) per server method (add)
+- Implement [circuit breaker](https://docs.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker)
 - Add tests for callback and promise error handling
-
-Configurable:
-```js
-circuitBreaker: {
-  enabled: false,
-  minSuccesses: 1, // Minimum successes in the half-open state to change to close state
-  halfOpenTime: 5 * 1000, // The duration when the server is ready to try further calls after changing to open state
-  resetIntervalTime: 15 * 1000, // Frequency of reseting the circuit breaker to close state in milliseconds
-  maxFailures: 3 // The threshold when the circuit breaker change to open state
-}
-```
 
 #### 
 
