@@ -177,7 +177,6 @@ class CircuitBreaker extends EventEmitter {
         }
         // request was successfully we increment it
         this._successesCount += 1
-        this.emit('success', { count: this._successesCount, state: this.CIRCUIT_CLOSE })
       } else if (success === false) {
         // If any invocation fails, the circuit breaker enters the Open state immediately and
         // the success counter will be reset the next time it enters the Half-Open state.
@@ -196,7 +195,6 @@ class CircuitBreaker extends EventEmitter {
       if (success === false) {
         // when request fails we increment the failureCount
         this._failureCount += 1
-        this.emit('failure', this.toJSON())
       }
 
       // when we reach maximum failure threshold we open the circuit breaker and start the reset timer
