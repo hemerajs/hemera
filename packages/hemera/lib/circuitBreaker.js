@@ -128,7 +128,7 @@ class CircuitBreaker extends EventEmitter {
    * @memberof CircuitBreaker
    */
   success () {
-    this.check(true)
+    this.record(true)
   }
 
   /**
@@ -138,7 +138,7 @@ class CircuitBreaker extends EventEmitter {
    * @memberof CircuitBreaker
    */
   failure () {
-    this.check(false)
+    this.record(false)
   }
   /**
    *
@@ -148,7 +148,7 @@ class CircuitBreaker extends EventEmitter {
    *
    * @memberof CircuitBreaker
    */
-  check (success) {
+  record (success) {
     if (this._state === this.CIRCUIT_HALF_OPEN) {
       // The counter used by the Half-Open state records the number of successful attempts to invoke the operation.
       // The circuit breaker reverts to the Closed state after a specified number of consecutive operation invocations have been successful.
