@@ -10,7 +10,13 @@ const hemera = new Hemera(nats, {
 })
 
 hemera.ready(() => {
-  const opt = { retries: 2 }
+  const opt = {
+    retries: 2, // The maximum amount of times to retry the operation
+    factor: 2, // The exponential factor to use
+    minTimeout: 1000, // The number of milliseconds before starting the first retry
+    maxTimeout: 10000, // The maximum number of milliseconds between two retries
+    randomize: false // Randomizes the timeouts by multiplying with a factor between 1 to 2
+  }
 
   hemera.add({
     topic: 'math',
