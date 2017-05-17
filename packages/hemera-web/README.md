@@ -69,24 +69,16 @@ _Status Code_: __404__
 ```json
 {
   "error": {
-    "name": "BusinessError",
-    "message": "Business error",
-    "statusCode:": 404,
-    "pattern": {
-      "topic": "math",
-      "cmd": "sub",
-      "a": 1,
-      "b": 2
-    },
-    "app": "hemera-3021105c79c4afcd",
-    "cause": {
-      "name": "CustomError",
-      "message": "CustomError"
-    },
-    "rootCause": {
-      "name": "CustomError",
-      "message": "CustomError"
-    }
+    "name": "Error",
+    "message": "test",
+    "hops": [
+      {
+        "service": "math",
+        "method": "a:1,b:2,cmd:sub,topic:math",
+        "app": "hemera-starptech",
+        "ts": 299208574491
+      }
+    ]
   }
 }
 ```

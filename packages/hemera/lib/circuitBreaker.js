@@ -158,7 +158,7 @@ class CircuitBreaker extends EventEmitter {
           this.clearHalfOpenTimer()
         }
         this._successesCount += 1
-        this.emit('success', { count: this._successesCount })
+        this.emit('success', { count: this._successesCount, state: this.CIRCUIT_CLOSE })
       } else if (success === false) {
         // If any invocation fails, the circuit breaker enters the Open state immediately and
         // the success counter will be reset the next time it enters the Half-Open state.
@@ -177,13 +177,13 @@ class CircuitBreaker extends EventEmitter {
       // when request fails we increment the failureCount
       if (success === false) {
         this._failureCount += 1
-        this.emit('failure', { count: this._failureCount })
+        this.emit('failure', { count: this._failureCount, state: this.CIRCUIT_CLOSE })
       }
 
       // when we reach maximum failure threshold we open the circuit breaker and start the reset timer
       if (this._failureCount >= this._maxFailures) {
         this._state = this.CIRCUIT_OPEN
-        this.clearResetInterval(this._resetInterval)
+        this.clearResetInterval()
         this.startResetInterval()
         this.emit('stateChange', { state: this.CIRCUIT_OPEN })
       }

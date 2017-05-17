@@ -53,10 +53,10 @@ describe('Hemera default config', function () {
       },
       circuitBreaker: {
         enabled: false,
-        minSuccesses: 1,
-        halfOpenTime: 5 * 1000,
-        resetIntervalTime: 15 * 1000,
-        maxFailures: 3
+        minSuccesses: 1, // minimum successes in the half-open state to change to close state
+        halfOpenTime: 5 * 1000, // the time when the server is ready to accept further calls after changing to open state
+        resetIntervalTime: 15 * 1000, // interval when the server automatically reset the circuit breaker to close state
+        maxFailures: 3 // threshold when the circuit breaker change to open state
       }
     }
 
