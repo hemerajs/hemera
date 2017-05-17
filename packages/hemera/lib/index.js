@@ -27,6 +27,7 @@ const SuperError = require('super-error')
 const Co = require('co')
 
 const Errors = require('./errors')
+const CircuitBreaker = require('./circuitBreaker')
 const Constants = require('./constants')
 const Extension = require('./extension')
 const Util = require('./util')
@@ -42,11 +43,11 @@ const Serializers = require('./serializer')
 const Add = require('./add')
 
 var defaultConfig = {
-  timeout: 2000, // max execution time of a request
-  generators: false, // promise and generators support
+  timeout: 2000, // Max execution time of a request
+  generators: false, // Promise and generators support
   name: 'hemera-' + Os.hostname(), // node name
   crashOnFatal: true, // Should gracefully exit the process at unhandled exceptions
-  logLevel: 'silent',
+  logLevel: 'silent', // 'fatal', 'error', 'warn', 'info', 'debug', 'trace'; also 'silent'
   maxRecursion: 0, // Max recursive method calls
   errio: {
     recursive: true, // Recursively serialize and deserialize nested errors
@@ -58,10 +59,10 @@ var defaultConfig = {
   },
   bloomrun: {
     indexing: 'inserting', // Pattern indexing method "inserting" or "depth"
-    lookupBeforeAdd: true // Should throw an error when pattern matched with existign set
+    lookupBeforeAdd: true // Checks if the pattern is no duplicate based on to the indexing strategy
   },
   load: {
-    checkPolicy: true,
+    checkPolicy: true, // Check on every request (server) if the load policy was observed
     process: {
       sampleInterval: 0  // Frequency of load sampling in milliseconds (zero is no sampling)
     },
@@ -70,6 +71,13 @@ var defaultConfig = {
       maxRssBytes: 0,       // Reject requests when process RSS is over size in bytes (zero is no max)
       maxEventLoopDelay: 0  // Milliseconds of delay after which requests are rejected (zero is no max)
     }
+  },
+  circuitBreaker: {
+    enabled: false,
+    minSuccesses: 1, // Minimum successes in the half-open state to change to close state
+    halfOpenTime: 5 * 1000, // The duration when the server is ready to accept further calls after changing to open state
+    resetIntervalTime: 15 * 1000, // Frequency of reseting the circuit breaker to close state in milliseconds
+    maxFailures: 3 // The threshold when the circuit breaker change to open state
   }
 }
 
@@ -479,7 +487,7 @@ class Hemera extends EventEmitter {
       return {
         app: this._config.name,
         isServer: this._isServer,
-        pattern: this._actMeta ? this._actMeta.pattern : false // PatternNotFound
+        pattern: this._actMeta ? this._actMeta.pattern : false // when pattern could not be found
       }
     } else {
       return {
@@ -600,9 +608,16 @@ class Hemera extends EventEmitter {
 
       // check if an error was already wrapped
       if (self._response.error) {
+        // don't handle circuit breaker error as failure
+        if (self._config.circuitBreaker.enabled && !(self._response.error instanceof Errors.CircuitBreakerError)) {
+          self._circuitBreaker.failure()
+        }
         self.emit('serverResponseError', self._response.error)
         self.log.error(self._response.error)
       } else if (err) { // check for an extension error
+        if (self._config.circuitBreaker.enabled) {
+          self._circuitBreaker.failure()
+        }
         if (err instanceof SuperError) {
           self._response.error = err.rootCause || err.cause || err
         } else {
@@ -612,6 +627,8 @@ class Hemera extends EventEmitter {
         const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err)
         self.log.error(internalError)
         self.emit('serverResponseError', self._response.error)
+      } else if (self._config.circuitBreaker.enabled) {
+        self._circuitBreaker.success()
       }
 
       // reply value from extension
@@ -792,7 +809,21 @@ class Hemera extends EventEmitter {
     function onServerPreRequestHandler (err, value) {
       let self = this
 
+      // icnoming pattern
       self._pattern = self._request.payload.pattern
+      // find matched route
+      self._actMeta = self._router.lookup(self._pattern)
+
+      if (self._config.circuitBreaker.enabled && self._actMeta) {
+        // get circuit breaker of server method
+        self._circuitBreaker = self._actMeta.actMeta.circuitBreaker
+        if (!self._circuitBreaker.available()) {
+          // trigger half-open timer
+          self._circuitBreaker.failure()
+          self._response.error = new Errors.CircuitBreakerError(`Circuit breaker is ${self._circuitBreaker.state}`, { state: self._circuitBreaker.state })
+          return self.finish()
+        }
+      }
 
       if (err) {
         if (err instanceof SuperError) {
@@ -809,9 +840,6 @@ class Hemera extends EventEmitter {
         self._response.payload = value
         return self.finish()
       }
-
-      // find matched route
-      self._actMeta = self._router.lookup(self._pattern)
 
       // check if a handler is registered with this pattern
       if (self._actMeta) {
@@ -839,6 +867,7 @@ class Hemera extends EventEmitter {
       ctx._pattern = {}
       ctx._actMeta = {}
       ctx._isServer = true
+      ctx._circuitBreaker = null
 
       ctx._extensions.onServerPreRequest.dispatch(ctx, onServerPreRequestHandler)
     }
@@ -908,17 +937,26 @@ class Hemera extends EventEmitter {
     let schema = Util.extractSchema(origPattern)
     origPattern = Util.cleanPattern(origPattern)
 
-    // create message object which represent the object behind the matched pattern
-    let actMeta = new Add({
+    const actMeta = {
       schema: schema,
       pattern: origPattern,
       plugin: this.plugin$
-    }, { generators: this._config.generators })
+    }
+
+    const circuitBreakerConfig = pattern.circuitBreaker$ || this._config.circuitBreaker
+
+    if (circuitBreakerConfig.enabled) {
+      const circuitBreaker = new CircuitBreaker(circuitBreakerConfig)
+      circuitBreaker.on('stateChange', (state) => this.emit('circuit-breaker.stateChange', state))
+      actMeta.circuitBreaker = circuitBreaker
+    }
+
+    let addDefinition = new Add(actMeta, { generators: this._config.generators })
 
     // cb is null when we use chaining syntax
     if (cb) {
     // set callback
-      actMeta.action = cb
+      addDefinition.action = cb
     }
 
     let handler = this._router.lookup(origPattern)
@@ -935,14 +973,14 @@ class Hemera extends EventEmitter {
     }
 
     // add to bloomrun
-    this._router.add(origPattern, actMeta)
+    this._router.add(origPattern, addDefinition)
 
     this.log.info(origPattern, Constants.ADD_ADDED)
 
     // subscribe on topic
     this.subscribe(pattern.topic, pattern.pubsub$, pattern.maxMessages$)
 
-    return actMeta
+    return addDefinition
   }
 
   /**

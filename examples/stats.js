@@ -7,7 +7,9 @@ const nats = require('nats').connect()
 
 const hemera = new Hemera(nats, {
   load: {
-    sampleInterval: 1
+    process: {
+      sampleInterval: 100
+    }
   }
 })
 

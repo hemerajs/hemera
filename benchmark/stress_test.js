@@ -7,7 +7,9 @@ const nats = Nats.connect()
 const hemera = new Hemera(nats, {
   logLevel: 'silent',
   load: {
-    sampleInterval: 100
+    process: {
+      sampleInterval: 100
+    }
   }
 })
 
@@ -18,7 +20,6 @@ let interval = 2500
 let messages = 10000
 
 hemera.ready(() => {
-
   hemera.add({
     topic: 'math',
     cmd: 'add'
@@ -26,8 +27,7 @@ hemera.ready(() => {
     cb()
   })
 
-  function act() {
-
+  function act () {
     if (i > messages) {
       i = 0
       rounds += 1
@@ -60,5 +60,4 @@ hemera.ready(() => {
 
   // run
   act()
-
 })
