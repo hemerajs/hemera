@@ -27,7 +27,6 @@ const SuperError = require('super-error')
 const Co = require('co')
 
 const Errors = require('./errors')
-const CircuitBreaker = require('./circuitBreaker')
 const Constants = require('./constants')
 const Extension = require('./extension')
 const Util = require('./util')
@@ -171,6 +170,9 @@ class Hemera extends EventEmitter {
 
     // start tracking process stats
     this._heavy.start()
+
+    // contains the list of circuit breaker of all act calls
+    this._circuitBreakerMap = new Map()
 
     // will be executed before the client request is executed.
     this._extensions.onClientPreRequest.add(DefaultExtensions.onClientPreRequest)
@@ -608,16 +610,9 @@ class Hemera extends EventEmitter {
 
       // check if an error was already wrapped
       if (self._response.error) {
-        // don't handle circuit breaker error as failure
-        if (self._config.circuitBreaker.enabled && !(self._response.error instanceof Errors.CircuitBreakerError)) {
-          self._circuitBreaker.failure()
-        }
         self.emit('serverResponseError', self._response.error)
         self.log.error(self._response.error)
       } else if (err) { // check for an extension error
-        if (self._config.circuitBreaker.enabled) {
-          self._circuitBreaker.failure()
-        }
         if (err instanceof SuperError) {
           self._response.error = err.rootCause || err.cause || err
         } else {
@@ -627,8 +622,6 @@ class Hemera extends EventEmitter {
         const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err)
         self.log.error(internalError)
         self.emit('serverResponseError', self._response.error)
-      } else if (self._config.circuitBreaker.enabled) {
-        self._circuitBreaker.success()
       }
 
       // reply value from extension
@@ -814,17 +807,6 @@ class Hemera extends EventEmitter {
       // find matched route
       self._actMeta = self._router.lookup(self._pattern)
 
-      if (self._config.circuitBreaker.enabled && self._actMeta) {
-        // get circuit breaker of server method
-        self._circuitBreaker = self._actMeta.actMeta.circuitBreaker
-        if (!self._circuitBreaker.available()) {
-          // trigger half-open timer
-          self._circuitBreaker.failure()
-          self._response.error = new Errors.CircuitBreakerError(`Circuit breaker is ${self._circuitBreaker.state}`, { state: self._circuitBreaker.state })
-          return self.finish()
-        }
-      }
-
       if (err) {
         if (err instanceof SuperError) {
           self._response.error = err.rootCause || err.cause || err
@@ -867,7 +849,6 @@ class Hemera extends EventEmitter {
       ctx._pattern = {}
       ctx._actMeta = {}
       ctx._isServer = true
-      ctx._circuitBreaker = null
 
       ctx._extensions.onServerPreRequest.dispatch(ctx, onServerPreRequestHandler)
     }
@@ -941,14 +922,6 @@ class Hemera extends EventEmitter {
       schema: schema,
       pattern: origPattern,
       plugin: this.plugin$
-    }
-
-    const circuitBreakerConfig = pattern.circuitBreaker$ || this._config.circuitBreaker
-
-    if (circuitBreakerConfig.enabled) {
-      const circuitBreaker = new CircuitBreaker(circuitBreakerConfig)
-      circuitBreaker.on('stateChange', (state) => this.emit('circuit-breaker.stateChange', state))
-      actMeta.circuitBreaker = circuitBreaker
     }
 
     let addDefinition = new Add(actMeta, { generators: this._config.generators })
@@ -1108,7 +1081,6 @@ class Hemera extends EventEmitter {
         const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
         self.log.error(internalError)
         self.emit('clientResponseError', error)
-
         self._execute(error)
         return
       }
@@ -1147,6 +1119,7 @@ class Hemera extends EventEmitter {
     ctx._response = new ClientResponse()
     ctx._request = new ClientRequest()
     ctx._isServer = false
+    ctx._execute = null
 
     // topic is needed to subscribe on a subject in NATS
     if (!pattern.topic) {
@@ -1165,10 +1138,17 @@ class Hemera extends EventEmitter {
     }
 
     if (this._config.generators) {
-      ctx._extensions.onClientPreRequest.dispatch(ctx, onPreRequestHandler)
-
-      return new Promise((resolve, reject) => {
+      const promise = new Promise((resolve, reject) => {
         ctx._execute = (err, result) => {
+          if (ctx._config.circuitBreaker.enabled) {
+            const circuitBreaker = ctx._circuitBreakerMap.get(ctx.trace$.method)
+            if (err) {
+              circuitBreaker.failure()
+            } else {
+              circuitBreaker.success()
+            }
+          }
+
           if (ctx._actCallback) {
             ctx._actCallback(err, result).then(x => resolve(x)).catch(x => reject(x))
           } else {
@@ -1180,9 +1160,22 @@ class Hemera extends EventEmitter {
           }
         }
       })
+
+      ctx._extensions.onClientPreRequest.dispatch(ctx, onPreRequestHandler)
+
+      return promise
     }
 
     ctx._execute = (err, result) => {
+      if (ctx._config.circuitBreaker.enabled) {
+        const circuitBreaker = ctx._circuitBreakerMap.get(ctx.trace$.method)
+        if (err) {
+          circuitBreaker.failure()
+        } else {
+          circuitBreaker.success()
+        }
+      }
+
       if (ctx._actCallback) {
         ctx._actCallback(err, result)
       }

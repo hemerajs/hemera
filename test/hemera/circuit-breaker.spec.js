@@ -56,6 +56,55 @@ describe('Circuit breaker', function () {
     })
   })
 
+  it('Should open the circuit breaker on timeout issues', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      logLevel: 'silent',
+      circuitBreaker: {
+        enabled: true,
+        maxFailures: 2
+      }
+    })
+
+    hemera.ready(() => {
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2,
+        timeout$: 50
+      }, (err) => {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('TimeoutError')
+        hemera.act({
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2,
+          timeout$: 50
+        }, (err) => {
+          expect(err).to.be.exists()
+          expect(err.name).to.be.equals('TimeoutError')
+          hemera.act({
+            topic: 'math',
+            cmd: 'add',
+            a: 1,
+            b: 2,
+            timeout$: 50
+          }, (err) => {
+            expect(err.name).to.be.equals('CircuitBreakerError')
+            expect(err.message).to.be.equals('Circuit breaker is open')
+            expect(err.service).to.be.equals('math')
+            expect(err.method).to.be.equals('a:1,b:2,cmd:add,topic:math')
+            hemera.close()
+            done()
+          })
+        })
+      })
+    })
+  })
+
   it('Should return error because circuit breaker is OPEN', function (done) {
     const nats = require('nats').connect(authUrl)
 
@@ -67,25 +116,15 @@ describe('Circuit breaker', function () {
       }
     })
 
-    let stateOpenEvent = Sinon.spy()
+    let addActionCalled = Sinon.spy()
 
     hemera.ready(() => {
       hemera.add({
         cmd: 'add',
         topic: 'math'
       }, (resp, cb) => {
+        addActionCalled()
         cb(new Error('test'))
-      })
-
-      const cb = hemera.router.lookup({
-        cmd: 'add',
-        topic: 'math'
-      }).actMeta.circuitBreaker
-
-      cb.on('stateChange', (event) => {
-        if (event.state === 'open') {
-          stateOpenEvent()
-        }
       })
 
       hemera.act({
@@ -112,9 +151,11 @@ describe('Circuit breaker', function () {
             a: 1,
             b: 2
           }, (err) => {
-            expect(stateOpenEvent.calledOnce).to.be.equals(true)
+            expect(addActionCalled.callCount).to.be.equals(2)
             expect(err.name).to.be.equals('CircuitBreakerError')
             expect(err.message).to.be.equals('Circuit breaker is open')
+            expect(err.service).to.be.equals('math')
+            expect(err.method).to.be.equals('a:1,b:2,cmd:add,topic:math')
             hemera.close()
             done()
           })
@@ -135,7 +176,7 @@ describe('Circuit breaker', function () {
       }
     })
 
-    let stateOpenEvent = Sinon.spy()
+    let addActionCalled = Sinon.spy()
 
     hemera.ready(() => {
       hemera.add({
@@ -147,17 +188,7 @@ describe('Circuit breaker', function () {
         } else {
           cb()
         }
-      })
-
-      const cb = hemera.router.lookup({
-        cmd: 'add',
-        topic: 'math'
-      }).actMeta.circuitBreaker
-
-      cb.on('stateChange', (event) => {
-        if (event.state === 'open') {
-          stateOpenEvent()
-        }
+        addActionCalled()
       })
 
       hemera.act({
@@ -180,7 +211,6 @@ describe('Circuit breaker', function () {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('Error')
           expect(err.message).to.be.equals('test')
-          expect(stateOpenEvent.calledOnce).to.be.equals(true)
           setTimeout(() => {
             hemera.act({
               topic: 'math',
@@ -190,49 +220,13 @@ describe('Circuit breaker', function () {
               error: false
             }, (err) => {
               expect(err).to.be.not.exists()
+              expect(addActionCalled.callCount).to.be.equals(3)
               hemera.close()
               done()
             })
           }, 300)
         })
       })
-    })
-  })
-
-  it('Should able to subscribe on all circuit breaker events from all server methods', function (done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats, {
-      logLevel: 'silent',
-      circuitBreaker: {
-        enabled: true,
-        maxFailures: 2
-      }
-    })
-    hemera.ready(() => {
-      hemera.add({
-        cmd: 'add',
-        topic: 'math'
-      }, (resp, cb) => {
-        cb(new Error('test'))
-      })
-
-      const cb = hemera.router.lookup({
-        cmd: 'add',
-        topic: 'math'
-      }).actMeta.circuitBreaker
-
-      hemera.on('circuit-breaker.stateChange', (event) => {
-        expect(event).to.be.equals({
-          state: cb.CIRCUIT_CLOSE,
-          failures: 0,
-          successes: 0
-        })
-        hemera.close()
-        done()
-      })
-
-      cb.emit('stateChange', cb.toJSON())
     })
   })
 
@@ -247,9 +241,7 @@ describe('Circuit breaker', function () {
       }
     })
 
-    let stateOpenEvent = Sinon.spy()
-    let stateHalfOpenEvent = Sinon.spy()
-    let stateCloseEvent = Sinon.spy()
+    let addActionCalled = Sinon.spy()
 
     hemera.ready(() => {
       hemera.add({
@@ -261,21 +253,7 @@ describe('Circuit breaker', function () {
         } else {
           cb()
         }
-      })
-
-      const cb = hemera.router.lookup({
-        cmd: 'add',
-        topic: 'math'
-      }).actMeta.circuitBreaker
-
-      cb.on('stateChange', (event) => {
-        if (event.state === 'open') {
-          stateOpenEvent()
-        } else if (event.state === 'half_open') {
-          stateHalfOpenEvent()
-        } else if (event.state === 'close') {
-          stateCloseEvent()
-        }
+        addActionCalled()
       })
 
       hemera.act({
@@ -308,7 +286,8 @@ describe('Circuit breaker', function () {
             expect(err).to.be.exists()
             expect(err.name).to.be.equals('CircuitBreakerError')
             expect(err.message).to.be.equals('Circuit breaker is open')
-            expect(stateOpenEvent.calledOnce).to.be.equals(true)
+            expect(err.service).to.be.equals('math')
+            expect(err.method).to.be.equals('a:1,b:2,cmd:add,error:true,topic:math')
             // wait until half open timer is finished
             setTimeout(() => {
               hemera.act({
@@ -319,7 +298,6 @@ describe('Circuit breaker', function () {
                 error: false
               }, (err) => {
                 expect(err).to.be.not.exists()
-                expect(stateHalfOpenEvent.calledOnce).to.be.equals(true)
                 hemera.act({
                   topic: 'math',
                   cmd: 'add',
@@ -328,7 +306,7 @@ describe('Circuit breaker', function () {
                   error: false
                 }, (err) => {
                   expect(err).to.be.not.exists()
-                  expect(stateCloseEvent.calledOnce).to.be.equals(true)
+                  expect(addActionCalled.callCount).to.be.equals(4)
                   hemera.close()
                   done()
                 })
@@ -351,9 +329,7 @@ describe('Circuit breaker', function () {
       }
     })
 
-    let stateOpenEvent = Sinon.spy()
-    let stateHalfOpenEvent = Sinon.spy()
-    let stateCloseEvent = Sinon.spy()
+    let addActionCalled = Sinon.spy()
 
     hemera.ready(() => {
       hemera.add({
@@ -365,21 +341,7 @@ describe('Circuit breaker', function () {
         } else {
           cb()
         }
-      })
-
-      const cb = hemera.router.lookup({
-        cmd: 'add',
-        topic: 'math'
-      }).actMeta.circuitBreaker
-
-      cb.on('stateChange', (event) => {
-        if (event.state === 'open') {
-          stateOpenEvent()
-        } else if (event.state === 'half_open') {
-          stateHalfOpenEvent()
-        } else if (event.state === 'close') {
-          stateCloseEvent()
-        }
+        addActionCalled()
       })
 
       hemera.act({
@@ -412,7 +374,8 @@ describe('Circuit breaker', function () {
             expect(err).to.be.exists()
             expect(err.name).to.be.equals('CircuitBreakerError')
             expect(err.message).to.be.equals('Circuit breaker is open')
-            expect(stateOpenEvent.calledOnce).to.be.equals(true)
+            expect(err.service).to.be.equals('math')
+            expect(err.method).to.be.equals('a:1,b:2,cmd:add,error:true,topic:math')
             // wait until half open timer is finished
             setTimeout(() => {
               hemera.act({
@@ -423,7 +386,6 @@ describe('Circuit breaker', function () {
                 error: false
               }, (err) => {
                 expect(err).to.be.not.exists()
-                expect(stateHalfOpenEvent.calledOnce).to.be.equals(true)
                 hemera.act({
                   topic: 'math',
                   cmd: 'add',
@@ -433,7 +395,7 @@ describe('Circuit breaker', function () {
                 }, (err) => {
                   // return business error instead circuit breaker
                   expect(err).to.be.exists()
-                  expect(stateOpenEvent.calledTwice).to.be.equals(true)
+                  expect(addActionCalled.callCount).to.be.equals(4)
                   hemera.close()
                   done()
                 })
@@ -446,7 +408,7 @@ describe('Circuit breaker', function () {
   })
 })
 
-describe('Circuit breaker with Generators / Promises', function () {
+describe('Circuit breaker - Generator / Promise support', function () {
   var PORT = 6242
   var flags = ['--user', 'derek', '--pass', 'foobar']
   var authUrl = 'nats://derek:foobar@localhost:' + PORT
@@ -466,7 +428,6 @@ describe('Circuit breaker with Generators / Promises', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      logLevel: 'silent',
       generators: true,
       circuitBreaker: {
         enabled: true,
@@ -478,7 +439,7 @@ describe('Circuit breaker with Generators / Promises', function () {
       hemera.add({
         cmd: 'add',
         topic: 'math'
-      }, function * (resp, cb) {
+      }, function * (resp) {
         return { a: 1 }
       })
 
@@ -503,6 +464,55 @@ describe('Circuit breaker with Generators / Promises', function () {
     })
   })
 
+  it('Should open the circuit breaker on timeout issues', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      logLevel: 'silent',
+      circuitBreaker: {
+        enabled: true,
+        maxFailures: 2
+      }
+    })
+
+    hemera.ready(() => {
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2,
+        timeout$: 50
+      }, (err) => {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('TimeoutError')
+        hemera.act({
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2,
+          timeout$: 50
+        }, (err) => {
+          expect(err).to.be.exists()
+          expect(err.name).to.be.equals('TimeoutError')
+          hemera.act({
+            topic: 'math',
+            cmd: 'add',
+            a: 1,
+            b: 2,
+            timeout$: 50
+          }, (err) => {
+            expect(err.name).to.be.equals('CircuitBreakerError')
+            expect(err.message).to.be.equals('Circuit breaker is open')
+            expect(err.service).to.be.equals('math')
+            expect(err.method).to.be.equals('a:1,b:2,cmd:add,topic:math')
+            hemera.close()
+            done()
+          })
+        })
+      })
+    })
+  })
+
   it('Should return error because circuit breaker is OPEN', function (done) {
     const nats = require('nats').connect(authUrl)
 
@@ -515,25 +525,15 @@ describe('Circuit breaker with Generators / Promises', function () {
       }
     })
 
-    let stateOpenEvent = Sinon.spy()
+    let addActionCalled = Sinon.spy()
 
     hemera.ready(() => {
       hemera.add({
         cmd: 'add',
         topic: 'math'
-      }, function * (resp, cb) {
+      }, function * (resp) {
+        addActionCalled()
         return Promise.reject(new Error('test'))
-      })
-
-      const cb = hemera.router.lookup({
-        cmd: 'add',
-        topic: 'math'
-      }).actMeta.circuitBreaker
-
-      cb.on('stateChange', (event) => {
-        if (event.state === 'open') {
-          stateOpenEvent()
-        }
       })
 
       hemera.act({
@@ -560,9 +560,11 @@ describe('Circuit breaker with Generators / Promises', function () {
             a: 1,
             b: 2
           }, (err) => {
-            expect(stateOpenEvent.calledOnce).to.be.equals(true)
+            expect(addActionCalled.callCount).to.be.equals(2)
             expect(err.name).to.be.equals('CircuitBreakerError')
             expect(err.message).to.be.equals('Circuit breaker is open')
+            expect(err.service).to.be.equals('math')
+            expect(err.method).to.be.equals('a:1,b:2,cmd:add,topic:math')
             hemera.close()
             done()
           })
@@ -584,28 +586,18 @@ describe('Circuit breaker with Generators / Promises', function () {
       }
     })
 
-    let stateOpenEvent = Sinon.spy()
+    let addActionCalled = Sinon.spy()
 
     hemera.ready(() => {
       hemera.add({
         cmd: 'add',
         topic: 'math'
       }, function * (resp, cb) {
+        addActionCalled()
         if (resp.error) {
           return Promise.reject(new Error('test'))
         } else {
           return Promise.resolve({ a: 1 })
-        }
-      })
-
-      const cb = hemera.router.lookup({
-        cmd: 'add',
-        topic: 'math'
-      }).actMeta.circuitBreaker
-
-      cb.on('stateChange', (event) => {
-        if (event.state === 'open') {
-          stateOpenEvent()
         }
       })
 
@@ -629,7 +621,6 @@ describe('Circuit breaker with Generators / Promises', function () {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('Error')
           expect(err.message).to.be.equals('test')
-          expect(stateOpenEvent.calledOnce).to.be.equals(true)
           setTimeout(() => {
             hemera.act({
               topic: 'math',
@@ -639,6 +630,7 @@ describe('Circuit breaker with Generators / Promises', function () {
               error: false
             }, (err) => {
               expect(err).to.be.not.exists()
+              expect(addActionCalled.callCount).to.be.equals(3)
               hemera.close()
               done()
             })
@@ -660,34 +652,18 @@ describe('Circuit breaker with Generators / Promises', function () {
       }
     })
 
-    let stateOpenEvent = Sinon.spy()
-    let stateHalfOpenEvent = Sinon.spy()
-    let stateCloseEvent = Sinon.spy()
+    let addActionCalled = Sinon.spy()
 
     hemera.ready(() => {
       hemera.add({
         cmd: 'add',
         topic: 'math'
       }, function * (resp, cb) {
+        addActionCalled()
         if (resp.error) {
           return Promise.reject(new Error('test'))
         } else {
           return Promise.resolve({ a: 1 })
-        }
-      })
-
-      const cb = hemera.router.lookup({
-        cmd: 'add',
-        topic: 'math'
-      }).actMeta.circuitBreaker
-
-      cb.on('stateChange', (event) => {
-        if (event.state === 'open') {
-          stateOpenEvent()
-        } else if (event.state === 'half_open') {
-          stateHalfOpenEvent()
-        } else if (event.state === 'close') {
-          stateCloseEvent()
         }
       })
 
@@ -721,7 +697,8 @@ describe('Circuit breaker with Generators / Promises', function () {
             expect(err).to.be.exists()
             expect(err.name).to.be.equals('CircuitBreakerError')
             expect(err.message).to.be.equals('Circuit breaker is open')
-            expect(stateOpenEvent.calledOnce).to.be.equals(true)
+            expect(err.service).to.be.equals('math')
+            expect(err.method).to.be.equals('a:1,b:2,cmd:add,error:true,topic:math')
             // wait until half open timer is finished
             setTimeout(() => {
               hemera.act({
@@ -732,7 +709,6 @@ describe('Circuit breaker with Generators / Promises', function () {
                 error: false
               }, (err) => {
                 expect(err).to.be.not.exists()
-                expect(stateHalfOpenEvent.calledOnce).to.be.equals(true)
                 hemera.act({
                   topic: 'math',
                   cmd: 'add',
@@ -741,7 +717,7 @@ describe('Circuit breaker with Generators / Promises', function () {
                   error: false
                 }, (err) => {
                   expect(err).to.be.not.exists()
-                  expect(stateCloseEvent.calledOnce).to.be.equals(true)
+                  expect(addActionCalled.callCount).to.be.equals(4)
                   hemera.close()
                   done()
                 })
@@ -765,34 +741,18 @@ describe('Circuit breaker with Generators / Promises', function () {
       }
     })
 
-    let stateOpenEvent = Sinon.spy()
-    let stateHalfOpenEvent = Sinon.spy()
-    let stateCloseEvent = Sinon.spy()
+    let addActionCalled = Sinon.spy()
 
     hemera.ready(() => {
       hemera.add({
         cmd: 'add',
         topic: 'math'
       }, function * (resp, cb) {
+        addActionCalled()
         if (resp.error) {
           return Promise.reject(new Error('test'))
         } else {
           return Promise.resolve({ a: 1 })
-        }
-      })
-
-      const cb = hemera.router.lookup({
-        cmd: 'add',
-        topic: 'math'
-      }).actMeta.circuitBreaker
-
-      cb.on('stateChange', (event) => {
-        if (event.state === 'open') {
-          stateOpenEvent()
-        } else if (event.state === 'half_open') {
-          stateHalfOpenEvent()
-        } else if (event.state === 'close') {
-          stateCloseEvent()
         }
       })
 
@@ -826,7 +786,8 @@ describe('Circuit breaker with Generators / Promises', function () {
             expect(err).to.be.exists()
             expect(err.name).to.be.equals('CircuitBreakerError')
             expect(err.message).to.be.equals('Circuit breaker is open')
-            expect(stateOpenEvent.calledOnce).to.be.equals(true)
+            expect(err.service).to.be.equals('math')
+            expect(err.method).to.be.equals('a:1,b:2,cmd:add,error:true,topic:math')
             // wait until half open timer is finished
             setTimeout(() => {
               hemera.act({
@@ -837,7 +798,6 @@ describe('Circuit breaker with Generators / Promises', function () {
                 error: false
               }, (err) => {
                 expect(err).to.be.not.exists()
-                expect(stateHalfOpenEvent.calledOnce).to.be.equals(true)
                 hemera.act({
                   topic: 'math',
                   cmd: 'add',
@@ -847,7 +807,7 @@ describe('Circuit breaker with Generators / Promises', function () {
                 }, (err) => {
                   // return business error instead circuit breaker
                   expect(err).to.be.exists()
-                  expect(stateOpenEvent.calledTwice).to.be.equals(true)
+                  expect(addActionCalled.callCount).to.be.equals(4)
                   hemera.close()
                   done()
                 })

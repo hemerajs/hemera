@@ -12,6 +12,7 @@
 const Util = require('./util')
 const Constants = require('./constants')
 const Errors = require('./errors')
+const CircuitBreaker = require('./circuitBreaker')
 
 /**
  *
@@ -97,6 +98,33 @@ function onClientPreRequest (next) {
  *
  *
  * @param {any} next
+ * @returns
+ */
+function onClientPreRequestCircuitBreaker (next) {
+  let ctx = this
+
+  if (ctx._config.circuitBreaker.enabled) {
+    const circuitBreaker = ctx._circuitBreakerMap.get(ctx.trace$.method)
+    if (!circuitBreaker) {
+      this._circuitBreakerMap.set(ctx.trace$.method, new CircuitBreaker(ctx._config.circuitBreaker))
+    } else {
+      if (!circuitBreaker.available()) {
+        // trigger half-open timer
+        circuitBreaker.failure()
+        return next(new Errors.CircuitBreakerError(`Circuit breaker is ${circuitBreaker.state}`, { state: circuitBreaker.state, method: ctx.trace$.method, service: ctx.trace$.service }))
+      }
+    }
+
+    next()
+  } else {
+    next()
+  }
+}
+
+/**
+ *
+ *
+ * @param {any} next
  */
 function onClientPostRequest (next) {
   let ctx = this
@@ -111,7 +139,7 @@ function onClientPostRequest (next) {
   }
 
   ctx.request$.service = pattern.topic
-  ctx.request$.method = Util.pattern(pattern)
+  ctx.request$.method = ctx.trace$.method
 
   ctx.log.info({
     inbound: ctx
@@ -201,7 +229,7 @@ function onServerPreResponse (req, res, next) {
   next()
 }
 
-module.exports.onClientPreRequest = [onClientPreRequest]
+module.exports.onClientPreRequest = [onClientPreRequest, onClientPreRequestCircuitBreaker]
 module.exports.onClientPostRequest = [onClientPostRequest]
 module.exports.onServerPreRequest = [onServerPreRequest, onServerPreRequestLoadTest]
 module.exports.onServerPreHandler = [onServerPreHandler]
