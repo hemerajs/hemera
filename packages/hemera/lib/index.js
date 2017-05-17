@@ -937,19 +937,26 @@ class Hemera extends EventEmitter {
     let schema = Util.extractSchema(origPattern)
     origPattern = Util.cleanPattern(origPattern)
 
-    // create message object which represent the object behind the matched pattern
-    const circuitBreakerConfig = pattern.circuitBreaker$ || this._config.circuitBreaker
-    let actMeta = new Add({
+    const actMeta = {
       schema: schema,
       pattern: origPattern,
-      plugin: this.plugin$,
-      circuitBreaker: new CircuitBreaker(circuitBreakerConfig)
-    }, { generators: this._config.generators })
+      plugin: this.plugin$
+    }
+
+    const circuitBreakerConfig = pattern.circuitBreaker$ || this._config.circuitBreaker
+
+    if (circuitBreakerConfig.enabled) {
+      const circuitBreaker = new CircuitBreaker(circuitBreakerConfig)
+      circuitBreaker.on('stateChange', (state) => this.emit('circuit-breaker.stateChange', state))
+      actMeta.circuitBreaker = circuitBreaker
+    }
+
+    let addDefinition = new Add(actMeta, { generators: this._config.generators })
 
     // cb is null when we use chaining syntax
     if (cb) {
     // set callback
-      actMeta.action = cb
+      addDefinition.action = cb
     }
 
     let handler = this._router.lookup(origPattern)
@@ -966,14 +973,14 @@ class Hemera extends EventEmitter {
     }
 
     // add to bloomrun
-    this._router.add(origPattern, actMeta)
+    this._router.add(origPattern, addDefinition)
 
     this.log.info(origPattern, Constants.ADD_ADDED)
 
     // subscribe on topic
     this.subscribe(pattern.topic, pattern.pubsub$, pattern.maxMessages$)
 
-    return actMeta
+    return addDefinition
   }
 
   /**

@@ -117,6 +117,21 @@ class CircuitBreaker extends EventEmitter {
    *
    * @memberof CircuitBreaker
    */
+  toJSON () {
+    return {
+      state: this._state,
+      failures: this._failureCount,
+      successes: this._successesCount
+    }
+  }
+
+  /**
+   *
+   *
+   * @returns
+   *
+   * @memberof CircuitBreaker
+   */
   available () {
     return this._state !== this.CIRCUIT_OPEN
   }
@@ -158,7 +173,7 @@ class CircuitBreaker extends EventEmitter {
           // reset failure count and clear half-open timeout
           this._failureCount = 0
           this.clearHalfOpenTimer()
-          this.emit('stateChange', { state: this.CIRCUIT_CLOSE })
+          this.emit('stateChange', this.toJSON())
         }
         // request was successfully we increment it
         this._successesCount += 1
@@ -168,7 +183,7 @@ class CircuitBreaker extends EventEmitter {
         // the success counter will be reset the next time it enters the Half-Open state.
         this._state = this.CIRCUIT_OPEN
         this.clearHalfOpenTimer()
-        this.emit('stateChange', { state: this.CIRCUIT_OPEN })
+        this.emit('stateChange', this.toJSON())
       }
     } else if (this._state === this.CIRCUIT_OPEN) {
       // At this point the proxy starts a timeout timer
@@ -181,7 +196,7 @@ class CircuitBreaker extends EventEmitter {
       if (success === false) {
         // when request fails we increment the failureCount
         this._failureCount += 1
-        this.emit('failure', { count: this._failureCount, state: this.CIRCUIT_CLOSE })
+        this.emit('failure', this.toJSON())
       }
 
       // when we reach maximum failure threshold we open the circuit breaker and start the reset timer
@@ -189,7 +204,7 @@ class CircuitBreaker extends EventEmitter {
         this._state = this.CIRCUIT_OPEN
         this.clearResetInterval()
         this.startResetInterval()
-        this.emit('stateChange', { state: this.CIRCUIT_OPEN })
+        this.emit('stateChange', this.toJSON())
       }
     }
   }

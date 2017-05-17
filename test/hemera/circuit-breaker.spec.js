@@ -199,6 +199,43 @@ describe('Circuit breaker', function () {
     })
   })
 
+  it('Should able to subscribe on all circuit breaker events from all server methods', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      logLevel: 'silent',
+      circuitBreaker: {
+        enabled: true,
+        maxFailures: 2
+      }
+    })
+    hemera.ready(() => {
+      hemera.add({
+        cmd: 'add',
+        topic: 'math'
+      }, (resp, cb) => {
+        cb(new Error('test'))
+      })
+
+      const cb = hemera.router.lookup({
+        cmd: 'add',
+        topic: 'math'
+      }).actMeta.circuitBreaker
+
+      hemera.on('circuit-breaker.stateChange', (event) => {
+        expect(event).to.be.equals({
+          state: cb.CIRCUIT_CLOSE,
+          failures: 0,
+          successes: 0
+        })
+        hemera.close()
+        done()
+      })
+
+      cb.emit('stateChange', cb.toJSON())
+    })
+  })
+
   it('Should be able to close the circuit breaker when the next call is successfully', function (done) {
     const nats = require('nats').connect(authUrl)
 
