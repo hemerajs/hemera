@@ -76,6 +76,7 @@ class CircuitBreaker extends EventEmitter {
   clearHalfOpenTimer () {
     if (this._halfOpenTime) {
       clearTimeout(this._halfOpenTime)
+      this._halfOpenTime = null
     }
   }
 
@@ -86,12 +87,15 @@ class CircuitBreaker extends EventEmitter {
    * @memberof CircuitBreaker
    */
   startHalfOpenTimer () {
-    this._halfOpenTimer = setTimeout(() => {
-      this._successesCount = 0
-      this._state = this.CIRCUIT_HALF_OPEN
-    }, this._halfOpenTime)
-    // unref from event loop
-    this._halfOpenTimer.unref()
+    // avoid starting new timer when existing already ticks
+    if (!this._halfOpenTimer) {
+      this._halfOpenTimer = setTimeout(() => {
+        this._successesCount = 0
+        this._state = this.CIRCUIT_HALF_OPEN
+      }, this._halfOpenTime)
+      // unref from event loop
+      this._halfOpenTimer.unref()
+    }
   }
   /**
    *
@@ -151,6 +155,7 @@ class CircuitBreaker extends EventEmitter {
         if (this._successesCount >= this._minSuccesses) {
           this._state = this.CIRCUIT_CLOSE
           this.emit('stateChange', { state: this.CIRCUIT_CLOSE })
+          this.clearHalfOpenTimer()
         }
         this._successesCount += 1
         this.emit('success', { count: this._successesCount })
