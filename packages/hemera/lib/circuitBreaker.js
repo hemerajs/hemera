@@ -64,6 +64,7 @@ class CircuitBreaker extends EventEmitter {
   startResetInterval () {
     this._resetInterval = setInterval(() => {
       this._state = this.CIRCUIT_CLOSE
+      this._failureCount = 0
     }, this._resetIntervalTime)
   }
 
@@ -154,28 +155,31 @@ class CircuitBreaker extends EventEmitter {
       if (success === true) {
         if (this._successesCount >= this._minSuccesses) {
           this._state = this.CIRCUIT_CLOSE
-          this.emit('stateChange', { state: this.CIRCUIT_CLOSE })
+          // reset failure count and clear half-open timeout
+          this._failureCount = 0
           this.clearHalfOpenTimer()
+          this.emit('stateChange', { state: this.CIRCUIT_CLOSE })
         }
+        // request was successfully we increment it
         this._successesCount += 1
         this.emit('success', { count: this._successesCount, state: this.CIRCUIT_CLOSE })
       } else if (success === false) {
         // If any invocation fails, the circuit breaker enters the Open state immediately and
         // the success counter will be reset the next time it enters the Half-Open state.
         this._state = this.CIRCUIT_OPEN
-        this._failureCount = 0
         this.clearHalfOpenTimer()
         this.emit('stateChange', { state: this.CIRCUIT_OPEN })
       }
     } else if (this._state === this.CIRCUIT_OPEN) {
-      this._failureCount = 0
       // At this point the proxy starts a timeout timer
       // and when this timer expires the proxy is placed into the Half-Open state.
+      // before we enter the Half-open state we reset the successes count
+      this._successesCount = 0
       this.startHalfOpenTimer()
       this.emit('stateChange', { state: this.CIRCUIT_HALF_OPEN })
     } else if (this._state === this.CIRCUIT_CLOSE) {
-      // when request fails we increment the failureCount
       if (success === false) {
+        // when request fails we increment the failureCount
         this._failureCount += 1
         this.emit('failure', { count: this._failureCount, state: this.CIRCUIT_CLOSE })
       }
