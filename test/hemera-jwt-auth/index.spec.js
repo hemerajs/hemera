@@ -227,6 +227,78 @@ describe('Hemera-jwt-auth', function () {
     })
   })
 
+  it('Should return an error when token is invalid', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.use(HemeraJwt)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add',
+        auth$: 2232323
+      }, function (req, cb) {
+        cb()
+      })
+
+      hemera.act({
+        meta$: {
+          jwtToken: 'foobar'
+        },
+        topic: 'math',
+        cmd: 'add',
+        a: 100,
+        b: 200
+      }, function (err, resp) {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('JsonWebTokenError')
+        expect(err.message).to.be.equals('jwt malformed')
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should return an error when token is empty', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.use(HemeraJwt)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add',
+        auth$: 2232323
+      }, function (req, cb) {
+        cb()
+      })
+
+      hemera.act({
+        meta$: {
+          jwtToken: ''
+        },
+        topic: 'math',
+        cmd: 'add',
+        a: 100,
+        b: 200
+      }, function (err, resp) {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('JsonWebTokenError')
+        expect(err.message).to.be.equals('jwt must be provided')
+        hemera.close()
+        done()
+      })
+    })
+  })
+
   it('Should ignore authentication when auth is disabled', function (done) {
     const nats = require('nats').connect(authUrl)
 
@@ -253,6 +325,8 @@ describe('Hemera-jwt-auth', function () {
           scope: 'math'
         }
       }, function (req, cb) {
+        delete this.meta$['jwtToken']
+
         this.act({
           topic: 'math',
           cmd: 'sub',
@@ -297,7 +371,7 @@ describe('Hemera-jwt-auth', function () {
           scope: 'math'
         }
       }, function (req, cb) {
-        expect(this.auth$.scope).to.be.equals(['math'])
+        expect(this.auth$.scope).to.be.equals(tokenDecoded.scope)
         cb(null, req.a + req.b)
       })
 
