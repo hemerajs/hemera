@@ -16,7 +16,7 @@ const hemera = new Hemera(nats, {
 let i = 0
 let rounds = 0
 let maxRounds = 10
-let interval = 2500
+let interval = 1000
 let messages = 10000
 
 hemera.ready(() => {
@@ -34,12 +34,14 @@ hemera.ready(() => {
 
       if (rounds === maxRounds) {
         console.log('END: ----------------------')
-        console.log('Load: ', hemera.load)
+        console.log('EventLoopDelay: ', hemera.load.eventLoopDelay + ' / ms')
+        console.log('Heap: ', hemera.load.heapUsed / 1e6 + ' / mb')
         return hemera.close()
       }
 
       console.log(`ROUND ${rounds}: ----------------------`)
-      console.log('Load: ', hemera.load)
+      console.log('EventLoopDelay: ', hemera.load.eventLoopDelay + ' / ms')
+      console.log('Heap: ', hemera.load.heapUsed / 1e6 + ' / mb')
 
       return setTimeout(act, interval)
     }

@@ -8,7 +8,7 @@ const flags = ['--user', 'derek', '--pass', 'foobar']
 const authUrl = 'nats://derek:foobar@localhost:' + PORT
 const noAuthUrl = 'nats://localhost:' + PORT
 
-const loop = 50000
+const loop = 100000
 const hash = 5000
 
 console.log('Publish Performance Test')

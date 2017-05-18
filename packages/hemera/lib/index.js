@@ -599,62 +599,239 @@ class Hemera extends EventEmitter {
   }
 
   /**
+   *
+   *
+   * @param {any} err
+   * @param {any} value
+   * @returns
+   *
+   * @memberof Hemera
+   */
+  _onServerPreResponseHandler (err, value) {
+    const self = this
+
+      // check if an error was already wrapped
+    if (self._response.error) {
+      self.emit('serverResponseError', self._response.error)
+      self.log.error(self._response.error)
+    } else if (err) { // check for an extension error
+      if (err instanceof SuperError) {
+        self._response.error = err.rootCause || err.cause || err
+      } else {
+        self._response.error = err
+      }
+
+      const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err)
+      self.log.error(internalError)
+      self.emit('serverResponseError', self._response.error)
+    }
+
+      // reply value from extension
+    if (value) {
+      self._response.payload = value
+    }
+
+      // create message payload
+    self._buildMessage()
+
+      // indicates that an error occurs and that the program should exit
+    if (self._shouldCrash) {
+        // only when we have an inbox othwerwise exit the service immediately
+      if (self._replyTo) {
+          // send error back to callee
+        return self._transport.send(self._replyTo, self._message, () => {
+            // let it crash
+          if (self._config.crashOnFatal) {
+            self.fatal()
+          }
+        })
+      } else if (self._config.crashOnFatal) {
+        return self.fatal()
+      }
+    }
+
+      // reply only when we have an inbox
+    if (self._replyTo) {
+      return this._transport.send(this._replyTo, self._message)
+    }
+  }
+
+  /**
    * Last step before the response is send to the callee.
    * The preResponse extension is dispatched and previous errors are evaluated.
    *
    * @memberOf Hemera
    */
   finish () {
-    function onServerPreResponseHandler (err, value) {
-      const self = this
+    this._extensions.onServerPreResponse.dispatch(this, (err, val) => this._onServerPreResponseHandler(err, val))
+  }
 
-      // check if an error was already wrapped
-      if (self._response.error) {
-        self.emit('serverResponseError', self._response.error)
-        self.log.error(self._response.error)
-      } else if (err) { // check for an extension error
-        if (err instanceof SuperError) {
-          self._response.error = err.rootCause || err.cause || err
-        } else {
-          self._response.error = err
-        }
+  /**
+   *
+   *
+   * @param {any} err
+   * @param {any} resp
+   * @returns
+   *
+   * @memberof Hemera
+   */
+  _actionHandler (err, resp) {
+    const self = this
 
-        const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err)
-        self.log.error(internalError)
-        self.emit('serverResponseError', self._response.error)
+    if (err) {
+      const errorDetails = {
+        service: self.trace$.service,
+        method: self.trace$.method,
+        app: self._config.name,
+        ts: Util.nowHrTime()
       }
 
-      // reply value from extension
-      if (value) {
-        self._response.payload = value
+        // collect hops
+      if (err.hops) {
+        err.hops.push(errorDetails)
+      } else {
+        err.hops = [errorDetails]
       }
 
-      // create message payload
-      self._buildMessage()
-
-      // indicates that an error occurs and that the program should exit
-      if (self._shouldCrash) {
-        // only when we have an inbox othwerwise exit the service immediately
-        if (self._replyTo) {
-          // send error back to callee
-          return self._transport.send(self._replyTo, self._message, () => {
-            // let it crash
-            if (self._config.crashOnFatal) {
-              self.fatal()
-            }
-          })
-        } else if (self._config.crashOnFatal) {
-          return self.fatal()
-        }
+      if (err instanceof SuperError) {
+        self._response.error = err.rootCause || err.cause || err
+      } else {
+        self._response.error = err
       }
 
-      // reply only when we have an inbox
-      if (self._replyTo) {
-        return this._transport.send(this._replyTo, self._message)
-      }
+      return self.finish()
     }
 
-    this._extensions.onServerPreResponse.dispatch(this, onServerPreResponseHandler)
+      // assign action result
+    self._response.payload = resp
+      // delete error we have payload
+    self._response.error = null
+
+    self.finish()
+  }
+
+  /**
+   *
+   *
+   * @param {any} err
+   * @param {any} value
+   * @returns
+   *
+   * @memberof Hemera
+   */
+  _onServerPreHandler (err, value) {
+    const self = this
+
+    if (err) {
+      if (err instanceof SuperError) {
+        self._response.error = err.rootCause || err.cause || err
+      } else {
+        self._response.error = err
+      }
+
+      const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err)
+      self.log.error(internalError)
+
+      return self.finish()
+    }
+
+      // reply value from extension
+    if (value) {
+      self._response.payload = value
+      return self.finish()
+    }
+
+    try {
+      let action = self._actMeta.action.bind(self)
+
+      self._actMeta.dispatch(self._request, self._response, (err) => {
+          // middleware error
+        if (err) {
+          if (err instanceof SuperError) {
+            self._response.error = err.rootCause || err.cause || err
+          } else {
+            self._response.error = err
+          }
+
+          const internalError = new Errors.HemeraError(Constants.ADD_MIDDLEWARE_ERROR, self.errorDetails).causedBy(err)
+          self.log.error(internalError)
+
+          return self.finish()
+        }
+
+          // if request type is 'pubsub' we dont have to reply back
+        if (self._request.payload.request.type === Constants.REQUEST_TYPE_PUBSUB) {
+          action(self._request.payload.pattern)
+          return self.finish()
+        }
+
+          // execute RPC action
+        if (self._config.generators && self._actMeta.isGenFunc) {
+          action(self._request.payload.pattern).then(x => self._actionHandler(null, x)).catch(e => self._actionHandler(e))
+        } else {
+          action(self._request.payload.pattern, self._actionHandler.bind(self))
+        }
+      })
+    } catch (err) {
+      if (err instanceof SuperError) {
+        self._response.error = err.rootCause || err.cause || err
+      } else {
+        self._response.error = err
+      }
+
+        // service should exit
+      self._shouldCrash = true
+
+      self.finish()
+    }
+  }
+
+  /**
+   *
+   *
+   * @param {any} err
+   * @param {any} value
+   * @returns
+   *
+   * @memberof Hemera
+   */
+  _onServerPreRequestHandler (err, value) {
+    let self = this
+
+      // icnoming pattern
+    self._pattern = self._request.payload.pattern
+      // find matched route
+    self._actMeta = self._router.lookup(self._pattern)
+
+    if (err) {
+      if (err instanceof SuperError) {
+        self._response.error = err.rootCause || err.cause || err
+      } else {
+        self._response.error = err
+      }
+
+      return self.finish()
+    }
+
+      // reply value from extension
+    if (value) {
+      self._response.payload = value
+      return self.finish()
+    }
+
+      // check if a handler is registered with this pattern
+    if (self._actMeta) {
+      self._extensions.onServerPreHandler.dispatch(self, (err, val) => self._onServerPreHandler(err, val))
+    } else {
+      self.log.info({
+        topic: self._topic
+      }, Constants.PATTERN_NOT_FOUND)
+
+      self._response.error = new Errors.PatternNotFound(Constants.PATTERN_NOT_FOUND, self.errorDetails)
+
+        // send error back to callee
+      self.finish()
+    }
   }
 
   /**
@@ -676,168 +853,6 @@ class Hemera extends EventEmitter {
       return
     }
 
-    /**
-     *
-     *
-     * @param {any} err
-     * @param {any} resp
-     * @returns
-     */
-    function actionHandler (err, resp) {
-      const self = this
-
-      if (err) {
-        const errorDetails = {
-          service: self.trace$.service,
-          method: self.trace$.method,
-          app: self._config.name,
-          ts: Util.nowHrTime()
-        }
-
-        // collect hops
-        if (err.hops) {
-          err.hops.push(errorDetails)
-        } else {
-          err.hops = [errorDetails]
-        }
-
-        if (err instanceof SuperError) {
-          self._response.error = err.rootCause || err.cause || err
-        } else {
-          self._response.error = err
-        }
-
-        return self.finish()
-      }
-
-      // assign action result
-      self._response.payload = resp
-      // delete error we have payload
-      self._response.error = null
-
-      self.finish()
-    }
-
-    /**
-     *
-     *
-     * @param {any} err
-     * @param {any} value
-     * @returns
-     */
-    function onServerPreHandler (err, value) {
-      const self = this
-
-      if (err) {
-        if (err instanceof SuperError) {
-          self._response.error = err.rootCause || err.cause || err
-        } else {
-          self._response.error = err
-        }
-
-        const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err)
-        self.log.error(internalError)
-
-        return self.finish()
-      }
-
-      // reply value from extension
-      if (value) {
-        self._response.payload = value
-        return self.finish()
-      }
-
-      try {
-        let action = self._actMeta.action.bind(self)
-
-        self._actMeta.dispatch(self._request, self._response, (err) => {
-          // middleware error
-          if (err) {
-            if (err instanceof SuperError) {
-              self._response.error = err.rootCause || err.cause || err
-            } else {
-              self._response.error = err
-            }
-
-            const internalError = new Errors.HemeraError(Constants.ADD_MIDDLEWARE_ERROR, self.errorDetails).causedBy(err)
-            self.log.error(internalError)
-
-            return self.finish()
-          }
-
-          // if request type is 'pubsub' we dont have to reply back
-          if (self._request.payload.request.type === Constants.REQUEST_TYPE_PUBSUB) {
-            action(self._request.payload.pattern)
-            return self.finish()
-          }
-
-          // execute RPC action
-          if (self._config.generators && self._actMeta.isGenFunc) {
-            action(self._request.payload.pattern).then(x => actionHandler.call(self, null, x)).catch(e => actionHandler.call(self, e))
-          } else {
-            action(self._request.payload.pattern, actionHandler.bind(self))
-          }
-        })
-      } catch (err) {
-        if (err instanceof SuperError) {
-          self._response.error = err.rootCause || err.cause || err
-        } else {
-          self._response.error = err
-        }
-
-        // service should exit
-        self._shouldCrash = true
-
-        self.finish()
-      }
-    }
-
-    /**
-     *
-     *
-     * @param {any} err
-     * @param {any} value
-     * @returns
-     */
-    function onServerPreRequestHandler (err, value) {
-      let self = this
-
-      // icnoming pattern
-      self._pattern = self._request.payload.pattern
-      // find matched route
-      self._actMeta = self._router.lookup(self._pattern)
-
-      if (err) {
-        if (err instanceof SuperError) {
-          self._response.error = err.rootCause || err.cause || err
-        } else {
-          self._response.error = err
-        }
-
-        return self.finish()
-      }
-
-      // reply value from extension
-      if (value) {
-        self._response.payload = value
-        return self.finish()
-      }
-
-      // check if a handler is registered with this pattern
-      if (self._actMeta) {
-        self._extensions.onServerPreHandler.dispatch(self, onServerPreHandler)
-      } else {
-        self.log.info({
-          topic: self._topic
-        }, Constants.PATTERN_NOT_FOUND)
-
-        self._response.error = new Errors.PatternNotFound(Constants.PATTERN_NOT_FOUND, self.errorDetails)
-
-        // send error back to callee
-        self.finish()
-      }
-    }
-
     let handler = (request, replyTo) => {
       // create new execution context
       let ctx = this.createContext()
@@ -850,7 +865,7 @@ class Hemera extends EventEmitter {
       ctx._actMeta = {}
       ctx._isServer = true
 
-      ctx._extensions.onServerPreRequest.dispatch(ctx, onServerPreRequestHandler)
+      ctx._extensions.onServerPreRequest.dispatch(ctx, (err, val) => ctx._onServerPreRequestHandler(err, val))
     }
 
     // standard pubsub with optional max proceed messages
@@ -957,6 +972,151 @@ class Hemera extends EventEmitter {
   }
 
   /**
+   *
+   *
+   * @param {any} err
+   *
+   * @memberof Hemera
+   */
+  _onClientPostRequestHandler (err) {
+    const self = this
+      // extension error
+    if (err) {
+      let error = null
+      if (err instanceof SuperError) {
+        error = err.rootCause || err.cause || err
+      } else {
+        error = err
+      }
+      const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err)
+      self.log.error(internalError)
+      self.emit('clientResponseError', error)
+
+      self._execute(error)
+      return
+    }
+
+    if (self._response.payload.error) {
+      let error = Errio.fromObject(self._response.payload.error)
+
+      const internalError = new Errors.BusinessError(Constants.BUSINESS_ERROR, self.errorDetails).causedBy(error)
+      self.log.error(internalError)
+      self.emit('clientResponseError', error)
+
+      self._execute(error)
+      return
+    }
+
+    self._execute(null, self._response.payload.result)
+  }
+
+  /**
+   *
+   *
+   * @param {any} response
+   *
+   * @memberof Hemera
+   */
+  _sendRequestHandler (response) {
+    const self = this
+    const res = self._decoder.decode.call(self, response)
+    self._response.payload = res.value
+    self._response.error = res.error
+
+    try {
+        // decoding error
+      if (self._response.error) {
+        let error = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR, self.errorDetails).causedBy(self._response.error)
+        self.log.error(error)
+        self.emit('clientResponseError', error)
+
+        self._execute(error)
+        return
+      }
+
+      self._extensions.onClientPostRequest.dispatch(self, (err) => self._onClientPostRequestHandler(err))
+    } catch (err) {
+      let error = null
+      if (err instanceof SuperError) {
+        error = err.rootCause || err.cause || err
+      } else {
+        error = err
+      }
+
+      const internalError = new Errors.FatalError(Constants.FATAL_ERROR, self.errorDetails).causedBy(err)
+      self.log.fatal(internalError)
+      self.emit('clientResponseError', error)
+
+        // let it crash
+      if (self._config.crashOnFatal) {
+        self.fatal()
+      }
+    }
+  }
+
+  /**
+   *
+   *
+   * @param {any} err
+   *
+   * @memberof Hemera
+   */
+  _onPreRequestHandler (err) {
+    const self = this
+
+    let m = self._encoder.encode.call(self, self._message)
+
+      // encoding issue
+    if (m.error) {
+      let error = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR).causedBy(m.error)
+      self.log.error(error)
+      self.emit('clientResponseError', error)
+
+      self._execute(error)
+      return
+    }
+
+    if (err) {
+      let error = null
+      if (err instanceof SuperError) {
+        error = err.rootCause || err.cause || err
+      } else {
+        error = err
+      }
+      const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+      self.log.error(internalError)
+      self.emit('clientResponseError', error)
+      self._execute(error)
+      return
+    }
+
+    self._request.payload = m.value
+    self._request.error = m.error
+
+      // use simple publish mechanism instead of request/reply
+    if (self._pattern.pubsub$ === true) {
+      if (self._actCallback) {
+        self.log.info(Constants.PUB_CALLBACK_REDUNDANT)
+      }
+
+      self._transport.send(self._pattern.topic, self._request.payload)
+    } else {
+      const optOptions = {}
+        // limit on the number of responses the requestor may receive
+      if (self._pattern.maxMessages$ > 0) {
+        optOptions.max = self._pattern.maxMessages$
+      } else if (self._pattern.maxMessages$ !== -1) {
+        optOptions.max = 1
+      }
+        // send request
+      self._sid = self._transport.sendRequest(self._pattern.topic, self._request.payload, optOptions, self._sendRequestHandler.bind(self))
+
+        // handle timeout
+      self.handleTimeout()
+    }
+  }
+
+  /**
    * Start an action.
    *
    * @param {any} pattern
@@ -968,147 +1128,6 @@ class Hemera extends EventEmitter {
     // check for use quick syntax for JSON objects
     if (_.isString(pattern)) {
       pattern = TinySonic(pattern)
-    }
-
-    /**
-     *
-     * @param {any} err
-     * @returns
-     */
-    function onClientPostRequestHandler (err) {
-      const self = this
-      // extension error
-      if (err) {
-        let error = null
-        if (err instanceof SuperError) {
-          error = err.rootCause || err.cause || err
-        } else {
-          error = err
-        }
-        const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err)
-        self.log.error(internalError)
-        self.emit('clientResponseError', error)
-
-        self._execute(error)
-        return
-      }
-
-      if (self._response.payload.error) {
-        let error = Errio.fromObject(self._response.payload.error)
-
-        const internalError = new Errors.BusinessError(Constants.BUSINESS_ERROR, self.errorDetails).causedBy(error)
-        self.log.error(internalError)
-        self.emit('clientResponseError', error)
-
-        self._execute(error)
-        return
-      }
-
-      self._execute(null, self._response.payload.result)
-    }
-
-    /**
-     *
-     *
-     * @param {any} response
-     * @returns
-     */
-    function sendRequestHandler (response) {
-      const self = this
-      const res = self._decoder.decode.call(self, response)
-      self._response.payload = res.value
-      self._response.error = res.error
-
-      try {
-        // decoding error
-        if (self._response.error) {
-          let error = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR, self.errorDetails).causedBy(self._response.error)
-          self.log.error(error)
-          self.emit('clientResponseError', error)
-
-          self._execute(error)
-          return
-        }
-
-        self._extensions.onClientPostRequest.dispatch(self, onClientPostRequestHandler)
-      } catch (err) {
-        let error = null
-        if (err instanceof SuperError) {
-          error = err.rootCause || err.cause || err
-        } else {
-          error = err
-        }
-
-        const internalError = new Errors.FatalError(Constants.FATAL_ERROR, self.errorDetails).causedBy(err)
-        self.log.fatal(internalError)
-        self.emit('clientResponseError', error)
-
-        // let it crash
-        if (self._config.crashOnFatal) {
-          self.fatal()
-        }
-      }
-    }
-
-    /**
-     *
-     *
-     * @param {any} err
-     * @returns
-     */
-    function onPreRequestHandler (err) {
-      const self = this
-
-      let m = self._encoder.encode.call(self, self._message)
-
-      // encoding issue
-      if (m.error) {
-        let error = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR).causedBy(m.error)
-        self.log.error(error)
-        self.emit('clientResponseError', error)
-
-        self._execute(error)
-        return
-      }
-
-      if (err) {
-        let error = null
-        if (err instanceof SuperError) {
-          error = err.rootCause || err.cause || err
-        } else {
-          error = err
-        }
-        const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
-        self.log.error(internalError)
-        self.emit('clientResponseError', error)
-        self._execute(error)
-        return
-      }
-
-      self._request.payload = m.value
-      self._request.error = m.error
-
-      // use simple publish mechanism instead of request/reply
-      if (pattern.pubsub$ === true) {
-        if (self._actCallback) {
-          self.log.info(Constants.PUB_CALLBACK_REDUNDANT)
-        }
-
-        self._transport.send(pattern.topic, self._request.payload)
-      } else {
-        const optOptions = {}
-        // limit on the number of responses the requestor may receive
-        if (self._pattern.maxMessages$ > 0) {
-          optOptions.max = self._pattern.maxMessages$
-        } else if (self._pattern.maxMessages$ !== -1) {
-          optOptions.max = 1
-        }
-        // send request
-        self._sid = self._transport.sendRequest(pattern.topic, self._request.payload, optOptions, sendRequestHandler.bind(self))
-
-        // handle timeout
-        self.handleTimeout()
-      }
     }
 
     // create new execution context
@@ -1161,7 +1180,7 @@ class Hemera extends EventEmitter {
         }
       })
 
-      ctx._extensions.onClientPreRequest.dispatch(ctx, onPreRequestHandler)
+      ctx._extensions.onClientPreRequest.dispatch(ctx, (err) => ctx._onPreRequestHandler(err))
 
       return promise
     }
@@ -1181,9 +1200,52 @@ class Hemera extends EventEmitter {
       }
     }
 
-    ctx._extensions.onClientPreRequest.dispatch(ctx, onPreRequestHandler)
+    ctx._extensions.onClientPreRequest.dispatch(ctx, (err) => ctx._onPreRequestHandler(err))
   }
 
+  /**
+   *
+   *
+   * @param {any} err
+   *
+   * @memberof Hemera
+   */
+  _onClientTimeoutPostRequestHandler (err) {
+    const self = this
+    if (err) {
+      let error = null
+      if (err instanceof SuperError) {
+        error = err.rootCause || err.cause || err
+      } else {
+        error = err
+      }
+
+      const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+      self.log.error(internalError)
+      self._response.error = error
+      self.emit('clientResponseError', error)
+    }
+
+    try {
+      self._execute(self._response.error)
+    } catch (err) {
+      let error = null
+      if (err instanceof SuperError) {
+        error = err.rootCause || err.cause || err
+      } else {
+        error = err
+      }
+
+      const internalError = new Errors.FatalError(Constants.FATAL_ERROR, self.errorDetails).causedBy(err)
+      self.log.fatal(internalError)
+      self.emit('clientResponseError', error)
+
+        // let it crash
+      if (self._config.crashOnFatal) {
+        self.fatal()
+      }
+    }
+  }
   /**
    * Handle the timeout when a pattern could not be resolved. Can have different reasons:
    * - No one was connected at the time (service unavailable)
@@ -1199,49 +1261,12 @@ class Hemera extends EventEmitter {
     const self = this
     const timeout = self._pattern.timeout$ || this._config.timeout
 
-    function onClientPostRequestHandler (err) {
-      const self = this
-      if (err) {
-        let error = null
-        if (err instanceof SuperError) {
-          error = err.rootCause || err.cause || err
-        } else {
-          error = err
-        }
-
-        const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
-        self.log.error(internalError)
-        self._response.error = error
-        self.emit('clientResponseError', error)
-      }
-
-      try {
-        self._execute(self._response.error)
-      } catch (err) {
-        let error = null
-        if (err instanceof SuperError) {
-          error = err.rootCause || err.cause || err
-        } else {
-          error = err
-        }
-
-        const internalError = new Errors.FatalError(Constants.FATAL_ERROR, self.errorDetails).causedBy(err)
-        self.log.fatal(internalError)
-        self.emit('clientResponseError', error)
-
-        // let it crash
-        if (self._config.crashOnFatal) {
-          self.fatal()
-        }
-      }
-    }
-
     let timeoutHandler = () => {
       const error = new Errors.TimeoutError(Constants.ACT_TIMEOUT_ERROR, self.errorDetails)
       self.log.error(error)
       self._response.error = error
       self.emit('clientResponseError', error)
-      self._extensions.onClientPostRequest.dispatch(self, onClientPostRequestHandler)
+      self._extensions.onClientPostRequest.dispatch(self, (err) => self._onClientTimeoutPostRequestHandler(err))
     }
 
     self._transport.timeout(self._sid, timeout, 1, timeoutHandler)
