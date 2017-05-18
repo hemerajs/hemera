@@ -122,16 +122,6 @@
                     <h4 class="section-h4">Definition</h4>
                     <pre>
 <code>
-message ErrorCause {
-  string message = 1;
-  string name = 2;
-}
-
-message RootCause {
-  string message = 1;
-  string name = 2;
-}
-
 enum RequestType {
   pubsub = 0;
   request = 1;
@@ -141,9 +131,7 @@ message Error {
   string message = 1;
   string name = 2;
   Pattern pattern = 3;
-  ErrorCause cause = 4;
-  RootCause rootCause = 5;
-  string ownStack = 6;
+  string stack = 6;
 }
 
 message Request {

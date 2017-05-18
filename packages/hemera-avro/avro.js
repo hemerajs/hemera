@@ -100,7 +100,7 @@ let schema = {
       {
         name: 'code',
         type: 'int',
-        default: -1
+        default: 0
       },
       {
         name: 'message',
@@ -119,13 +119,7 @@ let schema = {
           values: ['string', 'boolean', 'double']
         },
         default: {}
-      },
-      {
-        name: 'cause',
-        type: ['null', 'Error'],
-        default: null
-      }
-      ]
+      }]
     }, 'null']
   }, {
     name: 'meta',
