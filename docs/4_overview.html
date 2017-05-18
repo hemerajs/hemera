@@ -130,8 +130,8 @@ enum RequestType {
 message Error {
   string message = 1;
   string name = 2;
-  Pattern pattern = 3;
-  string stack = 6;
+  string code = 3;
+  string stack = 4;
 }
 
 message Request {
