@@ -3,6 +3,11 @@ Changelog
 
 # 1.x
 
+### 1.2.7
+
+#### Summary
+- Convert server / client handler to instance members (performance)
+
 ### 1.2.6
 
 #### Summary
