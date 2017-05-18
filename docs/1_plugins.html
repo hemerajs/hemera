@@ -174,7 +174,7 @@ hemera.use({
 </code>
                     </pre>
                     <h4 class="section-h4">Plugin dependencies</h4>
-                    <p><code>dependencies</code>: are managed by <a href="https://nodejs.org/en/blog/npm/peer-dependencies/">peerDepenencies</a></p>
+                    <p>The <code>dependencies</code> attribute is used to identify the dependencies of a plugin. When the plugin could not be resolved a warning appears and an error is thrown. Does not provide version dependency which should be implemented using npm  <a href="https://nodejs.org/en/blog/npm/peer-dependencies/">peerDepenencies</a>.</p>
                     <pre>
 <code class="javascript">
 hemera.use({ 
@@ -183,7 +183,8 @@ hemera.use({
  attributes: { 
   name: "test",
   version: "1.0.0",
-  description: "my first plugin"
+  description: "my first plugin",
+  dependencies: ['hemera-joi']
  }
 })
 </code>
