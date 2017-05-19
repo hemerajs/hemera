@@ -24,8 +24,9 @@ hemera.ready(() => {
   }, (req, cb) => {
     cb(null, true)
   })
+
   /**
-   * Token wilcards
+   * Token wildcards
    */
   hemera.act({
     topic: 'systems-europe.a.info.details',
@@ -33,8 +34,9 @@ hemera.ready(() => {
   }, function (err, resp) {
     this.log.info(resp, 'Result')
   })
+
   /**
-   * Full wilcards
+   * Full wildcards
    */
   hemera.act({
     topic: 'systems-europe.b.info',
