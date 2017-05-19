@@ -3,6 +3,11 @@ Changelog
 
 # 1.x
 
+### 1.2.9
+
+#### Summary
+- Improve NATS subject to RegexExp conversion. Support all subject levels `a.*.b`, `a.>`.
+
 ### 1.2.8
 
 #### Summary

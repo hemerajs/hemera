@@ -55,11 +55,11 @@ class Util {
     let hasFullWildcard = subject.indexOf('>') > -1
 
     if (hasFullWildcard) {
-      subject = subject.replace('>', '[a-zA-Z0-9\\-\\.]+$')
-      return new RegExp('^' + subject, 'i')
+      subject = subject.replace('>', '[a-zA-Z0-9\\-\\.]+')
+      return new RegExp('^' + subject + '$', 'i')
     } else if (hasTokenWildcard) {
-      subject = subject.replace('*', '[a-zA-Z0-9\\-]+$')
-      return new RegExp('^' + subject, 'i')
+      subject = subject.replace('*', '[a-zA-Z0-9\\-]+')
+      return new RegExp('^' + subject + '$', 'i')
     }
 
     return subject
