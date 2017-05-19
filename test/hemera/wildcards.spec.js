@@ -66,6 +66,44 @@ describe('Topic wildcards', function () {
     })
   })
 
+  it('Should call the first server method twice because order is significant', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    let callback = Sinon.spy()
+    let callback2 = Sinon.spy()
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'systems-europe.a.>',
+        cmd: 'info'
+      }, (req, cb) => {
+        callback()
+        cb(null, true)
+      })
+
+      hemera.add({
+        topic: 'systems-europe.a.*',
+        cmd: 'info'
+      }, (req, cb) => {
+        callback2()
+        cb(null, true)
+      })
+
+      hemera.act({
+        topic: 'systems-europe.a.info',
+        cmd: 'info'
+      }, function (err, resp) {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.equals(true)
+        expect(callback2.callCount).to.be.equals(0)
+        expect(callback.callCount).to.be.equals(2)
+        hemera.close()
+        done()
+      })
+    })
+  })
+
   it('Should be able to use token wildcard in pubsub mode', function (done) {
     const nats = require('nats').connect(authUrl)
 
