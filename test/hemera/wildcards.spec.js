@@ -97,6 +97,8 @@ describe('Topic wildcards', function () {
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals(true)
         expect(callback2.callCount).to.be.equals(0)
+        // NATS has registered two subject wildcards
+        // On hemera side the order is significant
         expect(callback.callCount).to.be.equals(2)
         hemera.close()
         done()
