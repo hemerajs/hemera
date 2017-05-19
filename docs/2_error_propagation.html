@@ -120,19 +120,52 @@
 
           <p class="section-content">
             <p>If you call a service which internally call many other services and suddenly a service fails, this error must
-              be propagated to the first callee. Hemera will aggregate all errors together and that you are able to identify the root
-              issue.</p>
-              <p>In order to avoid storing very long error chains we do not collect all errors in the chain but the root issue.</p>
+              be propagated to the first callee. In order to avoid storing very long error chains we do not collect all errors
+              in the chain but the root issue.</p>
           </p>
           <h4 class="section-h4">Example</h4>
           <pre>
 <code class="javascript">
-hemera.act({
-  topic: "a",
-  cmd: "a"
-}, function (err, resp) {
- const error = err // BusinessError
+const nats = require("nats").connect(authUrl)
+
+const hemera = new Hemera(nats)
+const UnauthorizedError = Hemera.createError("Unauthorized")
+
+hemera.ready(() => {
+  hemera.add({
+    topic: "a",
+    cmd: "a"
+  }, function (resp, cb) {
+    const a = new UnauthorizedError("test")
+    a.test = 444
+    cb(a)
+  })
+
+  hemera.act({
+    topic: "a",
+    cmd: "a"
+  }, function (err, resp) {
+    
+  })
 })
+</code>
+                    </pre>
+          <h4 class="section-h4">Error output:</h4>
+          <p>In addition a hops list is tracked to understand which services are
+              involved.</p>
+          <pre>
+<code class="javascript">
+{
+  name: "Unauthorized",
+  message: "test",
+  stack: "....",
+  test: 444,
+  hops:
+   [ { service: "a",
+       method: "cmd:a,topic:a",
+       app: "hemera-starptech",
+       ts: 522330692412 } ]
+}
 </code>
                     </pre>
         </div>
