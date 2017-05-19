@@ -14,13 +14,13 @@ const hemera = new Hemera(nats, {
 hemera.ready(() => {
   hemera.add({
     topic: 'systems-europe.a.>',
-    cmd: 'info'
+    cmd: 'details'
   }, (req, cb) => {
     cb(null, true)
   })
   hemera.add({
     topic: 'systems-europe.b.*',
-    cmd: 'info'
+    cmd: 'name'
   }, (req, cb) => {
     cb(null, true)
   })
@@ -29,7 +29,7 @@ hemera.ready(() => {
    */
   hemera.act({
     topic: 'systems-europe.a.info.details',
-    cmd: 'info'
+    cmd: 'details'
   }, function (err, resp) {
     this.log.info(resp, 'Result')
   })
@@ -38,7 +38,7 @@ hemera.ready(() => {
    */
   hemera.act({
     topic: 'systems-europe.b.info',
-    cmd: 'info'
+    cmd: 'name'
   }, function (err, resp) {
     this.log.info(resp, 'Result')
   })
