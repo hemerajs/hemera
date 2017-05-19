@@ -66,6 +66,50 @@ describe('Topic wildcards', function () {
     })
   })
 
+  it('Should be able to use token wildcard in pubsub mode', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'systems-europe.a.>',
+        cmd: 'info'
+      }, (req) => {
+        expect(req.topic).to.be.equals('systems-europe.a.info.details')
+        hemera.close()
+        done()
+      })
+      hemera.act({
+        topic: 'systems-europe.a.info.details',
+        cmd: 'info',
+        pubsub$: true
+      })
+    })
+  })
+
+  it('Should be able to use full wildcard in pubsub mode', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'systems-europe.a.*',
+        cmd: 'info'
+      }, (req) => {
+        expect(req.topic).to.be.equals('systems-europe.a.info')
+        hemera.close()
+        done()
+      })
+      hemera.act({
+        topic: 'systems-europe.a.info',
+        cmd: 'info',
+        pubsub$: true
+      })
+    })
+  })
+
   it('Should not convert topic without wildcard tokens', function (done) {
     const nats = require('nats').connect(authUrl)
 
