@@ -7,7 +7,7 @@ Changelog
 
 #### Summary
 - Add support for full / token wildcards in topic name [details](https://nats.io/documentation/internals/nats-protocol/)
-- Add wildcard [example](https://github.com/hemerajs/hemera/blob/master/examples/wildcards.js
+- Add wildcard [example](https://github.com/hemerajs/hemera/blob/master/examples/wildcards.js)
 - Add tests for wildcards
 
 ### 1.2.7
