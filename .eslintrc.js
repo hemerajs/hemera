@@ -15,6 +15,7 @@ module.exports = {
     "Hemera": true,
     "expect": true,
     "HemeraTestsuite": true,
+    "HemeraUtil": true,
     "Sinon": true,
     "Code": true,
     "UnauthorizedError": true

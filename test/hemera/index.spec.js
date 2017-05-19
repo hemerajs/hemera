@@ -576,4 +576,52 @@ describe('Hemera', function () {
       }, 50)
     })
   })
+
+  it('Should be able to use token wildcard in topic declaration', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'systems-europe.a.>',
+        cmd: 'info'
+      }, (req, cb) => {
+        cb(null, true)
+      })
+      hemera.act({
+        topic: 'systems-europe.a.info.details',
+        cmd: 'info'
+      }, function (err, resp) {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.equals(true)
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to use full wildcard in topic declaration', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'systems-europe.a.*',
+        cmd: 'info'
+      }, (req, cb) => {
+        cb(null, true)
+      })
+      hemera.act({
+        topic: 'systems-europe.a.info',
+        cmd: 'info'
+      }, function (err, resp) {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.equals(true)
+        hemera.close()
+        done()
+      })
+    })
+  })
 })

@@ -14,10 +14,56 @@ const _ = require('lodash')
 const lut = []
 for (let i = 0; i < 256; i++) { lut[i] = (i < 16 ? '0' : '') + (i).toString(16) }
 
+/*
+   // convert in regex equivalent
+if (typeof pattern.topic === 'object') {
+  let regexStr = pattern.topic.toString()
+  let hasTokenWildcard = regexStr.indexOf('*') > -1
+  let hasFullWildcard = regexStr.indexOf('>') > -1
+
+      // full wildcard match
+  if (hasFullWildcard) {
+    pattern.topic = regexStr.split('/').join('').split('^').join('')
+    regexStr = regexStr.replace('>', '[a-zA-Z\\-]*$')
+  }
+
+      // token wildcard match
+  if (hasTokenWildcard) {
+    pattern.topic = regexStr.split('/').join('').split('^').join('')
+    regexStr = regexStr.replace('*', '[a-zA-Z\\-\\.]*$')
+  }
+
+  bloomTopic = new RegExp(regexStr)
+}
+*/
+
 /**
  * @class Util
  */
 class Util {
+  /**
+   *
+   *
+   * @static
+   * @param {any} subject
+   * @returns
+   *
+   * @memberof Util
+   */
+  static natsWildcardToRegex (subject) {
+    let hasTokenWildcard = subject.indexOf('*') > -1
+    let hasFullWildcard = subject.indexOf('>') > -1
+
+    if (hasFullWildcard) {
+      subject = subject.replace('>', '[a-zA-Z0-9\\-\\.]+$')
+      return new RegExp('^' + subject, 'i')
+    } else if (hasTokenWildcard) {
+      subject = subject.replace('*', '[a-zA-Z0-9\\-]+$')
+      return new RegExp('^' + subject, 'i')
+    }
+
+    return subject
+  }
   /**
    * @returns
    * Fast ID generator: e7 https://jsperf.com/uuid-generator-opt/18
