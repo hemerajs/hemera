@@ -11,7 +11,7 @@ Changelog
 ```
  load: {
   shouldCrash: true, // Should gracefully exit the process to recover from memory leaks or load, crashOnFatal must be enabled
-},
+}
 ```
 
 ### 1.2.9
