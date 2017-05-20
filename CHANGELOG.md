@@ -3,6 +3,17 @@ Changelog
 
 # 1.x
 
+### 1.2.10
+
+#### Summary
+- Configuration: When load policy has been breached we can gracefully exit the process
+
+```
+ load: {
+  shouldCrash: true, // Should gracefully exit the process to recover from memory leaks or load, crashOnFatal must be enabled
+},
+```
+
 ### 1.2.9
 
 #### Summary
