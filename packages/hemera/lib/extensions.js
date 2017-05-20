@@ -199,6 +199,7 @@ function onServerPreRequestLoadTest (req, res, next) {
   if (ctx._config.load.checkPolicy) {
     const error = this._loadPolicy.check()
     if (error) {
+      ctx._shouldCrash = ctx._config.load.shouldCrash
       return next(new Errors.ProcessLoadError(error.message, error.data))
     }
   }

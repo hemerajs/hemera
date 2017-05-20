@@ -22,11 +22,11 @@ describe('Hemera default config', function () {
     const nats = require('nats').connect(authUrl)
 
     var defaultConfig = {
-      timeout: 2000, // max execution time of a request
-      generators: false, // promise and generators support
+      timeout: 2000, // Max execution time of a request
+      generators: false, // Promise and generators support
       name: 'hemera-' + Os.hostname(), // node name
       crashOnFatal: true, // Should gracefully exit the process at unhandled exceptions
-      logLevel: 'silent',
+      logLevel: 'silent', // 'fatal', 'error', 'warn', 'info', 'debug', 'trace'; also 'silent'
       maxRecursion: 0, // Max recursive method calls
       errio: {
         recursive: true, // Recursively serialize and deserialize nested errors
@@ -38,10 +38,11 @@ describe('Hemera default config', function () {
       },
       bloomrun: {
         indexing: 'inserting', // Pattern indexing method "inserting" or "depth"
-        lookupBeforeAdd: true // Should throw an error when pattern matched with existign set
+        lookupBeforeAdd: true // Checks if the pattern is no duplicate based on to the indexing strategy
       },
       load: {
-        checkPolicy: true,
+        checkPolicy: true, // Check on every request (server) if the load policy was observed,
+        shouldCrash: true, // Should gracefully exit the process to recover from memory leaks or load
         process: {
           sampleInterval: 0  // Frequency of load sampling in milliseconds (zero is no sampling)
         },
@@ -53,10 +54,10 @@ describe('Hemera default config', function () {
       },
       circuitBreaker: {
         enabled: false,
-        minSuccesses: 1, // minimum successes in the half-open state to change to close state
-        halfOpenTime: 5 * 1000, // the time when the server is ready to accept further calls after changing to open state
-        resetIntervalTime: 15 * 1000, // interval when the server automatically reset the circuit breaker to close state
-        maxFailures: 3 // threshold when the circuit breaker change to open state
+        minSuccesses: 1, // Minimum successes in the half-open state to change to close state
+        halfOpenTime: 5 * 1000, // The duration when the server is ready to accept further calls after changing to open state
+        resetIntervalTime: 15 * 1000, // Frequency of reseting the circuit breaker to close state in milliseconds
+        maxFailures: 3 // The threshold when the circuit breaker change to open state
       }
     }
 

@@ -45,7 +45,7 @@ var defaultConfig = {
   timeout: 2000, // Max execution time of a request
   generators: false, // Promise and generators support
   name: 'hemera-' + Os.hostname(), // node name
-  crashOnFatal: true, // Should gracefully exit the process at unhandled exceptions
+  crashOnFatal: true, // Should gracefully exit the process at unhandled exceptions or fatal errors
   logLevel: 'silent', // 'fatal', 'error', 'warn', 'info', 'debug', 'trace'; also 'silent'
   maxRecursion: 0, // Max recursive method calls
   errio: {
@@ -61,7 +61,8 @@ var defaultConfig = {
     lookupBeforeAdd: true // Checks if the pattern is no duplicate based on to the indexing strategy
   },
   load: {
-    checkPolicy: true, // Check on every request (server) if the load policy was observed
+    checkPolicy: true, // Check on every request (server) if the load policy was observed,
+    shouldCrash: true, // Should gracefully exit the process to recover from memory leaks or load, crashOnFatal must be enabled
     process: {
       sampleInterval: 0  // Frequency of load sampling in milliseconds (zero is no sampling)
     },
