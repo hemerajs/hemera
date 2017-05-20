@@ -14,29 +14,6 @@ const _ = require('lodash')
 const lut = []
 for (let i = 0; i < 256; i++) { lut[i] = (i < 16 ? '0' : '') + (i).toString(16) }
 
-/*
-   // convert in regex equivalent
-if (typeof pattern.topic === 'object') {
-  let regexStr = pattern.topic.toString()
-  let hasTokenWildcard = regexStr.indexOf('*') > -1
-  let hasFullWildcard = regexStr.indexOf('>') > -1
-
-      // full wildcard match
-  if (hasFullWildcard) {
-    pattern.topic = regexStr.split('/').join('').split('^').join('')
-    regexStr = regexStr.replace('>', '[a-zA-Z\\-]*$')
-  }
-
-      // token wildcard match
-  if (hasTokenWildcard) {
-    pattern.topic = regexStr.split('/').join('').split('^').join('')
-    regexStr = regexStr.replace('*', '[a-zA-Z\\-\\.]*$')
-  }
-
-  bloomTopic = new RegExp(regexStr)
-}
-*/
-
 /**
  * @class Util
  */
