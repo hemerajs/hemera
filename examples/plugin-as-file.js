@@ -27,7 +27,7 @@ exports.attributes = {
   const Hemera = require('./../')
   const nats = require('nats').connect()
 
-  const hemera = new Hemera(nats, { logLevel: 'info' })
+  const hemera = new Hemera(nats, { logLevel: 'info', childLogger: true })
   const plugin = require('./plugin-as-file')
   hemera.use(plugin, { ...plugin options })
 

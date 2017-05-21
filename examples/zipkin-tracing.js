@@ -5,7 +5,8 @@ const nats = require('nats').connect()
 const hemeraZipkin = require('./../packages/hemera-zipkin')
 
 const hemera = new Hemera(nats, {
-  logLevel: 'info'
+  logLevel: 'info',
+  childLogger: true
 })
 
 hemera.use(hemeraZipkin, {

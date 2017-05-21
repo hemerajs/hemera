@@ -6,7 +6,8 @@ const nats = require('nats').connect({
 })
 const HemeraAvro = require('./../packages/hemera-avro')
 const hemera = new Hemera(nats, {
-  logLevel: 'info'
+  logLevel: 'info',
+  childLogger: true
 })
 
 hemera.use(HemeraAvro)

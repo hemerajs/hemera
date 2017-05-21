@@ -7,7 +7,8 @@ const nats = require('nats').connect({
 const HemeraMsgpack = require('./../packages/hemera-msgpack')
 
 const hemera = new Hemera(nats, {
-  logLevel: 'info'
+  logLevel: 'info',
+  childLogger: true
 })
 
 hemera.use(HemeraMsgpack)

@@ -6,7 +6,8 @@ const hemeraJoi = require('./../packages/hemera-joi')
 const hemeraArango = require('./../packages/hemera-arango-store')
 
 const hemera = new Hemera(nats, {
-  logLevel: 'info'
+  logLevel: 'info',
+  childLogger: true
 })
 
 hemera.use(hemeraJoi)

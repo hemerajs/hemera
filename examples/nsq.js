@@ -6,7 +6,8 @@ const nats = require('nats').connect()
 const hemeraNsq = require('./../packages/hemera-nsq')
 
 const hemera = new Hemera(nats, {
-  logLevel: 'info'
+  logLevel: 'info',
+  childLogger: true
 })
 
 hemera.use(hemeraJoi)

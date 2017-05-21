@@ -7,7 +7,10 @@ const hemeraJwt = require('./../packages/hemera-jwt-auth')
 // encoded token with { scope: ['math'] }
 const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZSI6WyJtYXRoIl0sImlhdCI6MTQ4ODEyMjIwN30.UPLLbjDgkB_ajQjI7BUlpUGfZYvsqHP3NqWQIavibeQ'
 
-const hemera = new Hemera(nats)
+const hemera = new Hemera(nats, {
+  logLevel: 'info',
+  childLogger: true
+})
 hemera.use(hemeraJwt, {
   jwt: {
     secret: 'test'

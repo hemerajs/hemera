@@ -25,8 +25,9 @@ describe('Hemera default config', function () {
       timeout: 2000, // Max execution time of a request
       generators: false, // Promise and generators support
       name: 'hemera-' + Os.hostname(), // node name
-      crashOnFatal: true, // Should gracefully exit the process at unhandled exceptions
+      crashOnFatal: true, // Should gracefully exit the process at unhandled exceptions or fatal errors
       logLevel: 'silent', // 'fatal', 'error', 'warn', 'info', 'debug', 'trace'; also 'silent'
+      childLogger: false, // Create a child logger per section / plugin. Only possible with default logger Pino.
       maxRecursion: 0, // Max recursive method calls
       errio: {
         recursive: true, // Recursively serialize and deserialize nested errors
@@ -42,7 +43,7 @@ describe('Hemera default config', function () {
       },
       load: {
         checkPolicy: true, // Check on every request (server) if the load policy was observed,
-        shouldCrash: true, // Should gracefully exit the process to recover from memory leaks or load
+        shouldCrash: true, // Should gracefully exit the process to recover from memory leaks or load, crashOnFatal must be enabled
         process: {
           sampleInterval: 0  // Frequency of load sampling in milliseconds (zero is no sampling)
         },

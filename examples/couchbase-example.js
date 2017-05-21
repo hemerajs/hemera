@@ -6,7 +6,8 @@ const nats = require('nats').connect()
 const hemeraCouchbaseStore = require('./../packages/hemera-couchbase-store')
 
 const hemera = new Hemera(nats, {
-  logLevel: 'info'
+  logLevel: 'info',
+  childLogger: true
 })
 
 hemera.use(hemeraJoi)

@@ -15,7 +15,8 @@ const Hemera = require('./../packages/hemera')
 const nats = require('nats').connect()
 
 const hemera = new Hemera(nats, {
-  logLevel: 'info'
+  logLevel: 'info',
+  childLogger: true
 })
 hemera.expose('somethingToExpose', 4)
 hemera.use({

@@ -5,7 +5,8 @@ const nats = require('nats').connect()
 const hemeraMongo = require('./../packages/hemera-mongo-store')
 
 const hemera = new Hemera(nats, {
-  logLevel: 'info'
+  logLevel: 'info',
+  childLogger: true
 })
 
 hemera.use(hemeraMongo, {

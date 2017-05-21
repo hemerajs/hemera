@@ -5,7 +5,8 @@ const hemeraJoi = require('./../packages/hemera-joi')
 const nats = require('nats').connect()
 const hemeraElasticsearch = require('./../packages/hemera-elasticsearch')
 const hemera = new Hemera(nats, {
-  logLevel: 'info'
+  logLevel: 'info',
+  childLogger: true
 })
 
 hemera.use(hemeraJoi)

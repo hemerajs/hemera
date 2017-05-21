@@ -8,7 +8,8 @@ const nats = require('nats').connect({
 const HemeraRedisCache = require('./../packages/hemera-redis-cache')
 
 const hemera = new Hemera(nats, {
-  logLevel: 'info'
+  logLevel: 'info',
+  childLogger: true
 })
 
 hemera.use(hemeraJoi)

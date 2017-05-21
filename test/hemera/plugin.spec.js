@@ -462,4 +462,26 @@ describe('Plugin interface', function () {
       done()
     }
   })
+
+  it('Should be bale to use child logger', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      childLogger: true
+    })
+
+    let plugin = function (options) {
+      this.log.info('test')
+    }
+
+    hemera.use({
+      plugin: plugin,
+      attributes: {
+        name: 'myPlugin'
+      }
+    })
+
+    hemera.close()
+    done()
+  })
 })
