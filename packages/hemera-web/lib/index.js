@@ -85,7 +85,6 @@ class HttpMicro {
    * @memberof HttpMicro
    */
   listen (cb) {
-    this._hemera.log.info(`HTTP Server listening on: ${this._options.host}:${this._options.port}`)
     this._server.listen(this._options.port, this._options.host, cb)
   }
 }

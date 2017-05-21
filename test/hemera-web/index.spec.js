@@ -97,7 +97,6 @@ describe('Hemera-web', function () {
         cb(null, { result: parseInt(req.a) + parseInt(req.b) })
       })
 
-      // only pass cmd and payload
       Axios.get('http://127.0.0.1:3000?cmd=add&a=1&b=2').then((resp) => {
         expect(resp.data.result).to.be.equals(3)
         hemera.close()
