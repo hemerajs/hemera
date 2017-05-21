@@ -22,6 +22,10 @@ describe('Hemera-web', function () {
 
   // Shutdown our server after we are done
   after(function () {
+    if (NodeVersion.major < 6) {
+      return this.skip()
+    }
+
     server.kill()
   })
 
