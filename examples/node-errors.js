@@ -11,7 +11,7 @@ const FooBarError = hemera.createError('FooBarError')
  * IMPORTANT
  * - Always use hemera errors
  * - If you wrap errors only the root issue will reach the requestor
- * - Any additional error data except private _ properties are tranfered
+ * - Any additional error data except private _ properties are transfered
  */
 
 hemera.ready(() => {
