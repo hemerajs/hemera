@@ -3,6 +3,18 @@ Changelog
 
 # 1.x
 
+### 1.2.11
+
+### Summary
+
+### nats-hemera:
+- Add `close` event: Is fired before the transport connection is closed.
+
+### hemera-web:
+- Fire next when server is listening
+- Add tests
+- Fixed content type parsing
+
 ### 1.2.10
 
 #### Summary
