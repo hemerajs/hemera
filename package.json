@@ -35,9 +35,9 @@
     "setup": "npm i && lerna bootstrap",
     "clean": "lerna clean",
     "release": "lerna publish -i",
-    "test": "nyc mocha -r \"./test/hemera/bootstrap\" -t 5000 \"./test/**/*.spec.js\" \"./packages/hemera-zipkin/test/**/*.spec.js\"",
+    "test": "nyc mocha -r \"./test/hemera/bootstrap\" -t 5000 \"./test/**/*.js\" \"./packages/hemera-zipkin/test/**/*.js\"",
     "coverage": "npm run test && nyc report --reporter=html",
-    "ci": "nyc mocha -t 5000 \"./test/**/*.spec.js\" \"./packages/hemera-zipkin/test/**/*.spec.js\" && nyc report --reporter=text-lcov | coveralls"
+    "ci": "nyc mocha -r \"./test/hemera/bootstrap\" -t 5000 \"./test/**/*.js\" \"./packages/hemera-zipkin/test/**/*.js\" && nyc report --reporter=text-lcov | coveralls"
   },
   "engines": {
     "node": ">=4"
