@@ -32,8 +32,9 @@
     "queueing"
   ],
   "scripts": {
-    "setup-node6": "npm i && lerna bootstrap",
-    "setup": "npm i && lerna bootstrap --ignore \"hemera-web\"",
+    "setup:node4": "npm i && lerna bootstrap --ignore \"hemera-web\"",
+    "setup:node7": "npm i && lerna bootstrap",
+    "setup": "npm i && lerna bootstrap",
     "clean": "lerna clean",
     "release": "lerna publish -i",
     "test": "nyc mocha -r \"./test/hemera/bootstrap\" -t 5000 \"./test/**/*.js\" \"./packages/hemera-zipkin/test/**/*.js\"",
