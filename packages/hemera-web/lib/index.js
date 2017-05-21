@@ -1,8 +1,5 @@
 'use strict'
 
-const {
-  json, buffer, text
-} = require('micro')
 const Micro = require('micro')
 const Hoek = require('hoek')
 const Url = require('url')
@@ -54,19 +51,19 @@ class HttpMicro {
 
       // include json payload to pattern
       if (Typeis(req, contentTypeJson)) {
-        const body = await json(req)
+        const body = await Micro.json(req)
 
         if (body) {
           pattern = Hoek.applyToDefaults(pattern, body)
         }
       } else if (Typeis(req, contentForm)) { // include form data to pattern
-        const body = await text(req)
+        const body = await Micro.text(req)
         const post = Qs.parse(body)
         pattern = Hoek.applyToDefaults(pattern, post)
       } else if (Typeis(req, contentBinaryStream)) { // handle as raw binary data
-        pattern.binaryData = await buffer(req) // limit 1MB
+        pattern.binaryData = await Micro.buffer(req) // limit 1MB
       } else if (contentText.indexOf(contentType) > -1) { // handle as raw text data
-        pattern.textData = await text(req)
+        pattern.textData = await Micro.text(req)
       }
 
       return this._hemera.act(pattern).catch((err) => {
