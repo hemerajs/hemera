@@ -58,11 +58,18 @@ Payload: a=1&bd=2
 ```
 ### Error handling
 
+In Hemera:
 ```js
 const CustomError = hemera.createError('CustomError')
-const error = new CustomError()
-error.statusCode = 404
-cb(error)
+
+hemera.add({
+  topic: 'math',
+  cmd: 'add'
+}, function (req, cb) {
+  const error = new CustomError()
+  error.statusCode = 404
+  cb(error)
+})
 ```
 #### Results in
 _Status Code_: __404__
