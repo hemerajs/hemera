@@ -1315,9 +1315,10 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   close () {
-    this._heavy.stop()
+    this.emit('close')
 
-    return this._transport.close()
+    this._heavy.stop()
+    this._transport.close()
   }
 }
 

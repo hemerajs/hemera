@@ -2,9 +2,15 @@
 
 const Web = require('./lib')
 
-exports.plugin = function hemeraWeb (options) {
+exports.plugin = function hemeraWeb (options, next) {
   const hemera = this
-  new Web(hemera, options).listen()
+  const web = new Web(hemera, options)
+  web.listen(next)
+
+  hemera.on('close', () => {
+    web._server.close()
+    hemera.log.warn({ plugin: this.plugin$.attributes.name }, 'Http server closed!')
+  })
 }
 
 exports.options = {

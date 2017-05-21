@@ -13,7 +13,8 @@
   "dependencies": {
     "hoek": "4.1.x",
     "lodash": "4.17.x",
-    "micro": "7.3.x"
+    "micro": "7.3.x",
+    "type-is": "1.6.x"
   },
   "devDependencies": {
     "code": "4.0.x",
