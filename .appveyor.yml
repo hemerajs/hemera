@@ -57,7 +57,7 @@ install:
   - cmd: npm config set python %PYTHON2%\python.exe --global
 
   - npm run setup
-  - npm run test:excludeSkip
+  - npm run test
 
 
 

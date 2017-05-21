@@ -3,9 +3,11 @@
 const HemeraWeb = require('../../packages/hemera-web')
 const Axios = require('axios')
 
-process.setMaxListeners(0)
-
 describe('Hemera-web', function () {
+  if (NodeVersion.major < 6) {
+    return this.skip()
+  }
+
   const PORT = 6244
   const flags = ['--user', 'derek', '--pass', 'foobar']
   const authUrl = 'nats://derek:foobar@localhost:' + PORT
