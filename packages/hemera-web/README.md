@@ -72,7 +72,7 @@ hemera.add({
 })
 ```
 #### Results in
-_Status Code_: __404__
+_Status Code_: __404__ - _default (500)_
 ```json
 {
   "error": {
