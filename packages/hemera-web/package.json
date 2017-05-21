@@ -16,6 +16,9 @@
     "micro": "7.3.x",
     "type-is": "1.6.x"
   },
+  "engines": {
+    "node": ">=6"
+  },
   "devDependencies": {
     "code": "4.0.x",
     "eslint": "3.19.x",

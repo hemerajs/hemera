@@ -6,6 +6,11 @@ const Axios = require('axios')
 process.setMaxListeners(0)
 
 describe('Hemera-web', function () {
+  // Skip test if node version is too low
+  if (NodeVersion.major < 6) {
+    this.skip()
+  }
+
   const PORT = 6244
   const flags = ['--user', 'derek', '--pass', 'foobar']
   const authUrl = 'nats://derek:foobar@localhost:' + PORT

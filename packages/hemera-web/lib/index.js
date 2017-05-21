@@ -32,7 +32,7 @@ class HttpMicro {
    * @memberof HttpMicro
    */
   _create () {
-    this._server = Micro(async(req, res) => {
+    this._server = Micro(async (req, res) => {
       let pattern = Hoek.clone(this._options.pattern)
 
       let url = Url.parse(req.url, true)

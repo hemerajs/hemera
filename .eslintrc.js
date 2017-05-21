@@ -18,7 +18,8 @@ module.exports = {
     "HemeraUtil": true,
     "Sinon": true,
     "Code": true,
-    "UnauthorizedError": true
+    "UnauthorizedError": true,
+    "NodeVersion": true
   },
   // see http://eslint.org/docs/rules/
   "rules": {
