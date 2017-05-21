@@ -3,6 +3,25 @@ Changelog
 
 # 1.x
 
+### 1.2.12
+
+### Summary
+
+### nats-hemera:
+- Introduce `childLogger` for plugins: It uses internally the child bindings of [Pino](https://github.com/pinojs/pino/blob/master/docs/API.md#childbindings) therefore only possible with default logger Pino.
+- Add tests
+
+Example:
+```
+[2017-05-21T12:11:05.818Z] INFO (hemera-starptech/17328 on starptech):
+    plugin: "hemera-web"
+    inbound: {
+      "id": "33badc7834f541faaf3f4d79a8958715",
+      "duration": 0.005121,
+      "pattern": "a:1,b:2,cmd:add,topic:math"
+    }
+```
+
 ### 1.2.11
 
 ### Summary
