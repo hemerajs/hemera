@@ -81,7 +81,7 @@ _Status Code_: __404__
     "hops": [
       {
         "service": "math",
-        "method": "a:1,b:2,cmd:sub,topic:math",
+        "method": "a:1,b:2,cmd:add,topic:math",
         "app": "hemera-starptech",
         "ts": 299208574491
       }
