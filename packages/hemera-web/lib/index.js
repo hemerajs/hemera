@@ -41,7 +41,6 @@ class HttpMicro {
         pattern = Hoek.applyToDefaults(pattern, url.query)
       }
 
-      const contentType = req.headers['content-type']
       const xRequestId = req.headers['x-request-id']
 
       // for tracing
@@ -62,7 +61,7 @@ class HttpMicro {
         pattern = Hoek.applyToDefaults(pattern, post)
       } else if (Typeis(req, contentBinaryStream)) { // handle as raw binary data
         pattern.binaryData = await Micro.buffer(req) // limit 1MB
-      } else if (contentText.indexOf(contentType) > -1) { // handle as raw text data
+      } else if (Typeis(req, contentText)) { // handle as raw text data
         pattern.textData = await Micro.text(req)
       }
 
