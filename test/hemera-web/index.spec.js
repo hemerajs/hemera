@@ -1,12 +1,12 @@
 'use strict'
 
-const HemeraWeb = require('../../packages/hemera-web')
-const Axios = require('axios')
-
 describe('Hemera-web', function () {
   if (NodeVersion.major < 6) {
     return this.skip()
   }
+
+  const HemeraWeb = require('../../packages/hemera-web')
+  const Axios = require('axios')
 
   const PORT = 6244
   const flags = ['--user', 'derek', '--pass', 'foobar']
