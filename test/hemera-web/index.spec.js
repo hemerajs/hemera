@@ -78,6 +78,35 @@ describe('Hemera-web', function () {
     })
   })
 
+  it('Should be able to define default pattern', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.use(HemeraWeb, {
+      pattern: { topic: 'math' }
+    })
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function (req, cb) {
+        cb(null, { result: parseInt(req.a) + parseInt(req.b) })
+      })
+
+      // only pass cmd and payload
+      Axios.get('http://127.0.0.1:3000?cmd=add&a=1&b=2').then((resp) => {
+        expect(resp.data.result).to.be.equals(3)
+        hemera.close()
+        done()
+      })
+      .catch(done)
+    })
+  })
+
   it('Should be able to transfer small text with pattern', function (done) {
     const nats = require('nats').connect(authUrl)
 
