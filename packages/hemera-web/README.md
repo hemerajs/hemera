@@ -6,6 +6,7 @@ Http route mapping for Hemera microservices. Based on [Micro](https://github.com
 - Respect `Body` and `Query` data as pattern
 - Transport small binary or text data in the pattern
 - Returns correct Hemera errors and without stack traces
+- **Requires Node >= 6**
 
 [![npm](https://img.shields.io/npm/v/hemera-web.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-web)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
