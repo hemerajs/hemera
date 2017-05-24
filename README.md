@@ -132,6 +132,10 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 | [hemera-msgpack](https://github.com/hemerajs/hemera/tree/master/packages/hemera-msgpack) | [![npm](https://img.shields.io/npm/v/hemera-msgpack.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-msgpack)
 | [hemera-avro](https://github.com/hemerajs/hemera/tree/master/packages/hemera-avro) | [![npm](https://img.shields.io/npm/v/hemera-avro.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-avro)
 
+| Data compression | Version |
+|--------|-------|
+| [hemera-snappy](https://github.com/hemerajs/hemera/tree/master/packages/hemera-snappy) | [![npm](https://img.shields.io/npm/v/hemera-snappy.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-snappy)
+
 | Cache | Version |
 |--------|-------|
 | [hemera-redis-cache](https://github.com/hemerajs/hemera/tree/master/packages/hemera-redis-cache) | [![npm](https://img.shields.io/npm/v/hemera-redis-cache.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-redis-cache)
