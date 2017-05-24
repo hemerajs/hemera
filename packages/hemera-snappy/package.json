@@ -1,0 +1,22 @@
+{
+  "name": "hemera-snappy",
+  "version": "1.0.0",
+  "description": "This is a plugin to use snappy compression with Hemera",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint index.js"
+  },
+  "author": "Dustin Deus (https://github.com/StarpTech)",
+  "license": "MIT",
+  "dependencies": {
+    "snappyjs": "0.5.x"
+  },
+  "devDependencies": {
+    "eslint": "3.19.x",
+    "eslint-config-standard": "10.2.x",
+    "eslint-plugin-import": "2.2.x",
+    "eslint-plugin-node": "4.2.x",
+    "eslint-plugin-promise": "3.5.x",
+    "eslint-plugin-standard": "3.0.x"
+  }
+}
