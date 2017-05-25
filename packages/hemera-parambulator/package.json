@@ -3,12 +3,12 @@
   "version": "0.1.80",
   "description": "This is a plugin to use Parambulator with Hemera",
   "main": "index.js",
-  "scripts": {
-    "lint": "eslint index.js"
-  },
   "repository": {
     "url": "git@github.com:hemerajs/hemera.git",
     "type": "git"
+  },
+  "scripts": {
+    "lint": "eslint index.js"
   },
   "engines": {
     "node": ">=4.0.0"

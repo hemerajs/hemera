@@ -3,6 +3,10 @@
   "version": "1.0.10",
   "description": "Provide informations about the current hemera instance",
   "main": "index.js",
+  "repository": {
+    "url": "git@github.com:hemerajs/hemera.git",
+    "type": "git"
+  },
   "scripts": {
     "lint": "eslint index.js"
   },

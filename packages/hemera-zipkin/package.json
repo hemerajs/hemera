@@ -3,15 +3,15 @@
   "version": "1.0.6",
   "description": "This is a plugin to use Zipkin with Hemera",
   "main": "index.js",
+  "repository": {
+    "url": "git@github.com:hemerajs/hemera.git",
+    "type": "git"
+  },
   "scripts": {
     "test": "mocha -t 5000 --recursive",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec -t 5000 --recursive",
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report text-lcov -- -R spec | node ./node_modules/coveralls/bin/coveralls.js",
     "lint": "eslint --ext .js lib test"
-  },
-  "repository": {
-    "url": "git@github.com:hemerajs/hemera.git",
-    "type": "git"
   },
   "engines": {
     "node": ">=4.0.0"

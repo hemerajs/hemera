@@ -10,7 +10,9 @@ exports.plugin = function hemeraMongoStore (options, next) {
   const topic = 'mongo-store'
 
   Mongodb.MongoClient.connect(options.mongo.url, options.mongos.options, function (err, db) {
-    if (err) throw err
+    if (err) {
+      return hemera.emit('error', err)
+    }
 
     hemera.expose('db', db)
     hemera.expose('mongodb', Mongodb)

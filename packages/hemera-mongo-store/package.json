@@ -3,14 +3,14 @@
   "version": "1.0.9",
   "description": "This is a plugin to use Mongodb with Hemera",
   "main": "index.js",
+  "repository": {
+    "url": "git@github.com:hemerajs/hemera.git",
+    "type": "git"
+  },
   "scripts": {
     "lint": "eslint index.js",
     "test": "nyc mocha -t 5000 ./test/**/*.js",
     "coverage": "npm run test && nyc report --reporter=html"
-  },
-  "repository": {
-    "url": "git@github.com:hemerajs/hemera.git",
-    "type": "git"
   },
   "engines": {
     "node": ">=4.0.0"

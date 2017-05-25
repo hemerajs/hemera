@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "description": "This is a plugin to mail with Hemera",
   "main": "index.js",
+  "repository": {
+    "url": "git@github.com:hemerajs/hemera.git",
+    "type": "git"
+  },
   "scripts": {
     "lint": "eslint index.js"
   },

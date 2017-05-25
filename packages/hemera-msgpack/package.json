@@ -3,6 +3,10 @@
   "version": "1.0.15",
   "description": "This is a plugin to use Msgpack with Hemera",
   "main": "index.js",
+  "repository": {
+    "url": "git@github.com:hemerajs/hemera.git",
+    "type": "git"
+  },
   "scripts": {
     "lint": "eslint index.js"
   },
