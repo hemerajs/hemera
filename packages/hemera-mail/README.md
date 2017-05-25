@@ -19,7 +19,7 @@ const hemera = new Hemera(nats)
 
 hemera.use(HemeraJoi)
 hemera.use(HemeraMail, {
-  // use here the nodemailer transport plugin of your choice, default is jsonTransport
+  transport: // use here the nodemailer transport plugin of your choice, default is jsonTransport
 })
 
 hemera.ready(() => {
