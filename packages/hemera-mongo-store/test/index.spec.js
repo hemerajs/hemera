@@ -42,7 +42,6 @@ describe('Hemera-mongo-store', function () {
   let server
   let hemera
   let plugin
-  let extendedData = {}
 
   before(function (done) {
     server = HemeraTestsuite.start_server(PORT, {}, () => {
