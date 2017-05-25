@@ -35,6 +35,13 @@ hemera.ready(() => {
 })
 ```
 
+### How to execute a server method ?
+
+You can transport the pattern in different ways:
+
+- As Query parameters
+- As Payload from type JSON
+
 ### Examples
 
 - GET Request
