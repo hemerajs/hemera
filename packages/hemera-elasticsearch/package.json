@@ -1,6 +1,6 @@
 {
   "name": "hemera-elasticsearch",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "This is a plugin to use Elasticsearch with Hemera",
   "main": "index.js",
   "scripts": {
