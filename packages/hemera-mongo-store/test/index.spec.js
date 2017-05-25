@@ -437,6 +437,31 @@ describe('Hemera-mongo-store', function () {
     })
   })
 
+  it('find can query with regular expressions', function(done) {
+    hemera.act({
+      topic,
+      cmd: 'create',
+      collection: testCollection,
+      data: { name: 'Jacob' }
+    }, function (err, resp) {
+      expect(err).to.be.not.exists()
+      expect(resp).to.be.an.object()
+
+      hemera.act({
+        topic,
+        cmd: 'find',
+        collection: testCollection,
+        query: EJSON.serialize({ name: new RegExp(/^jac/, 'i') }),
+      }, function (err, resp) {
+        expect(err).to.be.not.exists()
+        expect(resp.result).to.be.an.array()
+        expect(resp.result[0]._id).to.be.exists()
+        expect(resp.result[0].name).to.be.exists()
+        done()
+      })
+    })
+  })
+
   it('find with pagination', function (done) {
     hemera.act({
       topic,
