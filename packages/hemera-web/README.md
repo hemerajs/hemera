@@ -65,6 +65,22 @@ http://localhost:3000?topic=math&cmd=add
 
 Payload: a=1&bd=2
 ```
+### Define default pattern
+
+In Hemera:
+```js
+const hemera = new Hemera(nats)
+hemera.use(hemeraWeb, {
+  port: 3000,
+  host: '127.0.0.1',
+  pattern: {
+    topic: 'math'
+  }
+})
+
+GET - http://localhost:3000?cmd=add&a=1&b=2
+```
+
 ### Error handling
 
 In Hemera:
@@ -98,3 +114,16 @@ _Status Code_: __404__ - _default (500)_
   }
 }
 ```
+
+### Show error stack for debugging
+
+In Hemera:
+```js
+const hemera = new Hemera(nats)
+hemera.use(hemeraWeb, {
+  port: 3000,
+  host: '127.0.0.1',
+  errors: { propBlacklist: [] }
+})
+```
+

@@ -340,10 +340,14 @@ class Hemera extends EventEmitter {
       params.attributes = Hoek.applyToDefaults(params.attributes, _.pick(params.attributes.pkg, ['name', 'description', 'version']))
     }
 
+    let pluginOptions = {}
+
     // pass options as second argument during plugin registration
     if (_.isObject(options)) {
-      params.options = params.options || {}
-      params.options = Hoek.applyToDefaults(params.options, options)
+      pluginOptions = Hoek.clone(params.options) || {}
+      pluginOptions = Hoek.applyToDefaults(pluginOptions, options)
+    } else if (params.options) {
+      pluginOptions = Hoek.clone(params.options)
     }
 
     // plugin name is required
@@ -378,7 +382,7 @@ class Hemera extends EventEmitter {
     ctx.plugin$.attributes = params.attributes || {}
     ctx.plugin$.attributes.dependencies = params.attributes.dependencies || []
     ctx.plugin$.parentPlugin = this.plugin$.attributes.name
-    ctx.plugin$.options = params.options || {}
+    ctx.plugin$.options = pluginOptions
 
     if (ctx._config.childLogger) {
       ctx.log = this.log.child({ plugin: params.attributes.name })
