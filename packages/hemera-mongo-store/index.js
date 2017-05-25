@@ -11,7 +11,7 @@ exports.plugin = function hemeraMongoStore (options, next) {
   const hemera = this
   const topic = 'mongo-store'
   const serializeResult = (result) => {
-    return (options.serializeResult === true) ? serialize(result) : result;
+    return (options.serializeResult === true) ? serialize(result) : result
   }
 
   Mongodb.MongoClient.connect(options.mongo.url, options.mongos.options, function (err, db) {
