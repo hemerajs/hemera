@@ -1,13 +1,12 @@
 'use strict'
 
-const Axios = require('axios')
-
 describe('Hemera-web', function () {
   const PORT = 6244
   const flags = ['--user', 'derek', '--pass', 'foobar']
   const authUrl = 'nats://derek:foobar@localhost:' + PORT
   let server
   let HemeraWeb
+  let Axios
 
   // Start up our own nats-server
   before(function (done) {
@@ -15,6 +14,7 @@ describe('Hemera-web', function () {
       return this.skip()
     }
 
+    Axios = require('axios')
     HemeraWeb = require('../../packages/hemera-web')
 
     server = HemeraTestsuite.start_server(PORT, flags, done)

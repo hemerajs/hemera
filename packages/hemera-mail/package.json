@@ -1,7 +1,7 @@
 {
-  "name": "hemera-redis-cache",
-  "version": "1.0.15",
-  "description": "This is a plugin to use Redis with Hemera",
+  "name": "hemera-mail",
+  "version": "0.0.0",
+  "description": "This is a plugin to mail with Hemera",
   "main": "index.js",
   "scripts": {
     "lint": "eslint index.js"
@@ -9,7 +9,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "redis": "2.7.x"
+    "nodemailer": "4.0.x"
   },
   "devDependencies": {
     "eslint": "3.19.x",

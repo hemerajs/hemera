@@ -80,6 +80,9 @@ hemera.ready(() => {
 })
 ```
 
+## Dependencies
+- hemera-joi
+
 ## Interface
 
 * [NSQ API](#NSQ-api)
