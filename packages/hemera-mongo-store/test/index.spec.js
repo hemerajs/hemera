@@ -21,10 +21,10 @@ describe('Hemera-mongo-store', function () {
 
   before(function (done) {
     utils.initServer(topic, testCollection, options, (err, resp) => {
-      server = resp.server;
-      hemera = resp.hemera;
-      plugin = resp.plugin;
-      done();
+      server = resp.server
+      hemera = resp.hemera
+      plugin = resp.plugin
+      done()
     })
   })
 
