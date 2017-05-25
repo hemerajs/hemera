@@ -17,18 +17,22 @@ function createExtendedData(mongodb, date) {
 }
 
 function testExtendedData(plugin, testCollection, id, done) {
+  plugin.db.collection(testCollection).findOne({
+    _id: new plugin.mongodb.ObjectID(id)
+  }, (err, doc) => {
+    expect(err).to.be.null()
+    testExtendedDoc(plugin, doc)
+    done()
+  })
+}
+
+function testExtendedDoc(plugin, doc) {
   const ObjectID = plugin.mongodb.ObjectID
   const DBRef = plugin.mongodb.DBRef
 
-  plugin.db.collection(testCollection).findOne({
-    _id: new ObjectID(id)
-  }, (err, doc) => {
-    expect(err).to.be.null()
-    expect(doc.date).to.be.a.date()
-    expect(doc.objectId).to.be.an.instanceof(ObjectID)
-    expect(doc.ref).to.be.an.instanceof(DBRef)
-    done()
-  })
+  expect(doc.date).to.be.a.date()
+  expect(doc.objectId).to.be.an.instanceof(ObjectID)
+  expect(doc.ref).to.be.an.instanceof(DBRef)
 }
 
 function initServer(topic, testCollection, pluginOptions, cb) {
@@ -61,3 +65,4 @@ function initServer(topic, testCollection, pluginOptions, cb) {
 exports.initServer = initServer
 exports.testExtendedData = testExtendedData
 exports.createExtendedData = createExtendedData
+exports.testExtendedDoc = testExtendedDoc
