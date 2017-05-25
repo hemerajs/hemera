@@ -19,7 +19,8 @@
   "license": "MIT",
   "dependencies": {
     "hemera-store": "^1.1.7",
-    "mongodb": "2.2.x"
+    "mongodb": "2.2.x",
+    "mongodb-extended-json": "1.9.x"
   },
   "devDependencies": {
     "code": "4.0.x",
