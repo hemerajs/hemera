@@ -41,6 +41,7 @@ You can transport the pattern in different ways:
 
 - As Query parameters
 - As Payload from type JSON
+- As Payload from type x-www-form-urlencoded
 
 ### Examples
 
