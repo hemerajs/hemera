@@ -1,6 +1,6 @@
 {
   "name": "hemera-joi",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "This is a plugin to use Joi with Hemera",
   "main": "index.js",
   "repository": {
@@ -9,10 +9,6 @@
   },
   "scripts": {
     "lint": "eslint index.js"
-  },
-  "repository": {
-    "url": "git@github.com:hemerajs/hemera.git",
-    "type": "git"
   },
   "engines": {
     "node": ">=4.0.0"
