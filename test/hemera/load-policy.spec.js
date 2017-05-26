@@ -118,7 +118,7 @@ describe('Load policy for server component', function () {
           expect(stub.called).to.be.equals(true)
           hemera.close()
           done()
-        })
+        }, 50)
       })
     })
   })

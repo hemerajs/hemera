@@ -10,6 +10,9 @@ Http route mapping for Hemera microservices. Based on [Micro](https://github.com
 [![npm](https://img.shields.io/npm/v/hemera-web.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-web)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
+### Requirements
+- Node.js 6+
+
 #### Example
 
 ```js
@@ -34,6 +37,14 @@ hemera.ready(() => {
 })
 ```
 
+### How to execute a server method ?
+
+You can transport the pattern in different ways:
+
+- As Query parameters
+- As Payload from type JSON
+- As Payload from type x-www-form-urlencoded
+
 ### Examples
 
 - GET Request
@@ -56,6 +67,22 @@ http://localhost:3000?topic=math&cmd=add
 
 Payload: a=1&bd=2
 ```
+### Define default pattern
+
+In Hemera:
+```js
+const hemera = new Hemera(nats)
+hemera.use(hemeraWeb, {
+  port: 3000,
+  host: '127.0.0.1',
+  pattern: {
+    topic: 'math'
+  }
+})
+
+GET - http://localhost:3000?cmd=add&a=1&b=2
+```
+
 ### Error handling
 
 In Hemera:
@@ -89,3 +116,16 @@ _Status Code_: __404__ - _default (500)_
   }
 }
 ```
+
+### Show error stack for debugging
+
+In Hemera:
+```js
+const hemera = new Hemera(nats)
+hemera.use(hemeraWeb, {
+  port: 3000,
+  host: '127.0.0.1',
+  errors: { propBlacklist: [] }
+})
+```
+

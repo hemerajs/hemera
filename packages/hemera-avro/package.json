@@ -1,8 +1,12 @@
 {
   "name": "hemera-avro",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "This is a plugin to use Avro with Hemera",
   "main": "index.js",
+  "repository": {
+    "url": "git@github.com:hemerajs/hemera.git",
+    "type": "git"
+  },
   "scripts": {
     "lint": "eslint index.js"
   },

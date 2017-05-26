@@ -1,13 +1,12 @@
 'use strict'
 
-const Axios = require('axios')
-
 describe('Hemera-web', function () {
   const PORT = 6244
   const flags = ['--user', 'derek', '--pass', 'foobar']
   const authUrl = 'nats://derek:foobar@localhost:' + PORT
   let server
   let HemeraWeb
+  let Axios
 
   // Start up our own nats-server
   before(function (done) {
@@ -15,6 +14,7 @@ describe('Hemera-web', function () {
       return this.skip()
     }
 
+    Axios = require('axios')
     HemeraWeb = require('../../packages/hemera-web')
 
     server = HemeraTestsuite.start_server(PORT, flags, done)
@@ -52,6 +52,122 @@ describe('Hemera-web', function () {
         done()
       })
       .catch(done)
+    })
+  })
+
+  it('Should support blacklist for error propertys', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.use(HemeraWeb, {
+      errors: {
+        propBlacklist: [] // default 'stack'
+      }
+    })
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function (req, cb) {
+        const err = new UnauthorizedError('test')
+        err.statusCode = 404
+        cb(err)
+      })
+
+      Axios.get('http://127.0.0.1:3000?topic=math&cmd=add&a=1&b=2')
+      .catch((resp) => {
+        expect(resp.response.data.error.stack).to.be.exists()
+        expect(resp.response.status).to.be.equals(404)
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should not transfer the error stack', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.use(HemeraWeb)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function (req, cb) {
+        const err = new UnauthorizedError('test')
+        err.statusCode = 404
+        cb(err)
+      })
+
+      Axios.get('http://127.0.0.1:3000?topic=math&cmd=add&a=1&b=2')
+      .catch((resp) => {
+        expect(resp.response.data.error.stack).to.be.not.exists()
+        expect(resp.response.status).to.be.equals(404)
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should respond with the correct statusCode', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.use(HemeraWeb)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function (req, cb) {
+        const err = new UnauthorizedError('test')
+        err.statusCode = 404
+        cb(err)
+      })
+
+      Axios.get('http://127.0.0.1:3000?topic=math&cmd=add&a=1&b=2')
+      .catch((resp) => {
+        expect(resp.response.status).to.be.equals(404)
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should respond with 500 when no statusCode was given', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.use(HemeraWeb)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function (req, cb) {
+        cb(new Error('test'))
+      })
+
+      Axios.get('http://127.0.0.1:3000?topic=math&cmd=add&a=1&b=2')
+      .catch((resp) => {
+        expect(resp.response.status).to.be.equals(500)
+        hemera.close()
+        done()
+      })
     })
   })
 

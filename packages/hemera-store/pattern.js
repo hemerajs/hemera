@@ -8,7 +8,6 @@ const Joi = require('joi')
  * @class StorePattern
  */
 class StorePattern {
-
   /**
    *
    *

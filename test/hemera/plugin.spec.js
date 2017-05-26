@@ -392,6 +392,96 @@ describe('Plugin interface', function () {
     })
   })
 
+  it('Should not overwrite plugin default options when options are passed as second argument', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let pluginOptions = {
+      a: 1
+    }
+
+    // Plugin
+    let plugin = function (options) {
+      let hemera = this
+
+      expect(options.a).to.be.equals(1)
+
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, (resp, cb) => {
+        cb(null, {
+          result: resp.a + resp.b
+        })
+      })
+    }
+
+    const defaultOptions = {
+      a: 33
+    }
+
+    hemera.use({
+      plugin: plugin,
+      options: defaultOptions,
+      attributes: {
+        name: 'foo',
+        description: 'test',
+        version: '1.0.0'
+      }
+    }, pluginOptions)
+
+    hemera.ready(() => {
+      expect(hemera.plugins.foo.options.a).to.be.equals(1)
+      expect(defaultOptions.a).to.be.equals(33)
+      hemera.close()
+      done()
+    })
+  })
+
+  it('Should not overwrite plugin default options', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    // Plugin
+    let plugin = function (options) {
+      let hemera = this
+
+      hemera.setOption('a', 1)
+
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, (resp, cb) => {
+        cb(null, {
+          result: resp.a + resp.b
+        })
+      })
+    }
+
+    const defaultOptions = {
+      a: 33
+    }
+
+    hemera.use({
+      plugin: plugin,
+      options: defaultOptions,
+      attributes: {
+        name: 'foo',
+        description: 'test',
+        version: '1.0.0'
+      }
+    })
+
+    hemera.ready(() => {
+      expect(hemera.plugins.foo.options.a).to.be.equals(1)
+      expect(defaultOptions.a).to.be.equals(33)
+      hemera.close()
+      done()
+    })
+  })
+
   it('Should be able to specify plugin attributes by package.json', function (done) {
     const nats = require('nats').connect(authUrl)
 

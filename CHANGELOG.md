@@ -3,6 +3,20 @@ Changelog
 
 # 1.x
 
+### 1.2.14
+
+- Emit errors instead throw them because they will be thrown by convention when no error handler exist. This improves async error handling.
+
+### 1.2.13
+
+### Summary
+
+### nats-hemera:
+- Don't manipulate original plugin options
+### hemera-web
+- Introduce blacklist for error propertys
+- Add tests
+
 ### 1.2.12
 
 ### Summary

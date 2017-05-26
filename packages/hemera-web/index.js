@@ -19,6 +19,7 @@ exports.plugin = function hemeraWeb (options, next) {
 exports.options = {
   port: 3000,
   host: '127.0.0.1',
+  errors: { propBlacklist: ['stack'] },
   pattern: {}
 }
 

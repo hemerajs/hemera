@@ -1,8 +1,12 @@
 {
   "name": "hemera-arango-store",
-  "version": "1.1.20",
+  "version": "1.1.23",
   "description": "This is a plugin to use Arangodb with Hemera",
   "main": "index.js",
+  "repository": {
+    "url": "git@github.com:hemerajs/hemera.git",
+    "type": "git"
+  },
   "scripts": {
     "lint": "eslint index.js",
     "test": "nyc mocha -t 5000 ./test/**/*.js",
@@ -12,8 +16,8 @@
   "license": "MIT",
   "dependencies": {
     "arangojs": "5.6.x",
-    "hemera-joi": "^1.0.5",
-    "hemera-store": "^1.1.7"
+    "hemera-joi": "^1.1.1",
+    "hemera-store": "^1.1.9"
   },
   "devDependencies": {
     "code": "4.0.x",

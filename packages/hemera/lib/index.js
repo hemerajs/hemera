@@ -320,7 +320,7 @@ class Hemera extends EventEmitter {
         type
       })
       this.log.error(error)
-      throw (error)
+      this.emit('error', error)
     }
 
     this._extensions[type].add(handler)
@@ -340,17 +340,21 @@ class Hemera extends EventEmitter {
       params.attributes = Hoek.applyToDefaults(params.attributes, _.pick(params.attributes.pkg, ['name', 'description', 'version']))
     }
 
+    let pluginOptions = {}
+
     // pass options as second argument during plugin registration
     if (_.isObject(options)) {
-      params.options = params.options || {}
-      params.options = Hoek.applyToDefaults(params.options, options)
+      pluginOptions = Hoek.clone(params.options) || {}
+      pluginOptions = Hoek.applyToDefaults(pluginOptions, options)
+    } else if (params.options) {
+      pluginOptions = Hoek.clone(params.options)
     }
 
     // plugin name is required
     if (!params.attributes.name) {
       let error = new Errors.HemeraError(Constants.PLUGIN_NAME_REQUIRED)
       this.log.error(error)
-      throw (error)
+      this.emit('error', error)
     }
 
     // check plugin dependenciess
@@ -358,7 +362,7 @@ class Hemera extends EventEmitter {
       params.attributes.dependencies.forEach((dep) => {
         if (!this._plugins[dep]) {
           this.log.error(Constants.PLUGIN_DEPENDENCY_MISSING, params.attributes.name, dep, dep)
-          throw new Errors.HemeraError(Constants.PLUGIN_DEPENDENCY_NOT_FOUND)
+          this.emit('error', new Errors.HemeraError(Constants.PLUGIN_DEPENDENCY_NOT_FOUND))
         }
       })
     }
@@ -367,7 +371,7 @@ class Hemera extends EventEmitter {
     _.each(params.attributes.dependencies, (pluginName) => {
       if (!this._plugins[pluginName]) {
         this.log.error(Constants.PLUGIN_DEPENDENCY_MISSING, params.attributes.name, pluginName, pluginName)
-        throw new Errors.HemeraError(Constants.PLUGIN_DEPENDENCY_NOT_FOUND)
+        this.emit('error', new Errors.HemeraError(Constants.PLUGIN_DEPENDENCY_NOT_FOUND))
       }
     })
 
@@ -378,7 +382,7 @@ class Hemera extends EventEmitter {
     ctx.plugin$.attributes = params.attributes || {}
     ctx.plugin$.attributes.dependencies = params.attributes.dependencies || []
     ctx.plugin$.parentPlugin = this.plugin$.attributes.name
-    ctx.plugin$.options = params.options || {}
+    ctx.plugin$.options = pluginOptions
 
     if (ctx._config.childLogger) {
       ctx.log = this.log.child({ plugin: params.attributes.name })
@@ -458,9 +462,9 @@ class Hemera extends EventEmitter {
    */
   decorate (prop, value) {
     if (this._decorations[prop]) {
-      throw new Error(Constants.DECORATION_ALREADY_DEFINED)
+      this.emit('error', new Error(Constants.DECORATION_ALREADY_DEFINED))
     } else if (this[prop]) {
-      throw new Error(Constants.OVERRIDE_BUILTIN_METHOD_NOT_ALLOWED)
+      this.emit('error', new Error(Constants.OVERRIDE_BUILTIN_METHOD_NOT_ALLOWED))
     }
 
     this._decorations[prop] = {
@@ -532,7 +536,7 @@ class Hemera extends EventEmitter {
 
       // exit only on connection issues. Authorization and protocol issues don't lead to process termination
       if (Constants.NATS_CONN_ERROR_CODES.indexOf(error.code) > -1) {
-        throw (error)
+        this.emit('error', error)
       }
     })
     this._transport.driver.on('reconnect', () => {
@@ -562,7 +566,7 @@ class Hemera extends EventEmitter {
           }
           const internalError = new Errors.HemeraError(Constants.PLUGIN_REGISTRATION_ERROR).causedBy(err)
           this.log.error(internalError)
-          throw (internalError)
+          this.emit('error', internalError)
         }
         if (_.isFunction(cb)) {
           cb.call(this)
@@ -932,7 +936,7 @@ class Hemera extends EventEmitter {
       })
 
       this.log.error(error)
-      throw (error)
+      this.emit('error', error)
     }
 
     let origPattern = _.cloneDeep(pattern)
@@ -968,7 +972,7 @@ class Hemera extends EventEmitter {
       })
 
       this.log.error(error)
-      throw (error)
+      this.emit('error', error)
     }
 
     // add to bloomrun
@@ -1156,7 +1160,7 @@ class Hemera extends EventEmitter {
       let error = new Errors.HemeraError(Constants.NO_TOPIC_TO_REQUEST, ctx.errorDetails)
 
       this.log.error(error)
-      throw (error)
+      this.emit('error', error)
     }
 
     if (cb) {
