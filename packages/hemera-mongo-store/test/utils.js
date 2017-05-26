@@ -38,18 +38,15 @@ function testExtendedDoc(plugin, doc) {
 function initServer(topic, testCollection, pluginOptions, cb) {
   const PORT = 6243
   const noAuthUrl = 'nats://localhost:' + PORT
-  let server
-  let hemera
-  let plugin
 
-  server = HemeraTestsuite.start_server(PORT, {}, () => {
+  const server = HemeraTestsuite.start_server(PORT, {}, () => {
     const nats = Nats.connect(noAuthUrl)
-    hemera = new Hemera(nats, {
+    const hemera = new Hemera(nats, {
       logLevel: 'silent'
     })
     hemera.use(HemeraMongoStore, pluginOptions)
     hemera.ready(() => {
-      plugin = hemera.exposition['hemera-mongo-store']
+      const plugin = hemera.exposition['hemera-mongo-store']
       hemera.act({
         topic,
         cmd: 'dropCollection',
