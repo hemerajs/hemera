@@ -82,6 +82,24 @@ describe('Hemera-mongo-store', function () {
     })
   })
 
+  it('create with extended json (manually)', function (done) {
+    hemera.act({
+      topic,
+      cmd: 'create',
+      collection: testCollection,
+      data: {
+        date: { $date: new Date() },
+        objectId: { $oid: new plugin.mongodb.ObjectID() },
+        ref:  { $ref: 'test', $id: 1234 },
+      }
+    }, function (err, resp) {
+      expect(err).to.be.not.exists()
+      expect(resp).to.be.an.object()
+      expect(resp._id).to.be.exists()
+      utils.testExtendedData(plugin, testCollection, resp._id, done)
+    })
+  })
+
   it('update', function (done) {
     hemera.act({
       topic,
@@ -417,7 +435,20 @@ describe('Hemera-mongo-store', function () {
         expect(resp.result).to.be.an.array()
         expect(resp.result[0]._id).to.be.exists()
         expect(resp.result[0].name).to.be.exists()
-        done()
+
+        // Test with native extended JSON
+        hemera.act({
+          topic,
+          cmd: 'find',
+          collection: testCollection,
+          query: { name: { $regex: '^jac', $options: 'i' } },
+        }, function (err, resp) {
+          expect(err).to.be.not.exists()
+          expect(resp.result).to.be.an.array()
+          expect(resp.result[0]._id).to.be.exists()
+          expect(resp.result[0].name).to.be.exists()
+          done()
+        })
       })
     })
   })
