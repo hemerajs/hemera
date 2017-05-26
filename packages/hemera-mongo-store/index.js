@@ -10,7 +10,7 @@ const deserialize = require('mongodb-extended-json').deserialize
 exports.plugin = function hemeraMongoStore (options, next) {
   const hemera = this
   const topic = 'mongo-store'
-  const serializeResult = (result) => {
+  const preResponseHandler = (result) => {
     if (options.serializeResult === true) {
       return serialize(result)
     }
@@ -52,7 +52,7 @@ exports.plugin = function hemeraMongoStore (options, next) {
         if (err) {
           cb(err)
         } else {
-          cb(err, serializeResult(result))
+          cb(err, preResponseHandler(result))
         }
       })
     })
@@ -66,7 +66,7 @@ exports.plugin = function hemeraMongoStore (options, next) {
         if (err) {
           cb(err)
         } else {
-          cb(err, serializeResult(result))
+          cb(err, preResponseHandler(result))
         }
       })
     })
@@ -89,7 +89,7 @@ exports.plugin = function hemeraMongoStore (options, next) {
         if (err) {
           cb(err)
         } else {
-          cb(err, serializeResult(result))
+          cb(err, preResponseHandler(result))
         }
       })
     })
@@ -112,7 +112,7 @@ exports.plugin = function hemeraMongoStore (options, next) {
         if (err) {
           cb(err)
         } else {
-          cb(err, serializeResult(result))
+          cb(err, preResponseHandler(result))
         }
       })
     })
@@ -126,7 +126,7 @@ exports.plugin = function hemeraMongoStore (options, next) {
         if (err) {
           cb(err)
         } else {
-          cb(err, serializeResult(result))
+          cb(err, preResponseHandler(result))
         }
       })
     })
@@ -141,7 +141,7 @@ exports.plugin = function hemeraMongoStore (options, next) {
         if (err) {
           cb(err)
         } else {
-          cb(err, serializeResult(result))
+          cb(err, preResponseHandler(result))
         }
       })
     })
