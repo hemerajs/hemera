@@ -9,7 +9,6 @@ const Store = require('hemera-store')
  * @extends {Store}
  */
 class MongoStore extends Store {
-
   /**
    * Creates an instance of MongoStore.
    *
@@ -228,7 +227,6 @@ class MongoStore extends Store {
       cb(err, result)
     })
   }
-
 }
 
 module.exports = MongoStore
