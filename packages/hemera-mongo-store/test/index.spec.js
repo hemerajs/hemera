@@ -1,7 +1,7 @@
 'use strict'
 
 const Code = require('code')
-const utils = require('./utils')
+const Utils = require('./utils')
 
 const now = new Date()
 const expect = Code.expect
@@ -19,7 +19,7 @@ describe('Hemera-mongo-store', function () {
   let plugin
 
   before(function (done) {
-    utils.initServer(topic, testCollection, options, (err, resp) => {
+    Utils.initServer(topic, testCollection, options, (err, resp) => {
       server = resp.server
       hemera = resp.hemera
       plugin = resp.plugin

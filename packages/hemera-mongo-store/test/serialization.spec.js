@@ -2,7 +2,7 @@
 
 const Code = require('code')
 const EJSON = require('mongodb-extended-json')
-const utils = require('./utils')
+const Utils = require('./utils')
 
 const now = new Date()
 const expect = Code.expect
@@ -21,7 +21,7 @@ describe('Hemera-mongo-store with serialization', function () {
   let plugin
 
   before(function (done) {
-    utils.initServer(topic, testCollection, options, (err, resp) => {
+    Utils.initServer(topic, testCollection, options, (err, resp) => {
       server = resp.server
       hemera = resp.hemera
       plugin = resp.plugin
@@ -40,7 +40,7 @@ describe('Hemera-mongo-store with serialization', function () {
       topic,
       cmd: 'create',
       collection: testCollection,
-      data: utils.createExtendedData(plugin.mongodb, now)
+      data: Utils.createExtendedData(plugin.mongodb, now)
     }, function (err, resp) {
       expect(err).to.be.not.exists()
       expect(resp).to.be.an.object()
@@ -55,7 +55,7 @@ describe('Hemera-mongo-store with serialization', function () {
         expect(err).to.be.not.exists()
         expect(resp.result).to.be.an.array()
         expect(resp.result[0]._id).to.be.instanceof(plugin.mongodb.ObjectID)
-        utils.testExtendedDoc(plugin, resp.result[0])
+        Utils.testExtendedDoc(plugin, resp.result[0])
         done()
       })
     })
@@ -66,7 +66,7 @@ describe('Hemera-mongo-store with serialization', function () {
       topic,
       cmd: 'create',
       collection: testCollection,
-      data: utils.createExtendedData(plugin.mongodb, now)
+      data: Utils.createExtendedData(plugin.mongodb, now)
     }, function (err, resp) {
       expect(err).to.be.not.exists()
       expect(resp).to.be.an.object()
@@ -80,7 +80,7 @@ describe('Hemera-mongo-store with serialization', function () {
         resp = EJSON.deserialize(resp)
         expect(err).to.be.not.exists()
         expect(resp._id).to.be.instanceof(plugin.mongodb.ObjectID)
-        utils.testExtendedDoc(plugin, resp)
+        Utils.testExtendedDoc(plugin, resp)
         done()
       })
     })

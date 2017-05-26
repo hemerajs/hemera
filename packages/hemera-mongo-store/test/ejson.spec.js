@@ -2,7 +2,7 @@
 
 const Code = require('code')
 const EJSON = require('mongodb-extended-json')
-const utils = require('./utils')
+const Utils = require('./utils')
 
 const now = new Date()
 const expect = Code.expect
@@ -20,7 +20,7 @@ describe('Hemera-mongo-store with EJSON', function () {
   let plugin
 
   before(function (done) {
-    utils.initServer(topic, testCollection, options, (err, resp) => {
+    Utils.initServer(topic, testCollection, options, (err, resp) => {
       server = resp.server
       hemera = resp.hemera
       plugin = resp.plugin
@@ -39,12 +39,12 @@ describe('Hemera-mongo-store with EJSON', function () {
       topic,
       cmd: 'create',
       collection: testCollection,
-      data: utils.createExtendedData(plugin.mongodb)
+      data: Utils.createExtendedData(plugin.mongodb)
     }, function (err, resp) {
       expect(err).to.be.not.exists()
       expect(resp).to.be.an.object()
       expect(resp._id).to.be.exists()
-      utils.testExtendedData(plugin, testCollection, resp._id, done)
+      Utils.testExtendedData(plugin, testCollection, resp._id, done)
     })
   })
 
@@ -62,7 +62,7 @@ describe('Hemera-mongo-store with EJSON', function () {
       expect(err).to.be.not.exists()
       expect(resp).to.be.an.object()
       expect(resp._id).to.be.exists()
-      utils.testExtendedData(plugin, testCollection, resp._id, done)
+      Utils.testExtendedData(plugin, testCollection, resp._id, done)
     })
   })
 
@@ -71,7 +71,7 @@ describe('Hemera-mongo-store with EJSON', function () {
       topic,
       cmd: 'create',
       collection: testCollection,
-      data: utils.createExtendedData(plugin.mongodb, now)
+      data: Utils.createExtendedData(plugin.mongodb, now)
     }, function (err, resp) {
       expect(err).to.be.not.exists()
       expect(resp).to.be.an.object()
@@ -109,7 +109,7 @@ describe('Hemera-mongo-store with EJSON', function () {
         cmd: 'update',
         collection: testCollection,
         data: {
-          $set: utils.createExtendedData(plugin.mongodb)
+          $set: Utils.createExtendedData(plugin.mongodb)
         },
         query: {
           name: 'jacob'
@@ -119,7 +119,7 @@ describe('Hemera-mongo-store with EJSON', function () {
         expect(resp).to.be.an.object()
         expect(resp._id).to.be.exists()
         expect(resp.name).to.be.exists()
-        utils.testExtendedData(plugin, testCollection, resp._id, done)
+        Utils.testExtendedData(plugin, testCollection, resp._id, done)
       })
     })
   })
@@ -141,7 +141,7 @@ describe('Hemera-mongo-store with EJSON', function () {
         cmd: 'updateById',
         collection: testCollection,
         data: {
-          $set: utils.createExtendedData(plugin.mongodb)
+          $set: Utils.createExtendedData(plugin.mongodb)
         },
         id: resp._id
       }, function (err, resp) {
@@ -149,7 +149,7 @@ describe('Hemera-mongo-store with EJSON', function () {
         expect(resp).to.be.an.object()
         expect(resp._id).to.be.exists()
         expect(resp.name).to.be.exists()
-        utils.testExtendedData(plugin, testCollection, resp._id, done)
+        Utils.testExtendedData(plugin, testCollection, resp._id, done)
       })
     })
   })
@@ -159,7 +159,7 @@ describe('Hemera-mongo-store with EJSON', function () {
       topic,
       cmd: 'create',
       collection: testCollection,
-      data: utils.createExtendedData(plugin.mongodb, now)
+      data: Utils.createExtendedData(plugin.mongodb, now)
     }, function (err, resp) {
       expect(err).to.be.not.exists()
       expect(resp).to.be.an.object()
@@ -183,7 +183,7 @@ describe('Hemera-mongo-store with EJSON', function () {
       topic,
       cmd: 'create',
       collection: testCollection,
-      data: utils.createExtendedData(plugin.mongodb, now)
+      data: Utils.createExtendedData(plugin.mongodb, now)
     }, function (err, resp) {
       expect(err).to.be.not.exists()
       expect(resp).to.be.an.object()
@@ -260,7 +260,7 @@ describe('Hemera-mongo-store with EJSON', function () {
         cmd: 'replace',
         collection: testCollection,
         data: {
-          $set: utils.createExtendedData(plugin.mongodb)
+          $set: Utils.createExtendedData(plugin.mongodb)
         },
         query: EJSON.serialize({ _id: id })
       }, function (err, resp) {
@@ -269,7 +269,7 @@ describe('Hemera-mongo-store with EJSON', function () {
         expect(resp.matchedCount).to.be.exists()
         expect(resp.modifiedCount).to.be.exists()
         expect(resp.upsertedCount).to.be.exists()
-        utils.testExtendedData(plugin, testCollection, id, done)
+        Utils.testExtendedData(plugin, testCollection, id, done)
       })
     })
   })
@@ -279,7 +279,7 @@ describe('Hemera-mongo-store with EJSON', function () {
       topic,
       cmd: 'create',
       collection: testCollection,
-      data: utils.createExtendedData(plugin.mongodb, now)
+      data: Utils.createExtendedData(plugin.mongodb, now)
     }, function (err, resp) {
       expect(err).to.be.not.exists()
       expect(resp).to.be.an.object()
@@ -321,13 +321,13 @@ describe('Hemera-mongo-store with EJSON', function () {
         topic,
         cmd: 'replaceById',
         collection: testCollection,
-        data: utils.createExtendedData(plugin.mongodb),
+        data: Utils.createExtendedData(plugin.mongodb),
         id: resp._id
       }, function (err, resp) {
         expect(err).to.be.not.exists()
         expect(resp._id).to.be.exists()
         expect(resp.name).to.be.exists()
-        utils.testExtendedData(plugin, testCollection, resp._id, done)
+        Utils.testExtendedData(plugin, testCollection, resp._id, done)
       })
     })
   })
