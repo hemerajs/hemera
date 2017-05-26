@@ -153,6 +153,7 @@ exports.plugin = function hemeraMongoStore (options, next) {
 
 exports.options = {
   mongos: {},
+  serializeResult: false,
   mongo: {
     url: 'mongodb://localhost:27017/'
   }
