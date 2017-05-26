@@ -2,8 +2,6 @@
 
 const Code = require('code')
 const Utils = require('./utils')
-
-const now = new Date()
 const expect = Code.expect
 
 describe('Hemera-mongo-store', function () {
@@ -16,13 +14,15 @@ describe('Hemera-mongo-store', function () {
   }
   let server
   let hemera
-  let plugin
 
   before(function (done) {
     Utils.initServer(topic, testCollection, options, (err, resp) => {
+      if (err) {
+        throw err
+      }
+
       server = resp.server
       hemera = resp.hemera
-      plugin = resp.plugin
       done()
     })
   })

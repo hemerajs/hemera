@@ -21,6 +21,10 @@ describe('Hemera-mongo-store with EJSON', function () {
 
   before(function (done) {
     Utils.initServer(topic, testCollection, options, (err, resp) => {
+      if (err) {
+        throw err
+      }
+
       server = resp.server
       hemera = resp.hemera
       plugin = resp.plugin
@@ -56,7 +60,7 @@ describe('Hemera-mongo-store with EJSON', function () {
       data: {
         date: { $date: new Date() },
         objectId: { $oid: new plugin.mongodb.ObjectID() },
-        ref:  { $ref: 'test', $id: 1234 },
+        ref: { $ref: 'test', $id: 1234 }
       }
     }, function (err, resp) {
       expect(err).to.be.not.exists()
@@ -66,7 +70,7 @@ describe('Hemera-mongo-store with EJSON', function () {
     })
   })
 
-  it('update can query with extended json', function(done) {
+  it('update can query with extended json', function (done) {
     hemera.act({
       topic,
       cmd: 'create',
@@ -83,7 +87,7 @@ describe('Hemera-mongo-store with EJSON', function () {
         data: {
           $set: { name: 'foo' }
         },
-        query: EJSON.serialize({ date: now }),
+        query: EJSON.serialize({ date: now })
       }, function (err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.an.object()
@@ -154,7 +158,7 @@ describe('Hemera-mongo-store with EJSON', function () {
     })
   })
 
-  it('remove can query with extended json', function(done) {
+  it('remove can query with extended json', function (done) {
     hemera.act({
       topic,
       cmd: 'create',
@@ -168,7 +172,7 @@ describe('Hemera-mongo-store with EJSON', function () {
         topic,
         cmd: 'remove',
         collection: testCollection,
-        query: EJSON.serialize({ date: now }),
+        query: EJSON.serialize({ date: now })
       }, function (err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.an.object()
@@ -178,7 +182,7 @@ describe('Hemera-mongo-store with EJSON', function () {
     })
   })
 
-  it('find can query with extended json', function(done) {
+  it('find can query with extended json', function (done) {
     hemera.act({
       topic,
       cmd: 'create',
@@ -192,7 +196,7 @@ describe('Hemera-mongo-store with EJSON', function () {
         topic,
         cmd: 'find',
         collection: testCollection,
-        query: EJSON.serialize({ date: now }),
+        query: EJSON.serialize({ date: now })
       }, function (err, resp) {
         expect(err).to.be.not.exists()
         expect(resp.result).to.be.an.array()
@@ -203,7 +207,7 @@ describe('Hemera-mongo-store with EJSON', function () {
     })
   })
 
-  it('find can query with regular expressions', function(done) {
+  it('find can query with regular expressions', function (done) {
     hemera.act({
       topic,
       cmd: 'create',
@@ -217,7 +221,7 @@ describe('Hemera-mongo-store with EJSON', function () {
         topic,
         cmd: 'find',
         collection: testCollection,
-        query: EJSON.serialize({ name: new RegExp(/^jac/, 'i') }),
+        query: EJSON.serialize({ name: new RegExp(/^jac/, 'i') })
       }, function (err, resp) {
         expect(err).to.be.not.exists()
         expect(resp.result).to.be.an.array()
@@ -229,7 +233,7 @@ describe('Hemera-mongo-store with EJSON', function () {
           topic,
           cmd: 'find',
           collection: testCollection,
-          query: { name: { $regex: '^jac', $options: 'i' } },
+          query: { name: { $regex: '^jac', $options: 'i' } }
         }, function (err, resp) {
           expect(err).to.be.not.exists()
           expect(resp.result).to.be.an.array()
@@ -274,7 +278,7 @@ describe('Hemera-mongo-store with EJSON', function () {
     })
   })
 
-  it('replace can query with extended json', function(done) {
+  it('replace can query with extended json', function (done) {
     hemera.act({
       topic,
       cmd: 'create',
@@ -293,7 +297,7 @@ describe('Hemera-mongo-store with EJSON', function () {
             name: 'nadja'
           }
         },
-        query: EJSON.serialize({ date: now }),
+        query: EJSON.serialize({ date: now })
       }, function (err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.an.object()

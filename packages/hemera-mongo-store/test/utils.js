@@ -7,16 +7,16 @@ const HemeraTestsuite = require('hemera-testsuite')
 const EJSON = require('mongodb-extended-json')
 const expect = require('code').expect
 
-function createExtendedData(mongodb, date) {
+function createExtendedData (mongodb, date) {
   const oid = new mongodb.ObjectID('58c6c65ed78c6a977a0041a8')
   return EJSON.serialize({
     date: date || new Date(),
     objectId: oid,
-    ref: mongodb.DBRef('test', oid),
+    ref: mongodb.DBRef('test', oid)
   })
 }
 
-function testExtendedData(plugin, testCollection, id, done) {
+function testExtendedData (plugin, testCollection, id, done) {
   plugin.db.collection(testCollection).findOne({
     _id: new plugin.mongodb.ObjectID(id)
   }, (err, doc) => {
@@ -26,7 +26,7 @@ function testExtendedData(plugin, testCollection, id, done) {
   })
 }
 
-function testExtendedDoc(plugin, doc) {
+function testExtendedDoc (plugin, doc) {
   const ObjectID = plugin.mongodb.ObjectID
   const DBRef = plugin.mongodb.DBRef
 
@@ -35,7 +35,7 @@ function testExtendedDoc(plugin, doc) {
   expect(doc.ref).to.be.an.instanceof(DBRef)
 }
 
-function initServer(topic, testCollection, pluginOptions, cb) {
+function initServer (topic, testCollection, pluginOptions, cb) {
   const PORT = 6243
   const noAuthUrl = 'nats://localhost:' + PORT
 
@@ -52,12 +52,15 @@ function initServer(topic, testCollection, pluginOptions, cb) {
         cmd: 'dropCollection',
         collection: testCollection
       }, function (err, resp) {
+        if (err) {
+          return cb(err)
+        }
+
         cb(null, { server, hemera, plugin })
       })
     })
   })
 }
-
 
 exports.initServer = initServer
 exports.testExtendedData = testExtendedData

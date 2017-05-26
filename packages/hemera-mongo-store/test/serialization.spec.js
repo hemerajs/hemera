@@ -22,6 +22,10 @@ describe('Hemera-mongo-store with serialization', function () {
 
   before(function (done) {
     Utils.initServer(topic, testCollection, options, (err, resp) => {
+      if (err) {
+        throw err
+      }
+
       server = resp.server
       hemera = resp.hemera
       plugin = resp.plugin
@@ -35,7 +39,7 @@ describe('Hemera-mongo-store with serialization', function () {
     done()
   })
 
-  it('find will return an extended json result', function(done) {
+  it('find will return an extended json result', function (done) {
     hemera.act({
       topic,
       cmd: 'create',
@@ -49,7 +53,7 @@ describe('Hemera-mongo-store with serialization', function () {
         topic,
         cmd: 'find',
         collection: testCollection,
-        query: EJSON.serialize({ date: now }),
+        query: EJSON.serialize({ date: now })
       }, function (err, resp) {
         resp = EJSON.deserialize(resp)
         expect(err).to.be.not.exists()
@@ -61,7 +65,7 @@ describe('Hemera-mongo-store with serialization', function () {
     })
   })
 
-  it('findById will return an extended json result', function(done) {
+  it('findById will return an extended json result', function (done) {
     hemera.act({
       topic,
       cmd: 'create',
@@ -93,7 +97,7 @@ describe('Hemera-mongo-store with serialization', function () {
       collection: testCollection,
       data: EJSON.serialize({
         name: 'jacob',
-        date: new Date(),
+        date: new Date()
       })
     }, function (err, resp) {
       expect(err).to.be.not.exists()
@@ -127,7 +131,7 @@ describe('Hemera-mongo-store with serialization', function () {
       collection: testCollection,
       data: EJSON.serialize({
         name: 'jacob',
-        date: new Date(),
+        date: new Date()
       })
     }, function (err, resp) {
       expect(err).to.be.not.exists()
@@ -159,7 +163,7 @@ describe('Hemera-mongo-store with serialization', function () {
       collection: testCollection,
       data: EJSON.serialize({
         name: 'jacob',
-        date: new Date(),
+        date: new Date()
       })
     }, function (err, resp) {
       expect(err).to.be.not.exists()
@@ -188,7 +192,7 @@ describe('Hemera-mongo-store with serialization', function () {
       collection: testCollection,
       data: EJSON.serialize({
         name: 'jacob',
-        date: new Date(),
+        date: new Date()
       })
     }, function (err, resp) {
       expect(err).to.be.not.exists()
