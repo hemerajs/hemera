@@ -52,7 +52,7 @@ exports.plugin = function hemeraMongoStore (options, next) {
         if (err) {
           cb(err)
         } else {
-          cb(err, preResponseHandler(result))
+          cb(null, preResponseHandler(result))
         }
       })
     })
@@ -66,7 +66,7 @@ exports.plugin = function hemeraMongoStore (options, next) {
         if (err) {
           cb(err)
         } else {
-          cb(err, preResponseHandler(result))
+          cb(null, preResponseHandler(result))
         }
       })
     })
@@ -89,7 +89,7 @@ exports.plugin = function hemeraMongoStore (options, next) {
         if (err) {
           cb(err)
         } else {
-          cb(err, preResponseHandler(result))
+          cb(null, preResponseHandler(result))
         }
       })
     })
@@ -112,7 +112,7 @@ exports.plugin = function hemeraMongoStore (options, next) {
         if (err) {
           cb(err)
         } else {
-          cb(err, preResponseHandler(result))
+          cb(null, preResponseHandler(result))
         }
       })
     })
@@ -126,7 +126,7 @@ exports.plugin = function hemeraMongoStore (options, next) {
         if (err) {
           cb(err)
         } else {
-          cb(err, preResponseHandler(result))
+          cb(null, preResponseHandler(result))
         }
       })
     })
@@ -141,7 +141,7 @@ exports.plugin = function hemeraMongoStore (options, next) {
         if (err) {
           cb(err)
         } else {
-          cb(err, preResponseHandler(result))
+          cb(null, preResponseHandler(result))
         }
       })
     })
