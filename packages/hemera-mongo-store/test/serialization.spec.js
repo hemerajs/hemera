@@ -7,7 +7,7 @@ const Utils = require('./utils')
 const now = new Date()
 const expect = Code.expect
 
-describe('Hemera-mongo-store with serialization', function () {
+describe('Hemera-mongo-store with response serialization', function () {
   const topic = 'mongo-store'
   const testCollection = 'test-serialize'
   const options = {
