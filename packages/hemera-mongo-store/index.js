@@ -11,7 +11,10 @@ exports.plugin = function hemeraMongoStore (options, next) {
   const hemera = this
   const topic = 'mongo-store'
   const serializeResult = (result) => {
-    return (options.serializeResult === true) ? serialize(result) : result
+    if (options.serializeResult === true) {
+      return serialize(result)
+    }
+    return result
   }
 
   Mongodb.MongoClient.connect(options.mongo.url, options.mongos.options, function (err, db) {
@@ -46,7 +49,11 @@ exports.plugin = function hemeraMongoStore (options, next) {
       req.query = deserialize(req.query)
 
       store.update(req, deserialize(req.data), (err, result) => {
-        (err) ? cb(err) : cb(err, serializeResult(result))
+        if (err) {
+          cb(err)
+        } else {
+          cb(err, serializeResult(result))
+        }
       })
     })
 
@@ -56,7 +63,11 @@ exports.plugin = function hemeraMongoStore (options, next) {
       store.ObjectID = ObjectID
 
       store.updateById(req, deserialize(req.data), (err, result) => {
-        (err) ? cb(err) : cb(err, serializeResult(result))
+        if (err) {
+          cb(err)
+        } else {
+          cb(err, serializeResult(result))
+        }
       })
     })
 
@@ -75,7 +86,11 @@ exports.plugin = function hemeraMongoStore (options, next) {
       store.ObjectID = ObjectID
 
       store.removeById(req, (err, result) => {
-        (err) ? cb(err) : cb(err, serializeResult(result))
+        if (err) {
+          cb(err)
+        } else {
+          cb(err, serializeResult(result))
+        }
       })
     })
 
@@ -94,7 +109,11 @@ exports.plugin = function hemeraMongoStore (options, next) {
       store.ObjectID = ObjectID
 
       store.replaceById(req, deserialize(req.data), (err, result) => {
-        (err) ? cb(err) : cb(err, serializeResult(result))
+        if (err) {
+          cb(err)
+        } else {
+          cb(err, serializeResult(result))
+        }
       })
     })
 
@@ -104,7 +123,11 @@ exports.plugin = function hemeraMongoStore (options, next) {
       store.ObjectID = ObjectID
 
       store.findById(req, (err, result) => {
-        (err) ? cb(err) : cb(err, serializeResult(result))
+        if (err) {
+          cb(err)
+        } else {
+          cb(err, serializeResult(result))
+        }
       })
     })
 
@@ -115,7 +138,11 @@ exports.plugin = function hemeraMongoStore (options, next) {
       req.query = deserialize(req.query)
 
       store.find(req, req.options, (err, result) => {
-        (err) ? cb(err) : cb(err, serializeResult(result))
+        if (err) {
+          cb(err)
+        } else {
+          cb(err, serializeResult(result))
+        }
       })
     })
 
