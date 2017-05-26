@@ -85,7 +85,7 @@ There is an extensive <a href="https://hemerajs.github.io/hemera/">documentation
 ## Get Involved
 
 - **Contributing**: Pull requests are welcome!
-    - Read [`CONTRIBUTING.md`](https://github.com/hemerajs/hemera/blob/master/CONTRIBUTING.md) and check out our [help-wanted](https://github.com/hemerajs/hemera/issues?q=is%3Aissue+is%3Aopen+label%3Astatus%3Ahelp-wanted) issues
+    - Read [`CONTRIBUTING.md`](https://github.com/hemerajs/hemera/blob/master/CONTRIBUTING.md) and check out our [help-wanted](https://github.com/hemerajs/hemera/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) issues
     - Submit github issues for any feature enhancements, bugs or documentation problems
 - **Support**: Join our [gitter chat](https://gitter.im/hemerajs/hemera) to ask questions to get support from the maintainers and other Hemera developers
     - Questions/comments can also be posted as [github issues](https://github.com/hemerajs/hemera/issues)
