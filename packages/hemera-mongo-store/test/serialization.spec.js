@@ -2,7 +2,7 @@
 
 const Code = require('code')
 const EJSON = require('mongodb-extended-json')
-const utils = require('./-utils')
+const utils = require('./utils')
 
 const now = new Date()
 const expect = Code.expect

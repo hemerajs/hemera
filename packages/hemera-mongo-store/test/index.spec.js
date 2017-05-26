@@ -1,7 +1,7 @@
 'use strict'
 
 const Code = require('code')
-const utils = require('./-utils')
+const utils = require('./utils')
 
 const now = new Date()
 const expect = Code.expect
