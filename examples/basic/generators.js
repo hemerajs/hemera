@@ -1,6 +1,6 @@
 'use strict'
 
-const Hemera = require('./../packages/hemera')
+const Hemera = require('./../../packages/hemera')
 const nats = require('nats').connect()
 
 const hemera = new Hemera(nats, {
@@ -9,13 +9,11 @@ const hemera = new Hemera(nats, {
 })
 
 hemera.ready(() => {
-
   // You can also mix but this is not clean code
   hemera.add({
     topic: 'math',
     cmd: 'divide'
   }, function (req, reply) {
-
     reply(null, {
       result: req.a / req.b
     })
@@ -25,7 +23,7 @@ hemera.ready(() => {
     next()
   })
 
-  hemera.ext('onServerPreRequest', function* (req, res, next) {
+  hemera.ext('onServerPreRequest', function * (req, res, next) {
     yield Promise.resolve(true)
     next()
   })
@@ -33,7 +31,7 @@ hemera.ready(() => {
   hemera.add({
     topic: 'math',
     cmd: 'sub'
-  }, function* (req) {
+  }, function * (req) {
     var result = yield Promise.resolve({
       result: req.a - req.b
     })
@@ -47,7 +45,7 @@ hemera.ready(() => {
   hemera.add({
     topic: 'math',
     cmd: 'add'
-  }, function* (req) {
+  }, function * (req) {
     const add = yield Promise.resolve({
       result: req.a + req.b
     })
@@ -59,20 +57,20 @@ hemera.ready(() => {
   })
 
   hemera.act({
-      topic: 'math',
-      cmd: 'add',
-      a: 10,
-      b: 20
-    })
+    topic: 'math',
+    cmd: 'add',
+    a: 10,
+    b: 20
+  })
     .then(x => console.log(x))
 
   hemera.act({
-      topic: 'math',
-      cmd: 'add',
-      a: 10,
-      b: 10
-    }, function* (err, result) {
-      return yield result
-    })
+    topic: 'math',
+    cmd: 'add',
+    a: 10,
+    b: 10
+  }, function * (err, result) {
+    return yield result
+  })
     .then(x => console.log(x))
 })

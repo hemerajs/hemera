@@ -1,9 +1,9 @@
 'use strict'
 
-const Hemera = require('./../packages/hemera')
-const hemeraJoi = require('./../packages/hemera-joi')
+const Hemera = require('./../../packages/hemera')
+const hemeraJoi = require('./../../packages/hemera-joi')
 const nats = require('nats').connect()
-const hemeraRabbitmq = require('./../packages/hemera-rabbitmq')
+const hemeraRabbitmq = require('./../../packages/hemera-rabbitmq')
 
 const options = {
   // arguments used to establish a connection to a broker

@@ -1,8 +1,8 @@
 'use strict'
 
-const Hemera = require('./../packages/hemera')
+const Hemera = require('./../../packages/hemera')
 const nats = require('nats').connect()
-const hemeraMongo = require('./../packages/hemera-mongo-store')
+const hemeraMongo = require('./../../packages/hemera-mongo-store')
 
 const hemera = new Hemera(nats, {
   logLevel: 'info',

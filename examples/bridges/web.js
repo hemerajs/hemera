@@ -1,5 +1,5 @@
-const Hemera = require('./../packages/hemera')
-const HemeraWeb = require('./../packages/hemera-web')
+const Hemera = require('./../../packages/hemera')
+const HemeraWeb = require('./../../packages/hemera-web')
 const Axios = require('axios')
 const nats = require('nats').connect()
 

@@ -4,7 +4,7 @@
  * Run mocha ./examples/unittest.js
  */
 
-const Hemera = require('./../packages/hemera')
+const Hemera = require('./../../packages/hemera')
 const Nats = require('hemera-testsuite/natsStub')
 const ActStub = require('hemera-testsuite/actStub')
 const AddStub = require('hemera-testsuite/addStub')

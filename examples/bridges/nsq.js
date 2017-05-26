@@ -1,9 +1,9 @@
 'use strict'
 
-const Hemera = require('./../packages/hemera')
-const hemeraJoi = require('./../packages/hemera-joi')
+const Hemera = require('./../../packages/hemera')
+const hemeraJoi = require('./../../packages/hemera-joi')
 const nats = require('nats').connect()
-const hemeraNsq = require('./../packages/hemera-nsq')
+const hemeraNsq = require('./../../packages/hemera-nsq')
 
 const hemera = new Hemera(nats, {
   logLevel: 'info',

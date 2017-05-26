@@ -1,8 +1,8 @@
 'use strict'
 
-const Hemera = require('./../packages/hemera')
+const Hemera = require('./../../packages/hemera')
 const nats = require('nats').connect()
-const hemeraZipkin = require('./../packages/hemera-zipkin')
+const hemeraZipkin = require('./../../packages/hemera-zipkin')
 
 const hemera = new Hemera(nats, {
   logLevel: 'info',

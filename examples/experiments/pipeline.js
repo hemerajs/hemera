@@ -7,7 +7,7 @@
  * The pipeline partners are agree on a property `users` its like the stream in terms of piping.
  */
 
-const Hemera = require('./../packages/hemera')
+const Hemera = require('./../../packages/hemera')
 const nats = require('nats').connect()
 
 const hemera = new Hemera(nats, {

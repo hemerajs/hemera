@@ -1,10 +1,10 @@
 'use strict'
 
-const Hemera = require('./../packages/hemera')
+const Hemera = require('./../../packages/hemera')
 const nats = require('nats').connect({
   preserveBuffers: true
 })
-const HemeraAvro = require('./../packages/hemera-avro')
+const HemeraAvro = require('./../../packages/hemera-avro')
 const hemera = new Hemera(nats, {
   logLevel: 'info',
   childLogger: true

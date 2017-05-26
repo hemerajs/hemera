@@ -1,6 +1,6 @@
 'use strict'
 
-const Hemera = require('./../packages/hemera')
+const Hemera = require('./../../packages/hemera')
 const parallel = require('async/parallel')
 const compose = require('async/compose')
 const nats = require('nats').connect()

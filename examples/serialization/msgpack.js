@@ -1,10 +1,10 @@
 'use strict'
 
-const Hemera = require('./../packages/hemera')
+const Hemera = require('./../../packages/hemera')
 const nats = require('nats').connect({
   preserveBuffers: true
 })
-const HemeraMsgpack = require('./../packages/hemera-msgpack')
+const HemeraMsgpack = require('./../../packages/hemera-msgpack')
 
 const hemera = new Hemera(nats, {
   logLevel: 'info',
