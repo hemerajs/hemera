@@ -3,6 +3,11 @@ Changelog
 
 # 1.x
 
+### 1.2.15
+
+- Unsubscribe subscription by id
+- Update streaming example
+
 ### 1.2.14
 
 - Emit errors instead throw them because they will be thrown by convention when no error handler exist. This improves async error handling.
