@@ -27,6 +27,8 @@ hemera.ready(() => {
     results.push(resp)
     if (results.length === 1000) {
       console.log('Received 1000 Messages!')
+      // remove INBOX channel because we had set no limit
+      hemera.remove(this._sid)
       hemera.close()
     }
   })

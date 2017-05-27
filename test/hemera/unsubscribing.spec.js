@@ -61,4 +61,34 @@ describe('Unsubscribe NATS topic', function () {
       done()
     })
   })
+
+  it('Should be able to unsubscribe a subscription id', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, (resp, cb) => {
+        cb(null, {
+          result: resp.a + resp.b
+        })
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        maxMessages$: -1
+      }, function (err, resp) {
+        expect(err).to.be.not.exists()
+
+        const result = hemera.remove(this._sid)
+        expect(result).to.be.equals(true)
+        hemera.close()
+        done()
+      })
+    })
+  })
 })

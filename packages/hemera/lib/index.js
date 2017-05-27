@@ -893,7 +893,7 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   * Unsubscribe a topic from NATS
+   * Unsubscribe a topic or subscription id from NATS
    *
    * @param {any} topic
    * @param {any} maxMessages
@@ -903,12 +903,18 @@ class Hemera extends EventEmitter {
    */
   remove (topic, maxMessages) {
     const self = this
-    const subId = self._topics[topic]
-    if (subId) {
-      self._transport.unsubscribe(subId, maxMessages)
-      // release topic
-      delete self._topics[topic]
+
+    if (_.isNumber(topic)) {
+      self._transport.unsubscribe(topic, maxMessages)
       return true
+    } else if (_.isString(topic)) {
+      const subId = self._topics[topic]
+      if (subId) {
+        self._transport.unsubscribe(subId, maxMessages)
+        // release topic
+        delete self._topics[topic]
+        return true
+      }
     }
 
     return false
