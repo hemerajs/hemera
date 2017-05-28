@@ -11,7 +11,7 @@ exports.plugin = function hemeraSQS (options) {
   }
 
   // Create an SQS service object
-  var sqs = new AWS.SQS({apiVersion: '2012-11-05'})
+  var sqs = new AWS.SQS(options.sqs)
 
   /**
    *  QUEUES
@@ -148,7 +148,11 @@ exports.plugin = function hemeraSQS (options) {
   })
 }
 
-exports.options = {}
+exports.options = {
+  sqs: {
+    apiVersion: '2012-11-05'
+  }
+}
 
 exports.attributes = {
   pkg: require('./package.json')
