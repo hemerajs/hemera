@@ -114,6 +114,7 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 | [hemera-rabbitmq](https://github.com/hemerajs/hemera/tree/master/packages/hemera-rabbitmq) | [![npm](https://img.shields.io/npm/v/hemera-rabbitmq.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-rabbitmq)
 | [hemera-nsq](https://github.com/hemerajs/hemera/tree/master/packages/hemera-nsq) | [![npm](https://img.shields.io/npm/v/hemera-nsq.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-nsq)
 | [hemera-web](https://github.com/hemerajs/hemera/tree/master/packages/hemera-web) | [![npm](https://img.shields.io/npm/v/hemera-web.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-web)
+| [hemera-sqs](https://github.com/hemerajs/hemera/tree/master/packages/hemera-sqs) | [![npm](https://img.shields.io/npm/v/hemera-sqs.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-sqs)
 
 | Database adapter | Version |
 |--------|-------|
