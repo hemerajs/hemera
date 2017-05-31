@@ -16,7 +16,7 @@
 A <a href="http://nodejs.org/">Node.js</a> microservices toolkit for the <a href="https://nats.io">NATS messaging system</a>
 </p>
 
-- __Node:__ 4.x, 5.x, 6.x, 7.x
+- __Node:__ 4.x, 5.x, 6.x, 7.x, 8.0
 - __Documentation:__ https://hemerajs.github.io/hemera/
 - __Website:__ https://hemerajs.github.io/hemera-site/
 - __Lead Maintainer:__ [Dustin Deus](https://github.com/StarpTech)
