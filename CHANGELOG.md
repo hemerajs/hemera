@@ -3,6 +3,10 @@ Changelog
 
 # 1.x
 
+### 1.2.16
+
+- Generate unique node id
+
 ### 1.2.15
 
 - Unsubscribe subscription by id

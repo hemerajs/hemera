@@ -24,7 +24,7 @@ describe('Hemera default config', function () {
     var defaultConfig = {
       timeout: 2000, // Max execution time of a request
       generators: false, // Promise and generators support
-      name: 'hemera-' + Os.hostname(), // node name
+      name: 'test', // node name
       crashOnFatal: true, // Should gracefully exit the process at unhandled exceptions or fatal errors
       logLevel: 'silent', // 'fatal', 'error', 'warn', 'info', 'debug', 'trace'; also 'silent'
       childLogger: false, // Create a child logger per section / plugin. Only possible with default logger Pino.
@@ -62,7 +62,9 @@ describe('Hemera default config', function () {
       }
     }
 
-    const hemera = new Hemera(nats)
+    const hemera = new Hemera(nats, {
+      name: 'test'
+    })
 
     expect(hemera.config).to.be.equals(defaultConfig)
 
