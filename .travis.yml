@@ -1,6 +1,6 @@
 language: node_js
 sudo: true
-      
+
 node_js:
   - "4"
   - "7"
@@ -9,30 +9,15 @@ script:
   - npm run setup && npm run ci
 
 env:
-  #- ARANGODB_VERSION=3.1 ARANGO_VERSION=30100
+  - CXX="g++-4.8"
 
 addons:
-  #apt:
-  #  sources:
-  #    - elasticsearch-5.x
-  #  packages:
-  #    - elasticsearch
-services:
-  # Start ElasticSearch as Travis service
-  #- elasticsearch
-  #- postgresql
-  #- rabbitmq
-  #- mongodb
-
-before_install:
-  # download and install arangodb
-  #- curl https://www.arangodb.com/repositories/travisCI/setup_arangodb_${ARANGODB_VERSION}.sh | bash
-  - sudo apt-get install python-software-properties
-  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-  - sudo apt-get update
-  - sudo apt-get install gcc-5 g++-5
-  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 80 --slave /usr/bin/g++ g++ /usr/bin/g++-5
-  - sudo update-alternatives --set gcc /usr/bin/gcc-5
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
+      - gcc-4.8
 
 before_script:
   # install nats
@@ -40,6 +25,7 @@ before_script:
   - unzip tmp.zip
   - mv gnatsd-v0.9.6-linux-amd64 gnatsd
 
-after_script:
-  # kill arangodb process
-  #- kill -9 $(pgrep arangod)
+notifications:
+  email:
+    on_success: never
+    on_failure: always

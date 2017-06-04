@@ -15,6 +15,7 @@ Changelog
 - Update docs and examples
 - Remove `dependencies` property from all hemera packages
 - Remove eslint, editorconfig from all hemera packages
+- Use `safe-buffer` in [hemera-avro](https://github.com/hemerajs/hemera/tree/master/packages/hemera-avro) package
 
 ### Breaking Changes
 You get no error when a plugin is registered twice of a depedency was not installed.
