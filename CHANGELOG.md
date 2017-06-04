@@ -18,7 +18,7 @@ Changelog
 - Use `safe-buffer` in [hemera-avro](https://github.com/hemerajs/hemera/tree/master/packages/hemera-avro) package
 
 ### Breaking Changes
-You get no error when a plugin is registered twice of a depedency was not installed.
+Hemera is no longer responsible to handle plugin dependencies.
 
 ### New Features
 - Simplifiy dependency management. Dependencies are installed from the plugin it needs. Since [NPM 3](https://docs.npmjs.com/how-npm-works/npm3) a clean dependency graph is guaranteed.
