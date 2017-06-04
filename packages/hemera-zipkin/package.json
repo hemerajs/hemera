@@ -1,6 +1,6 @@
 {
   "name": "hemera-zipkin",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "This is a plugin to use Zipkin with Hemera",
   "main": "index.js",
   "repository": {
@@ -19,9 +19,9 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
+    "hemera-plugin": "^0.0.2",
     "hoek": "4.1.x",
-    "wreck": "10.0.x",
-    "hemera-plugin": "0.0.x"
+    "wreck": "10.0.x"
   },
   "devDependencies": {
     "code": "4.0.x",
