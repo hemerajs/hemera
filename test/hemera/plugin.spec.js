@@ -132,20 +132,18 @@ describe('Plugin interface', function () {
         },
         myPlugin1: {
           attributes: {
-            name: 'myPlugin1',
-            dependencies: []
+            name: 'myPlugin1'
           },
-          parentPlugin: 'core',
+          parentPluginName: 'core',
           options: {
             a: '1'
           }
         },
         myPlugin2: {
           attributes: {
-            name: 'myPlugin2',
-            dependencies: []
+            name: 'myPlugin2'
           },
-          parentPlugin: 'core',
+          parentPluginName: 'core',
           options: {
             a: '1'
           }
@@ -529,31 +527,7 @@ describe('Plugin interface', function () {
     })
   })
 
-  it('Should thrown an error when plugin dependencies was not resolved before initialization', function (done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    let plugin = function (options) {}
-
-    try {
-      hemera.use({
-        plugin: plugin,
-        attributes: {
-          name: 'myPlugin',
-          dependencies: ['hemera-foo']
-        }
-      })
-    } catch (err) {
-      expect(err).to.exists()
-      expect(err.name).to.be.equals('HemeraError')
-      expect(err.message).to.be.equals('Plugin dependency not found')
-      hemera.close()
-      done()
-    }
-  })
-
-  it('Should be bale to use child logger', function (done) {
+  it('Should be able to use child logger', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {

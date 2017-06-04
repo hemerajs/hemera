@@ -1,5 +1,7 @@
 'use strict'
 
+const HemeraPlugin = require('./../../packages/hemera-plugin')
+
 function myPlugin (options) {
   var hemera = this
 
@@ -20,10 +22,9 @@ const hemera = new Hemera(nats, {
 })
 hemera.expose('somethingToExpose', 4)
 hemera.use({
-  plugin: myPlugin,
+  plugin: HemeraPlugin(myPlugin),
   attributes: {
-    name: 'myPlugin',
-    dependencies: []
+    name: 'myPlugin'
   },
   options: {}
 })

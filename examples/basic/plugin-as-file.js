@@ -1,6 +1,8 @@
 'use strict'
 
-exports.plugin = function myPlugin (options) {
+const HemeraPlugin = require('./../../packages/hemera-plugin')
+
+exports.plugin = HemeraPlugin(function myPlugin (options) {
   var hemera = this
 
   hemera.expose('somethingToExpose', 4)
@@ -11,12 +13,11 @@ exports.plugin = function myPlugin (options) {
   }, (req, cb) => {
     cb(null, req.a + req.b)
   })
-}
+})
 
 exports.options = {}
 
 exports.attributes = {
-  dependencies: ['hemera-joi'],
   pkg: require('./package.json')
 }
 

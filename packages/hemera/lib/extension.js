@@ -34,7 +34,7 @@ class Extension {
     if (this._options.generators) {
       if (IsGeneratorFn(handler)) {
         this._stack.push(function () {
-        // -3 because (req, res, next, prevValue, index)
+          // -3 because (req, res, next, prevValue, index)
           const next = arguments[arguments.length - 3]
           return Co(handler.apply(this, arguments)).then(x => next(null, x)).catch(next)
         })

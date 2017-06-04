@@ -1,7 +1,7 @@
 {
-  "name": "hemera-parambulator",
-  "version": "0.1.81",
-  "description": "This is a plugin to use Parambulator with Hemera",
+  "name": "hemera-plugin",
+  "version": "0.0.0",
+  "description": "This is a plugin helper for hemera",
   "main": "index.js",
   "repository": {
     "url": "git@github.com:hemerajs/hemera.git",
@@ -10,13 +10,12 @@
   "scripts": {
     "lint": "eslint index.js"
   },
-  "engines": {
-    "node": ">=4.0.0"
-  },
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "parambulator": "1.5.x"
+    "semver": "5.3.x"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "nats-hemera": "^1.2.16"
+  }
 }

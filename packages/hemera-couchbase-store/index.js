@@ -1,7 +1,6 @@
 'use strict'
 
 const Couchbase = require('couchbase')
-const StorePattern = require('hemera-store/pattern')
 
 exports.plugin = function hemeraCouchbaseStore (options) {
   const hemera = this
@@ -45,6 +44,5 @@ exports.options = {
 }
 
 exports.attributes = {
-  dependencies: ['hemera-joi'],
   pkg: require('./package.json')
 }

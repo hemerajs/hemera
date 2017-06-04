@@ -25,12 +25,6 @@
   "devDependencies": {
     "code": "4.0.x",
     "coveralls": "2.11.x",
-    "eslint": "3.19.x",
-    "eslint-config-standard": "10.2.x",
-    "eslint-plugin-import": "2.2.x",
-    "eslint-plugin-node": "4.2.x",
-    "eslint-plugin-promise": "3.5.x",
-    "eslint-plugin-standard": "3.0.x",
     "hemera-testsuite": "1.1.x",
     "istanbul": "0.4.x",
     "mocha": "3.3.x",

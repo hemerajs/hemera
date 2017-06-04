@@ -3,6 +3,30 @@ Changelog
 
 # 1.x
 
+## 1.3.0
+
+### Summary
+- Remove check for dependencies, the developer is responsible for that
+- Remove check for duplicate dependencies, the developer is responsible for that
+- Remove eslint packages from plugins. We use the root package as linter
+- Use `standard` package to lint.
+- Create new [hemera-plugin](https://github.com/hemerajs/hemera/tree/master/packages/hemera-plugin) which checks that the bare-minimum version of Hemera is installed and provide a consistent interface to create plugins.
+- Add tests for `hemera-plugin`
+- Update docs and examples
+- Remove `dependencies` property from all hemera packages
+- Remove eslint, editorconfig from all hemera packages
+
+### Breaking Changes
+You get no error when a plugin is registered twice of a depedency was not installed.
+
+### New Features
+- Simplifiy dependency management. Dependencies are installed from the plugin it needs. Since [NPM 3](https://docs.npmjs.com/how-npm-works/npm3) a clean dependency graph is guaranteed.
+- Plugin helper [hemera-plugin](https://github.com/hemerajs/hemera/tree/master/packages/hemera-plugin)
+
+### Migration Checklist
+- Always use [hemera-plugin](https://github.com/hemerajs/hemera/tree/master/packages/hemera-plugin) if you want to create a plugin. [Example](https://github.com/hemerajs/hemera/blob/master/examples/basic/plugin.js)
+- Check if any plugins has installed the correct dependencies.
+
 ### 1.2.16
 
 - Generate unique node id

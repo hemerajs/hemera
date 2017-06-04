@@ -2,6 +2,7 @@
 
 const Avro = require('avsc')
 const avroType = require('./avro')
+const Buffer = require('safe-buffer').Buffer
 
 exports.plugin = function hemeraAvro () {
   const hemera = this

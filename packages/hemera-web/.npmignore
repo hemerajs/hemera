@@ -4,4 +4,5 @@ test
 coverage
 docs
 packages
-node_modules
+flow-typed
+package-lock.json

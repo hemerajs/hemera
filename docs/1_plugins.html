@@ -117,7 +117,7 @@
                 <div class="col-sm-9 border-left section-right">
                     <h1 class="section-header">Plugins</h1>
                     <div class="alert alert-info" role="alert"><i class="fa fa-info" aria-hidden="true"></i> Create a plugin with a one-liner with the <a href="https://github.com/hemerajs/hemera-cli">hemera-cli</a></div>
-                    <div class="alert alert-warning" role="alert"><i class="fa fa-info" aria-hidden="true"></i> Please ensure that a plugin never extended a another plugin with server methods that use the same topic name. This leads to a plugin which can not be run alone.</div>
+                    <div class="alert alert-warning" role="alert"><i class="fa fa-info" aria-hidden="true"></i> Please ensure that a plugin never extended another plugin that use the same <code>topic</code> name. This results in a plugin which can not be run alone because the publisher is not aware of that composition.</div>
                     <p class="section-content">You can create a plugin in two different ways:</p>
                     <h4 class="section-h4">Create a plugin for publishing as package</h4>
                     <pre>
@@ -142,6 +142,7 @@ exports.attributes = {
 }
 </code>
                     </pre>
+                    <div class="alert alert-info" role="alert"><i class="fa fa-info" aria-hidden="true"></i> Use always the plugin helper to create new plugins <a href="https://github.com/hemerajs/hemera/tree/master/packages/hemera-plugin">hemera-plugin</a>. It will provide a consistent interface and checks the bare-minimum version of Hemera.</div>
                     <h4 class="section-h4">Create a pluging inline</h4>
                     <pre>
 <code class="javascript">
@@ -174,21 +175,8 @@ hemera.use({
 </code>
                     </pre>
                     <h4 class="section-h4">Plugin dependencies</h4>
-                    <p>The <code>dependencies</code> attribute is used to identify the dependencies of a plugin. When the plugin could not be resolved a warning appears and an error is thrown. Does not provide version dependency which should be implemented using npm  <a href="https://nodejs.org/en/blog/npm/peer-dependencies/">peerDepenencies</a>.</p>
-                    <pre>
-<code class="javascript">
-hemera.use({ 
- plugin: myPlugin,
- options: {},
- attributes: { 
-  name: "test",
-  version: "1.0.0",
-  description: "my first plugin",
-  dependencies: ['hemera-joi']
- }
-})
-</code>
-                    </pre>
+                    <p>Plugin dependencies are installed as usual with NPM. Every plugin instance create a new <code>scope</code> this means that any mondifications (via decorators, expose) on the <code>hemera</code> instance will not be reflected to the current context ancestors, but only to its descendants.</p>
+
                     <h4 class="section-h4">Plugin registration</h4>
                     <p>A plugin must be registered before the <code>ready</code> function is called. The <code>ready</code>                        function will initialize all plugins. Default plugin options are preserved if you don't overwrite
                         them.
@@ -196,7 +184,7 @@ hemera.use({
                     <pre>
 <code class="javascript">
 hemera.use({ 
-  plugin: function() {},
+  plugin: function(options, next) {},
   attributes: { name: "foo" },
   options: { a: 1 }
 })
@@ -206,7 +194,7 @@ hemera.use({
                     <pre>
 <code class="javascript">
 hemera.use({ 
-  plugin: function() {},
+  plugin: function(options, next) {},
   attributes: { name: "foo" }
 }, { a: 1 })
 </code>

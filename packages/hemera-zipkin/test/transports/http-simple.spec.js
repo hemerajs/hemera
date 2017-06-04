@@ -15,9 +15,7 @@ const options = {
 }
 
 describe('Transports', function () {
-
   describe('http-simple', function () {
-
     let fakeServer
 
     before(function (done) {
@@ -35,9 +33,7 @@ describe('Transports', function () {
     })
 
     it('sends received data to the correct url', function (done) {
-
       fakeServer.on('request', function (data) {
-
         expect(data.url).to.equal('/api/v1/spans')
         expect(data.body).to.be.an.array()
         expect(data.body).to.have.length(1)
@@ -53,9 +49,6 @@ describe('Transports', function () {
         traceId: 'test trace',
         id: 'test span'
       }, options)
-
     })
-
   })
-
 })
