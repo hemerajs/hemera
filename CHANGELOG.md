@@ -3,6 +3,12 @@ Changelog
 
 # 1.x
 
+### 1.3.1
+
+### Summary
+- Remove .eslintrc, eslint dependencies from nats-hemera package
+- Use [hemera-plugin](https://github.com/hemerajs/hemera/tree/master/packages/hemera-plugin) in all hemera plugins
+
 ## 1.3.0
 
 ### Summary
