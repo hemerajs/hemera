@@ -1,6 +1,6 @@
 {
   "name": "hemera-stats",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Provide informations about the current hemera instance",
   "main": "index.js",
   "repository": {
