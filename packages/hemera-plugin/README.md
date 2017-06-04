@@ -25,7 +25,7 @@ If you need to set a bare-minimum version of Hemera for your plugin, just add th
 ```js
 const hp = require('hemera-plugin')
 
-module.exports = fp(function (opts, next) {
+module.exports = hp(function (opts, next) {
   // your plugin code
   const hemera = this
   next()
