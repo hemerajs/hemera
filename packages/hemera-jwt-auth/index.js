@@ -1,5 +1,6 @@
 'use strict'
 
+const Hp = require('hemera-plugin')
 const JWT = require('jsonwebtoken')
 const Hoek = require('hoek')
 
@@ -23,7 +24,7 @@ function isSubset (scope, subset) {
   return common.length === subset.length
 }
 
-exports.plugin = function hemeraJwtAuth (options) {
+exports.plugin = Hp(function hemeraJwtAuth (options) {
   const hemera = this
 
   const JwtError = hemera.createError('JwtError')
@@ -64,7 +65,7 @@ exports.plugin = function hemeraJwtAuth (options) {
       }
     })
   })
-}
+})
 
 exports.options = {
   jwt: {

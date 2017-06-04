@@ -16,7 +16,8 @@
   "license": "MIT",
   "dependencies": {
     "elasticsearch": "13.0.x",
-    "hemera-joi": "^1.1.2"
+    "hemera-joi": "1.1.x",
+    "hemera-plugin": "0.0.x"
   },
   "devDependencies": {
     "code": "4.0.x",

@@ -1,12 +1,13 @@
 'use strict'
 
+const Hp = require('hemera-plugin')
 const fork = require('child_process').fork
 const Os = require('os')
 
 let workers = []
 const cpuCount = Os.cpus().length
 
-exports.plugin = function hemeraControlplane (options) {
+exports.plugin = Hp(function hemeraControlplane (options) {
   const hemera = this
   const topic = 'controlplane'
   const Joi = hemera.exposition['hemera-joi'].joi
@@ -197,7 +198,7 @@ exports.plugin = function hemeraControlplane (options) {
     const list = workers.map(item => item.pid)
     reply(null, { success: true, list })
   })
-}
+})
 
 exports.options = {
   payloadValidator: 'hemera-joi'

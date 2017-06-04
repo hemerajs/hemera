@@ -1,8 +1,9 @@
 'use strict'
 
 const AWS = require('aws-sdk')
+const Hp = require('hemera-plugin')
 
-exports.plugin = function hemeraSQS (options) {
+exports.plugin = Hp(function hemeraSQS (options) {
   const hemera = this
   const topic = 'sqs'
 
@@ -146,7 +147,7 @@ exports.plugin = function hemeraSQS (options) {
       }
     })
   })
-}
+})
 
 exports.options = {
   sqs: {

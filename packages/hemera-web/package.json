@@ -18,7 +18,8 @@
     "hoek": "4.1.x",
     "lodash": "4.17.x",
     "micro": "7.3.x",
-    "type-is": "1.6.x"
+    "type-is": "1.6.x",
+    "hemera-plugin": "0.0.x"
   },
   "engines": {
     "node": ">=6"

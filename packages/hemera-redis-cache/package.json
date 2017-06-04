@@ -13,8 +13,9 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-joi": "^1.1.2",
-    "redis": "2.7.x"
+    "hemera-joi": "1.1.x",
+    "redis": "2.7.x",
+    "hemera-plugin": "0.0.x"
   },
   "devDependencies": {}
 }

@@ -1,8 +1,9 @@
 'use strict'
 
+const Hp = require('hemera-plugin')
 const Parambulator = require('parambulator')
 
-exports.plugin = function hemeraParambulator () {
+exports.plugin = Hp(function hemeraParambulator () {
   const hemera = this
   const PreValidationError = hemera.createError('PreValidationError')
 
@@ -26,7 +27,7 @@ exports.plugin = function hemeraParambulator () {
       res.send()
     })
   })
-}
+})
 
 exports.options = {}
 

@@ -1,6 +1,8 @@
 'use strict'
 
-exports.plugin = function hemeraStats () {
+const Hp = require('hemera-plugin')
+
+exports.plugin = Hp(function hemeraStats () {
   const hemera = this
   const topic = 'stats'
 
@@ -62,7 +64,7 @@ exports.plugin = function hemeraStats () {
 
     cb(null, info)
   })
-}
+})
 
 exports.options = {}
 

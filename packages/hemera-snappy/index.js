@@ -1,8 +1,9 @@
 'use strict'
 
 const SnappyJS = require('snappyjs')
+const Hp = require('hemera-plugin')
 
-exports.plugin = function hemeraSnappy () {
+exports.plugin = Hp(function hemeraSnappy () {
   const hemera = this
 
   hemera._decoder.decode = (msg) => {
@@ -28,7 +29,7 @@ exports.plugin = function hemeraSnappy () {
       }
     }
   }
-}
+})
 
 exports.options = {}
 

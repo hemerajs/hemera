@@ -1,8 +1,9 @@
 'use strict'
 
 const Web = require('./lib')
+const Hp = require('hemera-plugin')
 
-exports.plugin = function hemeraWeb (options, next) {
+exports.plugin = Hp(function hemeraWeb (options, next) {
   const hemera = this
   const web = new Web(hemera, options)
   web.listen(() => {
@@ -14,7 +15,7 @@ exports.plugin = function hemeraWeb (options, next) {
     web._server.close()
     hemera.log.warn('Http server closed!')
   })
-}
+})
 
 exports.options = {
   port: 3000,

@@ -1,5 +1,6 @@
 'use strict'
 
+const Hp = require('hemera-plugin')
 const Zipkin = require('./lib/index')
 const Hoek = require('hoek')
 
@@ -11,7 +12,7 @@ let defaultConfig = {
   path: '/api/v1/spans'
 }
 
-exports.plugin = function hemeraZipkin (options) {
+exports.plugin = Hp(function hemeraZipkin (options) {
   var hemera = this
 
   const config = Hoek.applyToDefaults(defaultConfig, options || {})
@@ -95,7 +96,7 @@ exports.plugin = function hemeraZipkin (options) {
 
     Tracer.send_client_recv(ctx._zkTrace, meta)
   })
-}
+})
 
 exports.options = {}
 

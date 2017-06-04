@@ -1,8 +1,9 @@
 'use strict'
 
+const Hp = require('hemera-plugin')
 const Joi = require('joi')
 
-exports.plugin = function hemeraJoi () {
+exports.plugin = Hp(function hemeraJoi () {
   const hemera = this
   const PreValidationError = hemera.createError('PreValidationError')
   const PostValidationError = hemera.createError('PostValidationError')
@@ -83,7 +84,7 @@ exports.plugin = function hemeraJoi () {
       }
     })
   })
-}
+})
 
 exports.options = {}
 

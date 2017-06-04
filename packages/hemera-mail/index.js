@@ -1,8 +1,9 @@
 'use strict'
 
+const Hp = require('hemera-plugin')
 const Nodemailer = require('nodemailer')
 
-exports.plugin = function hemeraMsgpack (options) {
+exports.plugin = Hp(function hemeraMsgpack (options) {
   const hemera = this
   const topic = 'mail'
   const Joi = hemera.exposition['hemera-joi'].joi
@@ -35,7 +36,7 @@ exports.plugin = function hemeraMsgpack (options) {
       })
     })
   })
-}
+})
 
 exports.options = {
   payloadValidator: 'hemera-joi',

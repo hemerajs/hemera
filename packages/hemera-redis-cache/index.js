@@ -1,8 +1,9 @@
 'use strict'
 
 const Redis = require('redis')
+const Hp = require('hemera-plugin')
 
-exports.plugin = function hemeraRedisCache (options) {
+exports.plugin = Hp(function hemeraRedisCache (options) {
   const hemera = this
   const client = Redis.createClient(options.redis)
   const topic = 'redis-cache'
@@ -99,7 +100,7 @@ exports.plugin = function hemeraRedisCache (options) {
   }, function (req, cb) {
     client.ttl(req.key, cb)
   })
-}
+})
 
 exports.options = {
   payloadValidator: 'hemera-joi',

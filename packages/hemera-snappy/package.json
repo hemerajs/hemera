@@ -13,7 +13,8 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "snappyjs": "0.5.x"
+    "snappyjs": "0.5.x",
+    "hemera-plugin": "0.0.x"
   },
   "devDependencies": {}
 }

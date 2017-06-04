@@ -1,8 +1,9 @@
 'use strict'
 
+const Hp = require('hemera-plugin')
 const Couchbase = require('couchbase')
 
-exports.plugin = function hemeraCouchbaseStore (options) {
+exports.plugin = Hp(function hemeraCouchbaseStore (options) {
   const hemera = this
   const topic = 'couchbase-store'
 
@@ -33,7 +34,7 @@ exports.plugin = function hemeraCouchbaseStore (options) {
     const query = N1qlQuery.fromString(req.query)
     bucket.query(query, req.vars, cb)
   })
-}
+})
 
 exports.options = {
   payloadValidator: 'hemera-joi',

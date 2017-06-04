@@ -18,9 +18,10 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-store": "^1.1.10",
+    "hemera-store": "1.1.x",
     "mongodb": "2.2.x",
-    "mongodb-extended-json": "1.9.x"
+    "mongodb-extended-json": "1.9.x",
+    "hemera-plugin": "0.0.x"
   },
   "devDependencies": {}
 }

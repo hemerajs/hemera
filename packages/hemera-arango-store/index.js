@@ -1,10 +1,11 @@
 'use strict'
 
+const Hp = require('hemera-plugin')
 const Arangojs = require('arangojs')
 const ArangoStore = require('./store')
 const StorePattern = require('hemera-store/pattern')
 
-exports.plugin = function hemeraArangoStore (options) {
+exports.plugin = Hp(function hemeraArangoStore (options) {
   const hemera = this
   const connections = {}
   const topic = 'arango-store'
@@ -222,7 +223,7 @@ exports.plugin = function hemeraArangoStore (options) {
 
     store.find(req, req.options, cb)
   })
-}
+})
 
 exports.options = {
   payloadValidator: 'hemera-joi'

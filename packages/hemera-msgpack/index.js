@@ -1,10 +1,11 @@
 'use strict'
 
+const Hp = require('hemera-plugin')
 const msgpack = require('msgpack-lite')
 const encode = msgpack.encode
 const decode = msgpack.decode
 
-exports.plugin = function hemeraMsgpack () {
+exports.plugin = Hp(function hemeraMsgpack () {
   const hemera = this
 
   hemera._decoder.decode = (msg) => {
@@ -30,7 +31,7 @@ exports.plugin = function hemeraMsgpack () {
       }
     }
   }
-}
+})
 
 exports.options = {}
 

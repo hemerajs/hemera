@@ -15,7 +15,8 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "2.58.x"
+    "aws-sdk": "2.58.x",
+    "hemera-plugin": "0.0.x"
   },
   "devDependencies": {}
 }

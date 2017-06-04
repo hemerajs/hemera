@@ -1,5 +1,6 @@
 'use strict'
 
+const Hp = require('hemera-plugin')
 const Mongodb = require('mongodb')
 const ObjectID = Mongodb.ObjectID
 const MongoStore = require('./store')
@@ -7,7 +8,7 @@ const StorePattern = require('hemera-store/pattern')
 const serialize = require('mongodb-extended-json').serialize
 const deserialize = require('mongodb-extended-json').deserialize
 
-exports.plugin = function hemeraMongoStore (options, next) {
+exports.plugin = Hp(function hemeraMongoStore (options, next) {
   const hemera = this
   const topic = 'mongo-store'
   const preResponseHandler = (result) => {
@@ -149,7 +150,7 @@ exports.plugin = function hemeraMongoStore (options, next) {
     hemera.log.debug('DB connected!')
     next()
   })
-}
+})
 
 exports.options = {
   mongos: {},
