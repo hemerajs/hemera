@@ -3,6 +3,20 @@ Changelog
 
 # 1.x
 
+### 1.3.2
+
+### Summary
+
+- Remove passing extension index as parameter `hemera.ext(req, resp, next, prevValue, index)`
+- Move reply logic from server response to reply.js class
+- Update tests
+- Add new `onClose` extension point to gracefully shutdown services like hemera-mongo-store and hemera-web
+- Declare minimum hemera version in hemera-mongo-store and hemera-web
+
+### Summary
+- Remove .eslintrc, eslint dependencies from nats-hemera package
+- Use [hemera-plugin](https://github.com/hemerajs/hemera/tree/master/packages/hemera-plugin) in all hemera plugins
+
 ### 1.3.1
 
 ### Summary
