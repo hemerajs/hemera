@@ -156,7 +156,7 @@ exports.plugin = Hp(function hemeraMongoStore (options, next) {
     hemera.log.debug('DB connected!')
     next()
   })
-})
+}, '>= 1.3.2')
 
 exports.options = {
   mongos: {},

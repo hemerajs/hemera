@@ -17,7 +17,7 @@ exports.plugin = Hp(function hemeraWeb (options, next) {
     hemera.log.debug('Http server closed!')
     done()
   })
-})
+}, '>= 1.3.2')
 
 exports.options = {
   port: 3000,
