@@ -186,6 +186,7 @@ describe('Extension reply', function () {
         expect(req.payload).to.be.an.object()
         expect(req.error).to.be.a.null()
         expect(res.payload).to.be.an.object()
+        expect(res.error).to.be.null()
         ext3()
         next()
       })
@@ -209,6 +210,74 @@ describe('Extension reply', function () {
         expect(ext1.called).to.be.equals(true)
         expect(ext2.called).to.be.equals(true)
         expect(ext3.called).to.be.equals(true)
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to manipulate response payload in server extensions', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.ext('onServerPreResponse', function (req, res, next) {
+        res.payload = 1
+        next()
+      })
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+        cb(null, {
+          foo: 'bar'
+        })
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.equals(1)
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to manipulate response error payload in server extensions', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.ext('onServerPreResponse', function (req, res, next) {
+        res.error = new Error('test')
+        next()
+      })
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+        cb(null, {
+          foo: 'bar'
+        })
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+        expect(err.message).to.be.equals('test')
         hemera.close()
         done()
       })

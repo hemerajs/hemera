@@ -52,6 +52,27 @@ class Reply {
   }
 
   /**
+   *
+   *
+   *
+   * @memberof Reply
+   */
+  set error (value) {
+    this._response.error = value
+  }
+
+  /**
+   *
+   *
+   * @readonly
+   *
+   * @memberof Reply
+   */
+  get error () {
+    return this._response.error
+  }
+
+  /**
    * Abort the current request and respond wih the passed value
    *
    * @param {any} value
