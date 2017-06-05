@@ -553,8 +553,11 @@ describe('Generator / Promise support in extension', function () {
 
     hemera.ready(() => {
       hemera.ext('onServerPreHandler', function * (req, res) {
-        const result = yield Promise.resolve(true)
-        return result
+        return yield Promise.resolve(true)
+      })
+
+      hemera.ext('onServerPreHandler', function * (req, res) {
+        return yield Promise.resolve('foobar')
       })
 
       hemera.add({
@@ -571,7 +574,7 @@ describe('Generator / Promise support in extension', function () {
         msg: 'Hi!'
       }, (err, resp) => {
         expect(err).to.be.not.exists()
-        expect(resp).to.be.equals(true)
+        expect(resp).to.be.equals('foobar')
         hemera.close()
         done()
       })
@@ -620,8 +623,7 @@ describe('Generator / Promise support in extension', function () {
 
     hemera.ready(() => {
       hemera.ext('onServerPreHandler', function * (req, res) {
-        const result = yield Promise.reject(new Error('test'))
-        return result
+        return yield Promise.reject(new Error('test'))
       })
 
       hemera.add({

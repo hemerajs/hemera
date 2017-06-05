@@ -10,7 +10,8 @@
  */
 
 const Co = require('co')
-const IsGeneratorFn = require('./util').isGeneratorFunction
+const Reply = require('./reply')
+const Util = require('./util')
 const _ = require('lodash')
 
 /**
@@ -32,11 +33,13 @@ class Extension {
    */
   _add (handler) {
     if (this._options.generators) {
-      if (IsGeneratorFn(handler)) {
+      if (Util.isGeneratorFunction(handler)) {
         this._stack.push(function () {
-          // -3 because (req, res, next, prevValue, index)
-          const next = arguments[arguments.length - 3]
-          return Co(handler.apply(this, arguments)).then(x => next(null, x)).catch(next)
+          // -1 because (req, res, next)
+          const next = arguments[arguments.length - 1]
+          return Co(handler.apply(this, arguments))
+          .then(x => next(null, x))
+          .catch(next)
         })
       } else {
         this._stack.push(handler)
@@ -45,6 +48,7 @@ class Extension {
       this._stack.push(handler)
     }
   }
+
   /**
    *
    *
@@ -61,66 +65,27 @@ class Extension {
   }
 
   /**
-   *
+   * Executes the stack of callbacks and set the correct
+   * response and request context
    *
    * @param {any} cb
    *
    * @memberOf Extension
    */
   dispatch (ctx, cb) {
-    const each = (item, next, prevValue, i) => {
+    const each = (item, next) => {
       if (this._options.server) {
         const response = ctx._response
         const request = ctx._request
-        // pass next handler to response object so that the user can abort the response with msg or error
-        response.next = next
+        const reply = new Reply(request, response, next)
 
-        item.call(ctx, request, response, next, prevValue, i)
+        item.call(ctx, request, reply, next)
       } else {
-        item.call(ctx, next, i)
+        item.call(ctx, next)
       }
     }
 
-    Extension.serial(this._stack, each, cb)
-  }
-
-  /**
-   *
-   *
-   * @param {Array<Function>} array
-   * @param {Function} method
-   * @param {Function} callback
-   *
-   * @memberOf Extension
-   */
-  static serial (array, method, callback) {
-    if (!array.length) {
-      callback()
-    } else {
-      let i = 0
-
-      const iterate = function (prevValue) {
-        const done = function (err, value, abort) {
-          if (err) {
-            callback(err)
-          } else if (value && abort) {
-            callback(null, value)
-          } else {
-            i = i + 1
-
-            if (i < array.length) {
-              iterate(value)
-            } else {
-              callback(null, value)
-            }
-          }
-        }
-
-        method(array[i], done, prevValue, i)
-      }
-
-      iterate()
-    }
+    Util.serialWithCancellation(this._stack, each, cb)
   }
 }
 

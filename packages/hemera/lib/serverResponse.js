@@ -9,8 +9,6 @@
  *
  */
 
-const _ = require('lodash')
-
 /**
  * @class ServerResponse
  */
@@ -24,44 +22,6 @@ class ServerResponse {
    */
   constructor () {
     this._response = {}
-  }
-
-  /**
-   *
-   *
-   * @param {*} value
-   *
-   * @memberOf ServerResponse
-   */
-  end (value) {
-    if (value instanceof Error) {
-      if (_.isFunction(this.next)) {
-        this.next(value)
-      }
-    } else {
-      if (_.isFunction(this.next)) {
-        this.next(null, value, true)
-      }
-    }
-  }
-
-  /**
-   *
-   *
-   * @param {*} value
-   *
-   * @memberOf ServerResponse
-   */
-  send (value) {
-    if (value instanceof Error) {
-      if (_.isFunction(this.next)) {
-        this.next(value)
-      }
-    } else {
-      if (_.isFunction(this.next)) {
-        this.next(null, value)
-      }
-    }
   }
 
   /**

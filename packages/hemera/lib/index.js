@@ -161,7 +161,8 @@ class Hemera extends EventEmitter {
       onClientPostRequest: new Extension('onClientPostRequest', { server: false, generators: this._config.generators }),
       onServerPreHandler: new Extension('onServerPreHandler', { server: true, generators: this._config.generators }),
       onServerPreRequest: new Extension('onServerPreRequest', { server: true, generators: this._config.generators }),
-      onServerPreResponse: new Extension('onServerPreResponse', { server: true, generators: this._config.generators })
+      onServerPreResponse: new Extension('onServerPreResponse', { server: true, generators: this._config.generators }),
+      onClose: new Extension('onClose', { server: false, generators: this._config.generators })
     }
 
     // errio settings
@@ -208,11 +209,16 @@ class Hemera extends EventEmitter {
 
     // no matter how a process exits log and fire event
     OnExit((code, signal) => {
+      // Signal 0 checks if any process with the given PID is running
+      if (code === 0) {
+        return
+      }
+
       this.log.fatal({
         code,
         signal
       }, 'process exited')
-      this.emit('teardown', {
+      this.emit('exit', {
         code,
         signal
       })
@@ -1311,10 +1317,15 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   close () {
-    this.emit('close')
+    this._extensions.onClose.dispatch(this, (err, val) => {
+      this._heavy.stop()
+      this._transport.close()
 
-    this._heavy.stop()
-    this._transport.close()
+      if (err) {
+        this.log.fatal(err)
+        this.emit('error', err)
+      }
+    })
   }
 }
 

@@ -33,6 +33,23 @@ describe('Extension error', function () {
     })
   })
 
+  it('Invalid extension handler type', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      try {
+        hemera.ext('test', 'foo')
+      } catch (e) {
+        expect(e.name).to.be.equals('HemeraError')
+        expect(e.message).to.be.equals('Invalid extension type')
+        hemera.close()
+        done()
+      }
+    })
+  })
+
   it('Should be able to pass a super error to onClientPostRequest', function (done) {
     const nats = require('nats').connect(authUrl)
 
