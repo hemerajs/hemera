@@ -12,6 +12,13 @@ exports.plugin = Hp(function hemeraRedisCache (options) {
 
   hemera.expose('client', client)
 
+  // Gracefully shutdown
+  hemera.ext('onClose', (done) => {
+    hemera.log.debug('Redis connection closed!')
+    client.quit()
+    done()
+  })
+
   client.on('ready', function () {
     hemera.log.info('Redis Cache is ready')
   })
@@ -100,7 +107,7 @@ exports.plugin = Hp(function hemeraRedisCache (options) {
   }, function (req, cb) {
     client.ttl(req.key, cb)
   })
-})
+}, '>= 1.3.2')
 
 exports.options = {
   payloadValidator: 'hemera-joi',
