@@ -112,7 +112,7 @@ describe('onClose extension', function () {
     let plugin = function (options) {
       let hemera = this
 
-      hemera.ext('onClose', function * (done) {
+      hemera.ext('onClose', function * () {
         secondOnCloseHandler()
         return yield Promise.resolve()
       })
