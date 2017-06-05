@@ -1,6 +1,6 @@
 {
   "name": "hemera-web",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Http route mapping for Hemera microservices.",
   "main": "index.js",
   "repository": {
@@ -15,7 +15,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-plugin": "^0.0.2",
+    "hemera-plugin": "^0.0.3",
     "hoek": "4.1.x",
     "lodash": "4.17.x",
     "micro": "7.3.x",

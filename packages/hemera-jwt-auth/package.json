@@ -1,6 +1,6 @@
 {
   "name": "hemera-jwt-auth",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "Granting and authenticating solution with JWT for Hemera",
   "main": "index.js",
   "repository": {
@@ -16,7 +16,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-plugin": "^0.0.2",
+    "hemera-plugin": "^0.0.3",
     "hoek": "4.1.x",
     "jsonwebtoken": "7.3.x"
   },
