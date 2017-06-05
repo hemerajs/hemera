@@ -37,7 +37,9 @@ class Extension {
         this._stack.push(function () {
           // -1 because (req, res, next)
           const next = arguments[arguments.length - 1]
-          return Co(handler.apply(this, arguments)).then(x => next(null, x)).catch(next)
+          return Co(handler.apply(this, arguments))
+          .then(x => next(null, x))
+          .catch(next)
         })
       } else {
         this._stack.push(handler)

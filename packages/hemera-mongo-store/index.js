@@ -26,6 +26,12 @@ exports.plugin = Hp(function hemeraMongoStore (options, next) {
     hemera.expose('db', db)
     hemera.expose('mongodb', Mongodb)
 
+    // Gracefully shutdown
+    hemera.ext('onClose', (done) => {
+      hemera.log.debug('Mongodb connection closed!')
+      db.close(done)
+    })
+
     hemera.add({
       topic,
       cmd: 'dropCollection'
