@@ -93,6 +93,45 @@ class Util {
     }
   }
   /**
+   * Executes a series of callbacks and allows to interrupt
+   * as well as to continue with a final value
+   *
+   * @param {Array<Function>} array
+   * @param {Function} method
+   * @param {Function} callback
+   *
+   * @memberOf Extension
+   */
+  static serialWithCancellation (array, method, callback) {
+    if (!array.length) {
+      callback()
+    } else {
+      let i = 0
+
+      const iterate = function () {
+        const done = function (err, value, abort) {
+          if (err) {
+            callback(err)
+          } else if (value && abort) {
+            callback(null, value)
+          } else {
+            i = i + 1
+
+            if (i < array.length) {
+              iterate(value)
+            } else {
+              callback(null, value)
+            }
+          }
+        }
+
+        method(array[i], done)
+      }
+
+      iterate()
+    }
+  }
+  /**
    * Get high resolution time in nanoseconds
    *
    * @static
