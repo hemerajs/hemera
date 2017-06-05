@@ -13,10 +13,6 @@ Changelog
 - Add new `onClose` extension point to gracefully shutdown services like hemera-mongo-store and hemera-web
 - Declare minimum hemera version in hemera-mongo-store and hemera-web
 
-### Summary
-- Remove .eslintrc, eslint dependencies from nats-hemera package
-- Use [hemera-plugin](https://github.com/hemerajs/hemera/tree/master/packages/hemera-plugin) in all hemera plugins
-
 ### 1.3.1
 
 ### Summary
