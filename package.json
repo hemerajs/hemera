@@ -48,7 +48,7 @@
     "async": "2.4.x",
     "axios": "0.16.x",
     "chokidar-cli": "1.2.x",
-    "code": "4.0.x",
+    "code": "~4.1.0",
     "coveralls": "2.13.x",
     "hemera-testsuite": "1.1.x",
     "istanbul": "0.4.x",
