@@ -39,7 +39,7 @@ The key features of NATS in combination with Hemera are:
 * **Auto-pruning**: NATS automatically handles a slow consumer and cut it off.
 * **Pattern driven**: Define the signatures of your RPC's in JSON and use the flexibility of pattern-matching.
 * **Request & Reply**: By default point-to-point involves the fastest or first to respond.
-* **Pubish & Subscribe**: Hemera supports all features of NATS. This includes wildcards in subjects and normal publish and fanout mechanism.
+* **Publish & Subscribe**: Hemera supports all features of NATS. This includes wildcards in subjects and normal publish and fanout mechanism.
 * **Tracing**: Any distributed system need good tracing capabilities. We provide support for Zipkin a tracing system which manages both the collection and lookup of this data.
 * **Monitoring**: Your NATS server can be monitored by cli or a dashboard.
 * **Payload validation**: Create your own validator or use existing plugins for Joi and Parambulator.
