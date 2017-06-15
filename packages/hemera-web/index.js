@@ -20,8 +20,15 @@ exports.plugin = Hp(function hemeraWeb (options, next) {
   app.get('/', handler)
   app.post('/', handler)
 
+  app.get('/:topic', handler)
+  app.post('/:topic', handler)
+
+  app.get('/:topic/:cmd', handler)
+  app.post('/:topic/:cmd', handler)
+
   function handler (req, res) {
     const xRequestId = req.headers['x-request-id']
+
     let pattern = Hoek.clone(options.pattern)
     if (req.query) {
       pattern = Hoek.applyToDefaults(pattern, req.query)
@@ -29,6 +36,13 @@ exports.plugin = Hp(function hemeraWeb (options, next) {
     // for tracing
     if (xRequestId) {
       pattern.requestParentId$ = xRequestId
+    }
+    // respect params
+    if (req.params.topic) {
+      pattern.topic = req.params.topic
+    }
+    if (req.params.cmd) {
+      pattern.cmd = req.params.cmd
     }
 
     // include json payload to pattern

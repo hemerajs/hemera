@@ -21,7 +21,7 @@ describe('Hemera-web', function () {
     server.kill()
   })
 
-  it('Should be able to pass pattern with query parameters', function (done) {
+  it('Should be able to pass pattern with query parameters in GET request', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -39,6 +39,143 @@ describe('Hemera-web', function () {
       })
 
       Axios.get('http://127.0.0.1:3000?topic=math&cmd=add&a=1&b=2').then((resp) => {
+        expect(resp.data.result).to.be.equals(3)
+        hemera.close()
+        done()
+      })
+      .catch(done)
+    })
+  })
+
+  it('Should be able to pass pattern with query parameters in POST request', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.use(HemeraWeb)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function (req, cb) {
+        cb(null, { result: parseInt(req.a) + parseInt(req.b) })
+      })
+
+      Axios.post('http://127.0.0.1:3000?topic=math&cmd=add&a=1&b=2').then((resp) => {
+        expect(resp.data.result).to.be.equals(3)
+        hemera.close()
+        done()
+      })
+      .catch(done)
+    })
+  })
+
+  it('Should be able to do GET request with topic as url parameter', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.use(HemeraWeb)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function (req, cb) {
+        cb(null, { result: parseInt(req.a) + parseInt(req.b) })
+      })
+
+      Axios.get('http://127.0.0.1:3000/math?cmd=add&a=1&b=2').then((resp) => {
+        expect(resp.data.result).to.be.equals(3)
+        hemera.close()
+        done()
+      })
+      .catch(done)
+    })
+  })
+
+  it('Should be able to do GET request with topic and cmd as url parameters', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.use(HemeraWeb)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function (req, cb) {
+        cb(null, { result: parseInt(req.a) + parseInt(req.b) })
+      })
+
+      Axios.get('http://127.0.0.1:3000/math/add?a=1&b=2').then((resp) => {
+        expect(resp.data.result).to.be.equals(3)
+        hemera.close()
+        done()
+      })
+      .catch(done)
+    })
+  })
+
+  it('Should be able to do POST request with topic and cmd as url parameters', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.use(HemeraWeb)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function (req, cb) {
+        cb(null, { result: parseInt(req.a) + parseInt(req.b) })
+      })
+
+      Axios.post('http://127.0.0.1:3000/math/add', {
+        a: 1,
+        b: 2
+      }).then((resp) => {
+        expect(resp.data.result).to.be.equals(3)
+        hemera.close()
+        done()
+      })
+      .catch(done)
+    })
+  })
+
+  it('Should be able to do POST request with topic as url parameters', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.use(HemeraWeb)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function (req, cb) {
+        cb(null, { result: parseInt(req.a) + parseInt(req.b) })
+      })
+
+      Axios.post('http://127.0.0.1:3000/math', {
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }).then((resp) => {
         expect(resp.data.result).to.be.equals(3)
         hemera.close()
         done()

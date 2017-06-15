@@ -2,9 +2,10 @@
 Http route mapping for Hemera microservices. Based on [Express 4](https://github.com/expressjs/express)
 
 - Depends on minimalist web framework
-- Respect `Body` and `Query` data as pattern
-- Transport small binary or text data in the pattern
-- Returns correct Hemera errors and without stack traces
+- Respect `Body` and `Query` payload as pattern
+- Request your service like REST service`/:topic/:cmd`
+- Transport small binary or text data in pattern
+- Returns correct Hemera errors without stack traces
 
 [![npm](https://img.shields.io/npm/v/hemera-web.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-web)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
@@ -46,10 +47,12 @@ You can transport the pattern in different ways:
 - GET Request
 ```
 http://localhost:3000?topic=math&cmd=add&a=1&b=2
+http://localhost:3000/math/add?a=1&b=2
 ```
 - POST Request
 ```
 http://localhost:3000?topic=math&cmd=add
+http://localhost:3000/math/add
 
 Body:
 {
@@ -60,6 +63,7 @@ Body:
 - application/x-www-form-urlencoded
 ```
 http://localhost:3000?topic=math&cmd=add
+http://localhost:3000/math/add
 
 Payload: a=1&bd=2
 ```
