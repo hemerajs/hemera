@@ -4,9 +4,7 @@
 
 <p align="center">
 <a href="http://opensource.org/licenses/MIT"><img src="https://camo.githubusercontent.com/11ad3ffb000cd7668567587af947347c738b6472/68747470733a2f2f696d672e736869656c64732e696f2f6e706d2f6c2f657870726573732e7376673f7374796c653d666c61742d737175617265266d61784167653d33363030" alt="License MIT" data-canonical-src="https://img.shields.io/npm/l/express.svg?amp;maxAge=3600" style="max-width:100%;"></a>
-<a href="https://travis-ci.org/hemerajs/hemera"><img src="
-https://travis-ci.org/hemerajs/hemera.svg?branch=master
-" alt="Build Status" data-canonical-src="https://travis-ci.org/hemerajs/hemera.svg?branch=master" style="max-width:100%;"></a>
+<a href="https://travis-ci.org/hemerajs/hemera"><img src="https://travis-ci.org/hemerajs/hemera.svg?branch=master" alt="Build Status" data-canonical-src="https://travis-ci.org/hemerajs/hemera.svg?branch=master" style="max-width:100%;"></a>
 <a href="https://ci.appveyor.com/project/StarpTech/hemera"><img src="https://ci.appveyor.com/api/projects/status/s3to4boq8yawulpn?svg=true" alt="Build Status" data-canonical-src="https://ci.appveyor.com/project/StarpTech/hemera" style="max-width:100%;"></a>
 <a href="https://coveralls.io/github/hemerajs/hemera?branch=master"><img src="https://camo.githubusercontent.com/2b9676a6b88d202578519f30faac24db7a4c7661/68747470733a2f2f636f766572616c6c732e696f2f7265706f732f6769746875622f68656d6572616a732f68656d6572612f62616467652e7376673f6272616e63683d6d61737465722674733d39393939267374796c653d666c61742d737175617265" alt="Coverage Status" data-canonical-src="https://coveralls.io/repos/github/hemerajs/hemera/badge.svg?branch=master&amp;ts=9999" style="max-width:100%;"></a>
 <a href="https://gitter.im/hemerajs/hemera"><img src="https://camo.githubusercontent.com/e7536e01bc9c129b974e11c26b174f54e50c6d69/68747470733a2f2f696d672e736869656c64732e696f2f6769747465722f726f6f6d2f6e776a732f6e772e6a732e7376673f7374796c653d666c61742d737175617265266d61784167653d33363030" alt="Gitter" data-canonical-src="https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=3600" style="max-width:100%;"></a>
