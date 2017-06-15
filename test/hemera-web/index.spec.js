@@ -10,10 +10,6 @@ describe('Hemera-web', function () {
 
   // Start up our own nats-server
   before(function (done) {
-    if (NodeVersion.major < 6) {
-      return this.skip()
-    }
-
     Axios = require('axios')
     HemeraWeb = require('../../packages/hemera-web')
 
@@ -22,10 +18,6 @@ describe('Hemera-web', function () {
 
   // Shutdown our server after we are done
   after(function () {
-    if (NodeVersion.major < 6) {
-      return this.skip()
-    }
-
     server.kill()
   })
 

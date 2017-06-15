@@ -1,1 +1,2 @@
 --check-leaks
+--globals __core-js_shared__

@@ -1,8 +1,7 @@
 # Hemera-web
-Http route mapping for Hemera microservices. Based on [Micro](https://github.com/zeit/micro)
+Http route mapping for Hemera microservices. Based on [express 4](https://github.com/expressjs/express)
 
-- Depends on Micro with just ~100 lines of code 
-- High Performance, no middleware, just HTTP
+- Depends on minimalist web framework
 - Respect `Body` and `Query` data as pattern
 - Transport small binary or text data in the pattern
 - Returns correct Hemera errors and without stack traces

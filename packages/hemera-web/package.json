@@ -7,29 +7,18 @@
     "url": "git@github.com:hemerajs/hemera.git",
     "type": "git"
   },
-  "scripts": {
-    "lint": "eslint index.js",
-    "test": "nyc mocha -t 5000 ./test/**/*.js",
-    "coverage": "npm run test && nyc report --reporter=html"
-  },
+  "scripts": {},
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "1.17.2",
+    "express": "4.15.3",
     "hemera-plugin": "^0.0.3",
     "hoek": "4.1.x",
-    "lodash": "4.17.x",
-    "micro": "7.3.x",
-    "type-is": "1.6.x"
+    "lodash": "4.17.x"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=4"
   },
-  "devDependencies": {
-    "code": "4.0.x",
-    "hemera-testsuite": "1.1.x",
-    "istanbul": "0.4.x",
-    "mocha": "3.3.x",
-    "mocha-lcov-reporter": "1.3.x",
-    "nyc": "10.3.x"
-  }
+  "devDependencies": {}
 }
