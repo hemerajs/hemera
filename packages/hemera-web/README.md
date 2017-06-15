@@ -1,5 +1,5 @@
 # Hemera-web
-Http route mapping for Hemera microservices. Based on [express 4](https://github.com/expressjs/express)
+Http route mapping for Hemera microservices. Based on [Express 4](https://github.com/expressjs/express)
 
 - Depends on minimalist web framework
 - Respect `Body` and `Query` data as pattern
