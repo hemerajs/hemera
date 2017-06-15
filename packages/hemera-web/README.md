@@ -3,7 +3,7 @@ Http route mapping for Hemera microservices. Based on [Express 4](https://github
 
 - Depends on minimalist web framework
 - Respect `Body` and `Query` payload as pattern
-- Request your service like REST service`/:topic/:cmd`
+- Provide a REST like interface `/:topic/:cmd`
 - Transport small binary or text data in pattern
 - Returns correct Hemera errors without stack traces
 
