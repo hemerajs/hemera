@@ -34,10 +34,6 @@ exports.plugin = Hp(function hemeraZipkin (options) {
       meta.service = ctx.config.tag
     }
 
-    Tracer.addBinary(meta, {
-      serverName: ctx.config.name
-    })
-
     Tracer.addBinary(meta, ctx.delegate$)
 
     hemera.log.debug({
@@ -61,10 +57,6 @@ exports.plugin = Hp(function hemeraZipkin (options) {
     if (config.subscriptionBased === false) {
       meta.service = ctx.config.tag
     }
-
-    Tracer.addBinary(meta, {
-      serverName: ctx.config.name
-    })
 
     Tracer.addBinary(meta, ctx.delegate$)
 
@@ -98,10 +90,6 @@ exports.plugin = Hp(function hemeraZipkin (options) {
       meta.service = ctx.config.tag
     }
 
-    Tracer.addBinary(meta, {
-      serverName: ctx.config.name
-    })
-
     Tracer.addBinary(meta, ctx.delegate$)
 
     let traceData = {
@@ -132,10 +120,6 @@ exports.plugin = Hp(function hemeraZipkin (options) {
     if (config.subscriptionBased === false) {
       meta.service = ctx.config.tag
     }
-
-    Tracer.addBinary(meta, {
-      serverName: ctx.config.name
-    })
 
     Tracer.addBinary(meta, ctx.delegate$)
 
