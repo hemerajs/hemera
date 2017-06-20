@@ -44,6 +44,7 @@ const Add = require('./add')
 var defaultConfig = {
   timeout: 2000, // Max execution time of a request
   generators: false, // Promise and generators support
+  tag: '', // The tag string of this Hemera instance
   name: `hemera-${Os.hostname()}-${Util.randomId()}`, // node name
   crashOnFatal: true, // Should gracefully exit the process at unhandled exceptions or fatal errors
   logLevel: 'silent', // 'fatal', 'error', 'warn', 'info', 'debug', 'trace'; also 'silent'
