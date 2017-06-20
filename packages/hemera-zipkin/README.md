@@ -5,6 +5,10 @@
 
 This is a plugin to use [Zipkin](http://zipkin.io/) with Hemera.
 
+<p align="center">
+<img src="https://github.com/hemerajs/hemera/blob/master/packages/hemera-zipkin/media/zipkin-dependency-graph.PNG" style="max-width:100%;">
+</p>
+
 ## Tracking level
 
 1. Per subscription: Each topic represents a subscription in NATS and therefore handled as own service. The hemera `tag` indentifiy the server instance.
