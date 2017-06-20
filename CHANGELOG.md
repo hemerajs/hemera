@@ -3,6 +3,12 @@ Changelog
 
 # 1.x
 
+### 1.3.3
+
+### Summary
+
+- Add `tag` property to tagging hemera instances. Used in `hemera-zipkin` to indicate the server instance.
+
 ### 1.3.2
 
 ### Summary
