@@ -90,7 +90,7 @@ exports.plugin = Hp(function hemeraZipkin (options) {
   hemera.on('clientPreRequest', function () {
     const ctx = this
     let meta = {
-      service: ctx._prevContext._topic || ctx.config.tag,
+      service: ctx._prevContext._topic || ctx.config.tag, // when act is on root level
       name: ctx.trace$.method
     }
 
@@ -125,7 +125,7 @@ exports.plugin = Hp(function hemeraZipkin (options) {
   hemera.on('clientPostRequest', function () {
     const ctx = this
     let meta = {
-      service: ctx._prevContext._topic || ctx.config.tag,
+      service: ctx._prevContext._topic || ctx.config.tag, // when act is on root level
       name: ctx.trace$.method
     }
 
