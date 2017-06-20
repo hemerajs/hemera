@@ -1,6 +1,6 @@
 {
   "name": "hemera-mail",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "This is a plugin to mail with Hemera",
   "main": "index.js",
   "repository": {
@@ -13,8 +13,8 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-joi": "^1.1.5",
-    "hemera-plugin": "^0.0.4",
+    "hemera-joi": "^1.1.6",
+    "hemera-plugin": "^0.0.5",
     "nodemailer": "4.0.x"
   }
 }

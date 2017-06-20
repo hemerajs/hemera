@@ -1,6 +1,6 @@
 {
   "name": "hemera-joi",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "This is a plugin to use Joi with Hemera",
   "main": "index.js",
   "repository": {
@@ -16,7 +16,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-plugin": "^0.0.4",
+    "hemera-plugin": "^0.0.5",
     "joi": "10.5.x"
   }
 }

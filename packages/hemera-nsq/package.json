@@ -1,6 +1,6 @@
 {
   "name": "hemera-nsq",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "description": "This is a plugin to use NSQ with Hemera",
   "main": "index.js",
   "repository": {
@@ -15,8 +15,8 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-joi": "^1.1.5",
-    "hemera-plugin": "^0.0.4",
+    "hemera-joi": "^1.1.6",
+    "hemera-plugin": "^0.0.5",
     "nsqjs": "0.7.x"
   },
   "devDependencies": {
