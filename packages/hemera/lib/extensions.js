@@ -39,9 +39,9 @@ function onClientPreRequest (next) {
 
   // tracing
   ctx.trace$ = pattern.trace$ || {}
-  ctx.trace$.parentSpanId = prevCtx.trace$.spanId
-  ctx.trace$.traceId = prevCtx.trace$.traceId || Util.randomId()
-  ctx.trace$.spanId = pattern.trace$ ? pattern.trace$.spanId : Util.randomId()
+  ctx.trace$.parentSpanId = ctx.trace$.spanId || prevCtx.trace$.spanId
+  ctx.trace$.traceId = ctx.trace$.traceId || prevCtx.trace$.traceId || Util.randomId()
+  ctx.trace$.spanId = Util.randomId()
   ctx.trace$.timestamp = currentTime
   ctx.trace$.service = pattern.topic
   ctx.trace$.method = Util.pattern(pattern)
