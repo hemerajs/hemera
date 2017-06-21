@@ -3,6 +3,12 @@ Changelog
 
 # 1.x
 
+### 1.3.6
+
+### Summary
+
+- Fixed finite loop when we have nested call chain.
+
 ### 1.3.3
 
 ### Summary
