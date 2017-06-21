@@ -23,6 +23,13 @@ hemera.ready(() => {
   })
 
   hemera.add({
+    topic: 'account',
+    cmd: 'delete'
+  }, function (req, cb) {
+    cb(null, true)
+  })
+
+  hemera.add({
     topic: 'profile',
     cmd: 'get'
   }, function (req, cb) {
@@ -35,7 +42,9 @@ hemera.ready(() => {
     cmd: 'login'
   }, function (req, cb) {
     this.act('topic:profile,cmd:get', function () {
-      this.act('topic:email,cmd:send', cb)
+      this.act('topic:email,cmd:send', function () {
+        this.act('topic:account,cmd:delete', cb)
+      })
     })
   })
   hemera.act('topic:auth,cmd:login')

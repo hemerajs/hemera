@@ -92,8 +92,15 @@ exports.plugin = Hp(function hemeraZipkin (options) {
   hemera.on('clientPreRequest', function () {
     const ctx = this
     let meta = {
-      service: ctx._prevContext._topic || ctx.config.tag, // when act is on root level
       name: ctx.trace$.method
+    }
+
+    if (ctx._prevContext._isServer === true) {
+      meta.service = ctx._prevContext._topic
+    } else if (ctx._prevContext._isServer === false) {
+      meta.service = ctx._prevContext._pattern.topic
+    } else {
+      meta.service = ctx.config.tag // when act is on root level
     }
 
     if (config.subscriptionBased === false) {
@@ -130,8 +137,15 @@ exports.plugin = Hp(function hemeraZipkin (options) {
   hemera.on('clientPostRequest', function () {
     const ctx = this
     let meta = {
-      service: ctx._prevContext._topic || ctx.config.tag, // when act is on root level
       name: ctx.trace$.method
+    }
+
+    if (ctx._prevContext._isServer === true) {
+      meta.service = ctx._prevContext._topic
+    } else if (ctx._prevContext._isServer === false) {
+      meta.service = ctx._prevContext._pattern.topic
+    } else {
+      meta.service = ctx.config.tag // when act is on root level
     }
 
     if (config.subscriptionBased === false) {
