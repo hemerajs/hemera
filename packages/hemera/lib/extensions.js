@@ -180,6 +180,11 @@ function onServerPreRequest (req, res, next) {
   ctx._request.payload = m.value
   ctx._request.error = m.error
 
+  // icnoming pattern
+  ctx._pattern = ctx._request.payload.pattern
+  // find matched route
+  ctx._actMeta = ctx._router.lookup(ctx._pattern)
+
   ctx.emit('serverPreRequest')
 
   next()

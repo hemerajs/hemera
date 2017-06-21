@@ -35,6 +35,11 @@ exports.plugin = Hp(function hemeraZipkin (options) {
     }
 
     Tracer.addBinary(meta, ctx.delegate$)
+    Tracer.addBinary(meta, {
+      'server.topic': ctx._topic,
+      'server.maxMessages': ctx._actMeta.pattern.maxMessages$ || 0,
+      'server.pubsub': ctx._actMeta.pattern.pubsub$ || false
+    })
 
     hemera.log.debug({
       traceData: ctx._zkTrace,
@@ -59,6 +64,11 @@ exports.plugin = Hp(function hemeraZipkin (options) {
     }
 
     Tracer.addBinary(meta, ctx.delegate$)
+    Tracer.addBinary(meta, {
+      'server.topic': ctx._topic,
+      'server.maxMessages': ctx._actMeta.pattern.maxMessages$ || 0,
+      'server.pubsub': ctx._actMeta.pattern.pubsub$ || false
+    })
 
     let traceData = {
       traceId: ctx.trace$.traceId,
@@ -91,6 +101,13 @@ exports.plugin = Hp(function hemeraZipkin (options) {
     }
 
     Tracer.addBinary(meta, ctx.delegate$)
+    Tracer.addBinary(meta, {
+      'rpc.topic': ctx.trace$.service,
+      'rpc.method': ctx.trace$.method,
+      'rpc.timeout': ctx._pattern.timeout$ || ctx.config.timeout,
+      'rpc.maxMessages': ctx._pattern.maxMessages$ || 0,
+      'rpc.pubsub': ctx._pattern.pubsub$ || false
+    })
 
     let traceData = {
       traceId: ctx.trace$.traceId,
@@ -122,6 +139,13 @@ exports.plugin = Hp(function hemeraZipkin (options) {
     }
 
     Tracer.addBinary(meta, ctx.delegate$)
+    Tracer.addBinary(meta, {
+      'rpc.topic': ctx.trace$.service,
+      'rpc.method': ctx.trace$.method,
+      'rpc.timeout': ctx._pattern.timeout$ || ctx.config.timeout,
+      'rpc.maxMessages': ctx._pattern.maxMessages$ || 0,
+      'rpc.pubsub': ctx._pattern.pubsub$ || false
+    })
 
     hemera.log.debug({
       traceData: ctx._zkTrace,

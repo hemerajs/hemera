@@ -796,11 +796,6 @@ class Hemera extends EventEmitter {
   _onServerPreRequestHandler (err, value) {
     let self = this
 
-      // icnoming pattern
-    self._pattern = self._request.payload.pattern
-      // find matched route
-    self._actMeta = self._router.lookup(self._pattern)
-
     if (err) {
       if (err instanceof SuperError) {
         self._response.error = err.rootCause || err.cause || err
