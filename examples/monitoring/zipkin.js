@@ -5,7 +5,7 @@ const nats = require('nats').connect()
 const hemeraZipkin = require('./../../packages/hemera-zipkin')
 
 const hemera = new Hemera(nats, {
-  logLevel: 'debug',
+  logLevel: 'info',
   childLogger: true,
   tag: 'user-service'
 })
@@ -15,6 +15,13 @@ hemera.use(hemeraZipkin, {
 })
 
 hemera.ready(() => {
+  hemera.add({
+    topic: 'search',
+    cmd: 'friends'
+  }, function (req, cb) {
+    cb(null, true)
+  })
+
   hemera.add({
     topic: 'email',
     cmd: 'send'
@@ -46,6 +53,10 @@ hemera.ready(() => {
         this.act('topic:account,cmd:delete', cb)
       })
     })
+    this.act('topic:email,cmd:send', function (err, result) {
+      this.act('topic:search,cmd:friends')
+    })
   })
   hemera.act('topic:auth,cmd:login')
+  hemera.act('topic:search,cmd:friends')
 })
