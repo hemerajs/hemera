@@ -36,7 +36,6 @@ const hemera = new Hemera(nats, {
 })
 
 hemera.use(hemeraZipkin, {
-  host: '192.168.99.100',
   debug: false,
   host: '127.0.0.1',
   port: '9411',
