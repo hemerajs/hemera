@@ -7,7 +7,7 @@ Changelog
 
 ### Summary
 
-- Fixed finite loop when we have nested call chain.
+- **Critical** - Fixed finite loop when we have nested call chain of `act` and the last one does not provide a callback. 
 
 ### 1.3.3
 
