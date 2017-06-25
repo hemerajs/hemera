@@ -27,15 +27,21 @@ exports.plugin = Hp(function hemeraWeb (options, next) {
   app.post('/:topic/:cmd', handler)
 
   function handler (req, res) {
-    const xRequestId = req.headers['x-request-id']
+    const xRequestTraceId = req.headers['x-request-trace-id']
+    const xRequestSpanId = req.headers['x-request-span-id']
 
     let pattern = Hoek.clone(options.pattern)
     if (req.query) {
       pattern = Hoek.applyToDefaults(pattern, req.query)
     }
     // for tracing
-    if (xRequestId) {
-      pattern.requestParentId$ = xRequestId
+    if (xRequestTraceId) {
+      pattern.trace$ = pattern.trace$ || {}
+      pattern.trace$.traceId = xRequestTraceId
+    }
+    if (xRequestSpanId) {
+      pattern.trace$ = pattern.trace$ || {}
+      pattern.trace$.spanId = xRequestSpanId
     }
     // respect params
     if (req.params.topic) {
