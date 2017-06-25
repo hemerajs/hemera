@@ -5,13 +5,14 @@ const nats = require('nats').connect()
 const hemeraZipkin = require('./../../packages/hemera-zipkin')
 
 const hemera = new Hemera(nats, {
-  logLevel: 'info',
+  logLevel: 'debug',
   childLogger: true,
   tag: 'user-service'
 })
 
 hemera.use(hemeraZipkin, {
-  host: '127.0.0.1'
+  host: '127.0.0.1',
+  sampling: 1 // trace any request
 })
 
 hemera.ready(() => {

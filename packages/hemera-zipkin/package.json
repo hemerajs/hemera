@@ -21,15 +21,15 @@
   "dependencies": {
     "hemera-plugin": "^0.0.7",
     "hoek": "4.1.x",
-    "wreck": "10.0.x"
+    "wreck": "12.2.x"
   },
   "devDependencies": {
-    "code": "4.0.x",
-    "coveralls": "2.11.x",
+    "code": "4.1.x",
+    "coveralls": "2.13.x",
     "hemera-testsuite": "1.1.x",
     "istanbul": "0.4.x",
-    "mocha": "3.3.x",
+    "mocha": "3.4.x",
     "mocha-lcov-reporter": "1.3.x",
-    "nyc": "10.3.x"
+    "nyc": "11.0.x"
   }
 }

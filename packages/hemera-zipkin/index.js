@@ -11,7 +11,7 @@ let defaultConfig = {
   port: '9411',
   path: '/api/v1/spans',
   subscriptionBased: true, // when false the hemera tag represents the service otherwise the NATS topic name
-  sampling: 1
+  sampling: 0.1
 }
 
 exports.plugin = Hp(function hemeraZipkin (options) {
@@ -75,7 +75,7 @@ exports.plugin = Hp(function hemeraZipkin (options) {
       parentSpanId: ctx.trace$.parentSpanId,
       spanId: ctx.trace$.spanId,
       timestamp: ctx.trace$.timestamp,
-      sampled: config.sampling
+      sampled: ctx.trace$.sampled
     }
 
     hemera.log.debug({
@@ -116,11 +116,13 @@ exports.plugin = Hp(function hemeraZipkin (options) {
       'rpc.pubsub': ctx._pattern.pubsub$ || false
     })
 
+    ctx.trace$.sampled = Tracer.shouldSample()
+
     let traceData = {
       traceId: ctx.trace$.traceId,
       parentSpanId: ctx.trace$.parentSpanId,
       spanId: ctx.trace$.spanId,
-      sampled: config.sampling
+      sampled: ctx.trace$.sampled
     }
 
     hemera.log.debug({
