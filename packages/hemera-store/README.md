@@ -109,7 +109,8 @@ The pattern is:
 * `options`: the search criteria `object` (*optional*)
   * `limit`: maximum items to fetch `integer`
   * `offset`: the offset `integer`
-  * `fields`: the projection settings `array<String>`
+  * `orderBy`: the offset `array<string>` or `string` or `map<string, int>`
+  * `fields`: the projection settings `array<string>` or `map<string, int>`
 
 Example:
 ```js

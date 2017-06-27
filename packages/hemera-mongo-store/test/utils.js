@@ -36,11 +36,12 @@ function testExtendedDoc (plugin, doc) {
 }
 
 function initServer (topic, testCollection, pluginOptions, cb) {
-  const PORT = 6243
-  const noAuthUrl = 'nats://localhost:' + PORT
+  let PORT = 6242
+  var flags = ['--user', 'derek', '--pass', 'foobar']
+  var authUrl = 'nats://derek:foobar@localhost:' + PORT
 
-  const server = HemeraTestsuite.start_server(PORT, {}, () => {
-    const nats = Nats.connect(noAuthUrl)
+  const server = HemeraTestsuite.start_server(PORT, flags, () => {
+    const nats = Nats.connect(authUrl)
     const hemera = new Hemera(nats, {
       logLevel: 'silent'
     })
@@ -52,10 +53,6 @@ function initServer (topic, testCollection, pluginOptions, cb) {
         cmd: 'dropCollection',
         collection: testCollection
       }, function (err, resp) {
-        if (err) {
-          return cb(err)
-        }
-
         cb(null, { server, hemera, plugin })
       })
     })

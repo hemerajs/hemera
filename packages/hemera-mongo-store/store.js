@@ -155,6 +155,9 @@ class MongoStore extends Store {
       if (options.fields) {
         cursor = cursor.project(options.fields)
       }
+      if (options.orderBy) {
+        cursor = cursor.sort(options.orderBy)
+      }
     }
     cursor.toArray(function (err, resp) {
       if (err) {
