@@ -99,7 +99,7 @@ describe('Hemera-rethinkdb-store', function () {
     })
   })
 
-  it('findById', function (done) {
+  it('FindById', function (done) {
     hemera.act({
       topic,
       cmd: 'create',
