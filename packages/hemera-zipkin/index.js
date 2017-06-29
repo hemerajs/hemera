@@ -37,8 +37,8 @@ exports.plugin = Hp(function hemeraZipkin (options) {
     Tracer.addBinary(meta, ctx.delegate$)
     Tracer.addBinary(meta, {
       'server.topic': ctx._topic,
-      'server.maxMessages': ctx._actMeta.pattern.maxMessages$ || 0,
-      'server.pubsub': ctx._actMeta.pattern.pubsub$ || false
+      'server.maxMessages': ctx._actMeta ? ctx._actMeta.pattern.maxMessages$ || 0 : 0,
+      'server.pubsub': ctx._actMeta ? ctx._actMeta.pattern.pubsub$ || false : false
     })
 
     hemera.log.debug({
@@ -64,10 +64,11 @@ exports.plugin = Hp(function hemeraZipkin (options) {
     }
 
     Tracer.addBinary(meta, ctx.delegate$)
+
     Tracer.addBinary(meta, {
       'server.topic': ctx._topic,
-      'server.maxMessages': ctx._actMeta.pattern.maxMessages$ || 0,
-      'server.pubsub': ctx._actMeta.pattern.pubsub$ || false
+      'server.maxMessages': ctx._actMeta ? ctx._actMeta.pattern.maxMessages$ || 0 : 0,
+      'server.pubsub': ctx._actMeta ? ctx._actMeta.pattern.pubsub$ || false : false
     })
 
     let traceData = {
