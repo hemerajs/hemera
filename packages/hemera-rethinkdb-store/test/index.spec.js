@@ -9,7 +9,7 @@ const HemeraTestsuite = require('hemera-testsuite')
 
 const expect = Code.expect
 
-describe('Hemera-rethinkdb-store', function () {
+describe('Store interface', function () {
   let PORT = 6242
   var flags = ['--user', 'derek', '--pass', 'foobar']
   var authUrl = 'nats://derek:foobar@localhost:' + PORT
@@ -24,7 +24,7 @@ describe('Hemera-rethinkdb-store', function () {
     hemera.act({
       topic,
       cmd: 'createTable',
-      collection: 'users'
+      collection: testCollection
     }, function (err, resp) {
       if (err) throw err
       done()
@@ -35,7 +35,7 @@ describe('Hemera-rethinkdb-store', function () {
     hemera.act({
       topic,
       cmd: 'removeTable',
-      collection: 'users'
+      collection: testCollection
     }, function (err, resp) {
       if (err) throw err
       done()
@@ -307,33 +307,90 @@ describe('Hemera-rethinkdb-store', function () {
       })
     })
   })
+})
 
-  it.skip('Changes', function (done) {
+describe.skip('Hemera-rethinkdb-store', function () {
+  let PORT = 6242
+  var flags = ['--user', 'derek', '--pass', 'foobar']
+  var authUrl = 'nats://derek:foobar@localhost:' + PORT
+
+  let server
+  let hemera
+  let testDatabase = 'test'
+  let testCollection = 'pets'
+  let topic = 'rethinkdb-store'
+
+  function bootstrap (done) {
+    hemera.act({
+      topic,
+      cmd: 'createTable',
+      collection: testCollection
+    }, function (err, resp) {
+      if (err) throw err
+      done()
+    })
+  }
+
+  function clean (done) {
+    hemera.act({
+      topic,
+      cmd: 'removeTable',
+      collection: testCollection
+    }, function (err, resp) {
+      if (err) throw err
+      done()
+    })
+  }
+
+  before(function (done) {
+    server = HemeraTestsuite.start_server(PORT, flags, () => {
+      const nats = Nats.connect(authUrl)
+      hemera = new Hemera(nats, {
+        crashOnFatal: false,
+        logLevel: 'debug'
+      })
+      hemera.use(HemeraJoi)
+      hemera.use(HemeraRethinkdbStore, {
+        rethinkdb: {
+          db: testDatabase
+        }
+      })
+      hemera.ready(function () {
+        bootstrap(done)
+      })
+    })
+  })
+
+  after(function (done) {
+    clean(() => {
+      hemera.close()
+      server.kill()
+      done()
+    })
+  })
+
+  it('Changes', function (done) {
     hemera.act({
       topic,
       cmd: 'changes',
       collection: testCollection,
-      maxMessages: -1
+      maxMessages$: -1
     }, function (err, resp) {
       if (resp !== true) {
         console.log(resp)
         expect(err).to.be.not.exists()
         expect(resp).to.be.an.object()
+        done()
+      } else {
+        hemera.act({
+          topic,
+          cmd: 'create',
+          collection: testCollection,
+          data: {
+            name: 'peter2'
+          }
+        })
       }
     })
-
-    setTimeout(() => {
-      hemera.act({
-        topic,
-        cmd: 'create',
-        collection: testCollection,
-        data: {
-          name: 'peter2'
-        }
-      }, function (err, resp) {
-        expect(err).to.be.not.exists()
-        expect(resp).to.be.an.object()
-      })
-    }, 1000)
   })
 })

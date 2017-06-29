@@ -78,6 +78,7 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
     topic,
     cmd: 'changes',
     collection: Joi.string().required(),
+    query: Joi.object().default({}),
     databaseName: Joi.string().default(options.rethinkdb.db),
     options: Joi.object().keys({
       fields: Joi.alternatives().try(Joi.object(), Joi.array()),
@@ -86,7 +87,7 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
       limit: Joi.number().integer().default(1)
     }).default({})
   }, function (req, reply) {
-    let cursor = rethinkdb.db(req.databaseName).table(req.collection)
+    let cursor = rethinkdb.db(req.databaseName).table(req.collection).filter(req.query)
 
     if (req.options.limit) {
       cursor = cursor.limit(req.options.limit)
@@ -101,11 +102,20 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
       cursor = cursor.orderBy(req.options.orderBy)
     }
 
-    cursor.run({ stream: true }).then((stream) => {
+    cursor.run({ stream: true }, (err, stream) => {
+      if (err) {
+        return reply(err)
+      }
+
+      hemera.log.debug('New changes stream open')
+
       changeStream = stream
+
       changeStream.on('data', (data) => {
         reply(null, data)
       })
+
+      reply(null, true)
     })
   })
 
