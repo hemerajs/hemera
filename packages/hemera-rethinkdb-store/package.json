@@ -1,6 +1,6 @@
 {
   "name": "hemera-rethinkdb-store",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This is a plugin to use Rethinkdb with Hemera",
   "main": "index.js",
   "repository": {
