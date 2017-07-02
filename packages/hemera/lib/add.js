@@ -10,6 +10,8 @@
  */
 
 const _ = require('lodash')
+const Co = require('co')
+const Util = require('./util')
 
 /**
  *
@@ -18,18 +20,40 @@ const _ = require('lodash')
  * @class Add
  */
 class Add {
-
   /**
    * Creates an instance of Add.
    * @param {any} actMeta
    *
    * @memberOf Add
    */
-  constructor (actMeta) {
+  constructor (actMeta, options) {
     this.actMeta = actMeta
+    this.options = options
     this.actMeta.middleware = actMeta.middleware || []
   }
 
+  /**
+   *
+   *
+   * @param {any} handler
+   *
+   * @memberof Add
+   */
+  _use (handler) {
+    if (this.options.generators) {
+      if (Util.isGeneratorFunction(handler)) {
+        this.actMeta.middleware.push(function () {
+        // -1 because (req, res, next)
+          const next = arguments[arguments.length - 1]
+          return Co(handler.apply(this, arguments)).then(x => next(null, x)).catch(next)
+        })
+      } else {
+        this.actMeta.middleware.push(handler)
+      }
+    } else {
+      this.actMeta.middleware.push(handler)
+    }
+  }
   /**
    *
    *
@@ -40,10 +64,11 @@ class Add {
    */
   use (handler) {
     if (_.isArray(handler)) {
-      this.actMeta.middleware = this.actMeta.middleware.concat(handler)
+      handler.forEach(h => this._use(h))
     } else {
-      this.actMeta.middleware.push(handler)
+      this._use(handler)
     }
+
     return this
   }
   /**
@@ -54,7 +79,22 @@ class Add {
    * @memberOf Add
    */
   end (cb) {
-    this.actMeta.action = cb
+    this.action = cb
+  }
+
+  /**
+   *
+   *
+   * @param {any} request
+   * @param {any} response
+   * @param {any} cb
+   *
+   * @memberof Add
+   */
+  dispatch (request, response, cb) {
+    Util.serial(this.middleware, (item, next) => {
+      item(request, response, next)
+    }, cb)
   }
   /**
    *
@@ -93,7 +133,17 @@ class Add {
    * @memberOf Add
    */
   set action (action) {
-    this.actMeta.action = action
+    if (this.options.generators) {
+      if (!Util.isGeneratorFunction(action)) {
+        this.actMeta.action = action
+        this.isGenFunc = false
+      } else {
+        this.actMeta.action = Co.wrap(action)
+        this.isGenFunc = true
+      }
+    } else {
+      this.actMeta.action = action
+    }
   }
   /**
    *
@@ -115,7 +165,6 @@ class Add {
   get plugin () {
     return this.actMeta.plugin
   }
-
 }
 
 module.exports = Add

@@ -1,8 +1,9 @@
 'use strict'
 
+const Hp = require('hemera-plugin')
 const Rabbit = require('rabbot')
 
-exports.plugin = function hemeraRabbitmq (options) {
+exports.plugin = Hp(function hemeraRabbitmq (options) {
   const hemera = this
 
   const handlers = []
@@ -66,13 +67,12 @@ exports.plugin = function hemeraRabbitmq (options) {
       .catch(cb)
     })
   })
-}
+})
 
 exports.options = {
   payloadValidator: 'hemera-joi'
 }
 
 exports.attributes = {
-  dependencies: ['hemera-joi'],
   pkg: require('./package.json')
 }

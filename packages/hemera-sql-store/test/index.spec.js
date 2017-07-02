@@ -11,8 +11,9 @@ const Knex = require('knex')
 const expect = Code.expect
 
 describe('Hemera-sql-store', function () {
-  let PORT = 6243
-  let noAuthUrl = 'nats://localhost:' + PORT
+  let PORT = 6242
+  var flags = ['--user', 'derek', '--pass', 'foobar']
+  var authUrl = 'nats://derek:foobar@localhost:' + PORT
 
   let server
   let hemera
@@ -55,8 +56,8 @@ describe('Hemera-sql-store', function () {
       driver: knex
     }
 
-    server = HemeraTestsuite.start_server(PORT, {}, () => {
-      const nats = Nats.connect(noAuthUrl)
+    server = HemeraTestsuite.start_server(PORT, flags, () => {
+      const nats = Nats.connect(authUrl)
       hemera = new Hemera(nats)
       hemera.use(HemeraJoi)
       hemera.use(HemeraSqlStore)

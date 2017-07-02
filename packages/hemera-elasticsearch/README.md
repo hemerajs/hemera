@@ -75,6 +75,9 @@ hemera.ready(() => {
 })
 ```
 
+## Dependencies
+- hemera-joi
+
 ## Interface
 
 * [Elasticsearch API](#elasticsearch-api)

@@ -1,41 +1,29 @@
 'use strict'
 
-const Hemera = require('./../../hemera')
-const HemeraMongoStore = require('./../index')
-const Nats = require('nats')
 const Code = require('code')
-const HemeraTestsuite = require('hemera-testsuite')
-
+const Utils = require('./utils')
 const expect = Code.expect
 
 describe('Hemera-mongo-store', function () {
-  let PORT = 6243
-  let noAuthUrl = 'nats://localhost:' + PORT
   const topic = 'mongo-store'
   const testCollection = 'test'
+  const options = {
+    mongo: {
+      url: 'mongodb://localhost:27017/test'
+    }
+  }
   let server
   let hemera
 
   before(function (done) {
-    server = HemeraTestsuite.start_server(PORT, {}, () => {
-      const nats = Nats.connect(noAuthUrl)
-      hemera = new Hemera(nats, {
-        logLevel: 'info'
-      })
-      hemera.use(HemeraMongoStore, {
-        mongo: {
-          url: 'mongodb://localhost:27017/test'
-        }
-      })
-      hemera.ready(() => {
-        hemera.act({
-          topic,
-          cmd: 'dropCollection',
-          collection: testCollection
-        }, function (err, resp) {
-          done()
-        })
-      })
+    Utils.initServer(topic, testCollection, options, (err, resp) => {
+      if (err) {
+        throw err
+      }
+
+      server = resp.server
+      hemera = resp.hemera
+      done()
     })
   })
 
@@ -57,6 +45,23 @@ describe('Hemera-mongo-store', function () {
       expect(err).to.be.not.exists()
       expect(resp).to.be.an.object()
       expect(resp._id).to.be.exists()
+
+      done()
+    })
+  })
+
+  it('create multiple documents', function (done) {
+    hemera.act({
+      topic,
+      cmd: 'create',
+      collection: testCollection,
+      data: [
+        { name: 'peter' }, { name: 'parker' }
+      ]
+    }, function (err, resp) {
+      expect(err).to.be.not.exists()
+      expect(resp).to.be.an.object()
+      expect(resp._ids).to.be.an.array().length(2)
 
       done()
     })

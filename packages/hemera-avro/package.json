@@ -1,20 +1,20 @@
 {
   "name": "hemera-avro",
-  "version": "1.1.1",
+  "version": "1.1.13",
   "description": "This is a plugin to use Avro with Hemera",
   "main": "index.js",
+  "repository": {
+    "url": "git@github.com:hemerajs/hemera.git",
+    "type": "git"
+  },
   "scripts": {
     "lint": "eslint index.js"
   },
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "avsc": "5.0.x"
-  },
-  "devDependencies": {
-    "eslint": "^3.13.1",
-    "eslint-config-standard": "^6.2.1",
-    "eslint-plugin-promise": "^3.4.2",
-    "eslint-plugin-standard": "^2.0.1"
+    "avsc": "5.0.x",
+    "hemera-plugin": "^0.0.8",
+    "safe-buffer": "5.1.x"
   }
 }

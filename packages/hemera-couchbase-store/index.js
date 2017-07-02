@@ -1,16 +1,16 @@
 'use strict'
 
+const Hp = require('hemera-plugin')
 const Couchbase = require('couchbase')
-const StorePattern = require('hemera-store/pattern')
 
-exports.plugin = function hemeraCouchbaseStore (options) {
+exports.plugin = Hp(function hemeraCouchbaseStore (options) {
   const hemera = this
   const topic = 'couchbase-store'
 
   const Joi = hemera.exposition['hemera-joi'].joi
   const cluster = new Couchbase.Cluster(options.couchbase.url)
   const N1qlQuery = Couchbase.N1qlQuery
-  
+
   hemera.expose('openBucket', getBucket)
   hemera.expose('cluster', cluster)
   hemera.expose('couchbase', Couchbase)
@@ -34,7 +34,7 @@ exports.plugin = function hemeraCouchbaseStore (options) {
     const query = N1qlQuery.fromString(req.query)
     bucket.query(query, req.vars, cb)
   })
-}
+})
 
 exports.options = {
   payloadValidator: 'hemera-joi',
@@ -45,6 +45,5 @@ exports.options = {
 }
 
 exports.attributes = {
-  dependencies: ['hemera-joi'],
   pkg: require('./package.json')
 }

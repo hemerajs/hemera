@@ -5,10 +5,18 @@
 
 This is a plugin to use [Zipkin](http://zipkin.io/) with Hemera.
 
-#### 1. Run zipkin in docker container
+<p align="center">
+<img src="https://github.com/hemerajs/hemera/blob/master/packages/hemera-zipkin/media/zipkin-dependency-graph.PNG" style="max-width:100%;">
+</p>
 
-```js
-docker run -d -p 9411:9411 openzipkin/zipkin
+## Tracking level
+
+1. Per subscription: Each topic represents a subscription in NATS and therefore handled as own service. The hemera `tag` indentifiy the server instance.
+2. Per hemera instance: Each hemera instance represents the whole service. The service name can be configured by the `tag` option.
+
+#### 1. Run zipkin in docker container
+```
+$ docker-compose up
 ```
 #### 2. Visit http://127.0.0.1:9411/
 
@@ -17,80 +25,50 @@ docker run -d -p 9411:9411 openzipkin/zipkin
 ```js
 'use strict'
 
-const Hemera = require('./../')
+const Hemera = require('nats-hemera')
 const nats = require('nats').connect()
 const hemeraZipkin = require('hemera-zipkin')
 
 const hemera = new Hemera(nats, {
-  logLevel: 'info'
+  logLevel: 'debug',
+  childLogger: true,
+  tag: 'user-service'
 })
 
 hemera.use(hemeraZipkin, {
-  host: '192.168.99.100'
+  debug: false,
+  host: '127.0.0.1',
+  port: '9411',
+  path: '/api/v1/spans',
+  subscriptionBased: true, // when false the hemera tag represents the service otherwise the NATS topic name
+  sampling: 1
 })
 
 hemera.ready(() => {
-
-  /**
-   * Your Implementations
-   */
-  hemera.add({
-    topic: 'auth',
-    cmd: 'signup',
-  }, function (req, cb) {
-
-    let userId = 1
-
-    //Visible in zipkin ui
-    this.delegate$.query = 'SELECT FROM User;'
-
-    this.act({
-      topic: 'email',
-      cmd: 'send',
-      email: req.email,
-      message: 'Welcome!'
-    }, function (err, resp) {
-
-      this.act({
-        topic: 'payment',
-        cmd: 'process',
-        userId: userId
-      }, function (err, resp) {
-
-        cb(null, true)
-      })
-    })
-
-  })
-
-  hemera.add({
-    topic: 'payment',
-    cmd: 'process'
-  }, function (req, cb) {
-
-    cb(null, true)
-  })
-
   hemera.add({
     topic: 'email',
     cmd: 'send'
   }, function (req, cb) {
-
     cb(null, true)
   })
 
-  /**
-   * Call them
-   */
-  hemera.act({
-    topic: 'auth',
-    cmd: 'signup',
-    email: 'peter@gmail.com',
-    password: '1234'
-  }, function (err, resp) {
-
-    this.log.info('Finished', resp)
+  hemera.add({
+    topic: 'profile',
+    cmd: 'get'
+  }, function (req, cb) {
+    this.delegate$.query = 'SELECT FROM User;'
+    cb(null, true)
   })
+
+  hemera.add({
+    topic: 'auth',
+    cmd: 'login'
+  }, function (req, cb) {
+    this.act('topic:profile,cmd:get', function () {
+      this.act('topic:email,cmd:send', cb)
+    })
+  })
+  hemera.act('topic:auth,cmd:login')
 })
 ```
 

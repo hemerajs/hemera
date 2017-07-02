@@ -4,7 +4,7 @@
 
 <p align="center">
 <a href="http://opensource.org/licenses/MIT"><img src="https://camo.githubusercontent.com/11ad3ffb000cd7668567587af947347c738b6472/68747470733a2f2f696d672e736869656c64732e696f2f6e706d2f6c2f657870726573732e7376673f7374796c653d666c61742d737175617265266d61784167653d33363030" alt="License MIT" data-canonical-src="https://img.shields.io/npm/l/express.svg?amp;maxAge=3600" style="max-width:100%;"></a>
-<a href="https://travis-ci.org/hemerajs/hemera"><img src="https://camo.githubusercontent.com/b727088ce24fb5b56d5b1f746dc6648868b835f3/68747470733a2f2f7472617669732d63692e6f72672f68656d6572616a732f68656d6572612e7376673f6272616e63683d6d6173746572267374796c653d666c61742d737175617265" alt="Build Status" data-canonical-src="https://travis-ci.org/hemerajs/hemera.svg?branch=master" style="max-width:100%;"></a>
+<a href="https://travis-ci.org/hemerajs/hemera"><img src="https://travis-ci.org/hemerajs/hemera.svg?branch=master" alt="Build Status" data-canonical-src="https://travis-ci.org/hemerajs/hemera.svg?branch=master" style="max-width:100%;"></a>
 <a href="https://ci.appveyor.com/project/StarpTech/hemera"><img src="https://ci.appveyor.com/api/projects/status/s3to4boq8yawulpn?svg=true" alt="Build Status" data-canonical-src="https://ci.appveyor.com/project/StarpTech/hemera" style="max-width:100%;"></a>
 <a href="https://coveralls.io/github/hemerajs/hemera?branch=master"><img src="https://camo.githubusercontent.com/2b9676a6b88d202578519f30faac24db7a4c7661/68747470733a2f2f636f766572616c6c732e696f2f7265706f732f6769746875622f68656d6572616a732f68656d6572612f62616467652e7376673f6272616e63683d6d61737465722674733d39393939267374796c653d666c61742d737175617265" alt="Coverage Status" data-canonical-src="https://coveralls.io/repos/github/hemerajs/hemera/badge.svg?branch=master&amp;ts=9999" style="max-width:100%;"></a>
 <a href="https://gitter.im/hemerajs/hemera"><img src="https://camo.githubusercontent.com/e7536e01bc9c129b974e11c26b174f54e50c6d69/68747470733a2f2f696d672e736869656c64732e696f2f6769747465722f726f6f6d2f6e776a732f6e772e6a732e7376673f7374796c653d666c61742d737175617265266d61784167653d33363030" alt="Gitter" data-canonical-src="https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=3600" style="max-width:100%;"></a>
@@ -16,7 +16,7 @@
 A <a href="http://nodejs.org/">Node.js</a> microservices toolkit for the <a href="https://nats.io">NATS messaging system</a>
 </p>
 
-- __Node:__ 4.x, 5.x, 6.x, 7.x
+- __Node:__ 4.x, 5.x, 6.x, 7.x, 8.0
 - __Documentation:__ https://hemerajs.github.io/hemera/
 - __Website:__ https://hemerajs.github.io/hemera-site/
 - __Lead Maintainer:__ [Dustin Deus](https://github.com/StarpTech)
@@ -38,7 +38,8 @@ The key features of NATS in combination with Hemera are:
 * **Fault tolerance**: Auto-heals when new services are added. Configure cluster mode to be more reliable.
 * **Auto-pruning**: NATS automatically handles a slow consumer and cut it off.
 * **Pattern driven**: Define the signatures of your RPC's in JSON and use the flexibility of pattern-matching.
-* **PubSub**: Hemera supports all features of NATS. This includes wildcards in subjects and normal publish and fanout mechanism.
+* **Request & Reply**: By default point-to-point involves the fastest or first to respond.
+* **Publish & Subscribe**: Hemera supports all features of NATS. This includes wildcards in subjects and normal publish and fanout mechanism.
 * **Tracing**: Any distributed system need good tracing capabilities. We provide support for Zipkin a tracing system which manages both the collection and lookup of this data.
 * **Monitoring**: Your NATS server can be monitored by cli or a dashboard.
 * **Payload validation**: Create your own validator or use existing plugins for Joi and Parambulator.
@@ -51,9 +52,9 @@ The key features of NATS in combination with Hemera are:
 ```js
 const Hemera = require('nats-hemera')
 const HemeraJoi = require('hemera-joi')
-const nats = require('nats').connect(authUrl)
+const nats = require('nats').connect()
 
-const hemera = new Hemera(nats, { logLevel: 'info' })
+const hemera = new Hemera(nats, { logLevel: 'info', generators: true })
 hemera.use(HemeraJoi)
 
 hemera.ready(() => {
@@ -65,18 +66,15 @@ hemera.ready(() => {
     cmd: 'add',
     a: Joi.number().required(),
     b: Joi.number().required()
-  }, (req, cb) => {
-    cb(null, req.a + req.b)
+  }, function* (req) {
+    return yield Promise.resolve(req.a + req.b)
   })
 
-  hemera.act({ 
-    topic: 'math',
-    cmd: 'add',
-    a: 1,
-    b: 2
-  }, (err, resp) => {
-    hemera.log.info(resp)
-  })
+  const a = hemera.act({ topic: 'math', cmd: 'add', a: 10, b: 30 })
+  const b = hemera.act({ topic: 'math', cmd: 'add', a: 10, b: 60 })
+
+  Promise.all([a, b])
+    .then(x => hemera.log.info(x))
 
 })
 ```
@@ -87,11 +85,22 @@ There is an extensive <a href="https://hemerajs.github.io/hemera/">documentation
 ## Get Involved
 
 - **Contributing**: Pull requests are welcome!
-    - Read [`CONTRIBUTING.md`](https://github.com/hemerajs/hemera/blob/master/CONTRIBUTING.md) and check out our [help-wanted](https://github.com/hemerajs/hemera/issues?q=is%3Aissue+is%3Aopen+label%3Astatus%3Ahelp-wanted) issues
+    - Read [`CONTRIBUTING.md`](https://github.com/hemerajs/hemera/blob/master/CONTRIBUTING.md) and check out our [help-wanted](https://github.com/hemerajs/hemera/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) issues
     - Submit github issues for any feature enhancements, bugs or documentation problems
 - **Support**: Join our [gitter chat](https://gitter.im/hemerajs/hemera) to ask questions to get support from the maintainers and other Hemera developers
     - Questions/comments can also be posted as [github issues](https://github.com/hemerajs/hemera/issues)
 - **Discuss**: Tweet using the `#HemeraJs` hashtag
+
+## Be aware of your requirements
+
+Hemera has not been designed for high performance on a single process. It has been designed to create lots of microservices doesn't matter where they live. It choose simplicity and reliability as primary goals. It act together with NATS as central nervous system of your distributed system. Transport independency was not considered to be a relevant factor. In addition we use pattern matching which is very powerful. The fact that Hemera needs a broker is an argument which should be taken into consideration when you compare hemera with other frameworks. The relevant difference between microservice frameworks like senecajs, molecurer is not the performance or modularity its about the complexity you need to manage. Hemera is expert in providing an interface to work with lots of services in the network, NATS is the expert to deliver the message at the right place. Hemera is still a subscriber of NATS with some magic in routing and extensions. We don't have to worry about all different aspects in a distributed system like routing, load-balancing, service-discovery, clustering, health-checks ...
+
+### Characteristics
+- Max payload size `1MB` but it's configurable in NATS Server
+- Messages are delivered `at-most-once`
+- SSL Support
+- Rely on a publish-subscribe (pub/sub) distribution model
+- Cluster support
 
 ## Packages
 
@@ -100,15 +109,20 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 | General | Version |
 |--------|-------|
 | [nats-hemera](https://github.com/hemerajs/hemera/tree/master/packages/hemera) | [![npm](https://img.shields.io/npm/v/nats-hemera.svg?maxAge=3600)](https://www.npmjs.com/package/nats-hemera)
+| [hemera-plugin](https://github.com/hemerajs/hemera/tree/master/packages/hemera-plugin) | [![npm](https://img.shields.io/npm/v/hemera-plugin.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-plugin)
 | [hemera-zipkin](https://github.com/hemerajs/hemera/tree/master/packages/hemera-zipkin) | [![npm](https://img.shields.io/npm/v/hemera-zipkin.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-zipkin)
 | [hemera-store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store) | [![npm](https://img.shields.io/npm/v/hemera-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-store)
 | [hemera-stats](https://github.com/hemerajs/hemera/tree/master/packages/hemera-stats) | [![npm](https://img.shields.io/npm/v/hemera-stats.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-stats)
+| [hemera-controlplane](https://github.com/hemerajs/hemera/tree/master/packages/hemera-controlplane) | [![npm](https://img.shields.io/npm/v/hemera-controlplane.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-controlplane)
 | [hemera-cli](https://github.com/hemerajs/hemera-cli) | [![npm](https://img.shields.io/npm/v/hemera-cli.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-cli)
+| [hemera-mail](https://github.com/hemerajs/hemera/tree/master/packages/hemera-mail) | [![npm](https://img.shields.io/npm/v/hemera-mail.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-mail)
 
 | Messaging bridges | Version |
 |--------|-------|
 | [hemera-rabbitmq](https://github.com/hemerajs/hemera/tree/master/packages/hemera-rabbitmq) | [![npm](https://img.shields.io/npm/v/hemera-rabbitmq.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-rabbitmq)
 | [hemera-nsq](https://github.com/hemerajs/hemera/tree/master/packages/hemera-nsq) | [![npm](https://img.shields.io/npm/v/hemera-nsq.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-nsq)
+| [hemera-web](https://github.com/hemerajs/hemera/tree/master/packages/hemera-web) | [![npm](https://img.shields.io/npm/v/hemera-web.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-web)
+| [hemera-sqs](https://github.com/hemerajs/hemera/tree/master/packages/hemera-sqs) | [![npm](https://img.shields.io/npm/v/hemera-sqs.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-sqs)
 
 | Database adapter | Version |
 |--------|-------|
@@ -117,6 +131,7 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 | [hemera-elasticsearch](https://github.com/hemerajs/hemera/tree/master/packages/hemera-elasticsearch) | [![npm](https://img.shields.io/npm/v/hemera-elasticsearch.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-elasticsearch)
 | [hemera-couchbase-store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-couchbase-store) | [![npm](https://img.shields.io/npm/v/hemera-couchbase-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-couchbase-store)
 | [hemera-mongo-store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-mongo-store) | [![npm](https://img.shields.io/npm/v/hemera-mongo-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-mongo-store)
+| [hemera-rethinkdb-store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-rethinkdb-store) | [![npm](https://img.shields.io/npm/v/hemera-rethinkdb-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-rethinkdb-store)
 
 | Payload validation | Version |
 |--------|-------|
@@ -128,6 +143,10 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 | [hemera-msgpack](https://github.com/hemerajs/hemera/tree/master/packages/hemera-msgpack) | [![npm](https://img.shields.io/npm/v/hemera-msgpack.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-msgpack)
 | [hemera-avro](https://github.com/hemerajs/hemera/tree/master/packages/hemera-avro) | [![npm](https://img.shields.io/npm/v/hemera-avro.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-avro)
 
+| Data compression | Version |
+|--------|-------|
+| [hemera-snappy](https://github.com/hemerajs/hemera/tree/master/packages/hemera-snappy) | [![npm](https://img.shields.io/npm/v/hemera-snappy.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-snappy)
+
 | Cache | Version |
 |--------|-------|
 | [hemera-redis-cache](https://github.com/hemerajs/hemera/tree/master/packages/hemera-redis-cache) | [![npm](https://img.shields.io/npm/v/hemera-redis-cache.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-redis-cache)
@@ -135,6 +154,10 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 | Granting / Authenticating | Version |
 |--------|-------|
 | [hemera-jwt-auth](https://github.com/hemerajs/hemera/tree/master/packages/hemera-jwt-auth) | [![npm](https://img.shields.io/npm/v/hemera-jwt-auth.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-jwt-auth)
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md)
 
 ## Contributing
 
@@ -158,6 +181,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 [Seneca](https://github.com/senecajs/seneca) - A microservices toolkit for Node.js.
 
-## Support
+## Professional services
+Hemera is free for any use (MIT license). If you are in production don't miss the professional support service. For courses and training send me an email to [deusdustin@gmail.com](deusdustin@gmail.com) or contact me private on <a href="https://gitter.im/hemerajs/hemera"><img src="https://camo.githubusercontent.com/e7536e01bc9c129b974e11c26b174f54e50c6d69/68747470733a2f2f696d672e736869656c64732e696f2f6769747465722f726f6f6d2f6e776a732f6e772e6a732e7376673f7374796c653d666c61742d737175617265266d61784167653d33363030" alt="Gitter" data-canonical-src="https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=3600" style="max-width:100%;"></a>
 
-[![Support via PayPal](https://cdn.rawgit.com/twolfson/paypal-github-button/1.0.0/dist/button.svg)](https://paypal.me/payinstant/5)
+## Support / Donate
+We prefer a PR but if you have no time but want to give us something back you can support us with a starbucks coffee [PaypalMe](https://paypal.me/payinstant/5)

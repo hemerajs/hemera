@@ -1,8 +1,9 @@
 'use strict'
 
+const Hp = require('hemera-plugin')
 const Elasticsearch = require('elasticsearch')
 
-exports.plugin = function hemeraElasticSearch (options, next) {
+exports.plugin = Hp(function hemeraElasticSearch (options, next) {
   const hemera = this
   const topic = 'elasticsearch'
   const Joi = hemera.exposition['hemera-joi'].joi
@@ -102,7 +103,7 @@ exports.plugin = function hemeraElasticSearch (options, next) {
   }, function (req, cb) {
     client.refresh(req.data, cb)
   })
-}
+})
 
 exports.options = {
   payloadValidator: 'hemera-joi',
@@ -114,6 +115,5 @@ exports.options = {
 }
 
 exports.attributes = {
-  dependencies: ['hemera-joi'],
   pkg: require('./package.json')
 }

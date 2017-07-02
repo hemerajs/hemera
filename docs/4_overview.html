@@ -25,7 +25,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-                <a class="navbar-brand" href="https://github.com/hemerajs/hemera"><img src="images/logo.png" width="32px" height="36px"></a>
+                <a class="navbar-brand" href="https://github.com/hemerajs/hemera"><img src="images/logo.png" height="36px"></a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
@@ -122,16 +122,6 @@
                     <h4 class="section-h4">Definition</h4>
                     <pre>
 <code>
-message ErrorCause {
-  string message = 1;
-  string name = 2;
-}
-
-message RootCause {
-  string message = 1;
-  string name = 2;
-}
-
 enum RequestType {
   pubsub = 0;
   request = 1;
@@ -140,10 +130,8 @@ enum RequestType {
 message Error {
   string message = 1;
   string name = 2;
-  Pattern pattern = 3;
-  ErrorCause cause = 4;
-  RootCause rootCause = 5;
-  string ownStack = 6;
+  string code = 3;
+  string stack = 4;
 }
 
 message Request {

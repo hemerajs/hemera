@@ -42,3 +42,6 @@ hemera.ready(() => {
   })
 })
 ```
+
+## Dependencies
+- hemera-joi

@@ -1,8 +1,12 @@
 {
   "name": "hemera-arango-store",
-  "version": "1.1.16",
+  "version": "1.1.31",
   "description": "This is a plugin to use Arangodb with Hemera",
   "main": "index.js",
+  "repository": {
+    "url": "git@github.com:hemerajs/hemera.git",
+    "type": "git"
+  },
   "scripts": {
     "lint": "eslint index.js",
     "test": "nyc mocha -t 5000 ./test/**/*.js",
@@ -11,20 +15,17 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "arangojs": "5.4.x",
-    "hemera-store": "^1.1.5"
+    "arangojs": "5.6.x",
+    "hemera-joi": "^1.1.9",
+    "hemera-plugin": "^0.0.8",
+    "hemera-store": "^1.1.11"
   },
   "devDependencies": {
-    "code": "^4.0.0",
-    "eslint": "^3.13.1",
-    "eslint-config-standard": "^6.2.1",
-    "eslint-plugin-promise": "^3.4.2",
-    "eslint-plugin-standard": "^2.0.1",
-    "hemera-joi": "^1.0.2",
-    "hemera-testsuite": "1.0.x",
+    "code": "4.0.x",
+    "hemera-testsuite": "1.1.x",
     "istanbul": "0.4.x",
-    "mocha": "3.2.x",
-    "mocha-lcov-reporter": "1.2.x",
-    "nyc": "10.0.x"
+    "mocha": "3.3.x",
+    "mocha-lcov-reporter": "1.3.x",
+    "nyc": "10.3.x"
   }
 }

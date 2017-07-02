@@ -1,15 +1,23 @@
 'use strict'
 
 const Redis = require('redis')
+const Hp = require('hemera-plugin')
 
-exports.plugin = function hemeraRedisCache (options) {
+exports.plugin = Hp(function hemeraRedisCache (options) {
   const hemera = this
   const client = Redis.createClient(options.redis)
   const topic = 'redis-cache'
 
   const Joi = hemera.exposition['hemera-joi'].joi
-  
+
   hemera.expose('client', client)
+
+  // Gracefully shutdown
+  hemera.ext('onClose', (done) => {
+    hemera.log.debug('Redis connection closed!')
+    client.quit()
+    done()
+  })
 
   client.on('ready', function () {
     hemera.log.info('Redis Cache is ready')
@@ -99,7 +107,7 @@ exports.plugin = function hemeraRedisCache (options) {
   }, function (req, cb) {
     client.ttl(req.key, cb)
   })
-}
+}, '>= 1.3.2')
 
 exports.options = {
   payloadValidator: 'hemera-joi',
@@ -107,6 +115,5 @@ exports.options = {
 }
 
 exports.attributes = {
-  dependencies: ['hemera-joi'],
   pkg: require('./package.json')
 }

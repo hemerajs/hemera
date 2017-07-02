@@ -1,10 +1,11 @@
 'use strict'
 
+const Hp = require('hemera-plugin')
 const Arangojs = require('arangojs')
 const ArangoStore = require('./store')
 const StorePattern = require('hemera-store/pattern')
 
-exports.plugin = function hemeraArangoStore (options) {
+exports.plugin = Hp(function hemeraArangoStore (options) {
   const hemera = this
   const connections = {}
   const topic = 'arango-store'
@@ -67,7 +68,7 @@ exports.plugin = function hemeraArangoStore (options) {
     params: Joi.object().optional(),
     lockTimeout: Joi.object().optional()
   }, function (req, cb) {
-    let db = useDb(req.databaseName)
+    let db = useDb(req.databaseName || options.arango.databaseName)
 
     let action = String(req.action)
 
@@ -90,7 +91,7 @@ exports.plugin = function hemeraArangoStore (options) {
     type: Joi.any().allow(['edge', '']).default(''),
     databaseName: Joi.string().optional()
   }, function (req, cb) {
-    let db = useDb(req.databaseName)
+    let db = useDb(req.databaseName || options.arango.databaseName)
 
     let collection
 
@@ -119,7 +120,7 @@ exports.plugin = function hemeraArangoStore (options) {
     databaseName: Joi.string().optional(),
     variables: Joi.object().optional()
   }, function (req, cb) {
-    let db = useDb(req.databaseName)
+    let db = useDb(req.databaseName || options.arango.databaseName)
 
     db.query(req.query, req.variables, (err, res) => {
       if (err) {
@@ -140,7 +141,7 @@ exports.plugin = function hemeraArangoStore (options) {
     databaseName: Joi.string().optional(),
     variables: Joi.object().optional()
   }, function (req, cb) {
-    let db = useDb(req.databaseName)
+    let db = useDb(req.databaseName || options.arango.databaseName)
 
     db.query(req.query, req.variables, (err, res) => {
       if (err) {
@@ -152,7 +153,7 @@ exports.plugin = function hemeraArangoStore (options) {
   })
 
   hemera.add(StorePattern.create(topic), function (req, cb) {
-    let db = useDb(req.databaseName)
+    let db = useDb(req.databaseName || options.arango.databaseName)
 
     const store = new ArangoStore(db)
 
@@ -160,7 +161,7 @@ exports.plugin = function hemeraArangoStore (options) {
   })
 
   hemera.add(StorePattern.update(topic), function (req, cb) {
-    let db = useDb(req.databaseName)
+    let db = useDb(req.databaseName || options.arango.databaseName)
 
     const store = new ArangoStore(db)
 
@@ -168,7 +169,7 @@ exports.plugin = function hemeraArangoStore (options) {
   })
 
   hemera.add(StorePattern.updateById(topic), function (req, cb) {
-    let db = useDb(req.databaseName)
+    let db = useDb(req.databaseName || options.arango.databaseName)
 
     const store = new ArangoStore(db)
 
@@ -176,7 +177,7 @@ exports.plugin = function hemeraArangoStore (options) {
   })
 
   hemera.add(StorePattern.remove(topic), function (req, cb) {
-    let db = useDb(req.databaseName)
+    let db = useDb(req.databaseName || options.arango.databaseName)
 
     const store = new ArangoStore(db)
 
@@ -184,7 +185,7 @@ exports.plugin = function hemeraArangoStore (options) {
   })
 
   hemera.add(StorePattern.removeById(topic), function (req, cb) {
-    let db = useDb(req.databaseName)
+    let db = useDb(req.databaseName || options.arango.databaseName)
 
     const store = new ArangoStore(db)
 
@@ -192,7 +193,7 @@ exports.plugin = function hemeraArangoStore (options) {
   })
 
   hemera.add(StorePattern.replace(topic), function (req, cb) {
-    let db = useDb(req.databaseName)
+    let db = useDb(req.databaseName || options.arango.databaseName)
 
     const store = new ArangoStore(db)
 
@@ -200,7 +201,7 @@ exports.plugin = function hemeraArangoStore (options) {
   })
 
   hemera.add(StorePattern.replaceById(topic), function (req, cb) {
-    let db = useDb(req.databaseName)
+    let db = useDb(req.databaseName || options.arango.databaseName)
 
     const store = new ArangoStore(db)
 
@@ -208,7 +209,7 @@ exports.plugin = function hemeraArangoStore (options) {
   })
 
   hemera.add(StorePattern.findById(topic), function (req, cb) {
-    let db = useDb(req.databaseName)
+    let db = useDb(req.databaseName || options.arango.databaseName)
 
     const store = new ArangoStore(db)
 
@@ -216,19 +217,18 @@ exports.plugin = function hemeraArangoStore (options) {
   })
 
   hemera.add(StorePattern.find(topic), function (req, cb) {
-    let db = useDb(req.databaseName)
+    let db = useDb(req.databaseName || options.arango.databaseName)
 
     const store = new ArangoStore(db)
 
     store.find(req, req.options, cb)
   })
-}
+})
 
 exports.options = {
   payloadValidator: 'hemera-joi'
 }
 
 exports.attributes = {
-  dependencies: ['hemera-joi'],
   pkg: require('./package.json')
 }

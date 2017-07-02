@@ -8,7 +8,6 @@ const Joi = require('joi')
  * @class StorePattern
  */
 class StorePattern {
-
   /**
    *
    *
@@ -78,7 +77,7 @@ class StorePattern {
       cmd: 'update',
       collection: Joi.string().required(),
       data: Joi.object().required(),
-      query: Joi.object().default({}).required()
+      query: Joi.object().required()
     }
   }
 
@@ -116,7 +115,12 @@ class StorePattern {
       cmd: 'find',
       collection: Joi.string().required(),
       query: Joi.object().required(),
-      options: Joi.object().optional()
+      options: Joi.object().keys({
+        fields: Joi.alternatives().try(Joi.object(), Joi.array()),
+        orderBy: Joi.alternatives().try(Joi.object(), Joi.array(), Joi.string()),
+        offset: Joi.number().integer(),
+        limit: Joi.number().integer()
+      }).default({})
     }
   }
 
@@ -153,7 +157,7 @@ class StorePattern {
       cmd: 'replace',
       collection: Joi.string().required(),
       data: Joi.object().required(),
-      query: Joi.object().default({}).required()
+      query: Joi.object().required()
     }
   }
 

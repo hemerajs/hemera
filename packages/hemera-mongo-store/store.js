@@ -9,7 +9,6 @@ const Store = require('hemera-store')
  * @extends {Store}
  */
 class MongoStore extends Store {
-
   /**
    * Creates an instance of MongoStore.
    *
@@ -32,15 +31,27 @@ class MongoStore extends Store {
    * @memberOf MongoStore
    */
   create (req, cb) {
-    this._driver.insertOne(req.data, this.options.mongo, function (err, resp) {
-      if (err) {
-        return cb(err)
-      }
-      const result = {
-        _id: resp.insertedId.toString()
-      }
-      cb(err, result)
-    })
+    if (req.data instanceof Array) {
+      this._driver.insertMany(req.data, this.options.mongo, function (err, resp) {
+        if (err) {
+          return cb(err)
+        }
+        const result = {
+          _ids: resp.insertedIds
+        }
+        cb(err, result)
+      })
+    } else if (req.data instanceof Object) {
+      this._driver.insertOne(req.data, this.options.mongo, function (err, resp) {
+        if (err) {
+          return cb(err)
+        }
+        const result = {
+          _id: resp.insertedId.toString()
+        }
+        cb(err, result)
+      })
+    }
   }
 
   /**
@@ -144,6 +155,9 @@ class MongoStore extends Store {
       if (options.fields) {
         cursor = cursor.project(options.fields)
       }
+      if (options.orderBy) {
+        cursor = cursor.sort(options.orderBy)
+      }
     }
     cursor.toArray(function (err, resp) {
       if (err) {
@@ -216,7 +230,6 @@ class MongoStore extends Store {
       cb(err, result)
     })
   }
-
 }
 
 module.exports = MongoStore

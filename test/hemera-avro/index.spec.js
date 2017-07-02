@@ -1,13 +1,6 @@
 'use strict'
 
-const Hemera = require('../../packages/hemera')
 const HemeraAvro = require('../../packages/hemera-avro')
-const Code = require('code')
-const HemeraTestsuite = require('hemera-testsuite')
-
-const expect = Code.expect
-
-process.setMaxListeners(0)
 
 describe('Hemera-avro', function () {
   const PORT = 6243
@@ -227,10 +220,8 @@ describe('Hemera-avro', function () {
         avro$: type
       }, (err, resp) => {
         expect(err).to.be.exists()
-        expect(err.name).to.be.equals('BusinessError')
-        expect(err.message).to.be.equals('Business error')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('test')
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
 
         hemera.close()
         done()
@@ -280,12 +271,10 @@ describe('Hemera-avro', function () {
         b: 2,
         avro$: type
       }, (err, resp) => {
-        expect(err.name).to.be.equals('BusinessError')
-        expect(err.message).to.be.equals('Business error')
-        expect(err.cause.name).to.be.equals('Custom')
-        expect(err.cause.code).to.be.equals(500)
-        expect(err.cause.details).to.be.equals({ foo: 'bar' })
-        expect(err.cause.message).to.be.equals('test')
+        expect(err.name).to.be.equals('Custom')
+        expect(err.code).to.be.equals(500)
+        expect(err.details).to.be.equals({ foo: 'bar' })
+        expect(err.message).to.be.equals('test')
 
         hemera.close()
         done()

@@ -13,7 +13,6 @@
  * @class ClientResponse
  */
 class ClientResponse {
-
   /**
    * Creates an instance of ClientResponse.
    *
@@ -65,7 +64,6 @@ class ClientResponse {
   get error () {
     return this._response.error
   }
-
 }
 
 module.exports = ClientResponse

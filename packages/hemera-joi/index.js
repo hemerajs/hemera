@@ -1,8 +1,9 @@
 'use strict'
 
+const Hp = require('hemera-plugin')
 const Joi = require('joi')
 
-exports.plugin = function hemeraJoi () {
+exports.plugin = Hp(function hemeraJoi () {
   const hemera = this
   const PreValidationError = hemera.createError('PreValidationError')
   const PostValidationError = hemera.createError('PostValidationError')
@@ -42,6 +43,11 @@ exports.plugin = function hemeraJoi () {
   })
 
   hemera.ext('onServerPreResponse', function (req, res, next) {
+    // actMeta can be null when pattern was not found
+    if (!this._actMeta) {
+      return next()
+    }
+
     let plugin = this._actMeta.plugin
     let schema = this._actMeta.schema
     let response = res.payload
@@ -78,7 +84,7 @@ exports.plugin = function hemeraJoi () {
       }
     })
   })
-}
+})
 
 exports.options = {}
 

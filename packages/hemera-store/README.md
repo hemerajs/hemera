@@ -35,7 +35,7 @@ The pattern is:
 * `topic`: is the store name to publish to `<name>-store`
 * `cmd`: is the command to execute `create`
 * `collection`: the name of the table or collection `string`
-* `data`: the data which represent the entity to create `object`
+* `data`: the data which represent the entity to create `object` or `Array<object>`
 
 Example:
 ```js
@@ -109,7 +109,8 @@ The pattern is:
 * `options`: the search criteria `object` (*optional*)
   * `limit`: maximum items to fetch `integer`
   * `offset`: the offset `integer`
-  * `fields`: the projection settings `array<String>`
+  * `orderBy`: the offset `array<string>` or `string` or `map<string, int>`
+  * `fields`: the projection settings `array<string>` or `map<string, int>`
 
 Example:
 ```js

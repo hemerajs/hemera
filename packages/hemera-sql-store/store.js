@@ -14,7 +14,6 @@ const defaultConfig = {
  * @extends {Store}
  */
 class SqlStore extends Store {
-
   /**
    * Creates an instance of SqlStore.
    *
@@ -180,7 +179,6 @@ class SqlStore extends Store {
       })
       .catch(err => cb(err))
   }
-
 }
 
 module.exports = SqlStore

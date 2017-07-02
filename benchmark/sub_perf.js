@@ -9,7 +9,7 @@ const authUrl = 'nats://derek:foobar@localhost:' + PORT
 const noAuthUrl = 'nats://localhost:' + PORT
 
 let start
-const loop = 50000
+const loop = 100000
 const hash = 5000
 let received = 0
 

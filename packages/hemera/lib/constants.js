@@ -9,8 +9,19 @@
  *
  */
 
-// Errors messages
 module.exports = {
+  // General
+  NATS_QUEUEGROUP_PREFIX: 'queue',
+  // NATS conn error codes
+  NATS_CONN_ERROR_CODES: ['CONN_ERR', 'SECURE_CONN_REQ_MSG', 'NON_SECURE_CONN_REQ_MSG', 'CLIENT_CERT_REQ_MSG'],
+  // Request types
+  REQUEST_TYPE_PUBSUB: 'pubsub',
+  REQUEST_TYPE_REQUEST: 'request',
+  // Errors messages
+  TRANSPORT_ERROR: 'Could not connect to NATS!',
+  TRANSPORT_CLOSED: 'NATS connection closed!',
+  TRANSPORT_RECONNECTING: 'NATS reconnecting ...',
+  TRANSPORT_RECONNECTED: 'NATS reconnected!',
   JSON_PARSE_ERROR: 'Invalid JSON payload',
   ACT_TIMEOUT_ERROR: 'Timeout',
   NO_TOPIC_TO_SUBSCRIBE: 'No topic to subscribe',
@@ -32,8 +43,6 @@ module.exports = {
   PUB_CALLBACK_REDUNDANT: 'Specify a callback as publisher is redundant',
   INVALID_EXTENSION_TYPE: 'Invalid extension type',
   PLUGIN_NAME_REQUIRED: 'Plugin name is required',
-  PLUGIN_DEPENDENCY_MISSING: 'Plugin `%s` requires `%s` as dependency. Please install via `npm install --save %s`',
-  PLUGIN_DEPENDENCY_NOT_FOUND: 'Plugin dependency not found',
   PLUGIN_REGISTRATION_ERROR: 'Error during plugin registration',
   DECORATION_ALREADY_DEFINED: 'Server decoration already defined',
   OVERRIDE_BUILTIN_METHOD_NOT_ALLOWED: 'Cannot override the built-in server interface method'

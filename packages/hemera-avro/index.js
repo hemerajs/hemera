@@ -1,9 +1,11 @@
 'use strict'
 
+const Hp = require('hemera-plugin')
 const Avro = require('avsc')
 const avroType = require('./avro')
+const Buffer = require('safe-buffer').Buffer
 
-exports.plugin = function hemeraAvro () {
+exports.plugin = Hp(function hemeraAvro () {
   const hemera = this
   const type = Avro.parse(avroType)
 
@@ -68,7 +70,7 @@ exports.plugin = function hemeraAvro () {
       }
     }
   }
-}
+})
 
 exports.options = {}
 

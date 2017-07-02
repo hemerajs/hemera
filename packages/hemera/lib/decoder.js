@@ -10,7 +10,6 @@
  */
 
 class Decoder {
-
   static decode (msg) {
     return Parse(msg)
   }

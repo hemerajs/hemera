@@ -1,14 +1,14 @@
 {
   "name": "hemera-jwt-auth",
-  "version": "1.0.7",
+  "version": "1.1.9",
   "description": "Granting and authenticating solution with JWT for Hemera",
   "main": "index.js",
-  "scripts": {
-    "lint": "eslint index.js"
-  },
   "repository": {
     "url": "git@github.com:hemerajs/hemera.git",
     "type": "git"
+  },
+  "scripts": {
+    "lint": "eslint index.js"
   },
   "engines": {
     "node": ">=4.0.0"
@@ -16,12 +16,8 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
+    "hemera-plugin": "^0.0.8",
     "hoek": "4.1.x",
     "jsonwebtoken": "7.3.x"
-  },
-  "devDependencies": {
-    "eslint-config-standard": "^6.2.1",
-    "eslint-plugin-promise": "^3.4.2",
-    "eslint-plugin-standard": "^2.0.1"
   }
 }

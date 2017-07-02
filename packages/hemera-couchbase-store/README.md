@@ -5,6 +5,9 @@
 
 This is a plugin to use [Couchbase](https://www.couchbase.com/nosql-databases/couchbase-server) with Hemera.
 
+## Windows
+Requires to set `npm config set msvs_version 2013` to build the package
+
 ## Start Couchbase with Docker
 
 ```js
@@ -12,6 +15,9 @@ docker run -d --name db -p 8091-8094:8091-8094 -p 11210:11210 couchbase
 ```
 
 Visit http://localhost:8091
+
+## Dependencies
+- hemera-joi
 
 ## API
 

@@ -1,5 +1,6 @@
 'use strict'
 
+const Hp = require('hemera-plugin')
 const Zipkin = require('./lib/index')
 const Hoek = require('hoek')
 
@@ -8,94 +9,169 @@ let defaultConfig = {
   debug: false,
   host: '127.0.0.1',
   port: '9411',
-  path: '/api/v1/spans'
+  path: '/api/v1/spans',
+  subscriptionBased: true, // when false the hemera tag represents the service otherwise the NATS topic name
+  sampling: 0.1
 }
 
-exports.plugin = function hemeraZipkin (options) {
+exports.plugin = Hp(function hemeraZipkin (options) {
   var hemera = this
 
   const config = Hoek.applyToDefaults(defaultConfig, options || {})
-
   const Tracer = new Zipkin(config)
 
-  hemera.on('serverPreRequest', function () {
-    const ctx = this
-    let meta = {
-      service: ctx.trace$.service,
-      name: ctx.trace$.method
-    }
-
-    Tracer.add_binary(meta, {
-      serverName: ctx.config.name
-    })
-
-    Tracer.add_binary(meta, ctx.delegate$)
-
-    let traceData = {
-      traceId: ctx.trace$.traceId,
-      parentSpanId: ctx.trace$.parentSpanId,
-      spanId: ctx.trace$.spanId,
-      sampled: 1
-    }
-
-    ctx._zkTrace = Tracer.send_server_recv(traceData, meta)
-  })
-
+  /**
+   * Server send
+   */
   hemera.on('serverPreResponse', function () {
     const ctx = this
     let meta = {
-      service: ctx.trace$.service,
+      service: ctx._topic,
       name: ctx.trace$.method
     }
 
-    Tracer.add_binary(meta, {
-      serverName: ctx.config.name
+    if (config.subscriptionBased === false) {
+      meta.service = ctx.config.tag
+    }
+
+    Tracer.addBinary(meta, ctx.delegate$)
+    Tracer.addBinary(meta, {
+      'server.topic': ctx._topic,
+      'server.maxMessages': ctx._actMeta ? ctx._actMeta.pattern.maxMessages$ || 0 : 0,
+      'server.pubsub': ctx._actMeta ? ctx._actMeta.pattern.pubsub$ || false : false
     })
 
-    Tracer.add_binary(meta, ctx.delegate$)
+    hemera.log.debug({
+      traceData: ctx._zkTrace,
+      meta: meta
+    }, 'sendServerSend')
 
-    Tracer.send_server_send(ctx._zkTrace, meta)
+    Tracer.sendServerSend(ctx._zkTrace, meta)
   })
 
-  hemera.on('clientPreRequest', function () {
+  /**
+   * Server received
+   */
+  hemera.on('serverPreRequest', function () {
     const ctx = this
     let meta = {
-      service: ctx.trace$.service,
+      service: ctx._topic,
       name: ctx.trace$.method
     }
 
-    Tracer.add_binary(meta, {
-      serverName: ctx.config.name
-    })
+    if (config.subscriptionBased === false) {
+      meta.service = ctx.config.tag
+    }
 
-    Tracer.add_binary(meta, ctx.delegate$)
+    Tracer.addBinary(meta, ctx.delegate$)
+
+    Tracer.addBinary(meta, {
+      'server.topic': ctx._topic,
+      'server.maxMessages': ctx._actMeta ? ctx._actMeta.pattern.maxMessages$ || 0 : 0,
+      'server.pubsub': ctx._actMeta ? ctx._actMeta.pattern.pubsub$ || false : false
+    })
 
     let traceData = {
       traceId: ctx.trace$.traceId,
       parentSpanId: ctx.trace$.parentSpanId,
       spanId: ctx.trace$.spanId,
-      sampled: 1
+      timestamp: ctx.trace$.timestamp,
+      sampled: ctx.trace$.sampled
     }
 
-    ctx._zkTrace = Tracer.send_client_send(traceData, meta)
+    hemera.log.debug({
+      traceData: traceData,
+      meta: meta
+    }, 'sendServerRecv')
+
+    ctx._zkTrace = Tracer.sendServerRecv(traceData, meta)
   })
 
-  hemera.on('clientPostRequest', function () {
+  /**
+   * Client send
+   */
+  hemera.on('clientPreRequest', function () {
     const ctx = this
     let meta = {
-      service: ctx.trace$.service,
       name: ctx.trace$.method
     }
 
-    Tracer.add_binary(meta, {
-      serverName: ctx.config.name
+    if (ctx._prevContext._isServer === true) {
+      meta.service = ctx._prevContext._topic
+    } else if (ctx._prevContext._isServer === false) {
+      meta.service = ctx._prevContext._pattern.topic
+    } else {
+      meta.service = ctx.config.tag // when act is on root level
+    }
+
+    if (config.subscriptionBased === false) {
+      meta.service = ctx.config.tag
+    }
+
+    Tracer.addBinary(meta, ctx.delegate$)
+    Tracer.addBinary(meta, {
+      'rpc.topic': ctx.trace$.service,
+      'rpc.method': ctx.trace$.method,
+      'rpc.timeout': ctx._pattern.timeout$ || ctx.config.timeout,
+      'rpc.maxMessages': ctx._pattern.maxMessages$ || 0,
+      'rpc.pubsub': ctx._pattern.pubsub$ || false
     })
 
-    Tracer.add_binary(meta, ctx.delegate$)
+    ctx.trace$.sampled = Tracer.shouldSample()
 
-    Tracer.send_client_recv(ctx._zkTrace, meta)
+    let traceData = {
+      traceId: ctx.trace$.traceId,
+      parentSpanId: ctx.trace$.parentSpanId,
+      spanId: ctx.trace$.spanId,
+      sampled: ctx.trace$.sampled
+    }
+
+    hemera.log.debug({
+      traceData: traceData,
+      meta: meta
+    }, 'sendClientSend')
+
+    ctx._zkTrace = Tracer.sendClientSend(traceData, meta)
   })
-}
+
+  /**
+   * Client received
+   */
+  hemera.on('clientPostRequest', function () {
+    const ctx = this
+    let meta = {
+      name: ctx.trace$.method
+    }
+
+    if (ctx._prevContext._isServer === true) {
+      meta.service = ctx._prevContext._topic
+    } else if (ctx._prevContext._isServer === false) {
+      meta.service = ctx._prevContext._pattern.topic
+    } else {
+      meta.service = ctx.config.tag // when act is on root level
+    }
+
+    if (config.subscriptionBased === false) {
+      meta.service = ctx.config.tag
+    }
+
+    Tracer.addBinary(meta, ctx.delegate$)
+    Tracer.addBinary(meta, {
+      'rpc.topic': ctx.trace$.service,
+      'rpc.method': ctx.trace$.method,
+      'rpc.timeout': ctx._pattern.timeout$ || ctx.config.timeout,
+      'rpc.maxMessages': ctx._pattern.maxMessages$ || 0,
+      'rpc.pubsub': ctx._pattern.pubsub$ || false
+    })
+
+    hemera.log.debug({
+      traceData: ctx._zkTrace,
+      meta: meta
+    }, 'sendClientRecv')
+
+    Tracer.sendClientRecv(ctx._zkTrace, meta)
+  })
+})
 
 exports.options = {}
 

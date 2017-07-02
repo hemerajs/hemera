@@ -11,8 +11,9 @@ const Couchbase = require('couchbase').Mock
 const expect = Code.expect
 
 describe('Hemera-couchbase-store', function () {
-  let PORT = 6243
-  let noAuthUrl = 'nats://localhost:' + PORT
+  let PORT = 6242
+  var flags = ['--user', 'derek', '--pass', 'foobar']
+  var authUrl = 'nats://derek:foobar@localhost:' + PORT
 
   let server
   let hemera
@@ -25,8 +26,8 @@ describe('Hemera-couchbase-store', function () {
 
     HemeraCouchbaseStore.options.couchbase.bucketInstance = bucket
 
-    server = HemeraTestsuite.start_server(PORT, {}, () => {
-      const nats = Nats.connect(noAuthUrl)
+    server = HemeraTestsuite.start_server(PORT, flags, () => {
+      const nats = Nats.connect(authUrl)
       hemera = new Hemera(nats)
       hemera.use(HemeraJoi)
       hemera.use(HemeraCouchbaseStore)

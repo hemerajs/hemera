@@ -25,7 +25,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-				<a class="navbar-brand" href="https://github.com/hemerajs/hemera"><img src="images/logo.png" width="32px" height="36px"></a>
+				<a class="navbar-brand" href="https://github.com/hemerajs/hemera"><img src="images/logo.png" height="36px"></a>
 			</div>
 			<div id="navbar" class="navbar-collapse collapse">
 				<ul class="nav navbar-nav navbar-right">
@@ -140,7 +140,8 @@
 							<li><strong>Fault tolerance</strong>: Auto-heals when new services are added. Configure cluster mode to be more reliable.</li>
 							<li><strong>Auto-pruning</strong>: NATS automatically handles a slow consumer and cut it off.</li>
 							<li><strong>Pattern driven</strong>: Define the signatures of your RPC's in JSON and use the flexibility of pattern-matching.</li>
-							<li><strong>PubSub</strong>: Hemera supports all features of NATS. This includes wildcards in subjects and normal publish
+							<li><strong>Request & Reply</strong>: By default point-to-point involves the fastest or first to respond.</li>
+							<li><strong>Pubish & Subscribe</strong>: Hemera supports all features of NATS. This includes wildcards in subjects and normal publish
 								and fanout mechanism.</li>
 							<li><strong>Tracing</strong>: Any distributed system need good tracing capabilities. We provide support for Zipkin a tracing
 								system which manages both the collection and lookup of this data.</li>
@@ -153,9 +154,12 @@
 						<br>
 						<br>
 						<h4 class="section-header">What is your motivation?</h4>
-						<p>We want to create a toolkit which is responsible for everything expect the transport. We don't need overall transport
+						<p class="section-header">We want to create a toolkit which is responsible for everything expect the transport. We don't need overall transport
 							independence. We trust in a well tested system. The wrong path in error-handling, logging and tracing are one of the
 							reasons why we couldn't use existing solutions.</p>
+						<br>
+						<h4>Be aware of your requirements</h4>
+						<p>Hemera has not been designed for high performance on a single process. It has been designed to create lots of microservices doesn't matter where they live. It choose simplicity and reliability as primary goals. It act together with NATS as central nervous system of your distributed system. Transport independency was not considered to be a relevant factor. In addition we use pattern matching which is very powerful. The fact that Hemera needs a broker is an argument which should be taken into consideration when you compare hemera with other frameworks. The relevant difference between microservice frameworks like senecajs, molecurer is not the performance or modularity its about the complexity you need to manage. Hemera is expert in providing an interface to work with lots of services in the network, NATS is the expert to deliver the message at the right place. Hemera is still a subscriber of NATS with some magic in routing and extensions. We don't have to worry about all different aspects in a distributed system like routing, load-balancing, service-discovery, clustering, health-checks ...</p>
 					</p>
 				</div>
 				<!-- END CONTENT -->

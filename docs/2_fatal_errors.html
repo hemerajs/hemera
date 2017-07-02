@@ -26,7 +26,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-        <a class="navbar-brand" href="https://github.com/hemerajs/hemera"><img src="images/logo.png" width="32px" height="36px"></a>
+        <a class="navbar-brand" href="https://github.com/hemerajs/hemera"><img src="images/logo.png" height="36px"></a>
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
@@ -130,7 +130,7 @@ hemera.add({ topic: "math", cmd: "add" }, function (resp, cb) {
 })
 
 hemera.act({ topic: "math", cmd: "add", a: 1, b: 1 }, function (err, resp) {
-  err instanceOf FatalError // true
+  err instanceOf Error // true
 })
 </code>
                     </pre>

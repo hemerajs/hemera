@@ -1,10 +1,11 @@
 'use strict'
 
+const Hp = require('hemera-plugin')
 const Knex = require('knex')
 const SqlStore = require('./store')
 const StorePattern = require('hemera-store/pattern')
 
-exports.plugin = function hemeraSqlStore (options) {
+exports.plugin = Hp(function hemeraSqlStore (options) {
   const hemera = this
   const connections = {}
   const topic = 'sql-store'
@@ -146,13 +147,12 @@ exports.plugin = function hemeraSqlStore (options) {
 
     store.exists(req, cb)
   })
-}
+})
 
 exports.options = {
   payloadValidator: 'hemera-joi'
 }
 
 exports.attributes = {
-  dependencies: ['hemera-joi'],
   pkg: require('./package.json')
 }

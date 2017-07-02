@@ -114,6 +114,9 @@ hemera.ready(() => {
 })
 ```
 
+## Dependencies
+- hemera-joi
+
 ## Interface
 
 * [RabbitMQ API](#RabbitMQ-api)

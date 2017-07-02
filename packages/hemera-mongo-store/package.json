@@ -1,16 +1,16 @@
 {
   "name": "hemera-mongo-store",
-  "version": "1.0.5",
+  "version": "1.0.19",
   "description": "This is a plugin to use Mongodb with Hemera",
   "main": "index.js",
-  "scripts": {
-    "lint": "eslint index.js",
-    "test": "nyc mocha -t 5000 ./test/**/*.js",
-    "coverage": "npm run test && nyc report --reporter=html"
-  },
   "repository": {
     "url": "git@github.com:hemerajs/hemera.git",
     "type": "git"
+  },
+  "scripts": {
+    "lint": "eslint ./**/*.js",
+    "test": "nyc mocha -t 5000 ./test/**/*.js",
+    "coverage": "npm run test && nyc report --reporter=html"
   },
   "engines": {
     "node": ">=4.0.0"
@@ -18,19 +18,9 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-store": "^1.1.5",
-    "mongodb": "2.2.x"
-  },
-  "devDependencies": {
-    "code": "^4.0.0",
-    "eslint": "^3.13.1",
-    "eslint-config-standard": "^6.2.1",
-    "eslint-plugin-promise": "^3.4.2",
-    "eslint-plugin-standard": "^2.0.1",
-    "hemera-testsuite": "1.0.x",
-    "istanbul": "0.4.x",
-    "mocha": "3.2.x",
-    "mocha-lcov-reporter": "1.2.x",
-    "nyc": "10.0.x"
+    "hemera-plugin": "^0.0.8",
+    "hemera-store": "^1.1.11",
+    "mongodb": "2.2.x",
+    "mongodb-extended-json": "1.9.x"
   }
 }

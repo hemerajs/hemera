@@ -11,8 +11,9 @@ const Arangojs = require('arangojs')
 const expect = Code.expect
 
 describe('Hemera-arango-store', function () {
-  let PORT = 6243
-  let noAuthUrl = 'nats://localhost:' + PORT
+  let PORT = 6242
+  var flags = ['--user', 'derek', '--pass', 'foobar']
+  var authUrl = 'nats://derek:foobar@localhost:' + PORT
 
   let server
   let arangoOptions = {
@@ -51,8 +52,8 @@ describe('Hemera-arango-store', function () {
 
     // clear and bootstrap db
     clearArangodb().then(bootstrapArangodb).then(() => {
-      server = HemeraTestsuite.start_server(PORT, {}, () => {
-        const nats = Nats.connect(noAuthUrl)
+      server = HemeraTestsuite.start_server(PORT, flags, () => {
+        const nats = Nats.connect(authUrl)
         hemera = new Hemera(nats, {
           crashOnFatal: false,
           logLevel: 'silent'
@@ -137,7 +138,7 @@ describe('Hemera-arango-store', function () {
       cmd: 'executeAqlQuery',
       type: 'one',
       databaseName: testDatabase,
-      query: aql `INSERT ${user} INTO testColl return NEW`
+      query: aql`INSERT ${user} INTO testColl return NEW`
     }, function (err, resp) {
       expect(err).to.be.not.exists()
       expect(resp).to.be.an.object()

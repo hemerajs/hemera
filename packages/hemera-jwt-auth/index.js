@@ -1,5 +1,6 @@
 'use strict'
 
+const Hp = require('hemera-plugin')
 const JWT = require('jsonwebtoken')
 const Hoek = require('hoek')
 
@@ -23,21 +24,19 @@ function isSubset (scope, subset) {
   return common.length === subset.length
 }
 
-exports.plugin = function hemeraJwtAuth (options) {
+exports.plugin = Hp(function hemeraJwtAuth (options) {
   const hemera = this
 
   const JwtError = hemera.createError('JwtError')
 
-  hemera.ext('onServerPreHandler', function (req, res, next, prevValue, i) {
+  hemera.ext('onServerPreHandler', function (req, res, next) {
     const ctx = this
 
     // get auth from server method
     const auth = ctx._actMeta.schema.auth$
 
-    // if no token was passed or auth is disabled we can continue
-    if (!ctx.meta$.jwtToken) {
-      return next()
-    } else if (auth && auth.enabled === false) {
+    // disable auth when it was set explicit
+    if (auth && auth.enabled === false) {
       return next()
     }
 
@@ -66,7 +65,7 @@ exports.plugin = function hemeraJwtAuth (options) {
       }
     })
   })
-}
+})
 
 exports.options = {
   jwt: {

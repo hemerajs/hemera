@@ -15,7 +15,6 @@
  * @class Transport
  */
 class NatsTransport {
-
   /**
    * Creates an instance of NatsTransport.
    *

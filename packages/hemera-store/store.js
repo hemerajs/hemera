@@ -6,7 +6,6 @@
  * @class Store
  */
 class Store {
-
   /**
    * Creates an instance of Store.
    *

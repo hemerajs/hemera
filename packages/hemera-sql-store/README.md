@@ -25,7 +25,7 @@ npm install --save <driver>
 ### Start Mariadb with Docker
 
 ```
-cd test && docker-compose up
+docker-compose up
 ```
 
 ### Running the tests

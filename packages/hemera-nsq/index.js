@@ -1,8 +1,9 @@
 'use strict'
 
+const Hp = require('hemera-plugin')
 const Nsq = require('nsqjs')
 
-exports.plugin = function hemeraNsqStore (options) {
+exports.plugin = Hp(function hemeraNsqStore (options) {
   const hemera = this
   const readers = {}
 
@@ -102,13 +103,12 @@ exports.plugin = function hemeraNsqStore (options) {
       consume(req.subject, req.channel, cb)
     })
   })
-}
+})
 
 exports.options = {
   payloadValidator: 'hemera-joi'
 }
 
 exports.attributes = {
-  dependencies: ['hemera-joi'],
   pkg: require('./package.json')
 }
