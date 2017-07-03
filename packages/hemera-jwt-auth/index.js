@@ -54,7 +54,7 @@ exports.plugin = Hp(function hemeraJwtAuth (options) {
           auth.scope = [auth.scope]
         }
         // check if scope is subset
-        if (isSubset(auth.scope, decoded.scope)) {
+        if (isSubset(decoded.scope, auth.scope)) {
           return next()
         }
         // invalid scope return error

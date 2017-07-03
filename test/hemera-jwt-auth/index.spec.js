@@ -12,9 +12,9 @@ describe('Hemera-jwt-auth', function () {
   let server
 
   const tokenDecoded = {
-    scope: ['math']
+    scope: ['math', 'a']
   }
-  const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZSI6WyJtYXRoIl0sImlhdCI6MTQ4ODEyMjIwN30.UPLLbjDgkB_ajQjI7BUlpUGfZYvsqHP3NqWQIavibeQ'
+  const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZSI6WyJtYXRoIiwiYSJdfQ.2xnjYtIXDx_8wLL-taay_xjQX7G7NX1rTdwMAR59k74'
 
   // Start up our own nats-server
   before(function (done) {
@@ -93,7 +93,7 @@ describe('Hemera-jwt-auth', function () {
         topic: 'math',
         cmd: 'add',
         auth$: {
-          scope: ['math', 'a', 'b']
+          scope: ['math', 'a']
         }
       }, function (req, cb) {
         cb(null, true)
@@ -348,6 +348,44 @@ describe('Hemera-jwt-auth', function () {
       }, function (err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals(200)
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should return an error because requestor has not full rights', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.use(HemeraJwt)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add',
+        auth$: {
+          scope: ['math', 'a', 'b']
+        }
+      }, function (req, cb) {
+        cb(null, true)
+      })
+
+      hemera.act({
+        meta$: {
+          jwtToken
+        },
+        topic: 'math',
+        cmd: 'add',
+        a: 100,
+        b: 200
+      }, function (err, resp) {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('JwtError')
+        expect(err.message).to.be.equals('Invalid scope')
         hemera.close()
         done()
       })
