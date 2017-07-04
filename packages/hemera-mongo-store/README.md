@@ -163,3 +163,28 @@ hemera.ready(() => {
   })
 })
 ```
+
+## Options
+
+Fine-tuning of the calls to the MongoDB Node.js driver can be performed via `options.store`. The mapping from [Store API](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store#store-api) to [MongoDB API](http://mongodb.github.io/node-mongodb-native/2.2/api/) is the following:
+* [create](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store#create) => [insertMany](http://mongodb.github.io/node-mongodb-native/2.2/api/Collection.html#insertMany) and [insertOne](http://mongodb.github.io/node-mongodb-native/2.2/api/Collection.html#insertOne)
+* [update](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store#update) => [findOneAndUpdate](http://mongodb.github.io/node-mongodb-native/2.2/api/Collection.html#findOneAndUpdate)
+* [updateById](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store#updatebyid) => [findOneAndUpdate](http://mongodb.github.io/node-mongodb-native/2.2/api/Collection.html#findOneAndUpdate)
+* [find](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store#find) => [find](http://mongodb.github.io/node-mongodb-native/2.2/api/Collection.html#find)
+* [findById](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store#findbyid) => [findOne](http://mongodb.github.io/node-mongodb-native/2.2/api/Collection.html#findOne)
+* [remove](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store#remove) => [deleteMany](http://mongodb.github.io/node-mongodb-native/2.2/api/Collection.html#deleteMany)
+* [removeById](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store#removebyid) => [findOneAndDelete](http://mongodb.github.io/node-mongodb-native/2.2/api/Collection.html#findOneAndDelete)
+* [replace](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store#replace) => [updateMany](http://mongodb.github.io/node-mongodb-native/2.2/api/Collection.html#updateMany)
+* [replaceById](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store#replacebyid) => [findOneAndReplace](http://mongodb.github.io/node-mongodb-native/2.2/api/Collection.html#findOneAndReplace)
+* [exists](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store#exists): NA
+
+### Example:
+
+```
+hemera.use(hemeraMongo, {
+  mongo: { url: 'mongodb://localhost:27017/test' },
+  store: {
+    updateById: { returnOriginal: false },
+  },
+})
+```
