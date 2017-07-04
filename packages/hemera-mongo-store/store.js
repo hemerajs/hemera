@@ -1,6 +1,17 @@
 'use strict'
 
 const Store = require('hemera-store')
+const STORE_METHODS = [
+  'create',
+  'remove',
+  'removeById',
+  'update',
+  'updateById',
+  'find',
+  'findById',
+  'replace',
+  'replaceById',
+]
 
 /**
  *
@@ -17,18 +28,16 @@ class MongoStore extends Store {
    *
    * @memberOf MongoStore
    */
-  constructor (driver,options = { mongo: {
-      create: {},
-      update: {},
-      updateById: {},
-      find: {},
-      findById: {},
-      remove: {},
-      removeById: {},
-      replace: {},
-      replaceById: {},
-    }}) {
+  constructor (driver,options = { mongo: {}, store: {} }) {
     super(driver, options)
+    if (!this.options.hasOwnProperty('store')) {
+      this.options.store = {}
+    }
+    for (let method of STORE_METHODS) {
+      if (!this.options.store.hasOwnProperty(method)) {
+        this.options.store[method] = {}
+      }
+    }
   }
 
   /**
@@ -41,7 +50,7 @@ class MongoStore extends Store {
    */
   create (req, cb) {
     if (req.data instanceof Array) {
-      this._driver.insertMany(req.data, this.options.mongo.create, function (err, resp) {
+      this._driver.insertMany(req.data, this.options.store.create, function (err, resp) {
         if (err) {
           return cb(err)
         }
@@ -51,7 +60,7 @@ class MongoStore extends Store {
         cb(err, result)
       })
     } else if (req.data instanceof Object) {
-      this._driver.insertOne(req.data, this.options.mongo.create, function (err, resp) {
+      this._driver.insertOne(req.data, this.options.store.create, function (err, resp) {
         if (err) {
           return cb(err)
         }
@@ -72,7 +81,7 @@ class MongoStore extends Store {
    * @memberOf MongoStore
    */
   remove (req, cb) {
-    this._driver.deleteMany(req.query, this.options.mongo.remove, function (err, resp) {
+    this._driver.deleteMany(req.query, this.options.store.remove, function (err, resp) {
       if (err) {
         return cb(err)
       }
@@ -94,7 +103,7 @@ class MongoStore extends Store {
   removeById (req, cb) {
     this._driver.findOneAndDelete({
       _id: this.ObjectID(req.id)
-    }, this.options.mongo.removeById, function (err, resp) {
+    }, this.options.store.removeById, function (err, resp) {
       if (err) {
         return cb(err)
       }
@@ -113,7 +122,7 @@ class MongoStore extends Store {
    * @memberOf MongoStore
    */
   update (req, data, cb) {
-    this._driver.findOneAndUpdate(req.query, data, this.options.mongo.update, function (err, resp) {
+    this._driver.findOneAndUpdate(req.query, data, this.options.store.update, function (err, resp) {
       if (err) {
         return cb(err)
       }
@@ -134,7 +143,7 @@ class MongoStore extends Store {
   updateById (req, data, cb) {
     this._driver.findOneAndUpdate({
       _id: this.ObjectID(req.id)
-    }, data, this.options.mongo.updateById, function (err, resp) {
+    }, data, this.options.store.updateById, function (err, resp) {
       if (err) {
         return cb(err)
       }
@@ -152,7 +161,7 @@ class MongoStore extends Store {
    * @memberOf MongoStore
    */
   find (req, options, cb) {
-    let cursor = this._driver.find(req.query, this.options.mongo.find)
+    let cursor = this._driver.find(req.query, this.options.store.find)
 
     if (options) {
       if (options.limit) {
@@ -190,7 +199,7 @@ class MongoStore extends Store {
   findById (req, cb) {
     this._driver.findOne({
       _id: this.ObjectID(req.id)
-    }, this.options.mongo.findById, function (err, resp) {
+    }, this.options.store.findById, function (err, resp) {
       cb(err, resp)
     })
   }
@@ -204,7 +213,7 @@ class MongoStore extends Store {
    * @memberOf MongoStore
    */
   replace (req, data, cb) {
-    this._driver.updateMany(req.query, data, Object.assign(this.options.mongo.replace, {
+    this._driver.updateMany(req.query, data, Object.assign(this.options.store.replace, {
       upsert: true
     }), function (err, resp) {
       if (err) {
