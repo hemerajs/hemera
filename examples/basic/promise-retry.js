@@ -5,8 +5,7 @@ const nats = require('nats').connect()
 const promiseRetry = require('promise-retry')
 
 const hemera = new Hemera(nats, {
-  logLevel: 'silent',
-  generators: true
+  logLevel: 'silent'
 })
 
 hemera.ready(() => {

@@ -24,8 +24,8 @@ hemera1.ready(() => {
   hemera1.add({
     topic: 'math',
     cmd: 'add'
-  }, function* (req) {
-    return yield Promise.resolve(true)
+  }, async function (req) {
+    return await Promise.resolve(true)
   })
 
   nats1.flush(function () {

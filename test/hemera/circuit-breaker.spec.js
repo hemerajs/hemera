@@ -428,7 +428,6 @@ describe('Circuit breaker - Generator / Promise support', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      generators: true,
       circuitBreaker: {
         enabled: true,
         maxFailures: 2
@@ -518,7 +517,6 @@ describe('Circuit breaker - Generator / Promise support', function () {
 
     const hemera = new Hemera(nats, {
       logLevel: 'silent',
-      generators: true,
       circuitBreaker: {
         enabled: true,
         maxFailures: 2
@@ -577,7 +575,6 @@ describe('Circuit breaker - Generator / Promise support', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      generators: true,
       circuitBreaker: {
         enabled: true,
         maxFailures: 2,
@@ -644,7 +641,6 @@ describe('Circuit breaker - Generator / Promise support', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      generators: true,
       circuitBreaker: {
         enabled: true,
         maxFailures: 2,
@@ -733,7 +729,6 @@ describe('Circuit breaker - Generator / Promise support', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      generators: true,
       circuitBreaker: {
         enabled: true,
         maxFailures: 2,

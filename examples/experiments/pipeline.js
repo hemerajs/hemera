@@ -11,8 +11,7 @@ const Hemera = require('./../../packages/hemera')
 const nats = require('nats').connect()
 
 const hemera = new Hemera(nats, {
-  logLevel: 'info',
-  generators: true
+  logLevel: 'info'
 })
 
 hemera.ready(() => {
