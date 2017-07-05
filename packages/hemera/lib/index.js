@@ -435,8 +435,8 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  static createError (name) {
-    return SuperError.subclass(name)
+  static createError (name, customConstructor) {
+    return SuperError.subclass(name, customConstructor)
   }
 
   /**
@@ -467,12 +467,13 @@ class Hemera extends EventEmitter {
    * Create a custom super error object in a running hemera instance
    *
    * @param {any} name
+   * @param {function} customConstructor
    * @returns
    *
    * @memberOf Hemera
    */
-  createError (name) {
-    return SuperError.subclass(name)
+  createError (name, customConstructor) {
+    return SuperError.subclass(name, customConstructor)
   }
 
   /**

@@ -36,7 +36,7 @@ declare class Hemera extends events.EventEmitter {
   act(pattern: string | Pattern, callback: Function): void;
   add(pattern: string | Pattern, callback: Function): AddMeta;
   use(params: PluginDefinition, options?: any): void;
-  createError(name: string): any;
+  createError(name: string, customConstructor: function): any;
   decorate(prop: string, value: any): void;
   remove(topic: string, maxMessages: number): boolean;
   list(Pattern, options: any): any;
