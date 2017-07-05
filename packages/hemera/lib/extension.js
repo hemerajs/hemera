@@ -41,7 +41,7 @@ class Extension {
           .then(x => next(null, x))
           .catch(next)
         })
-      } else if (Util.isAsyncFunc(handler)) {
+      } else if (Util.isAsyncFunction(handler)) {
         this._stack.push(function () {
           // -1 because (req, res, next)
           const next = arguments[arguments.length - 1]

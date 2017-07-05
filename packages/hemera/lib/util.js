@@ -241,7 +241,7 @@ class Util {
    * @returns
    * @memberof Util
    */
-  static isAsyncFunc (obj) {
+  static isAsyncFunction (obj) {
     var constructor = obj.constructor
     if (!constructor) {
       return false

@@ -1160,7 +1160,7 @@ class Hemera extends EventEmitter {
       if (Util.isGeneratorFunction(cb)) {
         ctx._actCallback = Co.wrap(cb.bind(ctx))
         ctx._isPromisable = true
-      } else if (Util.isAsyncFunc(cb)) {
+      } else if (Util.isAsyncFunction(cb)) {
         ctx._actCallback = cb.bind(ctx)
         ctx._isPromisable = true
       } else {
