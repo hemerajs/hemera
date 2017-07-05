@@ -1,4 +1,5 @@
 'use strict'
+const CurrentVersion = require('node-version')
 
 describe('Async / Await support', function () {
   var PORT = 6242
@@ -8,11 +9,17 @@ describe('Async / Await support', function () {
 
   // Start up our own nats-server
   before(function (done) {
+    if (CurrentVersion.major < 8) {
+      return this.skip()
+    }
     server = HemeraTestsuite.start_server(PORT, flags, done)
   })
 
   // Shutdown our server after we are done
   after(function () {
+    if (CurrentVersion.major < 8) {
+      return this.skip()
+    }
     server.kill()
   })
 
