@@ -1,6 +1,6 @@
 'use strict'
 
-describe('Generator / Promise support', function () {
+describe('Async / Await support', function () {
   var PORT = 6242
   var flags = ['--user', 'derek', '--pass', 'foobar']
   var authUrl = 'nats://derek:foobar@localhost:' + PORT
@@ -16,7 +16,7 @@ describe('Generator / Promise support', function () {
     server.kill()
   })
 
-  it('Should be able to yield in add middleware', function (done) {
+  it('Should be able to await in add middleware', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -26,8 +26,8 @@ describe('Generator / Promise support', function () {
         topic: 'math',
         cmd: 'add'
       })
-        .use(function * (req, resp) {
-          const a = yield { a: 1 }
+        .use(async function (req, resp) {
+          const a = await { a: 1 }
           req.locals.test = a
         })
         .end(function (req, cb) {
@@ -49,7 +49,7 @@ describe('Generator / Promise support', function () {
     })
   })
 
-  it('Should be able to yield in end function of the middleware', function (done) {
+  it('Should be able to await in end function of the middleware', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -59,8 +59,9 @@ describe('Generator / Promise support', function () {
         topic: 'math',
         cmd: 'add'
       })
-        .end(function * (req) {
-          return yield Promise.resolve(req.a + req.b)
+        .end(async function (req) {
+          const a = await Promise.resolve(req.a + req.b)
+          return a
         })
 
       hemera.act({
@@ -77,7 +78,7 @@ describe('Generator / Promise support', function () {
     })
   })
 
-  it('Should be able to yield an error in add middleware', function (done) {
+  it('Should be able to await an error in add middleware', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -87,8 +88,9 @@ describe('Generator / Promise support', function () {
         topic: 'math',
         cmd: 'add'
       })
-        .use(function * (req, resp) {
-          yield Promise.reject(new Error('test'))
+        .use(async function (req, resp) {
+          const a = await Promise.reject(new Error('test'))
+          return a
         })
         .end(function (req, cb) {
           cb(null, req.a + req.b)
@@ -107,7 +109,7 @@ describe('Generator / Promise support', function () {
     })
   })
 
-  it('Should be able to use an array of generator function in add middleware', function (done) {
+  it('Should be able to use an array of async function in add middleware', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -117,10 +119,10 @@ describe('Generator / Promise support', function () {
         topic: 'math',
         cmd: 'add'
       })
-        .use([function * (req, resp) {
-          yield Promise.resolve(true)
-        }, function * (req, resp) {
-          yield Promise.resolve(true)
+        .use([async function (req, resp) {
+          await Promise.resolve(true)
+        }, async function (req, resp) {
+          await Promise.resolve(true)
         }])
         .end(function (req, cb) {
           cb(null, req.a + req.b)
@@ -139,7 +141,7 @@ describe('Generator / Promise support', function () {
     })
   })
 
-  it('Should be able to use a none generator function in add middleware', function (done) {
+  it('Should be able to use a none async function in add middleware', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -170,7 +172,7 @@ describe('Generator / Promise support', function () {
     })
   })
 
-  it('Should be able to yield in add', function (done) {
+  it('Should be able to await in add', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -179,19 +181,21 @@ describe('Generator / Promise support', function () {
       hemera.add({
         topic: 'math',
         cmd: 'add'
-      }, function * (resp) {
-        return yield {
+      }, async function (resp) {
+        const a = await {
           result: resp.a + resp.b
         }
+        return a
       })
 
       hemera.add({
         topic: 'math',
         cmd: 'multiply'
-      }, function * (resp) {
-        return yield {
+      }, async function (resp) {
+        const a = await {
           result: resp.a * resp.b
         }
+        return a
       })
 
       hemera.act({
@@ -219,7 +223,7 @@ describe('Generator / Promise support', function () {
     })
   })
 
-  it('Should be able to use none generator function in add', function (done) {
+  it('Should be able to use none await function in add', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -268,19 +272,17 @@ describe('Generator / Promise support', function () {
     })
   })
 
-  it('Should be able to yield an act', function (done) {
+  it('Should be able to await an act', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      logLevel: 'info'
-    })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
       hemera.add({
         topic: 'math',
         cmd: 'add'
-      }, function * (resp) {
-        const mult = yield this.act({
+      }, async function (resp) {
+        const mult = await this.act({
           topic: 'math',
           cmd: 'multiply',
           a: 1,
@@ -291,7 +293,7 @@ describe('Generator / Promise support', function () {
           result: 2
         })
 
-        return yield {
+        return {
           result: resp.a + resp.b
         }
       })
@@ -299,10 +301,11 @@ describe('Generator / Promise support', function () {
       hemera.add({
         topic: 'math',
         cmd: 'multiply'
-      }, function * (resp) {
-        return yield {
+      }, async function (resp) {
+        const a = await {
           result: resp.a * resp.b
         }
+        return a
       })
 
       hemera.act({
