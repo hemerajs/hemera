@@ -1,6 +1,6 @@
 {
   "name": "hemera-avro",
-  "version": "1.1.14",
+  "version": "1.1.15",
   "description": "This is a plugin to use Avro with Hemera",
   "main": "index.js",
   "repository": {
@@ -14,7 +14,7 @@
   "license": "MIT",
   "dependencies": {
     "avsc": "5.0.x",
-    "hemera-plugin": "^0.0.9",
+    "hemera-plugin": "^0.0.10",
     "safe-buffer": "5.1.x"
   }
 }

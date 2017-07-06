@@ -1,6 +1,6 @@
 {
   "name": "hemera-couchbase-store",
-  "version": "1.0.34",
+  "version": "1.0.35",
   "description": "This is a plugin to use Couchbase with Hemera",
   "main": "index.js",
   "repository": {
@@ -16,8 +16,8 @@
   "license": "MIT",
   "dependencies": {
     "couchbase": "2.3.x",
-    "hemera-joi": "^1.1.10",
-    "hemera-plugin": "^0.0.9",
+    "hemera-joi": "^1.1.11",
+    "hemera-plugin": "^0.0.10",
     "hemera-store": "^1.1.11"
   },
   "devDependencies": {
