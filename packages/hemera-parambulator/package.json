@@ -1,6 +1,6 @@
 {
   "name": "hemera-parambulator",
-  "version": "0.1.90",
+  "version": "0.1.91",
   "description": "This is a plugin to use Parambulator with Hemera",
   "main": "index.js",
   "repository": {
@@ -16,7 +16,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-plugin": "^0.0.9",
+    "hemera-plugin": "^0.0.10",
     "parambulator": "1.5.x"
   }
 }

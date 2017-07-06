@@ -1,6 +1,6 @@
 {
   "name": "hemera-controlplane",
-  "version": "0.1.20",
+  "version": "0.1.21",
   "description": "This is a plugin to scale your workers remotly with Hemera",
   "main": "index.js",
   "scripts": {
@@ -19,8 +19,8 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-joi": "^1.1.10",
-    "hemera-plugin": "^0.0.9"
+    "hemera-joi": "^1.1.11",
+    "hemera-plugin": "^0.0.10"
   },
   "devDependencies": {
     "code": "4.0.x",
