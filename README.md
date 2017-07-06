@@ -82,6 +82,12 @@ hemera.ready(() => {
 ## Documentation
 There is an extensive <a href="https://hemerajs.github.io/hemera/">documentation</a> or look in the <a href="https://github.com/hemerajs/hemera/tree/master/examples">Examples</a>.
 
+## Who's using Hemera?
+
+| [![appcom-interactive](http://www.appcom-interactive.de/images/appcom-logo.svg)](http://www.appcom-interactive.de/) |
+| -------------|
+| appcom-interactive |
+
 ## Get Involved
 
 - **Contributing**: Pull requests are welcome!
