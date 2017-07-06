@@ -3,10 +3,10 @@ Changelog
 
 # 1.x
 
-### 1.3.7
+### 1.3.8
 
 ### Summary
-- We support Async/Await, Generators and error-first-callback by default. You don't have to set any options. The `generators` options was removed.
+- We support Async/Await (Node 7.6+), Generators and error-first-callback by default. You don't have to set any options. The `generators` options was removed.
 
 ### 1.3.6
 
