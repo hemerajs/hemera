@@ -49,16 +49,19 @@ The key features of NATS in combination with Hemera are:
 
 ## What Hemera code looks like
 
+**We support Async/Await, Generators and error-first-callback style.**
+
 ```js
 const Hemera = require('nats-hemera')
 const HemeraJoi = require('hemera-joi')
 const nats = require('nats').connect()
 
-const hemera = new Hemera(nats, { logLevel: 'info', generators: true })
+const hemera = new Hemera(nats, { logLevel: 'info' })
 hemera.use(HemeraJoi)
 
 hemera.ready(() => {
 
+  hemera.setOption('payloadValidator', 'hemera-joi')
   let Joi = hemera.exposition['hemera-joi'].joi
 
   hemera.add({ 
@@ -66,8 +69,9 @@ hemera.ready(() => {
     cmd: 'add',
     a: Joi.number().required(),
     b: Joi.number().required()
-  }, function* (req) {
-    return yield Promise.resolve(req.a + req.b)
+  }, async function (req) {
+    const a = await Promise.resolve(req.a + req.b)
+    return a
   })
 
   const a = hemera.act({ topic: 'math', cmd: 'add', a: 10, b: 30 })
