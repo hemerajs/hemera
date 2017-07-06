@@ -49,7 +49,7 @@ The key features of NATS in combination with Hemera are:
 
 ## What Hemera code looks like
 
-**We support Async/Await (Node 7.6+), Generators and error-first-callback style.**
+**We support Async/Await (Node 7.6+), Generators (Node 4+) and error-first-callback style.**
 
 ```js
 const Hemera = require('nats-hemera')
