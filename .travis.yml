@@ -8,6 +8,9 @@ node_js:
 
 script:
   - npm run setup && npm run ci
+  - if [ ${TRAVIS_NODE_VERSION:0:1} == "8" ]; then
+    npm run test-node8
+    fi
 
 env:
   - CXX="g++-4.8"
