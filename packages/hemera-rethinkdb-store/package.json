@@ -1,6 +1,6 @@
 {
   "name": "hemera-rethinkdb-store",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "This is a plugin to use Rethinkdb with Hemera",
   "main": "index.js",
   "repository": {
@@ -15,8 +15,8 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-joi": "^1.1.9",
-    "hemera-plugin": "^0.0.8",
+    "hemera-joi": "^1.1.10",
+    "hemera-plugin": "^0.0.9",
     "hemera-store": "^1.1.11",
     "rethinkdbdash": "2.3.x"
   },
