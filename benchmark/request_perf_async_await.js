@@ -26,7 +26,8 @@ hemera.ready(() => {
       cmd: 'add',
       a: 1,
       b: 2
-    }, function* (err, resp) {
+    }, async function (err, resp) {
+      await {}
     })
 
     if (i % hash === 0) {

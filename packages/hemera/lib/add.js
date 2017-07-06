@@ -40,19 +40,25 @@ class Add {
    * @memberof Add
    */
   _use (handler) {
-    if (this.options.generators) {
+    const comp = () => {
       if (Util.isGeneratorFunction(handler)) {
         this.actMeta.middleware.push(function () {
         // -1 because (req, res, next)
           const next = arguments[arguments.length - 1]
           return Co(handler.apply(this, arguments)).then(x => next(null, x)).catch(next)
         })
+      } else if (Util.isAsyncFunction(handler)) {
+        this.actMeta.middleware.push(function () {
+        // -1 because (req, res, next)
+          const next = arguments[arguments.length - 1]
+          return handler.apply(this, arguments).then(x => next(null, x)).catch(next)
+        })
       } else {
         this.actMeta.middleware.push(handler)
       }
-    } else {
-      this.actMeta.middleware.push(handler)
     }
+
+    comp()
   }
   /**
    *
@@ -133,17 +139,20 @@ class Add {
    * @memberOf Add
    */
   set action (action) {
-    if (this.options.generators) {
-      if (!Util.isGeneratorFunction(action)) {
-        this.actMeta.action = action
-        this.isGenFunc = false
-      } else {
+    const comp = () => {
+      if (Util.isGeneratorFunction(action)) {
         this.actMeta.action = Co.wrap(action)
-        this.isGenFunc = true
+        this.isPromisable = true
+      } else if (Util.isAsyncFunction(action)) {
+        this.actMeta.action = action
+        this.isPromisable = true
+      } else {
+        this.actMeta.action = action
+        this.isPromisable = false
       }
-    } else {
-      this.actMeta.action = action
     }
+
+    comp()
   }
   /**
    *

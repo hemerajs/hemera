@@ -99,7 +99,7 @@ describe('onClose extension', function () {
   it('Should be able to add onClose extension handler with generators', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, { generators: true })
+    const hemera = new Hemera(nats)
     let firstOnCloseHandler = Sinon.spy()
     let secondOnCloseHandler = Sinon.spy()
 
@@ -139,7 +139,7 @@ describe('onClose extension', function () {
   it('Should be able to pass an error to onClose extension handler with generators', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, { generators: true })
+    const hemera = new Hemera(nats)
     let firstOnCloseHandler = Sinon.spy()
     let secondOnCloseHandler = Sinon.spy()
 

@@ -43,7 +43,6 @@ const Add = require('./add')
 
 var defaultConfig = {
   timeout: 2000, // Max execution time of a request
-  generators: false, // Promise and generators support
   tag: '', // The tag string of this Hemera instance
   name: `hemera-${Os.hostname()}-${Util.randomId()}`, // node name
   crashOnFatal: true, // Should gracefully exit the process at unhandled exceptions or fatal errors
@@ -158,12 +157,12 @@ class Hemera extends EventEmitter {
 
     // define extension points
     this._extensions = {
-      onClientPreRequest: new Extension('onClientPreRequest', { server: false, generators: this._config.generators }),
-      onClientPostRequest: new Extension('onClientPostRequest', { server: false, generators: this._config.generators }),
-      onServerPreHandler: new Extension('onServerPreHandler', { server: true, generators: this._config.generators }),
-      onServerPreRequest: new Extension('onServerPreRequest', { server: true, generators: this._config.generators }),
-      onServerPreResponse: new Extension('onServerPreResponse', { server: true, generators: this._config.generators }),
-      onClose: new Extension('onClose', { server: false, generators: this._config.generators })
+      onClientPreRequest: new Extension('onClientPreRequest', { server: false }),
+      onClientPostRequest: new Extension('onClientPostRequest', { server: false }),
+      onServerPreHandler: new Extension('onServerPreHandler', { server: true }),
+      onServerPreRequest: new Extension('onServerPreRequest', { server: true }),
+      onServerPreResponse: new Extension('onServerPreResponse', { server: true }),
+      onClose: new Extension('onClose', { server: false })
     }
 
     // errio settings
@@ -762,10 +761,11 @@ class Hemera extends EventEmitter {
           action(self._request.payload.pattern)
           return self.finish()
         }
-
           // execute RPC action
-        if (self._config.generators && self._actMeta.isGenFunc) {
-          action(self._request.payload.pattern).then(x => self._actionHandler(null, x)).catch(e => self._actionHandler(e))
+        if (self._actMeta.isPromisable) {
+          action(self._request.payload.pattern)
+            .then(x => self._actionHandler(null, x))
+            .catch(e => self._actionHandler(e))
         } else {
           action(self._request.payload.pattern, self._actionHandler.bind(self))
         }
@@ -938,7 +938,7 @@ class Hemera extends EventEmitter {
       plugin: this.plugin$
     }
 
-    let addDefinition = new Add(actMeta, { generators: this._config.generators })
+    let addDefinition = new Add(actMeta)
 
     // cb is null when we use chaining syntax
     if (cb) {
@@ -1144,6 +1144,7 @@ class Hemera extends EventEmitter {
     ctx._isServer = false
     ctx._execute = null
     ctx._hasCallback = false
+    ctx._isPromisable = false
 
     // topic is needed to subscribe on a subject in NATS
     if (!pattern.topic) {
@@ -1155,58 +1156,56 @@ class Hemera extends EventEmitter {
 
     if (cb) {
       ctx._hasCallback = true
-      if (this._config.generators) {
+
+      if (Util.isGeneratorFunction(cb)) {
         ctx._actCallback = Co.wrap(cb.bind(ctx))
+        ctx._isPromisable = true
+      } else if (Util.isAsyncFunction(cb)) {
+        ctx._actCallback = cb.bind(ctx)
+        ctx._isPromisable = true
       } else {
         ctx._actCallback = cb.bind(ctx)
+        ctx._isPromisable = false
       }
     }
 
-    if (this._config.generators) {
-      const promise = new Promise((resolve, reject) => {
-        ctx._execute = (err, result) => {
-          if (ctx._config.circuitBreaker.enabled) {
-            const circuitBreaker = ctx._circuitBreakerMap.get(ctx.trace$.method)
-            if (err) {
-              circuitBreaker.failure()
-            } else {
-              circuitBreaker.success()
-            }
-          }
-
-          if (ctx._hasCallback) {
-            ctx._actCallback(err, result).then(x => resolve(x)).catch(x => reject(x))
+    const promise = new Promise((resolve, reject) => {
+      ctx._execute = (err, result) => {
+        if (ctx._config.circuitBreaker.enabled) {
+          const circuitBreaker = ctx._circuitBreakerMap.get(ctx.trace$.method)
+          if (err) {
+            circuitBreaker.failure()
           } else {
-            if (err) {
-              reject(err)
-            } else {
-              resolve(result)
-            }
+            circuitBreaker.success()
           }
         }
-      })
 
-      ctx._extensions.onClientPreRequest.dispatch(ctx, (err) => ctx._onPreRequestHandler(err))
-
-      return promise
-    }
-
-    ctx._execute = (err, result) => {
-      if (ctx._config.circuitBreaker.enabled) {
-        const circuitBreaker = ctx._circuitBreakerMap.get(ctx.trace$.method)
-        if (err) {
-          circuitBreaker.failure()
+        if (ctx._hasCallback) {
+          if (ctx._isPromisable) {
+            ctx._actCallback(err, result)
+              .then(x => resolve(x))
+              .catch(x => reject(x))
+          } else {
+            const r = ctx._actCallback(err, result)
+            if (r instanceof Error) {
+              reject(r)
+            } else {
+              resolve(r)
+            }
+          }
         } else {
-          circuitBreaker.success()
+          if (err) {
+            reject(err)
+          } else {
+            resolve(result)
+          }
         }
       }
-
-      if (ctx._hasCallback) {
-        ctx._actCallback(err, result)
-      }
-    }
+    })
 
     ctx._extensions.onClientPreRequest.dispatch(ctx, (err) => ctx._onPreRequestHandler(err))
+
+    return promise
   }
 
   /**

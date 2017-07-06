@@ -222,8 +222,15 @@ class Util {
    *
    * @memberof Util
    */
-  static isGenerator (obj) {
-    return typeof obj.next === 'function' && typeof obj.throw === 'function'
+  static isGeneratorFunction (obj) {
+    var constructor = obj.constructor
+    if (!constructor) {
+      return false
+    }
+    if (constructor.name === 'GeneratorFunction' || constructor.displayName === 'GeneratorFunction') {
+      return true
+    }
+    return false
   }
 
   /**
@@ -232,14 +239,17 @@ class Util {
    * @static
    * @param {any} obj
    * @returns
-   *
    * @memberof Util
    */
-  static isGeneratorFunction (obj) {
+  static isAsyncFunction (obj) {
     var constructor = obj.constructor
-    if (!constructor) return false
-    if (constructor.name === 'GeneratorFunction' || constructor.displayName === 'GeneratorFunction') return true
-    return Util.isGenerator(constructor.prototype)
+    if (!constructor) {
+      return false
+    }
+    if (constructor.name === 'AsyncFunction' || constructor.displayName === 'AsyncFunction') {
+      return true
+    }
+    return false
   }
 }
 

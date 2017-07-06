@@ -3,6 +3,11 @@ Changelog
 
 # 1.x
 
+### 1.3.7
+
+### Summary
+- We support Async/Await, Generators and error-first-callback by default. You don't have to set any options. The `generators` options was removed.
+
 ### 1.3.6
 
 ### Summary

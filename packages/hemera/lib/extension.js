@@ -32,7 +32,7 @@ class Extension {
    * @memberof Extension
    */
   _add (handler) {
-    if (this._options.generators) {
+    const comp = () => {
       if (Util.isGeneratorFunction(handler)) {
         this._stack.push(function () {
           // -1 because (req, res, next)
@@ -41,12 +41,20 @@ class Extension {
           .then(x => next(null, x))
           .catch(next)
         })
+      } else if (Util.isAsyncFunction(handler)) {
+        this._stack.push(function () {
+          // -1 because (req, res, next)
+          const next = arguments[arguments.length - 1]
+          return handler.apply(this, arguments)
+          .then(x => next(null, x))
+          .catch(next)
+        })
       } else {
         this._stack.push(handler)
       }
-    } else {
-      this._stack.push(handler)
     }
+
+    comp()
   }
 
   /**
