@@ -331,8 +331,8 @@ describe('Async / Await support', function () {
       hemera.add({
         topic: 'math',
         cmd: 'add'
-      }, function * (resp) {
-        return yield Promise.reject(new Error('test'))
+      }, async function (resp) {
+        return await Promise.reject(new Error('test'))
       })
 
       hemera.act({
@@ -359,8 +359,8 @@ describe('Async / Await support', function () {
       hemera.add({
         topic: 'math',
         cmd: 'add'
-      }, function * (resp) {
-        return yield Promise.resolve({
+      }, async function (resp) {
+        return await Promise.resolve({
           result: true
         })
       })
@@ -370,7 +370,7 @@ describe('Async / Await support', function () {
         cmd: 'add',
         a: 1,
         b: 2
-      }, function * (err, resp) {
+      }, async function (err, resp) {
         expect(err).to.be.not.exists()
         return resp
       })
@@ -393,8 +393,8 @@ describe('Async / Await support', function () {
       hemera.add({
         topic: 'math',
         cmd: 'add'
-      }, function * (resp) {
-        return yield Promise.resolve({
+      }, async function (resp) {
+        return await Promise.resolve({
           result: true
         })
       })
@@ -404,9 +404,9 @@ describe('Async / Await support', function () {
         cmd: 'add',
         a: 1,
         b: 2
-      }, function * (err, resp) {
+      }, async function (err, resp) {
         expect(err).to.be.not.exists()
-        return yield Promise.reject(new Error('test'))
+        return await Promise.reject(new Error('test'))
       })
         .catch(function (err) {
           expect(err).to.be.exists()
@@ -425,8 +425,8 @@ describe('Async / Await support', function () {
       hemera.add({
         topic: 'math',
         cmd: 'add'
-      }, function * (resp) {
-        return yield Promise.reject(new Error('test'))
+      }, async function (resp) {
+        return await Promise.reject(new Error('test'))
       })
 
       hemera.act({
@@ -452,8 +452,8 @@ describe('Async / Await support', function () {
       hemera.add({
         topic: 'math',
         cmd: 'add'
-      }, function * (resp) {
-        return yield Promise.resolve({
+      }, async function (resp) {
+        return await Promise.resolve({
           result: true
         })
       })
@@ -481,8 +481,8 @@ describe('Async / Await support', function () {
       hemera.add({
         topic: 'math',
         cmd: 'add'
-      }, function * (resp) {
-        return yield Promise.resolve({
+      }, async function (resp) {
+        return await Promise.resolve({
           result: true
         })
       })
@@ -492,7 +492,7 @@ describe('Async / Await support', function () {
         cmd: 'add',
         a: 1,
         b: 2
-      }, function * (err, resp) {
+      }, async function (err, resp) {
         expect(err).to.be.not.exists()
         throw new Error('test')
       })
@@ -505,7 +505,7 @@ describe('Async / Await support', function () {
   })
 })
 
-describe('Generator / Promise support in extension', function () {
+describe('Async / Await support in extension', function () {
   var PORT = 6242
   var flags = ['--user', 'derek', '--pass', 'foobar']
   var authUrl = 'nats://derek:foobar@localhost:' + PORT
@@ -521,18 +521,18 @@ describe('Generator / Promise support in extension', function () {
     server.kill()
   })
 
-  it('Should be able to yield in extension', function (done) {
+  it('Should be able to await in extension', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreHandler', function * (req, res) {
-        return yield Promise.resolve(true)
+      hemera.ext('onServerPreHandler', async function (req, res) {
+        return await Promise.resolve(true)
       })
 
-      hemera.ext('onServerPreHandler', function * (req, res) {
-        return yield Promise.resolve('foobar')
+      hemera.ext('onServerPreHandler', async function (req, res) {
+        return await Promise.resolve('foobar')
       })
 
       hemera.add({
@@ -556,7 +556,7 @@ describe('Generator / Promise support in extension', function () {
     })
   })
 
-  it('Should be able to use none generator function in extensions', function (done) {
+  it('Should be able to use none async function in extensions', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -593,8 +593,8 @@ describe('Generator / Promise support in extension', function () {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreHandler', function * (req, res) {
-        return yield Promise.reject(new Error('test'))
+      hemera.ext('onServerPreHandler', async function (req, res) {
+        return await Promise.reject(new Error('test'))
       })
 
       hemera.add({
@@ -625,7 +625,7 @@ describe('Generator / Promise support in extension', function () {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreHandler', function * (req, res) {
+      hemera.ext('onServerPreHandler', async function (req, res) {
         throw new Error('test')
       })
 
