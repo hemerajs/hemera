@@ -347,6 +347,63 @@ describe('Generator / Promise support', function () {
     })
   })
 
+  it('Should be able to resolve with return value in act handler', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function * (resp) {
+        return yield Promise.resolve('test')
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, function (err, resp) {
+        return resp
+      }).then((resp) => {
+        expect(resp).to.be.equals('test')
+        expect(resp).to.be.equals('test')
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should be able to reject with return value in act handler', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function * (resp) {
+        return yield Promise.reject(new Error('test'))
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, function (err, resp) {
+        return err
+      }).catch((err) => {
+        expect(err.name).to.be.equals('Error')
+        hemera.close()
+        done()
+      })
+    })
+  })
+
   it('Should be able to chain an act', function (done) {
     const nats = require('nats').connect(authUrl)
 
