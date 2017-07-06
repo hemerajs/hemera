@@ -14,6 +14,7 @@
   "license": "MIT",
   "dependencies": {
     "hemera-plugin": "^0.0.8",
+    "safe-buffer": "5.1.x",
     "snappyjs": "0.5.x"
   }
 }
