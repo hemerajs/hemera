@@ -86,7 +86,7 @@ There is an extensive <a href="https://hemerajs.github.io/hemera/">documentation
 
 | [![appcom-interactive](http://www.appcom-interactive.de/images/appcom-logo.svg)](http://www.appcom-interactive.de/) |
 | -------------|
-| appcom-interactive |
+| appcom interactive |
 
 ## Get Involved
 
