@@ -406,6 +406,72 @@ describe('Circuit breaker', function () {
       })
     })
   })
+
+  it('Should be able to call in HALF OPEN state', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      circuitBreaker: {
+        enabled: true,
+        maxFailures: 1,
+        halfOpenTime: 100,
+        minSuccesses: 1
+      }
+    })
+
+    let addActionCallCount = 0
+
+    hemera.ready(() => {
+      hemera.add({
+        cmd: 'add',
+        topic: 'math'
+      }, (resp, cb) => {
+        addActionCallCount += 1
+        if (addActionCallCount < 2) {
+          cb(new Error('test'))
+        } else {
+          cb(null, true)
+        }
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, (err) => {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
+        hemera.act({
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        }, (err) => {
+          expect(err).to.be.exists()
+          expect(err.name).to.be.equals('CircuitBreakerError')
+          expect(err.message).to.be.equals('Circuit breaker is open')
+          expect(err.service).to.be.equals('math')
+          expect(err.method).to.be.equals('a:1,b:2,cmd:add,topic:math')
+            // wait until half open timer is finished
+          setTimeout(() => {
+            hemera.act({
+              topic: 'math',
+              cmd: 'add',
+              a: 1,
+              b: 2
+            }, (err, resp) => {
+              expect(err).to.be.not.exists()
+              expect(resp).to.be.equals(true)
+              hemera.close()
+              done()
+            })
+          }, 150)
+        })
+      })
+    })
+  })
 })
 
 describe('Circuit breaker - Generator / Promise support', function () {

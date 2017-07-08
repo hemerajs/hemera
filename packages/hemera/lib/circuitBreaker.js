@@ -8,7 +8,6 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-
 const EventEmitter = require('events')
 
 /**
@@ -20,7 +19,6 @@ const EventEmitter = require('events')
 class CircuitBreaker extends EventEmitter {
   constructor (options) {
     super()
-
     // states
     this.CIRCUIT_CLOSE = 'close'
     this.CIRCUIT_HALF_OPEN = 'half_open'
@@ -41,7 +39,7 @@ class CircuitBreaker extends EventEmitter {
     // interval when the circuit breaker will reset
     this._resetIntervalTime = options.resetIntervalTime
     // half open timer
-    this._failureTimer = null
+    this._halfOpenTimer = null
   }
 
   /**
@@ -75,9 +73,9 @@ class CircuitBreaker extends EventEmitter {
    * @memberof CircuitBreaker
    */
   clearHalfOpenTimer () {
-    if (this._halfOpenTime) {
-      clearTimeout(this._halfOpenTime)
-      this._halfOpenTime = null
+    if (this._halfOpenTimer) {
+      clearTimeout(this._halfOpenTimer)
+      this._halfOpenTimer = null
     }
   }
 
@@ -93,6 +91,8 @@ class CircuitBreaker extends EventEmitter {
       this._halfOpenTimer = setTimeout(() => {
         this._successesCount = 0
         this._state = this.CIRCUIT_HALF_OPEN
+        this._halfOpenTimer = null
+        this.emit('circuitBreaker.stateChange', this.toJSON())
       }, this._halfOpenTime)
       // unref from event loop
       this._halfOpenTimer.unref()
@@ -168,29 +168,26 @@ class CircuitBreaker extends EventEmitter {
       // The counter used by the Half-Open state records the number of successful attempts to invoke the operation.
       // The circuit breaker reverts to the Closed state after a specified number of consecutive operation invocations have been successful.
       if (success === true) {
+        // request was successfully we increment it
+        this._successesCount += 1
         if (this._successesCount >= this._minSuccesses) {
           this._state = this.CIRCUIT_CLOSE
+          this.emit('circuitBreaker.stateChange', this.toJSON())
           // reset failure count and clear half-open timeout
           this._failureCount = 0
           this.clearHalfOpenTimer()
-          this.emit('stateChange', this.toJSON())
         }
-        // request was successfully we increment it
-        this._successesCount += 1
       } else if (success === false) {
         // If any invocation fails, the circuit breaker enters the Open state immediately and
         // the success counter will be reset the next time it enters the Half-Open state.
         this._state = this.CIRCUIT_OPEN
+        this.emit('circuitBreaker.stateChange', this.toJSON())
         this.clearHalfOpenTimer()
-        this.emit('stateChange', this.toJSON())
       }
     } else if (this._state === this.CIRCUIT_OPEN) {
       // At this point the proxy starts a timeout timer
       // and when this timer expires the proxy is placed into the Half-Open state.
-      // before we enter the Half-open state we reset the successes count
-      this._successesCount = 0
       this.startHalfOpenTimer()
-      this.emit('stateChange', { state: this.CIRCUIT_HALF_OPEN })
     } else if (this._state === this.CIRCUIT_CLOSE) {
       if (success === false) {
         // when request fails we increment the failureCount
@@ -200,9 +197,9 @@ class CircuitBreaker extends EventEmitter {
       // when we reach maximum failure threshold we open the circuit breaker and start the reset timer
       if (this._failureCount >= this._maxFailures) {
         this._state = this.CIRCUIT_OPEN
+        this.emit('circuitBreaker.stateChange', this.toJSON())
         this.clearResetInterval()
         this.startResetInterval()
-        this.emit('stateChange', this.toJSON())
       }
     }
   }

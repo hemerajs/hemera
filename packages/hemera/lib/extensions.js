@@ -104,13 +104,15 @@ function onClientPreRequestCircuitBreaker (next) {
   let ctx = this
 
   if (ctx._config.circuitBreaker.enabled) {
+    // any pattern represent an own circuit breaker
     const circuitBreaker = ctx._circuitBreakerMap.get(ctx.trace$.method)
     if (!circuitBreaker) {
-      this._circuitBreakerMap.set(ctx.trace$.method, new CircuitBreaker(ctx._config.circuitBreaker))
+      const cb = new CircuitBreaker(ctx._config.circuitBreaker)
+      this._circuitBreakerMap.set(ctx.trace$.method, cb)
     } else {
       if (!circuitBreaker.available()) {
         // trigger half-open timer
-        circuitBreaker.failure()
+        circuitBreaker.record()
         return next(new Errors.CircuitBreakerError(`Circuit breaker is ${circuitBreaker.state}`, { state: circuitBreaker.state, method: ctx.trace$.method, service: ctx.trace$.service }))
       }
     }
