@@ -50,7 +50,7 @@ function onClientPreRequest (next) {
   if (this._config.maxRecursion > 1) {
     const callSignature = `${ctx.trace$.traceId}:${ctx.trace$.method}`
     if (ctx.meta$ && ctx.meta$.referrers) {
-      let count = ctx.meta$.referrers[callSignature]
+      var count = ctx.meta$.referrers[callSignature]
       count += 1
       ctx.meta$.referrers[callSignature] = count
       if (count > this._config.maxRecursion) {
