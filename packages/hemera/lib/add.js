@@ -45,13 +45,17 @@ class Add {
         this.actMeta.middleware.push(function () {
         // -1 because (req, res, next)
           const next = arguments[arguments.length - 1]
-          return Co(handler.apply(this, arguments)).then(x => next(null, x)).catch(next)
+          return Co(handler.apply(this, arguments))
+          .then(x => next(null, x))
+          .catch(next)
         })
       } else if (Util.isAsyncFunction(handler)) {
         this.actMeta.middleware.push(function () {
         // -1 because (req, res, next)
           const next = arguments[arguments.length - 1]
-          return handler.apply(this, arguments).then(x => next(null, x)).catch(next)
+          return handler.apply(this, arguments)
+          .then(x => next(null, x))
+          .catch(next)
         })
       } else {
         this.actMeta.middleware.push(handler)
