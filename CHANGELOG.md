@@ -3,6 +3,11 @@ Changelog
 
 # 1.x
 
+### 1.3.11
+
+### Summary
+- Allow using custom queue group names via `queue$` property in `add` pattern.
+
 ### 1.3.8
 
 ### Summary
