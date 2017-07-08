@@ -512,6 +512,39 @@ class Hemera extends EventEmitter {
   /**
    *
    *
+   * @param {any} plugins
+   * @param {any} cb
+   * @memberof Hemera
+   */
+  registerPlugins (plugins, cb) {
+    const each = (item, next) => {
+      // plugin has no callback
+      if (item.register.length < 2) {
+        item.register(item.options)
+        return next()
+      }
+      item.register(item.options, next)
+    }
+
+    // register all plugins
+    Util.serial(plugins, each, (err) => {
+      if (err) {
+        if (err instanceof SuperError) {
+          err = err.rootCause || err.cause || err
+        }
+        const internalError = new Errors.HemeraError(Constants.PLUGIN_REGISTRATION_ERROR).causedBy(err)
+        this.log.error(internalError)
+        this.emit('error', internalError)
+      }
+      if (_.isFunction(cb)) {
+        cb.call(this)
+      }
+    })
+  }
+
+  /**
+   *
+   *
    * @param {Function} cb
    *
    * @memberOf Hemera
@@ -526,39 +559,22 @@ class Hemera extends EventEmitter {
         this.emit('error', error)
       }
     })
+
     this._transport.driver.on('reconnect', () => {
       this.log.info(Constants.TRANSPORT_RECONNECTED)
     })
+
     this._transport.driver.on('reconnecting', () => {
       this.log.warn(Constants.TRANSPORT_RECONNECTING)
     })
+
     this._transport.driver.on('close', () => {
       this.log.warn(Constants.TRANSPORT_CLOSED)
     })
+
     this._transport.driver.on('connect', () => {
       this.log.info(Constants.TRANSPORT_CONNECTED)
-
-      const each = (item, next) => {
-        if (item.register.length < 2) {
-          item.register(item.options)
-          return next()
-        }
-        item.register(item.options, next)
-      }
-
-      Util.serial(this._pluginRegistrations, each, (err) => {
-        if (err) {
-          if (err instanceof SuperError) {
-            err = err.rootCause || err.cause || err
-          }
-          const internalError = new Errors.HemeraError(Constants.PLUGIN_REGISTRATION_ERROR).causedBy(err)
-          this.log.error(internalError)
-          this.emit('error', internalError)
-        }
-        if (_.isFunction(cb)) {
-          cb.call(this)
-        }
-      })
+      this.registerPlugins(this._pluginRegistrations, cb)
     })
   }
 
