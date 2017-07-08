@@ -1,6 +1,6 @@
 {
   "name": "hemera-snappy",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "This is a plugin to use snappy compression with Hemera",
   "main": "index.js",
   "repository": {
@@ -13,7 +13,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-plugin": "^0.0.10",
+    "hemera-plugin": "^0.0.11",
     "safe-buffer": "5.1.x",
     "snappyjs": "0.5.x"
   }
