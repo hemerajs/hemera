@@ -47,6 +47,11 @@ The key features of NATS in combination with Hemera are:
 * **Metadata**: Transfer metadata across services or attach contextual data to tracing systems.
 * **Dependencies**: NATS is a single binary of 7MB and can be deployed in seconds.
 
+## Built in protection
+* **Process policy**: Will exit the process when the policy (memory, event loop) could not be fullfilled (Option: `heavy`).
+* **Circuit breaker**: Will prevent from cascading failures (Option: `circuitBreaker`).
+* **Message loop detection**: Will return an error if you call a route recursively (Option: `maxRecursion`). 
+
 ## What Hemera code looks like
 
 **We support Async/Await (Node 7.6+), Generators (Node 4+) and error-first-callback style.**
