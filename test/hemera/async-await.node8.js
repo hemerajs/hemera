@@ -429,6 +429,8 @@ describe('Async / Await support', function () {
         return await Promise.reject(new Error('test'))
       })
 
+      // in future we have to try catch it
+
       hemera.act({
         topic: 'math',
         cmd: 'add',

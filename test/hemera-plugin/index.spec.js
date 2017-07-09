@@ -47,7 +47,6 @@ describe('Hemera plugin', function () {
 
     const hemera = new Hemera(nats)
     const throws = function () {
-
       // Plugin
       let plugin = HemeraPlugin(function (opts, next) {
         next()
@@ -65,6 +64,54 @@ describe('Hemera plugin', function () {
     }
 
     expect(throws).to.throw(Error)
+    hemera.close()
+    done()
+  })
+
+  it('Should throw an error because plugin function is not a function', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    const throws = function () {
+      // Plugin
+      let plugin = HemeraPlugin(true, '1')
+
+      hemera.use({
+        plugin: plugin,
+        attributes: {
+          name: 'myPlugin'
+        },
+        options: {}
+      })
+
+      hemera.ready()
+    }
+
+    expect(throws).to.throw(Error, 'hemera-plugin expects a function, instead got a \'boolean\'')
+    hemera.close()
+    done()
+  })
+
+  it('Should throw an error because plugin version is not a string', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    const throws = function () {
+      // Plugin
+      let plugin = HemeraPlugin(() => {}, true)
+
+      hemera.use({
+        plugin: plugin,
+        attributes: {
+          name: 'myPlugin'
+        },
+        options: {}
+      })
+
+      hemera.ready()
+    }
+
+    expect(throws).to.throw(Error, 'hemera-plugin expects a version string as second parameter, instead got \'boolean\'')
     hemera.close()
     done()
   })
