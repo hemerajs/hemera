@@ -850,10 +850,11 @@ class Hemera extends EventEmitter {
    * @param {string} topic
    * @param {boolean} subToMany
    * @param {number} maxMessages
+   * @param {string} queue
    *
    * @memberOf Hemera
    */
-  subscribe (topic, subToMany, maxMessages) {
+  subscribe (topic, subToMany, maxMessages, queue) {
     const self = this
 
     // avoid duplicate subscribers of the emit stream
@@ -883,9 +884,10 @@ class Hemera extends EventEmitter {
         max: maxMessages
       }, handler)
     } else {
+      const queueGroup = queue || `${Constants.NATS_QUEUEGROUP_PREFIX}.${topic}`
       // queue group names allow load balancing of services
       self._topics[topic] = self._transport.subscribe(topic, {
-        'queue': `${Constants.NATS_QUEUEGROUP_PREFIX}.${topic}`,
+        'queue': queueGroup,
         max: maxMessages
       }, handler)
     }
@@ -986,7 +988,7 @@ class Hemera extends EventEmitter {
     this.log.info(origPattern, Constants.ADD_ADDED)
 
     // subscribe on topic
-    this.subscribe(pattern.topic, pattern.pubsub$, pattern.maxMessages$)
+    this.subscribe(pattern.topic, pattern.pubsub$, pattern.maxMessages$, pattern.queue$)
 
     return addDefinition
   }

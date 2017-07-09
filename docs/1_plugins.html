@@ -117,7 +117,7 @@
                 <div class="col-sm-9 border-left section-right">
                     <h1 class="section-header">Plugins</h1>
                     <div class="alert alert-info" role="alert"><i class="fa fa-info" aria-hidden="true"></i> Create a plugin with a one-liner with the <a href="https://github.com/hemerajs/hemera-cli">hemera-cli</a></div>
-                    <div class="alert alert-warning" role="alert"><i class="fa fa-info" aria-hidden="true"></i> Please ensure that a plugin never extended another plugin that use the same <code>topic</code> name. This results in a plugin which can not be run alone because the publisher is not aware of that composition.</div>
+                    <div class="alert alert-warning" role="alert"><i class="fa fa-info" aria-hidden="true"></i> Please ensure that a plugin never extends another plugin that use the same <code>topic</code> name. This results in a plugin which can not be run alone because the publisher is not aware of that composition.</div>
                     <p class="section-content">You can create a plugin in two different ways:</p>
                     <h4 class="section-h4">Create a plugin for publishing as package</h4>
                     <pre>
@@ -163,10 +163,10 @@ const myPlugin = function (options, next) {
   next()
 }
 
-hemera.use({ 
+hemera.use({
  plugin: myPlugin,
  options: {},
- attributes: { 
+ attributes: {
   name: "test",
   version: "1.0.0",
   description: "my first plugin"
@@ -183,7 +183,7 @@ hemera.use({
                     </p>
                     <pre>
 <code class="javascript">
-hemera.use({ 
+hemera.use({
   plugin: function(options, next) {},
   attributes: { name: "foo" },
   options: { a: 1 }
@@ -193,7 +193,7 @@ hemera.use({
                     <p>Pass plugin options as second argument to the use function.</p>
                     <pre>
 <code class="javascript">
-hemera.use({ 
+hemera.use({
   plugin: function(options, next) {},
   attributes: { name: "foo" }
 }, { a: 1 })

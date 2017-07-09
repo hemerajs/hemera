@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800">
     <link rel="stylesheet" href="scripts/highlight/styles/github-gist.css">
     <link rel="stylesheet" href="stylesheets/styles.css">
+    <script src="https://use.fontawesome.com/2e9ff283e5.js"></script>
 </head>
 
 <body>
@@ -133,13 +134,14 @@
                         group is chosen randomly to receive the message. Although queue groups have multiple subscribers,
                         each message is only consumed by only one. This allows us to load-balancing the traffic by NATS.
                     </p>
+                    <div class="alert alert-info" role="alert"><i class="fa fa-info" aria-hidden="true"></i> You can define a different queue if you pass the <code>queue$: name</code> as property to the add pattern. Any subscriber with a different queue on this topic will receive a message. You can only have one different queue name per Hemera instance.</div>
                     <h4 class="section-h4">Request (point-to-point) by default</h4>
                     <pre>
 <code class="javascript">
-hemera.act({ 
-    topic: "math", 
-    cmd: "add", 
-    a: 1, b: 1 
+hemera.act({
+    topic: "math",
+    cmd: "add",
+    a: 1, b: 1
 }, function(err, resp) {
 })
 </code></pre>
@@ -148,9 +150,9 @@ hemera.act({
                         first response was an issue.</p>
                     <pre>
 <code class="javascript">
-hemera.act({ 
-    topic: "math", 
-    cmd: "add", 
+hemera.act({
+    topic: "math",
+    cmd: "add",
     a: 1, b: 1,
     maxMessages$: 10
 }, function(err, resp) {
@@ -162,7 +164,7 @@ hemera.act({
                         an error object.</p>
                     <pre>
 <code class="javascript">
-hemera.add({ 
+hemera.add({
   topic: "math",
   cmd: "add",
   a: Joi.number().required(),
@@ -177,7 +179,7 @@ hemera.add({
                         from NATS.</p>
                     <pre>
 <code class="javascript">
-hemera.add({ 
+hemera.add({
   topic: "math",
   cmd: "add",
   a: Joi.number().required(),
