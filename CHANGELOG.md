@@ -3,6 +3,11 @@ Changelog
 
 # 1.x
 
+### 1.3.12
+
+### Summary
+- Clean code
+
 ### 1.3.11
 
 ### Summary
