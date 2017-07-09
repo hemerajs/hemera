@@ -884,9 +884,10 @@ class Hemera extends EventEmitter {
         max: maxMessages
       }, handler)
     } else {
+      const queueGroup = queue || `${Constants.NATS_QUEUEGROUP_PREFIX}.${topic}`
       // queue group names allow load balancing of services
       self._topics[topic] = self._transport.subscribe(topic, {
-        'queue': `${queue || Constants.NATS_QUEUEGROUP_PREFIX}.${topic}`,
+        'queue': queueGroup,
         max: maxMessages
       }, handler)
     }
