@@ -8,8 +8,6 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-
-const Co = require('co')
 const Reply = require('./reply')
 const Util = require('./util')
 const _ = require('lodash')
@@ -18,9 +16,8 @@ const _ = require('lodash')
  * @class Extension
  */
 class Extension {
-  constructor (type, options) {
+  constructor (type) {
     this._stack = []
-    this._options = options
     this._type = type
   }
 
@@ -32,29 +29,7 @@ class Extension {
    * @memberof Extension
    */
   _add (handler) {
-    const comp = () => {
-      if (Util.isGeneratorFunction(handler)) {
-        this._stack.push(function () {
-          // -1 because (req, res, next)
-          const next = arguments[arguments.length - 1]
-          return Co(handler.apply(this, arguments))
-          .then(x => next(null, x))
-          .catch(next)
-        })
-      } else if (Util.isAsyncFunction(handler)) {
-        this._stack.push(function () {
-          // -1 because (req, res, next)
-          const next = arguments[arguments.length - 1]
-          return handler.apply(this, arguments)
-          .then(x => next(null, x))
-          .catch(next)
-        })
-      } else {
-        this._stack.push(handler)
-      }
-    }
-
-    comp()
+    this._stack.push(Util.toPromiseFact(handler))
   }
 
   /**
@@ -82,7 +57,7 @@ class Extension {
    */
   dispatch (ctx, cb) {
     const each = (item, next) => {
-      if (this._options.server) {
+      if (ctx._isServer) {
         const response = ctx._response
         const request = ctx._request
         const reply = new Reply(request, response, next)
