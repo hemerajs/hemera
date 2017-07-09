@@ -16,7 +16,7 @@ describe('Extension reply', function () {
     server.kill()
   })
 
-  it('Should be bale to reply an error', function (done) {
+  it('Should be able to reply an error', function (done) {
     let ext1 = Sinon.spy()
     let ext2 = Sinon.spy()
 

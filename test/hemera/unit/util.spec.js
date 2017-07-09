@@ -20,4 +20,24 @@ describe('Util', function () {
     expect(regex2).to.be.equals(/^a.[a-zA-Z0-9\-\.]+$/i)
     done()
   })
+
+  it('Should be able to detect async function', function (done) {
+    const a = HemeraUtil.isAsyncFunction(async function test () {})
+    const b = HemeraUtil.isAsyncFunction(function test () {})
+    const c = HemeraUtil.isAsyncFunction('')
+    expect(a).to.be.equals(true)
+    expect(b).to.be.equals(false)
+    expect(c).to.be.equals(false)
+    done()
+  })
+
+  it('Should be able to detect generator function', function (done) {
+    const a = HemeraUtil.isGeneratorFunction(function * test () {})
+    const b = HemeraUtil.isGeneratorFunction(function test () {})
+    const c = HemeraUtil.isGeneratorFunction('')
+    expect(a).to.be.equals(true)
+    expect(b).to.be.equals(false)
+    expect(c).to.be.equals(false)
+    done()
+  })
 })
