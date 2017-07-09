@@ -483,6 +483,8 @@ describe('Generator / Promise support', function () {
         return yield Promise.reject(new Error('test'))
       })
 
+      // in future we have to try catch it
+
       hemera.act({
         topic: 'math',
         cmd: 'add',

@@ -1202,6 +1202,8 @@ class Hemera extends EventEmitter {
               .then(x => resolve(x))
               .catch(x => reject(x))
           } else {
+            // any return value in a callback function will fullfilled the
+            // promise but an error will reject it
             const r = ctx._actCallback(err, result)
             if (r instanceof Error) {
               reject(r)
