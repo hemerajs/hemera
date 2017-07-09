@@ -1,17 +1,6 @@
 'use strict'
 
 const Store = require('hemera-store')
-const STORE_METHODS = [
-  'create',
-  'remove',
-  'removeById',
-  'update',
-  'updateById',
-  'find',
-  'findById',
-  'replace',
-  'replaceById',
-]
 
 /**
  *
@@ -28,16 +17,9 @@ class MongoStore extends Store {
    *
    * @memberOf MongoStore
    */
-  constructor (driver,options = { mongo: {}, store: {} }) {
+  constructor (driver,options = {}) {
+    options.mongo = {}
     super(driver, options)
-    if (!this.options.hasOwnProperty('store')) {
-      this.options.store = {}
-    }
-    for (let method of STORE_METHODS) {
-      if (!this.options.store.hasOwnProperty(method)) {
-        this.options.store[method] = {}
-      }
-    }
   }
 
   /**
@@ -213,9 +195,8 @@ class MongoStore extends Store {
    * @memberOf MongoStore
    */
   replace (req, data, cb) {
-    this._driver.updateMany(req.query, data, Object.assign(this.options.store.replace, {
-      upsert: true
-    }), function (err, resp) {
+    this._driver.updateMany(req.query, data, this.options.store.replace,
+    function (err, resp) {
       if (err) {
         return cb(err)
       }
