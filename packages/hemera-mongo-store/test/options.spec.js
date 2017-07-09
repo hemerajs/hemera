@@ -19,7 +19,7 @@ describe('Hemera-mongo-store options', function () {
       findById: { explain: true },
       remove: { },
       removeById: { projection: { name: 1 } },
-      replace: { upsert: true },
+      replace: { upsert: false },
       replaceById: { projection: { name: 1} },
     },
   }
@@ -196,11 +196,10 @@ describe('Hemera-mongo-store options', function () {
       },
       query: { side: 'allies' }
     }, function (err, resp) {
-      expect(err).to.be.not.exists()
+      expect(err).to.be.null()
       expect(resp).to.be.an.object()
-      expect(resp.matchedCount).to.be.exists()
-      expect(resp.modifiedCount).to.be.exists()
-      expect(resp.upsertedCount).to.be.exists()
+      expect(resp.upsertedCount).to.equal(0)
+      expect(resp.upsertedId).to.be.null()
 
       done()
     })

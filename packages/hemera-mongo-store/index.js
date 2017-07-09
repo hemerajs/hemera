@@ -163,6 +163,8 @@ exports.options = {
   serializeResult: false,
   mongo: {
     url: 'mongodb://localhost:27017/',
+  },
+  store: {
     create: {},
     update: {},
     updateById: {},
@@ -170,7 +172,7 @@ exports.options = {
     findById: {},
     remove: {},
     removeById: {},
-    replace: {},
+    replace: { upsert: true },
     replaceById: {}
   }
 }
