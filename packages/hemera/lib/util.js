@@ -10,6 +10,7 @@
  */
 
 const _ = require('lodash')
+const Co = require('co')
 
 const lut = []
 for (let i = 0; i < 256; i++) { lut[i] = (i < 16 ? '0' : '') + (i).toString(16) }
@@ -40,6 +41,37 @@ class Util {
     }
 
     return subject
+  }
+
+  /**
+   * Convert a generator or async function
+   * to promise factory function and call the last
+   * argument as callback
+   *
+   * @static
+   * @param {any} handler
+   * @memberof Util
+   */
+  static toPromiseFact (handler) {
+    if (Util.isGeneratorFunction(handler)) {
+      return function () {
+        // -1 because (req, res, next)
+        const next = arguments[arguments.length - 1]
+        return Co(handler.apply(null, arguments))
+          .then(x => next(null, x))
+          .catch(next)
+      }
+    } else if (Util.isAsyncFunction(handler)) {
+      return function () {
+        // -1 because (req, res, next)
+        const next = arguments[arguments.length - 1]
+        return handler.apply(null, arguments)
+          .then(x => next(null, x))
+          .catch(next)
+      }
+    } else {
+      return handler
+    }
   }
   /**
    * @returns

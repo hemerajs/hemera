@@ -157,12 +157,12 @@ class Hemera extends EventEmitter {
 
     // define extension points
     this._extensions = {
-      onClientPreRequest: new Extension('onClientPreRequest', { server: false }),
-      onClientPostRequest: new Extension('onClientPostRequest', { server: false }),
-      onServerPreHandler: new Extension('onServerPreHandler', { server: true }),
-      onServerPreRequest: new Extension('onServerPreRequest', { server: true }),
-      onServerPreResponse: new Extension('onServerPreResponse', { server: true }),
-      onClose: new Extension('onClose', { server: false })
+      onClientPreRequest: new Extension('onClientPreRequest'),
+      onClientPostRequest: new Extension('onClientPostRequest'),
+      onServerPreHandler: new Extension('onServerPreHandler'),
+      onServerPreRequest: new Extension('onServerPreRequest'),
+      onServerPreResponse: new Extension('onServerPreResponse'),
+      onClose: new Extension('onClose')
     }
 
     // errio settings
