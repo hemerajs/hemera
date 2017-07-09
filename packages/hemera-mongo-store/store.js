@@ -240,7 +240,7 @@ class MongoStore extends Store {
   replaceById (req, data, cb) {
     this._driver.findOneAndReplace({
       _id: this.ObjectID(req.id)
-    }, data, this.mongo.options.replaceById, function (err, resp) {
+    }, data, this.options.store.replaceById, function (err, resp) {
       if (err) {
         return cb(err)
       }
