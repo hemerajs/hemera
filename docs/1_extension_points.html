@@ -130,7 +130,7 @@
           <br>
           <pre>
 <code class="javascript">
-hemera.ext("onClientPreRequest", function(next, i) {
+hemera.ext("onClientPreRequest", function(next) {
 
    let ctx = this
    next()
@@ -151,7 +151,7 @@ hemera.ext("onClientPreRequest", function(next, i) {
           <br>
           <pre>
 <code class="javascript">
-hemera.ext("onServerPreHandler", function(req, res, next, prevValue) {
+hemera.ext("onServerPreHandler", function(req, res, next) {
 
    let ctx = this
    next()
