@@ -42,7 +42,7 @@ exports.plugin = Hp(function hemeraMongoStore (options, next) {
 
     hemera.add(StorePattern.create(topic), function (req, cb) {
       const collection = db.collection(req.collection)
-      const store = new MongoStore(collection)
+      const store = new MongoStore(collection, options)
       store.ObjectID = ObjectID
       req.data = deserialize(req.data)
 
@@ -51,7 +51,7 @@ exports.plugin = Hp(function hemeraMongoStore (options, next) {
 
     hemera.add(StorePattern.update(topic), function (req, cb) {
       const collection = db.collection(req.collection)
-      const store = new MongoStore(collection)
+      const store = new MongoStore(collection, options)
       store.ObjectID = ObjectID
       req.query = deserialize(req.query)
 
@@ -66,7 +66,7 @@ exports.plugin = Hp(function hemeraMongoStore (options, next) {
 
     hemera.add(StorePattern.updateById(topic), function (req, cb) {
       const collection = db.collection(req.collection)
-      const store = new MongoStore(collection)
+      const store = new MongoStore(collection, options)
       store.ObjectID = ObjectID
 
       store.updateById(req, deserialize(req.data), (err, result) => {
@@ -80,7 +80,7 @@ exports.plugin = Hp(function hemeraMongoStore (options, next) {
 
     hemera.add(StorePattern.remove(topic), function (req, cb) {
       const collection = db.collection(req.collection)
-      const store = new MongoStore(collection)
+      const store = new MongoStore(collection, options)
       store.ObjectID = ObjectID
       req.query = deserialize(req.query)
 
@@ -89,7 +89,7 @@ exports.plugin = Hp(function hemeraMongoStore (options, next) {
 
     hemera.add(StorePattern.removeById(topic), function (req, cb) {
       const collection = db.collection(req.collection)
-      const store = new MongoStore(collection)
+      const store = new MongoStore(collection, options)
       store.ObjectID = ObjectID
 
       store.removeById(req, (err, result) => {
@@ -103,7 +103,7 @@ exports.plugin = Hp(function hemeraMongoStore (options, next) {
 
     hemera.add(StorePattern.replace(topic), function (req, cb) {
       const collection = db.collection(req.collection)
-      const store = new MongoStore(collection)
+      const store = new MongoStore(collection, options)
       store.ObjectID = ObjectID
       req.query = deserialize(req.query)
 
@@ -112,7 +112,7 @@ exports.plugin = Hp(function hemeraMongoStore (options, next) {
 
     hemera.add(StorePattern.replaceById(topic), function (req, cb) {
       const collection = db.collection(req.collection)
-      const store = new MongoStore(collection)
+      const store = new MongoStore(collection, options)
       store.ObjectID = ObjectID
 
       store.replaceById(req, deserialize(req.data), (err, result) => {
@@ -126,7 +126,7 @@ exports.plugin = Hp(function hemeraMongoStore (options, next) {
 
     hemera.add(StorePattern.findById(topic), function (req, cb) {
       const collection = db.collection(req.collection)
-      const store = new MongoStore(collection)
+      const store = new MongoStore(collection, options)
       store.ObjectID = ObjectID
 
       store.findById(req, (err, result) => {
@@ -140,7 +140,7 @@ exports.plugin = Hp(function hemeraMongoStore (options, next) {
 
     hemera.add(StorePattern.find(topic), function (req, cb) {
       const collection = db.collection(req.collection)
-      const store = new MongoStore(collection)
+      const store = new MongoStore(collection, options)
       store.ObjectID = ObjectID
       req.query = deserialize(req.query)
 
@@ -162,7 +162,18 @@ exports.options = {
   mongos: {},
   serializeResult: false,
   mongo: {
-    url: 'mongodb://localhost:27017/'
+    url: 'mongodb://localhost:27017/',
+  },
+  store: {
+    create: {},
+    update: {},
+    updateById: {},
+    find: {},
+    findById: {},
+    remove: {},
+    removeById: {},
+    replace: { upsert: true },
+    replaceById: {}
   }
 }
 

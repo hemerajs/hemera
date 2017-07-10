@@ -17,7 +17,7 @@ class MongoStore extends Store {
    *
    * @memberOf MongoStore
    */
-  constructor (driver, options = {}) {
+  constructor (driver,options = {}) {
     options.mongo = {}
     super(driver, options)
   }
@@ -32,7 +32,7 @@ class MongoStore extends Store {
    */
   create (req, cb) {
     if (req.data instanceof Array) {
-      this._driver.insertMany(req.data, this.options.mongo, function (err, resp) {
+      this._driver.insertMany(req.data, this.options.store.create, function (err, resp) {
         if (err) {
           return cb(err)
         }
@@ -42,7 +42,7 @@ class MongoStore extends Store {
         cb(err, result)
       })
     } else if (req.data instanceof Object) {
-      this._driver.insertOne(req.data, this.options.mongo, function (err, resp) {
+      this._driver.insertOne(req.data, this.options.store.create, function (err, resp) {
         if (err) {
           return cb(err)
         }
@@ -63,7 +63,7 @@ class MongoStore extends Store {
    * @memberOf MongoStore
    */
   remove (req, cb) {
-    this._driver.deleteMany(req.query, this.options.mongo, function (err, resp) {
+    this._driver.deleteMany(req.query, this.options.store.remove, function (err, resp) {
       if (err) {
         return cb(err)
       }
@@ -85,7 +85,7 @@ class MongoStore extends Store {
   removeById (req, cb) {
     this._driver.findOneAndDelete({
       _id: this.ObjectID(req.id)
-    }, this.options.mongo, function (err, resp) {
+    }, this.options.store.removeById, function (err, resp) {
       if (err) {
         return cb(err)
       }
@@ -104,7 +104,7 @@ class MongoStore extends Store {
    * @memberOf MongoStore
    */
   update (req, data, cb) {
-    this._driver.findOneAndUpdate(req.query, data, this.options.mongo, function (err, resp) {
+    this._driver.findOneAndUpdate(req.query, data, this.options.store.update, function (err, resp) {
       if (err) {
         return cb(err)
       }
@@ -125,7 +125,7 @@ class MongoStore extends Store {
   updateById (req, data, cb) {
     this._driver.findOneAndUpdate({
       _id: this.ObjectID(req.id)
-    }, data, this.options.mongo, function (err, resp) {
+    }, data, this.options.store.updateById, function (err, resp) {
       if (err) {
         return cb(err)
       }
@@ -143,7 +143,7 @@ class MongoStore extends Store {
    * @memberOf MongoStore
    */
   find (req, options, cb) {
-    let cursor = this._driver.find(req.query)
+    let cursor = this._driver.find(req.query, this.options.store.find)
 
     if (options) {
       if (options.limit) {
@@ -181,7 +181,7 @@ class MongoStore extends Store {
   findById (req, cb) {
     this._driver.findOne({
       _id: this.ObjectID(req.id)
-    }, this.options.mongo, function (err, resp) {
+    }, this.options.store.findById, function (err, resp) {
       cb(err, resp)
     })
   }
@@ -195,9 +195,8 @@ class MongoStore extends Store {
    * @memberOf MongoStore
    */
   replace (req, data, cb) {
-    this._driver.updateMany(req.query, data, Object.assign(this.options.mongo, {
-      upsert: true
-    }), function (err, resp) {
+    this._driver.updateMany(req.query, data, this.options.store.replace,
+    function (err, resp) {
       if (err) {
         return cb(err)
       }
@@ -222,7 +221,7 @@ class MongoStore extends Store {
   replaceById (req, data, cb) {
     this._driver.findOneAndReplace({
       _id: this.ObjectID(req.id)
-    }, data, function (err, resp) {
+    }, data, this.options.store.replaceById, function (err, resp) {
       if (err) {
         return cb(err)
       }
