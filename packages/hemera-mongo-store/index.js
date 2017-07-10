@@ -162,7 +162,7 @@ exports.options = {
   mongos: {},
   serializeResult: false,
   mongo: {
-    url: 'mongodb://localhost:27017/',
+    url: 'mongodb://localhost:27017/'
   },
   store: {
     create: {},

@@ -17,7 +17,7 @@ class MongoStore extends Store {
    *
    * @memberOf MongoStore
    */
-  constructor (driver,options = {}) {
+  constructor (driver, options = {}) {
     options.mongo = {}
     super(driver, options)
   }
