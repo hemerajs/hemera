@@ -486,13 +486,13 @@ class Hemera extends EventEmitter {
       return {
         app: this._config.name,
         isServer: this._isServer,
-        pattern: this._actMeta ? this._actMeta.pattern : false // when pattern could not be found
+        pattern: this.trace$.method
       }
     } else {
       return {
         app: this._config.name,
         isServer: this._isServer,
-        pattern: this._pattern
+        pattern: this.trace$.method
       }
     }
   }
@@ -832,11 +832,9 @@ class Hemera extends EventEmitter {
     if (self._actMeta) {
       self._extensions.onServerPreHandler.dispatch(self, (err, val) => self._onServerPreHandler(err, val))
     } else {
-      self.log.info({
-        topic: self._topic
-      }, Constants.PATTERN_NOT_FOUND)
-
-      self._response.error = new Errors.PatternNotFound(Constants.PATTERN_NOT_FOUND, self.errorDetails)
+      const internalError = new Errors.PatternNotFound(Constants.PATTERN_NOT_FOUND, self.errorDetails)
+      self.log.error(internalError)
+      self._response.error = internalError
 
         // send error back to callee
       self.finish()

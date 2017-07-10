@@ -3,6 +3,11 @@ Changelog
 
 # 1.x
 
+### 1.3.13
+
+### Summary
+- Attach `trace$.method` to errorDetails.
+
 ### 1.3.12
 
 ### Summary
