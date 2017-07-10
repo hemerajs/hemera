@@ -836,7 +836,8 @@ class Hemera extends EventEmitter {
         topic: self._topic
       }, Constants.PATTERN_NOT_FOUND)
 
-      self._response.error = new Errors.PatternNotFound(Constants.PATTERN_NOT_FOUND, self.errorDetails)
+      const errorDetails = Object.assign({}, self.errorDetails, { _pattern: self._pattern })
+      self._response.error = new Errors.PatternNotFound(Constants.PATTERN_NOT_FOUND, errorDetails)
 
         // send error back to callee
       self.finish()
