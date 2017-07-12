@@ -95,4 +95,30 @@ describe('Gracefully shutdown', function () {
       })
     })
   })
+
+  it('Should be able to listen on error events before exit', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      logLevel: 'silent'
+    })
+
+    let callback = Sinon.spy()
+
+    hemera.ready(() => {
+      hemera.on('error', (err) => {
+        expect(err.message).to.be.equals('test')
+        callback()
+      })
+      hemera.ext('onClose', function (next) {
+        next(new Error('test'))
+      })
+      hemera.close((err) => {
+        expect(err).to.be.exists()
+        expect(nats.closed).to.be.equals(true)
+        expect(callback.called).to.be.equals(true)
+        done()
+      })
+    })
+  })
 })
