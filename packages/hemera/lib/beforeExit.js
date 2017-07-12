@@ -14,6 +14,7 @@
  */
 
 const _ = require('lodash')
+const Errors = require('./errors')
 
 /**
  *
@@ -38,7 +39,7 @@ class BeforeExit {
    */
   addAction (fn) {
     if (!_.isFunction(fn)) {
-      throw new Error('Expected a function but got a ' + typeof fn)
+      throw new Errors.HemeraError('Expected a function but got a ' + typeof fn)
     }
     this.actions.push(fn)
   }
