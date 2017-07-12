@@ -79,4 +79,20 @@ describe('Gracefully shutdown', function () {
       })
     })
   })
+
+  it('Should call close callback even when we did no IO', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      logLevel: 'debug'
+    })
+
+    hemera.ready(() => {
+      hemera.close((err) => {
+        expect(err).not.to.be.exists()
+        expect(nats.closed).to.be.equals(true)
+        done()
+      })
+    })
+  })
 })
