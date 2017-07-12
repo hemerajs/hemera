@@ -19,7 +19,6 @@ describe('Gracefully shutdown', function () {
   it('Should be able to unsubscribe all active subscriptions', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    let callback = Sinon.spy()
     const hemera = new Hemera(nats, {
       logLevel: 'silent'
     })
@@ -36,7 +35,6 @@ describe('Gracefully shutdown', function () {
         topic: 'math',
         cmd: 'add'
       }, function (resp, cb) {
-        callback()
         cb()
       })
 
