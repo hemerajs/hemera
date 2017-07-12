@@ -74,6 +74,16 @@ class NatsTransport {
    *
    *
    * @returns
+   * @memberof NatsTransport
+   */
+  flush () {
+    return this.nc.flush.apply(this.nc, arguments)
+  }
+
+  /**
+   *
+   *
+   * @returns
    *
    * @memberOf NatsTransport
    */
