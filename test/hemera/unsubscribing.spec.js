@@ -91,4 +91,40 @@ describe('Unsubscribe NATS topic', function () {
       })
     })
   })
+
+  it('Should be able to unsubscribe all at once', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, (resp, cb) => {
+        cb(null, {
+          result: resp.a + resp.b
+        })
+      })
+
+      hemera.add({
+        topic: 'order',
+        cmd: 'create'
+      }, (resp, cb) => {
+        cb()
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add'
+      }, function (err, resp) {
+        expect(err).to.be.not.exists()
+
+        hemera.removeAll()
+        expect(Object.keys(hemera.topics).length).to.be.equals(0)
+        hemera.close()
+        done()
+      })
+    })
+  })
 })
