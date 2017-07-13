@@ -51,11 +51,15 @@ class BeforeExit {
    * @memberof BeforeExit
    */
   doActions (signal) {
-    Promise.all(this.actions.map(action => action(signal))).then(() => {
-      process.exit(0)
-    }).catch(() => {
+    try {
+      Promise.all(this.actions.map(action => action(signal))).then(() => {
+        process.exit(0)
+      }).catch(() => {
+        process.exit(1)
+      })
+    } catch (err) {
       process.exit(1)
-    })
+    }
   }
 
   /**
