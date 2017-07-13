@@ -82,7 +82,8 @@
       "Sinon",
       "Code",
       "UnauthorizedError",
-      "NodeVersion"
+      "NodeVersion",
+      "BeforeExit"
     ]
   }
 }

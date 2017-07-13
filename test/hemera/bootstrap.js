@@ -2,6 +2,7 @@
 
 global.Hemera = require('../../packages/hemera')
 global.HemeraUtil = require('../../packages/hemera/lib/util')
+global.BeforeExit = require('../../packages/hemera/lib/beforeExit')
 global.Code = require('code')
 global.Sinon = require('sinon')
 global.HemeraTestsuite = require('hemera-testsuite')

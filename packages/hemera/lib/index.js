@@ -21,11 +21,11 @@ const Hoek = require('hoek')
 const Heavy = require('heavy')
 const _ = require('lodash')
 const Pino = require('pino')
-const OnExit = require('signal-exit')
 const TinySonic = require('tinysonic')
 const SuperError = require('super-error')
 const Co = require('co')
 
+const BeforeExit = require('./beforeExit')
 const Errors = require('./errors')
 const Constants = require('./constants')
 const Extension = require('./extension')
@@ -207,23 +207,30 @@ class Hemera extends EventEmitter {
       }, pretty)
     }
 
-    // no matter how a process exits log and fire event
-    OnExit((code, signal) => {
-      // Signal 0 checks if any process with the given PID is running
-      if (code === 0) {
-        return
-      }
+    this._beforeExit = new BeforeExit()
 
+    this._beforeExit.addAction((signal) => {
       this.log.fatal({
-        code,
         signal
       }, 'process exited')
       this.emit('exit', {
-        code,
         signal
       })
-      this.close()
     })
+
+    this._beforeExit.addAction(() => {
+      return new Promise((resolve, reject) => {
+        this.close((err) => {
+          if (err) {
+            this.log.error(err)
+            return reject(err)
+          }
+          resolve()
+        })
+      })
+    })
+
+    this._beforeExit.init()
   }
 
   /**
@@ -1325,21 +1332,57 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   * Close the process watcher and the underlying transort driver.
    *
-   * @returns
    *
-   * @memberOf Hemera
+   * @memberof Hemera
    */
-  close () {
-    this._extensions.onClose.dispatch(this, (err, val) => {
-      this._heavy.stop()
-      this._transport.close()
+  removeAll () {
+    _.each(this._topics, (_, topic) => this.remove(topic))
+  }
 
-      if (err) {
-        this.log.fatal(err)
-        this.emit('error', err)
+  /**
+   * Gracefully shutdown of all resources.
+   * Close the process watcher and the underlying transport driver.
+   *
+   * @param {any} cb
+   * @memberof Hemera
+   */
+  close (cb) {
+    this._extensions.onClose.dispatch(this, (err, val) => {
+      // no callback no queue processing
+      if (!_.isFunction(cb)) {
+        this._heavy.stop()
+        this._transport.close()
+        if (err) {
+          this.log.fatal(err)
+          this.emit('error', err)
+        }
+        return
       }
+
+      // remove all active subscriptions
+      this.removeAll()
+
+      // Waiting before all queued messages was proceed
+      // and then close hemera and nats
+      this._transport.flush(() => {
+        this._heavy.stop()
+        // close NATS
+        this._transport.close()
+
+        if (err) {
+          this.log.fatal(err)
+          this.emit('error', err)
+          if (_.isFunction(cb)) {
+            cb(err)
+          }
+        } else {
+          this.log.info(Constants.GRACEFULLY_SHUTDOWN)
+          if (_.isFunction(cb)) {
+            cb(null, val)
+          }
+        }
+      })
     })
   }
 }
