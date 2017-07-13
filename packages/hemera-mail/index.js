@@ -24,7 +24,7 @@ exports.plugin = Hp(function hemeraMsgpack (options) {
   }, function (req, reply) {
     transporter.sendMail(req.message, (err, info) => {
       if (err) {
-        this.log.eror(err, 'Could not send email!')
+        this.log.error(err, 'Could not send email!')
         return reply()
       }
 
