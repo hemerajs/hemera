@@ -3,6 +3,13 @@ Changelog
 
 # 1.x
 
+### 1.3.14
+
+### Summary
+- Remove `signal-exit` package and implement a much simpler signal handler to gracefully exit hemera.
+- Gracefully shutdown: We will unsubscribe all active subscriptions.
+- Gracefully shutdown: We will wait until the client has flush all messages to nats.
+
 ### 1.3.13
 
 ### Summary
