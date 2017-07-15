@@ -34,6 +34,18 @@ hemera.ready(() => {
 })
 ```
 
+# RTM (Real-time-messaging)
+
+```js
+hemera.act({
+      topic: 'slackbot',
+      cmd: 'subscribe',
+      maxMessages$: -1,
+    (err, req) => {
+      // all ingoing events https://api.slack.com/rtm
+  })
+```
+
 # API
 
 See [slack-bot-api](https://github.com/mishk0/slack-bot-api#methods) for an overview of all available methods. We pass it one to one.
