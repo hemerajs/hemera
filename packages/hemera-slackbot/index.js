@@ -1,7 +1,7 @@
 const SlackBot = require('slackbots')
 const Hp = require('hemera-plugin')
 
-exports.plugin = Hp(function hemeraWeb (options, next) {
+exports.plugin = Hp(function hemeraSlackbot (options, next) {
   const hemera = this
   const topic = 'slackbot'
 
