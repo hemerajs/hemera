@@ -165,8 +165,86 @@ message Protocol {
     Delegate delegate = 6;
 }
 </code>
+</pre>
+                    <h4 class="section-h4">Example Request</h4>
+                    <pre>
+<code class="javascript">
+{
+  // Map<string, any>
+  "pattern": {
+    "topic": "math",
+    "cmd": "add",
+    "a": 1,
+    "b": 20
+  },
+  // Map<string, any>, will be passed (Max hops: infinite)
+  "meta": {
+    "a": "b"
+  },
+  // Map<string, any>, Won't be passed (Max hop: 1)
+  "delegate": {
+    "a": "b"
+  },
+  // Tracing informations are collected by Hemera
+  "trace": {
+    "traceId": "b3d8b880c679406084636e7aac0ae7b3",
+    "spanId": "f475733e391a416b9458263f0adbaa49",
+    "timestamp": 289461899179,
+    "service": "math",
+    "method": "a:1,b:20,cmd:add,topic:math"
+  },
+  // General informations about the request
+  "request": {
+    "id": "0d8c3df07244436d8c3c63f2cc2f296e",
+    "timestamp": 289461899179, // Miliseconds
+    "type": "request", // Enum "request" or "pubsub"
+    "duration": 0
+  }
+}
+</code>
                     </pre>
-
+<h4 class="section-h4">Example Response</h4>
+<pre>
+  <code class="javascript">
+{
+  "meta": {
+    "a": "b"
+  },
+  // Same data as above but we can calculate the request duration
+  "trace": {
+    "traceId": "b3d8b880c679406084636e7aac0ae7b3",
+    "spanId": "f475733e391a416b9458263f0adbaa49",
+    "timestamp": 289461899179,
+    "service": "math",
+    "method": "a:1,b:20,cmd:add,topic:math",
+    "duration": 5690
+  },
+  // Same data as above
+  "request": {
+    "id": "0d8c3df07244436d8c3c63f2cc2f296e",
+    "timestamp": 289461899179,
+    "type": "request",
+    "duration": 5690
+  },
+  // Response result
+  "result": 21,
+  // The root issue
+  "error": {
+    "name": "Unauthorized",
+    "message": "test",
+    "stack": "....",
+    "custom-1": 444, // Custom attached data
+    // all hops to recognize which services were involved
+    "hops": [{
+        "service": "math",
+      	"method": "a:1,b:20,cmd:add,topic:math",
+        "app": "node-1",
+        "ts": 289461899179
+    }]
+  }
+}
+  </code>
+</pre>
                 </div>
                 <!-- END CONTENT -->
 
