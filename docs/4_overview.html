@@ -151,6 +151,11 @@ message Trace {
   int32 duration = 6;
 }
 
+enum RequestType {
+  request = "request";
+  pubsub = "pubsub";
+}
+
 message Pattern = Object;
 message Result = Any;
 message Delegate = Object;
