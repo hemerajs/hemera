@@ -3,6 +3,11 @@ Changelog
 
 # 1.x
 
+### 1.3.15
+
+### Summary
+- Gracefully shutdown also when hemera is exited by `hemera.fatal`
+
 ### 1.3.14
 
 ### Summary
