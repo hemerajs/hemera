@@ -426,12 +426,7 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   fatal () {
-    this.close()
-
-    // give nats driver chance to do rest work
-    setImmediate(() => {
-      process.exit(1)
-    })
+    this._beforeExit.doActions('fatal')
   }
 
   /**
