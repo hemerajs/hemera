@@ -1,7 +1,5 @@
 'use strict'
 
-const Os = require('os')
-
 describe('Hemera default config', function () {
   var PORT = 6242
   var flags = ['--user', 'derek', '--pass', 'foobar']
@@ -23,6 +21,7 @@ describe('Hemera default config', function () {
 
     var defaultConfig = {
       timeout: 2000, // Max execution time of a request
+      pluginTimeout: 3000,
       tag: '',
       name: 'test', // node name
       crashOnFatal: true, // Should gracefully exit the process at unhandled exceptions or fatal errors

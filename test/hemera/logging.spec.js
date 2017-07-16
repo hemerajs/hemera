@@ -58,7 +58,7 @@ describe('Logging interface', function () {
   it('Should be able to log with default logger', function (done) {
     const nats = require('nats').connect(authUrl)
     const hemera = new Hemera(nats, {
-      logLevel: 'info'
+      logLevel: 'silent'
     })
 
     hemera.ready(() => {

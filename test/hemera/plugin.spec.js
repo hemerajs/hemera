@@ -548,4 +548,32 @@ describe('Plugin interface', function () {
     hemera.close()
     done()
   })
+
+  it('Should emit timeout error when plugin callback was not called within time range', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      childLogger: true,
+      logLevel: 'silent',
+      pluginTimeout: 1000
+    })
+
+    hemera.on('error', (err) => {
+      expect(err instanceof Hemera.errors.HemeraError).to.be.equals(true)
+      expect(err.cause instanceof Hemera.errors.PluginTimeoutError).to.be.equals(true)
+      done()
+    })
+
+    let plugin = function (options, next) {
+      this.log.info('test')
+    }
+
+    hemera.use({
+      plugin: plugin,
+      attributes: {
+        name: 'myPlugin'
+      }
+    })
+    hemera.ready()
+  })
 })

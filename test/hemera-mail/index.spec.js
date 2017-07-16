@@ -35,7 +35,7 @@ describe('Hemera-mail', function () {
     })
 
     const hemera = new Hemera(nats, {
-      logLevel: 'info'
+      logLevel: 'silent'
     })
 
     hemera.use(HemeraJoi)

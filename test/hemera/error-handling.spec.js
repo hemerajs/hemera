@@ -296,10 +296,11 @@ describe('Error handling', function () {
 
     const hemera = new Hemera(nats, {
       crashOnFatal: true,
-      timeout: 10000
+      timeout: 10000,
+      logLevel: 'silent'
     })
 
-    var stub = Sinon.stub(hemera, 'fatal')
+    var stub = Sinon.stub(process, 'exit')
 
     stub.onCall(1)
 

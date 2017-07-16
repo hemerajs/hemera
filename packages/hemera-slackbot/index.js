@@ -44,6 +44,18 @@ exports.plugin = Hp(function hemeraSlackbot (options, next) {
     'postMessageToChannel'
   ]
 
+  validMethods.forEach((method) => {
+    hemera.add({
+      topic,
+      cmd: method,
+      params: Joi.array().default([])
+    }, function (req, reply) {
+      bot[method].apply(bot, req.params)
+      .then((resp) => reply(null, resp))
+      .fail((err) => reply(err))
+    })
+  })
+
   hemera.add({
     topic,
     cmd: 'subscribe'
