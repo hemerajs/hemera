@@ -83,7 +83,9 @@ exports.plugin = Hp(function hemeraSlackbot (options, next) {
   })
 }, '>= 1.3.2')
 
-exports.options = {}
+exports.options = {
+  payloadValidator: 'hemera-joi'
+}
 
 exports.attributes = {
   pkg: require('./package.json')
