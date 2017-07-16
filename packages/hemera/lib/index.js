@@ -369,6 +369,7 @@ class Hemera extends EventEmitter {
       let error = new Errors.HemeraError(Constants.PLUGIN_NAME_REQUIRED)
       this.log.error(error)
       this.emit('error', error)
+      return
     }
 
     // create new execution context
@@ -519,7 +520,7 @@ class Hemera extends EventEmitter {
    * @param {any} cb
    * @memberof Hemera
    */
-  registerPlugins (plugins, cb) {
+  registerPlugins (cb) {
     const each = (item, next) => {
       // plugin has no callback
       if (item.register.length < 2) {
@@ -541,7 +542,7 @@ class Hemera extends EventEmitter {
     }
 
     // register all plugins
-    Util.serial(plugins, each, (err) => {
+    Util.serial(this._pluginRegistrations, each, (err) => {
       if (err) {
         if (err instanceof SuperError) {
           err = err.rootCause || err.cause || err
@@ -549,8 +550,7 @@ class Hemera extends EventEmitter {
         const internalError = new Errors.HemeraError(Constants.PLUGIN_REGISTRATION_ERROR).causedBy(err)
         this.log.error(internalError)
         this.emit('error', internalError)
-      }
-      if (_.isFunction(cb)) {
+      } else if (_.isFunction(cb)) {
         cb.call(this)
       }
     })
@@ -588,7 +588,7 @@ class Hemera extends EventEmitter {
 
     this._transport.driver.on('connect', () => {
       this.log.info(Constants.TRANSPORT_CONNECTED)
-      this.registerPlugins(this._pluginRegistrations, cb)
+      this.registerPlugins(cb)
     })
   }
 
