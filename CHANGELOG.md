@@ -3,6 +3,11 @@ Changelog
 
 # 1.x
 
+### 1.3.16
+
+### Summary
+- Add pattern to `PATTERN_ALREADY_IN_USE` Error
+
 ### 1.3.15
 
 ### Summary
