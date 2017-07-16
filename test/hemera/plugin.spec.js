@@ -128,7 +128,10 @@ describe('Plugin interface', function () {
     hemera.ready(() => {
       expect(JSON.parse(JSON.stringify(hemera.plugins))).to.include({
         core: {
-          name: 'core'
+          attributes: {
+            name: 'core'
+          },
+          options: {}
         },
         myPlugin1: {
           attributes: {
