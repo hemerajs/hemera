@@ -40,6 +40,7 @@ const ClientRequest = require('./clientRequest')
 const ClientResponse = require('./clientResponse')
 const Serializers = require('./serializer')
 const Add = require('./add')
+const Plugin = require('./plugin')
 
 var defaultConfig = {
   timeout: 2000, // Max execution time of a request
@@ -112,12 +113,12 @@ class Hemera extends EventEmitter {
     this.meta$ = {}
     this.delegate$ = {}
     this.auth$ = {}
-    this.plugin$ = {
+    this.plugin$ = new Plugin({
       options: {},
       attributes: {
         name: 'core'
       }
-    }
+    })
     this.trace$ = {}
     this.request$ = {
       duration: 0,
@@ -146,7 +147,7 @@ class Hemera extends EventEmitter {
     // contains the list of all registered plugins
     // the core is also a plugin
     this._plugins = {
-      core: this.plugin$.attributes
+      core: this.plugin$
     }
 
     this._encoder = {
@@ -374,20 +375,24 @@ class Hemera extends EventEmitter {
 
     // create new execution context
     let ctx = this.createContext()
-    ctx.plugin$ = {}
-    ctx.plugin$.register = params.plugin.bind(ctx)
-    ctx.plugin$.attributes = params.attributes || {}
-    ctx.plugin$.parentPluginName = this.plugin$.attributes.name
-    ctx.plugin$.options = pluginOptions
+
+    const plugin = new Plugin({
+      register: params.plugin.bind(ctx),
+      attributes: params.attributes,
+      parentPluginName: this.plugin$.attributes.name,
+      options: pluginOptions
+    })
+
+    ctx.plugin$ = plugin
 
     if (ctx._config.childLogger) {
-      ctx.log = this.log.child({ plugin: params.attributes.name })
+      ctx.log = this.log.child({ plugin: plugin.attributes.name })
     }
 
-    this._pluginRegistrations.push(ctx.plugin$)
+    this._pluginRegistrations.push(plugin)
 
     this.log.info(params.attributes.name, Constants.PLUGIN_ADDED)
-    this._plugins[params.attributes.name] = ctx.plugin$
+    this._plugins[params.attributes.name] = plugin
   }
 
   /**
@@ -443,7 +448,7 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   * Decorate the root instance with a method or other value
+   * Decorate the root instance
    * Value is globaly accesible
    *
    * @param {any} prop
