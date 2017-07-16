@@ -3,6 +3,11 @@ Changelog
 
 # 1.x
 
+### 1.3.18
+
+### Summary
+- Create plugin class
+
 ### 1.3.17
 
 ### Summary
