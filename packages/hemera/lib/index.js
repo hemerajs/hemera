@@ -43,6 +43,7 @@ const Add = require('./add')
 
 var defaultConfig = {
   timeout: 2000, // Max execution time of a request
+  pluginTimeout: 3000, // Max intialization time for a plugin
   tag: '', // The tag string of this Hemera instance
   name: `hemera-${Os.hostname()}-${Util.randomId()}`, // node name
   crashOnFatal: true, // Should gracefully exit the process at unhandled exceptions or fatal errors
@@ -525,7 +526,18 @@ class Hemera extends EventEmitter {
         item.register(item.options)
         return next()
       }
-      item.register(item.options, next)
+
+      // Detect plugin timeouts
+      const pluginTimer = setTimeout(() => {
+        const internalError = new Errors.PluginTimeoutError(Constants.PLUGIN_TIMEOUT_ERROR)
+        this.log.error(internalError, `Plugin: ${item.attributes.name}`)
+        next(internalError)
+      }, this._config.pluginTimeout)
+
+      item.register(item.options, (err) => {
+        clearTimeout(pluginTimer)
+        next(err)
+      })
     }
 
     // register all plugins

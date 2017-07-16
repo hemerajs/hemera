@@ -272,7 +272,7 @@ describe('Generator / Promise support', function () {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      logLevel: 'info'
+      logLevel: 'silent'
     })
 
     hemera.ready(() => {

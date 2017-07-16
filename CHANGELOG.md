@@ -3,6 +3,11 @@ Changelog
 
 # 1.x
 
+### 1.3.17
+
+### Summary
+- Emit error when plugin was not initialized within the allowed timeout
+
 ### 1.3.16
 
 ### Summary
