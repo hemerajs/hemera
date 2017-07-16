@@ -74,16 +74,6 @@ exports.plugin = Hp(function hemeraSlackbot (options, next) {
     return reply(null, true)
   })
 
-  hemera.add({
-    topic,
-    cmd: Joi.any().valid(validMethods).required(),
-    params: Joi.array().default([])
-  }, function (req, reply) {
-    bot[req.cmd].apply(bot, req.params)
-      .then((resp) => reply(null, resp))
-      .fail((err) => reply(err))
-  })
-
   bot.on('start', function () {
     hemera.log.debug('Websocket connection open!')
     wsConnected = true
