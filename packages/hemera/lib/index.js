@@ -974,11 +974,12 @@ class Hemera extends EventEmitter {
     // check if pattern is already registered
     if (this._config.bloomrun.lookupBeforeAdd && handler) {
       let error = new Errors.HemeraError(Constants.PATTERN_ALREADY_IN_USE, {
-        pattern,
-        app: this._config.name
+        pattern
       })
 
-      this.log.error(error)
+      this.log.error({
+        pattern
+      }, error)
       this.emit('error', error)
     }
 
