@@ -13,11 +13,16 @@ exports.plugin = Hp(function hemeraSlackbot (options, next) {
   // Gracefully shutdown
   hemera.ext('onClose', (done) => {
     hemera.log.debug('Websocket connection closed!')
-    bot.ws.close(done)
+    if (wsConnected) {
+      bot.ws.close(done)
+    } else {
+      done()
+    }
   })
 
   const Joi = hemera.exposition['hemera-joi'].joi
   let subscribed = false
+  let wsConnected = false
 
   const validMethods = [
     'getChannels',
@@ -39,37 +44,37 @@ exports.plugin = Hp(function hemeraSlackbot (options, next) {
     'postMessageToChannel'
   ]
 
-  bot.on('start', function () {
-    hemera.log.debug('Websocket connection open!')
+  hemera.add({
+    topic,
+    cmd: 'subscribe'
+  }, function (req, reply) {
+    if (subscribed) {
+      return reply(null, true)
+    }
 
-    hemera.add({
-      topic,
-      cmd: Joi.any().allow(validMethods).required(),
-      params: Joi.array().default([])
-    }, function (req, reply) {
-      bot[req.cmd].apply(bot, req.params)
+    bot.on('message', function (data) {
+      // all ingoing events https://api.slack.com/rtm
+      reply(null, data)
+    })
+
+    subscribed = true
+
+    return reply(null, true)
+  })
+
+  hemera.add({
+    topic,
+    cmd: Joi.any().valid(validMethods).required(),
+    params: Joi.array().default([])
+  }, function (req, reply) {
+    bot[req.cmd].apply(bot, req.params)
       .then((resp) => reply(null, resp))
       .fail((err) => reply(err))
-    })
+  })
 
-    hemera.add({
-      topic,
-      cmd: 'subscribe'
-    }, function (req, reply) {
-      if (subscribed) {
-        return reply(null, true)
-      }
-
-      bot.on('message', function (data) {
-      // all ingoing events https://api.slack.com/rtm
-        reply(null, data)
-      })
-
-      subscribed = true
-
-      return reply(null, true)
-    })
-
+  bot.on('start', function () {
+    hemera.log.debug('Websocket connection open!')
+    wsConnected = true
     next()
   })
 
