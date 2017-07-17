@@ -9,10 +9,12 @@
  *
  */
 
+const PrettyMs = require('pretty-ms')
+
 function inbound (ctx) {
   return {
     id: ctx.request$.id,
-    duration: ctx.request$.duration / 1000000,
+    duration: PrettyMs(ctx.request$.duration / 1000, { msDecimalDigits: 3 }),
     pattern: ctx.request$.method
   }
 }

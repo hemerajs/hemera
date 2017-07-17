@@ -87,7 +87,7 @@ function onClientPreRequest (next) {
 
   ctx._message = message
 
-  ctx.log.info({
+  ctx.log.debug({
     outbound: ctx
   })
 
@@ -143,7 +143,7 @@ function onClientPostRequest (next) {
   ctx.request$.service = pattern.topic
   ctx.request$.method = ctx.trace$.method
 
-  ctx.log.info({
+  ctx.log.debug({
     inbound: ctx
   })
 
