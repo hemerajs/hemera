@@ -3,6 +3,13 @@ Changelog
 
 # 1.x
 
+### 1.3.19
+
+- Cover NATS permission error, gracefully shutdown of hemera on irrevocable connection issues
+
+### Summary
+- Create plugin class
+
 ### 1.3.18
 
 ### Summary
