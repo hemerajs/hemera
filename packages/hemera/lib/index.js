@@ -569,30 +569,40 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   ready (cb) {
-    this._transport.driver.on('error', (error) => {
-      this.log.error(error, Constants.TRANSPORT_ERROR)
-      this.log.error('NATS Code: \'%s\', Message: %s', error.code, error.message)
+    this._transport.driver.on('error', (err) => {
+      this.log.error(err, Constants.NATS_TRANSPORT_ERROR)
+      this.log.error('NATS Code: \'%s\', Message: %s', err.code, err.message)
 
-      // exit only on connection issues. Authorization and protocol issues don't lead to process termination
-      if (Constants.NATS_CONN_ERROR_CODES.indexOf(error.code) > -1) {
-        this.emit('error', error)
+      // Exit only on connection issues.
+      // Authorization and protocol issues don't lead to process termination
+      if (Constants.NATS_CONN_ERROR_CODES.indexOf(err.code) > -1) {
+        // No callback therefore only gracefully shutdown of hemere not NATS
+        this.close()
       }
     })
 
+    this._transport.driver.on('permission_error', (err) => {
+      this.log.error(err, Constants.NATS_PERMISSION_ERROR)
+    })
+
     this._transport.driver.on('reconnect', () => {
-      this.log.info(Constants.TRANSPORT_RECONNECTED)
+      this.log.info(Constants.NATS_TRANSPORT_RECONNECTED)
     })
 
     this._transport.driver.on('reconnecting', () => {
-      this.log.warn(Constants.TRANSPORT_RECONNECTING)
+      this.log.warn(Constants.NATS_TRANSPORT_RECONNECTING)
+    })
+
+    this._transport.driver.on('disconnect', () => {
+      this.log.warn(Constants.NATS_TRANSPORT_DISCONNECTED)
     })
 
     this._transport.driver.on('close', () => {
-      this.log.warn(Constants.TRANSPORT_CLOSED)
+      this.log.warn(Constants.NATS_TRANSPORT_CLOSED)
     })
 
     this._transport.driver.on('connect', () => {
-      this.log.info(Constants.TRANSPORT_CONNECTED)
+      this.log.info(Constants.NATS_TRANSPORT_CONNECTED)
       this.registerPlugins(cb)
     })
   }
@@ -1380,7 +1390,6 @@ class Hemera extends EventEmitter {
       // and then close hemera and nats
       this._transport.flush(() => {
         this._heavy.stop()
-        // close NATS
         this._transport.close()
 
         if (err) {
