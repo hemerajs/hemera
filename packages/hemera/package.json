@@ -48,7 +48,6 @@
     "hoek": "4.1.x",
     "lodash": "4.17.x",
     "pino": "4.5.x",
-    "pretty-ms": "3.0.x",
     "super-error": "2.0.x",
     "tinysonic": "1.2.x"
   },

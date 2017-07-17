@@ -19,40 +19,25 @@ describe('Logging interface', function () {
   it('Should be able to use custom logger', function (done) {
     const nats = require('nats').connect(authUrl)
 
+    var logSpy = Sinon.spy()
+
     let logger = {
-      info: function () {},
+      debug: function () {},
+      info: function () {
+        logSpy()
+      },
       fatal: function () {}
     }
-
-    var logSpy = Sinon.spy(logger, 'info')
 
     const hemera = new Hemera(nats, {
       logger
     })
 
-    hemera.ready(() => {
-      hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      }, (resp, cb) => {
-        cb(null, {
-          result: resp.a + resp.b
-        })
-      })
+    hemera.log.info('test')
 
-      hemera.act({
-        topic: 'math',
-        cmd: 'add',
-        a: 1,
-        b: 2
-      }, (err, resp) => {
-        expect(err).to.be.not.exists()
-        expect(resp).not.to.be.equals(3)
-        expect(logSpy.called).to.be.equals(true)
-        hemera.close()
-        done()
-      })
-    })
+    expect(logSpy.called).to.be.equals(true)
+    hemera.close()
+    done()
   })
 
   it('Should be able to log with default logger', function (done) {
@@ -61,27 +46,13 @@ describe('Logging interface', function () {
       logLevel: 'silent'
     })
 
-    hemera.ready(() => {
-      hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      }, (resp, cb) => {
-        cb(null, {
-          result: resp.a + resp.b
-        })
-      })
+    var logSpy = Sinon.spy(hemera.log, 'info')
 
-      hemera.act({
-        topic: 'math',
-        cmd: 'add',
-        a: 1,
-        b: 2
-      }, (err, resp) => {
-        expect(err).to.be.not.exists()
-        expect(resp).not.to.be.equals(3)
-        hemera.close()
-        done()
-      })
-    })
+    hemera.log.info('test')
+
+    expect(logSpy.called).to.be.equals(true)
+    logSpy.restore()
+    hemera.close()
+    done()
   })
 })

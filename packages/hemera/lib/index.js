@@ -624,10 +624,10 @@ class Hemera extends EventEmitter {
       error: result.error ? Errio.toObject(result.error) : null
     }
 
-    let endTime = Util.nowHrTime()
+    let diff = Util.nowHrTime() - message.request.timestamp
     // calculate request duration
-    message.request.duration = endTime - message.request.timestamp
-    message.trace.duration = endTime - message.request.timestamp
+    message.request.duration = diff
+    message.trace.duration = diff
 
     let m = this._encoder.encode.call(this, message)
 

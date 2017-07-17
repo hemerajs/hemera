@@ -173,7 +173,7 @@ class Util {
    */
   static nowHrTime () {
     const hrtime = process.hrtime()
-    return Math.floor(hrtime[0] * 1000000 + hrtime[1] / 1000)
+    return ((+hrtime[0]) * 1e9) + (+hrtime[1])
   }
   /**
    *

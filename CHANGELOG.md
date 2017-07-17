@@ -3,6 +3,13 @@ Changelog
 
 # 1.x
 
+### 1.3.20
+
+### Summary
+
+- Humanize duration property in request logging
+- Log out- and inbound requests in log level `debug`
+
 ### 1.3.19
 
 ### Summary
