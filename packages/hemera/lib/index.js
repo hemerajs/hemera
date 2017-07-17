@@ -1306,8 +1306,6 @@ class Hemera extends EventEmitter {
    * - Service is actually still processing the request (service takes too long)
    * - Service was processing the request but crashed (service error)
    *
-   * @param {any} sid
-   * @param {any} pattern
    *
    * @memberOf Hemera
    */
