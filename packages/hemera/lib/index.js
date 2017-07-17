@@ -546,7 +546,7 @@ class Hemera extends EventEmitter {
       })
     }
 
-    // register all plugins
+    // register all plugins in serie
     Util.serial(this._pluginRegistrations, each, (err) => {
       if (err) {
         if (err instanceof SuperError) {
@@ -576,7 +576,7 @@ class Hemera extends EventEmitter {
       // Exit only on connection issues.
       // Authorization and protocol issues don't lead to process termination
       if (Constants.NATS_CONN_ERROR_CODES.indexOf(err.code) > -1) {
-        // No callback therefore only gracefully shutdown of hemere not NATS
+        // We have no NATS connection and can only gracefully shutdown hemera
         this.close()
       }
     })
@@ -625,6 +625,7 @@ class Hemera extends EventEmitter {
     }
 
     let endTime = Util.nowHrTime()
+    // calculate request duration
     message.request.duration = endTime - message.request.timestamp
     message.trace.duration = endTime - message.request.timestamp
 
