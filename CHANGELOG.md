@@ -9,6 +9,7 @@ Changelog
 
 - Fixed request duration calculation
 - Remove redundant data from protocol (`request.timstamp` and `request.duration` already present in `trace`)
+- Make Pino PrettyLogger optional so we can consume the JSON output stream.
 
 ### 1.3.20
 

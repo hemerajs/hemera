@@ -55,4 +55,21 @@ describe('Logging interface', function () {
     hemera.close()
     done()
   })
+
+  it('Should be able to log with none pretty logger', function (done) {
+    const nats = require('nats').connect(authUrl)
+    const hemera = new Hemera(nats, {
+      logLevel: 'silent',
+      prettyLog: false
+    })
+
+    var logSpy = Sinon.spy(hemera.log, 'info')
+
+    hemera.log.info('test')
+
+    expect(logSpy.called).to.be.equals(true)
+    logSpy.restore()
+    hemera.close()
+    done()
+  })
 })

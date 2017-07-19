@@ -46,6 +46,7 @@ var defaultConfig = {
   timeout: 2000, // Max execution time of a request
   pluginTimeout: 3000, // Max intialization time for a plugin
   tag: '', // The tag string of this Hemera instance
+  prettyLog: true, // Enables pino pretty logger (Don't use it in production the output isn't JSON)
   name: `hemera-${Os.hostname()}-${Util.randomId()}`, // node name
   crashOnFatal: true, // Should gracefully exit the process at unhandled exceptions or fatal errors
   logLevel: 'silent', // 'fatal', 'error', 'warn', 'info', 'debug', 'trace'; also 'silent'
@@ -192,19 +193,27 @@ class Hemera extends EventEmitter {
     if (this._config.logger) {
       this.log = this._config.logger
     } else {
-      let pretty = Pino.pretty()
+      if (this._config.prettyLog) {
+        let pretty = Pino.pretty()
+        this.log = Pino({
+          name: this._config.name,
+          safe: true, // avoid error caused by circular references
+          level: this._config.logLevel,
+          serializers: Serializers
+        }, pretty)
 
-      // Leads to too much listeners in tests
-      if (this._config.logLevel !== 'silent') {
-        pretty.pipe(process.stdout)
+        // Leads to too much listeners in tests
+        if (this._config.logLevel !== 'silent') {
+          pretty.pipe(process.stdout)
+        }
+      } else {
+        this.log = Pino({
+          name: this._config.name,
+          safe: true,
+          level: this._config.logLevel,
+          serializers: Serializers
+        })
       }
-
-      this.log = Pino({
-        name: this._config.name,
-        safe: true, // avoid error caused by circular references
-        level: this._config.logLevel,
-        serializers: Serializers
-      }, pretty)
     }
 
     this._beforeExit = new BeforeExit()
