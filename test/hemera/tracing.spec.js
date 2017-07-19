@@ -75,7 +75,7 @@ describe('Tracing', function () {
 
             expect(this.trace$.traceId).to.be.equals(traceId)
             expect(this.trace$.spanId).to.be.string()
-            expect(this.request$.duration).to.be.a.number()
+            expect(this.trace$.timestamp).to.be.number()
 
             this.act({
               topic: 'math',
@@ -88,7 +88,7 @@ describe('Tracing', function () {
               expect(this.trace$.parentSpanId).to.be.string()
               expect(this.trace$.traceId).to.be.equals(traceId)
               expect(this.trace$.spanId).to.be.string()
-              expect(this.request$.duration).to.be.a.number()
+              expect(this.trace$.timestamp).to.be.number()
 
               cb(null, resp.a - resp.b)
             })
@@ -106,8 +106,8 @@ describe('Tracing', function () {
         expect(err).to.be.not.exists()
         expect(this.trace$.traceId).to.be.exists()
         expect(this.trace$.spanId).to.be.string()
+        expect(this.trace$.timestamp).to.be.number()
         expect(this.request$.id).to.be.string()
-        expect(this.request$.duration).to.be.a.number()
 
         traceId = this.trace$.traceId
 
@@ -123,9 +123,9 @@ describe('Tracing', function () {
           expect(this.trace$.traceId).to.be.equals(traceId)
           expect(this.trace$.spanId).to.be.string()
           expect(this.trace$.parentSpanId).to.be.string()
+          expect(this.trace$.timestamp).to.be.number()
           expect(this.request$.id).to.be.string()
           expect(this.request$.parentId).to.be.a.string()
-          expect(this.request$.duration).to.be.a.number()
 
           hemera.close()
           done()

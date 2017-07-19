@@ -121,9 +121,7 @@ class Hemera extends EventEmitter {
     })
     this.trace$ = {}
     this.request$ = {
-      duration: 0,
       parentId: '',
-      timestamp: 0,
       type: Constants.REQUEST_TYPE_REQUEST,
       id: ''
     }
@@ -623,11 +621,6 @@ class Hemera extends EventEmitter {
       result: result.error ? null : result.payload,
       error: result.error ? Errio.toObject(result.error) : null
     }
-
-    let diff = Util.nowHrTime() - message.request.timestamp
-    // calculate request duration
-    message.request.duration = diff
-    message.trace.duration = diff
 
     let m = this._encoder.encode.call(this, message)
 

@@ -136,19 +136,19 @@ message Error {
 
 message Request {
   string id = 1;
-  string parentId = 2;
-  int64 timestamp = 3;
-  int32 duration = 4;
-  RequestType type = 5;
+  RequestType type = 2;
+  string service = 3;
+  string method = 4;
 }
 
 message Trace {
   string traceId = 1;
-  string spanId = 2;
-  int64 timestamp = 3;
-  string service = 4;
-  string method = 5;
-  int32 duration = 6;
+  string parentSpanId = 2;
+  string spanId = 3;
+  int64 timestamp = 4;
+  string service = 5;
+  string method = 6;
+  int32 duration = 7;
 }
 
 enum RequestType {
@@ -201,9 +201,7 @@ message Protocol {
   // General informations about the request
   "request": {
     "id": "0d8c3df07244436d8c3c63f2cc2f296e",
-    "timestamp": 289461899179, // Miliseconds
     "type": "request", // Enum "request" or "pubsub"
-    "duration": 0
   }
 }
 </code>
@@ -227,9 +225,7 @@ message Protocol {
   // Same data as above
   "request": {
     "id": "0d8c3df07244436d8c3c63f2cc2f296e",
-    "timestamp": 289461899179,
-    "type": "request",
-    "duration": 5690
+    "type": "request"
   },
   // Response result
   "result": 21,

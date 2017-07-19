@@ -69,9 +69,7 @@ function onClientPreRequest (next) {
   let request = {
     id: pattern.requestId$ || Util.randomId(),
     parentId: ctx.request$.id || pattern.requestParentId$,
-    timestamp: currentTime,
-    type: pattern.pubsub$ === true ? Constants.REQUEST_TYPE_PUBSUB : Constants.REQUEST_TYPE_REQUEST,
-    duration: 0
+    type: pattern.pubsub$ === true ? Constants.REQUEST_TYPE_PUBSUB : Constants.REQUEST_TYPE_REQUEST
   }
 
   ctx.emit('clientPreRequest')
@@ -139,6 +137,10 @@ function onClientPostRequest (next) {
     ctx.trace$ = msg.trace || {}
     ctx.meta$ = msg.meta || {}
   }
+
+  // calculate request duration
+  let diff = Util.nowHrTime() - ctx.trace$.timestamp
+  ctx.trace$.duration = diff
 
   ctx.request$.service = pattern.topic
   ctx.request$.method = ctx.trace$.method
