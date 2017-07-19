@@ -3,6 +3,13 @@ Changelog
 
 # 1.x
 
+### 1.3.21
+
+## Summary
+
+- Fixed request duration calculation
+- Remove redundant data from protocol (`request.timstamp` and `request.duration` already present in `trace`)
+
 ### 1.3.20
 
 ### Summary
