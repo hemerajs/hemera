@@ -9,7 +9,7 @@
  *
  */
 const Reply = require('./reply')
-const BaseExtension = require('./base-extension')
+const BaseExtension = require('./baseExtension')
 
 /**
  *

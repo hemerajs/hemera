@@ -8,7 +8,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-const BaseExtension = require('./base-extension')
+const BaseExtension = require('./baseExtension')
 
 /**
  *
