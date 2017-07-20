@@ -76,11 +76,10 @@ exports.plugin = Hp(function hemeraJoi () {
     Joi.validate(response, joiSchema, {
       allowUnknown: true
     }, (err, value) => {
-      res.payload = value
       if (err) {
         res.send(new PostValidationError({ message: err.message, details: err.details }))
       } else {
-        res.send()
+        res.send(value)
       }
     })
   })
