@@ -29,6 +29,7 @@ const BeforeExit = require('./beforeExit')
 const Errors = require('./errors')
 const Constants = require('./constants')
 const Extension = require('./extension')
+const ServerExtension = require('./server-extension')
 const Util = require('./util')
 const NatsTransport = require('./transport')
 const DefaultExtensions = require('./extensions')
@@ -160,9 +161,9 @@ class Hemera extends EventEmitter {
     this._extensions = {
       onClientPreRequest: new Extension('onClientPreRequest'),
       onClientPostRequest: new Extension('onClientPostRequest'),
-      onServerPreHandler: new Extension('onServerPreHandler'),
-      onServerPreRequest: new Extension('onServerPreRequest'),
-      onServerPreResponse: new Extension('onServerPreResponse'),
+      onServerPreHandler: new ServerExtension('onServerPreHandler'),
+      onServerPreRequest: new ServerExtension('onServerPreRequest'),
+      onServerPreResponse: new ServerExtension('onServerPreResponse'),
       onClose: new Extension('onClose')
     }
 

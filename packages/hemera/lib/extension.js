@@ -8,67 +8,27 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-const Reply = require('./reply')
-const Util = require('./util')
-const _ = require('lodash')
+const BaseExtension = require('./base-extension')
 
 /**
+ *
+ *
  * @class Extension
  */
-class Extension {
-  constructor (type) {
-    this._stack = []
-    this._type = type
-  }
-
+class Extension extends BaseExtension {
   /**
+   * Executes the stack of functions
    *
-   *
-   * @param {any} handler
-   *
-   * @memberof Extension
-   */
-  _add (handler) {
-    this._stack.push(Util.toPromiseFact(handler))
-  }
-
-  /**
-   *
-   *
-   * @param {any} handler
-   *
-   * @memberOf Extension
-   */
-  add (handler) {
-    if (_.isArray(handler)) {
-      handler.forEach(h => this._add(h))
-    } else {
-      this._add(handler)
-    }
-  }
-
-  /**
-   * Executes the stack of callbacks and set the correct
-   * response and request context
-   *
+   * @param {any} ctx
    * @param {any} cb
-   *
-   * @memberOf Extension
+   * @memberof Extension
    */
   dispatch (ctx, cb) {
     const each = (item, next) => {
-      if (ctx._isServer) {
-        const response = ctx._response
-        const request = ctx._request
-        const reply = new Reply(request, response, next)
-
-        item.call(ctx, request, reply, next)
-      } else {
-        item.call(ctx, next)
-      }
+      item.call(ctx, next)
     }
 
-    Util.serialWithCancellation(this._stack, each, cb)
+    this.run(each, cb)
   }
 }
 
