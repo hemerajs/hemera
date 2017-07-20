@@ -92,7 +92,7 @@ class CircuitBreaker extends EventEmitter {
         this._successesCount = 0
         this._state = this.CIRCUIT_HALF_OPEN
         this._halfOpenTimer = null
-        this.emit('circuitBreaker.stateChange', this.toJSON())
+        this.emit('circuitHalfOpen', this.toJSON())
       }, this._halfOpenTime)
       // unref from event loop
       this._halfOpenTimer.unref()
@@ -172,7 +172,7 @@ class CircuitBreaker extends EventEmitter {
         this._successesCount += 1
         if (this._successesCount >= this._minSuccesses) {
           this._state = this.CIRCUIT_CLOSE
-          this.emit('circuitBreaker.stateChange', this.toJSON())
+          this.emit('circuitClose', this.toJSON())
           // reset failure count and clear half-open timeout
           this._failureCount = 0
           this.clearHalfOpenTimer()
@@ -181,7 +181,7 @@ class CircuitBreaker extends EventEmitter {
         // If any invocation fails, the circuit breaker enters the Open state immediately and
         // the success counter will be reset the next time it enters the Half-Open state.
         this._state = this.CIRCUIT_OPEN
-        this.emit('circuitBreaker.stateChange', this.toJSON())
+        this.emit('circuitOpen', this.toJSON())
         this.clearHalfOpenTimer()
       }
     } else if (this._state === this.CIRCUIT_OPEN) {
@@ -197,7 +197,7 @@ class CircuitBreaker extends EventEmitter {
       // when we reach maximum failure threshold we open the circuit breaker and start the reset timer
       if (this._failureCount >= this._maxFailures) {
         this._state = this.CIRCUIT_OPEN
-        this.emit('circuitBreaker.stateChange', this.toJSON())
+        this.emit('circuitOpen', this.toJSON())
         this.clearResetInterval()
         this.startResetInterval()
       }
