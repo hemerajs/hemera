@@ -3,6 +3,12 @@ Changelog
 
 # 1.x
 
+### 1.3.22
+
+## Summary
+
+- Validate config with Joi
+
 ### 1.3.21
 
 ## Summary
