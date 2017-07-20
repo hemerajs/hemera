@@ -13,6 +13,6 @@ hemera.ready(() => {
     cmd: 'created',
     queue$: 'log'
   }, function (req) {
-    console.log('logService-1')
+    console.log('logService-2')
   })
 })
