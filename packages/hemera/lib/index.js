@@ -14,7 +14,6 @@
  */
 
 const EventEmitter = require('events')
-const Os = require('os')
 const Bloomrun = require('bloomrun')
 const Errio = require('errio')
 const Hoek = require('hoek')
@@ -24,6 +23,7 @@ const Pino = require('pino')
 const TinySonic = require('tinysonic')
 const SuperError = require('super-error')
 const Co = require('co')
+const Joi = require('joi')
 
 const BeforeExit = require('./beforeExit')
 const Errors = require('./errors')
@@ -40,51 +40,9 @@ const ServerRequest = require('./serverRequest')
 const ClientRequest = require('./clientRequest')
 const ClientResponse = require('./clientResponse')
 const Serializers = require('./serializer')
+const ConfigScheme = require('./configScheme')
 const Add = require('./add')
 const Plugin = require('./plugin')
-
-var defaultConfig = {
-  timeout: 2000, // Max execution time of a request
-  pluginTimeout: 3000, // Max intialization time for a plugin
-  tag: '', // The tag string of this Hemera instance
-  prettyLog: true, // Enables pino pretty logger (Don't use it in production the output isn't JSON)
-  name: `hemera-${Os.hostname()}-${Util.randomId()}`, // node name
-  crashOnFatal: true, // Should gracefully exit the process at unhandled exceptions or fatal errors
-  logLevel: 'silent', // 'fatal', 'error', 'warn', 'info', 'debug', 'trace'; also 'silent'
-  childLogger: false, // Create a child logger per section / plugin. Only possible with default logger Pino.
-  maxRecursion: 0, // Max recursive method calls
-  errio: {
-    recursive: true, // Recursively serialize and deserialize nested errors
-    inherited: true, // Include inherited properties
-    stack: true,    // Include stack property
-    private: false,  // Include properties with leading or trailing underscores
-    exclude: [],     // Property names to exclude (low priority)
-    include: []      // Property names to include (high priority)
-  },
-  bloomrun: {
-    indexing: 'inserting', // Pattern indexing method "inserting" or "depth"
-    lookupBeforeAdd: true // Checks if the pattern is no duplicate based on to the indexing strategy
-  },
-  load: {
-    checkPolicy: true, // Check on every request (server) if the load policy was observed,
-    shouldCrash: true, // Should gracefully exit the process to recover from memory leaks or load, crashOnFatal must be enabled
-    process: {
-      sampleInterval: 0  // Frequency of load sampling in milliseconds (zero is no sampling)
-    },
-    policy: {
-      maxHeapUsedBytes: 0,  // Reject requests when V8 heap is over size in bytes (zero is no max)
-      maxRssBytes: 0,       // Reject requests when process RSS is over size in bytes (zero is no max)
-      maxEventLoopDelay: 0  // Milliseconds of delay after which requests are rejected (zero is no max)
-    }
-  },
-  circuitBreaker: {
-    enabled: false,
-    minSuccesses: 1, // Minimum successes in the half-open state to change to close state
-    halfOpenTime: 5 * 1000, // The duration when the server is ready to accept further calls after changing to open state
-    resetIntervalTime: 15 * 1000, // Frequency of reseting the circuit breaker to close state in milliseconds
-    maxFailures: 3 // The threshold when the circuit breaker change to open state
-  }
-}
 
 /**
  * @class Hemera
@@ -101,7 +59,12 @@ class Hemera extends EventEmitter {
   constructor (transport, params) {
     super()
 
-    this._config = Hoek.applyToDefaults(defaultConfig, params || {})
+    const config = Joi.validate(params || {}, ConfigScheme)
+    if (config.error) {
+      throw config.error
+    }
+
+    this._config = config.value
     this._router = Bloomrun(this._config.bloomrun)
     this._heavy = new Heavy(this._config.load.process)
     this._transport = new NatsTransport({

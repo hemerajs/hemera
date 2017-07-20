@@ -71,4 +71,18 @@ describe('Hemera default config', function () {
     hemera.close()
     done()
   })
+
+  it('Should throw error because invalid config values', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    try {
+      const hemera = new Hemera(nats, {
+        logLevel: 'foo'
+      })
+    } catch (err) {
+      expect(err.name).to.be.equals('ValidationError')
+      nats.close()
+      done()
+    }
+  })
 })

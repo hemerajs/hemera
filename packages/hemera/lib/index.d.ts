@@ -10,7 +10,6 @@ export interface PluginDefinitionAttributes {
   name: string;
   description: string;
   version: string;
-  dependencies: string | Array<string>;
 }
 export interface PluginDefinition {
   attributes: PluginDefinitionAttributes;

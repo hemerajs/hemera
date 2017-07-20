@@ -46,6 +46,7 @@
     "fast-safe-stringify": "1.1.x",
     "heavy": "4.0.x",
     "hoek": "4.1.x",
+    "joi": "10.6.x",
     "lodash": "4.17.x",
     "pino": "4.5.x",
     "super-error": "2.0.x",

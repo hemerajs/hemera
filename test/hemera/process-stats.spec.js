@@ -21,7 +21,9 @@ describe('Process stats', function () {
 
     const hemera = new Hemera(nats, {
       load: {
-        sampleInterval: 1
+        process: {
+          sampleInterval: 1
+        }
       }
     })
 
