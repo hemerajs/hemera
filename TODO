@@ -1,2 +1,3 @@
 [ ] Evaluate AOP for Hemera core.
 [ ] Simplify Extensions in Hemera core.
+[ ] Close without callback is deprecated
