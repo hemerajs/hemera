@@ -741,13 +741,15 @@ class Hemera extends EventEmitter {
       const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(err)
       self.log.error(internalError)
 
-      return self.finish()
+      self.finish()
+      return
     }
 
       // reply value from extension
     if (value) {
       self._response.payload = value
-      return self.finish()
+      self.finish()
+      return
     }
 
     try {
@@ -765,13 +767,15 @@ class Hemera extends EventEmitter {
           const internalError = new Errors.HemeraError(Constants.ADD_MIDDLEWARE_ERROR, self.errorDetails).causedBy(err)
           self.log.error(internalError)
 
-          return self.finish()
+          self.finish()
+          return
         }
 
           // if request type is 'pubsub' we dont have to reply back
         if (self._request.payload.request.type === Constants.REQUEST_TYPE_PUBSUB) {
           action(self._request.payload.pattern)
-          return self.finish()
+          self.finish()
+          return
         }
           // execute RPC action
         if (self._actMeta.isPromisable) {
@@ -815,13 +819,15 @@ class Hemera extends EventEmitter {
         self._response.error = err
       }
 
-      return self.finish()
+      self.finish()
+      return
     }
 
       // reply value from extension
     if (value) {
       self._response.payload = value
-      return self.finish()
+      self.finish()
+      return
     }
 
       // check if a handler is registered with this pattern
