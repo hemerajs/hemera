@@ -17,4 +17,4 @@
 - onServerPreHandler
 - onServerPreResponse
 
-can be aborted with `res.end(value)`. If you only want to set the payload you can use `res.send(value)` but other extensions from the same type will be called.
+can be aborted with `res.end(value or Error)`. If you only want to set the payload you can use `res.send(value or Error)` but other extensions from the same type will be called.
