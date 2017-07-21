@@ -134,9 +134,9 @@ hemera.use(hemeraWeb, {
 
 ```js
 const hemera = new Hemera(nats)
-const app = hemera.exposition['hemera-web'].express
 
 hemera.ready(() => {
+  const app = hemera.exposition['hemera-web'].express
   // Define Auth layer ... use it as always
   app.use(passport.session())
 })
