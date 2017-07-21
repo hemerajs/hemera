@@ -38,7 +38,7 @@ describe('Hemera default config', function () {
         include: []      // Property names to include (high priority)
       },
       bloomrun: {
-        indexing: 'inserting', // Pattern indexing method "inserting" or "depth"
+        indexing: 'insertion', // Pattern indexing method "insertion" or "depth"
         lookupBeforeAdd: true // Checks if the pattern is no duplicate based on to the indexing strategy
       },
       load: {
