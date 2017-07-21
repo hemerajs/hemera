@@ -130,3 +130,13 @@ hemera.use(hemeraWeb, {
 })
 ```
 
+### Access to express web framework
+
+```js
+const hemera = new Hemera(nats)
+const app = hemera.exposition['hemera-web'].express
+
+// Define Auth layer .. use it as always
+app.use(passport.session())
+```
+
