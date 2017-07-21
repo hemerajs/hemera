@@ -49,6 +49,6 @@ hemera.ready(() => {
 
 ### How to add attachments ?
 
-As long as your content TEXT, HTML is very small (A typical 80-word plain text message is around 10 KB.) it's no problem to transfer it over NATS. Transfering big files in a distributed system is in general an anti-pattern because it will affect the latency of your network and can result in cascading failures. In practice, we recommend to create an API Gateway which is resonsible to handle file uploads. The files can be stored in a distributed object storage like Amazon S3 or opensource alternatives [Rook](https://rook.io/), [Minio](https://docs.minio.io/). The developer would only work with IDs, Urls.
+As long as your content TEXT, HTML is very small (A typical 80-word plain text message is around 10 KB.) it's no problem to transfer it over NATS. Transfering big files in a distributed system is in general an anti-pattern because it will affect the latency of your network and can result in cascading failures. In practice, we recommend to create an API Gateway which is responsible to handle file uploads. The files can be stored in a distributed object storage like Amazon S3 or opensource alternatives [Rook](https://rook.io/), [Minio](https://docs.minio.io/). The developer should only work with ID's or Url's.
 
-Lots of mail services are providing an interface to manage email templates this is a great feature because you don't have to resend them on every mail. In line with the motto "Buy it and stick to your business".
+Lots of mail services are providing an interface to manage email templates this is a great feature because you don't have to send the template on every mail in line with the motto "Buy it and stick to your business".
