@@ -134,7 +134,10 @@ hemera.use(hemeraWeb, {
 
 ```js
 const hemera = new Hemera(nats)
-
+hemera.use(hemeraWeb, {
+  port: 3000,
+  host: '127.0.0.1'
+})
 hemera.ready(() => {
   const app = hemera.exposition['hemera-web'].express
   // Define Auth layer ... use it as always
