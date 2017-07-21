@@ -32,11 +32,16 @@ exports.plugin = Hp(function hemeraJwtAuth (options) {
   hemera.ext('onServerPreHandler', function (req, res, next) {
     const ctx = this
 
-    // get auth from server method
+    // Get auth from server method
     const auth = ctx._actMeta.schema.auth$
 
-    // disable auth when it was set explicit
+    // Disable auth when it was set explicit
     if (auth && auth.enabled === false) {
+      return next()
+    }
+
+    // If auth was not set and disabled by default
+    if (!auth && options.enforceAuth === false) {
       return next()
     }
 
@@ -44,23 +49,21 @@ exports.plugin = Hp(function hemeraJwtAuth (options) {
       if (err) {
         return next(err)
       }
-      // make accessible in server method context
+      // Make accessible in server method context
       ctx.auth$ = decoded
-      // get scopes from server method
-      const auth = ctx._actMeta.schema.auth$
       if (typeof auth === 'object') {
-        // support single scope
+        // Support single scope
         if (typeof auth.scope === 'string') {
           auth.scope = [auth.scope]
         }
-        // check if scope is subset
+        // Check if scope is subset
         if (isSubset(decoded.scope, auth.scope)) {
           return next()
         }
-        // invalid scope return error
+        // Invalid scope return error
         return res.end(new JwtError('Invalid scope'))
       } else {
-        // invalid auth options return error
+        // Invalid auth options return error
         return res.end(new JwtError('Invalid auth$ options'))
       }
     })
@@ -68,6 +71,7 @@ exports.plugin = Hp(function hemeraJwtAuth (options) {
 })
 
 exports.options = {
+  enforceAuth: true,
   jwt: {
     secret: false
   }

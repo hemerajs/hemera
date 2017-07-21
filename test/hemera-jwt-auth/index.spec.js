@@ -429,4 +429,90 @@ describe('Hemera-jwt-auth', function () {
       })
     })
   })
+
+  it('Should not enfore authentication', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.use(HemeraJwt, {
+      enforceAuth: false
+    })
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function (req, cb) {
+        cb(null, req.a + req.b)
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 100,
+        b: 200
+      }, function (err, resp) {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.equals(300)
+        hemera.close()
+        done()
+      })
+    })
+  })
+
+  it('Should not enfore authentication but allows to enable it selective', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: false
+    })
+
+    hemera.use(HemeraJwt, {
+      enforceAuth: false
+    })
+
+    hemera.ready(() => {
+      // Disable it by option
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function (req, cb) {
+        cb(null, req.a + req.b)
+      })
+
+      // Enable authentication
+      hemera.add({
+        topic: 'math',
+        cmd: 'sub',
+        auth$: {
+          scope: 'math'
+        }
+      }, function (req, cb) {
+        cb(null, req.a - req.b)
+      })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 100,
+        b: 200
+      }, function (err, resp) {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.equals(300)
+        hemera.act({
+          topic: 'math',
+          cmd: 'sub',
+          a: 500,
+          b: 200
+        }, function (err, resp) {
+          expect(err).to.be.exists()
+          hemera.close()
+          done()
+        })
+      })
+    })
+  })
 })
