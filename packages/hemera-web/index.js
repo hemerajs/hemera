@@ -26,11 +26,23 @@ exports.plugin = Hp(function hemeraWeb (options, next) {
   app.get('/:topic/:cmd', handler)
   app.post('/:topic/:cmd', handler)
 
+  function getBasePattern (request, basePattern) {
+    let obj = {}
+
+    if (typeof basePattern === 'function') {
+      obj = basePattern(request) || {}
+    } else {
+      obj = basePattern || {}
+    }
+
+    return obj
+  }
+
   function handler (req, res) {
     const xRequestTraceId = req.headers['x-request-trace-id']
     const xRequestSpanId = req.headers['x-request-span-id']
 
-    let pattern = Hoek.clone(options.pattern)
+    let pattern = getBasePattern(req, options.pattern)
     if (req.query) {
       pattern = Hoek.applyToDefaults(pattern, req.query)
     }
