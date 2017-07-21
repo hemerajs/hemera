@@ -17,6 +17,7 @@ const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZSI6WyJtYXRoIl0sI
 
 const hemera = new Hemera(nats)
 hemera.use(hemeraJwt, {
+  enforceAuth: true // set to false if you want to enable it selectively
   jwt: {
     secret: 'test'
   }
@@ -24,8 +25,6 @@ hemera.use(hemeraJwt, {
 
 hemera.ready(() => {
 
-  // 1. check if the token can be verified
-  // 2. check scope
   hemera.add({
     topic: 'math',
     cmd: 'sub',
@@ -39,8 +38,6 @@ hemera.ready(() => {
     cb(null, req.a - req.b)
   })
 
-  // 1. check if the token can be verified
-  // 2. check scope
   hemera.add({
     topic: 'math',
     cmd: 'add',

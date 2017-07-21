@@ -463,7 +463,7 @@ describe('Hemera-jwt-auth', function () {
     })
   })
 
-  it('Should not enfore authentication but allows to enable it selective', function (done) {
+  it('Should not enfore authentication but allows to enable it selectively', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
