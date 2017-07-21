@@ -3,6 +3,12 @@ Changelog
 
 # 1.x
 
+### 1.3.23
+
+## Summary
+
+- Fixed some config default values and document options.
+
 ### 1.3.22
 
 ## Summary
