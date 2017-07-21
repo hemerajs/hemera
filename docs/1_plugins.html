@@ -116,7 +116,7 @@
                 <!-- BEGIN CONTENT -->
                 <div class="col-sm-9 border-left section-right">
                     <h1 class="section-header">Plugins</h1>
-                    <div class="alert alert-info" role="alert"><i class="fa fa-info" aria-hidden="true"></i> Create a plugin with a one-liner with the <a href="https://github.com/hemerajs/hemera-cli">hemera-cli</a></div>
+                    <div class="alert alert-info" role="alert"><i class="fa fa-info" aria-hidden="true"></i> Create a plugin including test-suite, readme with one-liner. <a href="https://github.com/hemerajs/hemera-cli">hemera-cli</a></div>
                     <div class="alert alert-warning" role="alert"><i class="fa fa-info" aria-hidden="true"></i> Please ensure that a plugin never extends another plugin that use the same <code>topic</code> name. This results in a plugin which can not be run alone because the publisher is not aware of that composition.</div>
                     <p class="section-content">You can create a plugin in two different ways:</p>
                     <h4 class="section-h4">Create a plugin for publishing as package</h4>
@@ -124,9 +124,10 @@
 <code class="javascript">
 exports.plugin = function myPlugin (options, next) {
   const hemera = this
+  const topic = "math"
 
   hemera.add({
-    topic: "math",
+    topic,
     cmd: "add"
   }, function (req, cb) {
     cb(null, req.a + req.b)
@@ -147,11 +148,11 @@ exports.attributes = {
                     <pre>
 <code class="javascript">
 const myPlugin = function (options, next) {
-
   const hemera = this
+  const topic = "math"
 
   hemera.add({
-    topic: "math",
+    topic,
     cmd: "add"
   }, function (req, cb) {
 
