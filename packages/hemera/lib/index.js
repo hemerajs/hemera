@@ -619,7 +619,7 @@ class Hemera extends EventEmitter {
   _onServerPreResponseHandler (err, value) {
     const self = this
 
-      // check if an error was already wrapped
+    // check if an error was already wrapped
     if (self._response.error) {
       self.emit('serverResponseError', self._response.error)
       self.log.error(self._response.error)
@@ -635,21 +635,21 @@ class Hemera extends EventEmitter {
       self.emit('serverResponseError', self._response.error)
     }
 
-      // reply value from extension
+    // reply value from extension
     if (value) {
       self._response.payload = value
     }
 
-      // create message payload
+    // create message payload
     self._buildMessage()
 
-      // indicates that an error occurs and that the program should exit
+    // indicates that an error occurs and that the program should exit
     if (self._shouldCrash) {
-        // only when we have an inbox othwerwise exit the service immediately
+      // only when we have an inbox othwerwise exit the service immediately
       if (self._replyTo) {
-          // send error back to callee
+        // send error back to callee
         return self._transport.send(self._replyTo, self._message, () => {
-            // let it crash
+          // let it crash
           if (self._config.crashOnFatal) {
             self.fatal()
           }
@@ -659,7 +659,7 @@ class Hemera extends EventEmitter {
       }
     }
 
-      // reply only when we have an inbox
+    // reply only when we have an inbox
     if (self._replyTo) {
       return this._transport.send(this._replyTo, self._message)
     }
@@ -695,7 +695,7 @@ class Hemera extends EventEmitter {
         ts: Util.nowHrTime()
       }
 
-        // collect hops
+      // collect hops
       if (err.hops) {
         err.hops.push(errorDetails)
       } else {
@@ -711,9 +711,9 @@ class Hemera extends EventEmitter {
       return self.finish()
     }
 
-      // assign action result
+    // assign action result
     self._response.payload = resp
-      // delete error we have payload
+    // delete error we have payload
     self._response.error = null
 
     self.finish()
@@ -745,7 +745,7 @@ class Hemera extends EventEmitter {
       return
     }
 
-      // reply value from extension
+    // reply value from extension
     if (value) {
       self._response.payload = value
       self.finish()
@@ -756,7 +756,7 @@ class Hemera extends EventEmitter {
       let action = self._actMeta.action.bind(self)
 
       self._actMeta.dispatch(self._request, self._response, (err) => {
-          // middleware error
+        // middleware error
         if (err) {
           if (err instanceof SuperError) {
             self._response.error = err.rootCause || err.cause || err
@@ -771,13 +771,13 @@ class Hemera extends EventEmitter {
           return
         }
 
-          // if request type is 'pubsub' we dont have to reply back
+        // if request type is 'pubsub' we dont have to reply back
         if (self._request.payload.request.type === Constants.REQUEST_TYPE_PUBSUB) {
           action(self._request.payload.pattern)
           self.finish()
           return
         }
-          // execute RPC action
+        // execute RPC action
         if (self._actMeta.isPromisable) {
           action(self._request.payload.pattern)
             .then(x => self._actionHandler(null, x))
@@ -793,7 +793,7 @@ class Hemera extends EventEmitter {
         self._response.error = err
       }
 
-        // service should exit
+      // service should exit
       self._shouldCrash = true
 
       self.finish()
@@ -823,14 +823,14 @@ class Hemera extends EventEmitter {
       return
     }
 
-      // reply value from extension
+    // reply value from extension
     if (value) {
       self._response.payload = value
       self.finish()
       return
     }
 
-      // check if a handler is registered with this pattern
+    // check if a handler is registered with this pattern
     if (self._actMeta) {
       self._extensions.onServerPreHandler.dispatch(self, (err, val) => self._onServerPreHandler(err, val))
     } else {
@@ -838,7 +838,7 @@ class Hemera extends EventEmitter {
       self.log.error(internalError)
       self._response.error = internalError
 
-        // send error back to callee
+      // send error back to callee
       self.finish()
     }
   }
@@ -894,7 +894,7 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   * Unsubscribe a topic or subscription id from NATS
+   * Unsubscribe a topic or subscription id from NATS and Hemera
    *
    * @param {any} topic
    * @param {any} maxMessages
@@ -905,15 +905,29 @@ class Hemera extends EventEmitter {
   remove (topic, maxMessages) {
     const self = this
 
+    if (!topic) {
+      let error = new Errors.HemeraError(Constants.TOPIC_SID_REQUIRED_FOR_DELETION)
+      self.log.error(error)
+      throw error
+    }
+
     if (_.isNumber(topic)) {
       self._transport.unsubscribe(topic, maxMessages)
       return true
-    } else if (_.isString(topic)) {
+    } else {
       const subId = self._topics[topic]
+
       if (subId) {
         self._transport.unsubscribe(subId, maxMessages)
-        // release topic
+        // release topic so we can add it again
         delete self._topics[topic]
+        // remove pattern which belongs to the topic
+        _.each(this.list(), a => {
+          if (a.pattern.topic === topic) {
+            this.router.remove(a.pattern)
+          }
+        })
+
         return true
       }
     }
@@ -960,7 +974,7 @@ class Hemera extends EventEmitter {
 
     // cb is null when we use chaining syntax
     if (cb) {
-    // set callback
+      // set callback
       addDefinition.action = cb
     }
 
@@ -1003,7 +1017,7 @@ class Hemera extends EventEmitter {
    */
   _onClientPostRequestHandler (err) {
     const self = this
-      // extension error
+    // extension error
     if (err) {
       let error = null
       if (err instanceof SuperError) {
@@ -1047,7 +1061,7 @@ class Hemera extends EventEmitter {
     self._response.error = res.error
 
     try {
-        // decoding error
+      // decoding error
       if (self._response.error) {
         let error = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR, self.errorDetails).causedBy(self._response.error)
         self.log.error(error)
@@ -1070,7 +1084,7 @@ class Hemera extends EventEmitter {
       self.log.fatal(internalError)
       self.emit('clientResponseError', error)
 
-        // let it crash
+      // let it crash
       if (self._config.crashOnFatal) {
         self.fatal()
       }
@@ -1089,7 +1103,7 @@ class Hemera extends EventEmitter {
 
     let m = self._encoder.encode.call(self, self._message)
 
-      // encoding issue
+    // encoding issue
     if (m.error) {
       let error = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR).causedBy(m.error)
       self.log.error(error)
@@ -1116,7 +1130,7 @@ class Hemera extends EventEmitter {
     self._request.payload = m.value
     self._request.error = m.error
 
-      // use simple publish mechanism instead of request/reply
+    // use simple publish mechanism instead of request/reply
     if (self._pattern.pubsub$ === true) {
       if (self._actCallback) {
         self.log.info(Constants.PUB_CALLBACK_REDUNDANT)
@@ -1125,16 +1139,16 @@ class Hemera extends EventEmitter {
       self._transport.send(self._pattern.topic, self._request.payload)
     } else {
       const optOptions = {}
-        // limit on the number of responses the requestor may receive
+      // limit on the number of responses the requestor may receive
       if (self._pattern.maxMessages$ > 0) {
         optOptions.max = self._pattern.maxMessages$
       } else if (self._pattern.maxMessages$ !== -1) {
         optOptions.max = 1
       }
-        // send request
+      // send request
       self._sid = self._transport.sendRequest(self._pattern.topic, self._request.payload, optOptions, self._sendRequestHandler.bind(self))
 
-        // handle timeout
+      // handle timeout
       self.handleTimeout()
     }
   }
@@ -1266,7 +1280,7 @@ class Hemera extends EventEmitter {
       self.log.fatal(internalError)
       self.emit('clientResponseError', error)
 
-        // let it crash
+      // let it crash
       if (self._config.crashOnFatal) {
         self.fatal()
       }
@@ -1326,12 +1340,12 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   *
+   * Remove all registered pattern and release topic from NATS
    *
    * @memberof Hemera
    */
   removeAll () {
-    _.each(this._topics, (_, topic) => this.remove(topic))
+    _.each(this._topics, (val, key) => this.remove(key))
   }
 
   /**

@@ -27,6 +27,7 @@ module.exports = {
   REQUEST_TYPE_REQUEST: 'request',
   // Application errors
   JSON_PARSE_ERROR: 'Invalid JSON payload',
+  TOPIC_SID_REQUIRED_FOR_DELETION: 'Topic or sid is required for deletion',
   ACT_TIMEOUT_ERROR: 'Timeout',
   NO_TOPIC_TO_SUBSCRIBE: 'No topic to subscribe',
   NO_TOPIC_TO_REQUEST: 'No topic to request',

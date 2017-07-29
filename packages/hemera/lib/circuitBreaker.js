@@ -98,6 +98,7 @@ class CircuitBreaker extends EventEmitter {
       this._halfOpenTimer.unref()
     }
   }
+
   /**
    *
    *
