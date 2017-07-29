@@ -4,13 +4,12 @@ const HemeraParambulator = require('../../packages/hemera-parambulator')
 
 describe('Hemera-parambulator', function () {
   const PORT = 6244
-  const flags = ['--user', 'derek', '--pass', 'foobar']
-  const authUrl = 'nats://derek:foobar@localhost:' + PORT
-  let server
+  var authUrl = 'nats://localhost:' + PORT
+  var server
 
   // Start up our own nats-server
   before(function (done) {
-    server = HemeraTestsuite.start_server(PORT, flags, done)
+    server = HemeraTestsuite.start_server(PORT, done)
   })
 
   // Shutdown our server after we are done

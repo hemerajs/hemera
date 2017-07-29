@@ -7,14 +7,13 @@ process.setMaxListeners(0)
 
 describe('Hemera-stats', function () {
   const PORT = 6243
-  const flags = ['--user', 'derek', '--pass', 'foobar']
-  const authUrl = 'nats://derek:foobar@localhost:' + PORT
-  let server
+  var authUrl = 'nats://localhost:' + PORT
+  var server
   let prevNodeEnv = process.env.NODE_ENV
 
   // Start up our own nats-server
   before(function (done) {
-    server = HemeraTestsuite.start_server(PORT, flags, done)
+    server = HemeraTestsuite.start_server(PORT, done)
     process.env.NODE_ENV = 'development'
   })
 

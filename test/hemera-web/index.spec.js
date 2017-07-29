@@ -2,9 +2,8 @@
 
 describe('Hemera-web', function () {
   const PORT = 6244
-  const flags = ['--user', 'derek', '--pass', 'foobar']
-  const authUrl = 'nats://derek:foobar@localhost:' + PORT
-  let server
+  var authUrl = 'nats://localhost:' + PORT
+  var server
   let HemeraWeb
   let Axios
 
@@ -13,7 +12,7 @@ describe('Hemera-web', function () {
     Axios = require('axios')
     HemeraWeb = require('../../packages/hemera-web')
 
-    server = HemeraTestsuite.start_server(PORT, flags, done)
+    server = HemeraTestsuite.start_server(PORT, done)
   })
 
   // Shutdown our server after we are done

@@ -2,13 +2,12 @@
 
 describe('Response error events', function () {
   var PORT = 6242
-  var flags = ['--user', 'derek', '--pass', 'foobar']
-  var authUrl = 'nats://derek:foobar@localhost:' + PORT
+  var authUrl = 'nats://localhost:' + PORT
   var server
 
   // Start up our own nats-server
   before(function (done) {
-    server = HemeraTestsuite.start_server(PORT, flags, done)
+    server = HemeraTestsuite.start_server(PORT, done)
   })
 
   // Shutdown our server after we are done

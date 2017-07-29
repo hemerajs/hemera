@@ -7,9 +7,8 @@ process.setMaxListeners(0)
 
 describe('Hemera-jwt-auth', function () {
   const PORT = 6244
-  const flags = ['--user', 'derek', '--pass', 'foobar']
-  const authUrl = 'nats://derek:foobar@localhost:' + PORT
-  let server
+  var authUrl = 'nats://localhost:' + PORT
+  var server
 
   const tokenDecoded = {
     scope: ['math', 'a']
@@ -18,7 +17,7 @@ describe('Hemera-jwt-auth', function () {
 
   // Start up our own nats-server
   before(function (done) {
-    server = HemeraTestsuite.start_server(PORT, flags, done)
+    server = HemeraTestsuite.start_server(PORT, done)
   })
 
   // Shutdown our server after we are done
