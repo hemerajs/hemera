@@ -894,41 +894,40 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   * Unsubscribe a pattern or subscription id from NATS and Hemera
+   * Unsubscribe a topic or subscription id from NATS and Hemera
    *
-   * @param {any} pattern
+   * @param {any} topic
    * @param {any} maxMessages
    * @returns
    *
    * @memberOf Hemera
    */
-  remove (pattern, maxMessages) {
+  remove (topic, maxMessages) {
     const self = this
 
-    if (_.isString(pattern)) {
-      pattern = TinySonic(pattern)
+    if (!topic) {
+      let error = new Errors.HemeraError(Constants.TOPIC_SID_REQUIRED_FOR_DELETION)
+      self.log.error(error)
+      throw error
     }
 
-    if (_.isNumber(pattern)) {
-      self._transport.unsubscribe(pattern, maxMessages)
+    if (_.isNumber(topic)) {
+      self._transport.unsubscribe(topic, maxMessages)
       return true
     } else {
-      // topic is needed to unsubscribe on NATS and remove pattern from index
-      if (!pattern.topic) {
-        let error = new Errors.HemeraError(Constants.TOPIC_REQUIRED_FOR_REMOVING)
-
-        this.log.error(error)
-        throw error
-      }
-
-      const subId = self._topics[pattern.topic]
+      const subId = self._topics[topic]
 
       if (subId) {
         self._transport.unsubscribe(subId, maxMessages)
         // release topic so we can add it again
-        delete self._topics[pattern.topic]
-        // remove pattern from index
-        self.router.remove(pattern)
+        delete self._topics[topic]
+        // remove pattern which belongs to the topic
+        _.each(this.list(), a => {
+          if (a.pattern.topic === topic) {
+            this.router.remove(a.pattern)
+          }
+        })
+
         return true
       }
     }
@@ -1346,7 +1345,7 @@ class Hemera extends EventEmitter {
    * @memberof Hemera
    */
   removeAll () {
-    _.each(this.list(), (val) => this.remove(val.pattern))
+    _.each(this._topics, (val, key) => this.remove(key))
   }
 
   /**

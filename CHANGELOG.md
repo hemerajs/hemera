@@ -3,6 +3,13 @@ Changelog
 
 # 1.x
 
+### 1.3.24
+
+## Summary
+
+- When removing a topic all pattern which belongs to it are deleted
+
+
 ### 1.3.23
 
 ## Summary

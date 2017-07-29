@@ -30,7 +30,7 @@ describe('Unsubscribe NATS topic', function () {
         })
       })
 
-      const result = hemera.remove('topic:math,cmd:add')
+      const result = hemera.remove('math')
 
       expect(hemera.topics.math).to.be.not.exists()
       expect(hemera.list().length).to.be.equals(0)
@@ -40,32 +40,7 @@ describe('Unsubscribe NATS topic', function () {
     })
   })
 
-  it('Should be able to unsubscribe with literal syntax', function (done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    hemera.ready(() => {
-      hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      }, (resp, cb) => {
-        cb(null, {
-          result: resp.a + resp.b
-        })
-      })
-
-      const result = hemera.remove({ topic: 'math', cmd: 'add' })
-
-      expect(hemera.topics.math).to.be.not.exists()
-      expect(hemera.list().length).to.be.equals(0)
-      expect(result).to.be.equals(true)
-      hemera.close()
-      done()
-    })
-  })
-
-  it('Should be able to unsubscribe multiple pattern', function (done) {
+  it('Should be able to unsubscribe multiple pattern with the same pattern', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -96,7 +71,7 @@ describe('Unsubscribe NATS topic', function () {
         })
       })
 
-      const result = hemera.remove('topic:math,cmd:add')
+      const result = hemera.remove('math')
 
       expect(hemera.topics.math).to.be.not.exists()
       expect(hemera.list().length).to.be.equals(0)
@@ -106,7 +81,7 @@ describe('Unsubscribe NATS topic', function () {
     })
   })
 
-  it('Should not be able to unsubscribe a NATS topic because topic si required', function (done) {
+  it('Should not be able to unsubscribe a NATS topic because topic is required', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -122,10 +97,10 @@ describe('Unsubscribe NATS topic', function () {
       })
 
       try {
-        hemera.remove('cmd:add')
+        hemera.remove('')
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Topic is required to remove a pattern')
+        expect(err.message).to.be.equals('Topic or sid is required for deletion')
         hemera.close()
         done()
       }
@@ -147,7 +122,7 @@ describe('Unsubscribe NATS topic', function () {
         })
       })
 
-      const result = hemera.remove('topic:math1')
+      const result = hemera.remove('math1')
       expect(hemera.topics.math1).to.be.not.exists()
       expect(result).to.be.equals(false)
       hemera.close()
