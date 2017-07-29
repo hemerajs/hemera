@@ -195,7 +195,6 @@ class Hemera extends EventEmitter {
       return new Promise((resolve, reject) => {
         this.close((err) => {
           if (err) {
-            this.log.error(err)
             return reject(err)
           }
           resolve()
@@ -1364,6 +1363,7 @@ class Hemera extends EventEmitter {
       // and then close hemera and nats
       this._transport.flush(() => {
         this._heavy.stop()
+        // Does not throw an issue when connection is not available
         this._transport.close()
 
         if (err) {
