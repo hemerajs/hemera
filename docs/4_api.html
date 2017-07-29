@@ -138,14 +138,24 @@
                         <li><code>parentPlugin</code> <i>String</i></li>
                         <li><code>options</code> <i>Object</i></li>
                     </ul>
+                    <h4 class="section-header">request$</h4>
+                    <p>Returns the current request object.</p>
+                    <ul>
+                        <li><code>id</code> <i>String</i></li>
+                        <li><code>type</code> <i>"request" or "pubsub"</i></li>
+                        <li><code>service</code> <i>String</i></li>
+                        <li><code>method</code> <i>String</i></li>
+                    </ul>
                     <h4 class="section-header">trace$</h4>
                     <p>Returns current tracing informations</p>
                     <ul>
-                        <li><code>duration</code> <i>Number</i></li>
-                        <li><code>parentId</code> <i>String</i></li>
+                        <li><code>traceId </code> <i>String</i></li>
+                        <li><code>parentSpanId </code> <i>String</i></li>
+                        <li><code>spanId </code> <i>String</i></li>
                         <li><code>timestamp</code> <i>Number</i></li>
-                        <li><code>type</code> <i>request | pubsub</i></li>
-                        <li><code>id</code> <i>String</i></li>
+                        <li><code>service</code> <i>String</i></li>
+                        <li><code>method</code> <i>String</i></li>
+                        <li><code>duration</code> <i>Number</i></li>
                     </ul>
                     <h4 class="section-header"><i class="accessor">get</i> plugins</h4>
                     <p>Returns the list of all registered plugins.</p>
@@ -155,13 +165,6 @@
                     <p>Returns the load instance.</p>
                     <h4 class="section-header">config</h4>
                     <p>Returns the config.</p>
-                    <ul>
-                        <li><code>timeout</code> <i>Number</i></li>
-                        <li><code>name</code> <i>String</i></li>
-                        <li><code>crashOnFatal</code> <i>Boolean</i></li>
-                        <li><code>logLevel</code> <i>String</i></li>
-                        <li><code>load</code> <i>Load</i></li>
-                    </ul>
                     <h4 class="section-header">list(pattern: Object, options: Object)</h4>
                     <p>Returns the list of registered actions.</p>
                     <h4 class="section-header"><i class="accessor">get</i> topics</h4>
@@ -187,13 +190,13 @@
                     <h4 class="section-header">use(params: Object, handler: Function)</h4>
                     <p>Register a plugin.</p>
                     <h4 class="section-header">expose(key: String, object: Object)</h4>
-                    <p>Exposed data which can be accessed from all plugins.</p>
+                    <p>Expose data which can be accessed from all plugins.</p>
                     <h4 class="section-header">setOption(key: String, value: Any)</h4>
                     <p>Updates the plugin option value.</p>
                     <h4 class="section-header">setConfig(key: String, value: Any)</h4>
                     <p>Updates the config value.</p>
                     <h4 class="section-header">close()</h4>
-                    <p>Close the NATS and hemera instance.</p>
+                    <p>Gracefully shutdown of all plugins, NATS and hemera.</p>
                     <h4 class="section-h4">Server method interface</h4>
                     <h4 class="section-header">_actMeta</h4>
                     <p>Returns the metadata of the server method.</p>
