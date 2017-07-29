@@ -7,7 +7,7 @@ Changelog
 
 ## Summary
 
-- When removing a topic all pattern which belongs to it are deleted
+- When removing a topic all pattern which belongs to it will be deleted.
 
 
 ### 1.3.23
