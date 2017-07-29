@@ -1350,7 +1350,7 @@ class Hemera extends EventEmitter {
 
   /**
    * Gracefully shutdown of all resources.
-   * Close the process watcher and the underlying transport driver.
+   * Unsubscribe all subscriptiuons and close the underlying NATS connection
    *
    * @param {any} cb
    * @memberof Hemera
