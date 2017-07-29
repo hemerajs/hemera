@@ -33,8 +33,7 @@ describe('Process stats', function () {
       expect(load.heapUsed).to.be.number()
       expect(load.rss).to.be.number()
 
-      hemera.close()
-      done()
+      hemera.close(done)
     })
   })
 })

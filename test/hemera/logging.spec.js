@@ -35,8 +35,7 @@ describe('Logging interface', function () {
     hemera.log.info('test')
 
     expect(logSpy.called).to.be.equals(true)
-    hemera.close()
-    done()
+    hemera.close(done)
   })
 
   it('Should be able to log with default logger', function (done) {
@@ -51,8 +50,7 @@ describe('Logging interface', function () {
 
     expect(logSpy.called).to.be.equals(true)
     logSpy.restore()
-    hemera.close()
-    done()
+    hemera.close(done)
   })
 
   it('Should be able to log with none pretty logger', function (done) {
@@ -68,7 +66,6 @@ describe('Logging interface', function () {
 
     expect(logSpy.called).to.be.equals(true)
     logSpy.restore()
-    hemera.close()
-    done()
+    hemera.close(done)
   })
 })

@@ -35,8 +35,7 @@ describe('Unsubscribe NATS topic', function () {
       expect(hemera.topics.math).to.be.not.exists()
       expect(hemera.list().length).to.be.equals(0)
       expect(result).to.be.equals(true)
-      hemera.close()
-      done()
+      hemera.close(done)
     })
   })
 
@@ -76,8 +75,7 @@ describe('Unsubscribe NATS topic', function () {
       expect(hemera.topics.math).to.be.not.exists()
       expect(hemera.list().length).to.be.equals(0)
       expect(result).to.be.equals(true)
-      hemera.close()
-      done()
+      hemera.close(done)
     })
   })
 
@@ -101,8 +99,7 @@ describe('Unsubscribe NATS topic', function () {
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
         expect(err.message).to.be.equals('Topic or sid is required for deletion')
-        hemera.close()
-        done()
+        hemera.close(done)
       }
     })
   })
@@ -125,8 +122,7 @@ describe('Unsubscribe NATS topic', function () {
       const result = hemera.remove('math1')
       expect(hemera.topics.math1).to.be.not.exists()
       expect(result).to.be.equals(false)
-      hemera.close()
-      done()
+      hemera.close(done)
     })
   })
 
@@ -154,8 +150,7 @@ describe('Unsubscribe NATS topic', function () {
 
         const result = hemera.remove(this._sid)
         expect(result).to.be.equals(true)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -191,8 +186,7 @@ describe('Unsubscribe NATS topic', function () {
         hemera.removeAll()
         expect(Object.keys(hemera.topics).length).to.be.equals(0)
         expect(hemera.list().length).to.be.equals(0)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })

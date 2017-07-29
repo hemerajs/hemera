@@ -25,8 +25,7 @@ describe('Publish / Subscribe', function () {
         topic: 'email',
         cmd: 'send'
       }, (resp) => {
-        hemera.close()
-        done()
+        hemera.close(done)
       })
 
       hemera.act({
@@ -49,8 +48,7 @@ describe('Publish / Subscribe', function () {
         topic: 'email',
         cmd: 'send'
       }, (resp) => {
-        hemera.close()
-        done()
+        hemera.close(done)
       })
 
       hemera.act({
@@ -74,9 +72,7 @@ describe('Publish / Subscribe', function () {
       counter++
 
       if (counter === 2) {
-        hemera1.close()
-        hemera2.close()
-        done()
+        hemera1.close(x => hemera2.close(done))
       }
     }
 
@@ -141,8 +137,7 @@ describe('Publish / Subscribe', function () {
       setTimeout(() => {
         expect(stub.called).to.be.equals(true)
 
-        hemera.close()
-        done()
+        hemera.close(done)
       }, 100)
     })
   })
@@ -179,8 +174,7 @@ describe('Publish / Subscribe', function () {
       setTimeout(() => {
         expect(stub.called).to.be.equals(false)
 
-        hemera.close()
-        done()
+        hemera.close(done)
       }, 100)
     })
   })

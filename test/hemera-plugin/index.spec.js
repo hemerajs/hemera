@@ -36,8 +36,7 @@ describe('Hemera plugin', function () {
     })
 
     hemera.ready(() => {
-      hemera.close()
-      done()
+      hemera.close(done)
     })
   })
 
@@ -63,8 +62,7 @@ describe('Hemera plugin', function () {
     }
 
     expect(throws).to.throw(Error)
-    hemera.close()
-    done()
+    hemera.close(done)
   })
 
   it('Should throw an error because plugin function is not a function', function (done) {
@@ -87,8 +85,7 @@ describe('Hemera plugin', function () {
     }
 
     expect(throws).to.throw(Error, 'hemera-plugin expects a function, instead got a \'boolean\'')
-    hemera.close()
-    done()
+    hemera.close(done)
   })
 
   it('Should throw an error because plugin version is not a string', function (done) {
@@ -111,7 +108,6 @@ describe('Hemera plugin', function () {
     }
 
     expect(throws).to.throw(Error, 'hemera-plugin expects a version string as second parameter, instead got \'boolean\'')
-    hemera.close()
-    done()
+    hemera.close(done)
   })
 })

@@ -39,8 +39,7 @@ describe('Message loop detection', function () {
           n++
         } else {
           setTimeout(() => {
-            hemera.close()
-            done()
+            hemera.close(done)
           }, 100)
           cb()
         }
@@ -74,8 +73,7 @@ describe('Message loop detection', function () {
               expect(err.count).to.be.equals(2)
               // give nats chance to proceed the messages
               setTimeout(() => {
-                hemera.close()
-                done()
+                hemera.close(done)
               }, 50)
             }
             cb()
@@ -162,8 +160,7 @@ describe('Message loop detection', function () {
       expect(recursionError instanceof Hemera.errors.MaxRecursionError).to.be.equals(true)
       expect(recursionError.count).to.be.equals(maxRecursion)
       expect(client1Spy.callCount + client2Spy.callCount).to.be.equals(maxRecursion)
-      hemera.close()
-      done()
+      hemera.close(done)
     }, 500)
   })
 
@@ -246,8 +243,7 @@ describe('Message loop detection', function () {
       expect(recursionError instanceof Hemera.errors.MaxRecursionError).to.be.equals(true)
       expect(recursionError.count).to.be.equals(maxRecursion)
       expect(client1Spy.callCount + client2Spy.callCount).to.be.equals(0)
-      hemera.close()
-      done()
+      hemera.close(done)
     }, 500)
   })
 
@@ -284,8 +280,7 @@ describe('Message loop detection', function () {
                 expect(resp).to.be.equals(true)
                 // give nats chance to proceed the messages
                 setTimeout(() => {
-                  hemera.close()
-                  done()
+                  hemera.close(done)
                 }, 50)
               })
             }

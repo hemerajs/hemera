@@ -43,8 +43,7 @@ describe('Hemera-zipkin', function () {
         a: '1'
       }, (err, resp) => {
         expect(err).to.be.not.exists()
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })

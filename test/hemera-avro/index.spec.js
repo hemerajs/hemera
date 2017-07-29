@@ -43,8 +43,7 @@ describe('Hemera-avro', function () {
       }, (err, resp) => {
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -77,8 +76,7 @@ describe('Hemera-avro', function () {
       }, (err, resp) => {
         expect(err).to.be.not.exists()
         expect(resp.result).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -124,8 +122,7 @@ describe('Hemera-avro', function () {
       }, (err, resp) => {
         expect(err).to.be.not.exists()
         expect(resp.result).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -175,8 +172,7 @@ describe('Hemera-avro', function () {
         expect(err.cause.name).to.be.equals('Error')
         expect(err.cause.message).to.be.equals('truncated buffer')
 
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -222,8 +218,7 @@ describe('Hemera-avro', function () {
         expect(err.name).to.be.equals('Error')
         expect(err.message).to.be.equals('test')
 
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -275,8 +270,7 @@ describe('Hemera-avro', function () {
         expect(err.details).to.be.equals({ foo: 'bar' })
         expect(err.message).to.be.equals('test')
 
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })

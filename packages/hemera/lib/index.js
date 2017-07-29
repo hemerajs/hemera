@@ -1357,17 +1357,6 @@ class Hemera extends EventEmitter {
    */
   close (cb) {
     this._extensions.onClose.dispatch(this, (err, val) => {
-      // no callback no queue processing
-      if (!_.isFunction(cb)) {
-        this._heavy.stop()
-        this._transport.close()
-        if (err) {
-          this.log.fatal(err)
-          this.emit('error', err)
-        }
-        return
-      }
-
       // remove all active subscriptions
       this.removeAll()
 

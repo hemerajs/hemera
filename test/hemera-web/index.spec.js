@@ -39,8 +39,7 @@ describe('Hemera-web', function () {
 
       Axios.get('http://127.0.0.1:3000?topic=math&cmd=add&a=1&b=2').then((resp) => {
         expect(resp.data.result).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
       .catch(done)
     })
@@ -65,8 +64,7 @@ describe('Hemera-web', function () {
 
       Axios.post('http://127.0.0.1:3000?topic=math&cmd=add&a=1&b=2').then((resp) => {
         expect(resp.data.result).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
       .catch(done)
     })
@@ -91,8 +89,7 @@ describe('Hemera-web', function () {
 
       Axios.get('http://127.0.0.1:3000/math?cmd=add&a=1&b=2').then((resp) => {
         expect(resp.data.result).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
       .catch(done)
     })
@@ -117,8 +114,7 @@ describe('Hemera-web', function () {
 
       Axios.get('http://127.0.0.1:3000/math/add?a=1&b=2').then((resp) => {
         expect(resp.data.result).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
       .catch(done)
     })
@@ -146,8 +142,7 @@ describe('Hemera-web', function () {
         b: 2
       }).then((resp) => {
         expect(resp.data.result).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
       .catch(done)
     })
@@ -176,8 +171,7 @@ describe('Hemera-web', function () {
         b: 2
       }).then((resp) => {
         expect(resp.data.result).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
       .catch(done)
     })
@@ -210,8 +204,7 @@ describe('Hemera-web', function () {
       .catch((resp) => {
         expect(resp.response.data.error.stack).to.be.exists()
         expect(resp.response.status).to.be.equals(404)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -239,8 +232,7 @@ describe('Hemera-web', function () {
       .catch((resp) => {
         expect(resp.response.data.error.stack).to.be.not.exists()
         expect(resp.response.status).to.be.equals(404)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -267,8 +259,7 @@ describe('Hemera-web', function () {
       Axios.get('http://127.0.0.1:3000?topic=math&cmd=add&a=1&b=2')
       .catch((resp) => {
         expect(resp.response.status).to.be.equals(404)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -293,8 +284,7 @@ describe('Hemera-web', function () {
       Axios.get('http://127.0.0.1:3000?topic=math&cmd=add&a=1&b=2')
       .catch((resp) => {
         expect(resp.response.status).to.be.equals(500)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -323,8 +313,7 @@ describe('Hemera-web', function () {
         b: 2
       }).then((resp) => {
         expect(resp.data.result).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
       .catch(done)
     })
@@ -351,8 +340,7 @@ describe('Hemera-web', function () {
 
       Axios.get('http://127.0.0.1:3000?cmd=add&a=1&b=2').then((resp) => {
         expect(resp.data.result).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
       .catch(done)
     })
@@ -382,8 +370,7 @@ describe('Hemera-web', function () {
 
       Axios.get('http://127.0.0.1:3000?cmd=add&a=1&b=2').then((resp) => {
         expect(resp.data.result).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
       .catch(done)
     })
@@ -415,8 +402,7 @@ describe('Hemera-web', function () {
       }).then((resp) => {
         expect(resp.data.text).to.be.equals('fooBar')
         expect(resp.data.result).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
       .catch(done)
     })
@@ -450,8 +436,7 @@ describe('Hemera-web', function () {
       }).then((resp) => {
         expect(new Buffer(resp.data.binary).equals(buff)).to.be.equals(true)
         expect(resp.data.result).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
       .catch(done)
     })
@@ -483,8 +468,7 @@ describe('Hemera-web', function () {
         }
       }).then((resp) => {
         expect(resp.data.result).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
       .catch(done)
     })

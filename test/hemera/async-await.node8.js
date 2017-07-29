@@ -42,8 +42,7 @@ describe('Async / Await support', function () {
       }, function (err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -71,8 +70,7 @@ describe('Async / Await support', function () {
       }, function (err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -102,8 +100,7 @@ describe('Async / Await support', function () {
         b: 2
       }, function (err, resp) {
         expect(err).to.be.exists()
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -134,8 +131,7 @@ describe('Async / Await support', function () {
         b: 2
       }, function (err, resp) {
         expect(err).to.be.not.exists()
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -165,8 +161,7 @@ describe('Async / Await support', function () {
       }, function (err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -215,8 +210,7 @@ describe('Async / Await support', function () {
           expect(err).not.to.be.exists()
           expect(resp.result).to.be.equals(6)
 
-          hemera.close()
-          done()
+          hemera.close(done)
         })
       })
     })
@@ -264,8 +258,7 @@ describe('Async / Await support', function () {
           expect(err).not.to.be.exists()
           expect(resp.result).to.be.equals(6)
 
-          hemera.close()
-          done()
+          hemera.close(done)
         })
       })
     })
@@ -315,8 +308,7 @@ describe('Async / Await support', function () {
       }, function (err, resp) {
         expect(err).not.to.be.exists()
         expect(resp.result).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -343,8 +335,7 @@ describe('Async / Await support', function () {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Error')
         expect(err.name).to.be.equals('Error')
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -377,8 +368,7 @@ describe('Async / Await support', function () {
           expect(resp).to.be.equals({
             result: true
           })
-          hemera.close()
-          done()
+          hemera.close(done)
         })
     })
   })
@@ -409,8 +399,7 @@ describe('Async / Await support', function () {
       })
         .catch(function (err) {
           expect(err).to.be.exists()
-          hemera.close()
-          done()
+          hemera.close(done)
         })
     })
   })
@@ -438,8 +427,7 @@ describe('Async / Await support', function () {
       })
 
       setTimeout(() => {
-        hemera.close()
-        done()
+        hemera.close(done)
       }, 50)
     })
   })
@@ -467,8 +455,7 @@ describe('Async / Await support', function () {
       })
 
       setTimeout(() => {
-        hemera.close()
-        done()
+        hemera.close(done)
       }, 50)
     })
   })
@@ -499,8 +486,7 @@ describe('Async / Await support', function () {
       })
         .catch(function (err) {
           expect(err).to.be.exists()
-          hemera.close()
-          done()
+          hemera.close(done)
         })
     })
   })
@@ -551,8 +537,7 @@ describe('Async / Await support in extension', function () {
       }, (err, resp) => {
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals('foobar')
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -582,8 +567,7 @@ describe('Async / Await support in extension', function () {
       }, (err, resp) => {
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals(true)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -614,8 +598,7 @@ describe('Async / Await support in extension', function () {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Error')
         expect(err.message).to.be.equals('test')
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -646,8 +629,7 @@ describe('Async / Await support in extension', function () {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Error')
         expect(err.message).to.be.equals('test')
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })

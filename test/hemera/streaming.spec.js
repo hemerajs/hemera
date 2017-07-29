@@ -40,8 +40,7 @@ describe('Streaming', function () {
         expect(err).to.be.not.exists()
         results.push(resp)
         if (results.length === 100) {
-          hemera.close()
-          done()
+          hemera.close(done)
         }
       })
     })

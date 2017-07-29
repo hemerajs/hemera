@@ -61,8 +61,7 @@ describe('Load policy for server component', function () {
         // wait for next cycle
         setTimeout(() => {
           expect(stub.called).to.be.equals(false)
-          hemera.close()
-          done()
+          hemera.close(done)
         })
       })
     })
@@ -115,8 +114,7 @@ describe('Load policy for server component', function () {
         // wait for next cycle
         setTimeout(() => {
           expect(stub.called).to.be.equals(true)
-          hemera.close()
-          done()
+          hemera.close(done)
         }, 50)
       })
     })
