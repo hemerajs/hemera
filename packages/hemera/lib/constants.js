@@ -27,6 +27,7 @@ module.exports = {
   REQUEST_TYPE_REQUEST: 'request',
   // Application errors
   JSON_PARSE_ERROR: 'Invalid JSON payload',
+  TOPIC_REQUIRED_FOR_REMOVING: 'Topic is required to remove a pattern',
   ACT_TIMEOUT_ERROR: 'Timeout',
   NO_TOPIC_TO_SUBSCRIBE: 'No topic to subscribe',
   NO_TOPIC_TO_REQUEST: 'No topic to request',
