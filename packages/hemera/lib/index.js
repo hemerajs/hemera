@@ -1367,7 +1367,7 @@ class Hemera extends EventEmitter {
         this._transport.close()
 
         if (err) {
-          this.log.fatal(err)
+          this.log.error(err)
           this.emit('error', err)
           if (_.isFunction(cb)) {
             cb(err)
