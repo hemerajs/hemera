@@ -7,7 +7,7 @@ Changelog
 
 ## Summary
 
-- When removing a topic all pattern which belongs to it will be deleted.
+- When removing a topic with `remove(<topic>)` all pattern which belongs to it will be deleted.
 
 
 ### 1.3.23
