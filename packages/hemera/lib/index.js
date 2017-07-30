@@ -1310,7 +1310,7 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   * Create new instance of hemera but with pointer on the previous propertys
+   * Create new instance of hemera but based on the current prototype
    * so we are able to create a scope per act without lossing the reference to the core api.
    *
    * @returns
