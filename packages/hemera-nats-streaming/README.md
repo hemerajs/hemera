@@ -13,10 +13,10 @@ Since nats-streaming based on NATS Server you are able to run both technologies 
 
 We provide a simple interface to work with nats-streaming
 
-- **act("topic:nats-streaming,cmd:publish"):** Publish a message to nats-streaming.
-- **act("topic:nats-streaming,cmd:subscribe"):** Create a nats-streaming subscription and return an ack when the subscription was created.
-- **act("topic:nats-streaming,cmd:unsubscribe"):** Unsubscribe an active nats-streaming subscription.
-- **act("topic:nats-streaming,cmd:suspend"):** Suspend a durable nats-streaming subscription. You can active it if you call `subscribe` again.
+- **act("topic:nats-streaming,cmd:publish,subject:yourSubject"):** Publish a message to nats-streaming.
+- **act("topic:nats-streaming,cmd:subscribe,subject:yourSubject"):** Create a nats-streaming subscription and return an ack when the subscription was created.
+- **act("topic:nats-streaming,cmd:unsubscribe,subject:yourSubject"):** Unsubscribe an active nats-streaming subscription.
+- **act("topic:nats-streaming,cmd:suspend,subject:yourSubject"):** Suspend a durable nats-streaming subscription. You can active it if you call `subscribe` again.
 - **add("topic:nats-streaming.yourSubject":** Create a NATS subscription to listen on NATS-Streaming events. You have to call the callback handler to acknowledge the message.
 
 ### Why you don't implement nats-streaming in hemera?
