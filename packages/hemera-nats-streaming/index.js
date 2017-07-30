@@ -64,6 +64,7 @@ exports.plugin = Hp(function hemeraNatsStreaming (options, next) {
         setStartAtTimeDelta: Joi.number().integer(),
         setDurableName: Joi.string(), // Create a durable subscription
         setMaxInFlight: Joi.number().integer(), // the maximum number of outstanding acknowledgements
+        setManualAckMode: Joi.boolean().default(true),
         setAckWait: Joi.number().integer() // if an acknowledgement is not received within the configured timeout interval, NATS Streaming will attempt redelivery of the message (default 30 seconds)
       }).default()
     }, function (req, reply) {
@@ -101,6 +102,7 @@ exports.plugin = Hp(function hemeraNatsStreaming (options, next) {
             message: result.value
           }
           reply(null, data)
+          msg.ack()
         }
       })
     })
