@@ -31,4 +31,4 @@ _*nats-streaming-server_ hasn't support for cluster mode but it's planned for th
 Look in the source code all options are well documented.
 
 ### Example
-[Example](examples/bridges/nats-streaming.js)
+[Example](/examples/bridges/nats-streaming.js)
