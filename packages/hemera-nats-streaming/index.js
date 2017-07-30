@@ -112,6 +112,8 @@ exports.plugin = Hp(function hemeraNatsStreaming (options, next) {
           }, function (err, resp) {
             if (!err) {
               msg.ack()
+            } else {
+              this.log.error(`Message could not be acknowledged. Subscription "${inboxChannel}"`)
             }
           })
         }

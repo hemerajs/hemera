@@ -26,7 +26,9 @@ hemera.ready(() => {
     cmd: 'subscribe',
     subject: 'orderCreated',
     options: {
-      setAckWait: 60000
+      setAckWait: 10000,
+      setDeliverAllAvailable: true,
+      setDurableName: 'orderCreated'
     }
   }, function (err, resp) {
     this.log.info(resp, 'ACK')
@@ -39,8 +41,8 @@ hemera.ready(() => {
     topic: 'nats-streaming.orderCreated'
   }, function (req, reply) {
     this.log.info(req, 'RECEIVED')
-    // ACK Message
-    reply()
+    // ACK Message, if you pass an error the message is redelivered every 10 seconds
+    reply(/*new Error('test')*/)
   })
 
   setTimeout(() => {
