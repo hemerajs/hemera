@@ -14,7 +14,7 @@ Since nats-streaming based on NATS Server you are able to run both technologies 
 We provide a simple interface to work with nats-streaming
 
 - `act("topic:nats-streaming,cmd:publish,subject:<subject>")`: Publish a message to nats-streaming.
-- `act("topic:nats-streaming,cmd:subscribe,subject:yourSubject")`: Create a nats-streaming subscription and return an ack when the subscription was created.
+- `act("topic:nats-streaming,cmd:subscribe,subject:<subject>")`: Create a nats-streaming subscription and return an ack when the subscription was created.
 - `act("topic:nats-streaming,cmd:unsubscribe,subject:<subject>")`: Unsubscribe an active nats-streaming subscription.
 - `act("topic:nats-streaming,cmd:suspend,subject:<subject>")`: Suspend a durable nats-streaming subscription. You can active it if you call `subscribe` again.
 - `add("topic:nats-streaming.<subject>")`: Create a NATS subscription to listen on NATS-Streaming events. You have to call the callback handler to acknowledge the message.
