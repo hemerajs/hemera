@@ -24,7 +24,7 @@ They use the same server but the purpose is quite different with hemera we want 
 _*nats-streaming-server_ hasn't support for cluster mode but it's planned for this year 2017.
 
 ### Limitations
-- Since we use it as a bridge we cannot manually acknowledge a message.
+- Since we use it as a bridge we cannot manually acknowledge a message. This means that as soon as message could be successfully parsed as JSON and send to NATS it's acknowledged. The fault tolerance of your NATS System is the strength and weakness whether a message can be susccessfully proceed.
 - Only JSON support
 
 ### Documentation
