@@ -37,8 +37,7 @@ describe('Error propagation', function () {
         expect(err.name).to.be.equals('Error')
         expect(err.message).to.be.equals('B Error')
 
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -67,8 +66,7 @@ describe('Error propagation', function () {
         expect(err.name).to.be.equals('Unauthorized')
         expect(err.message).to.be.equals('test')
 
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -138,8 +136,7 @@ describe('Error propagation', function () {
         expect(err.hops[2].app).to.be.exists()
         expect(err.hops[2].ts).to.be.exists()
 
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -212,8 +209,7 @@ describe('Error propagation', function () {
         expect(err.hops[2].app).to.be.exists()
         expect(err.hops[2].ts).to.be.exists()
 
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })

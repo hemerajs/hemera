@@ -34,8 +34,7 @@ describe('Topic wildcards', function () {
       }, function (err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals(true)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -59,8 +58,7 @@ describe('Topic wildcards', function () {
       }, function (err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals(true)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -99,8 +97,7 @@ describe('Topic wildcards', function () {
         // NATS has registered two subject wildcards
         // On hemera side the order is significant
         expect(callback.callCount).to.be.equals(2)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -116,8 +113,7 @@ describe('Topic wildcards', function () {
         cmd: 'info'
       }, (req) => {
         expect(req.topic).to.be.equals('systems-europe.a.info.details')
-        hemera.close()
-        done()
+        hemera.close(done)
       })
       hemera.act({
         topic: 'systems-europe.a.info.details',
@@ -138,8 +134,7 @@ describe('Topic wildcards', function () {
         cmd: 'info'
       }, (req) => {
         expect(req.topic).to.be.equals('systems-europe.a.info')
-        hemera.close()
-        done()
+        hemera.close(done)
       })
       hemera.act({
         topic: 'systems-europe.a.info',
@@ -169,8 +164,7 @@ describe('Topic wildcards', function () {
       })
 
       expect(br.actMeta.pattern.topic).to.be.equals('systems-europe.a')
-      hemera.close()
-      done()
+      hemera.close(done)
     })
   })
 })

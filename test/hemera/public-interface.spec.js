@@ -24,8 +24,7 @@ describe('Public interface', function () {
     expect(hemera.topics).to.be.exists()
     expect(hemera.router).to.be.exists()
 
-    hemera.close()
-    done()
+    hemera.close(done)
   })
 
   it('public set options', function (done) {
@@ -36,7 +35,6 @@ describe('Public interface', function () {
     expect(hemera.setOption).to.be.exists()
     expect(hemera.setConfig).to.be.exists()
 
-    hemera.close()
-    done()
+    hemera.close(done)
   })
 })

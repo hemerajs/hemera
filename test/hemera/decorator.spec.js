@@ -24,8 +24,7 @@ describe('Decorator', function () {
       hemera.decorate('d', () => true)
       let result = hemera.d()
       expect(result).to.be.equals(true)
-      hemera.close()
-      done()
+      hemera.close(done)
     })
   })
 
@@ -41,8 +40,7 @@ describe('Decorator', function () {
       } catch (e) {
         expect(e).to.be.exists()
         expect(e.message).to.be.equals('Server decoration already defined')
-        hemera.close()
-        done()
+        hemera.close(done)
       }
     })
   })
@@ -58,8 +56,7 @@ describe('Decorator', function () {
       } catch (e) {
         expect(e).to.be.exists()
         expect(e.message).to.be.equals('Cannot override the built-in server interface method')
-        hemera.close()
-        done()
+        hemera.close(done)
       }
     })
   })
@@ -85,8 +82,7 @@ describe('Decorator', function () {
       let result = hemera.d()
       expect(result).to.be.equals(true)
       expect(hemera._decorations['d'].plugin.attributes.name).to.be.equals('myPlugin')
-      hemera.close()
-      done()
+      hemera.close(done)
     })
   })
 })

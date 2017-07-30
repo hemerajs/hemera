@@ -47,8 +47,7 @@ describe('Default JSON encoder', function () {
             dinklage: '[Circular]'
           }
         })
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })

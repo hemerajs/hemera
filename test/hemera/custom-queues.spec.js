@@ -55,9 +55,7 @@ describe('Custom queues', function () {
       }, function () {
         expect(queueA.callCount).to.be.equals(1)
         expect(queueB.callCount).to.be.equals(1)
-        hemera.close()
-        hemera2.close()
-        done()
+        hemera.close(x => hemera2.close(() => done()))
       })
     }, 100)
   })

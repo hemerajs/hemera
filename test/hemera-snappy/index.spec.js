@@ -43,8 +43,7 @@ describe('Hemera-snappy', function () {
       }, (err, resp) => {
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -77,8 +76,7 @@ describe('Hemera-snappy', function () {
       }, (err, resp) => {
         expect(err).to.be.not.exists()
         expect(resp.result).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })

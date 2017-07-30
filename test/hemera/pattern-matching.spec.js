@@ -48,8 +48,7 @@ describe('Pattern matching', function () {
       } catch (e) {
         expect(e.name).to.be.equals('HemeraError')
         expect(e.message).to.be.equals('Pattern is already in use')
-        hemera.close()
-        done()
+        hemera.close(done)
       }
     })
   })
@@ -87,8 +86,7 @@ describe('Pattern matching', function () {
         expect(err).to.be.not.exists()
         next()
       })
-      hemera.close()
-      done()
+      hemera.close(done)
     })
   })
 
@@ -138,8 +136,7 @@ describe('Pattern matching', function () {
         cmd: 'CMD'
       })
 
-      hemera.close()
-      done()
+      hemera.close(done)
     })
   })
 
@@ -170,8 +167,7 @@ describe('Pattern matching', function () {
         },
         timeout$: 5000
       }, function (err, resp) {
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -223,8 +219,7 @@ describe('Pattern matching', function () {
         type: 'TYPE2'
       })
 
-      hemera.close()
-      done()
+      hemera.close(done)
     })
   })
 })

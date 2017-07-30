@@ -77,8 +77,7 @@ describe('Metadata', function () {
         }, function (err, resp) {
           expect(err).to.be.not.exists()
           expect(this.meta$.a).to.be.equals('test')
-          hemera.close()
-          done()
+          hemera.close(done)
         })
       })
     })

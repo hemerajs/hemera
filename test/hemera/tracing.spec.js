@@ -126,8 +126,7 @@ describe('Tracing', function () {
           expect(this.request$.id).to.be.string()
           expect(this.request$.parentId).to.be.a.string()
 
-          hemera.close()
-          done()
+          hemera.close(done)
         })
       })
     })
@@ -222,8 +221,7 @@ describe('Tracing', function () {
       }, (err, resp) => {
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -249,8 +247,7 @@ describe('Tracing', function () {
         timeout$: 5000
       }, function (err, resp) {
         expect(this.trace$.method).to.be.equals('cmd:CMD,topic:TOPIC')
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })

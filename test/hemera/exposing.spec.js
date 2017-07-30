@@ -25,8 +25,7 @@ describe('Exposing', function () {
 
       expect(hemera.exposition.core.test).to.be.equals(1)
 
-      hemera.close()
-      done()
+      hemera.close(done)
     })
   })
 })

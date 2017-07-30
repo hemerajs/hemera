@@ -58,8 +58,7 @@ describe('Delegate', function () {
         expect(this.delegate$.name).to.exist()
         expect(err).to.be.not.exists()
 
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })

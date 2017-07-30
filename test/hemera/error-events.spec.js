@@ -25,8 +25,7 @@ describe('Response error events', function () {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Error')
         expect(err.message).to.be.equals('test')
-        hemera.close()
-        done()
+        hemera.close(done)
       })
 
       hemera.ext('onServerPreResponse', function (resp, req, next) {
@@ -59,8 +58,7 @@ describe('Response error events', function () {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Error')
         expect(err.message).to.be.equals('test')
-        hemera.close()
-        done()
+        hemera.close(done)
       })
 
       hemera.add({
@@ -91,8 +89,7 @@ describe('Response error events', function () {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Error')
         expect(err.message).to.be.equals('test')
-        hemera.close()
-        done()
+        hemera.close(done)
       })
 
       hemera.add({
@@ -125,8 +122,7 @@ describe('Response error events', function () {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Unauthorized')
         expect(err.message).to.be.equals('test')
-        hemera.close()
-        done()
+        hemera.close(done)
       })
 
       hemera.add({
@@ -157,8 +153,7 @@ describe('Response error events', function () {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Error')
         expect(err.message).to.be.equals('test')
-        hemera.close()
-        done()
+        hemera.close(done)
       })
 
       hemera.ext('onClientPostRequest', function (next) {

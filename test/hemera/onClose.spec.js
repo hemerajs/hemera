@@ -46,10 +46,11 @@ describe('onClose extension', function () {
     })
 
     hemera.ready(() => {
-      hemera.close()
-      expect(secondOnCloseHandler.callCount).to.be.equals(1)
-      expect(firstOnCloseHandler.callCount).to.be.equals(1)
-      done()
+      hemera.close(x => {
+        expect(secondOnCloseHandler.callCount).to.be.equals(1)
+        expect(firstOnCloseHandler.callCount).to.be.equals(1)
+        done()
+      })
     })
   })
 
@@ -89,9 +90,10 @@ describe('onClose extension', function () {
     })
 
     hemera.ready(x => {
-      hemera.close()
-      expect(secondOnCloseHandler.callCount).to.be.equals(1)
-      expect(firstOnCloseHandler.callCount).to.be.equals(1)
+      hemera.close(x => {
+        expect(secondOnCloseHandler.callCount).to.be.equals(1)
+        expect(firstOnCloseHandler.callCount).to.be.equals(1)
+      })
     })
   })
 
@@ -126,8 +128,7 @@ describe('onClose extension', function () {
     })
 
     hemera.ready(() => {
-      hemera.close()
-      setTimeout(() => {
+      hemera.close(x => {
         expect(secondOnCloseHandler.callCount).to.be.equals(1)
         expect(firstOnCloseHandler.callCount).to.be.equals(1)
         done()

@@ -3,6 +3,49 @@ Changelog
 
 # 1.x
 
+### 1.4.0
+
+## Summary
+
+The `close` method is async and accept a callback. Before the close callback is called all registered subscriptions are unsubscribed from NATS as well as all registered pattern. Plugins which have been registered an `onClose` extension can clean up. Every IO will be flushed to NATS before the close callback is called.
+
+- **Upgrade time:** low - none to a couple of hours for most users
+- **Complexity:** low - requires following the list of changes to verifying their impact
+- **Risk:** none
+- **Dependencies:** low - existing plugins will work as-is
+
+## Breaking change
+
+- The `close` method is async and accept a callback
+
+## Migration Checklist
+
+1. If you want to check the error from the `onClose` extension you can do:
+**Old:**
+
+```js
+hemera.close()
+```
+
+**New:**
+
+```js
+hemera.close((err) => ...)
+```
+
+2. The callback of your tests should be called in the `onClose` handler otherwise the server won't gracefully shutdown before the next test can start.
+
+**Old:**
+```js
+hemera.close()
+```
+
+**New:**
+
+```js
+hemera.close(done)
+```
+
 ### 1.3.24
 
 ## Summary

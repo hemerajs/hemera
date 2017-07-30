@@ -195,7 +195,6 @@ class Hemera extends EventEmitter {
       return new Promise((resolve, reject) => {
         this.close((err) => {
           if (err) {
-            this.log.error(err)
             return reject(err)
           }
           resolve()
@@ -1311,7 +1310,7 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   * Create new instance of hemera but with pointer on the previous propertys
+   * Create new instance of hemera but based on the current prototype
    * so we are able to create a scope per act without lossing the reference to the core api.
    *
    * @returns
@@ -1350,24 +1349,13 @@ class Hemera extends EventEmitter {
 
   /**
    * Gracefully shutdown of all resources.
-   * Close the process watcher and the underlying transport driver.
+   * Unsubscribe all subscriptiuons and close the underlying NATS connection
    *
    * @param {any} cb
    * @memberof Hemera
    */
   close (cb) {
     this._extensions.onClose.dispatch(this, (err, val) => {
-      // no callback no queue processing
-      if (!_.isFunction(cb)) {
-        this._heavy.stop()
-        this._transport.close()
-        if (err) {
-          this.log.fatal(err)
-          this.emit('error', err)
-        }
-        return
-      }
-
       // remove all active subscriptions
       this.removeAll()
 
@@ -1375,10 +1363,11 @@ class Hemera extends EventEmitter {
       // and then close hemera and nats
       this._transport.flush(() => {
         this._heavy.stop()
+        // Does not throw an issue when connection is not available
         this._transport.close()
 
         if (err) {
-          this.log.fatal(err)
+          this.log.error(err)
           this.emit('error', err)
           if (_.isFunction(cb)) {
             cb(err)

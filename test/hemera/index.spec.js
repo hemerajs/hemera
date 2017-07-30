@@ -57,8 +57,7 @@ describe('Hemera', function () {
           expect(err).not.to.be.exists()
           expect(resp.result).to.be.equals(6)
 
-          hemera.close()
-          done()
+          hemera.close(done)
         })
       })
     })
@@ -114,8 +113,7 @@ describe('Hemera', function () {
           expect(err).not.to.be.exists()
           expect(resp.result).to.be.equals(6)
 
-          hemera.close()
-          done()
+          hemera.close(done)
         })
       })
     })
@@ -141,8 +139,7 @@ describe('Hemera', function () {
         msg: 'Hi!'
       })
 
-      hemera.close()
-      done()
+      hemera.close(done)
     })
   })
 
@@ -171,8 +168,7 @@ describe('Hemera', function () {
       }, function (err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -209,8 +205,7 @@ describe('Hemera', function () {
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals(3)
         expect(callback.calledTwice).to.be.equals(true)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -243,8 +238,7 @@ describe('Hemera', function () {
       }, function (err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -280,8 +274,7 @@ describe('Hemera', function () {
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals(3)
         expect(callback.calledTwice).to.be.equals(true)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -303,8 +296,7 @@ describe('Hemera', function () {
 
       expect(result).to.be.an.array()
 
-      hemera.close()
-      done()
+      hemera.close(done)
     })
   })
 
@@ -323,8 +315,7 @@ describe('Hemera', function () {
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
         expect(err.message).to.be.equals('No topic to subscribe')
-        hemera.close()
-        done()
+        hemera.close(done)
       }
     })
   })
@@ -352,8 +343,7 @@ describe('Hemera', function () {
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
         expect(err.message).to.be.equals('Pattern is already in use')
-        hemera.close()
-        done()
+        hemera.close(done)
       }
     })
   })
@@ -384,8 +374,7 @@ describe('Hemera', function () {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Error')
         expect(err.message).to.be.equals('test')
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -417,8 +406,7 @@ describe('Hemera', function () {
         expect(err.name).to.be.equals('Unauthorized')
         expect(err.message).to.be.equals('test')
         expect(err instanceof UnauthorizedError).to.be.equals(true)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -456,8 +444,7 @@ describe('Hemera', function () {
         expect(err.name).to.be.equals('Error')
         expect(err.message).to.be.equals('test')
         expect(callback.calledOnce).to.be.equals(false)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -477,8 +464,7 @@ describe('Hemera', function () {
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
         expect(err.message).to.be.equals('No topic to request')
-        hemera.close()
-        done()
+        hemera.close(done)
       }
     })
   })
@@ -524,8 +510,7 @@ describe('Hemera', function () {
         }, (err, resp) => {
           expect(err).not.to.be.exists()
           expect(resp.result).to.be.equals(0)
-          hemera.close()
-          done()
+          hemera.close(done)
         })
       })
     })
@@ -568,9 +553,7 @@ describe('Hemera', function () {
         }, function (err, resp) {
           expect(err).to.be.not.exists()
           expect(callback.calledOnce).to.be.equals(true)
-          hemera1.close()
-          hemera2.close()
-          done()
+          hemera1.close(x => hemera2.close(done))
         })
       }, 50)
     })
@@ -594,8 +577,7 @@ describe('Hemera', function () {
       }, function (err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals(true)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -618,8 +600,7 @@ describe('Hemera', function () {
       }, function (err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.equals(true)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })

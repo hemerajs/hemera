@@ -10,13 +10,17 @@ const hemera = new Hemera(nats, {
 /**
  * Cycle:
  *
- * 1. Remove all active subscriptions
- * 2. Waiting before all queued messages was proceed and then close hemera and nats
- * 3. Close the underlying NATS connection and fires OnClose extension in all registered plugins.
+ * 1. Fires OnClose extension in all registered plugins
+ * 2. Unsubscribe all active subscriptions
+ * 3. Waiting before all queued messages was proceed and then close hemera and nats
  *
- * If you don't provide a callback NATS has no chance to process queued messages.
+ * Flush outbound queue to server and call optional callback when server has processed
+ * all data. Error is passed by a plugin in 'onClose' extension.
  */
 
 hemera.ready(() => {
-  hemera.close(() => process.exit(0))
+  hemera.close((err) => {
+    console.error(err)
+    process.exit(0)
+  })
 })

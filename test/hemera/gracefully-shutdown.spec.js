@@ -75,6 +75,44 @@ describe('Gracefully shutdown', function () {
     })
   })
 
+  it('Should gracefully shutdown even when NATS connection is already closed', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    let callback = Sinon.spy()
+
+    const hemera = new Hemera(nats, {
+      logLevel: 'silent'
+    })
+
+    hemera.ready(() => {
+      hemera.ext('onClose', function (next) {
+        callback()
+        next()
+      })
+      hemera.add({
+        topic: 'math',
+        cmd: 'sub'
+      }, function (resp, cb) {
+        cb()
+      })
+
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function (resp, cb) {
+        cb()
+      })
+
+      nats.close()
+      expect(nats.closed).to.be.equals(true)
+      hemera.close((err) => {
+        expect(err).not.to.be.exists()
+        expect(callback.called).to.be.equals(true)
+        done()
+      })
+    })
+  })
+
   it('Should call close callback even when we did no IO', function (done) {
     const nats = require('nats').connect(authUrl)
 

@@ -61,8 +61,7 @@ describe('Plugin interface', function () {
       }, (err, resp) => {
         expect(err).to.be.not.exists()
         expect(resp).not.to.be.equals(3)
-        hemera.close()
-        done()
+        hemera.close(done)
       })
     })
   })
@@ -152,8 +151,7 @@ describe('Plugin interface', function () {
         }
       })
 
-      hemera.close()
-      done()
+      hemera.close(done)
     })
   })
 
@@ -198,8 +196,7 @@ describe('Plugin interface', function () {
         },
         options: pluginOptions
       })
-      hemera.close()
-      done()
+      hemera.close(done)
     } catch (err) {
       expect(err).to.be.not.exists()
     }
@@ -246,14 +243,12 @@ describe('Plugin interface', function () {
         },
         options: pluginOptions
       })
-      hemera.close()
-      done()
+      hemera.close(done)
     } catch (err) {
       expect(err).to.exists()
       expect(err.name).to.be.equals('HemeraError')
       expect(err.message).to.be.equals('Plugin was already registered')
-      hemera.close()
-      done()
+      hemera.close(done)
     }
   })
 
@@ -273,16 +268,14 @@ describe('Plugin interface', function () {
           name: 'myPlugin'
         }
       })
-      hemera.close()
-      done()
+      hemera.close(done)
     } catch (err) {
       expect(err).to.exists()
       expect(err.name).to.be.equals('HemeraError')
       expect(err.message).to.be.equals('Error during plugin registration')
       expect(err.cause).to.be.equals('Error')
       expect(err.cause).to.be.equals('test')
-      hemera.close()
-      done()
+      hemera.close(done)
     }
   })
 
@@ -302,14 +295,12 @@ describe('Plugin interface', function () {
           name: 'myPlugin'
         }
       })
-      hemera.close()
-      done()
+      hemera.close(done)
     } catch (err) {
       expect(err).to.exists()
       expect(err.name).to.be.equals('Unauthorized')
       expect(err.message).to.be.equals('Shit!')
-      hemera.close()
-      done()
+      hemera.close(done)
     }
   })
 
@@ -346,8 +337,7 @@ describe('Plugin interface', function () {
       expect(err).to.exists()
       expect(err.name).to.be.equals('HemeraError')
       expect(err.message).to.be.equals('Plugin name is required')
-      hemera.close()
-      done()
+      hemera.close(done)
     }
   })
 
@@ -387,8 +377,7 @@ describe('Plugin interface', function () {
 
     hemera.ready(() => {
       expect(hemera.plugins.foo.options.a).to.be.equals('1')
-      hemera.close()
-      done()
+      hemera.close(done)
     })
   })
 
@@ -434,8 +423,7 @@ describe('Plugin interface', function () {
     hemera.ready(() => {
       expect(hemera.plugins.foo.options.a).to.be.equals(1)
       expect(defaultOptions.a).to.be.equals(33)
-      hemera.close()
-      done()
+      hemera.close(done)
     })
   })
 
@@ -477,8 +465,7 @@ describe('Plugin interface', function () {
     hemera.ready(() => {
       expect(hemera.plugins.foo.options.a).to.be.equals(1)
       expect(defaultOptions.a).to.be.equals(33)
-      hemera.close()
-      done()
+      hemera.close(done)
     })
   })
 
@@ -524,8 +511,7 @@ describe('Plugin interface', function () {
       expect(hemera.plugins.foo.attributes.description).to.be.equals('test')
       expect(hemera.plugins.foo.attributes.version).to.be.equals('1.0.0')
       expect(hemera.plugins.foo.options).to.be.equals(pluginOptions)
-      hemera.close()
-      done()
+      hemera.close(done)
     })
   })
 
@@ -547,8 +533,7 @@ describe('Plugin interface', function () {
       }
     })
 
-    hemera.close()
-    done()
+    hemera.close(done)
   })
 
   it('Should emit timeout error when plugin callback was not called within time range', function (done) {
