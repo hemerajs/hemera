@@ -4,8 +4,6 @@ const Hemera = require('./../packages/hemera')
 const Nats = require('nats')
 
 const PORT = 4222
-const flags = ['--user', 'derek', '--pass', 'foobar']
-const authUrl = 'nats://derek:foobar@localhost:' + PORT
 const noAuthUrl = 'nats://localhost:' + PORT
 
 const loop = 50000
@@ -26,7 +24,7 @@ hemera.ready(() => {
       cmd: 'add',
       a: 1,
       b: 2
-    }, function* (err, resp) {
+    }, function * (err, resp) {
     })
 
     if (i % hash === 0) {
@@ -34,7 +32,7 @@ hemera.ready(() => {
     }
   }
 
-  nats.flush(function () {
+  hemera.close(function () {
     var stop = new Date()
     var mps = parseInt(loop / ((stop - start) / 1000))
     console.log('\nPublished at ' + mps + ' msgs/sec')

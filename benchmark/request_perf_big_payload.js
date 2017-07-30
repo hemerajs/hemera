@@ -6,8 +6,6 @@ const Nats = require('nats')
 const PORT = 4222
 const noAuthUrl = 'nats://localhost:' + PORT
 
-let start
-
 const payloadSmall = require('./payloads/example_payload_small.json') // ~100KB
 const payloadMedium = require('./payloads/example_payload_medium.json') // ~ 500KB
 const payloadBig = require('./payloads/example_payload_big.json') // 990KB
@@ -28,10 +26,10 @@ nats2.on('error', (err) => {
 })
 
 const hemera1 = new Hemera(nats1, {
-  loglevel: 'info'
+  logLevel: 'info'
 })
 const hemera2 = new Hemera(nats2, {
-  loglevel: 'info'
+  logLevel: 'info'
 })
 
 hemera1.ready(() => {
@@ -41,13 +39,11 @@ hemera1.ready(() => {
     topic: 'math',
     cmd: 'add'
   }, function (req, reply) {
-    
     // response with big file
     return reply(null, payloadExtraBig)
   })
 
   nats1.flush(function () {
-
     hemera2.act({
       topic: 'math',
       cmd: 'add',
@@ -55,13 +51,10 @@ hemera1.ready(() => {
       b: 2,
       data: payloadExtraBig // request with big file
     }, function (err, resp) {
-
       let stop = new Date()
       let time = parseInt((stop - start))
       console.log('\nRequest: ' + time + ' /ms')
       process.exit()
-
     })
-
   })
 })

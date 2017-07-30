@@ -4,11 +4,8 @@ const Hemera = require('./../packages/hemera')
 const Nats = require('nats')
 
 const PORT = 4222
-const flags = ['--user', 'derek', '--pass', 'foobar']
-const authUrl = 'nats://derek:foobar@localhost:' + PORT
 const noAuthUrl = 'nats://localhost:' + PORT
 
-var start
 var loop = 100000
 var hash = 1000
 var received = 0
@@ -28,7 +25,7 @@ hemera1.ready(() => {
     return await Promise.resolve(true)
   })
 
-  nats1.flush(function () {
+  hemera1.close(function () {
     for (var i = 0; i < loop; i++) {
       hemera2.act({
         topic: 'math',
