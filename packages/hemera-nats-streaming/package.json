@@ -1,6 +1,6 @@
 {
   "name": "hemera-nats-streaming",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "This is a plugin to use NATS-Streaming with Hemera",
   "main": "index.js",
   "repository": {
@@ -16,6 +16,5 @@
     "hemera-plugin": "^0.0.11",
     "json-parse-safe": "1.0.x",
     "node-nats-streaming": "0.0.x"
-  },
-  "devDependencies": {}
+  }
 }
