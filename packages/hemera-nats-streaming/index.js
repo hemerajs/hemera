@@ -94,12 +94,9 @@ exports.plugin = Hp(function hemeraNatsStreaming (options, next) {
         const result = SafeParse(msg.getData())
         const inboxChannel = topic + '.' + req.subject
         if (result.error) {
-          const error = new ParsingError(`Message could not be parsed as JSON`)
+          const error = new ParsingError(`Message could not be parsed as JSON. Subscription "${inboxChannel}"`)
                           .cause(result.error)
-          hemera.act({
-            topic: inboxChannel,
-            data: error
-          })
+          this.log.error(error)
         } else {
           const data = {
             sequence: msg.getSequence(),
