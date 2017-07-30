@@ -92,17 +92,28 @@ exports.plugin = Hp(function hemeraNatsStreaming (options, next) {
 
       sub.on('message', (msg) => {
         const result = SafeParse(msg.getData())
+        const inboxChannel = topic + '.' + req.subject
         if (result.error) {
           const error = new ParsingError(`Message could not be parsed as JSON`)
                           .cause(result.error)
-          reply(error)
+          hemera.act({
+            topic: inboxChannel,
+            data: error
+          })
         } else {
           const data = {
             sequence: msg.getSequence(),
             message: result.value
           }
-          reply(null, data)
-          msg.ack()
+
+          hemera.act({
+            topic: inboxChannel,
+            data
+          }, function (err, resp) {
+            if (!err) {
+              msg.ack()
+            }
+          })
         }
       })
     })

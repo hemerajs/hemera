@@ -18,19 +18,35 @@ hemera.use(hemeraNatsStreaming, {
 })
 
 hemera.ready(() => {
+  /**
+   * Create nats-streaming-subscription
+   */
   hemera.act({
     topic: 'nats-streaming',
     cmd: 'subscribe',
     subject: 'orderCreated',
     options: {
       setAckWait: 60000
-    },
-    maxMessages$: -1 // to subscribe on further events
+    }
   }, function (err, resp) {
-    this.log.info(resp, 'RECEIVED')
+    this.log.info(resp, 'ACK')
+  })
+
+  /**
+   * Add listener for nats-streaming-events
+   */
+  hemera.add({
+    topic: 'nats-streaming.orderCreated'
+  }, function (req, reply) {
+    this.log.info(req, 'RECEIVED')
+    // ACK Message
+    reply()
   })
 
   setTimeout(() => {
+    /**
+     * Publish an event from hemera
+     */
     hemera.act({
       topic: 'nats-streaming',
       cmd: 'publish',

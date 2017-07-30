@@ -13,10 +13,11 @@ Since nats-streaming based on NATS Server you are able to run both technologies 
 
 We provide a simple interface to work with nats-streaming
 
-- **topic:nats-streaming,cmd:publish:** Publish a message to nats-streaming.
-- **topic:nats-streaming,cmd:subscribe:** Create a nats-streaming subscription and return an ack when the subscription was created. Any received message will be forwared to your handler.
-- **topic:nats-streaming,cmd:unsubscribe:** Unsubscribe an active nats-streaming subscription.
-- **topic:nats-streaming,cmd:suspend:** Suspend a durable nats-streaming subscription. You can active it if you call `subscribe` again.
+- **act("topic:nats-streaming,cmd:publish"):** Publish a message to nats-streaming.
+- **act("topic:nats-streaming,cmd:subscribe"):** Create a nats-streaming subscription and return an ack when the subscription was created.
+- **act("topic:nats-streaming,cmd:unsubscribe"):** Unsubscribe an active nats-streaming subscription.
+- **act("topic:nats-streaming,cmd:suspend"):** Suspend a durable nats-streaming subscription. You can active it if you call `subscribe` again.
+- **add("topic:nats-streaming.yourSubject":** Create a NATS subscription to listen on NATS-Streaming events. You have to call the callback handler to acknowledge the message.
 
 ### Why you don't implement nats-streaming in hemera?
 They use the same server but the purpose is quite different with hemera we want to provide a simple toolkit without any delivery guarantee. NATS-streaming was created to fill this gap with a mimimalistic protocol extension. We can use this feature while creating a simple bridge to nats-streaming. It will create a minimal roundtrip overhead but it's tolerable. The greatest fact is that we can run both technologies side by side* with one nats-streaming-server.
@@ -24,7 +25,6 @@ They use the same server but the purpose is quite different with hemera we want 
 _*nats-streaming-server_ hasn't support for cluster mode but it's planned for this year 2017.
 
 ### Limitations
-- Since we use it as a bridge we cannot manually acknowledge a message. This means that as soon as message could be successfully parsed as JSON and send to NATS it's acknowledged. The fault tolerance of your NATS System is the strength and weakness whether a message can be susccessfully proceed.
 - Only JSON support
 
 ### Documentation
