@@ -16,7 +16,7 @@ We provide a simple interface to work with nats-streaming
 - **topic:nats-streaming,cmd:publish:** Publish a message to nats-streaming.
 - **topic:nats-streaming,cmd:subscribe:** Create a nats-streaming subscription and return an ack when the subscription was created. Any received message will be forwared to your handler.
 - **topic:nats-streaming,cmd:unsubscribe:** Unsubscribe an active nats-streaming subscription.
-- **topic:nats-streaming,cmd:suspend:** Suspend an durable nats-streaming subscription. You can active it if you call `subscribe` again.
+- **topic:nats-streaming,cmd:suspend:** Suspend a durable nats-streaming subscription. You can active it if you call `subscribe` again.
 
 ### Why you don't implement nats-streaming in hemera?
 They use the same server but the purpose is quite different with hemera we want to provide a simple toolkit without any delivery guarantee. NATS-streaming was created to fill this gap with a mimimalistic protocol extension. We can use this feature while creating a simple bridge to nats-streaming. It will create a minimal roundtrip overhead but it's tolerable. The greatest fact is that we can run both technologies side by side* with one nats-streaming-server.
