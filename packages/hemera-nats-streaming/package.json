@@ -1,0 +1,21 @@
+{
+  "name": "hemera-nats-straming",
+  "version": "0.0.0",
+  "description": "This is a plugin to use NATS-Streaming with Hemera",
+  "main": "index.js",
+  "repository": {
+    "url": "git@github.com:hemerajs/hemera.git",
+    "type": "git"
+  },
+  "scripts": {},
+  "author": "Dustin Deus (https://github.com/StarpTech)",
+  "license": "MIT",
+  "dependencies": {
+    "fast-safe-stringify": "1.2.x",
+    "hemera-joi": "1.1.x",
+    "hemera-plugin": "^0.0.11",
+    "json-parse-safe": "1.0.x",
+    "node-nats-streaming": "0.0.x"
+  },
+  "devDependencies": {}
+}
