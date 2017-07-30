@@ -20,6 +20,8 @@ describe('Unsubscribe NATS topic', function () {
 
     const hemera = new Hemera(nats)
 
+    const callback = Sinon.spy()
+
     hemera.ready(() => {
       hemera.add({
         topic: 'math',
@@ -30,11 +32,17 @@ describe('Unsubscribe NATS topic', function () {
         })
       })
 
+      nats.on('unsubscribe', (sid, subject) => {
+        expect(subject).to.be.equals('math')
+        callback()
+      })
+
       const result = hemera.remove('math')
 
       expect(hemera.topics.math).to.be.not.exists()
       expect(hemera.list().length).to.be.equals(0)
       expect(result).to.be.equals(true)
+      expect(callback.called).to.be.equals(true)
       hemera.close(done)
     })
   })

@@ -15,12 +15,14 @@ describe('Gracefully shutdown', function () {
     server.kill()
   })
 
-  it('Should be able to unsubscribe all active subscriptions', function (done) {
+  it('Should be able to unsubscribe active subscription', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
       logLevel: 'silent'
     })
+
+    const callback = Sinon.spy()
 
     hemera.ready(() => {
       hemera.add({
@@ -37,9 +39,66 @@ describe('Gracefully shutdown', function () {
         cb()
       })
 
+      nats.on('unsubscribe', (sid, subject) => {
+        expect(subject).to.be.equals('math')
+        callback()
+      })
+
       hemera.close((err) => {
         expect(err).not.to.be.exists()
         expect(Object.keys(hemera.topics).length).to.be.equals(0)
+        expect(callback.called).to.be.equals(true)
+        done()
+      })
+    })
+  })
+
+  it('Should be able to unsubscribe multiple active subscriptions', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      logLevel: 'silent'
+    })
+
+    const callback = Sinon.spy()
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'sub'
+      }, function (resp, cb) {
+        cb()
+      })
+
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, function (resp, cb) {
+        cb()
+      })
+
+      hemera.add({
+        topic: 'user',
+        cmd: 'add'
+      }, function (resp, cb) {
+        cb()
+      })
+
+      hemera.add({
+        topic: 'order',
+        cmd: 'add'
+      }, function (resp, cb) {
+        cb()
+      })
+
+      nats.on('unsubscribe', (sid, subject) => {
+        callback()
+      })
+
+      hemera.close((err) => {
+        expect(err).not.to.be.exists()
+        expect(Object.keys(hemera.topics).length).to.be.equals(0)
+        expect(callback.callCount).to.be.equals(3)
         done()
       })
     })
