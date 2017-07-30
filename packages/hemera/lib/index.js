@@ -918,20 +918,29 @@ class Hemera extends EventEmitter {
 
       if (subId) {
         self._transport.unsubscribe(subId, maxMessages)
-        // release topic so we can add it again
-        delete self._topics[topic]
-        // remove pattern which belongs to the topic
-        _.each(this.list(), a => {
-          if (a.pattern.topic === topic) {
-            this.router.remove(a.pattern)
-          }
-        })
-
+        this.cleanTopic(topic)
         return true
       }
     }
 
     return false
+  }
+
+  /**
+   * Remove topic from list and clean pattern index of topic
+   *
+   * @param {any} topic
+   * @memberof Hemera
+   */
+  cleanTopic (topic) {
+    // release topic so we can add it again
+    delete this._topics[topic]
+    // remove pattern which belongs to the topic
+    _.each(this.list(), add => {
+      if (add.pattern.topic === topic) {
+        this.router.remove(add.pattern)
+      }
+    })
   }
 
   /**
