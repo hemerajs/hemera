@@ -116,6 +116,7 @@ Hemera has not been designed for high performance on a single process. It has be
 - SSL Support
 - Rely on a publish-subscribe (pub/sub) distribution model
 - Cluster support
+- Do you need reliable message delivery ? Look at [hemera-nats-streaming](/packages/hemera-nats-streaming)
 
 ## Packages
 
