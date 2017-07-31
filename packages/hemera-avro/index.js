@@ -3,7 +3,8 @@
 const Hp = require('hemera-plugin')
 const Avro = require('avsc')
 const avroType = require('./avro')
-const Buffer = require('safe-buffer').Buffer
+const SafeStringify = require('nats-hemera/lib/encoder').encode
+const SafeParse = require('nats-hemera/lib/decoder').decode
 
 exports.plugin = Hp(function hemeraAvro () {
   const hemera = this
@@ -31,7 +32,23 @@ exports.plugin = Hp(function hemeraAvro () {
           m.result = this._pattern.avro$.fromBuffer(m.result)
         } else {
           // response are bytes
-          m.result = JSON.parse(m.result)
+          const p = SafeParse(m.result)
+          if (p.error) {
+            throw p.error
+          } else {
+            m.result = p.value
+          }
+        }
+      }
+
+      // Pattern is encoded as JSON
+      if (Buffer.isBuffer(m.pattern)) {
+        // response are bytes
+        const p = SafeParse(m.pattern)
+        if (p.error) {
+          throw p.error
+        } else {
+          m.pattern = p.value
         }
       }
 
@@ -56,8 +73,21 @@ exports.plugin = Hp(function hemeraAvro () {
             msg.result = this._actMeta.schema.avro$.toBuffer(msg.result)
           } else {
             // payload are bytes
-            msg.result = new Buffer(JSON.stringify(msg.result))
+            const p = SafeStringify(msg.result)
+            if (p.error) {
+              throw p.error
+            } else {
+              msg.result = Buffer.from(p.value)
+            }
           }
+        }
+      } else {
+        // Encode pattern to JSON byte-array
+        const p = SafeStringify(msg.pattern)
+        if (p.error) {
+          throw p.error
+        } else {
+          msg.pattern = Buffer.from(p.value)
         }
       }
 

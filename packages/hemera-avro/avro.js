@@ -56,21 +56,6 @@ let schema = {
         default: ''
       },
       {
-        name: 'parentId',
-        type: 'string',
-        default: ''
-      },
-      {
-        name: 'timestamp',
-        type: 'long',
-        default: 0
-      },
-      {
-        name: 'duration',
-        type: 'long',
-        default: 0
-      },
-      {
         name: 'type',
         type: {
           name: 'Type',
@@ -98,6 +83,11 @@ let schema = {
         default: ''
       },
       {
+        name: 'statusCode',
+        type: 'int',
+        default: 0
+      },
+      {
         name: 'code',
         type: 'int',
         default: 0
@@ -111,6 +101,22 @@ let schema = {
         name: 'stack',
         type: 'string',
         default: ''
+      },
+      {
+        name: 'hops',
+        type: {
+          type: 'array',
+          items: {
+            type: 'record',
+            fields: [
+              { name: 'service', type: 'string' },
+              { name: 'method', type: 'string' },
+              { name: 'app', type: 'string' },
+              { name: 'ts', type: 'long' }
+            ]
+          }
+        },
+        default: []
       },
       {
         name: 'details',
@@ -134,7 +140,9 @@ let schema = {
     default: {},
     type: [{
       type: 'map',
-      values: ['string', 'boolean', 'double']
+      values: ['null', 'string', 'boolean', 'double']
+    }, {
+      type: 'bytes'
     }]
   },
   {
