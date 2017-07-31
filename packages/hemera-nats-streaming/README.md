@@ -24,6 +24,9 @@ They use the same server but the purpose is quite different with hemera we want 
 
 _*nats-streaming-server_ hasn't support for cluster mode but it's planned for this year 2017.
 
+### Why wee need NATS-Streaming ?
+Usually we would use RabbitMQ to ensure reliable message delivery but maintaining RabbitMQ as well as writing a reliable driver is hard. With NATS-Streaming we can use the same technology which hemera based on to combine both aspects without to increase the complexity.  
+
 ### Limitations
 - Only JSON support
 - NATS Streaming subscriptions do not support wildcards.
