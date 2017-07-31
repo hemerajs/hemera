@@ -116,7 +116,7 @@ The error, delegate, meta and request data are predefined with a fixed schema. H
 - **result:** You can use your own schema. If you don't define it the message is interpreted as binary (JSON encoded schema-less)
 - **error:**
   - **name:** Name of the error
-  - **Message:** Message of the error
+  - **message:** Message of the error
   - **stack:** Stack of the error
   - **code:** Code of the error
   - **statusCode:** Code of the error when using hemera-web
