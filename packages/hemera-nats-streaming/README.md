@@ -26,6 +26,7 @@ _*nats-streaming-server_ hasn't support for cluster mode but it's planned for th
 
 ### Limitations
 - Only JSON support
+- NATS Streaming subscriptions do not support wildcards.
 
 ### Documentation
 Look in the source code all options are well documented.
