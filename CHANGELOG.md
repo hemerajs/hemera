@@ -3,6 +3,29 @@ Changelog
 
 # 1.x
 
+### 1.4.1
+
+## Summary
+Implement a new interface to create a pipeline for encoding and decoding the messages. `hemera-msgpack`, `hemera-snappy` and `hemera-avro` was updated.
+
+**New:**
+
+```js
+// Replace the default decoder/encoder
+hemera.decoder.reset(decode)
+hemera.encoder.reset(decode)
+// Remove all steps
+hemera.decoder.reset()
+// Move the pipeline at the first place e.g for compressing algorithms
+hemera.decoder.first(uncompress)
+// Add a new pipeline step
+hemera.decoder.add(function() {
+  return { value: <payload>, error: <error> }
+})
+```
+
+## Summary
+
 ### 1.4.0
 
 ## Summary
