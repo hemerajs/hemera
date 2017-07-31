@@ -22,14 +22,14 @@ We provide a simple interface to work with nats-streaming
 ### Why you don't implement nats-streaming in hemera?
 They use the same server but the purpose is quite different with hemera we want to provide a simple toolkit without any delivery guarantee. NATS-streaming was created to fill this gap with a mimimalistic protocol extension. We can use this feature while creating a simple bridge to nats-streaming. It will create a minimal roundtrip overhead but it's tolerable. The greatest fact is that we can run both technologies side by side* with one nats-streaming-server.
 
-_*nats-streaming-server_ hasn't support for cluster mode but it's planned for this year 2017.
+_*nats-streaming-server_ hasn't support for cluster mode but it's planned for this year 2017. This doesn't mean you can't be [fault-tolerant](https://github.com/nats-io/nats-streaming-server#fault-tolerance)
 
 ### Why we need NATS-Streaming ?
 Usually we would use RabbitMQ to ensure reliable message delivery but maintaining RabbitMQ as well as writing a reliable driver is hard. With NATS-Streaming we can use the same technology which hemera based on to combine both aspects without to increase the complexity.  
 
 ### Limitations
 - Only JSON support
-- NATS Streaming subscriptions do not support wildcards.
+- NATS Streaming subscriptions do not support wildcards but there is a [proposal](https://github.com/nats-io/nats-streaming-server/issues/340).
 - Messages from NATS-Streaming are forwarded to a NATS subscriber. We can only support (request / reply), (queue-group) semantic (no fanout) to ensure message acknowledgement.
 
 ### Documentation
