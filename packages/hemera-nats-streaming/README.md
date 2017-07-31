@@ -30,10 +30,13 @@ Usually we would use RabbitMQ to ensure reliable message delivery but maintainin
 ### Limitations
 - Only JSON support
 - NATS Streaming subscriptions do not support wildcards.
-- Messages from NATS-Streaming are forwarded to a NATS subscriber. We can only support request / reply semantic to ensure message acknowledgement.
+- Messages from NATS-Streaming are forwarded to a NATS subscriber. We can only support (request / reply), (queue-group) semantic (no fanout) to ensure message acknowledgement.
 
 ### Documentation
 Look in the source code all options are well documented.
+
+### Monitoring
+
 
 ### Example
 [Example](/examples/bridges/nats-streaming.js)
