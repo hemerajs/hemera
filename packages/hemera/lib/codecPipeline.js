@@ -26,20 +26,6 @@ class CodecPipeline {
   }
 
   /**
-   *
-   *
-   * @readonly
-   * @static
-   * @memberof CodecPipeline
-   */
-  static get types () {
-    return {
-      ENCODER: 'encoder',
-      DECODER: 'decoder'
-    }
-  }
-
-  /**
    * Create a new pipline step
    *
    * @memberof CodecPipeline
@@ -62,13 +48,13 @@ class CodecPipeline {
   }
 
   /**
-   * Adds one element to the beginning of the stack
+   * Add the element at the beginning of the stack
    *
    * @param {any} step
    * @returns
    * @memberof CodecPipeline
    */
-  unshift (step) {
+  first (step) {
     this._stack.unshift(step)
     return this
   }

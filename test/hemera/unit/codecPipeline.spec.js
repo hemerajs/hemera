@@ -1,7 +1,7 @@
 
 describe('CodecPipeline', function () {
   it('Should add a pipeline step', function (done) {
-    const p = new CodecPipeline(CodecPipeline.types.DECODER)
+    const p = new CodecPipeline()
     p.add((val) => {
       return { value: val + 2, error: null }
     })
@@ -11,14 +11,14 @@ describe('CodecPipeline', function () {
   })
 
   it('Should move to the first pipeline step', function (done) {
-    const p = new CodecPipeline(CodecPipeline.types.DECODER)
+    const p = new CodecPipeline()
     p.add((val) => {
       return { value: val / 2, error: null }
     })
     p.add((val) => {
       return { value: val + 2, error: null }
     })
-    p.unshift((val) => {
+    p.first((val) => {
       return { value: val * 2, error: null }
     })
 
@@ -27,14 +27,14 @@ describe('CodecPipeline', function () {
   })
 
   it('Should reset the pipeline', function (done) {
-    const p = new CodecPipeline(CodecPipeline.types.DECODER)
+    const p = new CodecPipeline()
     p.add((val) => {
       return { value: val / 2, error: null }
     })
     p.add((val) => {
       return { value: val + 2, error: null }
     })
-    p.unshift((val) => {
+    p.first((val) => {
       return { value: val * 2, error: null }
     })
     p.reset()
@@ -44,7 +44,7 @@ describe('CodecPipeline', function () {
   })
 
   it('Should return pipeline error', function (done) {
-    const p = new CodecPipeline(CodecPipeline.types.DECODER)
+    const p = new CodecPipeline()
     p.add((val) => {
       return { value: val / 2, error: null }
     })

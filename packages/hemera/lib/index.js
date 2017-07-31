@@ -114,8 +114,8 @@ class Hemera extends EventEmitter {
       core: this.plugin$
     }
 
-    this._encoderPipeline = new CodecPipeline(CodecPipeline.types.ENCODER).add(DefaultEncoder.encode)
-    this._decoderPipeline = new CodecPipeline(CodecPipeline.types.DECODER).add(DefaultDecoder.decode)
+    this._encoderPipeline = new CodecPipeline().add(DefaultEncoder.encode)
+    this._decoderPipeline = new CodecPipeline().add(DefaultDecoder.decode)
 
     // define extension points
     this._extensions = {
