@@ -33,7 +33,7 @@ exports.plugin = Hp(function hemeraMsgpack () {
   // Will replace default encoder/decoder
   hemera.decoder.reset(decode)
   hemera.encoder.reset(encode)
-})
+}, '>=1.4.1')
 
 exports.options = {}
 

@@ -18,6 +18,6 @@
   "dependencies": {
     "avsc": "5.0.x",
     "hemera-plugin": "^0.0.11",
-    "nats-hemera": "^1.4.0"
+    "nats-hemera": "^1.4.1"
   }
 }

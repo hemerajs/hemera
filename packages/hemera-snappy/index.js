@@ -33,7 +33,7 @@ exports.plugin = Hp(function hemeraSnappy () {
   hemera.encoder.add(compress)
   // first uncompress then decode
   hemera.decoder.first(uncompress)
-})
+}, '>=1.4.1')
 
 exports.options = {}
 
