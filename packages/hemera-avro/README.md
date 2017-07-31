@@ -120,5 +120,5 @@ The error, delegate, meta and request data are predefined with a fixed schema. H
   - **stack:** Stack of the error
   - **code:** Code of the error
   - **statusCode:** Code of the error when using hemera-web
-  - **details:** Can be a Map of strings, boolean, number to add aditional data
+  - **details:** Can be a Map of strings, boolean, number to add additional data
   - **hops:** An array of services which were involved in this request
