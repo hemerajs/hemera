@@ -84,7 +84,8 @@
       "Code",
       "UnauthorizedError",
       "NodeVersion",
-      "BeforeExit"
+      "BeforeExit",
+      "CodecPipeline"
     ]
   }
 }

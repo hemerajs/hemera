@@ -148,12 +148,12 @@ describe('Error handling', function () {
     })
   })
 
-  it('Should be able to handle parsing errors', function (done) {
+  it('Should be able to handle decoding errors', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
-    var stub = Sinon.stub(hemera._decoder, 'decode')
+    var stub = Sinon.stub(hemera.decoder, 'run')
 
     stub.returns({
       error: new Error('TEST')
@@ -185,7 +185,7 @@ describe('Error handling', function () {
     })
   })
 
-  it('Should be able to handle response parsing error', function (done) {
+  it('Should be able to handle response decoding error', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -198,7 +198,7 @@ describe('Error handling', function () {
         cb()
       })
 
-      var stub = Sinon.stub(hemera._decoder, 'decode')
+      var stub = Sinon.stub(hemera.decoder, 'run')
 
       stub.onCall(1)
 
@@ -218,6 +218,44 @@ describe('Error handling', function () {
         expect(err.cause.name).to.be.equals('Error')
         expect(err.cause.message).to.be.equals('TEST')
 
+        stub.restore()
+        hemera.close(done)
+      })
+    })
+  })
+
+  it('Should be able to handle response encoding error', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    var stub = Sinon.stub(hemera.encoder, 'run')
+      .onSecondCall()
+      .returns({
+        error: new Error('TEST')
+      })
+
+    stub.callThrough()
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+        cb()
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('HemeraParseError')
+        expect(err.message).to.be.equals('Invalid payload')
+        expect(err.cause.name).to.be.equals('Error')
+        expect(err.cause.message).to.be.equals('TEST')
         stub.restore()
         hemera.close(done)
       })

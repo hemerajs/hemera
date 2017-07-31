@@ -21,7 +21,7 @@ exports.plugin = Hp(function hemeraAvro () {
     next()
   })
 
-  hemera._decoder.decode = function (msg) {
+  function decode (msg) {
     try {
       let m = type.fromBuffer(msg)
 
@@ -62,7 +62,7 @@ exports.plugin = Hp(function hemeraAvro () {
     }
   }
 
-  hemera._encoder.encode = function (msg) {
+  function encode (msg) {
     try {
       // server request encoding
       if (this._isServer) {
@@ -100,6 +100,10 @@ exports.plugin = Hp(function hemeraAvro () {
       }
     }
   }
+
+  // Will replace default encoder/decoder
+  hemera.decoder.reset(decode)
+  hemera.encoder.reset(encode)
 })
 
 exports.options = {}

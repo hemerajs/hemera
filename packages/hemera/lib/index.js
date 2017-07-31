@@ -41,6 +41,7 @@ const ClientRequest = require('./clientRequest')
 const ClientResponse = require('./clientResponse')
 const Serializers = require('./serializer')
 const ConfigScheme = require('./configScheme')
+const CodecPipeline = require('./codecPipeline')
 const Add = require('./add')
 const Plugin = require('./plugin')
 
@@ -113,12 +114,8 @@ class Hemera extends EventEmitter {
       core: this.plugin$
     }
 
-    this._encoder = {
-      encode: DefaultEncoder.encode
-    }
-    this._decoder = {
-      decode: DefaultDecoder.decode
-    }
+    this._encoderPipeline = new CodecPipeline(CodecPipeline.types.ENCODER).add(DefaultEncoder.encode)
+    this._decoderPipeline = new CodecPipeline(CodecPipeline.types.DECODER).add(DefaultDecoder.decode)
 
     // define extension points
     this._extensions = {
@@ -203,6 +200,26 @@ class Hemera extends EventEmitter {
     })
 
     this._beforeExit.init()
+  }
+
+  /**
+   *
+   *
+   * @readonly
+   * @memberof Hemera
+   */
+  get decoder () {
+    return this._decoderPipeline
+  }
+
+  /**
+   *
+   *
+   * @readonly
+   * @memberof Hemera
+   */
+  get encoder () {
+    return this._encoderPipeline
   }
 
   /**
@@ -594,12 +611,17 @@ class Hemera extends EventEmitter {
       error: result.error ? Errio.toObject(result.error) : null
     }
 
-    let m = this._encoder.encode.call(this, message)
+    let m = this._encoderPipeline.run(message, this)
 
     // attach encoding issues
     if (m.error) {
-      message.error = Errio.toObject(m.error)
+      let internalError = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR).causedBy(m.error)
+      message.error = Errio.toObject(internalError)
       message.result = null
+      // Retry to encode with issue perhaps the cause was data related
+      m = this._encoderPipeline.run(message, this)
+      this.log.error(internalError)
+      this.emit('serverResponseError', m.error)
     }
 
     // final response
@@ -1064,7 +1086,7 @@ class Hemera extends EventEmitter {
    */
   _sendRequestHandler (response) {
     const self = this
-    const res = self._decoder.decode.call(self, response)
+    const res = self._decoderPipeline.run(response, self)
     self._response.payload = res.value
     self._response.error = res.error
 
@@ -1109,7 +1131,7 @@ class Hemera extends EventEmitter {
   _onPreRequestHandler (err) {
     const self = this
 
-    let m = self._encoder.encode.call(self, self._message)
+    let m = self._encoderPipeline.run(self._message, self)
 
     // encoding issue
     if (m.error) {

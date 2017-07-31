@@ -173,10 +173,9 @@ describe('Hemera-avro', function () {
         avro$: type
       }, function (err, resp) {
         expect(err).to.be.exists()
+        // Error which are send doesnt include cause rootCause propertys
         expect(err.name).to.be.equals('HemeraParseError')
         expect(err.message).to.be.equals('Invalid payload')
-        expect(err.cause.name).to.be.equals('Error')
-        expect(err.cause.message).to.be.equals('truncated buffer')
 
         hemera.close(done)
       })

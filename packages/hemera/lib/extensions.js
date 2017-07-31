@@ -165,7 +165,7 @@ function onClientPostRequest (next) {
 function onServerPreRequest (req, res, next) {
   let ctx = this
 
-  let m = ctx._decoder.decode.call(ctx, ctx._request.payload)
+  let m = ctx._decoderPipeline.run(ctx._request.payload, ctx)
 
   if (m.error) {
     return res.send(m.error)
