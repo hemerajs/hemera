@@ -1,8 +1,8 @@
 'use strict'
 
 const Hp = require('hemera-plugin')
-const SafeStringify = require('fast-safe-stringify')
-const SafeParse = require('json-parse-safe')
+const SafeStringify = require('nats-hemera/lib/encoder').encode
+const SafeParse = require('nats-hemera/lib/decoder').decode
 const Nats = require('node-nats-streaming')
 
 exports.plugin = Hp(function hemeraNatsStreaming (options, next) {
@@ -44,7 +44,15 @@ exports.plugin = Hp(function hemeraNatsStreaming (options, next) {
         }
       }
 
-      stan.publish(req.subject, SafeStringify(req.data), handler)
+      const result = SafeStringify(req.data)
+
+      if (result.error) {
+        const error = new ParsingError(`Message could not be stringified. Subject "${req.subject}"`)
+                          .cause(result.error)
+        this.log.error(error)
+      } else {
+        stan.publish(req.subject, result.value, handler)
+      }
     })
 
     /**
@@ -55,7 +63,7 @@ exports.plugin = Hp(function hemeraNatsStreaming (options, next) {
       topic,
       cmd: 'subscribe',
       subject: Joi.string().required(),
-      queue: Joi.string().optional(),
+      queue: Joi.string().optional(), // queue group name
       options: Joi.object().keys({
         setStartWithLastReceived: Joi.boolean(), // Subscribe starting with the most recently published value
         setDeliverAllAvailable: Joi.boolean(), // Receive all stored values in order
