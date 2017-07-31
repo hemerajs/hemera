@@ -3,6 +3,10 @@
 [![npm](https://img.shields.io/npm/v/hemera-nats-streaming.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-nats-streaming)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
+<p align="center">
+<img src="https://github.com/StarpTech/hemera/raw/master/packages/hemera-nats-streaming/media/nats-streaming.png" alt="nats-streaming" style="max-width:100%;">
+</p>
+
 This is a plugin to use [NATS-Streaming](http://nats.io/) with Hemera.
 We use the official [Node-nats-streaming](https://github.com/nats-io/node-nats-streaming) client.
 Since nats-streaming based on NATS Server you are able to run both technologies with one NATS-streaming-server.
