@@ -275,26 +275,6 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   * Exposed data in context of the current plugin
-   * It is accessible by this.expositions[<plugin>][<key>]
-   *
-   * @param {string} key
-   * @param {mixed} object
-   *
-   * @memberOf Hemera
-   */
-  expose (key, object) {
-    let pluginName = this.plugin$.attributes.name
-
-    if (!this._exposition[pluginName]) {
-      this._exposition[pluginName] = {}
-      this._exposition[pluginName][key] = object
-    } else {
-      this._exposition[pluginName][key] = object
-    }
-  }
-
-  /**
    * Return the underlying NATS driver
    *
    * @readonly
@@ -314,6 +294,83 @@ class Hemera extends EventEmitter {
    */
   get topics () {
     return this._topics
+  }
+
+  /**
+ *
+ *
+ * @readonly
+ *
+ * @memberOf Hemera
+ */
+  get config () {
+    return this._config
+  }
+
+  /**
+ *
+ *
+ * @readonly
+ *
+ * @memberof Hemera
+ */
+  get errorDetails () {
+    if (this._isServer) {
+      return {
+        app: this._config.name,
+        isServer: this._isServer,
+        pattern: this.trace$.method
+      }
+    } else {
+      return {
+        app: this._config.name,
+        isServer: this._isServer,
+        pattern: this.trace$.method
+      }
+    }
+  }
+
+  /**
+   * Return all hemera errors
+   *
+   * @readonly
+   * @static
+   *
+   * @memberOf Hemera
+   */
+  static get errors () {
+    return Errors
+  }
+
+  /**
+ * Create a custom super error object without to start hemera
+ *
+ * @readonly
+ *
+ * @memberOf Hemera
+ */
+  static createError (name) {
+    return SuperError.subclass(name)
+  }
+
+  /**
+ * Exposed data in context of the current plugin
+ * It is accessible by this.expositions[<plugin>][<key>]
+ *
+ * @param {string} key
+ * @param {mixed} object
+ *
+ * @memberOf Hemera
+ */
+  expose (key, object) {
+    let pluginName = this.plugin$.attributes.name
+
+    if (!this._exposition[pluginName]) {
+      this._exposition[pluginName] = {}
+      this._exposition[pluginName][key] = object
+    } else {
+      this._exposition[pluginName][key] = object
+    }
   }
 
   /**
@@ -413,33 +470,12 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   *
-   *
-   * @readonly
-   *
-   * @memberOf Hemera
-   */
-  get config () {
-    return this._config
-  }
-  /**
    * Exit the process
    *
    * @memberOf Hemera
    */
   fatal () {
     this._beforeExit.doActions('fatal')
-  }
-
-  /**
-   * Create a custom super error object without to start hemera
-   *
-   * @readonly
-   *
-   * @memberOf Hemera
-   */
-  static createError (name) {
-    return SuperError.subclass(name)
   }
 
   /**
@@ -476,41 +512,6 @@ class Hemera extends EventEmitter {
    */
   createError (name) {
     return SuperError.subclass(name)
-  }
-
-  /**
-   *
-   *
-   * @readonly
-   *
-   * @memberof Hemera
-   */
-  get errorDetails () {
-    if (this._isServer) {
-      return {
-        app: this._config.name,
-        isServer: this._isServer,
-        pattern: this.trace$.method
-      }
-    } else {
-      return {
-        app: this._config.name,
-        isServer: this._isServer,
-        pattern: this.trace$.method
-      }
-    }
-  }
-
-  /**
-   * Return all hemera errors
-   *
-   * @readonly
-   * @static
-   *
-   * @memberOf Hemera
-   */
-  static get errors () {
-    return Errors
   }
 
   /**
