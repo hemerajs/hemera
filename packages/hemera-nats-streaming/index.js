@@ -162,7 +162,7 @@ exports.plugin = Hp(function hemeraNatsStreaming (options, next) {
 
     next()
   })
-})
+}, '>=1.5.0')
 
 exports.options = {
   payloadValidator: 'hemera-joi',
