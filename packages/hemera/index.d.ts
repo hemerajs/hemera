@@ -11,7 +11,7 @@ declare interface Pattern {
 // @TODO use typings
 declare interface Promise {
   then(onFulfilled? : (value: any) => any) : Promise;
-  catch(onRecejected? : (error: Error) => any) : Promise;
+  catch(onRejected? : (error: Error) => any) : Promise;
 }
 
 declare interface PluginDefinitionAttributes {
