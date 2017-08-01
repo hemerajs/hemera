@@ -20,7 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "hemera-plugin": "^0.0.11",
-    "hoek": "4.1.x",
+    "hoek": "4.2.x",
     "wreck": "12.2.x"
   },
   "devDependencies": {

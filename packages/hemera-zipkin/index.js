@@ -167,7 +167,7 @@ exports.plugin = Hp(function hemeraZipkin (options) {
 
     Tracer.sendClientRecv(ctx._zkTrace, meta)
   })
-})
+}, '>=1.5.0')
 
 exports.options = {}
 
