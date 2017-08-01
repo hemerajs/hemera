@@ -83,7 +83,7 @@ exports.plugin = Hp(function hemeraJoi () {
       }
     })
   })
-})
+}, '>=1.5.0')
 
 exports.options = {}
 
