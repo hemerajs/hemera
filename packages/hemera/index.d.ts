@@ -1,4 +1,4 @@
-// Type definitions for Hemera v1.4.1
+// Type definitions for Hemera v1.5.0
 // Project: https://github.com/hemerajs/hemera
 // Definitions by: Dustin Deus <https://github.com/starptech>
 
