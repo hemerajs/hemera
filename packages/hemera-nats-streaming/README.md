@@ -39,8 +39,5 @@ Usually we would use RabbitMQ to ensure reliable message delivery but maintainin
 ### Documentation
 Look in the source code all options are well documented.
 
-### Monitoring
-
-
 ### Example
 [Example](/examples/bridges/nats-streaming.js)
