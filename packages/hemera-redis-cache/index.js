@@ -107,7 +107,7 @@ exports.plugin = Hp(function hemeraRedisCache (options) {
   }, function (req, cb) {
     client.ttl(req.key, cb)
   })
-}, '>= 1.3.2')
+}, '>= 1.5.0')
 
 exports.options = {
   payloadValidator: 'hemera-joi',
