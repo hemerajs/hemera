@@ -159,6 +159,7 @@ exports.plugin = Hp(function hemeraMongoStore (options, next) {
 }, '>= 1.5.0')
 
 exports.options = {
+  payloadValidator: 'hemera-joi',
   mongos: {},
   serializeResult: false,
   mongo: {

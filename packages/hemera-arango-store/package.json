@@ -15,8 +15,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "arangojs": "5.6.x",
-    "hemera-joi": "^1.1.12",
+    "arangojs": "5.7.x",
     "hemera-plugin": "^0.0.11",
     "hemera-store": "^1.1.11"
   },

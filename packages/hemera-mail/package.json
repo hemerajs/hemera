@@ -13,7 +13,6 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-joi": "^1.1.12",
     "hemera-plugin": "^0.0.11",
     "nodemailer": "4.0.x"
   }

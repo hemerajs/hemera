@@ -22,5 +22,8 @@
     "hemera-store": "^1.1.11",
     "mongodb": "2.2.x",
     "mongodb-extended-json": "1.10.x"
+  },
+  "devDependencies": {
+    "hemera-joi": "^1.2.0"
   }
 }

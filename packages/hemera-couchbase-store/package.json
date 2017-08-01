@@ -16,7 +16,6 @@
   "license": "MIT",
   "dependencies": {
     "couchbase": "2.3.x",
-    "hemera-joi": "^1.1.12",
     "hemera-plugin": "^0.0.11",
     "hemera-store": "^1.1.11"
   },

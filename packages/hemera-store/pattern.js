@@ -22,7 +22,7 @@ class StorePattern {
       topic,
       cmd: 'create',
       collection: Joi.string().required(),
-      data: Joi.object().required()
+      data: Joi.required()
     }
   }
 

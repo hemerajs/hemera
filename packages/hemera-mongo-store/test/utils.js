@@ -2,6 +2,7 @@
 
 const Hemera = require('./../../hemera')
 const HemeraMongoStore = require('./../index')
+const HemeraJoi = require('hemera-joi')
 const Nats = require('nats')
 const HemeraTestsuite = require('hemera-testsuite')
 const EJSON = require('mongodb-extended-json')
@@ -45,6 +46,7 @@ function initServer (topic, testCollection, pluginOptions, cb) {
     const hemera = new Hemera(nats, {
       logLevel: 'silent'
     })
+    hemera.use(HemeraJoi)
     hemera.use(HemeraMongoStore, pluginOptions)
     hemera.ready(() => {
       const plugin = hemera.exposition['hemera-mongo-store']
