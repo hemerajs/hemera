@@ -12,7 +12,7 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
 
   hemera.expose('driver', rethinkdb)
 
-      // Gracefully shutdown
+  // Gracefully shutdown
   hemera.ext('onClose', (ctx, done) => {
     hemera.log.debug('Rethinkdb connection closed!')
     if (changeStream) {
@@ -47,7 +47,7 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
     collection: Joi.string().required(),
     databaseName: Joi.string().default(options.rethinkdb.db)
   }, function (req, reply) {
-    return rethinkdb.db(req.databaseName).tableCreate(req.collection, {primaryKey: 'id'}).run(reply)
+    return rethinkdb.db(req.databaseName).tableCreate(req.collection, { primaryKey: 'id' }).run(reply)
   })
 
   hemera.add({
@@ -182,14 +182,14 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
       }
     }
 
-    cursor.run({cursor: true}, (err, result) => {
+    cursor.run({ cursor: true }, (err, result) => {
       if (err) {
         return reply(err)
       }
       result.toArray(reply)
     })
   })
-}, '>= 1.3.2')
+}, '>= 1.5.0')
 
 exports.options = {
   payloadValidator: 'hemera-joi',
