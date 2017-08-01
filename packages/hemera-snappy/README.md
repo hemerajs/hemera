@@ -28,10 +28,6 @@ const hemera = new Hemera(nats, {
 hemera.use(HemeraSnappy)
 
 hemera.ready(() => {
-
-  /**
-   * Your Implementations
-   */
   hemera.add({
     topic: 'math',
     cmd: 'add'
