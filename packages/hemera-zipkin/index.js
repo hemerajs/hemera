@@ -23,8 +23,7 @@ exports.plugin = Hp(function hemeraZipkin (options) {
   /**
    * Server send
    */
-  hemera.on('serverPreResponse', function () {
-    const ctx = this
+  hemera.on('serverPreResponse', function (ctx) {
     let meta = {
       service: ctx._topic,
       name: ctx.trace$.method
@@ -52,8 +51,7 @@ exports.plugin = Hp(function hemeraZipkin (options) {
   /**
    * Server received
    */
-  hemera.on('serverPreRequest', function () {
-    const ctx = this
+  hemera.on('serverPreRequest', function (ctx) {
     let meta = {
       service: ctx._topic,
       name: ctx.trace$.method
@@ -90,8 +88,7 @@ exports.plugin = Hp(function hemeraZipkin (options) {
   /**
    * Client send
    */
-  hemera.on('clientPreRequest', function () {
-    const ctx = this
+  hemera.on('clientPreRequest', function (ctx) {
     let meta = {
       name: ctx.trace$.method
     }
@@ -137,8 +134,7 @@ exports.plugin = Hp(function hemeraZipkin (options) {
   /**
    * Client received
    */
-  hemera.on('clientPostRequest', function () {
-    const ctx = this
+  hemera.on('clientPostRequest', function (ctx) {
     let meta = {
       name: ctx.trace$.method
     }

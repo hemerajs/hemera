@@ -130,7 +130,7 @@
           <br>
           <pre>
 <code class="javascript">
-hemera.ext("onClientPreRequest", function(next) {
+hemera.ext("onClientPreRequest", function(ctx, next) {
 
    let ctx = this
    next()
@@ -151,7 +151,7 @@ hemera.ext("onClientPreRequest", function(next) {
           <br>
           <pre>
 <code class="javascript">
-hemera.ext("onServerPreHandler", function(req, res, next) {
+hemera.ext("onServerPreHandler", function(ctx, req, res, next) {
 
    let ctx = this
    next()
@@ -168,6 +168,8 @@ hemera.ext("onServerPreHandler", function(req, res, next) {
             <li>
               <code>res.end(&lt;error&gt; or &lt;payload&gt;)</code> will end the request-response cycle and send the data
               back to the callee but <strong>no</strong> other extensions will be called.</li>
+            <li>
+              <code>ctx</code> current hemera instance</li>
             <li>
               <code>req</code> contains the current request. Its an object with two properties <code>payload</code> and <code>error</code> because decoding issues. Payload and error object can be manipulated.</li>
             <li>

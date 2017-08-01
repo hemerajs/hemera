@@ -22,7 +22,7 @@ describe('Extension error', function () {
 
     hemera.ready(() => {
       try {
-        hemera.ext('test', function (next) {})
+        hemera.ext('test', function (ctx, next) {})
       } catch (e) {
         expect(e.name).to.be.equals('HemeraError')
         expect(e.message).to.be.equals('Invalid extension type')
@@ -55,7 +55,7 @@ describe('Extension error', function () {
     let plugin = function (options) {
       let hemera = this
 
-      hemera.ext('onClientPostRequest', function (next) {
+      hemera.ext('onClientPostRequest', function (ctx, next) {
         next(new UnauthorizedError('test'))
       })
 
@@ -98,7 +98,7 @@ describe('Extension error', function () {
     let plugin = function (options) {
       let hemera = this
 
-      hemera.ext('onClientPostRequest', function (next) {
+      hemera.ext('onClientPostRequest', function (ctx, next) {
         next(new Error('test'))
       })
 
@@ -141,7 +141,7 @@ describe('Extension error', function () {
     let plugin = function (options) {
       let hemera = this
 
-      hemera.ext('onClientPreRequest', function (next) {
+      hemera.ext('onClientPreRequest', function (ctx, next) {
         next(new UnauthorizedError('test'))
       })
 
@@ -184,7 +184,7 @@ describe('Extension error', function () {
     let plugin = function (options) {
       let hemera = this
 
-      hemera.ext('onClientPreRequest', function (next) {
+      hemera.ext('onClientPreRequest', function (ctx, next) {
         next(new Error('test'))
       })
 
@@ -227,7 +227,7 @@ describe('Extension error', function () {
     let plugin = function (options) {
       let hemera = this
 
-      hemera.ext('onServerPreRequest', function (req, res, next) {
+      hemera.ext('onServerPreRequest', function (ctx, req, res, next) {
         next(new UnauthorizedError('test'))
       })
 
@@ -270,7 +270,7 @@ describe('Extension error', function () {
     let plugin = function (options) {
       let hemera = this
 
-      hemera.ext('onServerPreRequest', function (req, res, next) {
+      hemera.ext('onServerPreRequest', function (ctx, req, res, next) {
         next(new Error('test'))
       })
 
@@ -313,7 +313,7 @@ describe('Extension error', function () {
     let plugin = function (options) {
       let hemera = this
 
-      hemera.ext('onServerPreResponse', function (req, res, next) {
+      hemera.ext('onServerPreResponse', function (ctx, req, res, next) {
         next(new UnauthorizedError('test'))
       })
 
@@ -356,7 +356,7 @@ describe('Extension error', function () {
     let plugin = function (options) {
       let hemera = this
 
-      hemera.ext('onServerPreResponse', function (req, res, next) {
+      hemera.ext('onServerPreResponse', function (ctx, req, res, next) {
         next(new Error('test'))
       })
 

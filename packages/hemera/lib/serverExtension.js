@@ -32,7 +32,7 @@ class ServerExtension extends BaseExtension {
       const request = ctx._request
       const reply = new Reply(request, response, next)
 
-      item.call(ctx, request, reply, next)
+      item(ctx, request, reply, next)
     }
 
     this.run(each, cb)

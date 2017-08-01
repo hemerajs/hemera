@@ -24,12 +24,12 @@ describe('Extension reply', function () {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreHandler', function (req, res, next) {
+      hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
         ext1()
         res.send(new Error('test'))
       })
 
-      hemera.ext('onServerPreHandler', function (req, res, next) {
+      hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
         ext2()
         res.send({
           msg: 'authorized'
@@ -66,14 +66,14 @@ describe('Extension reply', function () {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreHandler', function (req, res, next) {
+      hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
         ext1()
         res.end({
           msg: 'unauthorized'
         })
       })
 
-      hemera.ext('onServerPreHandler', function (req, res, next) {
+      hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
         ext2()
         res.send({
           msg: 'authorized'
@@ -113,14 +113,14 @@ describe('Extension reply', function () {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreHandler', function (req, res, next) {
+      hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
         ext1()
         res.send({
           msg: 'unauthorized'
         })
       })
 
-      hemera.ext('onServerPreHandler', function (req, res, next) {
+      hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
         ext2()
 
         res.end({
@@ -162,7 +162,7 @@ describe('Extension reply', function () {
     let ext3 = Sinon.spy()
 
     hemera.ready(() => {
-      hemera.ext('onServerPreHandler', function (req, res, next) {
+      hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
         expect(req.payload).to.be.an.object()
         expect(req.error).to.be.a.null()
         expect(res.payload).to.be.an.undefined()
@@ -170,7 +170,7 @@ describe('Extension reply', function () {
         next()
       })
 
-      hemera.ext('onServerPreRequest', function (req, res, next) {
+      hemera.ext('onServerPreRequest', function (ctx, req, res, next) {
         expect(req.payload).to.be.an.object()
         expect(req.error).to.be.a.null()
         expect(res.payload).to.be.an.undefined()
@@ -178,7 +178,7 @@ describe('Extension reply', function () {
         next()
       })
 
-      hemera.ext('onServerPreResponse', function (req, res, next) {
+      hemera.ext('onServerPreResponse', function (ctx, req, res, next) {
         expect(req.payload).to.be.an.object()
         expect(req.error).to.be.a.null()
         expect(res.payload).to.be.an.object()
@@ -217,7 +217,7 @@ describe('Extension reply', function () {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreResponse', function (req, res, next) {
+      hemera.ext('onServerPreResponse', function (ctx, req, res, next) {
         res.payload = 1
         next()
       })
@@ -250,7 +250,7 @@ describe('Extension reply', function () {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreResponse', function (req, res, next) {
+      hemera.ext('onServerPreResponse', function (ctx, req, res, next) {
         res.error = new Error('test')
         next()
       })
@@ -286,12 +286,12 @@ describe('Extension reply', function () {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreHandler', function (req, res, next) {
+      hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
         ext1()
         next()
       })
 
-      hemera.ext('onServerPreHandler', function (req, res, next) {
+      hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
         ext2()
         res.send({
           msg: 'authorized'

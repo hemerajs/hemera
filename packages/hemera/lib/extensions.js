@@ -20,13 +20,11 @@ const CircuitBreaker = require('./circuitBreaker')
  * @param {any} next
  * @returns
  */
-function onClientPreRequest (next) {
-  let ctx = this
+function onClientPreRequest (ctx, next) {
+  let pattern = ctx._pattern
 
-  let pattern = this._pattern
-
-  let prevCtx = this._prevContext
-  let cleanPattern = this._cleanPattern
+  let prevCtx = ctx._prevContext
+  let cleanPattern = ctx._cleanPattern
   let currentTime = Util.nowHrTime()
 
   // shared context
@@ -47,13 +45,13 @@ function onClientPreRequest (next) {
   ctx.trace$.method = Util.pattern(pattern)
 
   // detect recursion
-  if (this._config.maxRecursion > 1) {
+  if (ctx._config.maxRecursion > 1) {
     const callSignature = `${ctx.trace$.traceId}:${ctx.trace$.method}`
     if (ctx.meta$ && ctx.meta$.referrers) {
       var count = ctx.meta$.referrers[callSignature]
       count += 1
       ctx.meta$.referrers[callSignature] = count
-      if (count > this._config.maxRecursion) {
+      if (count > ctx._config.maxRecursion) {
         ctx.meta$.referrers = null
         return next(new Errors.MaxRecursionError({
           count: --count
@@ -72,7 +70,7 @@ function onClientPreRequest (next) {
     type: pattern.pubsub$ === true ? Constants.REQUEST_TYPE_PUBSUB : Constants.REQUEST_TYPE_REQUEST
   }
 
-  ctx.emit('clientPreRequest')
+  ctx.emit('clientPreRequest', ctx)
 
   // build msg
   let message = {
@@ -98,15 +96,13 @@ function onClientPreRequest (next) {
  * @param {any} next
  * @returns
  */
-function onClientPreRequestCircuitBreaker (next) {
-  let ctx = this
-
+function onClientPreRequestCircuitBreaker (ctx, next) {
   if (ctx._config.circuitBreaker.enabled) {
     // any pattern represent an own circuit breaker
     const circuitBreaker = ctx._circuitBreakerMap.get(ctx.trace$.method)
     if (!circuitBreaker) {
       const cb = new CircuitBreaker(ctx._config.circuitBreaker)
-      this._circuitBreakerMap.set(ctx.trace$.method, cb)
+      ctx._circuitBreakerMap.set(ctx.trace$.method, cb)
     } else {
       if (!circuitBreaker.available()) {
         // trigger half-open timer
@@ -126,9 +122,8 @@ function onClientPreRequestCircuitBreaker (next) {
  *
  * @param {any} next
  */
-function onClientPostRequest (next) {
-  let ctx = this
-  let pattern = this._pattern
+function onClientPostRequest (ctx, next) {
+  let pattern = ctx._pattern
   let msg = ctx._response.payload
 
   // pass to act context
@@ -149,7 +144,7 @@ function onClientPostRequest (next) {
     inbound: ctx
   })
 
-  ctx.emit('clientPostRequest')
+  ctx.emit('clientPostRequest', ctx)
 
   next()
 }
@@ -162,9 +157,7 @@ function onClientPostRequest (next) {
  * @param {any} next
  * @returns
  */
-function onServerPreRequest (req, res, next) {
-  let ctx = this
-
+function onServerPreRequest (ctx, req, res, next) {
   let m = ctx._decoderPipeline.run(ctx._request.payload, ctx)
 
   if (m.error) {
@@ -189,7 +182,7 @@ function onServerPreRequest (req, res, next) {
   // find matched route
   ctx._actMeta = ctx._router.lookup(ctx._pattern)
 
-  ctx.emit('serverPreRequest')
+  ctx.emit('serverPreRequest', ctx)
 
   next()
 }
@@ -202,11 +195,9 @@ function onServerPreRequest (req, res, next) {
  * @param {any} next
  * @returns
  */
-function onServerPreRequestLoadTest (req, res, next) {
-  let ctx = this
-
+function onServerPreRequestLoadTest (ctx, req, res, next) {
   if (ctx._config.load.checkPolicy) {
-    const error = this._loadPolicy.check()
+    const error = ctx._loadPolicy.check()
     if (error) {
       ctx._shouldCrash = ctx._config.load.shouldCrash
       return next(new Errors.ProcessLoadError(error.message, error.data))
@@ -223,18 +214,14 @@ function onServerPreRequestLoadTest (req, res, next) {
  * @param {any} res
  * @param {any} next
  */
-function onServerPreHandler (req, res, next) {
-  let ctx = this
-
-  ctx.emit('serverPreHandler')
+function onServerPreHandler (ctx, req, res, next) {
+  ctx.emit('serverPreHandler', ctx)
 
   next()
 }
 
-function onServerPreResponse (req, res, next) {
-  let ctx = this
-
-  ctx.emit('serverPreResponse')
+function onServerPreResponse (ctx, req, res, next) {
+  ctx.emit('serverPreResponse', ctx)
 
   next()
 }

@@ -98,7 +98,7 @@ exports.plugin = Hp(function hemeraWeb (options, next) {
   hemera.expose('express', app)
 
   // Gracefully shutdown
-  hemera.ext('onClose', (done) => {
+  hemera.ext('onClose', (ctx, done) => {
     server.close()
     hemera.log.debug('Http server closed!')
     done()

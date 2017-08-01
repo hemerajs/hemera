@@ -13,7 +13,7 @@ exports.plugin = Hp(function hemeraRedisCache (options) {
   hemera.expose('client', client)
 
   // Gracefully shutdown
-  hemera.ext('onClose', (done) => {
+  hemera.ext('onClose', (ctx, done) => {
     hemera.log.debug('Redis connection closed!')
     client.quit()
     done()

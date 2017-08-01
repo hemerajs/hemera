@@ -10,9 +10,9 @@ exports.plugin = Hp(function hemeraJoi () {
 
   hemera.expose('joi', Joi)
 
-  hemera.ext('onServerPreHandler', function (req, res, next) {
-    let plugin = this._actMeta.plugin
-    let schema = this._actMeta.schema
+  hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
+    let plugin = ctx._actMeta.plugin
+    let schema = ctx._actMeta.schema
     let pattern = req.payload.pattern
     let currentPayloadValidator = plugin.options.payloadValidator
 
@@ -42,14 +42,14 @@ exports.plugin = Hp(function hemeraJoi () {
     })
   })
 
-  hemera.ext('onServerPreResponse', function (req, res, next) {
+  hemera.ext('onServerPreResponse', function (ctx, req, res, next) {
     // actMeta can be null when pattern was not found
-    if (!this._actMeta) {
+    if (!ctx._actMeta) {
       return next()
     }
 
-    let plugin = this._actMeta.plugin
-    let schema = this._actMeta.schema
+    let plugin = ctx._actMeta.plugin
+    let schema = ctx._actMeta.schema
     let response = res.payload
     let currentPayloadValidator = plugin.options.payloadValidator
 

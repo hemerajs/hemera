@@ -18,11 +18,11 @@ hemera.ready(() => {
     })
   })
 
-  hemera.ext('onServerPreRequest', function (req, res, next) {
+  hemera.ext('onServerPreRequest', function (ctx, req, res, next) {
     next()
   })
 
-  hemera.ext('onServerPreRequest', function * (req, res) {
+  hemera.ext('onServerPreRequest', function * (ctx, req, res) {
     return yield Promise.resolve()
   })
 

@@ -144,7 +144,7 @@ describe('Gracefully shutdown', function () {
     })
 
     hemera.ready(() => {
-      hemera.ext('onClose', function (next) {
+      hemera.ext('onClose', function (ctx, next) {
         callback()
         next()
       })
@@ -202,7 +202,7 @@ describe('Gracefully shutdown', function () {
         expect(err.message).to.be.equals('test')
         callback()
       })
-      hemera.ext('onClose', function (next) {
+      hemera.ext('onClose', function (ctx, next) {
         next(new Error('test'))
       })
       hemera.close((err) => {

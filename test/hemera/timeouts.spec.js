@@ -201,8 +201,7 @@ describe('Timeouts', function () {
     let event = Sinon.spy()
 
     hemera.ready(() => {
-      hemera.on('clientPostRequest', function () {
-        const ctx = this
+      hemera.on('clientPostRequest', function (ctx) {
         const err = ctx._response.error
 
         expect(err).to.be.exists()
@@ -309,7 +308,7 @@ describe('Timeouts', function () {
     })
 
     hemera.ready(() => {
-      hemera.ext('onClientPostRequest', function (next) {
+      hemera.ext('onClientPostRequest', function (ctx, next) {
         next(new UnauthorizedError('test'))
       })
 
@@ -342,7 +341,7 @@ describe('Timeouts', function () {
     })
 
     hemera.ready(() => {
-      hemera.ext('onClientPostRequest', function (next) {
+      hemera.ext('onClientPostRequest', function (ctx, next) {
         next(new Error('test'))
       })
 

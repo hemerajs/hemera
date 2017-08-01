@@ -138,8 +138,7 @@ describe('Tracing', function () {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.on('serverPreRequest', function () {
-        const ctx = this
+      hemera.on('serverPreRequest', function (ctx) {
         let meta = {
           service: ctx.trace$.service,
           name: ctx.trace$.method
@@ -161,8 +160,7 @@ describe('Tracing', function () {
         expect(traceData.sampled).to.be.exist()
       })
 
-      hemera.on('serverPreResponse', function () {
-        const ctx = this
+      hemera.on('serverPreResponse', function (ctx) {
         let meta = {
           service: ctx.trace$.service,
           name: ctx.trace$.method
@@ -172,8 +170,7 @@ describe('Tracing', function () {
         expect(meta.name).to.be.equals('a:1,b:2,cmd:add,topic:math')
       })
 
-      hemera.on('clientPreRequest', function () {
-        const ctx = this
+      hemera.on('clientPreRequest', function (ctx) {
         let meta = {
           service: ctx.trace$.service,
           name: ctx.trace$.method
@@ -195,8 +192,7 @@ describe('Tracing', function () {
         expect(traceData.sampled).to.be.exist()
       })
 
-      hemera.on('clientPostRequest', function () {
-        const ctx = this
+      hemera.on('clientPostRequest', function (ctx) {
         let meta = {
           service: ctx.trace$.service,
           name: ctx.trace$.method
