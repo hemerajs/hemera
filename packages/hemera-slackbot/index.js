@@ -88,7 +88,7 @@ exports.plugin = Hp(function hemeraSlackbot (options, next) {
   bot.on('close', () => {
     hemera.log.info('Websocket connection closed!')
   })
-}, '>= 1.3.2')
+}, '>= 1.5.0')
 
 exports.options = {
   payloadValidator: 'hemera-joi'
