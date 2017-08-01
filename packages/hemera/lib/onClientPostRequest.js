@@ -14,6 +14,12 @@ const Constants = require('./constants')
 const Errio = require('errio')
 const Errors = require('./errors')
 
+/**
+ * Is called after the client has received and decoded the request
+ *
+ * @param {any} ctx
+ * @param {any} err
+ */
 function onClientPostRequestHandler (ctx, err) {
   // extension error
   if (err) {

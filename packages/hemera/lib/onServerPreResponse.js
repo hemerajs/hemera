@@ -13,6 +13,14 @@ const SuperError = require('super-error')
 const Constants = require('./constants')
 const Errors = require('./errors')
 
+/**
+ * Is called before the server has replied and build the message
+ *
+ * @param {any} ctx
+ * @param {any} err
+ * @param {any} value
+ * @returns
+ */
 function onServerPreResponseHandler (ctx, err, value) {
   // check if an error was already wrapped
   if (ctx._response.error) {

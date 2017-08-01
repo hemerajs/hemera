@@ -30,6 +30,7 @@ Functional style in extensions and life-cycle-events. In future we can provide a
 ## Migration Checklist
 
 1. Extensions
+
 **Old:**
 
 ```js
@@ -55,6 +56,7 @@ hemera.ext('onClose', (ctx, done) => {
 ```
 
 2. Life-cycle events
+
 **Old:**
 
 ```js

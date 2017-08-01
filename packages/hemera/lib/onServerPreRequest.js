@@ -14,6 +14,13 @@ const Constants = require('./constants')
 const Errors = require('./errors')
 const onServerPreHandler = require('./onServerPreHandler')
 
+/**
+ * Is called before the server has received the request
+ *
+ * @param {any} ctx
+ * @param {any} err
+ * @param {any} value
+ */
 function onServerPreRequest (ctx, err, value) {
   if (err) {
     if (err instanceof SuperError) {

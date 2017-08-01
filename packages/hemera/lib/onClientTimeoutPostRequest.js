@@ -13,6 +13,12 @@ const SuperError = require('super-error')
 const Constants = require('./constants')
 const Errors = require('./errors')
 
+/**
+ * Is called after the client request timeout
+ *
+ * @param {any} ctx
+ * @param {any} err
+ */
 function onClientTimeoutPostRequestHandler (ctx, err) {
   if (err) {
     let error = null

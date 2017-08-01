@@ -149,13 +149,13 @@ class Hemera extends EventEmitter {
 
     // will be executed before the client request is executed.
     this._extensions.onClientPreRequest.add(DefaultExtensions.onClientPreRequest)
-    // will be executed after the client received and decoded the request
+    // will be executed after the client has received and decoded the request
     this._extensions.onClientPostRequest.add(DefaultExtensions.onClientPostRequest)
-    // will be executed before the server received the requests
+    // will be executed before the server has received the requests
     this._extensions.onServerPreRequest.add(DefaultExtensions.onServerPreRequest)
     // will be executed before the server action is executed
     this._extensions.onServerPreHandler.add(DefaultExtensions.onServerPreHandler)
-    // will be executed before the server reply the response and build the message
+    // will be executed before the server has replied the response and build the message
     this._extensions.onServerPreResponse.add(DefaultExtensions.onServerPreResponse)
 
     // use own logger

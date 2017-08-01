@@ -13,6 +13,13 @@ const SuperError = require('super-error')
 const Constants = require('./constants')
 const Errors = require('./errors')
 
+/**
+ * Is called before the server action is executed
+ *
+ * @param {any} ctx
+ * @param {any} err
+ * @param {any} value
+ */
 function onServerPreHandler (ctx, err, value) {
   if (err) {
     if (err instanceof SuperError) {

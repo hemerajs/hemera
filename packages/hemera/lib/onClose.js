@@ -12,6 +12,14 @@
 const Constants = require('./constants')
 const _ = require('lodash')
 
+/**
+ * Is called after all onClose extensions have been called
+ *
+ * @param {any} ctx
+ * @param {any} err
+ * @param {any} val
+ * @param {any} cb
+ */
 function onClose (ctx, err, val, cb) {
   // remove all active subscriptions
   ctx.removeAll()

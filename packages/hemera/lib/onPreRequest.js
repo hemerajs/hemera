@@ -13,6 +13,12 @@ const SuperError = require('super-error')
 const Constants = require('./constants')
 const Errors = require('./errors')
 
+/**
+ * Is called before the client has send the request to NATS
+ *
+ * @param {any} ctx
+ * @param {any} err
+ */
 function onPreRequestHandler (ctx, err) {
   let m = ctx._encoderPipeline.run(ctx._message, ctx)
 
