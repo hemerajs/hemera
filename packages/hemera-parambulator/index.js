@@ -27,7 +27,7 @@ exports.plugin = Hp(function hemeraParambulator () {
       res.send()
     })
   })
-})
+}, '>=1.5.0')
 
 exports.options = {}
 
