@@ -74,6 +74,11 @@ hemera.ext('onServerPreRequest', function (ctx) {
 })
 ```
 
+### 1.4.2
+
+## Summary
+Much better Typescript support
+
 ### 1.4.1
 
 ## Summary
