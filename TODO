@@ -1,3 +1,4 @@
 [ ] Evaluate AOP for Hemera core.
-[ ] Simplify Extensions in Hemera core.
-[ ] Close without callback is deprecated
+[X] Simplify Extensions in Hemera core.
+[X] Close without callback is deprecated
+[X] Functional programming for life-cycle-events and extensions

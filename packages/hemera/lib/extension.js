@@ -25,7 +25,7 @@ class Extension extends BaseExtension {
    */
   dispatch (ctx, cb) {
     const each = (item, next) => {
-      item.call(ctx, next)
+      item(ctx, next)
     }
 
     this.run(each, cb)

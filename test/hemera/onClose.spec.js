@@ -22,7 +22,7 @@ describe('onClose extension', function () {
     let firstOnCloseHandler = Sinon.spy()
     let secondOnCloseHandler = Sinon.spy()
 
-    hemera.ext('onClose', function (next) {
+    hemera.ext('onClose', function (ctx, next) {
       firstOnCloseHandler()
       next()
     })
@@ -31,7 +31,7 @@ describe('onClose extension', function () {
     let plugin = function (options) {
       let hemera = this
 
-      hemera.ext('onClose', function (next) {
+      hemera.ext('onClose', function (ctx, next) {
         secondOnCloseHandler()
         next()
       })
@@ -61,7 +61,7 @@ describe('onClose extension', function () {
     let firstOnCloseHandler = Sinon.spy()
     let secondOnCloseHandler = Sinon.spy()
 
-    hemera.ext('onClose', function (next) {
+    hemera.ext('onClose', function (ctx, next) {
       firstOnCloseHandler()
       next()
     })
@@ -70,7 +70,7 @@ describe('onClose extension', function () {
     let plugin = function (options) {
       let hemera = this
 
-      hemera.ext('onClose', function (next) {
+      hemera.ext('onClose', function (ctx, next) {
         secondOnCloseHandler()
         next(new Error('test'))
       })
@@ -104,7 +104,7 @@ describe('onClose extension', function () {
     let firstOnCloseHandler = Sinon.spy()
     let secondOnCloseHandler = Sinon.spy()
 
-    hemera.ext('onClose', function * (done) {
+    hemera.ext('onClose', function * (ctx, done) {
       firstOnCloseHandler()
       return yield Promise.resolve()
     })

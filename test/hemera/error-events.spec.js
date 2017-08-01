@@ -28,7 +28,7 @@ describe('Response error events', function () {
         hemera.close(done)
       })
 
-      hemera.ext('onServerPreResponse', function (resp, req, next) {
+      hemera.ext('onServerPreResponse', function (ctx, resp, req, next) {
         next(new Error('test'))
       })
 
@@ -156,7 +156,7 @@ describe('Response error events', function () {
         hemera.close(done)
       })
 
-      hemera.ext('onClientPostRequest', function (next) {
+      hemera.ext('onClientPostRequest', function (ctx, next) {
         next(new Error('test'))
       })
 

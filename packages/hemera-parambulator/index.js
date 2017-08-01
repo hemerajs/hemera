@@ -7,9 +7,9 @@ exports.plugin = Hp(function hemeraParambulator () {
   const hemera = this
   const PreValidationError = hemera.createError('PreValidationError')
 
-  hemera.ext('onServerPreHandler', function (req, res, next) {
-    let plugin = this._actMeta.plugin
-    let schema = this._actMeta.schema
+  hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
+    let plugin = ctx._actMeta.plugin
+    let schema = ctx._actMeta.schema
     let pattern = req.payload.pattern
     let currentPayloadValidator = plugin.options.payloadValidator
 

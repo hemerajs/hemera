@@ -12,10 +12,10 @@ exports.plugin = Hp(function hemeraAvro () {
 
   hemera.expose('avro', Avro)
 
-  hemera.ext('onClientPreRequest', function (next) {
+  hemera.ext('onClientPreRequest', function (ctx, next) {
     // mark that request as "avro encoded" so we can easily determine how to decode the response
-    if (this._pattern.avro$) {
-      this.meta$.avro = true
+    if (ctx._pattern.avro$) {
+      ctx.meta$.avro = true
     }
 
     next()

@@ -11,7 +11,7 @@ exports.plugin = Hp(function hemeraSlackbot (options, next) {
   })
 
   // Gracefully shutdown
-  hemera.ext('onClose', (done) => {
+  hemera.ext('onClose', (ctx, done) => {
     hemera.log.debug('Websocket connection closed!')
     if (wsConnected) {
       bot.ws.close(done)

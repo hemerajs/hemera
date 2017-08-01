@@ -8,7 +8,7 @@ const hemera = new Hemera(nats, {
 })
 
 hemera.ready(() => {
-  hemera.ext('onServerPreRequest', async function (req, res) {
+  hemera.ext('onServerPreRequest', async function (ctx, req, res) {
     await Promise.resolve()
   })
 

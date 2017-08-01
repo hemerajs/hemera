@@ -13,7 +13,7 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
   hemera.expose('driver', rethinkdb)
 
       // Gracefully shutdown
-  hemera.ext('onClose', (done) => {
+  hemera.ext('onClose', (ctx, done) => {
     hemera.log.debug('Rethinkdb connection closed!')
     if (changeStream) {
       changeStream.close()

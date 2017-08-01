@@ -3,6 +3,77 @@ Changelog
 
 # 1.x
 
+### 1.5.0
+
+## Summary
+
+Functional style in extensions and life-cycle-events. In future we can provide a more consistent and encapsulated interface.
+
+### Updated modules without breaking changes
+
+- hemera-joi
+- hemera-avro
+- hemera-redis-cache
+- hemera-jwt-auth
+- hemera-mongo-store
+- hemera-rethinkdb-store
+- hemera-parambulator
+- hemera-slackbot
+- hemera-web
+- hemera-zipkin
+- hemera-nats-streaming
+
+## Breaking change
+
+- Extension and Life-cycle hooks are no longer scoped with the current hemera instance we pass the instance as the first argument
+
+## Migration Checklist
+
+1. Extensions
+
+**Old:**
+
+```js
+hemera.ext('onServerPreRequest', function (req, res, next) {
+  const ctx = this
+  next()
+})
+hemera.ext('onClose', (done) => {
+  const ctx = this
+  done()
+})
+```
+
+**New:**
+
+```js
+hemera.ext('onServerPreRequest', function (ctx, req, res, next) {
+  next()
+})
+hemera.ext('onClose', (ctx, done) => {
+  done()
+})
+```
+
+2. Life-cycle events
+
+**Old:**
+
+```js
+hemera.ext('clientPostRequest', function () {
+  const ctx = this
+})
+
+```
+
+**New:**
+
+```js
+hemera.ext('onServerPreRequest', function (ctx) {
+    next()
+})
+```
+
 ### 1.4.3 - 1.4.4
 
 Lerna issues

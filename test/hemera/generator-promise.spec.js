@@ -566,11 +566,11 @@ describe('Generator / Promise support in extension', function () {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreHandler', function * (req, res) {
+      hemera.ext('onServerPreHandler', function * (ctx, req, res) {
         return yield Promise.resolve(true)
       })
 
-      hemera.ext('onServerPreHandler', function * (req, res) {
+      hemera.ext('onServerPreHandler', function * (ctx, req, res) {
         return yield Promise.resolve('foobar')
       })
 
@@ -600,7 +600,7 @@ describe('Generator / Promise support in extension', function () {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreHandler', function (req, res, next) {
+      hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
         next(null, true)
       })
 
@@ -630,7 +630,7 @@ describe('Generator / Promise support in extension', function () {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreHandler', function * (req, res) {
+      hemera.ext('onServerPreHandler', function * (ctx, req, res) {
         return yield Promise.reject(new Error('test'))
       })
 
@@ -661,7 +661,7 @@ describe('Generator / Promise support in extension', function () {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreHandler', function * (req, res) {
+      hemera.ext('onServerPreHandler', function * (ctx, req, res) {
         throw new Error('test')
       })
 

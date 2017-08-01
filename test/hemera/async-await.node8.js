@@ -514,11 +514,11 @@ describe('Async / Await support in extension', function () {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreHandler', async function (req, res) {
+      hemera.ext('onServerPreHandler', async function (ctx, req, res) {
         return await Promise.resolve(true)
       })
 
-      hemera.ext('onServerPreHandler', async function (req, res) {
+      hemera.ext('onServerPreHandler', async function (ctx, req, res) {
         return await Promise.resolve('foobar')
       })
 
@@ -548,7 +548,7 @@ describe('Async / Await support in extension', function () {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreHandler', function (req, res, next) {
+      hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
         next(null, true)
       })
 
@@ -578,7 +578,7 @@ describe('Async / Await support in extension', function () {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreHandler', async function (req, res) {
+      hemera.ext('onServerPreHandler', async function (ctx, req, res) {
         return await Promise.reject(new Error('test'))
       })
 
@@ -609,7 +609,7 @@ describe('Async / Await support in extension', function () {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreHandler', async function (req, res) {
+      hemera.ext('onServerPreHandler', async function (ctx, req, res) {
         throw new Error('test')
       })
 
