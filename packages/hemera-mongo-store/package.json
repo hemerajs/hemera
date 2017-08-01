@@ -19,9 +19,9 @@
   "license": "MIT",
   "dependencies": {
     "hemera-plugin": "^0.0.11",
-    "hemera-store": "^1.1.11",
+    "hemera-store": "^1.1.12",
     "mongodb": "2.2.x",
-    "mongodb-extended-json": "1.10.x"
+    "mongodb-extended-json": "^1.10.0"
   },
   "devDependencies": {
     "hemera-joi": "^1.2.0"
