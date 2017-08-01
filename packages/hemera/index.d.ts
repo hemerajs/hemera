@@ -8,6 +8,12 @@ declare interface Pattern {
   topic: string;
 }
 
+// @TODO use typings
+declare interface Promise {
+  then(onFulfilled? : (value: any) => any) : Promise;
+  catch(onRecejected? : (error: Error) => any) : Promise;
+}
+
 declare interface PluginDefinitionAttributes {
   name: string;
   description: string;
