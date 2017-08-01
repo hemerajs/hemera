@@ -104,7 +104,7 @@ exports.plugin = Hp(function hemeraAvro () {
   // Will replace default encoder/decoder
   hemera.decoder.reset(decode)
   hemera.encoder.reset(encode)
-}, '>=1.4.1')
+}, '>=1.5.0')
 
 exports.options = {}
 

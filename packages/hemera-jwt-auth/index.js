@@ -66,7 +66,7 @@ exports.plugin = Hp(function hemeraJwtAuth (options) {
       }
     })
   })
-})
+}, '>=1.5.0')
 
 exports.options = {
   enforceAuth: true,

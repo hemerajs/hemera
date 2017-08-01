@@ -17,7 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "hemera-plugin": "^0.0.11",
-    "hoek": "4.1.x",
-    "jsonwebtoken": "7.3.x"
+    "hoek": "4.2.x",
+    "jsonwebtoken": "7.4.x"
   }
 }
