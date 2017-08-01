@@ -4,6 +4,8 @@
 
 import events = require('events');
 
+declare const Buffer
+
 declare interface Pattern {
   topic: string;
 }
