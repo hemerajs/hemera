@@ -3,6 +3,20 @@ Changelog
 
 # 1.x
 
+### 1.5.2
+
+## Summary
+
+- Check if pattern is not undefined in `act`
+
+### 1.5.1
+
+- dump version
+
+## Summary
+
+- Check if pattern is not undefined in `act`
+
 ### 1.5.0
 
 ## Summary
