@@ -46,6 +46,7 @@ The key features of NATS in combination with Hemera are:
 * **Serialization**: Use JSON, Msgpack or Avro to serialize your data (dynamic or static).
 * **Metadata**: Transfer metadata across services or attach contextual data to tracing systems.
 * **Dependencies**: NATS is a single binary of 7MB and can be deployed in seconds.
+* **Typescript**: We provide a definition file to support auto-intellisense. 
 
 ## Built in protection
 * **Process policy**: Will exit the process when the policy (memory, event loop) could not be fullfilled (Option: `heavy`).
