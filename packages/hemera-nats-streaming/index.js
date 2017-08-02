@@ -57,7 +57,7 @@ exports.plugin = Hp(function hemeraNatsStreaming (options, next) {
 
     /**
      * Create a subscription on the NATS-Streaming server
-     * All options are available expect manual acknowledgement because we use it as a proxy
+     * Manual acknowledgement is handled by request / reply call to NATS
      */
     hemera.add({
       topic,
@@ -84,6 +84,7 @@ exports.plugin = Hp(function hemeraNatsStreaming (options, next) {
 
       const opts = stan.subscriptionOptions()
 
+      // construct subscription options
       for (var option in req.options) {
         if (req.options[option] !== undefined) {
           opts[option](req.options[option])
@@ -101,6 +102,7 @@ exports.plugin = Hp(function hemeraNatsStreaming (options, next) {
       sub.on('message', (msg) => {
         const result = SafeParse(msg.getData())
         const inboxChannel = topic + '.' + req.subject
+
         if (result.error) {
           const error = new ParsingError(`Message could not be parsed as JSON. Subject "${req.subject}"`)
                           .cause(result.error)
