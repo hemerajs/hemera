@@ -300,6 +300,24 @@ describe('Hemera', function () {
     })
   })
 
+  it('Pattern is required to define an add', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      try {
+        hemera.add(null, (resp, cb) => {
+          cb()
+        })
+      } catch (err) {
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals('Pattern is required to define an add')
+        hemera.close(done)
+      }
+    })
+  })
+
   it('Topic is required in a add', function (done) {
     const nats = require('nats').connect(authUrl)
 
@@ -446,6 +464,24 @@ describe('Hemera', function () {
         expect(callback.calledOnce).to.be.equals(false)
         hemera.close(done)
       })
+    })
+  })
+
+  it('Topic must be set in act', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      try {
+        hemera.act(null, (resp, cb) => {
+
+        })
+      } catch (err) {
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals('Pattern is required to start an act call')
+        hemera.close(done)
+      }
     })
   })
 

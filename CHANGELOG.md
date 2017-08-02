@@ -3,6 +3,12 @@ Changelog
 
 # 1.x
 
+### 1.5.3
+
+## Summary
+
+- Check for pattern in `act` and `add` and throw error when pattern is undefined
+
 ### 1.5.2
 
 ## Summary

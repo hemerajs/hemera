@@ -808,6 +808,12 @@ class Hemera extends EventEmitter {
       pattern = TinySonic(pattern)
     }
 
+    if (!_.isObject(pattern)) {
+      let error = new Errors.HemeraError(Constants.ADD_PATTERN_REQUIRED)
+      this.log.error(error)
+      throw error
+    }
+
     // topic is needed to subscribe on a subject in NATS
     if (!pattern.topic) {
       let error = new Errors.HemeraError(Constants.NO_TOPIC_TO_SUBSCRIBE, {
@@ -816,7 +822,7 @@ class Hemera extends EventEmitter {
       })
 
       this.log.error(error)
-      this.emit('error', error)
+      throw error
     }
 
     let origPattern = _.cloneDeep(pattern)
@@ -929,6 +935,12 @@ class Hemera extends EventEmitter {
       pattern = TinySonic(pattern)
     }
 
+    if (!_.isObject(pattern)) {
+      let error = new Errors.HemeraError(Constants.ACT_PATTERN_REQUIRED)
+      this.log.error(error)
+      throw error
+    }
+
     // create new execution context
     let ctx = this.createContext()
     ctx._pattern = pattern
@@ -942,11 +954,10 @@ class Hemera extends EventEmitter {
     ctx._isPromisable = false
 
     // topic is needed to subscribe on a subject in NATS
-    if (!pattern || !pattern.topic) {
+    if (!pattern.topic) {
       let error = new Errors.HemeraError(Constants.NO_TOPIC_TO_REQUEST, ctx.errorDetails)
-
       this.log.error(error)
-      this.emit('error', error)
+      throw error
     }
 
     if (cb) {

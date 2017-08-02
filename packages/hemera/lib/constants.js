@@ -51,5 +51,7 @@ module.exports = {
   DECORATION_ALREADY_DEFINED: 'Server decoration already defined',
   OVERRIDE_BUILTIN_METHOD_NOT_ALLOWED: 'Cannot override the built-in server interface method',
   GRACEFULLY_SHUTDOWN: 'Gracefully shutdown',
-  PLUGIN_TIMEOUT_ERROR: 'Plugin callback was not called'
+  PLUGIN_TIMEOUT_ERROR: 'Plugin callback was not called',
+  ACT_PATTERN_REQUIRED: 'Pattern is required to start an act call',
+  ADD_PATTERN_REQUIRED: 'Pattern is required to define an add'
 }
