@@ -49,7 +49,7 @@ describe('Math', function () {
       }, function (err, result) {
         expect(err).to.be.not.exists()
         expect(result).to.be.equals(300)
-        done()
+        hemera.close(done)
       })
     })
   })
