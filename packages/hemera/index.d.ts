@@ -4,17 +4,18 @@
 
 import events = require('events');
 
-declare const Buffer
+declare type Buffer = any;
 
 declare interface Pattern {
   topic: string;
+  [key: string]: any;
 }
 
 // @TODO use typings
-declare interface Promise {
+/*declare interface Promise {
   then(onFulfilled? : (value: any) => any) : Promise;
   catch(onRejected? : (error: Error) => any) : Promise;
-}
+}*/
 
 declare interface PluginDefinitionAttributes {
   name: string;
@@ -68,6 +69,7 @@ declare interface Reply {
   error: any;
   send(data: Error | any);
   end(data: Error | any);
+  [key: string]: any;
 }
 
 declare type RequestType =
@@ -105,12 +107,12 @@ declare type LogLevel =
   'silent'
 
 declare interface ErrioConfig {
-  recursive: boolean;
-  inherited: boolean;
-  stack: boolean;
-  private: boolean;
-  exclude: Array<string>;
-  include: Array<string>;
+  recursive?: boolean;
+  inherited?: boolean;
+  stack?: boolean;
+  private?: boolean;
+  exclude?: Array<string>;
+  include?: Array<string>;
 }
 
 declare interface BloomrunConfig {
@@ -119,45 +121,45 @@ declare interface BloomrunConfig {
 }
 
 declare interface LoadConfig {
-  checkPolicy: boolean;
-  shouldCrash: boolean;
-  process: LoadProcessConfig;
-  policy: LoadPolicyConfig;
+  checkPolicy?: boolean;
+  shouldCrash?: boolean;
+  process?: LoadProcessConfig;
+  policy?: LoadPolicyConfig;
 }
 
 declare interface LoadProcessConfig {
-  sampleInterval: number;
+  sampleInterval?: number;
 }
 
 declare interface LoadPolicyConfig {
-  maxHeapUsedBytes: number;
-  maxRssBytes: number;
-  maxEventLoopDelay: number;
+  maxHeapUsedBytes?: number;
+  maxRssBytes?: number;
+  maxEventLoopDelay?: number;
 }
 
 declare interface CircuitBreakerConfig {
-  enabled: boolean;
-  minSuccesses: number;
-  halfOpenTime: number;
-  resetIntervalTime: number;
-  maxFailures: number;
+  enabled?: boolean;
+  minSuccesses?: number;
+  halfOpenTime?: number;
+  resetIntervalTime?: number;
+  maxFailures?: number;
 }
 
 declare interface Config {
-  timeout: number;
-  pluginTimeout: number;
-  tag: string;
-  prettyLog: boolean;
-  name: string;
-  crashOnFatal: boolean;
-  logLevel: LogLevel;
-  childLogger: boolean;
-  maxRecursion: number;
-  logger: any;
-  errio: ErrioConfig;
-  bloomrun: BloomrunConfig;
-  load: LoadConfig;
-  circuitBreaker: CircuitBreakerConfig;
+  timeout?: number;
+  pluginTimeout?: number;
+  tag?: string;
+  prettyLog?: boolean;
+  name?: string;
+  crashOnFatal?: boolean;
+  logLevel?: LogLevel;
+  childLogger?: boolean;
+  maxRecursion?: number;
+  logger?: any;
+  errio?: ErrioConfig;
+  bloomrun?: BloomrunConfig;
+  load?: LoadConfig;
+  circuitBreaker?: CircuitBreakerConfig;
 }
 
 declare type HemeraEvents =
@@ -188,7 +190,7 @@ declare interface AddMeta {
 
 declare type ClientResult = any;
 
-declare type AddHandler = (this: Hemera, request: Pattern, reply?: Reply) => void;
+declare type AddHandler = (this: Hemera, request: Pattern, reply?: any) => void;
 declare type ActHandler = (this: Hemera, error: Error, response: ClientResult) => void;
 
 declare type ExtensionNextHandler = (error: Error) => void;
@@ -202,7 +204,7 @@ declare class Hemera extends events.EventEmitter {
   constructor(transport: object, config: Config);
 
   ready(callback: Function): void;
-  act(pattern: string | Pattern, handler?: ActHandler): Promise;
+  act(pattern: string | Pattern, handler?: ActHandler): Promise<any>;
   add(pattern: string | Pattern, handler: AddHandler): AddMeta;
   use(params: PluginDefinition, options?: any): void;
   createError(name: string): any;
