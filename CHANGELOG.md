@@ -3,6 +3,12 @@ Changelog
 
 # 1.x
 
+### 1.5.4
+
+## Summary
+
+- update typescript definition files
+
 ### 1.5.3
 
 ## Summary
