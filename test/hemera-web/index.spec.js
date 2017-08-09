@@ -425,7 +425,7 @@ describe('Hemera-web', function () {
         cb(null, { result: parseInt(req.a) + parseInt(req.b), binary: req.binaryData })
       })
 
-      const buff = new Buffer('test')
+      const buff = Buffer.from('test')
 
       const instance = Axios.create()
 

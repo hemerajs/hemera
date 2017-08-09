@@ -64,7 +64,9 @@ describe('Hemera-msgpack', function () {
         cmd: 'add'
       }, (resp, cb) => {
         cb(null, {
-          result: resp.a + resp.b
+          buffer: resp.c,
+          result: resp.a + resp.b,
+          d: resp.d
         })
       })
 
@@ -72,10 +74,14 @@ describe('Hemera-msgpack', function () {
         topic: 'math',
         cmd: 'add',
         a: 1,
-        b: 2
+        b: 2,
+        c: Buffer.from('test'),
+        d: { foo: true }
       }, (err, resp) => {
         expect(err).to.be.not.exists()
         expect(resp.result).to.be.equals(3)
+        expect(Buffer.isBuffer(resp.buffer)).to.be.equals(true)
+        expect(resp.d).to.be.equals({ foo: true })
         hemera.close(done)
       })
     })

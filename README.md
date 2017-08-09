@@ -16,7 +16,7 @@
 A <a href="http://nodejs.org/">Node.js</a> microservices toolkit for the <a href="https://nats.io">NATS messaging system</a>
 </p>
 
-- __Node:__ 4.x, 5.x, 6.x, 7.x, 8.0
+- __Node:__ >= 4.5
 - __Documentation:__ https://hemerajs.github.io/hemera/
 - __Website:__ https://hemerajs.github.io/hemera-site/
 - __Lead Maintainer:__ [Dustin Deus](https://github.com/StarpTech)
@@ -55,7 +55,10 @@ The key features of NATS in combination with Hemera are:
 
 ## What Hemera code looks like
 
-**We support Async/Await (Node 7.6+), Generators (Node 4+) and error-first-callback style.**
+**We support:**
+- Async/Await (Node 7.6+)
+- Generators (Node 4+)
+- Error-first-callback style
 
 ```js
 const Hemera = require('nats-hemera')
