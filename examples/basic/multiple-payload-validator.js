@@ -4,11 +4,11 @@ const Hemera = require('./../../packages/hemera')
 const nats = require('nats').connect({
   preserveBuffers: true
 })
-const HemeraJoi = require('./../packages/hemera-joi')
-const HemeraParambulator = require('./../packages/hemera-parambulator')
+const HemeraJoi = require('./../../packages/hemera-joi')
+const HemeraParambulator = require('./../../packages/hemera-parambulator')
 
 const hemera = new Hemera(nats, {
-  logLevel: 'info'
+  logLevel: 'debug'
 })
 
 hemera.use(HemeraJoi)
@@ -58,7 +58,7 @@ hemera.ready(() => {
   hemera.act({
     topic: 'math',
     cmd: 'add',
-    a: 'dwed3',
+    a: 3,
     b: 20
   }, function (err, resp) {
     this.log.info(err, 'Error') // Error: child "a" fails because ["a" must be a number]
@@ -67,7 +67,7 @@ hemera.ready(() => {
   hemera.act({
     topic: 'math',
     cmd: 'sub',
-    a: 'ddd',
+    a: 3,
     b: 5
   }, function (err, resp) {
     this.log.info(err, 'Error') // Error: The value "ddd" is not of type 'number' (parent: a).
