@@ -207,7 +207,7 @@ describe('Plugin interface', function () {
     hemera.ready()
   })
 
-  it.only('Should thrown error when trying to register plugin in plugin', function (done) {
+  it('Should thrown error when trying to register plugin in plugin', function (done) {
     let hemera
 
     const nats = require('nats').connect(authUrl)
