@@ -53,5 +53,6 @@ module.exports = {
   GRACEFULLY_SHUTDOWN: 'Gracefully shutdown',
   PLUGIN_TIMEOUT_ERROR: 'Plugin callback was not called',
   ACT_PATTERN_REQUIRED: 'Pattern is required to start an act call',
-  ADD_PATTERN_REQUIRED: 'Pattern is required to define an add'
+  ADD_PATTERN_REQUIRED: 'Pattern is required to define an add',
+  NO_USE_IN_PLUGINS: 'Plugin registrations are not allowed within plugins'
 }

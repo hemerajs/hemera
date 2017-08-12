@@ -427,6 +427,7 @@ class Hemera extends EventEmitter {
 
     // create new execution context
     let ctx = this.createContext()
+    ctx.use = () => { throw new Errors.HemeraError(Constants.NO_USE_IN_PLUGINS) }
 
     const plugin = new Plugin({
       register: params.plugin.bind(ctx),

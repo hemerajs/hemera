@@ -155,103 +155,6 @@ describe('Plugin interface', function () {
     })
   })
 
-  it('Should be able to register the plugin twice when multiple attribute is set to true', function (done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    let pluginOptions = {
-      a: '1'
-    }
-
-    // Plugin
-    let plugin = function (options) {
-      let hemera = this
-
-      hemera.use({
-        plugin: plugin2,
-        attributes: {
-          name: 'myPlugin2'
-        },
-        options: pluginOptions
-      })
-    }
-
-    // Plugin
-    let plugin2 = function (options) {}
-
-    try {
-      hemera.use({
-        plugin: plugin,
-        attributes: {
-          name: 'myPlugin'
-        },
-        options: pluginOptions
-      })
-      hemera.use({
-        plugin: plugin2,
-        attributes: {
-          name: 'myPlugin2',
-          multiple: true
-        },
-        options: pluginOptions
-      })
-      hemera.close(done)
-    } catch (err) {
-      expect(err).to.be.not.exists()
-    }
-  })
-
-  it('Should thrown an error when the plugin is registered twice when multiple attribute is not set to true', function (done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    let pluginOptions = {
-      a: '1'
-    }
-
-    // Plugin
-    let plugin = function (options) {
-      let hemera = this
-
-      hemera.use({
-        plugin: plugin2,
-        attributes: {
-          name: 'myPlugin2'
-        },
-        options: pluginOptions
-      })
-    }
-
-    // Plugin
-    let plugin2 = function (options) {}
-
-    try {
-      hemera.use({
-        plugin: plugin,
-        attributes: {
-          name: 'myPlugin'
-        },
-        options: pluginOptions
-      })
-      hemera.use({
-        plugin: plugin2,
-        attributes: {
-          name: 'myPlugin2',
-          multiple: false
-        },
-        options: pluginOptions
-      })
-      hemera.close(done)
-    } catch (err) {
-      expect(err).to.exists()
-      expect(err.name).to.be.equals('HemeraError')
-      expect(err.message).to.be.equals('Plugin was already registered')
-      hemera.close(done)
-    }
-  })
-
   it('Should thrown plugin error during initialization', function (done) {
     const nats = require('nats').connect(authUrl)
 
@@ -261,22 +164,21 @@ describe('Plugin interface', function () {
       next(new Error('test'))
     }
 
-    try {
-      hemera.use({
-        plugin: plugin,
-        attributes: {
-          name: 'myPlugin'
-        }
-      })
-      hemera.close(done)
-    } catch (err) {
+    hemera.on('error', (err) => {
       expect(err).to.exists()
       expect(err.name).to.be.equals('HemeraError')
       expect(err.message).to.be.equals('Error during plugin registration')
-      expect(err.cause).to.be.equals('Error')
-      expect(err.cause).to.be.equals('test')
       hemera.close(done)
-    }
+    })
+
+    hemera.use({
+      plugin: plugin,
+      attributes: {
+        name: 'myPlugin'
+      }
+    })
+
+    hemera.ready()
   })
 
   it('Should thrown super plugin error during initialization', function (done) {
@@ -285,23 +187,53 @@ describe('Plugin interface', function () {
     const hemera = new Hemera(nats)
 
     let plugin = function (options, next) {
-      next(new UnauthorizedError('Shit!'))
+      next(new UnauthorizedError('test'))
     }
 
-    try {
-      hemera.use({
-        plugin: plugin,
-        attributes: {
-          name: 'myPlugin'
-        }
-      })
-      hemera.close(done)
-    } catch (err) {
+    hemera.on('error', (err) => {
       expect(err).to.exists()
-      expect(err.name).to.be.equals('Unauthorized')
-      expect(err.message).to.be.equals('Shit!')
+      expect(err.name).to.be.equals('HemeraError')
+      expect(err.message).to.be.equals('Error during plugin registration')
       hemera.close(done)
+    })
+
+    hemera.use({
+      plugin: plugin,
+      attributes: {
+        name: 'myPlugin'
+      }
+    })
+
+    hemera.ready()
+  })
+
+  it('Should thrown error when trying to register plugin in plugin', function (done) {
+    let hemera
+
+    const nats = require('nats').connect(authUrl)
+
+    hemera = new Hemera(nats)
+
+    let plugin = function (options, next) {
+      try {
+        this.use()
+      } catch (err) {
+        expect(err).to.exists()
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals('Plugin registrations are not allowed within plugins')
+        hemera.close(done)
+      }
+      next()
     }
+
+    hemera.use({
+      plugin: plugin,
+      attributes: {
+        name: 'myPlugin'
+      }
+    })
+
+    hemera.ready()
   })
 
   it('Plugin name is required', function (done) {
