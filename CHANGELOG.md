@@ -3,6 +3,12 @@ Changelog
 
 # 1.x
 
+### 1.5.5
+
+## Summary
+
+- Throw error when trying to register plugins with `.use()` inside plugins
+
 ### 1.5.4
 
 ## Summary
