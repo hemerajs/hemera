@@ -207,7 +207,7 @@ describe('Plugin interface', function () {
     hemera.ready()
   })
 
-  it('Should thrown error when trying to register plugin in plugin', function (done) {
+  it.only('Should thrown error when trying to register plugin in plugin', function (done) {
     let hemera
 
     const nats = require('nats').connect(authUrl)
@@ -220,7 +220,7 @@ describe('Plugin interface', function () {
       } catch (err) {
         expect(err).to.exists()
         expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Plugin registrations are not allowed within plugins')
+        expect(err.message).to.be.equals('Call `use()` inside plugins not allowed')
         hemera.close(done)
       }
       next()

@@ -427,7 +427,6 @@ class Hemera extends EventEmitter {
 
     // create new execution context
     let ctx = this.createContext()
-    ctx.use = () => { throw new Errors.HemeraError(Constants.NO_USE_IN_PLUGINS) }
 
     const plugin = new Plugin({
       register: params.plugin.bind(ctx),
@@ -440,6 +439,11 @@ class Hemera extends EventEmitter {
 
     if (ctx._config.childLogger) {
       ctx.log = this.log.child({ plugin: plugin.attributes.name })
+    }
+
+    ctx.use = () => {
+      ctx.log.error(Constants.NO_USE_IN_PLUGINS)
+      throw new Errors.HemeraError(Constants.NO_USE_IN_PLUGINS)
     }
 
     this._pluginRegistrations.push(plugin)
