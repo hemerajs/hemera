@@ -4,67 +4,67 @@
 
 import events = require('events');
 
-declare type Buffer = any;
+type Buffer = any;
 
-declare interface Pattern {
+interface Pattern {
   topic: string;
   [key: string]: any;
 }
 
 // @TODO use typings
-/*declare interface Promise {
+/*interface Promise {
   then(onFulfilled? : (value: any) => any) : Promise;
   catch(onRejected? : (error: Error) => any) : Promise;
 }*/
 
-declare interface PluginDefinitionAttributes {
+interface PluginDefinitionAttributes {
   name: string;
   description: string;
   version: string;
 }
 
-declare interface PluginDefinition {
+interface PluginDefinition {
   register: Function;
   attributes: PluginDefinitionAttributes;
   options: any;
   parentPluginName: string;
 }
 
-declare interface Router {
+interface Router {
 }
 
-declare interface Load {
+interface Load {
 }
 
-declare interface CodecPipeline {
+interface CodecPipeline {
   add(step: Function): CodecPipeline;
   reset(step: Function): CodecPipeline;
   unshift(step: Function): CodecPipeline;
   run(msg: string | Buffer, cb: Function): string | Buffer;
 }
 
-declare interface ServerRequest {
+interface ServerRequest {
   payload: any;
   error: any;
   locals: any;
 }
 
-declare interface ServerResponse {
+interface ServerResponse {
   payload: any;
   error: any;
 }
 
-declare interface ClientRequest {
+interface ClientRequest {
   payload: any;
   error: any;
 }
 
-declare interface ClientResponse {
+interface ClientResponse {
   payload: any;
   error: any;
 }
 
-declare interface Reply {
+interface Reply {
   payload: any;
   error: any;
   send(data: Error | any);
@@ -72,11 +72,11 @@ declare interface Reply {
   [key: string]: any;
 }
 
-declare type RequestType =
+type RequestType =
   'pubsub' |
   'request'
 
-declare interface Trace {
+interface Trace {
   traceId: string;
   parentSpanId: string;
   spanId: string;
@@ -86,18 +86,18 @@ declare interface Trace {
   duration: number;
 }
 
-declare interface Request {
+interface Request {
   id: string;
   type: RequestType;
 }
 
-declare interface Delegate {
+interface Delegate {
 }
 
-declare interface Meta {
+interface Meta {
 }
 
-declare type LogLevel =
+type LogLevel =
   'fatal' |
   'error' |
   'warn' |
@@ -106,7 +106,7 @@ declare type LogLevel =
   'trace' |
   'silent'
 
-declare interface ErrioConfig {
+interface ErrioConfig {
   recursive?: boolean;
   inherited?: boolean;
   stack?: boolean;
@@ -115,29 +115,29 @@ declare interface ErrioConfig {
   include?: Array<string>;
 }
 
-declare interface BloomrunConfig {
+interface BloomrunConfig {
   indexing: 'insertion' | 'depth';
   lookupBeforeAdd: boolean;
 }
 
-declare interface LoadConfig {
+interface LoadConfig {
   checkPolicy?: boolean;
   shouldCrash?: boolean;
   process?: LoadProcessConfig;
   policy?: LoadPolicyConfig;
 }
 
-declare interface LoadProcessConfig {
+interface LoadProcessConfig {
   sampleInterval?: number;
 }
 
-declare interface LoadPolicyConfig {
+interface LoadPolicyConfig {
   maxHeapUsedBytes?: number;
   maxRssBytes?: number;
   maxEventLoopDelay?: number;
 }
 
-declare interface CircuitBreakerConfig {
+interface CircuitBreakerConfig {
   enabled?: boolean;
   minSuccesses?: number;
   halfOpenTime?: number;
@@ -145,7 +145,7 @@ declare interface CircuitBreakerConfig {
   maxFailures?: number;
 }
 
-declare interface Config {
+interface Config {
   timeout?: number;
   pluginTimeout?: number;
   tag?: string;
@@ -162,7 +162,7 @@ declare interface Config {
   circuitBreaker?: CircuitBreakerConfig;
 }
 
-declare type HemeraEvents =
+type HemeraEvents =
   'error' |
   'clientPreRequest' |
   'clientPostRequest' |
@@ -170,16 +170,16 @@ declare type HemeraEvents =
   'serverPreRequest' |
   'serverPreResponse'
 
-declare type ExtensionType =
+type ExtensionType =
   'onClientPreRequest' |
   'onClientPostRequest' |
   'onServerPreHandler' |
   'onServerPreRequest' |
   'onServerPreResponse'
 
-declare type AddMetaMiddleware = (request: ServerRequest, response: ServerResponse, next: Function) => void;
+type AddMetaMiddleware = (request: ServerRequest, response: ServerResponse, next: Function) => void;
 
-declare interface AddMeta {
+interface AddMeta {
   schema: any;
   pattern: Pattern;
   action: Function;
@@ -188,13 +188,13 @@ declare interface AddMeta {
   end(cb: Function): void;
 }
 
-declare type ClientResult = any;
+type ClientResult = any;
 
-declare type AddHandler = (this: Hemera, request: Pattern, reply?: any) => void;
-declare type ActHandler = (this: Hemera, error: Error, response: ClientResult) => void;
+type AddHandler = (this: Hemera, request: Pattern, reply?: any) => void;
+type ActHandler = (this: Hemera, error: Error, response: ClientResult) => void;
 
-declare type ExtensionNextHandler = (error: Error) => void;
-declare type ExtensionHandler = (ctx: Hemera, request: any, response: any, next?: ExtensionNextHandler) => void;
+type ExtensionNextHandler = (error: Error) => void;
+type ExtensionHandler = (ctx: Hemera, request: any, response: any, next?: ExtensionNextHandler) => void;
 
 interface Plugins {
   [name: string]: PluginDefinition;
@@ -240,5 +240,7 @@ declare class Hemera extends events.EventEmitter {
   trace$: Trace;
   request$: Request;
 }
+
+
 
 export = Hemera
