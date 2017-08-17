@@ -63,7 +63,7 @@
     "node-version": "1.0.x",
     "nyc": "10.3.x",
     "promise-retry": "1.1.x",
-    "sinon": "2.1.0",
+    "sinon": "3.2.1",
     "standard": "10.0.x"
   },
   "standard": {
