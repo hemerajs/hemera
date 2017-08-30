@@ -3,6 +3,12 @@ Changelog
 
 # 1.x
 
+### 1.5.7
+
+## Summary
+
+- Remove typescript definition files. Thanks to [@vforv](https://github.com/vforv) we provide official [@types/nats-hemera](https://www.npmjs.com/package/@types/nats-hemera)
+
 ### 1.5.6
 
 ## Summary
