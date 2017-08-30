@@ -3,6 +3,12 @@ Changelog
 
 # 1.x
 
+### 1.5.8
+
+## Summary
+
+- Remove typings property from package.json
+
 ### 1.5.7
 
 ## Summary

@@ -54,6 +54,5 @@
   },
   "peerDependencies": {
     "nats": ">= 0.7.2"
-  },
-  "typings": "./index.d.ts"
+  }
 }
