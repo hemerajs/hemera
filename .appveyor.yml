@@ -46,8 +46,8 @@ init:
 
 install:
   # Install gnats
-  - appveyor DownloadFile https://github.com/nats-io/gnatsd/releases/download/v0.9.6/gnatsd-v0.9.6-windows-386.zip
-  - 7z e gnatsd-v0.9.6-windows-386.zip gnatsd.exe -r -oc:\projects\hemera\build
+  - appveyor DownloadFile https://github.com/nats-io/gnatsd/releases/download/v1.0.2/gnatsd-v1.0.2-windows-386.zip
+  - 7z e gnatsd-v1.0.2-windows-386.zip gnatsd.exe -r -oc:\projects\hemera\build
   - cmd: set PATH=%PATH%;C:\projects\hemera\build
 
   - cmd: "%PIP2% freeze"
