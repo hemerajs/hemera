@@ -3,6 +3,12 @@ Changelog
 
 # 1.x
 
+### 1.5.9
+
+## Summary
+
+- Throw errors instead emiting
+
 ### 1.5.8
 
 ## Summary

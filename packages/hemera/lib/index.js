@@ -387,7 +387,7 @@ class Hemera extends EventEmitter {
         type
       })
       this.log.error(error)
-      this.emit('error', error)
+      throw error
     }
 
     this._extensions[type].add(handler)
@@ -494,9 +494,9 @@ class Hemera extends EventEmitter {
    */
   decorate (prop, value) {
     if (this._decorations[prop]) {
-      this.emit('error', new Error(Constants.DECORATION_ALREADY_DEFINED))
+      throw new Error(Constants.DECORATION_ALREADY_DEFINED)
     } else if (this[prop]) {
-      this.emit('error', new Error(Constants.OVERRIDE_BUILTIN_METHOD_NOT_ALLOWED))
+      throw new Error(Constants.OVERRIDE_BUILTIN_METHOD_NOT_ALLOWED)
     }
 
     this._decorations[prop] = {
