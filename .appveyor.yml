@@ -37,7 +37,7 @@ init:
   - cmd: node --version
   - cmd: npm --version
     # CRITICAL FOR NODE-GYP TO WORK
-  - cmd: npm -g install npm@latest
+  - cmd: npm -g install npm@5.3 #TODO restore to npm@latest when npm stops breaking builds https://github.com/npm/npm/issues/18380
   - cmd: npm --version
 
   # SET THE RELEVANT PYTHON AND PIP LOCATIONS IN THE PATH
