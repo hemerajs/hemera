@@ -61,7 +61,7 @@
     "nats-hemera": "^1.5.0",
     "node-nats-streaming": "^0.0.26",
     "node-version": "1.1.x",
-    "nyc": "11.1.x",
+    "nyc": "~11.2.1",
     "promise-retry": "1.1.x",
     "sinon": "3.2.1",
     "standard": "10.0.x"
