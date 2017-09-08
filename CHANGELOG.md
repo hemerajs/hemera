@@ -3,7 +3,7 @@ Changelog
 
 # 1.x
 
-### 1.5.10
+### 1.5.11
 
 ## Summary
 
