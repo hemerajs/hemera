@@ -138,6 +138,9 @@ class Hemera extends EventEmitter {
     // errio settings
     Errio.setDefaults(this._config.errio)
 
+    // Register all default hemera errors
+    this._registerErrors()
+
     // create load policy
     this._loadPolicy = this._heavy.policy(this._config.load.policy)
 
@@ -210,6 +213,16 @@ class Hemera extends EventEmitter {
     this._beforeExit.init()
   }
 
+  /**
+   *
+   *
+   * @memberof Hemera
+   */
+  _registerErrors () {
+    for (var error in Hemera.errors) {
+      Errio.register(Hemera.errors[error])
+    }
+  }
   /**
    *
    *
@@ -350,7 +363,10 @@ class Hemera extends EventEmitter {
  * @memberOf Hemera
  */
   static createError (name) {
-    return SuperError.subclass(name)
+    const ctor = SuperError.subclass(name)
+    // Register the class with Errio.
+    Errio.register(ctor)
+    return ctor
   }
 
   /**
@@ -516,7 +532,10 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   createError (name) {
-    return SuperError.subclass(name)
+    const ctor = SuperError.subclass(name)
+    // Register the class with Errio.
+    Errio.register(ctor)
+    return ctor
   }
 
   /**

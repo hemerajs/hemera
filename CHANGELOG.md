@@ -3,6 +3,13 @@ Changelog
 
 # 1.x
 
+### 1.5.11
+
+## Summary
+
+- Register hemera and plugin errors in errio to use it in `instanceof` comparison.
+- Any error which is created with `hemera.createError` is registered in errio.
+
 ### 1.5.9
 
 ## Summary
