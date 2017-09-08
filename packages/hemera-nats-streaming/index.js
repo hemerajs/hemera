@@ -15,6 +15,12 @@ exports.plugin = Hp(function hemeraNatsStreaming (options, next) {
   const stan = Nats.connect(options.clusterId, options.clientId, options.opts)
   const subList = {}
 
+  hemera.expose('errors', {
+    DuplicateSubscriberError,
+    ParsingError,
+    NotAvailableError
+  })
+
   hemera.ext('onClose', (ctx, next) => {
     hemera.log.debug('Stan closing ...')
     stan.close()

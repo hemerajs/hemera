@@ -29,6 +29,10 @@ exports.plugin = Hp(function hemeraJwtAuth (options) {
 
   const JwtError = hemera.createError('JwtError')
 
+  hemera.expose('errors', {
+    JwtError
+  })
+
   hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
     // Get auth from server method
     const auth = ctx._actMeta.schema.auth$

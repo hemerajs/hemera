@@ -9,6 +9,10 @@ exports.plugin = Hp(function hemeraJoi () {
   const PostValidationError = hemera.createError('PostValidationError')
 
   hemera.expose('joi', Joi)
+  hemera.expose('errors', {
+    PreValidationError,
+    PostValidationError
+  })
 
   hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
     let plugin = ctx._actMeta.plugin
