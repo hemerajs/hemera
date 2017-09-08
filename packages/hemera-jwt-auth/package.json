@@ -1,6 +1,6 @@
 {
   "name": "hemera-jwt-auth",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Granting and authenticating solution with JWT for Hemera",
   "main": "index.js",
   "repository": {
