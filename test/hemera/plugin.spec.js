@@ -66,6 +66,50 @@ describe('Plugin interface', function () {
     })
   })
 
+  it('Should be able to compare plugin hemera errors with instanceof', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    // Plugin
+    let plugin = function (options) {
+      let hemera = this
+
+      const FooBarError = hemera.createError('FooBarError')
+
+      hemera.expose('errors', {
+        FooBarError
+      })
+
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      }, (resp, cb) => {
+        cb(new FooBarError('test'))
+      })
+    }
+
+    hemera.use({
+      plugin: plugin,
+      attributes: {
+        name: 'myPlugin'
+      }
+    })
+
+    hemera.ready(() => {
+      hemera.act({
+        topic: 'math',
+        cmd: 'add'
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('FooBarError')
+        expect(err.message).to.be.equals('test')
+        expect(err instanceof hemera.exposition['myPlugin'].errors.FooBarError).to.be.equals(true)
+        hemera.close(done)
+      })
+    })
+  })
+
   it('Should be able to get a map of registered plugins', function (done) {
     const nats = require('nats').connect(authUrl)
 

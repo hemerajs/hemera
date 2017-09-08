@@ -58,6 +58,64 @@ describe('Error handling', function () {
     })
   })
 
+  it('Should be able to compare hemera errors with instanceof', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+        cb(new Hemera.errors.BusinessError('test'))
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('BusinessError')
+        expect(err.message).to.be.equals('test')
+        expect(err instanceof Hemera.errors.BusinessError).to.be.equals(true)
+        hemera.close(done)
+      })
+    })
+  })
+
+  it('Should be able to compare custom hemera errors with instanceof', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    const FooBarError = hemera.createError('FooBarError')
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+        cb(new FooBarError('test'))
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('FooBarError')
+        expect(err.message).to.be.equals('test')
+        expect(err instanceof FooBarError).to.be.equals(true)
+        hemera.close(done)
+      })
+    })
+  })
+
   it('Should be able to serialize and deserialize an error back to the callee', function (done) {
     const nats = require('nats').connect(authUrl)
 
