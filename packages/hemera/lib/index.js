@@ -138,6 +138,9 @@ class Hemera extends EventEmitter {
     // errio settings
     Errio.setDefaults(this._config.errio)
 
+    // Register all default hemera errors
+    this._registerErrors()
+
     // create load policy
     this._loadPolicy = this._heavy.policy(this._config.load.policy)
 
@@ -210,6 +213,16 @@ class Hemera extends EventEmitter {
     this._beforeExit.init()
   }
 
+  /**
+   *
+   *
+   * @memberof Hemera
+   */
+  _registerErrors () {
+    for (var error in Hemera.errors) {
+      Errio.register(Hemera.errors[error])
+    }
+  }
   /**
    *
    *
