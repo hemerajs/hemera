@@ -350,7 +350,10 @@ class Hemera extends EventEmitter {
  * @memberOf Hemera
  */
   static createError (name) {
-    return SuperError.subclass(name)
+    const ctor = SuperError.subclass(name)
+    // Register the class with Errio.
+    Errio.register(ctor)
+    return ctor
   }
 
   /**
@@ -516,7 +519,10 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   createError (name) {
-    return SuperError.subclass(name)
+    const ctor = SuperError.subclass(name)
+    // Register the class with Errio.
+    Errio.register(ctor)
+    return ctor
   }
 
   /**
