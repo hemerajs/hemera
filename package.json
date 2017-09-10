@@ -55,7 +55,7 @@
     "istanbul": "0.4.x",
     "joi": "10.6.x",
     "lerna": "^2.1.2",
-    "mocha": "3.5.x",
+    "mocha": "~3.5.1",
     "mocha-lcov-reporter": "1.3.x",
     "nats": "0.7.x",
     "nats-hemera": "^1.5.0",
