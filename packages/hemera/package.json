@@ -50,7 +50,7 @@
     "lodash": "4.17.x",
     "pino": "4.7.x",
     "super-error": "2.0.x",
-    "tinysonic": "1.2.x"
+    "tinysonic": "1.3.x"
   },
   "peerDependencies": {
     "nats": ">= 0.7.2"

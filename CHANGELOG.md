@@ -3,6 +3,11 @@ Changelog
 
 # 1.x
 
+### 1.5.13
+
+## Summary
+Update `tinysonic` to 1.3.0 to fix parsing issues in short json syntax e.g `act('a:22de')`, `àct('a: null')`
+
 ### 1.5.12
 
 ## Summary
