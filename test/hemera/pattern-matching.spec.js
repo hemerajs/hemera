@@ -18,7 +18,11 @@ describe('Pattern matching', function () {
   it('Should throw an error when the pattern is already defined', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats)
+    const hemera = new Hemera(nats, {
+      bloomrun: {
+        lookupBeforeAdd: true
+      }
+    })
 
     hemera.ready(() => {
       try {
@@ -56,11 +60,7 @@ describe('Pattern matching', function () {
   it('Should not throw an error when a pattern is a subset of another', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      bloomrun: {
-        lookupBeforeAdd: false
-      }
-    })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
       hemera.add({
@@ -95,7 +95,6 @@ describe('Pattern matching', function () {
 
     const hemera = new Hemera(nats, {
       bloomrun: {
-        lookupBeforeAdd: false,
         indexing: 'insertion'
       }
     })

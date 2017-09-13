@@ -40,7 +40,7 @@ module.exports = Joi.object().keys({
   bloomrun: Joi.object().keys({
     indexing: Joi.any().valid(['insertion', 'depth']).default('insertion'),
      // Checks if the pattern is no duplicate based on to the indexing strategy
-    lookupBeforeAdd: Joi.boolean().default(true)
+    lookupBeforeAdd: Joi.boolean().default(false)
   }).default(),
   load: Joi.object().keys({
     // Check on every request (server) if the load policy was observed,

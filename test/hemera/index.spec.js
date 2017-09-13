@@ -341,7 +341,11 @@ describe('Hemera', function () {
   it('Should throw an error by duplicate patterns', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats)
+    const hemera = new Hemera(nats, {
+      bloomrun: {
+        lookupBeforeAdd: true
+      }
+    })
 
     hemera.ready(() => {
       try {

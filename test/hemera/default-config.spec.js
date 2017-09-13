@@ -38,7 +38,7 @@ describe('Hemera default config', function () {
       },
       bloomrun: {
         indexing: 'insertion', // Pattern indexing method "insertion" or "depth"
-        lookupBeforeAdd: true // Checks if the pattern is no duplicate based on to the indexing strategy
+        lookupBeforeAdd: false // Checks if the pattern is no duplicate based on to the indexing strategy
       },
       load: {
         checkPolicy: true, // Check on every request (server) if the load policy was observed,
