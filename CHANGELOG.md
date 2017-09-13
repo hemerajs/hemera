@@ -6,7 +6,7 @@ Changelog
 ### 1.5.12
 
 ## Summary
-The `bloomrun` config `lookupBeforeAdd` is set to false by default. This allows to add pattern without to respecting the pattern matching order.
+The `bloomrun` config `lookupBeforeAdd` is set to `false` by default. This allows to add pattern without to respecting the pattern matching order.
 It has no impact on the pattern matching rules.
 
 ### 1.5.11
