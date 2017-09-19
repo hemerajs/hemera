@@ -52,6 +52,41 @@ hemera.ready(() => {
 
 ```
 
+## Multiple databases example
+
+```js
+'use strict'
+
+const Hemera = require('nats-hemera')
+const nats = require('nats').connect()
+const hemeraMongo = require('hemera-mongo-store')
+
+const hemera = new Hemera(nats, {
+  logLevel: 'info'
+})
+
+hemera.use(hemeraMongo, {
+  mongo: {
+    url: 'mongodb://localhost:27017/test',
+    multiDB: true
+  }
+})
+
+hemera.ready(() => {
+  hemera.act({
+    topic: 'mongo-store-test',
+    cmd: 'create',
+    collection: 'collTest',
+    data: {
+      name: 'peter'
+    }
+  }, function (err, resp) {
+    this.log.info(resp, 'Query result')
+  })
+})
+
+```
+
 ## API
 
 See [Store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store) Interface.
