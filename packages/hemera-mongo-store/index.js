@@ -24,8 +24,8 @@ exports.plugin = Hp(function hemeraMongoStore(options, next) {
     }
 
     const dbName = db.s.databaseName;
-    if (options.mongo.multiDB) {
-      topic = `mongo-store-${dbName}`;
+    if (options.multiDb) {
+      topic = `mongo-store.${dbName}`;
     }
 
 
