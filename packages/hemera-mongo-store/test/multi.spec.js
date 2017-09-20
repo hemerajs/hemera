@@ -34,7 +34,7 @@ describe('Hemera-mongo-store, multiple databases', function () {
     done()
   })
 
-  it('create', function (done) {
+  it('create, multi db support', function (done) {
     hemera.act({
       topic,
       cmd: 'create',
@@ -51,7 +51,7 @@ describe('Hemera-mongo-store, multiple databases', function () {
     })
   })
 
-  it('create multiple documents', function (done) {
+  it('create multiple documents, multi db support', function (done) {
     hemera.act({
       topic,
       cmd: 'create',
@@ -68,7 +68,7 @@ describe('Hemera-mongo-store, multiple databases', function () {
     })
   })
 
-  it('update', function (done) {
+  it('update, multi db support', function (done) {
     hemera.act({
       topic,
       cmd: 'create',
@@ -103,7 +103,7 @@ describe('Hemera-mongo-store, multiple databases', function () {
     })
   })
 
-  it('updatebyId', function (done) {
+  it('updatebyId, multi db support', function (done) {
     hemera.act({
       topic,
       cmd: 'create',
@@ -136,7 +136,7 @@ describe('Hemera-mongo-store, multiple databases', function () {
     })
   })
 
-  it('remove', function (done) {
+  it('remove, multi db support', function (done) {
     hemera.act({
       topic,
       cmd: 'create',
@@ -165,7 +165,7 @@ describe('Hemera-mongo-store, multiple databases', function () {
     })
   })
 
-  it('removeById', function (done) {
+  it('removeById, multi db support', function (done) {
     hemera.act({
       topic,
       cmd: 'create',
@@ -192,7 +192,7 @@ describe('Hemera-mongo-store, multiple databases', function () {
     })
   })
 
-  it('findById', function (done) {
+  it('findById, multi db support', function (done) {
     hemera.act({
       topic,
       cmd: 'create',
@@ -219,7 +219,7 @@ describe('Hemera-mongo-store, multiple databases', function () {
     })
   })
 
-  it('find', function (done) {
+  it('find, multi db support', function (done) {
     hemera.act({
       topic,
       cmd: 'create',
@@ -246,7 +246,7 @@ describe('Hemera-mongo-store, multiple databases', function () {
     })
   })
 
-  it('find with pagination', function (done) {
+  it('find with pagination, multi db support', function (done) {
     hemera.act({
       topic,
       cmd: 'create',
@@ -279,7 +279,7 @@ describe('Hemera-mongo-store, multiple databases', function () {
     })
   })
 
-  it('replace', function (done) {
+  it('replace, multi db support', function (done) {
     hemera.act({
       topic,
       cmd: 'create',
@@ -313,7 +313,7 @@ describe('Hemera-mongo-store, multiple databases', function () {
     })
   })
 
-  it('replaceById', function (done) {
+  it('replaceById, multi db support', function (done) {
     hemera.act({
       topic,
       cmd: 'create',
