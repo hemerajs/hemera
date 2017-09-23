@@ -3,6 +3,10 @@ Changelog
 
 # 1.x
 
+### 1.6.0
+## Summary
+Update bloomrun to [4.0.0](https://github.com/mcollina/bloomrun/releases/tag/v4.0.0)
+
 ### 1.5.13
 
 ## Summary
