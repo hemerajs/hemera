@@ -31,7 +31,6 @@ class GracefulShutdown {
   constructor (logger) {
     this.logger = logger
     this.handlers = []
-    this.clean = false
     this.signals = ['SIGINT', 'SIGTERM']
   }
 
@@ -73,10 +72,7 @@ class GracefulShutdown {
    * @memberof GracefulShutdown
    */
   shutdown (code) {
-    if(!this.clean) {
-      this.clean = true
-      parallel(null, this.handlers, code, (err) => this.completed(err, code))
-    }
+    parallel(null, this.handlers, code, (err) => this.completed(err, code))
   }
 
   /**
@@ -85,16 +81,6 @@ class GracefulShutdown {
    * @memberof GracefulShutdown
    */
   init () {
-    process.on('cleanup', code => {
-      this.shutdown(code)
-    })
-
-    // when the Node.js event loop no longer having any additional work to perform
-    // when the process.exit() method being called explicitly
-    process.on('exit', function (code) {
-      process.emit('cleanup', code)
-    })
-
     this.signals.forEach((code) => {
       process.on(code, () => {
         this.shutdown(code)
