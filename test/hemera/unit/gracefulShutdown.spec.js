@@ -1,3 +1,4 @@
+'use strict'
 
 describe('GracefulShutdown', function () {
   let noOpLogger = {
