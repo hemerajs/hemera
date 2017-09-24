@@ -3,6 +3,10 @@ Changelog
 
 # 1.x
 
+### 1.6.2
+## Summary
+- Remove `exit` event in graceful shutdown routine.
+
 ### 1.6.1
 ## Summary
 - Refactor graceful shutdown implementation [Commit](https://github.com/hemerajs/hemera/commit/396594d074809b9cf3c17229530550266990208e)
