@@ -3,6 +3,11 @@ Changelog
 
 # 1.x
 
+### 1.6.1
+## Summary
+- Refactor graceful shutdown implementation [Commit](https://github.com/hemerajs/hemera/commit/396594d074809b9cf3c17229530550266990208e)
+- Fixed some lint issues [Commit](https://github.com/hemerajs/hemera/commit/396594d074809b9cf3c17229530550266990208e)
+
 ### 1.6.0
 ## Summary
 Update bloomrun to [4.0.0](https://github.com/mcollina/bloomrun/releases/tag/v4.0.0)
