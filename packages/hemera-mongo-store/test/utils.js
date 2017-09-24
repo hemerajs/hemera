@@ -55,7 +55,7 @@ function initServer (topic, testCollection, pluginOptions, cb) {
         cmd: 'dropCollection',
         collection: testCollection
       }, function (err, resp) {
-        cb(null, { server, hemera, plugin })
+        cb(err, { server, hemera, plugin })
       })
     })
   })

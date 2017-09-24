@@ -20,7 +20,7 @@ describe('Hemera-mongo-store options', function () {
       remove: { },
       removeById: { projection: { name: 1 } },
       replace: { upsert: false },
-      replaceById: { projection: { name: 1} }
+      replaceById: { projection: { name: 1 } }
     }
   }
   let server

@@ -25,7 +25,7 @@ const SuperError = require('super-error')
 const Co = require('co')
 const Joi = require('joi')
 
-const BeforeExit = require('./beforeExit')
+const GracefulShutdown = require('./gracefulShutdown')
 const Errors = require('./errors')
 const Constants = require('./constants')
 const Extension = require('./extension')
@@ -188,29 +188,9 @@ class Hemera extends EventEmitter {
       }
     }
 
-    this._beforeExit = new BeforeExit()
-
-    this._beforeExit.addAction((signal) => {
-      this.log.fatal({
-        signal
-      }, 'process exited')
-      this.emit('exit', {
-        signal
-      })
-    })
-
-    this._beforeExit.addAction(() => {
-      return new Promise((resolve, reject) => {
-        this.close((err) => {
-          if (err) {
-            return reject(err)
-          }
-          resolve()
-        })
-      })
-    })
-
-    this._beforeExit.init()
+    this._gracefulShutdown = new GracefulShutdown(this.log)
+    this._gracefulShutdown.addHandler((code, cb) => this.close(cb))
+    this._gracefulShutdown.init()
   }
 
   /**
@@ -496,7 +476,7 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   fatal () {
-    this._beforeExit.doActions('fatal')
+    this._gracefulShutdown.shutdown('fatal')
   }
 
   /**

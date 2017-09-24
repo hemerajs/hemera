@@ -38,7 +38,6 @@ function onClose (ctx, err, val, cb) {
         cb(err)
       }
     } else {
-      ctx.log.info(Constants.GRACEFULLY_SHUTDOWN)
       if (_.isFunction(cb)) {
         cb(null, val)
       }
