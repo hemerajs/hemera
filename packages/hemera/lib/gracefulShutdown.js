@@ -30,7 +30,9 @@ class GracefulShutdown {
    */
   constructor (logger) {
     this.logger = logger
+    this.process = null
     this.handlers = []
+    this.timeout = 10000
     this.signals = ['SIGINT', 'SIGTERM']
   }
 
@@ -52,27 +54,55 @@ class GracefulShutdown {
    *
    *
    * @param {any} err
-   * @param {any} code
+   * @param {any} signal
    * @memberof GracefulShutdown
    */
-  completed (err, code) {
+  completed (err, signal) {
     if (err) {
-      this.logger.error({ err: err, exitCode: code }, Constants.GRACEFULLY_SHUTDOWN)
-      process.exit(1)
+      this.logger.error({ err, signal }, Constants.PROCESS_TERMINATED)
+      this.process.exit(1)
     } else {
-      this.logger.info({ exitCode: code }, Constants.GRACEFULLY_SHUTDOWN)
-      process.exit(0)
+      this.logger.info({ signal }, Constants.PROCESS_TERMINATED)
+      this.process.exit(0)
     }
   }
 
   /**
    *
    *
-   * @param {any} code
+   * @param {any} signal
+   * @param {any} timeout
    * @memberof GracefulShutdown
    */
-  shutdown (code) {
-    parallel(null, this.handlers, code, (err) => this.completed(err, code))
+  terminateAfterTimeout (signal, timeout) {
+    setTimeout(() => {
+      this.logger.error(
+        { signal, timeout },
+        Constants.TERMINATE_AFTER_TIMEOUT
+      )
+      this.process.exit(1)
+    }, timeout).unref()
+  }
+
+  /**
+   *
+   *
+   * @param {any} signal
+   * @memberof GracefulShutdown
+   */
+  shutdown (signal) {
+    parallel(null, this.handlers, signal, (err) => this.completed(err, signal))
+  }
+
+  /**
+   *
+   *
+   * @param {any} signal
+   * @memberof GracefulShutdown
+   */
+  sigHandler (signal) {
+    this.terminateAfterTimeout(signal, this.timeout)
+    this.shutdown(signal)
   }
 
   /**
@@ -81,10 +111,11 @@ class GracefulShutdown {
    * @memberof GracefulShutdown
    */
   init () {
-    this.signals.forEach((code) => {
-      process.on(code, () => {
-        this.shutdown(code)
-      })
+    this.signals.forEach((signal) => {
+      if (this.process.listenerCount(signal) > 0) {
+        this.logger.warn(`${signal} handler was already registered`)
+      }
+      this.process.once(signal, s => this.sigHandler(signal))
     })
   }
 }

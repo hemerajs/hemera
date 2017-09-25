@@ -54,5 +54,8 @@ module.exports = {
   PLUGIN_TIMEOUT_ERROR: 'Plugin callback was not called',
   ACT_PATTERN_REQUIRED: 'Pattern is required to start an act call',
   ADD_PATTERN_REQUIRED: 'Pattern is required to define an add',
-  NO_USE_IN_PLUGINS: 'Call `use()` inside plugins not allowed'
+  NO_USE_IN_PLUGINS: 'Call `use()` inside plugins not allowed',
+  TERMINATE_AFTER_TIMEOUT: 'Terminate process after timeout',
+  PROCESS_TERMINATED: 'Process terminated',
+  TRIGGERING_CLOSE_HOOK: 'Triggering close hook'
 }
