@@ -25,6 +25,7 @@ describe('Logging interface', function () {
       info: function () {
         logSpy()
       },
+      warn: function () {},
       fatal: function () {}
     }
 

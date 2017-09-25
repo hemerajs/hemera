@@ -188,9 +188,16 @@ class Hemera extends EventEmitter {
       }
     }
 
-    this._gracefulShutdown = new GracefulShutdown(this.log)
-    this._gracefulShutdown.addHandler((code, cb) => this.close(cb))
-    this._gracefulShutdown.init()
+    const gs = new GracefulShutdown()
+    gs.process = process
+    gs.logger = this.log
+    gs.addHandler((signal, cb) => {
+      this.log.info({ signal }, Constants.TRIGGERING_CLOSE_HOOK)
+      this.close(cb)
+    })
+    gs.init()
+
+    this._gracefulShutdown = gs
   }
 
   /**
