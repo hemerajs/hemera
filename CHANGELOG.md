@@ -3,6 +3,11 @@ Changelog
 
 # 1.x
 
+### 1.6.3
+## Summary
+- Implement more robust graceful shutdown
+- Activate async / await tests in CI
+
 ### 1.6.2
 ## Summary
 - Remove `exit` event in graceful shutdown routine.
