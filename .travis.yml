@@ -8,7 +8,7 @@ node_js:
   - "8"
 
 script:
-  - npm run setup && npm run ci
+  - npm run ci:setup && npm run ci
 
 env:
   - CXX="g++-4.8"

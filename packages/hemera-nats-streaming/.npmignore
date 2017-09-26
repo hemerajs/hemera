@@ -6,4 +6,4 @@ docs
 packages
 flow-typed
 package-lock.json
-media
+yarn.lock
