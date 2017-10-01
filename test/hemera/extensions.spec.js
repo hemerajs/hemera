@@ -59,6 +59,97 @@ describe('Extension reply', function () {
     })
   })
 
+  it('Should not be able to overwrite the previous error', function (done) {
+    let ext1 = Sinon.spy()
+    let ext2 = Sinon.spy()
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
+        ext1()
+        res.send(new Error('test'))
+        next(new Error('test2'))
+      })
+
+      hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
+        ext2()
+        res.send({
+          msg: 'authorized'
+        })
+        next()
+      })
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+        cb()
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+        expect(ext1.called).to.be.equals(true)
+        expect(ext2.called).to.be.equals(false)
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
+        hemera.close(done)
+      })
+    })
+  })
+
+  it('Should not be able to send multiple times', function (done) {
+    let ext1 = Sinon.spy()
+    let ext2 = Sinon.spy()
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
+        ext1()
+        res.send({ a: 1 })
+        res.send({ a: 2 })
+        next()
+      })
+
+      hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
+        ext2()
+        res.send({ a: 3 })
+        res.send({ a: 4 })
+        next()
+      })
+
+      hemera.add({
+        topic: 'email',
+        cmd: 'send'
+      }, (resp, cb) => {
+        cb()
+      })
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!'
+      }, (err, resp) => {
+        expect(ext1.called).to.be.equals(true)
+        expect(ext2.called).to.be.equals(true)
+        expect(err).to.be.not.exists()
+        expect(resp.a).to.be.equals(1)
+        hemera.close(done)
+      })
+    })
+  })
+
   it('send', function (done) {
     let ext1 = Sinon.spy()
 

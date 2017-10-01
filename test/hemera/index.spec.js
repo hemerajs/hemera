@@ -370,6 +370,69 @@ describe('Hemera', function () {
     })
   })
 
+  it('Should be able to reply in middleware', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      })
+        .use(function (req, resp, next) {
+          resp.send({ a: 1 })
+          next()
+        })
+        .end(function (req, cb) {
+          cb(null, req.a + req.b)
+        })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, function (err, resp) {
+        expect(err).to.be.not.exists()
+        expect(resp.a).to.be.equals(1)
+        hemera.close(done)
+      })
+    })
+  })
+
+  it('Should be able to reply an error in middleware', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add'
+      })
+        .use(function (req, resp, next) {
+          resp.send(new Error('test'))
+          next()
+        })
+        .end(function (req, cb) {
+          cb(null, req.a + req.b)
+        })
+
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      }, function (err, resp) {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
+        hemera.close(done)
+      })
+    })
+  })
+
   it('Should be able to handle an middleware error of a server method', function (done) {
     const nats = require('nats').connect(authUrl)
 
