@@ -24,4 +24,62 @@ describe('Util', function() {
     expect(regex2).to.be.equals(/^a.[a-zA-Z0-9\-\.]+$/i)
     done()
   })
+
+  it('Extract schema', function(done) {
+    let schema = HemeraUtil.extractSchema({
+      topic: 'foo',
+      a: { b: 1 }
+    })
+    expect(schema).to.be.equals({ a: { b: 1 } })
+
+    schema = HemeraUtil.extractSchema(null)
+    expect(schema).to.be.equals(null)
+
+    done()
+  })
+
+  it('Clean pattern', function(done) {
+    let pattern = HemeraUtil.cleanPattern({
+      topic: 'foo',
+      test$: 'a',
+      a: { b: 1 }
+    })
+    expect(pattern).to.be.equals({ topic: 'foo' })
+
+    pattern = HemeraUtil.cleanPattern(null)
+    expect(pattern).to.be.equals(null)
+
+    done()
+  })
+
+  it('Clean from special variables', function(done) {
+    let pattern = HemeraUtil.cleanFromSpecialVars({
+      topic: 'foo',
+      test$: 'a',
+      a: { b: 1 }
+    })
+    expect(pattern).to.be.equals({ topic: 'foo', a: { b: 1 } })
+
+    pattern = HemeraUtil.cleanFromSpecialVars(null)
+    expect(pattern).to.be.equals(null)
+
+    done()
+  })
+
+  it('Get pattern in string form', function(done) {
+    let pattern = HemeraUtil.pattern({
+      topic: 'foo',
+      test$: 'a',
+      a: { b: 1 }
+    })
+    expect(pattern).to.be.equals('topic:foo')
+
+    pattern = HemeraUtil.pattern('topic:foo')
+    expect(pattern).to.be.equals('topic:foo')
+
+    pattern = HemeraUtil.pattern(null)
+    expect(pattern).to.be.equals('')
+
+    done()
+  })
 })
