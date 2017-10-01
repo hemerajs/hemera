@@ -135,6 +135,7 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 | [hemera-cli](https://github.com/hemerajs/hemera-cli) | [![npm](https://img.shields.io/npm/v/hemera-cli.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-cli)
 | [hemera-mail](https://github.com/hemerajs/hemera/tree/master/packages/hemera-mail) | [![npm](https://img.shields.io/npm/v/hemera-mail.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-mail)
 | [hemera-slackbot](https://github.com/hemerajs/hemera/tree/master/packages/hemera-slackbot) | [![npm](https://img.shields.io/npm/v/hemera-slackbot.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-slackbot)
+| [hemera-graceful-shutdown](https://github.com/hemerajs/hemera/tree/master/packages/hemera-graceful-shutdown) | [![npm](https://img.shields.io/npm/v/hemera-graceful-shutdown.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-graceful-shutdown)
 
 | Messaging bridges | Version |
 |--------|-------|
