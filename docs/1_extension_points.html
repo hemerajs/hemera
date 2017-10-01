@@ -149,7 +149,7 @@ hemera.ext("onClientPreRequest", function(ctx, next) {
           <br>
           <pre>
 <code class="javascript">
-hemera.ext("onServerPreHandler", function(ctx, req, res, next) {
+hemera.ext("onServerPreHandler", function(ctx, req, reply, next) {
    next()
 })
 </code>
@@ -161,9 +161,16 @@ hemera.ext("onServerPreHandler", function(ctx, req, res, next) {
             <li>
               <code>ctx</code> current hemera instance</li>
             <li>
-              <code>req</code> contains the current request. Its an object with two properties <code>payload</code> and <code>error</code> because decoding issues.</li>
+              <code>req</code> contains the current request.
+            </li>
             <li>
-              <code>res</code> contains the current reply interface.
+              <code>reply</code> contains the current reply interface.
+              <ul>
+                  <li><code>send()</code></li>
+                  <li><code>payload</code></li>
+                  <li><code>error</code></li>
+                </ul>
+            </li>
           </ul>
 
         </div>
