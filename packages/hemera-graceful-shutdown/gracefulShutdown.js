@@ -73,10 +73,7 @@ class GracefulShutdown {
    */
   terminateAfterTimeout (signal, timeout) {
     setTimeout(() => {
-      this.logger.error(
-        { signal, timeout },
-        'terminate process after timeout'
-      )
+      this.logger.error({ signal, timeout }, 'terminate process after timeout')
       this.process.exit(1)
     }, timeout).unref()
   }
@@ -88,7 +85,7 @@ class GracefulShutdown {
    * @memberof GracefulShutdown
    */
   shutdown (signal) {
-    parallel(null, this.handlers, signal, (err) => this.completed(err, signal))
+    parallel(null, this.handlers, signal, err => this.completed(err, signal))
   }
 
   /**
@@ -108,7 +105,7 @@ class GracefulShutdown {
    * @memberof GracefulShutdown
    */
   init () {
-    this.signals.forEach((signal) => {
+    this.signals.forEach(signal => {
       if (this.process.listenerCount(signal) > 0) {
         this.logger.warn(`${signal} handler was already registered`)
       }

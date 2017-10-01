@@ -37,7 +37,8 @@ function onClientPreRequest (context, next) {
   // tracing
   context.trace$ = pattern.trace$ || {}
   context.trace$.parentSpanId = context.trace$.spanId || prevCtx.trace$.spanId
-  context.trace$.traceId = context.trace$.traceId || prevCtx.trace$.traceId || Util.randomId()
+  context.trace$.traceId =
+    context.trace$.traceId || prevCtx.trace$.traceId || Util.randomId()
   context.trace$.spanId = Util.randomId()
   context.trace$.timestamp = currentTime
   context.trace$.service = pattern.topic
@@ -52,9 +53,11 @@ function onClientPreRequest (context, next) {
       context.meta$.referrers[callSignature] = count
       if (count > context._config.maxRecursion) {
         context.meta$.referrers = null
-        return next(new Errors.MaxRecursionError({
-          count: --count
-        }))
+        return next(
+          new Errors.MaxRecursionError({
+            count: --count
+          })
+        )
       }
     } else {
       context.meta$.referrers = {}
@@ -66,7 +69,10 @@ function onClientPreRequest (context, next) {
   let request = {
     id: pattern.requestId$ || Util.randomId(),
     parentId: context.request$.id || pattern.requestParentId$,
-    type: pattern.pubsub$ === true ? Constants.REQUEST_TYPE_PUBSUB : Constants.REQUEST_TYPE_REQUEST
+    type:
+      pattern.pubsub$ === true
+        ? Constants.REQUEST_TYPE_PUBSUB
+        : Constants.REQUEST_TYPE_REQUEST
   }
 
   context.emit('clientPreRequest', context)
@@ -201,6 +207,9 @@ function onServerPreResponse (context, req, res, next) {
 
 module.exports.onClientPreRequest = [onClientPreRequest]
 module.exports.onClientPostRequest = [onClientPostRequest]
-module.exports.onServerPreRequest = [onServerPreRequest, onServerPreRequestLoadTest]
+module.exports.onServerPreRequest = [
+  onServerPreRequest,
+  onServerPreRequestLoadTest
+]
 module.exports.onServerPreHandler = [onServerPreHandler]
 module.exports.onServerPreResponse = [onServerPreResponse]

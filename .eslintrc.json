@@ -1,0 +1,9 @@
+{
+  "extends": [
+    "prettier",
+    "standard"
+  ],
+  "plugins": [
+    "prettier"
+  ]
+}

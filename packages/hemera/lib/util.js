@@ -12,7 +12,9 @@
 const _ = require('lodash')
 
 const lut = []
-for (let i = 0; i < 256; i++) { lut[i] = (i < 16 ? '0' : '') + (i).toString(16) }
+for (let i = 0; i < 256; i++) {
+  lut[i] = (i < 16 ? '0' : '') + i.toString(16)
+}
 
 /**
  * @class Util
@@ -52,7 +54,8 @@ class Util {
       return function () {
         // -1 because (req, res, next)
         const next = arguments[arguments.length - 1]
-        return handler.apply(null, arguments)
+        return handler
+          .apply(null, arguments)
           .then(x => next(null, x))
           .catch(next)
       }
@@ -66,14 +69,28 @@ class Util {
    * @memberOf Util
    */
   static randomId () {
-    const d0 = Math.random() * 0xffffffff | 0
-    const d1 = Math.random() * 0xffffffff | 0
-    const d2 = Math.random() * 0xffffffff | 0
-    const d3 = Math.random() * 0xffffffff | 0
-    return lut[d0 & 0xff] + lut[d0 >> 8 & 0xff] + lut[d0 >> 16 & 0xff] + lut[d0 >> 24 & 0xff] +
-      lut[d1 & 0xff] + lut[d1 >> 8 & 0xff] + lut[d1 >> 16 & 0x0f | 0x40] + lut[d1 >> 24 & 0xff] +
-      lut[d2 & 0x3f | 0x80] + lut[d2 >> 8 & 0xff] + lut[d2 >> 16 & 0xff] + lut[d2 >> 24 & 0xff] +
-      lut[d3 & 0xff] + lut[d3 >> 8 & 0xff] + lut[d3 >> 16 & 0xff] + lut[d3 >> 24 & 0xff]
+    const d0 = (Math.random() * 0xffffffff) | 0
+    const d1 = (Math.random() * 0xffffffff) | 0
+    const d2 = (Math.random() * 0xffffffff) | 0
+    const d3 = (Math.random() * 0xffffffff) | 0
+    return (
+      lut[d0 & 0xff] +
+      lut[(d0 >> 8) & 0xff] +
+      lut[(d0 >> 16) & 0xff] +
+      lut[(d0 >> 24) & 0xff] +
+      lut[d1 & 0xff] +
+      lut[(d1 >> 8) & 0xff] +
+      lut[((d1 >> 16) & 0x0f) | 0x40] +
+      lut[(d1 >> 24) & 0xff] +
+      lut[(d2 & 0x3f) | 0x80] +
+      lut[(d2 >> 8) & 0xff] +
+      lut[(d2 >> 16) & 0xff] +
+      lut[(d2 >> 24) & 0xff] +
+      lut[d3 & 0xff] +
+      lut[(d3 >> 8) & 0xff] +
+      lut[(d3 >> 16) & 0xff] +
+      lut[(d3 >> 24) & 0xff]
+    )
   }
 
   /**
@@ -121,7 +138,7 @@ class Util {
    */
   static nowHrTime () {
     const hrtime = process.hrtime()
-    return ((+hrtime[0]) * 1e9) + (+hrtime[1])
+    return +hrtime[0] * 1e9 + +hrtime[1]
   }
   /**
    *
@@ -193,7 +210,7 @@ class Util {
     return sb.join(',')
   }
 
-   /*
+  /*
    *
    *
    * @static
@@ -206,7 +223,10 @@ class Util {
     if (!constructor) {
       return false
     }
-    if (constructor.name === 'AsyncFunction' || constructor.displayName === 'AsyncFunction') {
+    if (
+      constructor.name === 'AsyncFunction' ||
+      constructor.displayName === 'AsyncFunction'
+    ) {
       return true
     }
     return false

@@ -40,73 +40,97 @@ exports.plugin = Hp(function hemeraRedisCache (options) {
     hemera.fatal()
   })
 
-  hemera.add({
-    topic,
-    cmd: 'set',
-    key: Joi.string().required(),
-    value: Joi.any().required()
-  }, function (req, cb) {
-    client.set(req.key, req.value, cb)
-  })
+  hemera.add(
+    {
+      topic,
+      cmd: 'set',
+      key: Joi.string().required(),
+      value: Joi.any().required()
+    },
+    function (req, cb) {
+      client.set(req.key, req.value, cb)
+    }
+  )
 
-  hemera.add({
-    topic,
-    cmd: 'get',
-    key: Joi.string().required()
-  }, function (req, cb) {
-    client.get(req.key, cb)
-  })
+  hemera.add(
+    {
+      topic,
+      cmd: 'get',
+      key: Joi.string().required()
+    },
+    function (req, cb) {
+      client.get(req.key, cb)
+    }
+  )
 
-  hemera.add({
-    topic,
-    cmd: 'hmset',
-    key: Joi.string().required(),
-    values: Joi.any().required()
-  }, function (req, cb) {
-    client.hmset(req.key, req.values, cb)
-  })
+  hemera.add(
+    {
+      topic,
+      cmd: 'hmset',
+      key: Joi.string().required(),
+      values: Joi.any().required()
+    },
+    function (req, cb) {
+      client.hmset(req.key, req.values, cb)
+    }
+  )
 
-  hemera.add({
-    topic,
-    cmd: 'hget',
-    key: Joi.string().required(),
-    values: Joi.any().required()
-  }, function (req, cb) {
-    client.hget(req.key, req.values, cb)
-  })
+  hemera.add(
+    {
+      topic,
+      cmd: 'hget',
+      key: Joi.string().required(),
+      values: Joi.any().required()
+    },
+    function (req, cb) {
+      client.hget(req.key, req.values, cb)
+    }
+  )
 
-  hemera.add({
-    topic,
-    cmd: 'hgetall',
-    key: Joi.string().required()
-  }, function (req, cb) {
-    client.hgetall(req.key, cb)
-  })
+  hemera.add(
+    {
+      topic,
+      cmd: 'hgetall',
+      key: Joi.string().required()
+    },
+    function (req, cb) {
+      client.hgetall(req.key, cb)
+    }
+  )
 
-  hemera.add({
-    topic,
-    cmd: 'expire',
-    key: Joi.string().required(),
-    ttlSeconds: Joi.number().required()
-  }, function (req, cb) {
-    client.expire(req.key, req.ttlSeconds, cb)
-  })
+  hemera.add(
+    {
+      topic,
+      cmd: 'expire',
+      key: Joi.string().required(),
+      ttlSeconds: Joi.number().required()
+    },
+    function (req, cb) {
+      client.expire(req.key, req.ttlSeconds, cb)
+    }
+  )
 
-  hemera.add({
-    topic,
-    cmd: 'exists',
-    key: Joi.string().required()
-  }, function (req, cb) {
-    client.exists(req.key, cb)
-  })
+  hemera.add(
+    {
+      topic,
+      cmd: 'exists',
+      key: Joi.string().required()
+    },
+    function (req, cb) {
+      client.exists(req.key, cb)
+    }
+  )
 
-  hemera.add({
-    topic,
-    cmd: 'ttl',
-    key: Joi.string().required()
-  }, function (req, cb) {
-    client.ttl(req.key, cb)
-  })
+  hemera.add(
+    {
+      topic,
+      cmd: 'ttl',
+      key: Joi.string().required()
+    },
+    function (req, cb) {
+      client.ttl(req.key, cb)
+    }
+  )
 }, '>= 1.5.0')
 
 exports.options = {

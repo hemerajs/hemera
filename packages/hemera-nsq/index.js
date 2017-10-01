@@ -40,24 +40,31 @@ exports.plugin = Hp(function hemeraNsqStore (options) {
       /*
        * Forward all message of the NSQ topic/channel to the NATS subscriber
        */
-      hemera.act({
-        topic: `nsq.${subject}.${channel}`,
-        cmd: 'subscribe',
-        data: msg.json()
-      }, (err) => {
-        if (!err) {
-          return msg.finish()
-        }
+      hemera.act(
+        {
+          topic: `nsq.${subject}.${channel}`,
+          cmd: 'subscribe',
+          data: msg.json()
+        },
+        err => {
+          if (!err) {
+            return msg.finish()
+          }
 
-        msg.requeue()
-      })
+          msg.requeue()
+        }
+      )
     })
 
     readers[subject + channel] = reader
   }
 
   // only one writer for this service
-  var w = new Nsq.Writer(options.nsq.writer.url, options.nsq.writer.port, options.nsq.writer.options)
+  var w = new Nsq.Writer(
+    options.nsq.writer.url,
+    options.nsq.writer.port,
+    options.nsq.writer.options
+  )
 
   w.connect()
 
@@ -76,32 +83,38 @@ exports.plugin = Hp(function hemeraNsqStore (options) {
     /*
      * Publish a message to a NSQ topic
      */
-    hemera.add({
-      topic: 'nsq',
-      cmd: 'publish',
-      subject: Joi.string().required(),
-      data: Joi.object().required()
-    }, function (req, cb) {
-      w.publish(req.subject, req.data, function (err) {
-        if (err) {
-          return cb(err)
-        }
+    hemera.add(
+      {
+        topic: 'nsq',
+        cmd: 'publish',
+        subject: Joi.string().required(),
+        data: Joi.object().required()
+      },
+      function (req, cb) {
+        w.publish(req.subject, req.data, function (err) {
+          if (err) {
+            return cb(err)
+          }
 
-        cb(null, true)
-      })
-    })
+          cb(null, true)
+        })
+      }
+    )
 
     /*
      * Create NSQ subscriber
      */
-    hemera.add({
-      topic: 'nsq',
-      cmd: 'subscribe',
-      subject: Joi.string().required(),
-      channel: Joi.string().required()
-    }, function (req, cb) {
-      consume(req.subject, req.channel, cb)
-    })
+    hemera.add(
+      {
+        topic: 'nsq',
+        cmd: 'subscribe',
+        subject: Joi.string().required(),
+        channel: Joi.string().required()
+      },
+      function (req, cb) {
+        consume(req.subject, req.channel, cb)
+      }
+    )
   })
 })
 

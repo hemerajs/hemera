@@ -8,7 +8,7 @@ const hemera = new Hemera(nats, {
 })
 
 hemera.ready(() => {
-  hemera.decorate('test', (a) => console.log(a))
+  hemera.decorate('test', a => console.log(a))
   // global namespace
   hemera.test('Hi!')
 })

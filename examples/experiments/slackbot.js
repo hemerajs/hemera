@@ -17,17 +17,20 @@ hemera.use(hemeraSlackbot, {
 })
 
 hemera.ready(() => {
-  hemera.act({
-    topic: 'slackbot',
-    cmd: 'postMessageToChannel',
-    params: [
-      'general', // Channel
-      'Hello bob!', // Message
-      {
-        icon_emoji: ':cat:'
-      }
-    ]
-  }, function (err, resp) {
-    console.log(err, resp)
-  })
+  hemera.act(
+    {
+      topic: 'slackbot',
+      cmd: 'postMessageToChannel',
+      params: [
+        'general', // Channel
+        'Hello bob!', // Message
+        {
+          icon_emoji: ':cat:'
+        }
+      ]
+    },
+    function(err, resp) {
+      console.log(err, resp)
+    }
+  )
 })

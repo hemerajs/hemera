@@ -1,7 +1,7 @@
 # Hemera-controlplane package
 
 [![npm](https://img.shields.io/npm/v/hemera-controlplane.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-controlplane)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
+[![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
 This is a plugin to scale your workers remotly with Hemera. This package allows you to react dynamically to load requirements. Each worker has its own memory, with their own V8 instance. If you scale a worker inside a docker container ensure that you docker host has enough memory. The maximal number of workers is restricted to the processor count of the host machine.
 

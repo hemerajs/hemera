@@ -1,7 +1,7 @@
 # Hemera-mail package
 
 [![npm](https://img.shields.io/npm/v/hemera-mail.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-mail)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
+[![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
 This is a plugin to mail via SMTP in Hemera. It's use [Nodemailer](https://nodemailer.com) as client library. The parameters are passed one-to-one so look in the nodemailer documentation if you want to
 configure something.

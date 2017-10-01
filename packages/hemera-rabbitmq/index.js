@@ -25,17 +25,20 @@ exports.plugin = Hp(function hemeraRabbitmq (options) {
       }
 
       const handler = Rabbit.handle(type, function (msg) {
-        hemera.act({
-          topic: `rabbitmq.${type}`,
-          cmd: 'subscribe',
-          data: msg.body
-        }, (err) => {
-          if (!err) {
-            return msg.ack()
-          }
+        hemera.act(
+          {
+            topic: `rabbitmq.${type}`,
+            cmd: 'subscribe',
+            data: msg.body
+          },
+          err => {
+            if (!err) {
+              return msg.ack()
+            }
 
-          msg.unack()
-        })
+            msg.unack()
+          }
+        )
       })
 
       handlers[type] = handler
@@ -43,29 +46,36 @@ exports.plugin = Hp(function hemeraRabbitmq (options) {
       cb(null, true)
     }
 
-    hemera.add({
-      topic: 'rabbitmq',
-      cmd: 'subscribe',
-      type: Joi.string().required()
-    }, function (req, cb) {
-      consume(req.type, cb)
-    })
+    hemera.add(
+      {
+        topic: 'rabbitmq',
+        cmd: 'subscribe',
+        type: Joi.string().required()
+      },
+      function (req, cb) {
+        consume(req.type, cb)
+      }
+    )
 
-    hemera.add({
-      topic: 'rabbitmq',
-      cmd: 'publish',
-      exchange: Joi.string().required(),
-      type: Joi.string().required(),
-      data: Joi.object().required()
-    }, function (req, cb) {
-      Rabbit.publish(req.exchange, {
-        type: req.type,
-        body: req.data
-      }).then(function () {
-        cb(null, true)
-      })
-      .catch(cb)
-    })
+    hemera.add(
+      {
+        topic: 'rabbitmq',
+        cmd: 'publish',
+        exchange: Joi.string().required(),
+        type: Joi.string().required(),
+        data: Joi.object().required()
+      },
+      function (req, cb) {
+        Rabbit.publish(req.exchange, {
+          type: req.type,
+          body: req.data
+        })
+          .then(function () {
+            cb(null, true)
+          })
+          .catch(cb)
+      }
+    )
   })
 })
 

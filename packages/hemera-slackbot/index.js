@@ -44,35 +44,42 @@ exports.plugin = Hp(function hemeraSlackbot (options, next) {
     'postMessageToChannel'
   ]
 
-  validMethods.forEach((method) => {
-    hemera.add({
-      topic,
-      cmd: method,
-      params: Joi.array().default([])
-    }, function (req, reply) {
-      bot[method].apply(bot, req.params)
-      .then((resp) => reply(null, resp))
-      .fail((err) => reply(err))
-    })
+  validMethods.forEach(method => {
+    hemera.add(
+      {
+        topic,
+        cmd: method,
+        params: Joi.array().default([])
+      },
+      function (req, reply) {
+        bot[method]
+          .apply(bot, req.params)
+          .then(resp => reply(null, resp))
+          .fail(err => reply(err))
+      }
+    )
   })
 
-  hemera.add({
-    topic,
-    cmd: 'subscribe'
-  }, function (req, reply) {
-    if (subscribed) {
+  hemera.add(
+    {
+      topic,
+      cmd: 'subscribe'
+    },
+    function (req, reply) {
+      if (subscribed) {
+        return reply(null, true)
+      }
+
+      bot.on('message', function (data) {
+        // all ingoing events https://api.slack.com/rtm
+        reply(null, data)
+      })
+
+      subscribed = true
+
       return reply(null, true)
     }
-
-    bot.on('message', function (data) {
-      // all ingoing events https://api.slack.com/rtm
-      reply(null, data)
-    })
-
-    subscribed = true
-
-    return reply(null, true)
-  })
+  )
 
   bot.on('start', function () {
     hemera.log.debug('Websocket connection open!')
@@ -80,7 +87,7 @@ exports.plugin = Hp(function hemeraSlackbot (options, next) {
     next()
   })
 
-  bot.on('error', (err) => {
+  bot.on('error', err => {
     hemera.log.error(err)
     hemera.fatal()
   })

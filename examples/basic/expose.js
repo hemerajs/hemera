@@ -8,7 +8,7 @@ const hemera = new Hemera(nats, {
 })
 
 hemera.ready(() => {
-  hemera.expose('test', (a) => console.log(a))
+  hemera.expose('test', a => console.log(a))
   // plugin namespace
   hemera.exposition.core.test('Hi!')
 })

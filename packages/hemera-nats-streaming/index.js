@@ -27,7 +27,7 @@ exports.plugin = Hp(function hemeraNatsStreaming (options, next) {
     next()
   })
 
-  stan.on('error', (err) => {
+  stan.on('error', err => {
     hemera.log.error(err)
     hemera.fatal()
   })
@@ -36,137 +36,170 @@ exports.plugin = Hp(function hemeraNatsStreaming (options, next) {
     /**
      * Publish a message over NATS-Streaming server
      */
-    hemera.add({
-      topic,
-      cmd: 'publish',
-      subject: Joi.string().required(),
-      data: Joi.alternatives().try(Joi.object(), Joi.array())
-    }, function (req, reply) {
-      function handler (err, guid) {
-        if (err) {
-          reply(err)
+    hemera.add(
+      {
+        topic,
+        cmd: 'publish',
+        subject: Joi.string().required(),
+        data: Joi.alternatives().try(Joi.object(), Joi.array())
+      },
+      function (req, reply) {
+        function handler (err, guid) {
+          if (err) {
+            reply(err)
+          } else {
+            reply(null, guid)
+          }
+        }
+
+        const result = SafeStringify(req.data)
+
+        if (result.error) {
+          const error = new ParsingError(
+            `Message could not be stringified. Subject "${req.subject}"`
+          ).cause(result.error)
+          this.log.error(error)
         } else {
-          reply(null, guid)
+          stan.publish(req.subject, result.value, handler)
         }
       }
-
-      const result = SafeStringify(req.data)
-
-      if (result.error) {
-        const error = new ParsingError(`Message could not be stringified. Subject "${req.subject}"`)
-                          .cause(result.error)
-        this.log.error(error)
-      } else {
-        stan.publish(req.subject, result.value, handler)
-      }
-    })
+    )
 
     /**
      * Create a subscription on the NATS-Streaming server
      * Manual acknowledgement is handled by request / reply call to NATS
      */
-    hemera.add({
-      topic,
-      cmd: 'subscribe',
-      subject: Joi.string().required(),
-      queue: Joi.string().optional(), // queue group name
-      options: Joi.object().keys({
-        setStartWithLastReceived: Joi.boolean(), // Subscribe starting with the most recently published value
-        setDeliverAllAvailable: Joi.boolean(), // Receive all stored values in order
-        setStartAtSequence: Joi.number().integer(), // Receive all messages starting at a specific sequence number
-        setStartTime: Joi.date().iso(), // Subscribe starting at a specific time
-        setStartAtTimeDelta: Joi.number().integer(),
-        setDurableName: Joi.string(), // Create a durable subscription
-        setMaxInFlight: Joi.number().integer(), // the maximum number of outstanding acknowledgements
-        setManualAckMode: Joi.boolean().default(true),
-        setAckWait: Joi.number().integer() // if an acknowledgement is not received within the configured timeout interval, NATS Streaming will attempt redelivery of the message (default 30 seconds)
-      }).default()
-    }, function (req, reply) {
-      // avoid multiple subscribers for the same subject
-      if (subList[req.subject]) {
-        reply(new DuplicateSubscriberError(`Subscription for subject "${req.subject}" is already active`))
-        return
-      }
-
-      const opts = stan.subscriptionOptions()
-
-      // construct subscription options
-      for (var option in req.options) {
-        if (req.options[option] !== undefined) {
-          opts[option](req.options[option])
-        }
-      }
-
-      this.log.debug(opts, 'Subscription options')
-
-      const sub = stan.subscribe(req.subject, req.queue, opts)
-      subList[req.subject] = sub
-
-      // signal that subscription was created
-      reply(null, { created: true, subject: req.subject, opts })
-
-      sub.on('message', (msg) => {
-        const result = SafeParse(msg.getData())
-        const inboxChannel = topic + '.' + req.subject
-
-        if (result.error) {
-          const error = new ParsingError(`Message could not be parsed as JSON. Subject "${req.subject}"`)
-                          .cause(result.error)
-          this.log.error(error)
-        } else {
-          const data = {
-            sequence: msg.getSequence(),
-            message: result.value
-          }
-
-          hemera.act({
-            topic: inboxChannel,
-            data
-          }, function (err, resp) {
-            if (!err) {
-              msg.ack()
-            } else {
-              this.log.error(`Message could not be acknowledged. Subscription "${inboxChannel}"`)
-            }
+    hemera.add(
+      {
+        topic,
+        cmd: 'subscribe',
+        subject: Joi.string().required(),
+        queue: Joi.string().optional(), // queue group name
+        options: Joi.object()
+          .keys({
+            setStartWithLastReceived: Joi.boolean(), // Subscribe starting with the most recently published value
+            setDeliverAllAvailable: Joi.boolean(), // Receive all stored values in order
+            setStartAtSequence: Joi.number().integer(), // Receive all messages starting at a specific sequence number
+            setStartTime: Joi.date().iso(), // Subscribe starting at a specific time
+            setStartAtTimeDelta: Joi.number().integer(),
+            setDurableName: Joi.string(), // Create a durable subscription
+            setMaxInFlight: Joi.number().integer(), // the maximum number of outstanding acknowledgements
+            setManualAckMode: Joi.boolean().default(true),
+            setAckWait: Joi.number().integer() // if an acknowledgement is not received within the configured timeout interval, NATS Streaming will attempt redelivery of the message (default 30 seconds)
           })
+          .default()
+      },
+      function (req, reply) {
+        // avoid multiple subscribers for the same subject
+        if (subList[req.subject]) {
+          reply(
+            new DuplicateSubscriberError(
+              `Subscription for subject "${req.subject}" is already active`
+            )
+          )
+          return
         }
-      })
-    })
+
+        const opts = stan.subscriptionOptions()
+
+        // construct subscription options
+        for (var option in req.options) {
+          if (req.options[option] !== undefined) {
+            opts[option](req.options[option])
+          }
+        }
+
+        this.log.debug(opts, 'Subscription options')
+
+        const sub = stan.subscribe(req.subject, req.queue, opts)
+        subList[req.subject] = sub
+
+        // signal that subscription was created
+        reply(null, { created: true, subject: req.subject, opts })
+
+        sub.on('message', msg => {
+          const result = SafeParse(msg.getData())
+          const inboxChannel = topic + '.' + req.subject
+
+          if (result.error) {
+            const error = new ParsingError(
+              `Message could not be parsed as JSON. Subject "${req.subject}"`
+            ).cause(result.error)
+            this.log.error(error)
+          } else {
+            const data = {
+              sequence: msg.getSequence(),
+              message: result.value
+            }
+
+            hemera.act(
+              {
+                topic: inboxChannel,
+                data
+              },
+              function (err, resp) {
+                if (!err) {
+                  msg.ack()
+                } else {
+                  this.log.error(
+                    `Message could not be acknowledged. Subscription "${inboxChannel}"`
+                  )
+                }
+              }
+            )
+          }
+        })
+      }
+    )
 
     /**
      * Suspends durable subscription
      * If you call `subscribe` again the subscription will be resumed
      */
-    hemera.add({
-      topic,
-      cmd: 'suspend',
-      subject: Joi.string().required()
-    }, function (req, reply) {
-      if (subList[req.subject]) {
-        subList[req.subject].close()
-        delete subList[req.subject]
-        reply(null, true)
-      } else {
-        reply(new NotAvailableError(`Subscription "${req.subject}" is not available`))
+    hemera.add(
+      {
+        topic,
+        cmd: 'suspend',
+        subject: Joi.string().required()
+      },
+      function (req, reply) {
+        if (subList[req.subject]) {
+          subList[req.subject].close()
+          delete subList[req.subject]
+          reply(null, true)
+        } else {
+          reply(
+            new NotAvailableError(
+              `Subscription "${req.subject}" is not available`
+            )
+          )
+        }
       }
-    })
+    )
 
     /**
      * Unsubscribe an active subscription
      */
-    hemera.add({
-      topic,
-      cmd: 'unsubscribe',
-      subject: Joi.string().required()
-    }, function (req, reply) {
-      if (subList[req.subject]) {
-        subList[req.subject].unsubscribe()
-        delete subList[req.subject]
-        reply(null, true)
-      } else {
-        reply(new NotAvailableError(`Subscription "${req.subject}" is not available`))
+    hemera.add(
+      {
+        topic,
+        cmd: 'unsubscribe',
+        subject: Joi.string().required()
+      },
+      function (req, reply) {
+        if (subList[req.subject]) {
+          subList[req.subject].unsubscribe()
+          delete subList[req.subject]
+          reply(null, true)
+        } else {
+          reply(
+            new NotAvailableError(
+              `Subscription "${req.subject}" is not available`
+            )
+          )
+        }
       }
-    })
+    )
 
     next()
   })

@@ -81,9 +81,13 @@ class Add {
    * @memberof Add
    */
   run (request, response, cb) {
-    Util.eachSeries(this.middleware, (item, next) => {
-      item(request, response, next)
-    }, cb)
+    Util.eachSeries(
+      this.middleware,
+      (item, next) => {
+        item(request, response, next)
+      },
+      cb
+    )
   }
 
   /**

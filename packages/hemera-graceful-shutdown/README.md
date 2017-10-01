@@ -1,7 +1,7 @@
 # Hemera-graceful-shutdown package
 
 [![npm](https://img.shields.io/npm/v/hemera-joi.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-graceful-shutdown)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
+[![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
 Shutdown Hemera graceful asynchronously. By default the hemera `onClose` hook is called when `SIGINT` or `SIGTERM` was triggered.
 

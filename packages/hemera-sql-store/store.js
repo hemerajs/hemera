@@ -51,7 +51,10 @@ class SqlStore extends Store {
    * @memberOf Store
    */
   remove (req, cb) {
-    this._driver(req.collection).where(req.query).del().asCallback(cb)
+    this._driver(req.collection)
+      .where(req.query)
+      .del()
+      .asCallback(cb)
   }
 
   /**
@@ -63,7 +66,10 @@ class SqlStore extends Store {
    * @memberOf Store
    */
   removeById (req, cb) {
-    this._driver(req.collection).where(this._options.idField, req.id).del().asCallback(cb)
+    this._driver(req.collection)
+      .where(this._options.idField, req.id)
+      .del()
+      .asCallback(cb)
   }
 
   /**
@@ -76,7 +82,10 @@ class SqlStore extends Store {
    * @memberOf Store
    */
   update (req, data, cb) {
-    this._driver(req.collection).where(req.query).update(data).asCallback(cb)
+    this._driver(req.collection)
+      .where(req.query)
+      .update(data)
+      .asCallback(cb)
   }
 
   /**
@@ -89,7 +98,10 @@ class SqlStore extends Store {
    * @memberOf Store
    */
   updateById (req, data, cb) {
-    this._driver(req.collection).where(this._options.idField, req.id).update(data).asCallback(cb)
+    this._driver(req.collection)
+      .where(this._options.idField, req.id)
+      .update(data)
+      .asCallback(cb)
   }
 
   /**
@@ -119,9 +131,12 @@ class SqlStore extends Store {
       if (err) {
         return cb(err)
       }
-      const result = Object.assign({
-        result: resp
-      }, options)
+      const result = Object.assign(
+        {
+          result: resp
+        },
+        options
+      )
       cb(err, result)
     })
   }
@@ -135,7 +150,9 @@ class SqlStore extends Store {
    * @memberOf Store
    */
   findById (req, cb) {
-    this._driver(req.collection).where(this._options.idField, req.id).asCallback(cb)
+    this._driver(req.collection)
+      .where(this._options.idField, req.id)
+      .asCallback(cb)
   }
 
   /**
@@ -173,7 +190,9 @@ class SqlStore extends Store {
    * @memberOf Store
    */
   exists (req, cb) {
-    this._driver(req.collection).where(req.query).first(this._options.idField)
+    this._driver(req.collection)
+      .where(req.query)
+      .first(this._options.idField)
       .then(row => {
         cb(null, row !== null)
       })

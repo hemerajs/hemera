@@ -147,12 +147,15 @@ class Hemera extends EventEmitter {
     } else {
       if (this._config.prettyLog) {
         let pretty = Pino.pretty()
-        this.log = Pino({
-          name: this._config.name,
-          safe: true, // avoid error caused by circular references
-          level: this._config.logLevel,
-          serializers: Serializers
-        }, pretty)
+        this.log = Pino(
+          {
+            name: this._config.name,
+            safe: true, // avoid error caused by circular references
+            level: this._config.logLevel,
+            serializers: Serializers
+          },
+          pretty
+        )
 
         // Leads to too much listeners in tests
         if (this._config.logLevel !== 'silent') {
@@ -368,7 +371,10 @@ class Hemera extends EventEmitter {
     // use plugin infos from package.json
     if (_.isObject(params.attributes.pkg)) {
       params.attributes = params.attributes || {}
-      params.attributes = Hoek.applyToDefaults(params.attributes, _.pick(params.attributes.pkg, ['name', 'description', 'version']))
+      params.attributes = Hoek.applyToDefaults(
+        params.attributes,
+        _.pick(params.attributes.pkg, ['name', 'description', 'version'])
+      )
     }
 
     let pluginOptions = {}
@@ -513,24 +519,28 @@ class Hemera extends EventEmitter {
 
       // Detect plugin timeouts
       const pluginTimer = setTimeout(() => {
-        const internalError = new Errors.PluginTimeoutError(Constants.PLUGIN_TIMEOUT_ERROR)
+        const internalError = new Errors.PluginTimeoutError(
+          Constants.PLUGIN_TIMEOUT_ERROR
+        )
         this.log.error(internalError, `Plugin: ${item.attributes.name}`)
         next(internalError)
       }, this._config.pluginTimeout)
 
-      item.register(item.options, (err) => {
+      item.register(item.options, err => {
         clearTimeout(pluginTimer)
         next(err)
       })
     }
 
     // register all plugins in serie
-    Util.eachSeries(this._pluginRegistrations, each, (err) => {
+    Util.eachSeries(this._pluginRegistrations, each, err => {
       if (err) {
         if (err instanceof SuperError) {
           err = err.rootCause || err.cause || err
         }
-        const internalError = new Errors.HemeraError(Constants.PLUGIN_REGISTRATION_ERROR).causedBy(err)
+        const internalError = new Errors.HemeraError(
+          Constants.PLUGIN_REGISTRATION_ERROR
+        ).causedBy(err)
         this.log.error(internalError)
         this.emit('error', internalError)
       } else if (_.isFunction(cb)) {
@@ -547,9 +557,9 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   ready (cb) {
-    this._transport.driver.on('error', (err) => {
+    this._transport.driver.on('error', err => {
       this.log.error(err, Constants.NATS_TRANSPORT_ERROR)
-      this.log.error('NATS Code: \'%s\', Message: %s', err.code, err.message)
+      this.log.error("NATS Code: '%s', Message: %s", err.code, err.message)
 
       // Exit only on connection issues.
       // Authorization and protocol issues don't lead to process termination
@@ -559,7 +569,7 @@ class Hemera extends EventEmitter {
       }
     })
 
-    this._transport.driver.on('permission_error', (err) => {
+    this._transport.driver.on('permission_error', err => {
       this.log.error(err, Constants.NATS_PERMISSION_ERROR)
     })
 
@@ -595,7 +605,9 @@ class Hemera extends EventEmitter {
     const self = this
 
     const args = [self, self._request, self._reply]
-    series(self, self._ext['onServerPreResponse'], args, (err) => self._onServerPreResponseCompleted(err))
+    series(self, self._ext['onServerPreResponse'], args, err =>
+      self._onServerPreResponseCompleted(err)
+    )
   }
 
   /**
@@ -609,7 +621,10 @@ class Hemera extends EventEmitter {
     // check if any error was set before
     if (extensionError) {
       self._reply.error = extensionError
-      const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(extensionError)
+      const internalError = new Errors.HemeraError(
+        Constants.EXTENSION_ERROR,
+        self.errorDetails
+      ).causedBy(extensionError)
       self.log.error(internalError)
       self.emit('serverResponseError', self._reply.error)
     }
@@ -618,7 +633,7 @@ class Hemera extends EventEmitter {
     self._send(result)
   }
 
-    /**
+  /**
    *
    *
    * @param {any} msg
@@ -673,7 +688,9 @@ class Hemera extends EventEmitter {
 
     // attach encoding issues
     if (m.error) {
-      let internalError = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR).causedBy(m.error)
+      let internalError = new Errors.ParseError(
+        Constants.PAYLOAD_PARSING_ERROR
+      ).causedBy(m.error)
       message.error = Errio.toObject(internalError)
       message.result = null
       // Retry to encode with issue perhaps the reason was data related
@@ -759,21 +776,31 @@ class Hemera extends EventEmitter {
       hemera._isServer = true
 
       const args = [hemera, hemera._request, hemera._reply]
-      series(hemera, self._ext['onServerPreRequest'], args, (err) => hemera._onServerPreRequestCompleted(err))
+      series(hemera, self._ext['onServerPreRequest'], args, err =>
+        hemera._onServerPreRequestCompleted(err)
+      )
     }
 
     // standard pubsub with optional max proceed messages
     if (subToMany) {
-      self._topics[topic] = self._transport.subscribe(topic, {
-        max: maxMessages
-      }, handler)
+      self._topics[topic] = self._transport.subscribe(
+        topic,
+        {
+          max: maxMessages
+        },
+        handler
+      )
     } else {
       const queueGroup = queue || `${Constants.NATS_QUEUEGROUP_PREFIX}.${topic}`
       // queue group names allow load balancing of services
-      self._topics[topic] = self._transport.subscribe(topic, {
-        'queue': queueGroup,
-        max: maxMessages
-      }, handler)
+      self._topics[topic] = self._transport.subscribe(
+        topic,
+        {
+          queue: queueGroup,
+          max: maxMessages
+        },
+        handler
+      )
     }
   }
 
@@ -796,9 +823,14 @@ class Hemera extends EventEmitter {
     // check if a handler is registered with this pattern
     if (self._actMeta) {
       const args = [self, self._request, self._reply]
-      series(self, self._ext['onServerPreHandler'], args, (err) => self._onServerPreHandlerCompleted(err))
+      series(self, self._ext['onServerPreHandler'], args, err =>
+        self._onServerPreHandlerCompleted(err)
+      )
     } else {
-      const internalError = new Errors.PatternNotFound(Constants.PATTERN_NOT_FOUND, self.errorDetails)
+      const internalError = new Errors.PatternNotFound(
+        Constants.PATTERN_NOT_FOUND,
+        self.errorDetails
+      )
       self.log.error(internalError)
       self._reply.error = internalError
       self.emit('serverResponseError', self._reply.error)
@@ -821,7 +853,10 @@ class Hemera extends EventEmitter {
     if (extensionError) {
       self._reply.error = extensionError
 
-      const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(extensionError)
+      const internalError = new Errors.HemeraError(
+        Constants.EXTENSION_ERROR,
+        self.errorDetails
+      ).causedBy(extensionError)
       self.log.error(internalError)
       self.emit('serverResponseError', self._reply.error)
       self.finish()
@@ -831,10 +866,13 @@ class Hemera extends EventEmitter {
     try {
       let action = self._actMeta.action.bind(self)
 
-      self._actMeta.run(self._request, self._reply, (err) => {
+      self._actMeta.run(self._request, self._reply, err => {
         if (err) {
           self._reply.error = err
-          const internalError = new Errors.HemeraError(Constants.ADD_MIDDLEWARE_ERROR, self.errorDetails).causedBy(err)
+          const internalError = new Errors.HemeraError(
+            Constants.ADD_MIDDLEWARE_ERROR,
+            self.errorDetails
+          ).causedBy(err)
           self.log.error(internalError)
           self.emit('serverResponseError', self._reply.error)
           self.finish()
@@ -842,7 +880,9 @@ class Hemera extends EventEmitter {
         }
 
         // if request type is 'pubsub' we dont have to reply back
-        if (self._request.payload.request.type === Constants.REQUEST_TYPE_PUBSUB) {
+        if (
+          self._request.payload.request.type === Constants.REQUEST_TYPE_PUBSUB
+        ) {
           action(self._request.payload.pattern)
           self.finish()
           return
@@ -854,7 +894,9 @@ class Hemera extends EventEmitter {
             .then(x => self._actionHandler(null, x))
             .catch(e => self._actionHandler(e))
         } else {
-          action(self._request.payload.pattern, (err, result) => self._actionHandler(err, result))
+          action(self._request.payload.pattern, (err, result) =>
+            self._actionHandler(err, result)
+          )
         }
       })
     } catch (err) {
@@ -880,7 +922,9 @@ class Hemera extends EventEmitter {
     const self = this
 
     if (!topic) {
-      let error = new Errors.HemeraError(Constants.TOPIC_SID_REQUIRED_FOR_DELETION)
+      let error = new Errors.HemeraError(
+        Constants.TOPIC_SID_REQUIRED_FOR_DELETION
+      )
       self.log.error(error)
       throw error
     }
@@ -979,9 +1023,12 @@ class Hemera extends EventEmitter {
         pattern
       })
 
-      this.log.error({
-        pattern
-      }, error)
+      this.log.error(
+        {
+          pattern
+        },
+        error
+      )
       this.emit('error', error)
     }
 
@@ -995,7 +1042,8 @@ class Hemera extends EventEmitter {
       pattern.topic,
       pattern.pubsub$,
       pattern.maxMessages$,
-      pattern.queue$)
+      pattern.queue$
+    )
 
     return addDefinition
   }
@@ -1016,7 +1064,10 @@ class Hemera extends EventEmitter {
     try {
       // decoding error
       if (self._response.error) {
-        let error = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR, self.errorDetails).causedBy(self._response.error)
+        let error = new Errors.ParseError(
+          Constants.PAYLOAD_PARSING_ERROR,
+          self.errorDetails
+        ).causedBy(self._response.error)
         self.log.error(error)
         self.emit('clientResponseError', error)
         self._execute(error)
@@ -1024,10 +1075,15 @@ class Hemera extends EventEmitter {
       }
 
       // Execute onClientPostRequest extension
-      series(self, self._ext['onClientPostRequest'], [self], (err) => self._onClientPostRequestCompleted(err))
+      series(self, self._ext['onClientPostRequest'], [self], err =>
+        self._onClientPostRequestCompleted(err)
+      )
     } catch (err) {
       let error = self.getRootError(err)
-      const internalError = new Errors.FatalError(Constants.FATAL_ERROR, self.errorDetails).causedBy(err)
+      const internalError = new Errors.FatalError(
+        Constants.FATAL_ERROR,
+        self.errorDetails
+      ).causedBy(err)
       self.log.fatal(internalError)
       self.emit('clientResponseError', error)
 
@@ -1051,7 +1107,10 @@ class Hemera extends EventEmitter {
 
     if (extensionError) {
       let error = self.getRootError(extensionError)
-      const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR, self.errorDetails).causedBy(extensionError)
+      const internalError = new Errors.HemeraError(
+        Constants.EXTENSION_ERROR,
+        self.errorDetails
+      ).causedBy(extensionError)
       self.log.error(internalError)
       self.emit('clientResponseError', error)
       self._execute(error)
@@ -1060,7 +1119,10 @@ class Hemera extends EventEmitter {
 
     if (self._response.payload.error) {
       let error = Errio.fromObject(self._response.payload.error)
-      const internalError = new Errors.BusinessError(Constants.BUSINESS_ERROR, self.errorDetails).causedBy(error)
+      const internalError = new Errors.BusinessError(
+        Constants.BUSINESS_ERROR,
+        self.errorDetails
+      ).causedBy(error)
       self.log.error(internalError)
       self.emit('clientResponseError', error)
 
@@ -1105,7 +1167,10 @@ class Hemera extends EventEmitter {
 
     // topic is needed to subscribe on a subject in NATS
     if (!pattern.topic) {
-      let error = new Errors.HemeraError(Constants.NO_TOPIC_TO_REQUEST, hemera.errorDetails)
+      let error = new Errors.HemeraError(
+        Constants.NO_TOPIC_TO_REQUEST,
+        hemera.errorDetails
+      )
       this.log.error(error)
       throw error
     }
@@ -1122,7 +1187,8 @@ class Hemera extends EventEmitter {
 
     hemera._execute = (err, result) => {
       if (hemera._isPromisable) {
-        hemera._actCallback(err, result)
+        hemera
+          ._actCallback(err, result)
           .then(hemera._defer.resolve)
           .catch(hemera._defer.reject)
       } else if (hemera._actCallback) {
@@ -1143,7 +1209,9 @@ class Hemera extends EventEmitter {
     }
 
     // Execute onClientPreRequest extension
-    series(hemera, hemera._ext['onClientPreRequest'], [hemera], (err) => hemera._onPreRequestCompleted(err))
+    series(hemera, hemera._ext['onClientPreRequest'], [hemera], err =>
+      hemera._onPreRequestCompleted(err)
+    )
 
     return hemera._defer.promise
   }
@@ -1177,7 +1245,9 @@ class Hemera extends EventEmitter {
 
     // encoding issue
     if (m.error) {
-      let error = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR).causedBy(m.error)
+      let error = new Errors.ParseError(
+        Constants.PAYLOAD_PARSING_ERROR
+      ).causedBy(m.error)
       self.log.error(error)
       self.emit('clientResponseError', error)
       self._execute(error)
@@ -1186,7 +1256,9 @@ class Hemera extends EventEmitter {
 
     if (err) {
       let error = self.getRootError(err)
-      const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+      const internalError = new Errors.HemeraError(
+        Constants.EXTENSION_ERROR
+      ).causedBy(err)
       self.log.error(internalError)
       self.emit('clientResponseError', error)
       self._execute(error)
@@ -1212,7 +1284,12 @@ class Hemera extends EventEmitter {
         optOptions.max = 1
       }
       // send request
-      self._sid = self._transport.sendRequest(self._pattern.topic, self._request.payload, optOptions, (resp) => self._sendRequestHandler(resp))
+      self._sid = self._transport.sendRequest(
+        self._pattern.topic,
+        self._request.payload,
+        optOptions,
+        resp => self._sendRequestHandler(resp)
+      )
 
       // handle timeout
       self.handleTimeout()
@@ -1232,13 +1309,18 @@ class Hemera extends EventEmitter {
     const timeout = self._pattern.timeout$ || this._config.timeout
 
     let timeoutHandler = () => {
-      const error = new Errors.TimeoutError(Constants.ACT_TIMEOUT_ERROR, self.errorDetails)
+      const error = new Errors.TimeoutError(
+        Constants.ACT_TIMEOUT_ERROR,
+        self.errorDetails
+      )
       self.log.error(error)
       self._response.error = error
       self.emit('clientResponseError', error)
 
       // Execute onClientPostRequest extension
-      series(self, self._ext['onClientPostRequest'], [self], (err) => self._onClientTimeoutPostRequestCompleted(err))
+      series(self, self._ext['onClientPostRequest'], [self], err =>
+        self._onClientTimeoutPostRequestCompleted(err)
+      )
     }
 
     self._transport.timeout(self._sid, timeout, 1, timeoutHandler)
@@ -1255,7 +1337,9 @@ class Hemera extends EventEmitter {
 
     if (err) {
       let error = self.getRootError(err)
-      const internalError = new Errors.HemeraError(Constants.EXTENSION_ERROR).causedBy(err)
+      const internalError = new Errors.HemeraError(
+        Constants.EXTENSION_ERROR
+      ).causedBy(err)
       self.log.error(internalError)
       self._response.error = error
       self.emit('clientResponseError', error)
@@ -1265,7 +1349,10 @@ class Hemera extends EventEmitter {
       self._execute(self._response.error)
     } catch (err) {
       let error = self.getRootError(err)
-      const internalError = new Errors.FatalError(Constants.FATAL_ERROR, self.errorDetails).causedBy(err)
+      const internalError = new Errors.FatalError(
+        Constants.FATAL_ERROR,
+        self.errorDetails
+      ).causedBy(err)
       self.log.fatal(internalError)
       self.emit('clientResponseError', error)
 
@@ -1322,7 +1409,7 @@ class Hemera extends EventEmitter {
    * @memberof Hemera
    */
   close (cb) {
-    series(this, this._ext['onClose'], [this], (err) => this._onClose(err, cb))
+    series(this, this._ext['onClose'], [this], err => this._onClose(err, cb))
   }
 
   /**

@@ -24,9 +24,14 @@ exports.plugin = Hp(function hemeraParambulator () {
     let pbSchema = schema.pb$ || schema
 
     let paramcheck = Parambulator(pbSchema)
-    paramcheck.validate(pattern, (err) => {
+    paramcheck.validate(pattern, err => {
       if (err) {
-        return next(new PreValidationError({ message: err.message, details: err.parambulator }))
+        return next(
+          new PreValidationError({
+            message: err.message,
+            details: err.parambulator
+          })
+        )
       }
       next()
     })

@@ -11,23 +11,23 @@ const Client = new Zipkin({
   sampling: 1
 })
 
-function now () {
+function now() {
   return new Date().getTime() * TO_MICROSECONDS
 }
 
-function noop () {}
+function noop() {}
 
-describe('Zipkin client', function () {
-  beforeEach(function resetTransport (done) {
+describe('Zipkin client', function() {
+  beforeEach(function resetTransport(done) {
     Client.options({
       transport: noop
     })
     done()
   })
 
-  describe('options', function () {
-    it('is possible to swap transport', function (done) {
-      function dummyTransport (data) {
+  describe('options', function() {
+    it('is possible to swap transport', function(done) {
+      function dummyTransport(data) {
         expect(data).to.include(['traceId', 'name', 'id', 'annotations'])
         done()
       }
@@ -42,7 +42,7 @@ describe('Zipkin client', function () {
       })
     })
 
-    it('it cant sets to http batch transport', function (done) {
+    it('it cant sets to http batch transport', function(done) {
       Client.options({
         transport: 'http'
       })
@@ -51,7 +51,7 @@ describe('Zipkin client', function () {
       done()
     })
 
-    it('it cant sets to http simple transport', function (done) {
+    it('it cant sets to http simple transport', function(done) {
       Client.options({
         transport: 'http-simple'
       })
@@ -61,9 +61,9 @@ describe('Zipkin client', function () {
     })
   })
 
-  describe('Trace data manipulation', function () {
-    describe('getChild', function () {
-      it('should return data for child span', function (done) {
+  describe('Trace data manipulation', function() {
+    describe('getChild', function() {
+      it('should return data for child span', function(done) {
         const traceData = Client.getChild({
           traceId: 'test traceId',
           spanId: 'test spanId',
@@ -81,7 +81,7 @@ describe('Zipkin client', function () {
         done()
       })
 
-      it('should carry the sampled state', function (done) {
+      it('should carry the sampled state', function(done) {
         const traceData = Client.getChild({
           traceId: 'test traceId',
           spanId: 'test spanId',
@@ -94,12 +94,12 @@ describe('Zipkin client', function () {
         done()
       })
 
-      it('provides a underscore alias', function (done) {
+      it('provides a underscore alias', function(done) {
         expect(Client.get_child).to.equal(Client.getChild)
         done()
       })
 
-      it('should ignore serverOnly attribute', function (done) {
+      it('should ignore serverOnly attribute', function(done) {
         const traceData = Client.getChild({
           traceId: 'test traceId',
           spanId: 'test spanId',
@@ -117,7 +117,7 @@ describe('Zipkin client', function () {
         done()
       })
 
-      it('should create a root trace if none is passed', function (done) {
+      it('should create a root trace if none is passed', function(done) {
         const traceData = Client.getChild(null)
         expect(traceData).to.include(['traceId', 'spanId', 'sampled'])
         expect(traceData.parentSpanId).to.be.null()
@@ -126,8 +126,8 @@ describe('Zipkin client', function () {
     })
   })
 
-  describe('Standard annotations', function () {
-    describe('sendClientSend', function () {
+  describe('Standard annotations', function() {
+    describe('sendClientSend', function() {
       const traceData = {
         traceId: 'test traceId',
         spanId: 'test spanId',
@@ -136,22 +136,24 @@ describe('Zipkin client', function () {
         sampled: true
       }
 
-      it('sends data to zipkin', function (done) {
-        function testTransport (data) {
+      it('sends data to zipkin', function(done) {
+        function testTransport(data) {
           try {
             expect(data).to.part.include({
               traceId: 'test traceId',
               name: 'test name',
               id: 'test spanId',
               timestamp: traceData.timestamp,
-              annotations: [{
-                value: 'cs',
-                endpoint: {
-                  serviceName: 'test service',
-                  ipv4: 0,
-                  port: 0
+              annotations: [
+                {
+                  value: 'cs',
+                  endpoint: {
+                    serviceName: 'test service',
+                    ipv4: 0,
+                    port: 0
+                  }
                 }
-              }],
+              ],
               binaryAnnotations: []
             })
             expect(data.annotations[0]).to.include('timestamp')
@@ -172,7 +174,7 @@ describe('Zipkin client', function () {
         })
       })
 
-      it('should create a new trace if none passed', function (done) {
+      it('should create a new trace if none passed', function(done) {
         var data = Client.sendClientSend(null, {
           service: 'test service',
           name: 'test name'
@@ -184,31 +186,34 @@ describe('Zipkin client', function () {
         done()
       })
 
-      it('should not send data for not sampled traces', function (done) {
-        function testTransport () {
-          done('Shouldn\'t receive data')
+      it('should not send data for not sampled traces', function(done) {
+        function testTransport() {
+          done("Shouldn't receive data")
         }
 
         Client.options({
           transport: testTransport
         })
-        Client.sendClientSend({
-          sampled: false
-        }, {
-          service: 'test service',
-          name: 'test name'
-        })
+        Client.sendClientSend(
+          {
+            sampled: false
+          },
+          {
+            service: 'test service',
+            name: 'test name'
+          }
+        )
 
         done()
       })
 
-      it('provides a camel case alias', function (done) {
+      it('provides a camel case alias', function(done) {
         expect(Client.send_client_send).to.equal(Client.sendClientSend)
         done()
       })
     })
 
-    describe('sendClientRecv', function () {
+    describe('sendClientRecv', function() {
       const traceData = {
         traceId: 'test traceId',
         spanId: 'test spanId',
@@ -217,26 +222,30 @@ describe('Zipkin client', function () {
         sampled: true
       }
 
-      it('sends data to zipkin', function (done) {
-        function testTransport (data) {
+      it('sends data to zipkin', function(done) {
+        function testTransport(data) {
           try {
             expect(data).to.part.include({
               traceId: 'test traceId',
               name: 'test name',
               id: 'test spanId',
-              annotations: [{
-                value: 'cr',
-                endpoint: {
-                  serviceName: 'test service',
-                  ipv4: 0,
-                  port: 0
+              annotations: [
+                {
+                  value: 'cr',
+                  endpoint: {
+                    serviceName: 'test service',
+                    ipv4: 0,
+                    port: 0
+                  }
                 }
-              }],
+              ],
               binaryAnnotations: []
             })
             expect(data).to.not.include('timestamp')
             expect(data.annotations[0]).to.include('timestamp')
-            expect(data.duration).to.equal(data.annotations[0].timestamp - traceData.timestamp)
+            expect(data.duration).to.equal(
+              data.annotations[0].timestamp - traceData.timestamp
+            )
           } catch (ex) {
             return done(ex)
           }
@@ -253,13 +262,13 @@ describe('Zipkin client', function () {
         })
       })
 
-      it('provides a camel case alias', function (done) {
+      it('provides a camel case alias', function(done) {
         expect(Client.send_client_recv).to.equal(Client.sendClientRecv)
         done()
       })
     })
 
-    describe('sendServerSend', function () {
+    describe('sendServerSend', function() {
       const traceData = {
         traceId: 'test traceId',
         spanId: 'test spanId',
@@ -268,21 +277,23 @@ describe('Zipkin client', function () {
         sampled: true
       }
 
-      it('sends data to zipkin', function (done) {
-        function testTransport (data) {
+      it('sends data to zipkin', function(done) {
+        function testTransport(data) {
           try {
             expect(data).to.part.include({
               traceId: 'test traceId',
               name: 'test name',
               id: 'test spanId',
-              annotations: [{
-                value: 'ss',
-                endpoint: {
-                  serviceName: 'test service',
-                  ipv4: 0,
-                  port: 0
+              annotations: [
+                {
+                  value: 'ss',
+                  endpoint: {
+                    serviceName: 'test service',
+                    ipv4: 0,
+                    port: 0
+                  }
                 }
-              }],
+              ],
               binaryAnnotations: []
             })
             expect(data).to.not.include('timestamp')
@@ -304,7 +315,7 @@ describe('Zipkin client', function () {
         })
       })
 
-      it('sends the duration on server only traces', function (done) {
+      it('sends the duration on server only traces', function(done) {
         const traceData = {
           traceId: 'test traceId',
           spanId: 'test spanId',
@@ -314,25 +325,29 @@ describe('Zipkin client', function () {
           serverOnly: true
         }
 
-        function testTransport (data) {
+        function testTransport(data) {
           try {
             expect(data).to.part.include({
               traceId: 'test traceId',
               name: 'test name',
               id: 'test spanId',
-              annotations: [{
-                value: 'ss',
-                endpoint: {
-                  serviceName: 'test service',
-                  ipv4: 0,
-                  port: 0
+              annotations: [
+                {
+                  value: 'ss',
+                  endpoint: {
+                    serviceName: 'test service',
+                    ipv4: 0,
+                    port: 0
+                  }
                 }
-              }],
+              ],
               binaryAnnotations: []
             })
             expect(data).to.not.include('timestamp')
             expect(data.annotations[0]).to.include('timestamp')
-            expect(data.duration).to.equal(data.annotations[0].timestamp - traceData.timestamp)
+            expect(data.duration).to.equal(
+              data.annotations[0].timestamp - traceData.timestamp
+            )
           } catch (ex) {
             return done(ex)
           }
@@ -349,13 +364,13 @@ describe('Zipkin client', function () {
         })
       })
 
-      it('provides a camel case alias', function (done) {
+      it('provides a camel case alias', function(done) {
         expect(Client.send_server_send).to.equal(Client.sendServerSend)
         done()
       })
     })
 
-    describe('sendServerRecv', function () {
+    describe('sendServerRecv', function() {
       const traceData = {
         traceId: 'test traceId',
         spanId: 'test spanId',
@@ -364,21 +379,23 @@ describe('Zipkin client', function () {
         sampled: true
       }
 
-      it('sends data to zipkin', function (done) {
-        function testTransport (data) {
+      it('sends data to zipkin', function(done) {
+        function testTransport(data) {
           try {
             expect(data).to.part.include({
               traceId: 'test traceId',
               name: 'test name',
               id: 'test spanId',
-              annotations: [{
-                value: 'sr',
-                endpoint: {
-                  serviceName: 'test service',
-                  ipv4: 0,
-                  port: 0
+              annotations: [
+                {
+                  value: 'sr',
+                  endpoint: {
+                    serviceName: 'test service',
+                    ipv4: 0,
+                    port: 0
+                  }
                 }
-              }],
+              ],
               binaryAnnotations: []
             })
             expect(data).to.not.include('timestamp')
@@ -400,19 +417,23 @@ describe('Zipkin client', function () {
         })
       })
 
-      it('sends timestamp and creates a serverOnly trace if no trace passed in', function (done) {
-        function testTransport (data) {
+      it('sends timestamp and creates a serverOnly trace if no trace passed in', function(
+        done
+      ) {
+        function testTransport(data) {
           try {
             expect(data).to.part.include({
               name: 'test name',
-              annotations: [{
-                value: 'sr',
-                endpoint: {
-                  serviceName: 'test service',
-                  ipv4: 0,
-                  port: 0
+              annotations: [
+                {
+                  value: 'sr',
+                  endpoint: {
+                    serviceName: 'test service',
+                    ipv4: 0,
+                    port: 0
+                  }
                 }
-              }],
+              ],
               binaryAnnotations: []
             })
             expect(data).to.include('timestamp')
@@ -436,7 +457,7 @@ describe('Zipkin client', function () {
         expect(data.serverOnly).to.be.true()
       })
 
-      it('provides a camel case alias', function (done) {
+      it('provides a camel case alias', function(done) {
         expect(Client.send_server_recv).to.equal(Client.sendServerRecv)
         done()
       })

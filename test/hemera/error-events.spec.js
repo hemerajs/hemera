@@ -1,43 +1,46 @@
 'use strict'
 
-describe('Response error events', function () {
+describe('Response error events', function() {
   var PORT = 6242
   var authUrl = 'nats://localhost:' + PORT
   var server
 
   // Start up our own nats-server
-  before(function (done) {
+  before(function(done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
   // Shutdown our server after we are done
-  after(function () {
+  after(function() {
     server.kill()
   })
 
-  it('server response extension error', function (done) {
+  it('server response extension error', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.on('serverResponseError', function (err) {
+      hemera.on('serverResponseError', function(err) {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Error')
         expect(err.message).to.be.equals('test')
         hemera.close(done)
       })
 
-      hemera.ext('onServerPreResponse', function (ctx, resp, req, next) {
+      hemera.ext('onServerPreResponse', function(ctx, resp, req, next) {
         next(new Error('test'))
       })
 
-      hemera.add({
-        cmd: 'add',
-        topic: 'math'
-      }, (resp, cb) => {
-        cb(null, resp.a + resp.b)
-      })
+      hemera.add(
+        {
+          cmd: 'add',
+          topic: 'math'
+        },
+        (resp, cb) => {
+          cb(null, resp.a + resp.b)
+        }
+      )
 
       hemera.act({
         topic: 'math',
@@ -48,29 +51,32 @@ describe('Response error events', function () {
     })
   })
 
-  it('client response extension error', function (done) {
+  it('client response extension error', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.on('clientResponseError', function (err) {
+      hemera.on('clientResponseError', function(err) {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Error')
         expect(err.message).to.be.equals('test')
         hemera.close(done)
       })
 
-      hemera.ext('onClientPostRequest', function (ctx, next) {
+      hemera.ext('onClientPostRequest', function(ctx, next) {
         next(new Error('test'))
       })
 
-      hemera.add({
-        cmd: 'add',
-        topic: 'math'
-      }, (resp, cb) => {
-        cb(null, resp.a + resp.b)
-      })
+      hemera.add(
+        {
+          cmd: 'add',
+          topic: 'math'
+        },
+        (resp, cb) => {
+          cb(null, resp.a + resp.b)
+        }
+      )
 
       hemera.act({
         topic: 'math',

@@ -36,14 +36,21 @@ exports.plugin = Hp(function hemeraZipkin (options) {
     Tracer.addBinary(meta, ctx.delegate$)
     Tracer.addBinary(meta, {
       'server.topic': ctx._topic,
-      'server.maxMessages': ctx._actMeta ? ctx._actMeta.pattern.maxMessages$ || 0 : 0,
-      'server.pubsub': ctx._actMeta ? ctx._actMeta.pattern.pubsub$ || false : false
+      'server.maxMessages': ctx._actMeta
+        ? ctx._actMeta.pattern.maxMessages$ || 0
+        : 0,
+      'server.pubsub': ctx._actMeta
+        ? ctx._actMeta.pattern.pubsub$ || false
+        : false
     })
 
-    hemera.log.debug({
-      traceData: ctx._zkTrace,
-      meta: meta
-    }, 'sendServerSend')
+    hemera.log.debug(
+      {
+        traceData: ctx._zkTrace,
+        meta: meta
+      },
+      'sendServerSend'
+    )
 
     Tracer.sendServerSend(ctx._zkTrace, meta)
   })
@@ -65,8 +72,12 @@ exports.plugin = Hp(function hemeraZipkin (options) {
 
     Tracer.addBinary(meta, {
       'server.topic': ctx._topic,
-      'server.maxMessages': ctx._actMeta ? ctx._actMeta.pattern.maxMessages$ || 0 : 0,
-      'server.pubsub': ctx._actMeta ? ctx._actMeta.pattern.pubsub$ || false : false
+      'server.maxMessages': ctx._actMeta
+        ? ctx._actMeta.pattern.maxMessages$ || 0
+        : 0,
+      'server.pubsub': ctx._actMeta
+        ? ctx._actMeta.pattern.pubsub$ || false
+        : false
     })
 
     let traceData = {
@@ -77,10 +88,13 @@ exports.plugin = Hp(function hemeraZipkin (options) {
       sampled: ctx.trace$.sampled
     }
 
-    hemera.log.debug({
-      traceData: traceData,
-      meta: meta
-    }, 'sendServerRecv')
+    hemera.log.debug(
+      {
+        traceData: traceData,
+        meta: meta
+      },
+      'sendServerRecv'
+    )
 
     ctx._zkTrace = Tracer.sendServerRecv(traceData, meta)
   })
@@ -123,10 +137,13 @@ exports.plugin = Hp(function hemeraZipkin (options) {
       sampled: ctx.trace$.sampled
     }
 
-    hemera.log.debug({
-      traceData: traceData,
-      meta: meta
-    }, 'sendClientSend')
+    hemera.log.debug(
+      {
+        traceData: traceData,
+        meta: meta
+      },
+      'sendClientSend'
+    )
 
     ctx._zkTrace = Tracer.sendClientSend(traceData, meta)
   })
@@ -160,10 +177,13 @@ exports.plugin = Hp(function hemeraZipkin (options) {
       'rpc.pubsub': ctx._pattern.pubsub$ || false
     })
 
-    hemera.log.debug({
-      traceData: ctx._zkTrace,
-      meta: meta
-    }, 'sendClientRecv')
+    hemera.log.debug(
+      {
+        traceData: ctx._zkTrace,
+        meta: meta
+      },
+      'sendClientRecv'
+    )
 
     Tracer.sendClientRecv(ctx._zkTrace, meta)
   })

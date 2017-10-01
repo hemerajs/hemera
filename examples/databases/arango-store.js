@@ -21,28 +21,34 @@ hemera.use(hemeraArango, {
 hemera.ready(() => {
   let aql = hemera.exposition['hemera-arango-store'].aqlTemplate
 
-  hemera.act({
-    topic: 'arango-store',
-    cmd: 'executeAqlQuery',
-    type: 'all',
-    query: `
+  hemera.act(
+    {
+      topic: 'arango-store',
+      cmd: 'executeAqlQuery',
+      type: 'all',
+      query: `
     FOR u IN users
     RETURN u
 `
-  }, function (err, resp) {
-    this.log.info(resp, 'Query result')
-  })
+    },
+    function(err, resp) {
+      this.log.info(resp, 'Query result')
+    }
+  )
 
   const user = {
     name: 'olaf'
   }
 
-  hemera.act({
-    topic: 'arango-store',
-    cmd: 'executeAqlQuery',
-    type: 'one',
-    query: aql`INSERT ${user} INTO users`
-  }, function (err, resp) {
-    this.log.info(resp, 'Query result')
-  })
+  hemera.act(
+    {
+      topic: 'arango-store',
+      cmd: 'executeAqlQuery',
+      type: 'one',
+      query: aql`INSERT ${user} INTO users`
+    },
+    function(err, resp) {
+      this.log.info(resp, 'Query result')
+    }
+  )
 })

@@ -34,16 +34,26 @@ exports.plugin = Hp(function hemeraJoi () {
       }
     }
 
-    Joi.validate(pattern, joiSchema, {
-      allowUnknown: true
-    }, (err, value) => {
-      req.payload.pattern = value
-      if (err) {
-        next(new PreValidationError({ message: err.message, details: err.details }))
-      } else {
-        next()
+    Joi.validate(
+      pattern,
+      joiSchema,
+      {
+        allowUnknown: true
+      },
+      (err, value) => {
+        req.payload.pattern = value
+        if (err) {
+          next(
+            new PreValidationError({
+              message: err.message,
+              details: err.details
+            })
+          )
+        } else {
+          next()
+        }
       }
-    })
+    )
   })
 
   hemera.ext('onServerPreResponse', function (ctx, req, res, next) {
@@ -77,16 +87,26 @@ exports.plugin = Hp(function hemeraJoi () {
       return next()
     }
 
-    Joi.validate(response, joiSchema, {
-      allowUnknown: true
-    }, (err, value) => {
-      if (err) {
-        next(new PostValidationError({ message: err.message, details: err.details }))
-      } else {
-        res.send(value)
-        next()
+    Joi.validate(
+      response,
+      joiSchema,
+      {
+        allowUnknown: true
+      },
+      (err, value) => {
+        if (err) {
+          next(
+            new PostValidationError({
+              message: err.message,
+              details: err.details
+            })
+          )
+        } else {
+          res.send(value)
+          next()
+        }
       }
-    })
+    )
   })
 }, '>=1.5.0')
 

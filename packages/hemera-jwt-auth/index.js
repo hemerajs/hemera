@@ -47,28 +47,33 @@ exports.plugin = Hp(function hemeraJwtAuth (options) {
       return next()
     }
 
-    JWT.verify(ctx.meta$.jwtToken, options.jwt.secret, options.jwt.options, (err, decoded) => {
-      if (err) {
-        return next(err)
-      }
-      // Make accessible in server method context
-      ctx.auth$ = decoded
-      if (typeof auth === 'object') {
-        // Support single scope
-        if (typeof auth.scope === 'string') {
-          auth.scope = [auth.scope]
+    JWT.verify(
+      ctx.meta$.jwtToken,
+      options.jwt.secret,
+      options.jwt.options,
+      (err, decoded) => {
+        if (err) {
+          return next(err)
         }
-        // Check if scope is subset
-        if (isSubset(decoded.scope, auth.scope)) {
-          return next()
+        // Make accessible in server method context
+        ctx.auth$ = decoded
+        if (typeof auth === 'object') {
+          // Support single scope
+          if (typeof auth.scope === 'string') {
+            auth.scope = [auth.scope]
+          }
+          // Check if scope is subset
+          if (isSubset(decoded.scope, auth.scope)) {
+            return next()
+          }
+          // Invalid scope return error
+          return next(new JwtError('Invalid scope'))
+        } else {
+          // Invalid auth options return error
+          return next(new JwtError('Invalid auth$ options'))
         }
-        // Invalid scope return error
-        return next(new JwtError('Invalid scope'))
-      } else {
-        // Invalid auth options return error
-        return next(new JwtError('Invalid auth$ options'))
       }
-    })
+    )
   })
 }, '>=1.5.0')
 

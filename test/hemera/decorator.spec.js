@@ -1,21 +1,21 @@
 'use strict'
 
-describe('Decorator', function () {
+describe('Decorator', function() {
   var PORT = 6242
   var authUrl = 'nats://localhost:' + PORT
   var server
 
   // Start up our own nats-server
-  before(function (done) {
+  before(function(done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
   // Shutdown our server after we are done
-  after(function () {
+  after(function() {
     server.kill()
   })
 
-  it('Should be able add a decorator', function (done) {
+  it('Should be able add a decorator', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -28,7 +28,7 @@ describe('Decorator', function () {
     })
   })
 
-  it('Should not be possible to override an decoration', function (done) {
+  it('Should not be possible to override an decoration', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -45,7 +45,7 @@ describe('Decorator', function () {
     })
   })
 
-  it('Should not be possible to override a built in method', function (done) {
+  it('Should not be possible to override a built in method', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -55,18 +55,20 @@ describe('Decorator', function () {
         hemera.decorate('act', () => true)
       } catch (e) {
         expect(e).to.be.exists()
-        expect(e.message).to.be.equals('Cannot override the built-in server interface method')
+        expect(e.message).to.be.equals(
+          'Cannot override the built-in server interface method'
+        )
         hemera.close(done)
       }
     })
   })
 
-  it('Decorator are not plugin scoped', function (done) {
+  it('Decorator are not plugin scoped', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
-    let plugin = function (options) {
+    let plugin = function(options) {
       let hemera = this
       hemera.decorate('d', () => true)
     }
@@ -81,7 +83,9 @@ describe('Decorator', function () {
     hemera.ready(() => {
       let result = hemera.d()
       expect(result).to.be.equals(true)
-      expect(hemera._decorations['d'].plugin.attributes.name).to.be.equals('myPlugin')
+      expect(hemera._decorations['d'].plugin.attributes.name).to.be.equals(
+        'myPlugin'
+      )
       hemera.close(done)
     })
   })

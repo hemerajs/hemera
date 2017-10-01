@@ -69,12 +69,15 @@ exports.plugin = Hp(function hemeraWeb (options, next) {
       if (body) {
         pattern = Hoek.applyToDefaults(pattern, body)
       }
-    } else if (req.is(contentForm)) { // include form data to pattern
+    } else if (req.is(contentForm)) {
+      // include form data to pattern
       const body = req.body
       pattern = Hoek.applyToDefaults(pattern, body)
-    } else if (req.is(contentBinaryStream)) { // handle as raw binary data
+    } else if (req.is(contentBinaryStream)) {
+      // handle as raw binary data
       pattern.binaryData = req.body
-    } else if (req.is(contentText)) { // handle as raw text data
+    } else if (req.is(contentText)) {
+      // handle as raw text data
       pattern.textData = req.body
     }
 

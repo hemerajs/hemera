@@ -23,17 +23,24 @@ exports.plugin = Hp(function hemeraCouchbaseStore (options) {
     }
   }
 
-  hemera.add({
-    topic,
-    cmd: 'query',
-    bucket: Joi.string().optional().default('default'),
-    query: Joi.string().required(),
-    vars: Joi.array().items(Joi.string(), Joi.number()).default([])
-  }, function (req, cb) {
-    const bucket = getBucket(req.bucket)
-    const query = N1qlQuery.fromString(req.query)
-    bucket.query(query, req.vars, cb)
-  })
+  hemera.add(
+    {
+      topic,
+      cmd: 'query',
+      bucket: Joi.string()
+        .optional()
+        .default('default'),
+      query: Joi.string().required(),
+      vars: Joi.array()
+        .items(Joi.string(), Joi.number())
+        .default([])
+    },
+    function (req, cb) {
+      const bucket = getBucket(req.bucket)
+      const query = N1qlQuery.fromString(req.query)
+      bucket.query(query, req.vars, cb)
+    }
+  )
 })
 
 exports.options = {

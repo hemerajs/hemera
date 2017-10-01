@@ -2,15 +2,18 @@
 
 const HemeraPlugin = require('./../../packages/hemera-plugin')
 
-function myPlugin (options) {
+function myPlugin(options) {
   var hemera = this
 
-  hemera.add({
-    topic: 'math',
-    cmd: 'add'
-  }, (resp, cb) => {
-    cb(null, resp.a + resp.b)
-  })
+  hemera.add(
+    {
+      topic: 'math',
+      cmd: 'add'
+    },
+    (resp, cb) => {
+      cb(null, resp.a + resp.b)
+    }
+  )
 }
 
 const Hemera = require('./../../packages/hemera')

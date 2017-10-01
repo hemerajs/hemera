@@ -1,7 +1,7 @@
 # Hemera-nats-streaming package
 
 [![npm](https://img.shields.io/npm/v/hemera-nats-streaming.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-nats-streaming)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
+[![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
 <p align="center">
 <img src="https://github.com/StarpTech/hemera/raw/master/packages/hemera-nats-streaming/media/nats-streaming.png" alt="nats-streaming" style="max-width:100%;">

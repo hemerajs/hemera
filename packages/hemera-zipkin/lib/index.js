@@ -130,11 +130,17 @@ zipkinSimple.prototype.sendTrace = function sendTrace (trace, data) {
       value: data.annotations[i]
     })
 
-    if (data.annotations[i] === 'cr' || (data.annotations[i] === 'ss' && trace.serverOnly)) {
+    if (
+      data.annotations[i] === 'cr' ||
+      (data.annotations[i] === 'ss' && trace.serverOnly)
+    ) {
       body.duration = time - trace.timestamp
     }
 
-    if (data.annotations[i] === 'cs' || (data.annotations[i] === 'sr' && trace.serverOnly)) {
+    if (
+      data.annotations[i] === 'cs' ||
+      (data.annotations[i] === 'sr' && trace.serverOnly)
+    ) {
       body.timestamp = trace.timestamp || generateTimestamp()
     }
   }
@@ -142,7 +148,11 @@ zipkinSimple.prototype.sendTrace = function sendTrace (trace, data) {
   this.send(body, this.opts)
 }
 
-zipkinSimple.prototype.traceWithAnnotation = function traceWithAnnotation (trace, data, annotation) {
+zipkinSimple.prototype.traceWithAnnotation = function traceWithAnnotation (
+  trace,
+  data,
+  annotation
+) {
   if (!trace) {
     trace = this.createRootTrace()
   }

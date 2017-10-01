@@ -4,22 +4,22 @@ const EventEmitter = require('events')
 const GracefulShutdown = require('../../packages/hemera-graceful-shutdown/gracefulShutdown')
 const HemeraGracefulShutdown = require('../../packages/hemera-graceful-shutdown')
 
-describe('Hemera-graceful-shutdown', function () {
+describe('Hemera-graceful-shutdown', function() {
   const PORT = 6243
   var authUrl = 'nats://localhost:' + PORT
   var server
 
   // Start up our own nats-server
-  before(function (done) {
+  before(function(done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
   // Shutdown our server after we are done
-  after(function () {
+  after(function() {
     server.kill()
   })
 
-  it('Should be able to use it as plugin', function (done) {
+  it('Should be able to use it as plugin', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -32,9 +32,9 @@ describe('Hemera-graceful-shutdown', function () {
   })
 })
 
-describe('GracefulShutdown', function () {
+describe('GracefulShutdown', function() {
   class FakeProcess extends EventEmitter {
-    exit () {}
+    exit() {}
   }
   let noOpLogger = {
     info: () => {},
@@ -42,7 +42,7 @@ describe('GracefulShutdown', function () {
     warn: () => {}
   }
 
-  it('Should exit with 0', function (done) {
+  it('Should exit with 0', function(done) {
     const gs = new GracefulShutdown()
     gs.logger = noOpLogger
     gs.process = new FakeProcess()
@@ -61,7 +61,7 @@ describe('GracefulShutdown', function () {
     })
   })
 
-  it('Should exit with 1 when err is passed', function (done) {
+  it('Should exit with 1 when err is passed', function(done) {
     const gs = new GracefulShutdown()
     gs.logger = noOpLogger
     gs.process = new FakeProcess()
@@ -80,7 +80,7 @@ describe('GracefulShutdown', function () {
     })
   })
 
-  it('Should exit on SIGINT', function (done) {
+  it('Should exit on SIGINT', function(done) {
     const gs = new GracefulShutdown()
     gs.logger = noOpLogger
     gs.process = new FakeProcess()
@@ -98,7 +98,7 @@ describe('GracefulShutdown', function () {
     })
   })
 
-  it('Should exit on SIGTERM', function (done) {
+  it('Should exit on SIGTERM', function(done) {
     const gs = new GracefulShutdown()
     gs.logger = noOpLogger
     gs.process = new FakeProcess()
@@ -116,7 +116,7 @@ describe('GracefulShutdown', function () {
     })
   })
 
-  it('Should exit after certain timeout', function (done) {
+  it('Should exit after certain timeout', function(done) {
     const gs = new GracefulShutdown()
     gs.logger = noOpLogger
     gs.timeout = 10

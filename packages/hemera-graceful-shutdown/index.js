@@ -14,7 +14,7 @@ exports.plugin = Hp(function hemeraGracefulShutdown () {
     hemera.close(cb)
   })
   gs.init()
-  hemera.decorate('gracefulShutdown', (handler) => gs.addHandler(handler))
+  hemera.decorate('gracefulShutdown', handler => gs.addHandler(handler))
 }, '>=1.5.0')
 
 exports.options = {}

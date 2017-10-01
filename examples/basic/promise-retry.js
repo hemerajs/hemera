@@ -17,27 +17,33 @@ hemera.ready(() => {
     randomize: false // Randomizes the timeouts by multiplying with a factor between 1 to 2
   }
 
-  hemera.add({
-    topic: 'math',
-    cmd: 'add'
-  }, function * (req, cb) {
-    return Promise.reject(new Error('Uuups!'))
-  })
+  hemera.add(
+    {
+      topic: 'math',
+      cmd: 'add'
+    },
+    function*(req, cb) {
+      return Promise.reject(new Error('Uuups!'))
+    }
+  )
 
-  promiseRetry(function (retry, number) {
+  promiseRetry(function(retry, number) {
     console.log('Attempt number', number)
 
-    return hemera.act({
-      topic: 'math',
-      cmd: 'add',
-      a: 1,
-      b: 20
-    })
-    .catch(retry)
-  }, opt)
-    .then(function (value) {
+    return hemera
+      .act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 20
+      })
+      .catch(retry)
+  }, opt).then(
+    function(value) {
       console.log(value)
-    }, function (err) {
+    },
+    function(err) {
       console.error(err)
-    })
+    }
+  )
 })

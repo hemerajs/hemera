@@ -58,7 +58,9 @@ class StorePattern {
       topic,
       cmd: 'removeById',
       collection: Joi.string().required(),
-      id: Joi.alternatives().try(Joi.number(), Joi.string()).required()
+      id: Joi.alternatives()
+        .try(Joi.number(), Joi.string())
+        .required()
     }
   }
 
@@ -96,7 +98,9 @@ class StorePattern {
       cmd: 'updateById',
       collection: Joi.string().required(),
       data: Joi.object().required(),
-      id: Joi.alternatives().try(Joi.number(), Joi.string()).required()
+      id: Joi.alternatives()
+        .try(Joi.number(), Joi.string())
+        .required()
     }
   }
 
@@ -115,12 +119,18 @@ class StorePattern {
       cmd: 'find',
       collection: Joi.string().required(),
       query: Joi.object().required(),
-      options: Joi.object().keys({
-        fields: Joi.alternatives().try(Joi.object(), Joi.array()),
-        orderBy: Joi.alternatives().try(Joi.object(), Joi.array(), Joi.string()),
-        offset: Joi.number().integer(),
-        limit: Joi.number().integer()
-      }).default({})
+      options: Joi.object()
+        .keys({
+          fields: Joi.alternatives().try(Joi.object(), Joi.array()),
+          orderBy: Joi.alternatives().try(
+            Joi.object(),
+            Joi.array(),
+            Joi.string()
+          ),
+          offset: Joi.number().integer(),
+          limit: Joi.number().integer()
+        })
+        .default({})
     }
   }
 
@@ -138,7 +148,9 @@ class StorePattern {
       topic,
       cmd: 'findById',
       collection: Joi.string().required(),
-      id: Joi.alternatives().try(Joi.number(), Joi.string()).required()
+      id: Joi.alternatives()
+        .try(Joi.number(), Joi.string())
+        .required()
     }
   }
 
@@ -176,7 +188,9 @@ class StorePattern {
       cmd: 'replaceById',
       collection: Joi.string().required(),
       data: Joi.object().required(),
-      id: Joi.alternatives().try(Joi.number(), Joi.string()).required()
+      id: Joi.alternatives()
+        .try(Joi.number(), Joi.string())
+        .required()
     }
   }
 

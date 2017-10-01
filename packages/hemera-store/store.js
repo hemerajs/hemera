@@ -47,7 +47,7 @@ class Store {
    * @memberOf Store
    */
   create () {
-    throw (new Error('Not implemented yet'))
+    throw new Error('Not implemented yet')
   }
 
   /**
@@ -57,7 +57,7 @@ class Store {
    * @memberOf Store
    */
   remove () {
-    throw (new Error('Not implemented yet'))
+    throw new Error('Not implemented yet')
   }
 
   /**
@@ -67,7 +67,7 @@ class Store {
    * @memberOf Store
    */
   removeById () {
-    throw (new Error('Not implemented yet'))
+    throw new Error('Not implemented yet')
   }
   /**
    * Update an entity
@@ -76,7 +76,7 @@ class Store {
    * @memberOf Store
    */
   update () {
-    throw (new Error('Not implemented yet'))
+    throw new Error('Not implemented yet')
   }
 
   /**
@@ -86,7 +86,7 @@ class Store {
    * @memberOf Store
    */
   updateById () {
-    throw (new Error('Not implemented yet'))
+    throw new Error('Not implemented yet')
   }
 
   /**
@@ -96,7 +96,7 @@ class Store {
    * @memberOf Store
    */
   find () {
-    throw (new Error('Not implemented yet'))
+    throw new Error('Not implemented yet')
   }
 
   /**
@@ -106,7 +106,7 @@ class Store {
    * @memberOf Store
    */
   findById () {
-    throw (new Error('Not implemented yet'))
+    throw new Error('Not implemented yet')
   }
 
   /**
@@ -116,7 +116,7 @@ class Store {
    * @memberOf Store
    */
   replace () {
-    throw (new Error('Not implemented yet'))
+    throw new Error('Not implemented yet')
   }
 
   /**
@@ -126,7 +126,7 @@ class Store {
    * @memberOf Store
    */
   replaceById () {
-    throw (new Error('Not implemented yet'))
+    throw new Error('Not implemented yet')
   }
 
   /**
@@ -135,7 +135,7 @@ class Store {
    * @memberOf Store
    */
   exists () {
-    throw (new Error('Not implemented yet'))
+    throw new Error('Not implemented yet')
   }
 }
 
