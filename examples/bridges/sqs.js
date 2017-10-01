@@ -39,7 +39,7 @@ hemera.ready(() => {
       cmd: 'sendMessage',
       params
     },
-    function(err, resp) {
+    function (err, resp) {
       this.log.info(resp || err)
     }
   )

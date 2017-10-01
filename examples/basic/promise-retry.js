@@ -22,12 +22,12 @@ hemera.ready(() => {
       topic: 'math',
       cmd: 'add'
     },
-    function*(req, cb) {
+    function * (req, cb) {
       return Promise.reject(new Error('Uuups!'))
     }
   )
 
-  promiseRetry(function(retry, number) {
+  promiseRetry(function (retry, number) {
     console.log('Attempt number', number)
 
     return hemera
@@ -39,10 +39,10 @@ hemera.ready(() => {
       })
       .catch(retry)
   }, opt).then(
-    function(value) {
+    function (value) {
       console.log(value)
     },
-    function(err) {
+    function (err) {
       console.error(err)
     }
   )

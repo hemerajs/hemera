@@ -20,10 +20,10 @@ hemera.ready(() => {
       topic: 'users',
       cmd: 'filterById'
     },
-    function*(req) {
-      return {
+    function (req, cb) {
+      cb(null, {
         users: req.users.filter(u => u.userId === req.userId)
-      }
+      })
     }
   )
   hemera.add(
@@ -31,8 +31,8 @@ hemera.ready(() => {
       topic: 'users',
       cmd: 'getAll'
     },
-    function*(req) {
-      return {
+    function (req, cb) {
+      cb(null, {
         users: [
           {
             userId: 1,
@@ -43,7 +43,7 @@ hemera.ready(() => {
             name: 'klaus'
           }
         ]
-      }
+      })
     }
   )
 
@@ -78,7 +78,7 @@ class Pipeline {
    *
    * @memberof Pipeline
    */
-  constructor(hemera) {
+  constructor (hemera) {
     this._hemera = hemera
     this._stack = []
   }
@@ -91,7 +91,7 @@ class Pipeline {
    *
    * @memberof Pipeline
    */
-  pipe(pattern) {
+  pipe (pattern) {
     this._stack.push(prev => {
       return this._hemera.act(Object.assign(pattern, prev))
     })
@@ -105,7 +105,7 @@ class Pipeline {
    *
    * @memberof Pipeline
    */
-  exec() {
+  exec () {
     return this._stack.reduce((promise, item) => {
       return promise
         .then(result => {

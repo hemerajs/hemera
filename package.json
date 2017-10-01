@@ -32,7 +32,7 @@
     "queueing"
   ],
   "scripts": {
-    "lint": "eslint --fix ./packages/**/*.js",
+    "lint": "eslint --fix ./packages/**/*.js ./test/**/*.js",
     "format": "prettier ./packages/**/*.js ./examples/**/*.js ./test/**/*.js --write && npm run lint",
     "setup": "npm i && lerna bootstrap",
     "ci:setup": "npm i && lerna bootstrap --npm-client=npm",
@@ -56,6 +56,7 @@
     "eslint-config-prettier": "^2.6.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-mocha": "^4.11.0",
     "eslint-plugin-node": "^5.2.0",
     "eslint-plugin-prettier": "^2.3.1",
     "eslint-plugin-promise": "^3.5.0",

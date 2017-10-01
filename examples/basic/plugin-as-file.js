@@ -2,7 +2,7 @@
 
 const HemeraPlugin = require('./../../packages/hemera-plugin')
 
-exports.plugin = HemeraPlugin(function myPlugin(options) {
+exports.plugin = HemeraPlugin(function myPlugin (options) {
   var hemera = this
 
   hemera.expose('somethingToExpose', 4)

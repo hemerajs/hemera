@@ -31,7 +31,7 @@ hemera.ready(() => {
       topic: 'nsq.newsletter.germany',
       cmd: 'subscribe'
     },
-    function(req, cb) {
+    function (req, cb) {
       this.log.info(req, 'Data')
 
       cb()
@@ -46,7 +46,7 @@ hemera.ready(() => {
       subject: 'newsletter',
       channel: 'germany'
     },
-    function(err, resp) {
+    function (err, resp) {
       this.log.info(resp, 'Subscribed ACK')
     }
   )
@@ -62,7 +62,7 @@ hemera.ready(() => {
         text: 'You got a gift!'
       }
     },
-    function(err, resp) {
+    function (err, resp) {
       this.log.info(resp, 'Publish ACK')
     }
   )

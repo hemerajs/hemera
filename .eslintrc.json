@@ -4,6 +4,10 @@
     "standard"
   ],
   "plugins": [
-    "prettier"
-  ]
+    "prettier",
+    "mocha"
+  ],
+  "rules": {
+    "mocha/no-exclusive-tests": "error"
+  }
 }

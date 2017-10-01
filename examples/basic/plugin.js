@@ -2,7 +2,7 @@
 
 const HemeraPlugin = require('./../../packages/hemera-plugin')
 
-function myPlugin(options) {
+function myPlugin (options) {
   var hemera = this
 
   hemera.add(

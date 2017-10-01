@@ -27,7 +27,7 @@ hemera.ready(() => {
         scope: 'math'
       }
     },
-    function(req, cb) {
+    function (req, cb) {
       cb(null, req.a - req.b)
     }
   )
@@ -39,7 +39,7 @@ hemera.ready(() => {
         scope: 'math'
       }
     },
-    function(req, cb) {
+    function (req, cb) {
       this.act(
         {
           topic: 'math',
@@ -47,7 +47,7 @@ hemera.ready(() => {
           a: req.a + req.b,
           b: 100
         },
-        function(err, res) {
+        function (err, res) {
           cb(err, res)
         }
       )
@@ -64,7 +64,7 @@ hemera.ready(() => {
       a: 100,
       b: 200
     },
-    function(err, resp) {
+    function (err, resp) {
       console.log(resp)
     }
   )

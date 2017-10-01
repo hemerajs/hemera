@@ -39,7 +39,7 @@ hemera.ready(() => {
       topic: 'systems-europe.a.info.details',
       cmd: 'details'
     },
-    function(err, resp) {
+    function (err, resp) {
       this.log.info(resp, 'Result')
     }
   )
@@ -52,7 +52,7 @@ hemera.ready(() => {
       topic: 'systems-europe.b.info',
       cmd: 'name'
     },
-    function(err, resp) {
+    function (err, resp) {
       this.log.info(resp, 'Result')
     }
   )

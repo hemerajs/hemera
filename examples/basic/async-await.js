@@ -13,8 +13,8 @@ hemera.ready(() => {
       topic: 'math',
       cmd: 'add'
     },
-    async function(req) {
-      return await Promise.reject(new Error('test'))
+    async function (req) {
+      return await Promise.resolve('test')
     }
   )
 
@@ -25,10 +25,8 @@ hemera.ready(() => {
       a: 10,
       b: 10
     },
-    async function(err, result) {
-      console.log(err)
-      await result
-      return 'test'
+    async function (err, result) {
+      this.log.info(await result)
     }
   )
 })

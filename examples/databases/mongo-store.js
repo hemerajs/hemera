@@ -25,7 +25,7 @@ hemera.ready(() => {
         name: 'peter'
       }
     },
-    function(err, resp) {
+    function (err, resp) {
       this.log.info(resp, 'Query result')
     }
   )

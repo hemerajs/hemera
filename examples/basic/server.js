@@ -16,7 +16,7 @@ hemera.ready(() => {
       topic: 'math',
       cmd: 'add'
     },
-    function(req, cb) {
+    function (req, cb) {
       cb(null, req.a + req.b)
     }
   )

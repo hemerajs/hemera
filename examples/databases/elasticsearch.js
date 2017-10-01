@@ -35,7 +35,7 @@ hemera.ready(() => {
         }
       }
     },
-    function(err, req) {
+    function (err, req) {
       this.log.info(req, 'Data')
     }
   )
@@ -49,7 +49,7 @@ hemera.ready(() => {
         q: 'title:test'
       }
     },
-    function(err, req) {
+    function (err, req) {
       this.log.info(req, 'Data')
     }
   )

@@ -13,7 +13,7 @@ hemera.ready(() => {
       topic: 'math',
       cmd: 'add'
     },
-    function(req, cb) {
+    function (req, cb) {
       const err = new UnauthorizedError('Unauthorized action')
       cb(err)
     }
@@ -26,7 +26,7 @@ hemera.ready(() => {
       a: 1,
       b: 2
     },
-    function(err, resp) {
+    function (err, resp) {
       console.log(err instanceof UnauthorizedError)
     }
   )

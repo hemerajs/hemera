@@ -14,7 +14,7 @@ hemera.ready(() => {
       cmd: 'created',
       queue$: 'log'
     },
-    function(req) {
+    function (req) {
       console.log('logService-1')
     }
   )

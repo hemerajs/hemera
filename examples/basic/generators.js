@@ -14,18 +14,18 @@ hemera.ready(() => {
       topic: 'math',
       cmd: 'divide'
     },
-    function(req, reply) {
+    function (req, reply) {
       reply(null, {
         result: req.a / req.b
       })
     }
   )
 
-  hemera.ext('onServerPreRequest', function(ctx, req, res, next) {
+  hemera.ext('onServerPreRequest', function (ctx, req, res, next) {
     next()
   })
 
-  hemera.ext('onServerPreRequest', function*(ctx, req, res) {
+  hemera.ext('onServerPreRequest', function * (ctx, req, res) {
     return yield Promise.resolve()
   })
 
@@ -34,7 +34,7 @@ hemera.ready(() => {
       topic: 'math',
       cmd: 'sub'
     },
-    function*(req) {
+    function * (req) {
       var result = yield Promise.resolve({
         result: req.a - req.b
       })
@@ -42,7 +42,7 @@ hemera.ready(() => {
     }
   )
 
-  hemera.act('topic:math,cmd:divide,a:30,b:5', function(err, result) {
+  hemera.act('topic:math,cmd:divide,a:30,b:5', function (err, result) {
     this.log.info(result)
   })
 
@@ -51,7 +51,7 @@ hemera.ready(() => {
       topic: 'math',
       cmd: 'add'
     },
-    function*(req) {
+    function * (req) {
       const add = yield Promise.resolve({
         result: req.a + req.b
       })
@@ -80,7 +80,7 @@ hemera.ready(() => {
         a: 10,
         b: 10
       },
-      function*(err, result) {
+      function * (err, result) {
         return yield result
       }
     )

@@ -14,7 +14,7 @@ hemera.ready(() => {
       cmd: 'created',
       queue$: 'audit'
     },
-    function(req) {
+    function (req) {
       console.log('auditService-2')
     }
   )

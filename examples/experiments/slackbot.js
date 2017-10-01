@@ -29,7 +29,7 @@ hemera.ready(() => {
         }
       ]
     },
-    function(err, resp) {
+    function (err, resp) {
       console.log(err, resp)
     }
   )

@@ -40,7 +40,7 @@ hemera.ready(() => {
       topic: 'stats',
       cmd: 'processInfo'
     },
-    function(err, resp) {
+    function (err, resp) {
       console.log(err, resp)
     }
   )
@@ -49,7 +49,7 @@ hemera.ready(() => {
       topic: 'stats',
       cmd: 'registeredActions'
     },
-    function(err, resp) {
+    function (err, resp) {
       console.log(err, resp)
     }
   )
