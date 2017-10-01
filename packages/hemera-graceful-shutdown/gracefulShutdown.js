@@ -13,9 +13,6 @@
  * Module Dependencies
  */
 
-const _ = require('lodash')
-const Errors = require('./errors')
-const Constants = require('./constants')
 const parallel = require('fastparallel')()
 
 /**
@@ -43,8 +40,8 @@ class GracefulShutdown {
    * @memberof GracefulShutdown
    */
   addHandler (fn) {
-    if (!_.isFunction(fn)) {
-      throw new Errors.HemeraError('Expected a function but got a ' + typeof fn)
+    if (typeof fn !== 'function') {
+      throw new Error('Expected a function but got a ' + typeof fn)
     }
 
     this.handlers.push(fn)
@@ -59,10 +56,10 @@ class GracefulShutdown {
    */
   completed (err, signal) {
     if (err) {
-      this.logger.error({ err, signal }, Constants.PROCESS_TERMINATED)
+      this.logger.error({ err, signal }, 'process terminated')
       this.process.exit(1)
     } else {
-      this.logger.info({ signal }, Constants.PROCESS_TERMINATED)
+      this.logger.info({ signal }, 'process terminated')
       this.process.exit(0)
     }
   }
@@ -78,7 +75,7 @@ class GracefulShutdown {
     setTimeout(() => {
       this.logger.error(
         { signal, timeout },
-        Constants.TERMINATE_AFTER_TIMEOUT
+        'terminate process after timeout'
       )
       this.process.exit(1)
     }, timeout).unref()

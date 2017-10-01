@@ -24,7 +24,6 @@ const TinySonic = require('tinysonic')
 const SuperError = require('super-error')
 const Joi = require('joi')
 
-const GracefulShutdown = require('./gracefulShutdown')
 const Errors = require('./errors')
 const Constants = require('./constants')
 const Util = require('./util')
@@ -168,17 +167,6 @@ class Hemera extends EventEmitter {
         })
       }
     }
-
-    const gs = new GracefulShutdown()
-    gs.process = process
-    gs.logger = this.log
-    gs.addHandler((signal, cb) => {
-      this.log.info({ signal }, Constants.TRIGGERING_CLOSE_HOOK)
-      this.close(cb)
-    })
-    gs.init()
-
-    this._gracefulShutdown = gs
   }
 
   /**
@@ -451,17 +439,27 @@ class Hemera extends EventEmitter {
   }
 
   /**
+   * Return the root instance
+   *
+   * @returns
+   * @memberof Hemera
+   */
+  root () {
+    return this._root
+  }
+
+  /**
    * Exit the process
    *
    * @memberOf Hemera
    */
   fatal () {
-    this._gracefulShutdown.shutdown('fatal')
+    process.exit(1)
   }
 
   /**
    * Decorate the root instance
-   * Value is globaly accesible
+   * Value is globaly accessible
    *
    * @param {any} prop
    * @param {any} value
