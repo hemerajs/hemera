@@ -168,7 +168,7 @@ describe('Extension reply', function() {
     })
   })
 
-  it('send', function(done) {
+  it('Should be able to send', function(done) {
     let ext1 = Sinon.spy()
 
     const nats = require('nats').connect(authUrl)

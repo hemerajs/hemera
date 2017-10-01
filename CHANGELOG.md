@@ -1,6 +1,8 @@
 Changelog
 =========
 
+**Look at Github release for changelogs**
+
 # 1.x
 
 ### 1.6.3
