@@ -50,14 +50,12 @@ The key features of NATS in combination with Hemera are:
 
 ## Built in protection
 * **Process policy**: Will exit the process when the policy (memory, event loop) could not be fullfilled (Option: `heavy`).
-* **Circuit breaker**: Will prevent from cascading failures (Option: `circuitBreaker`).
 * **Message loop detection**: Will return an error if you call a route recursively (Option: `maxRecursion`). 
 
 ## What Hemera code looks like
 
 **We support:**
 - Async/Await (Node 7.6+)
-- Generators (Node 4+)
 - Error-first-callback style
 
 ```js

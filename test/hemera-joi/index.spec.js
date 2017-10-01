@@ -218,7 +218,9 @@ describe('Hemera-joi pre/post', function () {
   it('Should validate request payload', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats)
+    const hemera = new Hemera(nats, {
+      logLevel: 'silent'
+    })
 
     hemera.use(HemeraJoi)
     hemera.setOption('payloadValidator', 'hemera-joi')

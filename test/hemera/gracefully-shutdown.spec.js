@@ -175,9 +175,7 @@ describe('Gracefully shutdown', function () {
   it('Should call close callback even when we did no IO', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      logLevel: 'debug'
-    })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
       hemera.close((err) => {

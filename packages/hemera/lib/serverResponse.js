@@ -9,6 +9,8 @@
  *
  */
 
+const SuperError = require('super-error')
+
 /**
  * @class ServerResponse
  */
@@ -52,7 +54,11 @@ class ServerResponse {
    * @memberOf ServerResponse
    */
   set error (error) {
-    this._response.error = error
+    if (error instanceof SuperError) {
+      this._response.error = error.rootCause || error.cause || error
+    } else {
+      this._response.error = error
+    }
   }
 
   /**

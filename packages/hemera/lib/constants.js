@@ -57,5 +57,7 @@ module.exports = {
   NO_USE_IN_PLUGINS: 'Call `use()` inside plugins not allowed',
   TERMINATE_AFTER_TIMEOUT: 'Terminate process after timeout',
   PROCESS_TERMINATED: 'Process terminated',
-  TRIGGERING_CLOSE_HOOK: 'Triggering close hook'
+  TRIGGERING_CLOSE_HOOK: 'Triggering close hook',
+  REPLY_ERROR_ALREADY_SET: 'Error already set',
+  REPLY_ALREADY_SENT: 'Reply already sent'
 }

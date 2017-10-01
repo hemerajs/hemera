@@ -9,6 +9,8 @@
  *
  */
 
+const Constants = require('./constants')
+
 /**
  *
  *
@@ -19,14 +21,16 @@ class Reply {
    * Creates an instance of Reply.
    * @param {any} request
    * @param {any} response
-   * @param {any} extensionCallback
+   * @param {any} hemera
    *
    * @memberof Reply
    */
-  constructor (request, response, extensionCallback) {
+  constructor (request, response, logger) {
     this._request = request
     this._response = response
-    this.extensionCallback = extensionCallback
+    this.log = logger
+    this.sent = false
+    this._errored = false
   }
 
   /**
@@ -52,12 +56,18 @@ class Reply {
   }
 
   /**
-   *
-   *
+   * Set the response error
+   * Error can not be set twice
    *
    * @memberof Reply
    */
   set error (value) {
+    if (this._errored) {
+      this.log.debug(new Error(Constants.REPLY_ERROR_ALREADY_SET))
+      return
+    }
+
+    this._errored = true
     this._response.error = value
   }
 
@@ -73,32 +83,27 @@ class Reply {
   }
 
   /**
-   * Abort the current request and respond wih the passed value
+   * Set the response error
    *
-   * @param {any} value
-   *
+   * @param {any} msg
    * @memberof Reply
    */
-  end (value) {
-    if (value instanceof Error) {
-      this.extensionCallback(value)
-    } else {
-      this.extensionCallback(null, value, true)
-    }
-  }
+  send (msg) {
+    const self = this
 
-  /**
-   * Runs through all extensions and keep the passed value to respond it
-   *
-   * @param {any} value
-   *
-   * @memberof Reply
-   */
-  send (value) {
-    if (value instanceof Error) {
-      this.extensionCallback(value)
-    } else {
-      this.extensionCallback(null, value)
+    if (self.sent) {
+      self.log.warn(new Error(Constants.REPLY_ALREADY_SENT))
+      return
+    }
+
+    self.sent = true
+
+    if (msg) {
+      if (msg instanceof Error) {
+        self.error = msg
+      } else {
+        self.payload = msg
+      }
     }
   }
 }

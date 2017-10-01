@@ -10,7 +10,6 @@
  */
 
 const _ = require('lodash')
-const Co = require('co')
 const Util = require('./util')
 
 /**
@@ -81,8 +80,8 @@ class Add {
    *
    * @memberof Add
    */
-  dispatch (request, response, cb) {
-    Util.serial(this.middleware, (item, next) => {
+  run (request, response, cb) {
+    Util.eachSeries(this.middleware, (item, next) => {
       item(request, response, next)
     }, cb)
   }
@@ -126,10 +125,7 @@ class Add {
    * @memberOf Add
    */
   set action (action) {
-    if (Util.isGeneratorFunction(action)) {
-      this.actMeta.action = Co.wrap(action)
-      this.isPromisable = true
-    } else if (Util.isAsyncFunction(action)) {
+    if (Util.isAsyncFunction(action)) {
       this.actMeta.action = action
       this.isPromisable = true
     } else {

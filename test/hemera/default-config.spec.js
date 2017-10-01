@@ -51,13 +51,6 @@ describe('Hemera default config', function () {
           maxRssBytes: 0,       // Reject requests when process RSS is over size in bytes (zero is no max)
           maxEventLoopDelay: 0  // Milliseconds of delay after which requests are rejected (zero is no max)
         }
-      },
-      circuitBreaker: {
-        enabled: false,
-        minSuccesses: 1, // Minimum successes in the half-open state to change to close state
-        halfOpenTime: 5 * 1000, // The duration when the server is ready to accept further calls after changing to open state
-        resetIntervalTime: 15 * 1000, // Frequency of reseting the circuit breaker to close state in milliseconds
-        maxFailures: 3 // The threshold when the circuit breaker change to open state
       }
     }
 

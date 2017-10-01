@@ -39,9 +39,9 @@ exports.plugin = Hp(function hemeraJoi () {
     }, (err, value) => {
       req.payload.pattern = value
       if (err) {
-        res.send(new PreValidationError({ message: err.message, details: err.details }))
+        next(new PreValidationError({ message: err.message, details: err.details }))
       } else {
-        res.send()
+        next()
       }
     })
   })
@@ -81,9 +81,10 @@ exports.plugin = Hp(function hemeraJoi () {
       allowUnknown: true
     }, (err, value) => {
       if (err) {
-        res.send(new PostValidationError({ message: err.message, details: err.details }))
+        next(new PostValidationError({ message: err.message, details: err.details }))
       } else {
         res.send(value)
+        next()
       }
     })
   })

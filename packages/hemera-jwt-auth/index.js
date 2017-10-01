@@ -63,10 +63,10 @@ exports.plugin = Hp(function hemeraJwtAuth (options) {
           return next()
         }
         // Invalid scope return error
-        return res.end(new JwtError('Invalid scope'))
+        return next(new JwtError('Invalid scope'))
       } else {
         // Invalid auth options return error
-        return res.end(new JwtError('Invalid auth$ options'))
+        return next(new JwtError('Invalid auth$ options'))
       }
     })
   })

@@ -10,7 +10,6 @@
  */
 
 const _ = require('lodash')
-const Co = require('co')
 
 const lut = []
 for (let i = 0; i < 256; i++) { lut[i] = (i < 16 ? '0' : '') + (i).toString(16) }
@@ -44,24 +43,12 @@ class Util {
   }
 
   /**
-   * Convert a generator or async function
-   * to promise factory function and call the last
-   * argument as callback
-   *
    * @static
    * @param {any} handler
    * @memberof Util
    */
   static toPromiseFact (handler) {
-    if (Util.isGeneratorFunction(handler)) {
-      return function () {
-        // -1 because (req, res, next)
-        const next = arguments[arguments.length - 1]
-        return Co(handler.apply(null, arguments))
-          .then(x => next(null, x))
-          .catch(next)
-      }
-    } else if (Util.isAsyncFunction(handler)) {
+    if (Util.isAsyncFunction(handler)) {
       return function () {
         // -1 because (req, res, next)
         const next = arguments[arguments.length - 1]
@@ -99,7 +86,7 @@ class Util {
    *
    * @memberOf Util
    */
-  static serial (array, method, callback) {
+  static eachSeries (array, method, callback) {
     if (!array.length) {
       callback()
     } else {
@@ -119,45 +106,6 @@ class Util {
         }
 
         method(array[i], done, i)
-      }
-
-      iterate()
-    }
-  }
-  /**
-   * Executes a series of callbacks and allows to interrupt
-   * as well as to continue with a final value
-   *
-   * @param {Array<Function>} array
-   * @param {Function} method
-   * @param {Function} callback
-   *
-   * @memberOf Extension
-   */
-  static serialWithCancellation (array, method, callback) {
-    if (!array.length) {
-      callback()
-    } else {
-      let i = 0
-
-      const iterate = function () {
-        const done = function (err, value, abort) {
-          if (err) {
-            callback(err)
-          } else if (value && abort) {
-            callback(null, value)
-          } else {
-            i = i + 1
-
-            if (i < array.length) {
-              iterate(value)
-            } else {
-              callback(null, value)
-            }
-          }
-        }
-
-        method(array[i], done)
       }
 
       iterate()
@@ -245,27 +193,7 @@ class Util {
     return sb.join(',')
   }
 
-  /**
-   *
-   *
-   * @static
-   * @param {any} obj
-   * @returns
-   *
-   * @memberof Util
-   */
-  static isGeneratorFunction (obj) {
-    var constructor = obj.constructor
-    if (!constructor) {
-      return false
-    }
-    if (constructor.name === 'GeneratorFunction' || constructor.displayName === 'GeneratorFunction') {
-      return true
-    }
-    return false
-  }
-
-  /**
+   /*
    *
    *
    * @static

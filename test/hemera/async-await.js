@@ -75,97 +75,6 @@ describe('Async / Await support', function () {
     })
   })
 
-  it('Should be able to await an error in add middleware', function (done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    hemera.ready(() => {
-      hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      })
-        .use(async function (req, resp) {
-          const a = await Promise.reject(new Error('test'))
-          return a
-        })
-        .end(function (req, cb) {
-          cb(null, req.a + req.b)
-        })
-
-      hemera.act({
-        topic: 'math',
-        cmd: 'add',
-        a: 1,
-        b: 2
-      }, function (err, resp) {
-        expect(err).to.be.exists()
-        hemera.close(done)
-      })
-    })
-  })
-
-  it('Should be able to use an array of async function in add middleware', function (done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    hemera.ready(() => {
-      hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      })
-        .use([async function (req, resp) {
-          await Promise.resolve(true)
-        }, async function (req, resp) {
-          await Promise.resolve(true)
-        }])
-        .end(function (req, cb) {
-          cb(null, req.a + req.b)
-        })
-
-      hemera.act({
-        topic: 'math',
-        cmd: 'add',
-        a: 1,
-        b: 2
-      }, function (err, resp) {
-        expect(err).to.be.not.exists()
-        hemera.close(done)
-      })
-    })
-  })
-
-  it('Should be able to use a none async function in add middleware', function (done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    hemera.ready(() => {
-      hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      })
-        .use(function (req, resp, next) {
-          next()
-        })
-        .end(function (req, cb) {
-          cb(null, req.a + req.b)
-        })
-
-      hemera.act({
-        topic: 'math',
-        cmd: 'add',
-        a: 1,
-        b: 2
-      }, function (err, resp) {
-        expect(err).to.be.not.exists()
-        expect(resp).to.be.equals(3)
-        hemera.close(done)
-      })
-    })
-  })
-
   it('Should be able to await in add', function (done) {
     const nats = require('nats').connect(authUrl)
 
@@ -323,7 +232,7 @@ describe('Async / Await support', function () {
         topic: 'math',
         cmd: 'add'
       }, async function (resp) {
-        return await Promise.reject(new Error('test'))
+        await Promise.reject(new Error('test'))
       })
 
       hemera.act({
@@ -350,9 +259,10 @@ describe('Async / Await support', function () {
         topic: 'math',
         cmd: 'add'
       }, async function (resp) {
-        return await Promise.resolve({
+        const result = await Promise.resolve({
           result: true
         })
+        return result
       })
 
       hemera.act({
@@ -362,6 +272,7 @@ describe('Async / Await support', function () {
         b: 2
       }, async function (err, resp) {
         expect(err).to.be.not.exists()
+
         return resp
       })
         .then(function (resp) {
@@ -383,7 +294,7 @@ describe('Async / Await support', function () {
         topic: 'math',
         cmd: 'add'
       }, async function (resp) {
-        return await Promise.resolve({
+        await Promise.resolve({
           result: true
         })
       })
@@ -395,7 +306,7 @@ describe('Async / Await support', function () {
         b: 2
       }, async function (err, resp) {
         expect(err).to.be.not.exists()
-        return await Promise.reject(new Error('test'))
+        await Promise.reject(new Error('test'))
       })
         .catch(function (err) {
           expect(err).to.be.exists()
@@ -414,7 +325,7 @@ describe('Async / Await support', function () {
         topic: 'math',
         cmd: 'add'
       }, async function (resp) {
-        return await Promise.reject(new Error('test'))
+        await Promise.reject(new Error('test'))
       })
 
       // in future we have to try catch it
@@ -442,7 +353,7 @@ describe('Async / Await support', function () {
         topic: 'math',
         cmd: 'add'
       }, async function (resp) {
-        return await Promise.resolve({
+        await Promise.resolve({
           result: true
         })
       })
@@ -470,7 +381,7 @@ describe('Async / Await support', function () {
         topic: 'math',
         cmd: 'add'
       }, async function (resp) {
-        return await Promise.resolve({
+        await Promise.resolve({
           result: true
         })
       })
@@ -488,149 +399,6 @@ describe('Async / Await support', function () {
           expect(err).to.be.exists()
           hemera.close(done)
         })
-    })
-  })
-})
-
-describe('Async / Await support in extension', function () {
-  var PORT = 6242
-  var flags = ['--user', 'derek', '--pass', 'foobar']
-  var authUrl = 'nats://derek:foobar@localhost:' + PORT
-  var server
-
-  // Start up our own nats-server
-  before(function (done) {
-    server = HemeraTestsuite.start_server(PORT, flags, done)
-  })
-
-  // Shutdown our server after we are done
-  after(function () {
-    server.kill()
-  })
-
-  it('Should be able to await in extension', function (done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    hemera.ready(() => {
-      hemera.ext('onServerPreHandler', async function (ctx, req, res) {
-        return await Promise.resolve(true)
-      })
-
-      hemera.ext('onServerPreHandler', async function (ctx, req, res) {
-        return await Promise.resolve('foobar')
-      })
-
-      hemera.add({
-        topic: 'email',
-        cmd: 'send'
-      }, (resp, cb) => {
-        cb()
-      })
-
-      hemera.act({
-        topic: 'email',
-        cmd: 'send',
-        email: 'foobar@gmail.com',
-        msg: 'Hi!'
-      }, (err, resp) => {
-        expect(err).to.be.not.exists()
-        expect(resp).to.be.equals('foobar')
-        hemera.close(done)
-      })
-    })
-  })
-
-  it('Should be able to use none async function in extensions', function (done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    hemera.ready(() => {
-      hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
-        next(null, true)
-      })
-
-      hemera.add({
-        topic: 'email',
-        cmd: 'send'
-      }, (resp, cb) => {
-        cb()
-      })
-
-      hemera.act({
-        topic: 'email',
-        cmd: 'send',
-        email: 'foobar@gmail.com',
-        msg: 'Hi!'
-      }, (err, resp) => {
-        expect(err).to.be.not.exists()
-        expect(resp).to.be.equals(true)
-        hemera.close(done)
-      })
-    })
-  })
-
-  it('Should be able to return an error', function (done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    hemera.ready(() => {
-      hemera.ext('onServerPreHandler', async function (ctx, req, res) {
-        return await Promise.reject(new Error('test'))
-      })
-
-      hemera.add({
-        topic: 'email',
-        cmd: 'send'
-      }, (resp, cb) => {
-        cb()
-      })
-
-      hemera.act({
-        topic: 'email',
-        cmd: 'send',
-        email: 'foobar@gmail.com',
-        msg: 'Hi!'
-      }, (err, resp) => {
-        expect(err).to.be.exists()
-        expect(err.name).to.be.equals('Error')
-        expect(err.message).to.be.equals('test')
-        hemera.close(done)
-      })
-    })
-  })
-
-  it('Should be able to catch a thrown error', function (done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    hemera.ready(() => {
-      hemera.ext('onServerPreHandler', async function (ctx, req, res) {
-        throw new Error('test')
-      })
-
-      hemera.add({
-        topic: 'email',
-        cmd: 'send'
-      }, (resp, cb) => {
-        cb()
-      })
-
-      hemera.act({
-        topic: 'email',
-        cmd: 'send',
-        email: 'foobar@gmail.com',
-        msg: 'Hi!'
-      }, (err, resp) => {
-        expect(err).to.be.exists()
-        expect(err.name).to.be.equals('Error')
-        expect(err.message).to.be.equals('test')
-        hemera.close(done)
-      })
     })
   })
 })

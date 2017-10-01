@@ -59,16 +59,5 @@ module.exports = Joi.object().keys({
       // Milliseconds of delay after which requests are rejected (zero is no max)
       maxEventLoopDelay: Joi.number().integer().default(0)
     }).default()
-  }).default(),
-  circuitBreaker: Joi.object().keys({
-    enabled: Joi.boolean().default(false),
-    // Minimum successes in the half-open state to change to close state
-    minSuccesses: Joi.number().integer().default(1),
-    // The duration (milliseconds) when the server is ready to accept further calls after changing to open state
-    halfOpenTime: Joi.number().integer().default(5000),
-    // Frequency of reseting the circuit breaker to close state in milliseconds
-    resetIntervalTime: Joi.number().integer().default(15000),
-    // The threshold when the circuit breaker change to open state
-    maxFailures: Joi.number().integer().default(3)
   }).default()
 })
