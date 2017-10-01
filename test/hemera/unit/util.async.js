@@ -1,6 +1,6 @@
 'use strict'
 
-describe('Util', function () {
+describe('Util Async / Await', function () {
   it('Should be able to detect async function', function (done) {
     const a = HemeraUtil.isAsyncFunction(async function test () {})
     const b = HemeraUtil.isAsyncFunction(function test () {})
