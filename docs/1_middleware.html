@@ -118,9 +118,9 @@
                     <hr>
 
                     <p class="section-content">
-                        Middleware functions are functions that have access to the request object (req), the response object (res), and the next
+                        Middleware functions are functions that have access to the request object (req), the reply object (reply), and the next
                         middleware function in the application’s request-response cycle. The next middleware function is
-                        commonly denoted by a variable named next. If you pass an error to the <code>next</code>                        function the error will be responded.
+                        commonly denoted by a variable named next. If you pass an error to the <code>next</code> function the lifecycle is aborted and the error is responded.
                     </p>
                     <h4 class="section-h4"></h4>
                     <pre>
@@ -128,11 +128,11 @@
 hemera.add({
   topic: "test",
   cmd: "add"
-}).use(function(req, resp, next) {
+}).use(function(req, reply, next) {
   //process request
   next()
 })
-.use(function(req, resp, next) {
+.use(function(req, reply, next) {
   //process request
   next()
 })
