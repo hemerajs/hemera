@@ -5,14 +5,14 @@ var Wreck = require('wreck')
 var HTTP_OK = 200
 var HTTP_RECEIVED = 202
 
-function httpSimpleTransport (body, options) {
+function httpSimpleTransport(body, options) {
   const path = 'http://' + options.host + ':' + options.port + options.path
   Wreck.post(
     path,
     {
       payload: [body]
     },
-    function sent (err, response, body) {
+    function sent(err, response, body) {
       if (!options.debug) {
         return
       }

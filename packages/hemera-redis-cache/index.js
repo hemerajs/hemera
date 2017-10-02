@@ -11,7 +11,7 @@ exports.options = {
   redis: null
 }
 
-function hemeraRedisCache (hemera, opts, done) {
+function hemeraRedisCache(hemera, opts, done) {
   const client = Redis.createClient(opts.redis)
   const topic = 'redis-cache'
 
@@ -28,24 +28,24 @@ function hemeraRedisCache (hemera, opts, done) {
     done()
   })
 
-  client.on('ready', function () {
+  client.on('ready', function() {
     hemera.log.info('Redis Cache is ready')
     done()
   })
 
-  client.on('end', function () {
+  client.on('end', function() {
     hemera.log.warn('Redis client connection closed')
   })
 
-  client.on('reconnecting', function (msg) {
+  client.on('reconnecting', function(msg) {
     hemera.log.info(msg, 'Redis client is reconnecting')
   })
 
-  client.on('warning', function (msg) {
+  client.on('warning', function(msg) {
     hemera.log.warn(msg, 'Redis client warning')
   })
 
-  client.on('error', function (err) {
+  client.on('error', function(err) {
     hemera.log.fatal(err)
     hemera.fatal()
   })
@@ -57,7 +57,7 @@ function hemeraRedisCache (hemera, opts, done) {
       key: Joi.string().required(),
       value: Joi.any().required()
     },
-    function (req, cb) {
+    function(req, cb) {
       client.set(req.key, req.value, cb)
     }
   )
@@ -68,7 +68,7 @@ function hemeraRedisCache (hemera, opts, done) {
       cmd: 'get',
       key: Joi.string().required()
     },
-    function (req, cb) {
+    function(req, cb) {
       client.get(req.key, cb)
     }
   )
@@ -80,7 +80,7 @@ function hemeraRedisCache (hemera, opts, done) {
       key: Joi.string().required(),
       values: Joi.any().required()
     },
-    function (req, cb) {
+    function(req, cb) {
       client.hmset(req.key, req.values, cb)
     }
   )
@@ -92,7 +92,7 @@ function hemeraRedisCache (hemera, opts, done) {
       key: Joi.string().required(),
       values: Joi.any().required()
     },
-    function (req, cb) {
+    function(req, cb) {
       client.hget(req.key, req.values, cb)
     }
   )
@@ -103,7 +103,7 @@ function hemeraRedisCache (hemera, opts, done) {
       cmd: 'hgetall',
       key: Joi.string().required()
     },
-    function (req, cb) {
+    function(req, cb) {
       client.hgetall(req.key, cb)
     }
   )
@@ -115,7 +115,7 @@ function hemeraRedisCache (hemera, opts, done) {
       key: Joi.string().required(),
       ttlSeconds: Joi.number().required()
     },
-    function (req, cb) {
+    function(req, cb) {
       client.expire(req.key, req.ttlSeconds, cb)
     }
   )
@@ -126,7 +126,7 @@ function hemeraRedisCache (hemera, opts, done) {
       cmd: 'exists',
       key: Joi.string().required()
     },
-    function (req, cb) {
+    function(req, cb) {
       client.exists(req.key, cb)
     }
   )
@@ -137,7 +137,7 @@ function hemeraRedisCache (hemera, opts, done) {
       cmd: 'ttl',
       key: Joi.string().required()
     },
-    function (req, cb) {
+    function(req, cb) {
       client.ttl(req.key, cb)
     }
   )

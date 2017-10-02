@@ -11,7 +11,7 @@ exports.options = {
   }
 }
 
-function hemeraSQS (hemera, opts, done) {
+function hemeraSQS(hemera, opts, done) {
   const topic = 'sqs'
 
   if (opts.configPath) {
@@ -30,7 +30,7 @@ function hemeraSQS (hemera, opts, done) {
       topic,
       cmd: 'listQueues'
     },
-    function (req, reply) {
+    function(req, reply) {
       sqs.listQueues(req.params, (err, data) => {
         if (err) {
           this.log.error(err)
@@ -47,7 +47,7 @@ function hemeraSQS (hemera, opts, done) {
       topic,
       cmd: 'createQueue'
     },
-    function (req, reply) {
+    function(req, reply) {
       sqs.createQueue(req.params, (err, data) => {
         if (err) {
           this.log.error(err)
@@ -64,7 +64,7 @@ function hemeraSQS (hemera, opts, done) {
       topic,
       cmd: 'getQueueUrl'
     },
-    function (req, reply) {
+    function(req, reply) {
       sqs.getQueueUrl(req.params, (err, data) => {
         if (err) {
           this.log.error(err)
@@ -81,7 +81,7 @@ function hemeraSQS (hemera, opts, done) {
       topic,
       cmd: 'deleteQueue'
     },
-    function (req, reply) {
+    function(req, reply) {
       sqs.deleteQueue(req.params, (err, data) => {
         if (err) {
           this.log.error(err)
@@ -98,7 +98,7 @@ function hemeraSQS (hemera, opts, done) {
       topic,
       cmd: 'setQueueAttributes'
     },
-    function (req, reply) {
+    function(req, reply) {
       sqs.setQueueAttributes(req.params, (err, data) => {
         if (err) {
           this.log.error(err)
@@ -119,7 +119,7 @@ function hemeraSQS (hemera, opts, done) {
       topic,
       cmd: 'sendMessage'
     },
-    function (req, reply) {
+    function(req, reply) {
       sqs.sendMessage(req.params, (err, data) => {
         if (err) {
           this.log.error(err)
@@ -136,7 +136,7 @@ function hemeraSQS (hemera, opts, done) {
       topic,
       cmd: 'receiveMessage'
     },
-    function (req, reply) {
+    function(req, reply) {
       sqs.receiveMessage(req.params, (err, data) => {
         if (err) {
           this.log.error(err)
@@ -153,7 +153,7 @@ function hemeraSQS (hemera, opts, done) {
       topic,
       cmd: 'deleteMessage'
     },
-    function (req, reply) {
+    function(req, reply) {
       sqs.deleteMessage(req.params, (err, data) => {
         if (err) {
           this.log.error(err)
@@ -170,7 +170,7 @@ function hemeraSQS (hemera, opts, done) {
       topic,
       cmd: 'changeMessageVisibility'
     },
-    function (req, reply) {
+    function(req, reply) {
       sqs.changeMessageVisibility(req.params, (err, data) => {
         if (err) {
           this.log.error(err)

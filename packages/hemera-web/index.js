@@ -23,7 +23,6 @@ exports.options = {
 }
 
 function hemeraWeb(hemera, opts, done) {
-
   const app = Express()
   app.use(BodyParser.json())
 

@@ -25,7 +25,7 @@ class Reply {
    *
    * @memberof Reply
    */
-  constructor (request, response, logger) {
+  constructor(request, response, logger) {
     this._request = request
     this._response = response
     this.log = logger
@@ -40,7 +40,7 @@ class Reply {
    *
    * @memberof Reply
    */
-  set payload (value) {
+  set payload(value) {
     this._response.payload = value
   }
 
@@ -51,7 +51,7 @@ class Reply {
    *
    * @memberof Reply
    */
-  get payload () {
+  get payload() {
     return this._response.payload
   }
 
@@ -61,7 +61,7 @@ class Reply {
    *
    * @memberof Reply
    */
-  set error (value) {
+  set error(value) {
     if (this._errored) {
       this.log.debug(new Error(Constants.REPLY_ERROR_ALREADY_SET))
       return
@@ -78,7 +78,7 @@ class Reply {
    *
    * @memberof Reply
    */
-  get error () {
+  get error() {
     return this._response.error
   }
 
@@ -88,7 +88,7 @@ class Reply {
    * @param {any} msg
    * @memberof Reply
    */
-  send (msg) {
+  send(msg) {
     const self = this
 
     if (self.sent) {

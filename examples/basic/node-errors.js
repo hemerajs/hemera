@@ -20,7 +20,7 @@ hemera.ready(() => {
       topic: 'math',
       cmd: 'div'
     },
-    function (req, cb) {
+    function(req, cb) {
       const bar = new FooBarError('bar')
       bar.test = 'test'
       const err = new FooBarError('foo').causedBy(bar)
@@ -33,7 +33,7 @@ hemera.ready(() => {
       topic: 'math',
       cmd: 'sub'
     },
-    function (req, cb) {
+    function(req, cb) {
       const err = new FooBarError().causedBy(new Error('test'))
       cb(err)
     }
@@ -44,7 +44,7 @@ hemera.ready(() => {
       topic: 'math',
       cmd: 'add'
     },
-    function (req, cb) {
+    function(req, cb) {
       const err = new Error('test')
       cb(err)
     }
@@ -55,7 +55,7 @@ hemera.ready(() => {
       topic: 'math',
       cmd: 'add'
     },
-    function (err, resp) {
+    function(err, resp) {
       this.log.debug('Instance of: %s', err instanceof Error)
       this.log.debug('Error: %s', err.name)
       this.log.debug('Error message: %s', err.message)
@@ -67,7 +67,7 @@ hemera.ready(() => {
       topic: 'math',
       cmd: 'sub'
     },
-    function (err, resp) {
+    function(err, resp) {
       this.log.debug('Instance of: %s', err instanceof Error)
       this.log.debug('Error: %s', err.name)
       this.log.debug('Error: %s', err.name)
@@ -80,7 +80,7 @@ hemera.ready(() => {
       topic: 'math',
       cmd: 'div'
     },
-    function (err, resp) {
+    function(err, resp) {
       this.log.debug('Instance of: %s', err instanceof FooBarError)
       this.log.debug('Error: %s', err.name)
       this.log.debug('Error data: %s', err.test)

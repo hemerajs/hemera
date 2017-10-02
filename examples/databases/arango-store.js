@@ -31,7 +31,7 @@ hemera.ready(() => {
     RETURN u
 `
     },
-    function (err, resp) {
+    function(err, resp) {
       this.log.info(resp, 'Query result')
     }
   )
@@ -47,7 +47,7 @@ hemera.ready(() => {
       type: 'one',
       query: aql`INSERT ${user} INTO users`
     },
-    function (err, resp) {
+    function(err, resp) {
       this.log.info(resp, 'Query result')
     }
   )

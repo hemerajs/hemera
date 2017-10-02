@@ -11,7 +11,7 @@ const hemera = new Hemera(nats, {
 
 hemera.use(HemeraGracefulShutdown)
 
-hemera.ready(function () {
+hemera.ready(function() {
   hemera.ext('onClose', (ctx, next) => {
     this.log.info('Triggered!')
     next()

@@ -13,7 +13,7 @@ exports.options = {
   }
 }
 
-function hemeraCouchbaseStore (hemera, opts, done) {
+function hemeraCouchbaseStore(hemera, opts, done) {
   const topic = 'couchbase-store'
 
   const Joi = hemera.joi
@@ -25,7 +25,7 @@ function hemeraCouchbaseStore (hemera, opts, done) {
     cluster
   })
 
-  function getBucket (name) {
+  function getBucket(name) {
     if (opts.couchbase.bucketInstance) {
       return opts.couchbase.bucketInstance
     } else {
@@ -45,7 +45,7 @@ function hemeraCouchbaseStore (hemera, opts, done) {
         .items(Joi.string(), Joi.number())
         .default([])
     },
-    function (req, cb) {
+    function(req, cb) {
       const bucket = getBucket(req.bucket)
       const query = N1qlQuery.fromString(req.query)
       bucket.query(query, req.vars, cb)

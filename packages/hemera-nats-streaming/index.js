@@ -12,7 +12,7 @@ exports.options = {
   opts: {} // object with NATS/STAN options
 }
 
-function hemeraNatsStreaming (hemera, opts, done) {
+function hemeraNatsStreaming(hemera, opts, done) {
   const topic = 'nats-streaming'
   const Joi = hemera.joi
   const DuplicateSubscriberError = hemera.createError('DuplicateSubscriber')
@@ -38,7 +38,7 @@ function hemeraNatsStreaming (hemera, opts, done) {
     hemera.fatal()
   })
 
-  stan.on('connect', function () {
+  stan.on('connect', function() {
     /**
      * Publish a message over NATS-Streaming server
      */
@@ -49,8 +49,8 @@ function hemeraNatsStreaming (hemera, opts, done) {
         subject: Joi.string().required(),
         data: Joi.alternatives().try(Joi.object(), Joi.array())
       },
-      function (req, reply) {
-        function handler (err, guid) {
+      function(req, reply) {
+        function handler(err, guid) {
           if (err) {
             reply(err)
           } else {
@@ -95,7 +95,7 @@ function hemeraNatsStreaming (hemera, opts, done) {
           })
           .default()
       },
-      function (req, reply) {
+      function(req, reply) {
         // avoid multiple subscribers for the same subject
         if (subList[req.subject]) {
           reply(
@@ -143,7 +143,7 @@ function hemeraNatsStreaming (hemera, opts, done) {
                 topic: inboxChannel,
                 data
               },
-              function (err, resp) {
+              function(err, resp) {
                 if (!err) {
                   msg.ack()
                 } else {
@@ -168,7 +168,7 @@ function hemeraNatsStreaming (hemera, opts, done) {
         cmd: 'suspend',
         subject: Joi.string().required()
       },
-      function (req, reply) {
+      function(req, reply) {
         if (subList[req.subject]) {
           subList[req.subject].close()
           delete subList[req.subject]
@@ -192,7 +192,7 @@ function hemeraNatsStreaming (hemera, opts, done) {
         cmd: 'unsubscribe',
         subject: Joi.string().required()
       },
-      function (req, reply) {
+      function(req, reply) {
         if (subList[req.subject]) {
           subList[req.subject].unsubscribe()
           delete subList[req.subject]

@@ -22,7 +22,7 @@ class NatsTransport {
    *
    * @memberOf NatsTransport
    */
-  constructor (params) {
+  constructor(params) {
     this.nc = params.transport
   }
 
@@ -33,7 +33,7 @@ class NatsTransport {
    *
    * @memberOf NatsTransport
    */
-  get driver () {
+  get driver() {
     return this.nc
   }
 
@@ -44,7 +44,7 @@ class NatsTransport {
    *
    * @memberOf NatsTransport
    */
-  timeout () {
+  timeout() {
     return this.nc.timeout.apply(this.nc, arguments)
   }
 
@@ -55,7 +55,7 @@ class NatsTransport {
    *
    * @memberOf NatsTransport
    */
-  send () {
+  send() {
     return this.nc.publish.apply(this.nc, arguments)
   }
 
@@ -66,7 +66,7 @@ class NatsTransport {
    *
    * @memberOf NatsTransport
    */
-  close () {
+  close() {
     return this.nc.close.apply(this.nc, arguments)
   }
 
@@ -76,7 +76,7 @@ class NatsTransport {
    * @returns
    * @memberof NatsTransport
    */
-  flush () {
+  flush() {
     return this.nc.flush.apply(this.nc, arguments)
   }
 
@@ -87,7 +87,7 @@ class NatsTransport {
    *
    * @memberOf NatsTransport
    */
-  subscribe () {
+  subscribe() {
     return this.nc.subscribe.apply(this.nc, arguments)
   }
 
@@ -98,7 +98,7 @@ class NatsTransport {
    *
    * @memberOf NatsTransport
    */
-  unsubscribe () {
+  unsubscribe() {
     return this.nc.unsubscribe.apply(this.nc, arguments)
   }
 
@@ -109,7 +109,7 @@ class NatsTransport {
    *
    * @memberOf NatsTransport
    */
-  sendRequest () {
+  sendRequest() {
     return this.nc.request.apply(this.nc, arguments)
   }
 }

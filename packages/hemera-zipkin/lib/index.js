@@ -15,11 +15,11 @@ const DEFAULT_OPTIONS = {
   path: '/api/v1/spans'
 }
 
-function generateTimestamp () {
+function generateTimestamp() {
   return new Date().getTime() * TO_MICROSECONDS
 }
 
-function generateId () {
+function generateId() {
   // copied over from zipkin-js
   let n = ''
   for (var i = 0; i < ID_LENGTH; i++) {
@@ -33,13 +33,13 @@ function generateId () {
   return n
 }
 
-function zipkinSimple (options) {
+function zipkinSimple(options) {
   this.counter = 0
   this.opts = Object.assign({}, DEFAULT_OPTIONS, options)
   this.buildOptions()
 }
 
-zipkinSimple.prototype.buildOptions = function buildOptions () {
+zipkinSimple.prototype.buildOptions = function buildOptions() {
   this.send = HttpBatchTransport
 
   if (this.opts.transport === 'http-simple') {
@@ -51,7 +51,7 @@ zipkinSimple.prototype.buildOptions = function buildOptions () {
   }
 }
 
-zipkinSimple.prototype.shouldSample = function shouldSample () {
+zipkinSimple.prototype.shouldSample = function shouldSample() {
   this.counter++
 
   if (this.counter * this.opts.sampling >= 1) {
@@ -62,7 +62,7 @@ zipkinSimple.prototype.shouldSample = function shouldSample () {
   return false
 }
 
-zipkinSimple.prototype.createRootTrace = function createRootTrace () {
+zipkinSimple.prototype.createRootTrace = function createRootTrace() {
   var id = generateId()
 
   return {
@@ -74,7 +74,7 @@ zipkinSimple.prototype.createRootTrace = function createRootTrace () {
   }
 }
 
-zipkinSimple.prototype.getChild = function getChild (traceData) {
+zipkinSimple.prototype.getChild = function getChild(traceData) {
   if (!traceData) {
     return this.createRootTrace()
   }
@@ -88,7 +88,7 @@ zipkinSimple.prototype.getChild = function getChild (traceData) {
   }
 }
 
-zipkinSimple.prototype.sendTrace = function sendTrace (trace, data) {
+zipkinSimple.prototype.sendTrace = function sendTrace(trace, data) {
   if (!trace.sampled) {
     return
   }
@@ -148,7 +148,7 @@ zipkinSimple.prototype.sendTrace = function sendTrace (trace, data) {
   this.send(body, this.opts)
 }
 
-zipkinSimple.prototype.traceWithAnnotation = function traceWithAnnotation (
+zipkinSimple.prototype.traceWithAnnotation = function traceWithAnnotation(
   trace,
   data,
   annotation
@@ -168,24 +168,24 @@ zipkinSimple.prototype.traceWithAnnotation = function traceWithAnnotation (
   return trace
 }
 
-zipkinSimple.prototype.addBinary = function addBinary (data, annotation) {
+zipkinSimple.prototype.addBinary = function addBinary(data, annotation) {
   data.binaryAnnotations = data.binaryAnnotations || {}
   data.binaryAnnotations = Object.assign(data.binaryAnnotations, annotation)
 }
 
-zipkinSimple.prototype.sendClientSend = function sendClientSend (trace, data) {
+zipkinSimple.prototype.sendClientSend = function sendClientSend(trace, data) {
   return this.traceWithAnnotation(trace, data, 'cs')
 }
 
-zipkinSimple.prototype.sendClientRecv = function sendClientRecv (trace, data) {
+zipkinSimple.prototype.sendClientRecv = function sendClientRecv(trace, data) {
   return this.traceWithAnnotation(trace, data, 'cr')
 }
 
-zipkinSimple.prototype.sendServerSend = function sendServerSend (trace, data) {
+zipkinSimple.prototype.sendServerSend = function sendServerSend(trace, data) {
   return this.traceWithAnnotation(trace, data, 'ss')
 }
 
-zipkinSimple.prototype.sendServerRecv = function sendServerRecv (trace, data) {
+zipkinSimple.prototype.sendServerRecv = function sendServerRecv(trace, data) {
   if (!trace) {
     trace = this.createRootTrace()
     trace.serverOnly = true
@@ -194,7 +194,7 @@ zipkinSimple.prototype.sendServerRecv = function sendServerRecv (trace, data) {
   return this.traceWithAnnotation(trace, data, 'sr')
 }
 
-zipkinSimple.prototype.options = function setOptions (opts) {
+zipkinSimple.prototype.options = function setOptions(opts) {
   if (opts) {
     Object.assign(this.opts, opts)
     this.buildOptions()

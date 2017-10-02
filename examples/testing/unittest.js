@@ -17,14 +17,14 @@ const hemera = new Hemera(nats, {
 })
 const actStub = new ActStub(hemera)
 
-hemera.ready(function () {
+hemera.ready(function() {
   hemera.add(
     {
       topic: 'math',
       cmd: 'add'
     },
-    function (args, cb) {
-      this.act({ topic: 'math', cmd: 'sub', a: 100, b: 50 }, function (
+    function(args, cb) {
+      this.act({ topic: 'math', cmd: 'sub', a: 100, b: 50 }, function(
         err,
         resp
       ) {
@@ -44,7 +44,7 @@ hemera.ready(function () {
     hemera,
     { topic: 'math', cmd: 'add' },
     { a: 100, b: 200 },
-    function (err, result) {
+    function(err, result) {
       console.log(err, result)
     }
   )
@@ -56,7 +56,7 @@ hemera.ready(function () {
       a: 100,
       b: 200
     },
-    function (err, result) {
+    function(err, result) {
       console.log(err, result)
     }
   )

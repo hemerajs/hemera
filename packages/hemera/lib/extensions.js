@@ -19,7 +19,7 @@ const Errors = require('./errors')
  * @param {any} next
  * @returns
  */
-function onClientPreRequest (context, next) {
+function onClientPreRequest(context, next) {
   let pattern = context._pattern
 
   let prevCtx = context._prevContext
@@ -100,7 +100,7 @@ function onClientPreRequest (context, next) {
  *
  * @param {any} next
  */
-function onClientPostRequest (context, next) {
+function onClientPostRequest(context, next) {
   let pattern = context._pattern
   let msg = context._response.payload
 
@@ -135,7 +135,7 @@ function onClientPostRequest (context, next) {
  * @param {any} next
  * @returns
  */
-function onServerPreRequest (context, req, res, next) {
+function onServerPreRequest(context, req, res, next) {
   let m = context._decoderPipeline.run(context._request.payload, context)
 
   if (m.error) {
@@ -174,7 +174,7 @@ function onServerPreRequest (context, req, res, next) {
  * @param {any} next
  * @returns
  */
-function onServerPreRequestLoadTest (context, req, res, next) {
+function onServerPreRequestLoadTest(context, req, res, next) {
   if (context._config.load.checkPolicy) {
     const error = context._loadPolicy.check()
     if (error) {
@@ -193,13 +193,13 @@ function onServerPreRequestLoadTest (context, req, res, next) {
  * @param {any} res
  * @param {any} next
  */
-function onServerPreHandler (context, req, res, next) {
+function onServerPreHandler(context, req, res, next) {
   context.emit('serverPreHandler', context)
 
   next()
 }
 
-function onServerPreResponse (context, req, res, next) {
+function onServerPreResponse(context, req, res, next) {
   context.emit('serverPreResponse', context)
 
   next()

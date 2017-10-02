@@ -35,7 +35,7 @@ hemera.ready(() => {
       cmd: 'add',
       a: 'ddd'
     },
-    function (err, resp) {
+    function(err, resp) {
       this.log.debug(err instanceof joiErrors.PreValidationError)
     }
   )

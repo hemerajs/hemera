@@ -13,19 +13,19 @@ hemera.ready(() => {
       topic: 'a',
       cmd: 'a'
     },
-    function (resp, cb) {
+    function(resp, cb) {
       this.act(
         {
           topic: 'b',
           cmd: 'b'
         },
-        function (err, resp) {
+        function(err, resp) {
           this.act(
             {
               topic: 'c',
               cmd: 'c'
             },
-            function (err, resp) {
+            function(err, resp) {
               cb(err, resp)
             }
           )
@@ -49,13 +49,13 @@ hemera.ready(() => {
       topic: 'c',
       cmd: 'c'
     },
-    function (resp, cb) {
+    function(resp, cb) {
       this.act(
         {
           topic: 'b',
           cmd: 'b'
         },
-        function (err, resp) {
+        function(err, resp) {
           cb(err, resp)
         }
       )
@@ -67,7 +67,7 @@ hemera.ready(() => {
       topic: 'a',
       cmd: 'a'
     },
-    function (err, resp) {
+    function(err, resp) {
       this.log.info('Error name: %s', err.name)
       this.log.info('Error message: %s', err.message)
       this.log.info('Custom error data: test=%s', err.test)

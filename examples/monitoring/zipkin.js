@@ -21,7 +21,7 @@ hemera.ready(() => {
       topic: 'search',
       cmd: 'friends'
     },
-    function (req, cb) {
+    function(req, cb) {
       cb(null, true)
     }
   )
@@ -31,7 +31,7 @@ hemera.ready(() => {
       topic: 'email',
       cmd: 'send'
     },
-    function (req, cb) {
+    function(req, cb) {
       cb(null, true)
     }
   )
@@ -41,7 +41,7 @@ hemera.ready(() => {
       topic: 'account',
       cmd: 'delete'
     },
-    function (req, cb) {
+    function(req, cb) {
       cb(null, true)
     }
   )
@@ -51,7 +51,7 @@ hemera.ready(() => {
       topic: 'profile',
       cmd: 'get'
     },
-    function (req, cb) {
+    function(req, cb) {
       this.delegate$.query = 'SELECT FROM User;'
       cb(null, true)
     }
@@ -62,13 +62,13 @@ hemera.ready(() => {
       topic: 'auth',
       cmd: 'login'
     },
-    function (req, cb) {
-      this.act('topic:profile,cmd:get', function () {
-        this.act('topic:email,cmd:send', function () {
+    function(req, cb) {
+      this.act('topic:profile,cmd:get', function() {
+        this.act('topic:email,cmd:send', function() {
           this.act('topic:account,cmd:delete', cb)
         })
       })
-      this.act('topic:email,cmd:send', function (err, result) {
+      this.act('topic:email,cmd:send', function(err, result) {
         this.act('topic:search,cmd:friends')
       })
     }

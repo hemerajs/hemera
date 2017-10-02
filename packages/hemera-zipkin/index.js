@@ -19,14 +19,14 @@ exports.options = {
   name: require('./package.json')
 }
 
-function hemeraZipkin (hemera, opts, done) {
+function hemeraZipkin(hemera, opts, done) {
   const config = Hoek.applyToDefaults(defaultConfig, opts || {})
   const Tracer = new Zipkin(config)
 
   /**
    * Server send
    */
-  hemera.on('serverPreResponse', function (ctx) {
+  hemera.on('serverPreResponse', function(ctx) {
     let meta = {
       service: ctx._topic,
       name: ctx.trace$.method
@@ -61,7 +61,7 @@ function hemeraZipkin (hemera, opts, done) {
   /**
    * Server received
    */
-  hemera.on('serverPreRequest', function (ctx) {
+  hemera.on('serverPreRequest', function(ctx) {
     let meta = {
       service: ctx._topic,
       name: ctx.trace$.method
@@ -105,7 +105,7 @@ function hemeraZipkin (hemera, opts, done) {
   /**
    * Client send
    */
-  hemera.on('clientPreRequest', function (ctx) {
+  hemera.on('clientPreRequest', function(ctx) {
     let meta = {
       name: ctx.trace$.method
     }
@@ -154,7 +154,7 @@ function hemeraZipkin (hemera, opts, done) {
   /**
    * Client received
    */
-  hemera.on('clientPostRequest', function (ctx) {
+  hemera.on('clientPostRequest', function(ctx) {
     let meta = {
       name: ctx.trace$.method
     }

@@ -7,7 +7,7 @@ exports.options = {
   name: require('./package.json').name
 }
 
-function hemeraStats (hemera, opts, done) {
+function hemeraStats(hemera, opts, done) {
   const topic = 'stats'
 
   hemera.add(
@@ -16,7 +16,7 @@ function hemeraStats (hemera, opts, done) {
       cmd: 'processInfo',
       pubsub$: true
     },
-    function (resp, cb) {
+    function(resp, cb) {
       const info = {
         app: hemera.config.name,
         eventLoopDelay: hemera.load.eventLoopDelay,
@@ -37,7 +37,7 @@ function hemeraStats (hemera, opts, done) {
       cmd: 'registeredActions',
       pubsub$: true
     },
-    function (resp, cb) {
+    function(resp, cb) {
       const info = {
         app: hemera.config.name
       }

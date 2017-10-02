@@ -8,7 +8,7 @@ exports.options = {
   payloadValidator: 'hemera-joi'
 }
 
-function hemeraSlackbot (hemera, opts, done) {
+function hemeraSlackbot(hemera, opts, done) {
   const topic = 'slackbot'
 
   const bot = new SlackBot({
@@ -57,7 +57,7 @@ function hemeraSlackbot (hemera, opts, done) {
         cmd: method,
         params: Joi.array().default([])
       },
-      function (req, reply) {
+      function(req, reply) {
         bot[method]
           .apply(bot, req.params)
           .then(resp => reply(null, resp))
@@ -71,12 +71,12 @@ function hemeraSlackbot (hemera, opts, done) {
       topic,
       cmd: 'subscribe'
     },
-    function (req, reply) {
+    function(req, reply) {
       if (subscribed) {
         return reply(null, true)
       }
 
-      bot.on('message', function (data) {
+      bot.on('message', function(data) {
         // all ingoing events https://api.slack.com/rtm
         reply(null, data)
       })
@@ -87,7 +87,7 @@ function hemeraSlackbot (hemera, opts, done) {
     }
   )
 
-  bot.on('start', function () {
+  bot.on('start', function() {
     hemera.log.debug('Websocket connection open!')
     wsConnected = true
     done()

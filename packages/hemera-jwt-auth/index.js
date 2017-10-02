@@ -13,14 +13,14 @@ exports.options = {
   }
 }
 
-function hemeraJwtAuth (hemera, opts, done) {
+function hemeraJwtAuth(hemera, opts, done) {
   const JwtError = hemera.createError('JwtError')
 
   hemera.decorate('jwtErrors', {
     JwtError
   })
 
-  hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
+  hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
     // Get auth from server method
     const auth = ctx._actMeta.schema.auth$
 
@@ -66,7 +66,7 @@ function hemeraJwtAuth (hemera, opts, done) {
   done()
 }
 
-function isSubset (scope, subset) {
+function isSubset(scope, subset) {
   if (!scope) {
     return false
   }

@@ -9,7 +9,7 @@ exports.options = {
   payloadValidator: 'hemera-joi'
 }
 
-function hemeraRabbitmq (hemera, opts, done) {
+function hemeraRabbitmq(hemera, opts, done) {
   const handlers = []
   const Joi = hemera.joi
 
@@ -17,7 +17,7 @@ function hemeraRabbitmq (hemera, opts, done) {
     handlers
   })
 
-  Rabbit.configure(opts.rabbitmq).then(function () {
+  Rabbit.configure(opts.rabbitmq).then(function() {
     // Sends all unhandled messages back to the queue.
     Rabbit.nackUnhandled()
 
@@ -25,12 +25,12 @@ function hemeraRabbitmq (hemera, opts, done) {
     // that nacks the message on an error
     Rabbit.nackOnError()
 
-    function consume (type, cb) {
+    function consume(type, cb) {
       if (handlers[type]) {
         return
       }
 
-      const handler = Rabbit.handle(type, function (msg) {
+      const handler = Rabbit.handle(type, function(msg) {
         hemera.act(
           {
             topic: `rabbitmq.${type}`,
@@ -58,7 +58,7 @@ function hemeraRabbitmq (hemera, opts, done) {
         cmd: 'subscribe',
         type: Joi.string().required()
       },
-      function (req, cb) {
+      function(req, cb) {
         consume(req.type, cb)
       }
     )
@@ -71,12 +71,12 @@ function hemeraRabbitmq (hemera, opts, done) {
         type: Joi.string().required(),
         data: Joi.object().required()
       },
-      function (req, cb) {
+      function(req, cb) {
         Rabbit.publish(req.exchange, {
           type: req.type,
           body: req.data
         })
-          .then(function () {
+          .then(function() {
             cb(null, true)
           })
           .catch(cb)

@@ -8,14 +8,14 @@ exports.options = {
   name: require('./package.json').name
 }
 
-function hemeraParambulator (hemera, opts, done) {
+function hemeraParambulator(hemera, opts, done) {
   const PreValidationError = hemera.createError('PreValidationError')
 
   hemera.decorate('parambulatorErrors', {
     PreValidationError
   })
 
-  hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
+  hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
     let plugin = ctx._actMeta.plugin
     let schema = ctx._actMeta.schema
     let pattern = req.payload.pattern

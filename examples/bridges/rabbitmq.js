@@ -53,13 +53,13 @@ hemera.ready(() => {
       topic: 'rabbitmq.publisher.message',
       cmd: 'subscribe'
     },
-    function (req, cb) {
+    function(req, cb) {
       this.log.info(req, 'Data')
       cb()
     }
   )
 
-  setTimeout(function () {
+  setTimeout(function() {
     // create subscriber
     hemera.act(
       {
@@ -67,7 +67,7 @@ hemera.ready(() => {
         cmd: 'subscribe',
         type: 'publisher.message'
       },
-      function (err, resp) {
+      function(err, resp) {
         this.log.info(resp, 'Subscriber ACK')
       }
     )
@@ -84,7 +84,7 @@ hemera.ready(() => {
           amount: 50
         }
       },
-      function (err, resp) {
+      function(err, resp) {
         this.log.info(resp, 'Publish ACK')
       }
     )

@@ -27,7 +27,7 @@ hemera.ready(() => {
         name: 'peter'
       }
     },
-    function (err, resp) {
+    function(err, resp) {
       this.log.info(resp, 'User inserted!')
     }
   )
@@ -39,7 +39,7 @@ hemera.ready(() => {
       collection: 'users',
       maxMessages$: -1
     },
-    function (err, resp) {
+    function(err, resp) {
       this.log.info(resp, 'Change detected!')
     }
   )
@@ -54,7 +54,7 @@ hemera.ready(() => {
           name: 'peter'
         }
       },
-      function (err, resp) {
+      function(err, resp) {
         this.log.info(resp, 'User inserted!')
       }
     )

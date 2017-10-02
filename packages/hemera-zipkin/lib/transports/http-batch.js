@@ -11,7 +11,7 @@ const DEFAULT_BATCH_TIMEOUT = 1000
 const queue = []
 let timer = null
 
-function send (body, options) {
+function send(body, options) {
   clearTimeout(timer)
   timer = null
 
@@ -25,7 +25,7 @@ function send (body, options) {
     {
       payload: body
     },
-    function sent (err, response, body) {
+    function sent(err, response, body) {
       if (!options.debug) {
         return
       }
@@ -49,17 +49,17 @@ function send (body, options) {
   )
 }
 
-function flush (options) {
+function flush(options) {
   send(queue.splice(0, queue.length), options)
 }
 
-function httpBatchTransport (data, options) {
+function httpBatchTransport(data, options) {
   queue.push(data)
 
   if (queue.length >= (options.batchSize || DEFAULT_BATCH_SIZE)) {
     send(queue.splice(0, queue.length), options)
   } else if (!timer) {
-    timer = setTimeout(function () {
+    timer = setTimeout(function() {
       flush(options)
     }, options.batchTimeout || DEFAULT_BATCH_TIMEOUT)
   }

@@ -8,8 +8,8 @@ exports.options = {
   name: require('./package.json').name
 }
 
-function hemeraSnappy (hemera, opts, done) {
-  function uncompress (msg) {
+function hemeraSnappy(hemera, opts, done) {
+  function uncompress(msg) {
     try {
       return {
         value: SnappyJS.uncompress(msg)
@@ -21,7 +21,7 @@ function hemeraSnappy (hemera, opts, done) {
     }
   }
 
-  function compress (msg) {
+  function compress(msg) {
     try {
       return {
         value: SnappyJS.compress(Buffer.from(msg))

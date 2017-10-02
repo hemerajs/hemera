@@ -12,7 +12,7 @@ exports.options = {
   }
 }
 
-function hemeraEmail (hemera, opts, done) {
+function hemeraEmail(hemera, opts, done) {
   const topic = 'mail'
   const Joi = hemera.joi
   const transporter = Nodemailer.createTransport(opts.transport)
@@ -33,7 +33,7 @@ function hemeraEmail (hemera, opts, done) {
         })
         .required()
     },
-    function (req, reply) {
+    function(req, reply) {
       transporter.sendMail(req.message, (err, info) => {
         if (err) {
           this.log.error(err, 'Could not send email!')

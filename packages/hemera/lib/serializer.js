@@ -9,11 +9,11 @@
  *
  */
 
-function nanoToMsString (val) {
+function nanoToMsString(val) {
   return (val / 1e6).toFixed(2) + 'ms'
 }
 
-function inbound (ctx) {
+function inbound(ctx) {
   return {
     id: ctx.request$.id,
     duration: nanoToMsString(ctx.trace$.duration),
@@ -21,7 +21,7 @@ function inbound (ctx) {
   }
 }
 
-function outbound (ctx) {
+function outbound(ctx) {
   return {
     id: ctx._message.request.id,
     pattern: ctx.trace$.method

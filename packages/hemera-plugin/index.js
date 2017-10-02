@@ -2,7 +2,7 @@
 
 const semver = require('semver')
 
-function plugin (fn, version) {
+function plugin(fn, version) {
   if (typeof fn !== 'function') {
     throw new TypeError(
       `hemera-plugin expects a function, instead got a '${typeof fn}'`

@@ -20,7 +20,7 @@ hemera.ready(() => {
       cmd: 'query',
       query: 'SELECT * FROM default'
     },
-    function (err, resp) {
+    function(err, resp) {
       this.log.info(resp, 'Query result')
     }
   )

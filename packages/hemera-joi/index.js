@@ -8,7 +8,7 @@ exports.options = {
   name: require('./package.json').name
 }
 
-function hemeraJoi (hemera, opts, done) {
+function hemeraJoi(hemera, opts, done) {
   const PreValidationError = hemera.createError('PreValidationError')
   const PostValidationError = hemera.createError('PostValidationError')
   const pluginName = exports.options.name
@@ -19,7 +19,7 @@ function hemeraJoi (hemera, opts, done) {
     PostValidationError
   })
 
-  hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
+  hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
     let plugin = ctx._actMeta.plugin
     let schema = ctx._actMeta.schema
     let pattern = req.payload.pattern
@@ -61,7 +61,7 @@ function hemeraJoi (hemera, opts, done) {
     )
   })
 
-  hemera.ext('onServerPreResponse', function (ctx, req, res, next) {
+  hemera.ext('onServerPreResponse', function(ctx, req, res, next) {
     // actMeta can be null when pattern was not found
     if (!ctx._actMeta) {
       return next()

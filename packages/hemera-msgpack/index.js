@@ -8,8 +8,8 @@ exports.options = {
   name: require('./package.json').name
 }
 
-function hemeraMsgpack (hemera, opts, done) {
-  function decode (msg) {
+function hemeraMsgpack(hemera, opts, done) {
+  function decode(msg) {
     try {
       return {
         value: msgpack.decode(msg)
@@ -21,7 +21,7 @@ function hemeraMsgpack (hemera, opts, done) {
     }
   }
 
-  function encode (msg) {
+  function encode(msg) {
     try {
       return {
         value: msgpack.encode(msg)

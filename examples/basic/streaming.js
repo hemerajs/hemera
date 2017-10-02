@@ -28,7 +28,7 @@ hemera.ready(() => {
       cmd: 'add',
       maxMessages$: -1
     },
-    function (err, resp) {
+    function(err, resp) {
       results.push(resp)
       if (results.length === 1000) {
         console.log('Received 1000 Messages!')

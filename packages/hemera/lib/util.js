@@ -29,7 +29,7 @@ class Util {
    *
    * @memberof Util
    */
-  static natsWildcardToRegex (subject) {
+  static natsWildcardToRegex(subject) {
     let hasTokenWildcard = subject.indexOf('*') > -1
     let hasFullWildcard = subject.indexOf('>') > -1
 
@@ -49,9 +49,9 @@ class Util {
    * @param {any} handler
    * @memberof Util
    */
-  static toPromiseFact (handler) {
+  static toPromiseFact(handler) {
     if (Util.isAsyncFunction(handler)) {
-      return function () {
+      return function() {
         // -1 because (req, res, next)
         const next = arguments[arguments.length - 1]
         return handler
@@ -68,7 +68,7 @@ class Util {
    * Fast ID generator: e7 https://jsperf.com/uuid-generator-opt/18
    * @memberOf Util
    */
-  static randomId () {
+  static randomId() {
     const d0 = (Math.random() * 0xffffffff) | 0
     const d1 = (Math.random() * 0xffffffff) | 0
     const d2 = (Math.random() * 0xffffffff) | 0
@@ -103,13 +103,13 @@ class Util {
    *
    * @memberOf Util
    */
-  static eachSeries (array, method, callback) {
+  static eachSeries(array, method, callback) {
     if (!array.length) {
       callback()
     } else {
       let i = 0
-      const iterate = function () {
-        const done = function (err) {
+      const iterate = function() {
+        const done = function(err) {
           if (err) {
             callback(err)
           } else {
@@ -136,7 +136,7 @@ class Util {
    *
    * @memberOf Util
    */
-  static nowHrTime () {
+  static nowHrTime() {
     const hrtime = process.hrtime()
     return +hrtime[0] * 1e9 + +hrtime[1]
   }
@@ -149,10 +149,10 @@ class Util {
    *
    * @memberOf Util
    */
-  static extractSchema (obj) {
+  static extractSchema(obj) {
     if (obj === null) return obj
 
-    return _.pickBy(obj, function (val, prop) {
+    return _.pickBy(obj, function(val, prop) {
       return _.isObject(val)
     })
   }
@@ -163,10 +163,10 @@ class Util {
    *
    * @memberOf Util
    */
-  static cleanPattern (obj) {
+  static cleanPattern(obj) {
     if (obj === null) return obj
 
-    return _.pickBy(obj, function (val, prop) {
+    return _.pickBy(obj, function(val, prop) {
       return !_.includes(prop, '$') && !_.isObject(val)
     })
   }
@@ -178,10 +178,10 @@ class Util {
    *
    * @memberOf Util
    */
-  static cleanFromSpecialVars (obj) {
+  static cleanFromSpecialVars(obj) {
     if (obj === null) return obj
 
-    return _.pickBy(obj, function (val, prop) {
+    return _.pickBy(obj, function(val, prop) {
       return !_.includes(prop, '$')
     })
   }
@@ -192,14 +192,14 @@ class Util {
    *
    * @memberOf Util
    */
-  static pattern (args) {
+  static pattern(args) {
     if (_.isString(args)) {
       return args
     }
 
     args = args || {}
     let sb = []
-    _.each(args, function (v, k) {
+    _.each(args, function(v, k) {
       if (!~k.indexOf('$') && !_.isFunction(v) && !_.isObject(v)) {
         sb.push(k + ':' + v)
       }
@@ -218,7 +218,7 @@ class Util {
    * @returns
    * @memberof Util
    */
-  static isAsyncFunction (obj) {
+  static isAsyncFunction(obj) {
     var constructor = obj.constructor
     if (!constructor) {
       return false

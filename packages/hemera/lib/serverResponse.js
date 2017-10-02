@@ -22,7 +22,7 @@ class ServerResponse {
    *
    * @memberOf ServerResponse
    */
-  constructor () {
+  constructor() {
     this._response = {}
   }
 
@@ -33,7 +33,7 @@ class ServerResponse {
    * @type {*}
    * @memberOf ServerResponse
    */
-  get payload () {
+  get payload() {
     return this._response.value
   }
 
@@ -43,7 +43,7 @@ class ServerResponse {
    *
    * @memberOf ServerResponse
    */
-  set payload (value) {
+  set payload(value) {
     this._response.value = value
   }
 
@@ -53,7 +53,7 @@ class ServerResponse {
    *
    * @memberOf ServerResponse
    */
-  set error (error) {
+  set error(error) {
     if (error instanceof SuperError) {
       this._response.error = error.rootCause || error.cause || error
     } else {
@@ -68,7 +68,7 @@ class ServerResponse {
    * @type {*}
    * @memberOf ServerResponse
    */
-  get error () {
+  get error() {
     return this._response.error
   }
 }

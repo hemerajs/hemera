@@ -20,7 +20,7 @@ class ServerRequest {
    *
    * @memberOf ServerRequest
    */
-  constructor (payload) {
+  constructor(payload) {
     this._request = {}
     this._locals = {}
     this.payload = payload
@@ -33,7 +33,7 @@ class ServerRequest {
    * @type {*}
    * @memberOf ServerRequest
    */
-  get payload () {
+  get payload() {
     return this._request.value
   }
 
@@ -44,7 +44,7 @@ class ServerRequest {
    *
    * @memberof ServerRequest
    */
-  get locals () {
+  get locals() {
     return this._locals
   }
 
@@ -55,7 +55,7 @@ class ServerRequest {
    * @type {*}
    * @memberOf ServerRequest
    */
-  get error () {
+  get error() {
     return this._request.error
   }
 
@@ -65,7 +65,7 @@ class ServerRequest {
    *
    * @memberOf ServerRequest
    */
-  set payload (value) {
+  set payload(value) {
     this._request.value = value
   }
 
@@ -75,7 +75,7 @@ class ServerRequest {
    *
    * @memberOf ServerRequest
    */
-  set error (error) {
+  set error(error) {
     this._request.error = error
   }
 }

@@ -17,7 +17,7 @@ const Errors = require('./errors')
  * @class Extension
  */
 class Ext {
-  constructor () {
+  constructor() {
     this._stack = []
     this._types = [
       'onClientPreRequest',
@@ -42,7 +42,7 @@ class Ext {
    *
    * @memberof Extension
    */
-  _add (type, handler) {
+  _add(type, handler) {
     if (this._types.indexOf(type) === -1) {
       let error = new Errors.HemeraError(Constants.INVALID_EXTENSION_TYPE, {
         type
@@ -63,7 +63,7 @@ class Ext {
    *
    * @memberOf Extension
    */
-  add (type, handler) {
+  add(type, handler) {
     if (_.isArray(handler)) {
       handler.forEach(h => this._add(type, h))
     } else {

@@ -25,7 +25,7 @@ class GracefulShutdown {
    * Creates an instance of GracefulShutdown.
    * @memberof GracefulShutdown
    */
-  constructor (logger) {
+  constructor(logger) {
     this.logger = logger
     this.process = null
     this.handlers = []
@@ -39,7 +39,7 @@ class GracefulShutdown {
    * @param {any} fn
    * @memberof GracefulShutdown
    */
-  addHandler (fn) {
+  addHandler(fn) {
     if (typeof fn !== 'function') {
       throw new Error('Expected a function but got a ' + typeof fn)
     }
@@ -54,7 +54,7 @@ class GracefulShutdown {
    * @param {any} signal
    * @memberof GracefulShutdown
    */
-  completed (err, signal) {
+  completed(err, signal) {
     if (err) {
       this.logger.error({ err, signal }, 'process terminated')
       this.process.exit(1)
@@ -71,7 +71,7 @@ class GracefulShutdown {
    * @param {any} timeout
    * @memberof GracefulShutdown
    */
-  terminateAfterTimeout (signal, timeout) {
+  terminateAfterTimeout(signal, timeout) {
     setTimeout(() => {
       this.logger.error({ signal, timeout }, 'terminate process after timeout')
       this.process.exit(1)
@@ -84,7 +84,7 @@ class GracefulShutdown {
    * @param {any} signal
    * @memberof GracefulShutdown
    */
-  shutdown (signal) {
+  shutdown(signal) {
     parallel(null, this.handlers, signal, err => this.completed(err, signal))
   }
 
@@ -94,7 +94,7 @@ class GracefulShutdown {
    * @param {any} signal
    * @memberof GracefulShutdown
    */
-  sigHandler (signal) {
+  sigHandler(signal) {
     this.terminateAfterTimeout(signal, this.timeout)
     this.shutdown(signal)
   }
@@ -104,7 +104,7 @@ class GracefulShutdown {
    *
    * @memberof GracefulShutdown
    */
-  init () {
+  init() {
     this.signals.forEach(signal => {
       if (this.process.listenerCount(signal) > 0) {
         this.logger.warn(`${signal} handler was already registered`)

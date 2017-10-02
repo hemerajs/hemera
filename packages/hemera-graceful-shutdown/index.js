@@ -8,7 +8,7 @@ exports.options = {
   name: require('./package.json').name
 }
 
-function hemeraGracefulShutdown (hemera, opts, done) {
+function hemeraGracefulShutdown(hemera, opts, done) {
   const gs = new GracefulShutdown()
   gs.process = process
   gs.logger = hemera.log

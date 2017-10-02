@@ -13,7 +13,7 @@ exports.options = {
   }
 }
 
-function hemeraRethinkdbStore (hemera, opts, done) {
+function hemeraRethinkdbStore(hemera, opts, done) {
   const topic = 'rethinkdb-store'
   const Joi = hemera.joi
 
@@ -42,7 +42,7 @@ function hemeraRethinkdbStore (hemera, opts, done) {
       cmd: 'createDatabase',
       databaseName: Joi.string().default(opts.rethinkdb.db)
     },
-    function (req, reply) {
+    function(req, reply) {
       return rethinkdb.dbCreate(req.databaseName).run(reply)
     }
   )
@@ -53,7 +53,7 @@ function hemeraRethinkdbStore (hemera, opts, done) {
       cmd: 'removeDatabase',
       databaseName: Joi.string().default(opts.rethinkdb.db)
     },
-    function (req, reply) {
+    function(req, reply) {
       return rethinkdb.dbDrop(req.databaseName).run(reply)
     }
   )
@@ -65,7 +65,7 @@ function hemeraRethinkdbStore (hemera, opts, done) {
       collection: Joi.string().required(),
       databaseName: Joi.string().default(opts.rethinkdb.db)
     },
-    function (req, reply) {
+    function(req, reply) {
       return rethinkdb
         .db(req.databaseName)
         .tableCreate(req.collection, { primaryKey: 'id' })
@@ -80,7 +80,7 @@ function hemeraRethinkdbStore (hemera, opts, done) {
       collection: Joi.string().required(),
       databaseName: Joi.string().default(opts.rethinkdb.db)
     },
-    function (req, reply) {
+    function(req, reply) {
       rethinkdb
         .db(req.databaseName)
         .tableDrop(req.collection)
@@ -95,7 +95,7 @@ function hemeraRethinkdbStore (hemera, opts, done) {
       collection: Joi.string().required(),
       databaseName: Joi.string().default(opts.rethinkdb.db)
     },
-    function (req, reply) {
+    function(req, reply) {
       rethinkdb
         .db(req.databaseName)
         .table(req.collection)
@@ -132,7 +132,7 @@ function hemeraRethinkdbStore (hemera, opts, done) {
         })
         .default({})
     },
-    function (req, reply) {
+    function(req, reply) {
       let cursor = rethinkdb
         .db(req.databaseName)
         .table(req.collection)
@@ -173,7 +173,7 @@ function hemeraRethinkdbStore (hemera, opts, done) {
    * Store interface
    */
 
-  hemera.add(StorePattern.create(topic), function (req, reply) {
+  hemera.add(StorePattern.create(topic), function(req, reply) {
     const databaseName = req.databaseName || opts.rethinkdb.db
     rethinkdb
       .db(databaseName)
@@ -182,7 +182,7 @@ function hemeraRethinkdbStore (hemera, opts, done) {
       .run(reply)
   })
 
-  hemera.add(StorePattern.update(topic), function (req, reply) {
+  hemera.add(StorePattern.update(topic), function(req, reply) {
     const databaseName = req.databaseName || opts.rethinkdb.db
     rethinkdb
       .db(databaseName)
@@ -192,7 +192,7 @@ function hemeraRethinkdbStore (hemera, opts, done) {
       .run(reply)
   })
 
-  hemera.add(StorePattern.updateById(topic), function (req, reply) {
+  hemera.add(StorePattern.updateById(topic), function(req, reply) {
     const databaseName = req.databaseName || opts.rethinkdb.db
     rethinkdb
       .db(databaseName)
@@ -202,7 +202,7 @@ function hemeraRethinkdbStore (hemera, opts, done) {
       .run(reply)
   })
 
-  hemera.add(StorePattern.remove(topic), function (req, reply) {
+  hemera.add(StorePattern.remove(topic), function(req, reply) {
     const databaseName = req.databaseName || opts.rethinkdb.db
     rethinkdb
       .db(databaseName)
@@ -212,7 +212,7 @@ function hemeraRethinkdbStore (hemera, opts, done) {
       .run(reply)
   })
 
-  hemera.add(StorePattern.removeById(topic), function (req, reply) {
+  hemera.add(StorePattern.removeById(topic), function(req, reply) {
     const databaseName = req.databaseName || opts.rethinkdb.db
     rethinkdb
       .db(databaseName)
@@ -222,7 +222,7 @@ function hemeraRethinkdbStore (hemera, opts, done) {
       .run(reply)
   })
 
-  hemera.add(StorePattern.replace(topic), function (req, reply) {
+  hemera.add(StorePattern.replace(topic), function(req, reply) {
     const databaseName = req.databaseName || opts.rethinkdb.db
     rethinkdb
       .db(databaseName)
@@ -232,7 +232,7 @@ function hemeraRethinkdbStore (hemera, opts, done) {
       .run(reply)
   })
 
-  hemera.add(StorePattern.replaceById(topic), function (req, reply) {
+  hemera.add(StorePattern.replaceById(topic), function(req, reply) {
     const databaseName = req.databaseName || opts.rethinkdb.db
     rethinkdb
       .db(databaseName)
@@ -242,7 +242,7 @@ function hemeraRethinkdbStore (hemera, opts, done) {
       .run(reply)
   })
 
-  hemera.add(StorePattern.findById(topic), function (req, reply) {
+  hemera.add(StorePattern.findById(topic), function(req, reply) {
     const databaseName = req.databaseName || opts.rethinkdb.db
     rethinkdb
       .db(databaseName)
@@ -251,7 +251,7 @@ function hemeraRethinkdbStore (hemera, opts, done) {
       .run(reply)
   })
 
-  hemera.add(StorePattern.find(topic), function (req, reply) {
+  hemera.add(StorePattern.find(topic), function(req, reply) {
     const databaseName = req.databaseName || opts.rethinkdb.db
     let cursor = rethinkdb
       .db(databaseName)

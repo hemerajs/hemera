@@ -14,7 +14,7 @@ exports.options = {
   payloadValidator: 'hemera-joi'
 }
 
-function hemeraControlplane (hemera, opts, done) {
+function hemeraControlplane(hemera, opts, done) {
   const topic = 'controlplane'
   const Joi = hemera.joi
 
@@ -48,7 +48,7 @@ function hemeraControlplane (hemera, opts, done) {
     process.send({ plugin: 'controlplane', event: 'online', pid: process.pid })
   }
 
-  function removeWorkerByPid (workers, pid) {
+  function removeWorkerByPid(workers, pid) {
     const workerIndex = workers.findIndex(p => {
       return p.pid === pid
     })
@@ -64,7 +64,7 @@ function hemeraControlplane (hemera, opts, done) {
       cmd: 'scaleUp',
       service: opts.service
     },
-    function (req, reply) {
+    function(req, reply) {
       // limit forks by count of processors
       if (workers.length < cpuCount) {
         // script must be passed as second argument
@@ -100,7 +100,7 @@ function hemeraControlplane (hemera, opts, done) {
       cmd: 'scaleDown',
       service: opts.service
     },
-    function (req, reply) {
+    function(req, reply) {
       const worker = workers.shift()
       if (worker) {
         // wait until process was terminated
@@ -137,7 +137,7 @@ function hemeraControlplane (hemera, opts, done) {
       service: opts.service,
       pid: Joi.number().required()
     },
-    function (req, reply) {
+    function(req, reply) {
       const workerIndex = workers.findIndex(p => {
         return p.pid === req.pid
       })
@@ -181,9 +181,9 @@ function hemeraControlplane (hemera, opts, done) {
       cmd: 'down',
       service: opts.service
     },
-    function (req, reply) {
+    function(req, reply) {
       const self = this
-      function kill (workers) {
+      function kill(workers) {
         const worker = workers.shift()
 
         if (worker) {
@@ -228,7 +228,7 @@ function hemeraControlplane (hemera, opts, done) {
       cmd: 'list',
       service: opts.service
     },
-    function (req, reply) {
+    function(req, reply) {
       const list = workers.map(item => item.pid)
       reply(null, { success: true, list })
     }
