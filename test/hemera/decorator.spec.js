@@ -27,6 +27,37 @@ describe('Root Decorator', function() {
     })
   })
 
+  it('Should throw error because could not resolve all decorate deps', function(
+    done
+  ) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      try {
+        hemera.decorate('b', 1, ['a'])
+      } catch (err) {
+        expect(err.message).to.be.equals(
+          HemeraConstants.MISSING_DECORATE_DEPENDENCY
+        )
+        hemera.close(done)
+      }
+    })
+  })
+
+  it('Should satisfy all decorate deps', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.decorate('a', 2)
+      hemera.decorate('b', 1, ['a'])
+      hemera.close(done)
+    })
+  })
+
   it('Should not be possible to override an decoration', function(done) {
     const nats = require('nats').connect(authUrl)
 
@@ -66,5 +97,4 @@ describe('Root Decorator', function() {
       hemera2.close(done)
     })
   })
-
 })

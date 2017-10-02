@@ -203,11 +203,10 @@ hemera.setOption("payloadValidator", "hemera-joi")
 </code>
                     </pre>
                     <h4 class="section-h4">Shared data</h4>
-                    <p>Sometimes it is useful to share data across plugins. This data can be accessed from all other plugins
-                        which were initialized after that.</p>
+                    <p>Sometimes it is useful to share data across plugins. This data can be accessed from all other plugins. You can also declare the dependencies of your function.</p>
                     <pre>
 <code class="javascript">
-hemera.decorate("magicNumber", 42)
+hemera.decorate("magicNumber", fn, ['dep1', 'dep2'])
 </code>
                     </pre>
                 </div>

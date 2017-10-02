@@ -86,10 +86,62 @@ describe('Plugin interface', function() {
 
     hemera.ready(() => {
       expect(hemera.plugins).to.be.an.object()
-      expect(Object.keys(hemera.plugins)).to.be.equals([ 'core', 'myPlugin' ])
+      expect(Object.keys(hemera.plugins)).to.be.equals(['core', 'myPlugin'])
       expect(hemera.plugins.core).to.be.exists()
       expect(hemera.plugins.myPlugin).to.be.exists()
       expect(hemera.plugins.myPlugin instanceof Hemera).to.be.equals(true)
+      hemera.close(done)
+    })
+  })
+
+  it('Should throw error because could not resolve all decorate deps', function(
+    done
+  ) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let plugin = function(hemera, options, next) {
+      try {
+        hemera.decorate('b', 1, ['a'])
+      } catch (err) {
+        expect(err.message).to.exists(
+          HemeraConstants.MISSING_DECORATE_DEPENDENCY
+        )
+        hemera.close(done)
+      }
+      next()
+    }
+
+    hemera.use({
+      plugin: plugin,
+      options: {
+        name: 'myPlugin'
+      }
+    })
+
+    hemera.ready()
+  })
+
+  it('Should satisfy all decorate deps', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let plugin = function(hemera, options, next) {
+      hemera.decorate('a', 2)
+      hemera.decorate('b', 1, ['a'])
+      next()
+    }
+
+    hemera.use({
+      plugin: plugin,
+      options: {
+        name: 'myPlugin'
+      }
+    })
+
+    hemera.ready(() => {
       hemera.close(done)
     })
   })

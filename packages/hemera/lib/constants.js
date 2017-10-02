@@ -50,6 +50,7 @@ module.exports = {
   PUB_CALLBACK_REDUNDANT: 'Specify a callback as publisher is redundant',
   INVALID_EXTENSION_TYPE: 'Invalid extension type',
   PLUGIN_NAME_REQUIRED: 'Plugin name is required',
+  MISSING_DECORATE_DEPENDENCY: 'Missing decorate dependency',
   DECORATION_ALREADY_DEFINED: 'Decoration has been already added',
   GRACEFULLY_SHUTDOWN: 'Gracefully shutdown',
   ACT_PATTERN_REQUIRED: 'Pattern is required to start an act call',
