@@ -105,7 +105,7 @@ class Hemera extends EventEmitter {
       core: this
     }
 
-    // create reference to root hemera instance
+    // keep reference to root hemera instance
     this._root = this
 
     this._encoderPipeline = new CodecPipeline().add(DefaultEncoder.encode)
