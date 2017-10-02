@@ -5,26 +5,32 @@ const SafeStringify = require('nats-hemera/lib/encoder').encode
 const SafeParse = require('nats-hemera/lib/decoder').decode
 const Nats = require('node-nats-streaming')
 
-exports.plugin = Hp(function hemeraNatsStreaming (options, next) {
-  const hemera = this
+exports.plugin = Hp(hemeraNatsStreaming, '>=1.5.0')
+exports.options = {
+  name: require('./package.json').name,
+  payloadValidator: 'hemera-joi',
+  opts: {} // object with NATS/STAN options
+}
+
+function hemeraNatsStreaming (hemera, opts, done) {
   const topic = 'nats-streaming'
-  const Joi = hemera.exposition['hemera-joi'].joi
+  const Joi = hemera.joi
   const DuplicateSubscriberError = hemera.createError('DuplicateSubscriber')
   const ParsingError = hemera.createError('ParsingError')
   const NotAvailableError = hemera.createError('NotAvailable')
-  const stan = Nats.connect(options.clusterId, options.clientId, options.opts)
+  const stan = Nats.connect(opts.clusterId, opts.clientId, opts.opts)
   const subList = {}
 
-  hemera.expose('errors', {
+  hemera.decorate('natsStreamingErrors', {
     DuplicateSubscriberError,
     ParsingError,
     NotAvailableError
   })
 
-  hemera.ext('onClose', (ctx, next) => {
+  hemera.ext('onClose', (ctx, done) => {
     hemera.log.debug('Stan closing ...')
     stan.close()
-    next()
+    done()
   })
 
   stan.on('error', err => {
@@ -201,15 +207,6 @@ exports.plugin = Hp(function hemeraNatsStreaming (options, next) {
       }
     )
 
-    next()
+    done()
   })
-}, '>=1.5.0')
-
-exports.options = {
-  payloadValidator: 'hemera-joi',
-  opts: {} // object with NATS/STAN options
-}
-
-exports.attributes = {
-  pkg: require('./package.json')
 }

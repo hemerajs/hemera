@@ -60,7 +60,7 @@ See [Store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store
 Because the underlying NATs transport is simply passing JSON stringified messages between actions, certain native (or extended) MongoDB types will be lost. For example, sending the following action will result in the `date` and `objectId` fields being saved as strings, not as their corresponding `Date` and `ObjectId` types.
 ```js
 hemera.ready(() => {
-  const ObjectID = hemera.exposition['hemera-mongo-store'].mongodb.ObjectID
+  const ObjectID = hemera.mongodb.client.ObjectID
   hemera.act({
     topic: 'mongo-store',
     cmd: 'create',
@@ -78,7 +78,7 @@ hemera.ready(() => {
 In order to "fix" this issue, the `mongo-store` supports the use of [MongoDB Extended JSON](https://docs.mongodb.com/manual/reference/mongodb-extended-json/). For example:
 ```js
 hemera.ready(() => {
-  const ObjectID = hemera.exposition['hemera-mongo-store'].mongodb.ObjectID
+  const ObjectID = hemera.mongodb.client.ObjectID
   hemera.act({
     topic: 'mongo-store',
     cmd: 'create',
@@ -98,7 +98,7 @@ To make things easiser, you can also use the `mongodb-extended-json` [package](h
 const EJSON = require('mongodb-extended-json');
 
 hemera.ready(() => {
-  const ObjectID = hemera.exposition['hemera-mongo-store'].mongodb.ObjectID
+  const ObjectID = hemera.mongodb.client.ObjectID
   hemera.act({
     topic: 'mongo-store',
     cmd: 'create',

@@ -139,7 +139,7 @@ hemera.use(hemeraWeb, {
   host: '127.0.0.1'
 })
 hemera.ready(() => {
-  const app = hemera.exposition['hemera-web'].express
+  const app = hemera.express
   // Define Auth layer ... use it as always
   app.use(passport.session())
 })

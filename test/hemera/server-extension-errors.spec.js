@@ -22,9 +22,7 @@ describe('Server Extension error', function() {
 
     const hemera = new Hemera(nats)
 
-    let plugin = function(options) {
-      let hemera = this
-
+    let plugin = function(hemera, options, done) {
       hemera.ext('onServerPreRequest', function(ctx, req, res, next) {
         next(new UnauthorizedError('test'))
       })
@@ -38,14 +36,15 @@ describe('Server Extension error', function() {
           cb(null, resp.a + resp.b)
         }
       )
+
+      done()
     }
 
     hemera.use({
       plugin: plugin,
-      attributes: {
+      options: {
         name: 'myPlugin'
-      },
-      options: {}
+      }
     })
 
     hemera.ready(() => {
@@ -71,9 +70,7 @@ describe('Server Extension error', function() {
 
     const hemera = new Hemera(nats)
 
-    let plugin = function(options) {
-      let hemera = this
-
+    let plugin = function(hemera, options, done) {
       hemera.ext('onServerPreRequest', function(ctx, req, res, next) {
         next(new Error('test'))
       })
@@ -87,14 +84,15 @@ describe('Server Extension error', function() {
           cb(null, resp.a + resp.b)
         }
       )
+
+      done()
     }
 
     hemera.use({
       plugin: plugin,
-      attributes: {
+      options: {
         name: 'myPlugin'
-      },
-      options: {}
+      }
     })
 
     hemera.ready(() => {
@@ -122,9 +120,7 @@ describe('Server Extension error', function() {
 
     const hemera = new Hemera(nats)
 
-    let plugin = function(options) {
-      let hemera = this
-
+    let plugin = function(hemera, options, done) {
       hemera.ext('onServerPreResponse', function(ctx, req, res, next) {
         next(new UnauthorizedError('test'))
       })
@@ -138,14 +134,15 @@ describe('Server Extension error', function() {
           cb(null, resp.a + resp.b)
         }
       )
+
+      done()
     }
 
     hemera.use({
       plugin: plugin,
-      attributes: {
+      options: {
         name: 'myPlugin'
-      },
-      options: {}
+      }
     })
 
     hemera.ready(() => {
@@ -171,9 +168,7 @@ describe('Server Extension error', function() {
 
     const hemera = new Hemera(nats)
 
-    let plugin = function(options) {
-      let hemera = this
-
+    let plugin = function(hemera, options, done) {
       hemera.ext('onServerPreResponse', function(ctx, req, res, next) {
         next(new Error('test'))
       })
@@ -187,14 +182,15 @@ describe('Server Extension error', function() {
           cb(null, resp.a + resp.b)
         }
       )
+
+      done()
     }
 
     hemera.use({
       plugin: plugin,
-      attributes: {
+      options: {
         name: 'myPlugin'
-      },
-      options: {}
+      }
     })
 
     hemera.ready(() => {

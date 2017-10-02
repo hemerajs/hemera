@@ -33,7 +33,7 @@ const hemera = new Hemera(nats, {
 
 hemera.use(HemeraStats)
 hemera.ready(() => {
-  let Joi = hemera.exposition['hemera-joi'].joi
+  let Joi = hemera.joi
 
   hemera.add({
     topic: 'math',

@@ -3,9 +3,12 @@
 const Hp = require('hemera-plugin')
 const msgpack = require('msgpack-lite')
 
-exports.plugin = Hp(function hemeraMsgpack () {
-  const hemera = this
+exports.plugin = Hp(hemeraMsgpack, '>=1.4.1')
+exports.options = {
+  name: require('./package.json').name
+}
 
+function hemeraMsgpack (hemera, opts, done) {
   function decode (msg) {
     try {
       return {
@@ -33,10 +36,6 @@ exports.plugin = Hp(function hemeraMsgpack () {
   // Will replace default encoder/decoder
   hemera.decoder.reset(decode)
   hemera.encoder.reset(encode)
-}, '>=1.4.1')
 
-exports.options = {}
-
-exports.attributes = {
-  pkg: require('./package.json')
+  done()
 }

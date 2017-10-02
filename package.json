@@ -38,7 +38,7 @@
     "ci:setup": "npm i && lerna bootstrap --npm-client=npm",
     "clean": "lerna clean",
     "release": "lerna publish -i",
-    "test": "npm run lint && nyc mocha -r \"./test/hemera/bootstrap\" -t 5000 \"./test/**/*.spec.js\" \"./packages/hemera-zipkin/test/**/*.js\"",
+    "test": "nyc mocha -r \"./test/hemera/bootstrap\" -t 5000 \"./test/**/*.spec.js\" \"./packages/hemera-zipkin/test/**/*.js\"",
     "coverage": "npm run test && nyc report --reporter=html",
     "ci": "nyc mocha -r \"./test/hemera/bootstrap\" -t 5000 \"./test/**/*.spec.js\" \"./packages/hemera-zipkin/test/**/*.js\" && nyc report --reporter=text-lcov | coveralls"
   },

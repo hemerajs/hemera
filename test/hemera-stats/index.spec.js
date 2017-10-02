@@ -58,13 +58,15 @@ describe('Hemera-stats', function() {
   ) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats)
+    const hemera = new Hemera(nats, {
+      logLevel: 'info'
+    })
 
     hemera.use(HemeraStats)
     hemera.use(HemeraJoi)
 
     hemera.ready(() => {
-      let Joi = hemera.exposition['hemera-joi'].joi
+      let Joi = hemera.joi
 
       hemera.add(
         {

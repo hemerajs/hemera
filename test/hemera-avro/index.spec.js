@@ -109,7 +109,7 @@ describe('Hemera-avro', function() {
     hemera.use(HemeraAvro)
 
     hemera.ready(() => {
-      let Avro = hemera.exposition['hemera-avro'].avro
+      let Avro = hemera.avro
 
       const type = Avro.parse({
         name: 'SumResult',
@@ -166,7 +166,7 @@ describe('Hemera-avro', function() {
     hemera.use(HemeraAvro)
 
     hemera.ready(() => {
-      let Avro = hemera.exposition['hemera-avro'].avro
+      let Avro = hemera.avro
 
       const type = Avro.parse({
         name: 'SumResult',
@@ -223,7 +223,7 @@ describe('Hemera-avro', function() {
     hemera.use(HemeraAvro)
 
     hemera.ready(() => {
-      let Avro = hemera.exposition['hemera-avro'].avro
+      let Avro = hemera.avro
 
       const type = Avro.parse({
         name: 'SumResult',
@@ -279,7 +279,7 @@ describe('Hemera-avro', function() {
     hemera.use(HemeraAvro)
 
     hemera.ready(() => {
-      let Avro = hemera.exposition['hemera-avro'].avro
+      let Avro = hemera.avro
 
       const type = Avro.parse({
         name: 'SumResult',

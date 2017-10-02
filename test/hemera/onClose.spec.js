@@ -28,21 +28,20 @@ describe('onClose extension', function() {
     })
 
     // Plugin
-    let plugin = function(options) {
-      let hemera = this
-
+    let plugin = function(hemera, options, done) {
       hemera.ext('onClose', function(ctx, next) {
         secondOnCloseHandler()
         next()
       })
+
+      done()
     }
 
     hemera.use({
       plugin: plugin,
-      attributes: {
+      options: {
         name: 'myPlugin'
-      },
-      options: {}
+      }
     })
 
     hemera.ready(() => {
@@ -69,21 +68,20 @@ describe('onClose extension', function() {
     })
 
     // Plugin
-    let plugin = function(options) {
-      let hemera = this
-
+    let plugin = function(hemera, options, done) {
       hemera.ext('onClose', function(ctx, next) {
         secondOnCloseHandler()
         next(new Error('test'))
       })
+
+      done()
     }
 
     hemera.use({
       plugin: plugin,
-      attributes: {
+      options: {
         name: 'myPlugin'
-      },
-      options: {}
+      }
     })
 
     hemera.on('error', err => {

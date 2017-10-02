@@ -3,13 +3,20 @@
 const Hp = require('hemera-plugin')
 const Nsq = require('nsqjs')
 
-exports.plugin = Hp(function hemeraNsqStore (options) {
-  const hemera = this
+exports.plugin = Hp(hemeraNsqStore, '>=1.5.0')
+exports.options = {
+  name: require('./package.json').name,
+  payloadValidator: 'hemera-joi'
+}
+
+function hemeraNsqStore (hemera, opts, done) {
   const readers = {}
 
-  hemera.expose('readers', readers)
+  hemera.decorate('nsq', {
+    readers
+  })
 
-  const Joi = hemera.exposition['hemera-joi'].joi
+  const Joi = hemera.joi
 
   function consume (subject, channel, cb) {
     // only one reader per topic channel combination
@@ -17,7 +24,7 @@ exports.plugin = Hp(function hemeraNsqStore (options) {
       return cb(null, true)
     }
 
-    var reader = new Nsq.Reader(subject, channel, options.nsq.reader)
+    var reader = new Nsq.Reader(subject, channel, opts.nsq.reader)
 
     reader.connect()
 
@@ -61,9 +68,9 @@ exports.plugin = Hp(function hemeraNsqStore (options) {
 
   // only one writer for this service
   var w = new Nsq.Writer(
-    options.nsq.writer.url,
-    options.nsq.writer.port,
-    options.nsq.writer.options
+    opts.nsq.writer.url,
+    opts.nsq.writer.port,
+    opts.nsq.writer.options
   )
 
   w.connect()
@@ -115,13 +122,7 @@ exports.plugin = Hp(function hemeraNsqStore (options) {
         consume(req.subject, req.channel, cb)
       }
     )
+
+    done()
   })
-})
-
-exports.options = {
-  payloadValidator: 'hemera-joi'
-}
-
-exports.attributes = {
-  pkg: require('./package.json')
 }

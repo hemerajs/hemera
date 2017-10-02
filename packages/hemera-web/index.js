@@ -11,8 +11,18 @@ const contentBinaryStream = ['application/octet-stream']
 const contentText = ['text/*']
 const contentForm = ['application/x-www-form-*', 'multipart']
 
-exports.plugin = Hp(function hemeraWeb (options, next) {
-  const hemera = this
+exports.plugin = Hp(hemeraWeb, '>= 1.5.0')
+exports.options = {
+  name: require('./package.json').name,
+  port: 3000,
+  host: '127.0.0.1',
+  errors: {
+    propBlacklist: ['stack']
+  },
+  pattern: {}
+}
+
+function hemeraWeb(hemera, opts, done) {
 
   const app = Express()
   app.use(BodyParser.json())
@@ -26,7 +36,7 @@ exports.plugin = Hp(function hemeraWeb (options, next) {
   app.get('/:topic/:cmd', handler)
   app.post('/:topic/:cmd', handler)
 
-  function getBasePattern (request, basePattern) {
+  function getBasePattern(request, basePattern) {
     let obj = {}
 
     if (typeof basePattern === 'function') {
@@ -38,11 +48,11 @@ exports.plugin = Hp(function hemeraWeb (options, next) {
     return obj
   }
 
-  function handler (req, res) {
+  function handler(req, res) {
     const xRequestTraceId = req.headers['x-request-trace-id']
     const xRequestSpanId = req.headers['x-request-span-id']
 
-    let pattern = getBasePattern(req, options.pattern)
+    let pattern = getBasePattern(req, opts.pattern)
     if (req.query) {
       pattern = Hoek.applyToDefaults(pattern, req.query)
     }
@@ -81,11 +91,11 @@ exports.plugin = Hp(function hemeraWeb (options, next) {
       pattern.textData = req.body
     }
 
-    hemera.act(pattern, function (err, result) {
+    hemera.act(pattern, function(err, result) {
       if (err) {
         res.statusCode = err.statusCode || 500
         res.send({
-          error: _.omit(err, options.errors.propBlacklist)
+          error: _.omit(err, opts.errors.propBlacklist)
         })
       } else {
         res.send(result)
@@ -93,12 +103,12 @@ exports.plugin = Hp(function hemeraWeb (options, next) {
     })
   }
 
-  const server = app.listen(options.port, options.host, () => {
-    hemera.log.info(`HTTP Server listening on: ${options.host}:${options.port}`)
-    next()
+  const server = app.listen(opts.port, opts.host, () => {
+    hemera.log.info(`HTTP Server listening on: ${opts.host}:${opts.port}`)
+    done()
   })
 
-  hemera.expose('express', app)
+  hemera.decorate('express', app)
 
   // Gracefully shutdown
   hemera.ext('onClose', (ctx, done) => {
@@ -106,17 +116,4 @@ exports.plugin = Hp(function hemeraWeb (options, next) {
     hemera.log.debug('Http server closed!')
     done()
   })
-}, '>= 1.5.0')
-
-exports.options = {
-  port: 3000,
-  host: '127.0.0.1',
-  errors: {
-    propBlacklist: ['stack']
-  },
-  pattern: {}
-}
-
-exports.attributes = {
-  pkg: require('./package.json')
 }

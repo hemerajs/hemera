@@ -8,26 +8,50 @@ const StorePattern = require('hemera-store/pattern')
 const serialize = require('mongodb-extended-json').serialize
 const deserialize = require('mongodb-extended-json').deserialize
 
-exports.plugin = Hp(function hemeraMongoStore (options, next) {
-  const hemera = this
+exports.plugin = Hp(hemeraMongoStore, '>=1.5.0')
+exports.options = {
+  name: require('./package.json').name,
+  payloadValidator: 'hemera-joi',
+  mongos: {},
+  serializeResult: false,
+  mongo: {
+    url: 'mongodb://localhost:27017/'
+  },
+  store: {
+    create: {},
+    update: {},
+    updateById: {},
+    find: {},
+    findById: {},
+    remove: {},
+    removeById: {},
+    replace: { upsert: true },
+    replaceById: {}
+  }
+}
+
+function hemeraMongoStore (hemera, opts, done) {
   const topic = 'mongo-store'
+
   const preResponseHandler = result => {
-    if (options.serializeResult === true) {
+    if (opts.serializeResult === true) {
       return serialize(result)
     }
     return result
   }
 
   Mongodb.MongoClient.connect(
-    options.mongo.url,
-    options.mongos.options,
+    opts.mongo.url,
+    opts.mongos.options,
     function (err, db) {
       if (err) {
         return hemera.emit('error', err)
       }
 
-      hemera.expose('db', db)
-      hemera.expose('mongodb', Mongodb)
+      hemera.decorate('mongodb', {
+        client: Mongodb,
+        db
+      })
 
       // Gracefully shutdown
       hemera.ext('onClose', (ctx, done) => {
@@ -48,7 +72,7 @@ exports.plugin = Hp(function hemeraMongoStore (options, next) {
 
       hemera.add(StorePattern.create(topic), function (req, cb) {
         const collection = db.collection(req.collection)
-        const store = new MongoStore(collection, options)
+        const store = new MongoStore(collection, opts)
         store.ObjectID = ObjectID
         req.data = deserialize(req.data)
 
@@ -57,7 +81,7 @@ exports.plugin = Hp(function hemeraMongoStore (options, next) {
 
       hemera.add(StorePattern.update(topic), function (req, cb) {
         const collection = db.collection(req.collection)
-        const store = new MongoStore(collection, options)
+        const store = new MongoStore(collection, opts)
         store.ObjectID = ObjectID
         req.query = deserialize(req.query)
 
@@ -72,7 +96,7 @@ exports.plugin = Hp(function hemeraMongoStore (options, next) {
 
       hemera.add(StorePattern.updateById(topic), function (req, cb) {
         const collection = db.collection(req.collection)
-        const store = new MongoStore(collection, options)
+        const store = new MongoStore(collection, opts)
         store.ObjectID = ObjectID
 
         store.updateById(req, deserialize(req.data), (err, result) => {
@@ -86,7 +110,7 @@ exports.plugin = Hp(function hemeraMongoStore (options, next) {
 
       hemera.add(StorePattern.remove(topic), function (req, cb) {
         const collection = db.collection(req.collection)
-        const store = new MongoStore(collection, options)
+        const store = new MongoStore(collection, opts)
         store.ObjectID = ObjectID
         req.query = deserialize(req.query)
 
@@ -95,7 +119,7 @@ exports.plugin = Hp(function hemeraMongoStore (options, next) {
 
       hemera.add(StorePattern.removeById(topic), function (req, cb) {
         const collection = db.collection(req.collection)
-        const store = new MongoStore(collection, options)
+        const store = new MongoStore(collection, opts)
         store.ObjectID = ObjectID
 
         store.removeById(req, (err, result) => {
@@ -109,7 +133,7 @@ exports.plugin = Hp(function hemeraMongoStore (options, next) {
 
       hemera.add(StorePattern.replace(topic), function (req, cb) {
         const collection = db.collection(req.collection)
-        const store = new MongoStore(collection, options)
+        const store = new MongoStore(collection, opts)
         store.ObjectID = ObjectID
         req.query = deserialize(req.query)
 
@@ -118,7 +142,7 @@ exports.plugin = Hp(function hemeraMongoStore (options, next) {
 
       hemera.add(StorePattern.replaceById(topic), function (req, cb) {
         const collection = db.collection(req.collection)
-        const store = new MongoStore(collection, options)
+        const store = new MongoStore(collection, opts)
         store.ObjectID = ObjectID
 
         store.replaceById(req, deserialize(req.data), (err, result) => {
@@ -132,7 +156,7 @@ exports.plugin = Hp(function hemeraMongoStore (options, next) {
 
       hemera.add(StorePattern.findById(topic), function (req, cb) {
         const collection = db.collection(req.collection)
-        const store = new MongoStore(collection, options)
+        const store = new MongoStore(collection, opts)
         store.ObjectID = ObjectID
 
         store.findById(req, (err, result) => {
@@ -146,7 +170,7 @@ exports.plugin = Hp(function hemeraMongoStore (options, next) {
 
       hemera.add(StorePattern.find(topic), function (req, cb) {
         const collection = db.collection(req.collection)
-        const store = new MongoStore(collection, options)
+        const store = new MongoStore(collection, opts)
         store.ObjectID = ObjectID
         req.query = deserialize(req.query)
 
@@ -160,31 +184,7 @@ exports.plugin = Hp(function hemeraMongoStore (options, next) {
       })
 
       hemera.log.debug('DB connected!')
-      next()
+      done()
     }
   )
-}, '>= 1.5.0')
-
-exports.options = {
-  payloadValidator: 'hemera-joi',
-  mongos: {},
-  serializeResult: false,
-  mongo: {
-    url: 'mongodb://localhost:27017/'
-  },
-  store: {
-    create: {},
-    update: {},
-    updateById: {},
-    find: {},
-    findById: {},
-    remove: {},
-    removeById: {},
-    replace: { upsert: true },
-    replaceById: {}
-  }
-}
-
-exports.attributes = {
-  pkg: require('./package.json')
 }

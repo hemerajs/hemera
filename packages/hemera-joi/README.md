@@ -21,7 +21,7 @@ hemera.ready(() => {
   // Use Joi as payload validator
   hemera.setOption('payloadValidator', 'hemera-joi')
 
-  let Joi = hemera.exposition['hemera-joi'].joi
+  let Joi = hemera.joi
   /**
    * Your Implementations
    */
@@ -48,7 +48,7 @@ hemera.ready(() => {
 
 ### Pass the full schema
 ```js
-  let Joi = hemera.exposition['hemera-joi'].joi
+  let Joi = hemera.joi
   
   hemera.add({
     topic: 'math',
@@ -62,7 +62,7 @@ hemera.ready(() => {
 
 ### Pre and Post validation
 ```js
-  let Joi = hemera.exposition['hemera-joi'].joi
+  let Joi = hemera.joi
   
   hemera.add({
     topic: 'math',

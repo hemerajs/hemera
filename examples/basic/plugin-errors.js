@@ -15,8 +15,8 @@ hemera.use(HemeraJoi)
 hemera.ready(() => {
   hemera.setOption('payloadValidator', 'hemera-joi')
 
-  let Joi = hemera.exposition['hemera-joi'].joi
-  let joiErrors = hemera.exposition['hemera-joi'].errors
+  let Joi = hemera.joi
+  let joiErrors = hemera.joiErrors
 
   hemera.add(
     {

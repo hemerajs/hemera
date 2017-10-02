@@ -3,13 +3,18 @@
 const Hp = require('hemera-plugin')
 const Joi = require('joi')
 
-exports.plugin = Hp(function hemeraJoi () {
-  const hemera = this
+exports.plugin = Hp(hemeraJoi, '>=1.5.0')
+exports.options = {
+  name: require('./package.json').name
+}
+
+function hemeraJoi (hemera, opts, done) {
   const PreValidationError = hemera.createError('PreValidationError')
   const PostValidationError = hemera.createError('PostValidationError')
+  const pluginName = exports.options.name
 
-  hemera.expose('joi', Joi)
-  hemera.expose('errors', {
+  hemera.decorate('joi', Joi)
+  hemera.decorate('joiErrors', {
     PreValidationError,
     PostValidationError
   })
@@ -20,7 +25,7 @@ exports.plugin = Hp(function hemeraJoi () {
     let pattern = req.payload.pattern
     let currentPayloadValidator = plugin.options.payloadValidator
 
-    if (currentPayloadValidator !== exports.attributes.name) {
+    if (currentPayloadValidator !== pluginName) {
       return next()
     }
 
@@ -67,7 +72,7 @@ exports.plugin = Hp(function hemeraJoi () {
     let response = res.payload
     let currentPayloadValidator = plugin.options.payloadValidator
 
-    if (currentPayloadValidator !== exports.attributes.name) {
+    if (currentPayloadValidator !== pluginName) {
       return next()
     }
 
@@ -108,10 +113,6 @@ exports.plugin = Hp(function hemeraJoi () {
       }
     )
   })
-}, '>=1.5.0')
 
-exports.options = {}
-
-exports.attributes = {
-  pkg: require('./package.json')
+  done()
 }

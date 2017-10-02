@@ -64,7 +64,7 @@ describe('Hemera-arango-store', function() {
           hemera.use(HemeraJoi)
           hemera.use(HemeraArangoStore)
           hemera.ready(function() {
-            aql = hemera.exposition['hemera-arango-store'].aqlTemplate
+            aql = hemera.aqlTemplate
             done()
           })
         })

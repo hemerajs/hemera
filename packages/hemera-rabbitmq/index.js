@@ -3,15 +3,21 @@
 const Hp = require('hemera-plugin')
 const Rabbit = require('rabbot')
 
-exports.plugin = Hp(function hemeraRabbitmq (options) {
-  const hemera = this
+exports.plugin = Hp(hemeraRabbitmq, '>=1.5.0')
+exports.options = {
+  name: require('./package.json').name,
+  payloadValidator: 'hemera-joi'
+}
 
+function hemeraRabbitmq (hemera, opts, done) {
   const handlers = []
-  const Joi = hemera.exposition['hemera-joi'].joi
+  const Joi = hemera.joi
 
-  hemera.expose('handlers', handlers)
+  hemera.decorate('rabbitmq', {
+    handlers
+  })
 
-  Rabbit.configure(options.rabbitmq).then(function () {
+  Rabbit.configure(opts.rabbitmq).then(function () {
     // Sends all unhandled messages back to the queue.
     Rabbit.nackUnhandled()
 
@@ -76,13 +82,7 @@ exports.plugin = Hp(function hemeraRabbitmq (options) {
           .catch(cb)
       }
     )
+
+    done()
   })
-})
-
-exports.options = {
-  payloadValidator: 'hemera-joi'
-}
-
-exports.attributes = {
-  pkg: require('./package.json')
 }

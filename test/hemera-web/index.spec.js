@@ -204,12 +204,10 @@ describe('Hemera-web', function() {
         cmd: 'add',
         a: 1,
         b: 2
+      }).then(resp => {
+        expect(resp.data.result).to.be.equals(3)
+        hemera.close(done)
       })
-        .then(resp => {
-          expect(resp.data.result).to.be.equals(3)
-          hemera.close(done)
-        })
-        .catch(done)
     })
   })
 

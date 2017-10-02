@@ -23,16 +23,15 @@ describe('Hemera plugin', function() {
     const hemera = new Hemera(nats)
 
     // Plugin
-    let plugin = HemeraPlugin(function(opts, next) {
-      next()
+    let plugin = HemeraPlugin(function(hemera, opts, done) {
+      done()
     })
 
     hemera.use({
       plugin: plugin,
-      attributes: {
+      options: {
         name: 'myPlugin'
-      },
-      options: {}
+      }
     })
 
     hemera.ready(() => {
@@ -48,16 +47,15 @@ describe('Hemera plugin', function() {
     const hemera = new Hemera(nats)
     const throws = function() {
       // Plugin
-      let plugin = HemeraPlugin(function(opts, next) {
-        next()
+      let plugin = HemeraPlugin(function(hemera, opts, done) {
+        done()
       }, '500.400.300')
 
       hemera.use({
         plugin: plugin,
-        attributes: {
+        options: {
           name: 'myPlugin'
-        },
-        options: {}
+        }
       })
 
       hemera.ready()
@@ -79,10 +77,9 @@ describe('Hemera plugin', function() {
 
       hemera.use({
         plugin: plugin,
-        attributes: {
+        options: {
           name: 'myPlugin'
-        },
-        options: {}
+        }
       })
 
       hemera.ready()
@@ -107,10 +104,9 @@ describe('Hemera plugin', function() {
 
       hemera.use({
         plugin: plugin,
-        attributes: {
+        options: {
           name: 'myPlugin'
-        },
-        options: {}
+        }
       })
 
       hemera.ready()

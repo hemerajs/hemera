@@ -3,28 +3,38 @@
 const Hp = require('hemera-plugin')
 const Elasticsearch = require('elasticsearch')
 
-exports.plugin = Hp(function hemeraElasticSearch (options, next) {
-  const hemera = this
-  const topic = 'elasticsearch'
-  const Joi = hemera.exposition['hemera-joi'].joi
+exports.plugin = Hp(hemeraElasticSearch, '>=1.5.0')
+exports.options = {
+  name: require('./package.json').name,
+  payloadValidator: 'hemera-joi',
+  elasticsearch: {
+    timeout: 3000,
+    host: 'localhost:9200',
+    apiVersion: '5.0'
+  }
+}
 
-  const client = new Elasticsearch.Client(options.elasticsearch)
+function hemeraElasticSearch (hemera, opts, done) {
+  const topic = 'elasticsearch'
+  const Joi = hemera.joi
+
+  const client = new Elasticsearch.Client(opts.elasticsearch)
+  hemera.decorate('elasticsearch', client)
 
   /**
    * Check if cluster is available otherwise exit this client.
    */
   client.ping(
     {
-      requestTimeout: options.elasticsearch.timeout
+      requestTimeout: opts.elasticsearch.timeout
     },
     function (error) {
       if (error) {
         hemera.log.trace(error, 'elasticsearch cluster is down!')
         hemera.fatal()
       } else {
-        hemera.expose('client', client)
         hemera.log.info('elasticsearch cluster is available')
-        next()
+        done()
       }
     }
   )
@@ -128,17 +138,4 @@ exports.plugin = Hp(function hemeraElasticSearch (options, next) {
       client.refresh(req.data, cb)
     }
   )
-})
-
-exports.options = {
-  payloadValidator: 'hemera-joi',
-  elasticsearch: {
-    timeout: 3000,
-    host: 'localhost:9200',
-    apiVersion: '5.0'
-  }
-}
-
-exports.attributes = {
-  pkg: require('./package.json')
 }

@@ -3,9 +3,12 @@
 const Hp = require('hemera-plugin')
 const GracefulShutdown = require('./gracefulShutdown')
 
-exports.plugin = Hp(function hemeraGracefulShutdown () {
-  const hemera = this
+exports.plugin = Hp(hemeraGracefulShutdown, '>=1.5.0')
+exports.options = {
+  name: require('./package.json').name
+}
 
+function hemeraGracefulShutdown (hemera, opts, done) {
   const gs = new GracefulShutdown()
   gs.process = process
   gs.logger = hemera.log
@@ -15,10 +18,5 @@ exports.plugin = Hp(function hemeraGracefulShutdown () {
   })
   gs.init()
   hemera.decorate('gracefulShutdown', handler => gs.addHandler(handler))
-}, '>=1.5.0')
-
-exports.options = {}
-
-exports.attributes = {
-  pkg: require('./package.json')
+  done()
 }

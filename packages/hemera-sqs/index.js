@@ -3,16 +3,23 @@
 const AWS = require('aws-sdk')
 const Hp = require('hemera-plugin')
 
-exports.plugin = Hp(function hemeraSQS (options) {
-  const hemera = this
+exports.plugin = Hp(hemeraSQS, '>=1.5.0')
+exports.options = {
+  name: require('./package.json').name,
+  sqs: {
+    apiVersion: '2012-11-05'
+  }
+}
+
+function hemeraSQS (hemera, opts, done) {
   const topic = 'sqs'
 
-  if (options.configPath) {
-    AWS.config.loadFromPath(options.configPath)
+  if (opts.configPath) {
+    AWS.config.loadFromPath(opts.configPath)
   }
 
   // Create an SQS service object
-  var sqs = new AWS.SQS(options.sqs)
+  const sqs = new AWS.SQS(opts.sqs)
 
   /**
    *  QUEUES
@@ -174,14 +181,6 @@ exports.plugin = Hp(function hemeraSQS (options) {
       })
     }
   )
-})
 
-exports.options = {
-  sqs: {
-    apiVersion: '2012-11-05'
-  }
-}
-
-exports.attributes = {
-  pkg: require('./package.json')
+  done()
 }

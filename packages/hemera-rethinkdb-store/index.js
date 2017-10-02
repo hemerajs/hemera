@@ -3,14 +3,25 @@
 const Hp = require('hemera-plugin')
 const StorePattern = require('hemera-store/pattern')
 
-exports.plugin = Hp(function hemeraRethinkdbStore (options) {
-  const hemera = this
+exports.plugin = Hp(hemeraRethinkdbStore, '>= 1.5.0')
+exports.options = {
+  name: require('./package.json').name,
+  payloadValidator: 'hemera-joi',
+  rethinkdb: {
+    pool: true,
+    cursor: true
+  }
+}
+
+function hemeraRethinkdbStore (hemera, opts, done) {
   const topic = 'rethinkdb-store'
-  const Joi = hemera.exposition['hemera-joi'].joi
+  const Joi = hemera.joi
 
-  const rethinkdb = require('rethinkdbdash')(options.rethinkdb)
+  const rethinkdb = require('rethinkdbdash')(opts.rethinkdb)
 
-  hemera.expose('driver', rethinkdb)
+  hemera.decorate('rethinkdb', {
+    driver: rethinkdb
+  })
 
   // Gracefully shutdown
   hemera.ext('onClose', (ctx, done) => {
@@ -29,7 +40,7 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
     {
       topic,
       cmd: 'createDatabase',
-      databaseName: Joi.string().default(options.rethinkdb.db)
+      databaseName: Joi.string().default(opts.rethinkdb.db)
     },
     function (req, reply) {
       return rethinkdb.dbCreate(req.databaseName).run(reply)
@@ -40,7 +51,7 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
     {
       topic,
       cmd: 'removeDatabase',
-      databaseName: Joi.string().default(options.rethinkdb.db)
+      databaseName: Joi.string().default(opts.rethinkdb.db)
     },
     function (req, reply) {
       return rethinkdb.dbDrop(req.databaseName).run(reply)
@@ -52,7 +63,7 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
       topic,
       cmd: 'createTable',
       collection: Joi.string().required(),
-      databaseName: Joi.string().default(options.rethinkdb.db)
+      databaseName: Joi.string().default(opts.rethinkdb.db)
     },
     function (req, reply) {
       return rethinkdb
@@ -67,7 +78,7 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
       topic,
       cmd: 'removeTable',
       collection: Joi.string().required(),
-      databaseName: Joi.string().default(options.rethinkdb.db)
+      databaseName: Joi.string().default(opts.rethinkdb.db)
     },
     function (req, reply) {
       rethinkdb
@@ -82,7 +93,7 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
       topic,
       cmd: 'truncateTable',
       collection: Joi.string().required(),
-      databaseName: Joi.string().default(options.rethinkdb.db)
+      databaseName: Joi.string().default(opts.rethinkdb.db)
     },
     function (req, reply) {
       rethinkdb
@@ -105,7 +116,7 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
       cmd: 'changes',
       collection: Joi.string().required(),
       query: Joi.object().default({}),
-      databaseName: Joi.string().default(options.rethinkdb.db),
+      databaseName: Joi.string().default(opts.rethinkdb.db),
       options: Joi.object()
         .keys({
           fields: Joi.alternatives().try(Joi.object(), Joi.array()),
@@ -163,7 +174,7 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
    */
 
   hemera.add(StorePattern.create(topic), function (req, reply) {
-    const databaseName = req.databaseName || options.rethinkdb.db
+    const databaseName = req.databaseName || opts.rethinkdb.db
     rethinkdb
       .db(databaseName)
       .table(req.collection)
@@ -172,7 +183,7 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
   })
 
   hemera.add(StorePattern.update(topic), function (req, reply) {
-    const databaseName = req.databaseName || options.rethinkdb.db
+    const databaseName = req.databaseName || opts.rethinkdb.db
     rethinkdb
       .db(databaseName)
       .table(req.collection)
@@ -182,7 +193,7 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
   })
 
   hemera.add(StorePattern.updateById(topic), function (req, reply) {
-    const databaseName = req.databaseName || options.rethinkdb.db
+    const databaseName = req.databaseName || opts.rethinkdb.db
     rethinkdb
       .db(databaseName)
       .table(req.collection)
@@ -192,7 +203,7 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
   })
 
   hemera.add(StorePattern.remove(topic), function (req, reply) {
-    const databaseName = req.databaseName || options.rethinkdb.db
+    const databaseName = req.databaseName || opts.rethinkdb.db
     rethinkdb
       .db(databaseName)
       .table(req.collection)
@@ -202,7 +213,7 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
   })
 
   hemera.add(StorePattern.removeById(topic), function (req, reply) {
-    const databaseName = req.databaseName || options.rethinkdb.db
+    const databaseName = req.databaseName || opts.rethinkdb.db
     rethinkdb
       .db(databaseName)
       .table(req.collection)
@@ -212,7 +223,7 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
   })
 
   hemera.add(StorePattern.replace(topic), function (req, reply) {
-    const databaseName = req.databaseName || options.rethinkdb.db
+    const databaseName = req.databaseName || opts.rethinkdb.db
     rethinkdb
       .db(databaseName)
       .table(req.collection)
@@ -222,7 +233,7 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
   })
 
   hemera.add(StorePattern.replaceById(topic), function (req, reply) {
-    const databaseName = req.databaseName || options.rethinkdb.db
+    const databaseName = req.databaseName || opts.rethinkdb.db
     rethinkdb
       .db(databaseName)
       .table(req.collection)
@@ -232,7 +243,7 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
   })
 
   hemera.add(StorePattern.findById(topic), function (req, reply) {
-    const databaseName = req.databaseName || options.rethinkdb.db
+    const databaseName = req.databaseName || opts.rethinkdb.db
     rethinkdb
       .db(databaseName)
       .table(req.collection)
@@ -241,7 +252,7 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
   })
 
   hemera.add(StorePattern.find(topic), function (req, reply) {
-    const databaseName = req.databaseName || options.rethinkdb.db
+    const databaseName = req.databaseName || opts.rethinkdb.db
     let cursor = rethinkdb
       .db(databaseName)
       .table(req.collection)
@@ -249,10 +260,10 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
 
     if (req.options) {
       if (req.options.limit) {
-        cursor = cursor.limit(options.limit)
+        cursor = cursor.limit(opts.limit)
       }
       if (req.options.offset) {
-        cursor = cursor.skip(options.offset)
+        cursor = cursor.skip(opts.offset)
       }
       if (req.options.fields) {
         cursor = cursor.pluck(req.options.fields)
@@ -269,16 +280,6 @@ exports.plugin = Hp(function hemeraRethinkdbStore (options) {
       result.toArray(reply)
     })
   })
-}, '>= 1.5.0')
 
-exports.options = {
-  payloadValidator: 'hemera-joi',
-  rethinkdb: {
-    pool: true,
-    cursor: true
-  }
-}
-
-exports.attributes = {
-  pkg: require('./package.json')
+  done()
 }

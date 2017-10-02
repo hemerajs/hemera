@@ -21,12 +21,11 @@ describe('Hemera-joi', function() {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
-
     hemera.use(HemeraJoi)
     hemera.setOption('payloadValidator', 'hemera-joi')
 
     hemera.ready(() => {
-      let Joi = hemera.exposition['hemera-joi'].joi
+      let Joi = hemera.joi
       hemera.add(
         {
           topic: 'email',
@@ -68,7 +67,7 @@ describe('Hemera-joi', function() {
     hemera.setOption('payloadValidator', 'hemera-joi')
 
     hemera.ready(() => {
-      let Joi = hemera.exposition['hemera-joi'].joi
+      let Joi = hemera.joi
       hemera.add(
         {
           topic: 'email',
@@ -119,7 +118,7 @@ describe('Hemera-joi', function() {
     hemera.setOption('payloadValidator', 'hemera-joi')
 
     hemera.ready(() => {
-      let Joi = hemera.exposition['hemera-joi'].joi
+      let Joi = hemera.joi
       hemera.add(
         {
           topic: 'email',
@@ -160,7 +159,7 @@ describe('Hemera-joi', function() {
     hemera.setOption('payloadValidator', 'hemera-joi')
 
     hemera.ready(() => {
-      let Joi = hemera.exposition['hemera-joi'].joi
+      let Joi = hemera.joi
       hemera.add(
         {
           topic: 'email',
@@ -219,7 +218,7 @@ describe('Hemera-joi pre/post', function() {
     hemera.setOption('payloadValidator', 'hemera-joi')
 
     hemera.ready(() => {
-      let Joi = hemera.exposition['hemera-joi'].joi
+      let Joi = hemera.joi
       hemera.add(
         {
           topic: 'email',
@@ -270,7 +269,7 @@ describe('Hemera-joi pre/post', function() {
     hemera.setOption('payloadValidator', 'hemera-joi')
 
     hemera.ready(() => {
-      let Joi = hemera.exposition['hemera-joi'].joi
+      let Joi = hemera.joi
       hemera.add(
         {
           topic: 'email',
@@ -319,7 +318,7 @@ describe('Hemera-joi pre/post', function() {
     hemera.setOption('payloadValidator', 'hemera-joi')
 
     hemera.ready(() => {
-      let Joi = hemera.exposition['hemera-joi'].joi
+      let Joi = hemera.joi
       hemera.add(
         {
           topic: 'email',
@@ -361,7 +360,7 @@ describe('Hemera-joi pre/post', function() {
     hemera.setOption('payloadValidator', 'hemera-joi')
 
     hemera.ready(() => {
-      let Joi = hemera.exposition['hemera-joi'].joi
+      let Joi = hemera.joi
       hemera.add(
         {
           topic: 'email',
@@ -404,7 +403,7 @@ describe('Hemera-joi pre/post', function() {
     hemera.setOption('payloadValidator', 'hemera-joi')
 
     hemera.ready(() => {
-      let Joi = hemera.exposition['hemera-joi'].joi
+      let Joi = hemera.joi
       hemera.add(
         {
           topic: 'email',

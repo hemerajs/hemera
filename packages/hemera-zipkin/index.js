@@ -14,10 +14,13 @@ let defaultConfig = {
   sampling: 0.1
 }
 
-exports.plugin = Hp(function hemeraZipkin (options) {
-  var hemera = this
+exports.plugin = Hp(hemeraZipkin, '>=1.5.0')
+exports.options = {
+  name: require('./package.json')
+}
 
-  const config = Hoek.applyToDefaults(defaultConfig, options || {})
+function hemeraZipkin (hemera, opts, done) {
+  const config = Hoek.applyToDefaults(defaultConfig, opts || {})
   const Tracer = new Zipkin(config)
 
   /**
@@ -187,10 +190,6 @@ exports.plugin = Hp(function hemeraZipkin (options) {
 
     Tracer.sendClientRecv(ctx._zkTrace, meta)
   })
-}, '>=1.5.0')
 
-exports.options = {}
-
-exports.attributes = {
-  pkg: require('./package.json')
+  done()
 }

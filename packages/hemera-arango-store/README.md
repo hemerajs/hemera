@@ -51,7 +51,7 @@ hemera.use(HemeraArango, {
 
 hemera.ready(() => {
 
-  let aql = hemera.exposition['hemera-arango-store'].aqlTemplate
+  let aql = hemera.aqlTemplate
 
   hemera.act({
     topic: 'arango-store',

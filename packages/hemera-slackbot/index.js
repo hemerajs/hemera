@@ -1,13 +1,19 @@
 const SlackBot = require('slackbots')
 const Hp = require('hemera-plugin')
 
-exports.plugin = Hp(function hemeraSlackbot (options, next) {
-  const hemera = this
+exports.plugin = Hp(hemeraSlackbot, '>= 1.5.0')
+
+exports.options = {
+  name: require('./package.json').name,
+  payloadValidator: 'hemera-joi'
+}
+
+function hemeraSlackbot (hemera, opts, done) {
   const topic = 'slackbot'
 
   const bot = new SlackBot({
-    token: options.token,
-    name: options.name
+    token: opts.token,
+    name: opts.name
   })
 
   // Gracefully shutdown
@@ -20,7 +26,7 @@ exports.plugin = Hp(function hemeraSlackbot (options, next) {
     }
   })
 
-  const Joi = hemera.exposition['hemera-joi'].joi
+  const Joi = hemera.joi
   let subscribed = false
   let wsConnected = false
 
@@ -84,7 +90,7 @@ exports.plugin = Hp(function hemeraSlackbot (options, next) {
   bot.on('start', function () {
     hemera.log.debug('Websocket connection open!')
     wsConnected = true
-    next()
+    done()
   })
 
   bot.on('error', err => {
@@ -95,12 +101,4 @@ exports.plugin = Hp(function hemeraSlackbot (options, next) {
   bot.on('close', () => {
     hemera.log.info('Websocket connection closed!')
   })
-}, '>= 1.5.0')
-
-exports.options = {
-  payloadValidator: 'hemera-joi'
-}
-
-exports.attributes = {
-  pkg: require('./package.json')
 }

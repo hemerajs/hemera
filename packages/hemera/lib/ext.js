@@ -33,8 +33,6 @@ class Ext {
     this.onServerPreHandler = []
     this.onServerPreRequest = []
     this.onServerPreResponse = []
-
-    this.onClose = []
   }
 
   /**

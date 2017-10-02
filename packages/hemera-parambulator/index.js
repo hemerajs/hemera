@@ -3,11 +3,15 @@
 const Hp = require('hemera-plugin')
 const Parambulator = require('parambulator')
 
-exports.plugin = Hp(function hemeraParambulator () {
-  const hemera = this
+exports.plugin = Hp(hemeraParambulator, '>=1.5.0')
+exports.options = {
+  name: require('./package.json').name
+}
+
+function hemeraParambulator (hemera, opts, done) {
   const PreValidationError = hemera.createError('PreValidationError')
 
-  hemera.expose('errors', {
+  hemera.decorate('parambulatorErrors', {
     PreValidationError
   })
 
@@ -17,7 +21,7 @@ exports.plugin = Hp(function hemeraParambulator () {
     let pattern = req.payload.pattern
     let currentPayloadValidator = plugin.options.payloadValidator
 
-    if (currentPayloadValidator !== exports.attributes.name) {
+    if (currentPayloadValidator !== exports.options.name) {
       return next()
     }
 
@@ -36,10 +40,6 @@ exports.plugin = Hp(function hemeraParambulator () {
       next()
     })
   })
-}, '>=1.5.0')
 
-exports.options = {}
-
-exports.attributes = {
-  pkg: require('./package.json')
+  done()
 }

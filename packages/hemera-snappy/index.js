@@ -3,9 +3,12 @@
 const SnappyJS = require('snappyjs')
 const Hp = require('hemera-plugin')
 
-exports.plugin = Hp(function hemeraSnappy () {
-  const hemera = this
+exports.plugin = Hp(hemeraSnappy, '>=1.4.1')
+exports.options = {
+  name: require('./package.json').name
+}
 
+function hemeraSnappy (hemera, opts, done) {
   function uncompress (msg) {
     try {
       return {
@@ -33,10 +36,6 @@ exports.plugin = Hp(function hemeraSnappy () {
   hemera.encoder.add(compress)
   // first uncompress then decode
   hemera.decoder.first(uncompress)
-}, '>=1.4.1')
 
-exports.options = {}
-
-exports.attributes = {
-  pkg: require('./package.json')
+  done()
 }

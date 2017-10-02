@@ -45,12 +45,15 @@ function initServer(topic, testCollection, pluginOptions, cb) {
   const server = HemeraTestsuite.start_server(PORT, flags, () => {
     const nats = Nats.connect(authUrl)
     const hemera = new Hemera(nats, {
-      logLevel: 'silent'
+      logLevel: 'info'
     })
     hemera.use(HemeraJoi)
     hemera.use(HemeraMongoStore, pluginOptions)
     hemera.ready(() => {
-      const plugin = hemera.exposition['hemera-mongo-store']
+      const plugin = {
+        mongodb: hemera.mongodb.client,
+        db: hemera.mongodb.db
+      }
       hemera.act(
         {
           topic,
@@ -58,7 +61,7 @@ function initServer(topic, testCollection, pluginOptions, cb) {
           collection: testCollection
         },
         function(err, resp) {
-          cb(err, { server, hemera, plugin })
+          cb(null, { server, hemera })
         }
       )
     })

@@ -3,11 +3,19 @@
 const Hp = require('hemera-plugin')
 const Nodemailer = require('nodemailer')
 
-exports.plugin = Hp(function hemeraMsgpack (options) {
-  const hemera = this
+exports.plugin = Hp(hemeraEmail, '>=1.5.0')
+exports.options = {
+  name: require('./package.json').name,
+  payloadValidator: 'hemera-joi',
+  transport: {
+    jsonTransport: true // for debugging
+  }
+}
+
+function hemeraEmail (hemera, opts, done) {
   const topic = 'mail'
-  const Joi = hemera.exposition['hemera-joi'].joi
-  const transporter = Nodemailer.createTransport(options.transport)
+  const Joi = hemera.joi
+  const transporter = Nodemailer.createTransport(opts.transport)
 
   hemera.add(
     {
@@ -41,15 +49,6 @@ exports.plugin = Hp(function hemeraMsgpack (options) {
       })
     }
   )
-})
 
-exports.options = {
-  payloadValidator: 'hemera-joi',
-  transport: {
-    jsonTransport: true // for debugging
-  }
-}
-
-exports.attributes = {
-  pkg: require('./package.json')
+  done()
 }

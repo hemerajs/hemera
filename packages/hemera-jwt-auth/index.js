@@ -4,32 +4,19 @@ const Hp = require('hemera-plugin')
 const JWT = require('jsonwebtoken')
 const Hoek = require('hoek')
 
-/**
- *
- *
- * @param {any} scope
- * @param {any} subset
- * @returns
- */
-function isSubset (scope, subset) {
-  if (!scope) {
-    return false
+exports.plugin = Hp(hemeraJwtAuth, '>=1.5.0')
+exports.options = {
+  name: require('./package.json').name,
+  enforceAuth: true,
+  jwt: {
+    secret: false
   }
-
-  if (scope.length < subset.length) {
-    return false
-  }
-
-  const common = Hoek.intersect(scope, subset)
-  return common.length === subset.length
 }
 
-exports.plugin = Hp(function hemeraJwtAuth (options) {
-  const hemera = this
-
+function hemeraJwtAuth (hemera, opts, done) {
   const JwtError = hemera.createError('JwtError')
 
-  hemera.expose('errors', {
+  hemera.decorate('jwtErrors', {
     JwtError
   })
 
@@ -43,14 +30,14 @@ exports.plugin = Hp(function hemeraJwtAuth (options) {
     }
 
     // If auth was not set and disabled by default
-    if (!auth && options.enforceAuth === false) {
+    if (!auth && opts.enforceAuth === false) {
       return next()
     }
 
     JWT.verify(
       ctx.meta$.jwtToken,
-      options.jwt.secret,
-      options.jwt.options,
+      opts.jwt.secret,
+      opts.jwt.options,
       (err, decoded) => {
         if (err) {
           return next(err)
@@ -75,15 +62,19 @@ exports.plugin = Hp(function hemeraJwtAuth (options) {
       }
     )
   })
-}, '>=1.5.0')
 
-exports.options = {
-  enforceAuth: true,
-  jwt: {
-    secret: false
-  }
+  done()
 }
 
-exports.attributes = {
-  pkg: require('./package.json')
+function isSubset (scope, subset) {
+  if (!scope) {
+    return false
+  }
+
+  if (scope.length < subset.length) {
+    return false
+  }
+
+  const common = Hoek.intersect(scope, subset)
+  return common.length === subset.length
 }

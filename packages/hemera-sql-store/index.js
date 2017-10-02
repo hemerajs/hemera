@@ -5,12 +5,19 @@ const Knex = require('knex')
 const SqlStore = require('./store')
 const StorePattern = require('hemera-store/pattern')
 
-exports.plugin = Hp(function hemeraSqlStore (options) {
-  const hemera = this
+exports.plugin = Hp(hemeraSqlStore, '>=1.5.0')
+exports.options = {
+  name: require('./package.json').name,
+  payloadValidator: 'hemera-joi'
+}
+
+function hemeraSqlStore (hemera, opts, done) {
   const connections = {}
   const topic = 'sql-store'
 
-  hemera.expose('useDb', useDb)
+  hemera.decorate('sql', {
+    useDb
+  })
 
   function useDb (databaseName) {
     if (connections[databaseName]) {
@@ -18,11 +25,11 @@ exports.plugin = Hp(function hemeraSqlStore (options) {
     }
 
     if (databaseName) {
-      let option = Object.assign({}, options.connection)
+      let option = Object.assign({}, opts.connection)
       option.database = databaseName
 
       connections[databaseName] = Knex({
-        dialect: options.dialect,
+        dialect: opts.dialect,
         connection: option,
         pool: {
           min: 0,
@@ -33,7 +40,7 @@ exports.plugin = Hp(function hemeraSqlStore (options) {
       return connections[databaseName]
     }
 
-    connections[databaseName] = options.knex.driver
+    connections[databaseName] = opts.knex.driver
 
     return connections[databaseName]
   }
@@ -147,12 +154,6 @@ exports.plugin = Hp(function hemeraSqlStore (options) {
 
     store.exists(req, cb)
   })
-})
 
-exports.options = {
-  payloadValidator: 'hemera-joi'
-}
-
-exports.attributes = {
-  pkg: require('./package.json')
+  done()
 }

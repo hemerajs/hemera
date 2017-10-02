@@ -7,14 +7,20 @@ const Os = require('os')
 let workers = []
 const cpuCount = Os.cpus().length
 
-exports.plugin = Hp(function hemeraControlplane (options) {
-  const hemera = this
+exports.plugin = Hp(hemeraControlplane, '>=1.5.0')
+
+exports.options = {
+  name: require('./package.json').name,
+  payloadValidator: 'hemera-joi'
+}
+
+function hemeraControlplane (hemera, opts, done) {
   const topic = 'controlplane'
-  const Joi = hemera.exposition['hemera-joi'].joi
+  const Joi = hemera.joi
 
   // name of the service is required
   const result = Joi.validate(
-    options,
+    opts,
     { service: Joi.string().required() },
     { allowUnknown: true }
   )
@@ -56,7 +62,7 @@ exports.plugin = Hp(function hemeraControlplane (options) {
     {
       topic,
       cmd: 'scaleUp',
-      service: options.service
+      service: opts.service
     },
     function (req, reply) {
       // limit forks by count of processors
@@ -92,7 +98,7 @@ exports.plugin = Hp(function hemeraControlplane (options) {
     {
       topic,
       cmd: 'scaleDown',
-      service: options.service
+      service: opts.service
     },
     function (req, reply) {
       const worker = workers.shift()
@@ -128,7 +134,7 @@ exports.plugin = Hp(function hemeraControlplane (options) {
     {
       topic,
       cmd: 'killByPid',
-      service: options.service,
+      service: opts.service,
       pid: Joi.number().required()
     },
     function (req, reply) {
@@ -173,7 +179,7 @@ exports.plugin = Hp(function hemeraControlplane (options) {
     {
       topic,
       cmd: 'down',
-      service: options.service
+      service: opts.service
     },
     function (req, reply) {
       const self = this
@@ -220,19 +226,13 @@ exports.plugin = Hp(function hemeraControlplane (options) {
     {
       topic,
       cmd: 'list',
-      service: options.service
+      service: opts.service
     },
     function (req, reply) {
       const list = workers.map(item => item.pid)
       reply(null, { success: true, list })
     }
   )
-})
 
-exports.options = {
-  payloadValidator: 'hemera-joi'
-}
-
-exports.attributes = {
-  pkg: require('./package.json')
+  done()
 }

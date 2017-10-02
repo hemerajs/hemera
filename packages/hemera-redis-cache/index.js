@@ -3,14 +3,23 @@
 const Redis = require('redis')
 const Hp = require('hemera-plugin')
 
-exports.plugin = Hp(function hemeraRedisCache (options) {
-  const hemera = this
-  const client = Redis.createClient(options.redis)
+exports.plugin = Hp(hemeraRedisCache, '>= 1.5.0')
+
+exports.options = {
+  name: require('./package.json').name,
+  payloadValidator: 'hemera-joi',
+  redis: null
+}
+
+function hemeraRedisCache (hemera, opts, done) {
+  const client = Redis.createClient(opts.redis)
   const topic = 'redis-cache'
 
-  const Joi = hemera.exposition['hemera-joi'].joi
+  const Joi = hemera.joi
 
-  hemera.expose('client', client)
+  hemera.decorate('redis', {
+    client
+  })
 
   // Gracefully shutdown
   hemera.ext('onClose', (ctx, done) => {
@@ -21,6 +30,7 @@ exports.plugin = Hp(function hemeraRedisCache (options) {
 
   client.on('ready', function () {
     hemera.log.info('Redis Cache is ready')
+    done()
   })
 
   client.on('end', function () {
@@ -131,13 +141,4 @@ exports.plugin = Hp(function hemeraRedisCache (options) {
       client.ttl(req.key, cb)
     }
   )
-}, '>= 1.5.0')
-
-exports.options = {
-  payloadValidator: 'hemera-joi',
-  redis: null
-}
-
-exports.attributes = {
-  pkg: require('./package.json')
 }

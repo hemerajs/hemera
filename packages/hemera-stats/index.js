@@ -2,8 +2,12 @@
 
 const Hp = require('hemera-plugin')
 
-exports.plugin = Hp(function hemeraStats () {
-  const hemera = this
+exports.plugin = Hp(hemeraStats, '>=1.5.0')
+exports.options = {
+  name: require('./package.json').name
+}
+
+function hemeraStats (hemera, opts, done) {
   const topic = 'stats'
 
   hemera.add(
@@ -63,17 +67,13 @@ exports.plugin = Hp(function hemeraStats () {
         return {
           pattern: a.pattern,
           schema: schema,
-          plugin: a.plugin.attributes.name
+          plugin: a.plugin.options.name
         }
       })
 
       cb(null, info)
     }
   )
-})
 
-exports.options = {}
-
-exports.attributes = {
-  pkg: require('./package.json')
+  done()
 }

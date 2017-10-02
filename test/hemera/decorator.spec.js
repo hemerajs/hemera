@@ -1,6 +1,6 @@
 'use strict'
 
-describe('Decorator', function() {
+describe('Root Decorator', function() {
   var PORT = 6242
   var authUrl = 'nats://localhost:' + PORT
   var server
@@ -22,8 +22,7 @@ describe('Decorator', function() {
 
     hemera.ready(() => {
       hemera.decorate('d', () => true)
-      let result = hemera.d()
-      expect(result).to.be.equals(true)
+      expect(hemera.d).to.be.function()
       hemera.close(done)
     })
   })
@@ -35,58 +34,37 @@ describe('Decorator', function() {
 
     hemera.ready(() => {
       try {
-        hemera.decorate('d', () => true)
-        hemera.decorate('d', () => true)
-      } catch (e) {
-        expect(e).to.be.exists()
-        expect(e.message).to.be.equals('Server decoration already defined')
+        hemera.decorate('d', 1)
+        hemera.decorate('d', 1)
+      } catch (err) {
+        expect(err).to.exists()
         hemera.close(done)
       }
     })
   })
 
-  it('Should not be possible to override a built in method', function(done) {
+  it('Should be able add to check if a decorator exists', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      try {
-        hemera.decorate('act', () => true)
-      } catch (e) {
-        expect(e).to.be.exists()
-        expect(e.message).to.be.equals(
-          'Cannot override the built-in server interface method'
-        )
-        hemera.close(done)
-      }
-    })
-  })
-
-  it('Decorator are not plugin scoped', function(done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    let plugin = function(options) {
-      let hemera = this
       hemera.decorate('d', () => true)
-    }
-
-    hemera.use({
-      plugin: plugin,
-      attributes: {
-        name: 'myPlugin'
-      }
-    })
-
-    hemera.ready(() => {
-      let result = hemera.d()
-      expect(result).to.be.equals(true)
-      expect(hemera._decorations['d'].plugin.attributes.name).to.be.equals(
-        'myPlugin'
-      )
+      expect(hemera.hasDecorator('d')).to.be.equals(true)
       hemera.close(done)
     })
   })
+
+  it('Should not extend the prototype', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    let hemera1 = new Hemera(nats)
+    hemera1.decorate('fooBar', 1)
+    let hemera2 = new Hemera(nats)
+    expect(hemera2.hasDecorator('fooBar')).to.be.equals(false)
+    hemera1.close(() => {
+      hemera2.close(done)
+    })
+  })
+
 })
