@@ -42,7 +42,7 @@ const ConfigScheme = require('./configScheme')
 const CodecPipeline = require('./codecPipeline')
 const Reply = require('./reply')
 const Add = require('./add')
-const Ext = require('./ext')
+const Extension = require('./Extension')
 const pDefer = require('p-defer')
 
 /**
@@ -126,7 +126,7 @@ class Hemera extends EventEmitter {
     // contains the list of circuit breaker of all act calls
     this._circuitBreakerMap = new Map()
 
-    this._ext = new Ext()
+    this._ext = new Extension()
     this._ext.add('onClientPreRequest', DefaultExtensions.onClientPreRequest)
     this._ext.add('onClientPostRequest', DefaultExtensions.onClientPostRequest)
     this._ext.add('onServerPreRequest', DefaultExtensions.onServerPreRequest)
@@ -144,6 +144,7 @@ class Hemera extends EventEmitter {
 
     this._avvio.override = (hemera, plugin, opts) => {
       const res = Object.create(hemera)
+      const proto = Object.getPrototypeOf(res)
 
       if (hemera._config.childLogger) {
         res.log = hemera.log.child({ plugin: opts.name })
@@ -165,7 +166,8 @@ class Hemera extends EventEmitter {
           res._checkDecoraterDependencies(deps)
         }
 
-        Object.getPrototypeOf(res)[prop] = value
+        // extend prototype
+        proto[prop] = value
       }
 
       this._plugins[opts.name] = res

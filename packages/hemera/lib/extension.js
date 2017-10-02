@@ -16,7 +16,7 @@ const Errors = require('./errors')
 /**
  * @class Extension
  */
-class Ext {
+class Extension {
   constructor() {
     this._stack = []
     this._types = [
@@ -72,4 +72,4 @@ class Ext {
   }
 }
 
-module.exports = Ext
+module.exports = Extension
