@@ -66,6 +66,108 @@ describe('Plugin interface', function() {
     })
   })
 
+  it('Should be able to register an array of plugins', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    // Plugin
+    let plugin = function(hemera, options, done) {
+      done()
+    }
+
+    let plugin2 = function(hemera, options, done) {
+      done()
+    }
+
+    hemera.use([
+      {
+        plugin: plugin,
+        options: {
+          name: 'myPlugin',
+          a: 1
+        }
+      },
+      {
+        plugin: plugin2,
+        options: {
+          name: 'myPlugin2',
+          a: 2
+        }
+      }
+    ])
+
+    hemera.ready(err => {
+      expect(err).to.be.not.exists()
+      expect(hemera.plugins.myPlugin.plugin$.options.a).to.be.equals(1)
+      expect(hemera.plugins.myPlugin2.plugin$.options.a).to.be.equals(2)
+      hemera.close(done)
+    })
+  })
+
+  it('Should be able to use after', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    // Plugin
+    let plugin = function(hemera, options, done) {
+      done()
+    }
+
+    let pluginOptions = {
+      name: 'myPlugin',
+      a: '1'
+    }
+
+    hemera
+      .use({
+        plugin: plugin,
+        options: pluginOptions
+      })
+      .after(err => {
+        expect(err).to.be.not.exists()
+        hemera.close(done)
+      })
+
+    hemera.ready(err => {
+      expect(err).to.be.not.exists()
+    })
+  })
+
+  it('Should be able to pass a callback after plugins was initialized', function(
+    done
+  ) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    // Plugin
+    let plugin = function(hemera, options, done) {
+      done()
+    }
+
+    let pluginOptions = {
+      name: 'myPlugin',
+      a: '1'
+    }
+
+    hemera.use(
+      {
+        plugin: plugin,
+        options: pluginOptions
+      },
+      err => {
+        expect(err).to.be.not.exists()
+        hemera.close(done)
+      }
+    )
+
+    hemera.ready(err => {
+      expect(err).to.be.not.exists()
+    })
+  })
+
   it('Should be able to list all plugins', function(done) {
     const nats = require('nats').connect(authUrl)
 
