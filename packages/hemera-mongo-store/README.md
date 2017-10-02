@@ -95,7 +95,7 @@ hemera.ready(() => {
 ```
 To make things easiser, you can also use the `mongodb-extended-json` [package](https://www.npmjs.com/package/mongodb-extended-json) and its serialization capabilities (which the store uses under the hood), to make the objects "less messy." For example:
 ```js
-const EJSON = require('mongodb-extended-json');
+const EJSON = require('mongodb-extended-json')
 
 hemera.ready(() => {
   const ObjectID = hemera.mongodb.client.ObjectID
@@ -120,7 +120,7 @@ Be default, responses returned from the `mongo-store` (via `find` or other actio
 
 That being said, if you want responses to be converted into extended format, you can enable the `serializeResult` plugin option. Also, to "auto-magically" convert all extended types, you can utilize mongodb-extended-json's deserialization capabilities. Example:
 ```js
-const EJSON = require('mongodb-extended-json');
+const EJSON = require('mongodb-extended-json')
 
 hemera.use(hemeraMongo, {
   serializeResult: true,
@@ -136,7 +136,7 @@ hemera.ready(() => {
     collection: 'collTest',
     id: 'some-id-value',
   }, function (err, resp) {
-    const doc = EJSON.deserialize(resp);
+    const doc = EJSON.deserialize(resp)
     // Now `doc.date` and `doc.objectId` will be deserialized into
     // `Date` and `ObjectId` types, respectively.
   })
@@ -144,7 +144,7 @@ hemera.ready(() => {
 ```
 Finally, extended JSON can also be used in queries. This is useful when you need to query an `ObjectId` value that isn't the native `_id` field, or for Regular Expressions. For example:
 ```js
-const EJSON = require('mongodb-extended-json');
+const EJSON = require('mongodb-extended-json')
 
 hemera.ready(() => {
   hemera.act({
