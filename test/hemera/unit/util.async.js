@@ -10,4 +10,14 @@ describe('Util Async / Await', function() {
     expect(c).to.be.equals(false)
     done()
   })
+
+  it('toPromiseFact', function(done) {
+    const a = async function() {}
+    let fn = HemeraUtil.toPromiseFact(a)
+    expect(fn).to.be.function()
+    expect(fn.length).to.be.equals(0)
+    expect(fn).to.be.not.equals(a)
+
+    done()
+  })
 })

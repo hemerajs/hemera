@@ -38,6 +38,24 @@ describe('Util', function() {
     done()
   })
 
+  it('Generate random id', function(done) {
+    let schema = HemeraUtil.randomId()
+    expect(schema).to.be.string()
+    expect(schema.length).to.be.equals(32)
+
+    done()
+  })
+
+  it('toPromiseFact', function(done) {
+    const a = function() {}
+    let fn = HemeraUtil.toPromiseFact(a)
+    expect(fn).to.be.function()
+    expect(fn.length).to.be.equals(0)
+    expect(fn).to.be.equals(a)
+
+    done()
+  })
+
   it('Clean pattern', function(done) {
     let pattern = HemeraUtil.cleanPattern({
       topic: 'foo',
