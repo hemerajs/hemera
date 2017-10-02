@@ -43,5 +43,10 @@ hemera.ready(() => {
 })
 ```
 
+## Run Redis
+```bash
+$ docker-compose up
+```
+
 ## Dependencies
 - hemera-joi

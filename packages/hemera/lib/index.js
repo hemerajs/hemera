@@ -1103,6 +1103,7 @@ class Hemera extends EventEmitter {
     hemera._isServer = false
     hemera._execute = null
     hemera._defer = pDefer()
+    hemera._isPromisable = false
     hemera._actCallback = null
 
     // topic is needed to subscribe on a subject in NATS
@@ -1133,12 +1134,7 @@ class Hemera extends EventEmitter {
           .catch(hemera._defer.reject)
       } else if (hemera._actCallback) {
         const res = hemera._actCallback(err, result)
-
-        if (res instanceof Error) {
-          hemera._defer.reject(res)
-        } else {
-          hemera._defer.resolve(res)
-        }
+        hemera._defer.resolve(res)
       } else {
         if (err) {
           hemera._defer.reject(err)

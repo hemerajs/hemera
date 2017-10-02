@@ -45,7 +45,7 @@ function initServer(topic, testCollection, pluginOptions, cb) {
   const server = HemeraTestsuite.start_server(PORT, flags, () => {
     const nats = Nats.connect(authUrl)
     const hemera = new Hemera(nats, {
-      logLevel: 'info'
+      logLevel: 'silent'
     })
     hemera.use(HemeraJoi)
     hemera.use(HemeraMongoStore, pluginOptions)

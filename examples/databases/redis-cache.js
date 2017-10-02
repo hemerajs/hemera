@@ -23,7 +23,7 @@ hemera.ready(() => {
       key: 'foo',
       value: 'bar'
     },
-    function (err, resp) {
+    function(err, resp) {
       this.log.info(resp, 'Result')
 
       hemera.act(
@@ -32,7 +32,7 @@ hemera.ready(() => {
           cmd: 'get',
           key: 'foo'
         },
-        function (err, resp) {
+        function(err, resp) {
           this.log.info(resp, 'Result')
         }
       )
