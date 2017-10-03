@@ -3,7 +3,7 @@
 const Hp = require('hemera-plugin')
 const Elasticsearch = require('elasticsearch')
 
-exports.plugin = Hp(hemeraElasticSearch, '>=2.0.0-0')
+exports.plugin = Hp(hemeraElasticSearch, '>=2.0.0')
 exports.options = {
   name: require('./package.json').name,
   payloadValidator: 'hemera-joi',

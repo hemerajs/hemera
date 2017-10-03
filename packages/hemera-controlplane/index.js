@@ -7,7 +7,7 @@ const Os = require('os')
 let workers = []
 const cpuCount = Os.cpus().length
 
-exports.plugin = Hp(hemeraControlplane, '>=2.0.0-0')
+exports.plugin = Hp(hemeraControlplane, '>=2.0.0')
 
 exports.options = {
   name: require('./package.json').name,

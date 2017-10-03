@@ -3,7 +3,7 @@
 const Hp = require('hemera-plugin')
 const Joi = require('joi')
 
-exports.plugin = Hp(hemeraJoi, '>=2.0.0-0')
+exports.plugin = Hp(hemeraJoi, '>=2.0.0')
 exports.options = {
   name: require('./package.json').name
 }

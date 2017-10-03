@@ -1,7 +1,7 @@
 const SlackBot = require('slackbots')
 const Hp = require('hemera-plugin')
 
-exports.plugin = Hp(hemeraSlackbot, '>=2.0.0-0')
+exports.plugin = Hp(hemeraSlackbot, '>=2.0.0')
 
 exports.options = {
   name: require('./package.json').name,

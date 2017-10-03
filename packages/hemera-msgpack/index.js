@@ -3,7 +3,7 @@
 const Hp = require('hemera-plugin')
 const msgpack = require('msgpack-lite')
 
-exports.plugin = Hp(hemeraMsgpack, '>=2.0.0-0')
+exports.plugin = Hp(hemeraMsgpack, '>=2.0.0')
 exports.options = {
   name: require('./package.json').name
 }

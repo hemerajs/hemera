@@ -3,7 +3,7 @@
 const Hp = require('hemera-plugin')
 const Couchbase = require('couchbase')
 
-exports.plugin = Hp(hemeraCouchbaseStore, '>=2.0.0-0')
+exports.plugin = Hp(hemeraCouchbaseStore, '>=2.0.0')
 exports.options = {
   name: require('./package.json').name,
   payloadValidator: 'hemera-joi',

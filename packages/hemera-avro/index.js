@@ -6,7 +6,7 @@ const avroType = require('./avro')
 const SafeStringify = require('nats-hemera/lib/encoder').encode
 const SafeParse = require('nats-hemera/lib/decoder').decode
 
-exports.plugin = Hp(hemeraAvro, '>=2.0.0-0')
+exports.plugin = Hp(hemeraAvro, '>=2.0.0')
 exports.options = {
   name: require('./package.json').name
 }

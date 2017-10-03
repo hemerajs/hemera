@@ -8,7 +8,7 @@ const StorePattern = require('hemera-store/pattern')
 const serialize = require('mongodb-extended-json').serialize
 const deserialize = require('mongodb-extended-json').deserialize
 
-exports.plugin = Hp(hemeraMongoStore, '>=2.0.0-0')
+exports.plugin = Hp(hemeraMongoStore, '>=2.0.0')
 exports.options = {
   name: require('./package.json').name,
   payloadValidator: 'hemera-joi',

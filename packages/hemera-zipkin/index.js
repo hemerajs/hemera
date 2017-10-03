@@ -14,7 +14,7 @@ let defaultConfig = {
   sampling: 0.1
 }
 
-exports.plugin = Hp(hemeraZipkin, '>=2.0.0-0')
+exports.plugin = Hp(hemeraZipkin, '>=2.0.0')
 exports.options = {
   name: require('./package.json')
 }

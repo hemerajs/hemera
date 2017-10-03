@@ -3,7 +3,7 @@
 const SnappyJS = require('snappyjs')
 const Hp = require('hemera-plugin')
 
-exports.plugin = Hp(hemeraSnappy, '>=2.0.0-0')
+exports.plugin = Hp(hemeraSnappy, '>=2.0.0')
 exports.options = {
   name: require('./package.json').name
 }

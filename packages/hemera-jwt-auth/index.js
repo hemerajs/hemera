@@ -4,7 +4,7 @@ const Hp = require('hemera-plugin')
 const JWT = require('jsonwebtoken')
 const Hoek = require('hoek')
 
-exports.plugin = Hp(hemeraJwtAuth, '>=2.0.0-0')
+exports.plugin = Hp(hemeraJwtAuth, '>=2.0.0')
 exports.options = {
   name: require('./package.json').name,
   enforceAuth: true,
