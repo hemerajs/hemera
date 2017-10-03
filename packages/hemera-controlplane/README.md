@@ -12,6 +12,13 @@ __Status:__ Experimental
 - `online` and `exit` status are guaranteed via IPC
 - Receive further events e.g when a worker exists fast after it was successfully created
 
+#### Run tests
+
+```bash
+$ node ./test/worker
+$ npm run test
+```
+
 #### Start your worker
 
 ```js

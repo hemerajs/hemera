@@ -135,6 +135,35 @@ describe('Plugin interface', function() {
     })
   })
 
+  it('Should be able to register a plugin in a plugin', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    // Plugin
+    let plugin = function(hemera, options, done) {
+      hemera.use({
+        plugin: (hemera, opts, done) => {
+          done()
+        },
+        options: { name: 'foo' }
+      })
+
+      done()
+    }
+
+    hemera.use({
+      plugin,
+      options: { name: 'bar' }
+    })
+
+    hemera.ready(err => {
+      expect(err).to.be.not.exists()
+      expect(Object.keys(hemera.plugins)).to.be.equals(['core', 'bar', 'foo'])
+      hemera.close(done)
+    })
+  })
+
   it('Should be able to pass a callback after plugins was initialized', function(
     done
   ) {

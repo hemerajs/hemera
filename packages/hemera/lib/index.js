@@ -42,7 +42,7 @@ const ConfigScheme = require('./configScheme')
 const CodecPipeline = require('./codecPipeline')
 const Reply = require('./reply')
 const Add = require('./add')
-const Extension = require('./Extension')
+const Extension = require('./extension')
 const pDefer = require('p-defer')
 
 /**
