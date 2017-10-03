@@ -1,7 +1,7 @@
 Changelog
 =========
 
-**Look at Github release for changelogs**
+**Further changelogs are tracked in Github release**
 
 # 1.x
 
