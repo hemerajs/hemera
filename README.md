@@ -178,7 +178,7 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md)
+See [Releases](https://github.com/hemerajs/hemera/releases)
 
 ## Contributing
 
