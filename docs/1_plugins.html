@@ -189,23 +189,13 @@ hemera.use(plugin, [opts], [cb])
   }, { a: 1 })
 </code>
                     </pre>
-                    <h4 class="section-h4">Ready callback</h4>
-                    <p>Pass a callback function to get notified when the plugins were initalized.</p>
-                    <pre>
-<code class="javascript">
-  hemera.use({
-    plugin: function(hemera, opts, next) { next() },
-    options: { name: "foo" }
-  }, (err) => {  })
-</code>
-                    </pre>
                     <h4 class="section-h4">Register multiple plugins at once</h4>
                     <pre>
 <code class="javascript">
   hemera.use([{
     plugin: function(hemera, opts, next) { next() },
     options: { name: "foo" }
-  }], (err) => {  })
+  }]).after((err) => { })
 </code>
                     </pre>
 

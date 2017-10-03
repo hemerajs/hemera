@@ -458,7 +458,7 @@ class Hemera extends EventEmitter {
    * @returns
    * @memberof Hemera
    */
-  _use(plugin, opts, cb) {
+  _use(plugin, opts) {
     const pluginOpts = Hoek.clone(plugin.options || {})
     const options = Hoek.applyToDefaults(pluginOpts, opts || {}, true)
 
@@ -466,7 +466,7 @@ class Hemera extends EventEmitter {
       throw new Errors.HemeraError(Constants.PLUGIN_NAME_REQUIRED)
     }
 
-    this.register(plugin.plugin, options, cb)
+    this.register(plugin.plugin, options)
   }
 
   /**
@@ -478,19 +478,13 @@ class Hemera extends EventEmitter {
    * @returns
    * @memberof Hemera
    */
-  use(plugin, opts, cb) {
-    // when opts is omitted
-    if (_.isFunction(opts)) {
-      cb = opts
-      opts = {}
-    }
-
+  use(plugin, opts) {
     if (_.isArray(plugin)) {
       plugin.forEach(p => {
-        this._use(p, opts, cb)
+        this._use(p, opts)
       })
     } else {
-      this._use(plugin, opts, cb)
+      this._use(plugin, opts)
     }
 
     return this._avvio

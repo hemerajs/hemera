@@ -105,6 +105,54 @@ describe('Plugin interface', function() {
     })
   })
 
+  it('Should be able to register a callback after an array of plugins was registered', function(
+    done
+  ) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    const spy = Sinon.spy()
+
+    // Plugin
+    let plugin = function(hemera, options, done) {
+      done()
+    }
+
+    let plugin2 = function(hemera, options, done) {
+      done()
+    }
+
+    hemera
+      .use([
+        {
+          plugin: plugin,
+          options: {
+            name: 'myPlugin',
+            a: 1
+          }
+        },
+        {
+          plugin: plugin2,
+          options: {
+            name: 'myPlugin2',
+            a: 2
+          }
+        }
+      ])
+      .after(err => {
+        expect(err).to.be.not.exists()
+        spy()
+      })
+
+    hemera.ready(err => {
+      expect(err).to.be.not.exists()
+      expect(spy.calledOnce).to.be.equals(true)
+      expect(hemera.plugins.myPlugin.plugin$.options.a).to.be.equals(1)
+      expect(hemera.plugins.myPlugin2.plugin$.options.a).to.be.equals(2)
+      hemera.close(done)
+    })
+  })
+
   it('Should be able to use after', function(done) {
     const nats = require('nats').connect(authUrl)
 
@@ -211,16 +259,15 @@ describe('Plugin interface', function() {
       a: '1'
     }
 
-    hemera.use(
-      {
+    hemera
+      .use({
         plugin: plugin,
         options: pluginOptions
-      },
-      err => {
+      })
+      .after(err => {
         expect(err).to.be.not.exists()
         hemera.close(done)
-      }
-    )
+      })
 
     hemera.ready(err => {
       expect(err).to.be.not.exists()
