@@ -131,10 +131,7 @@
 hemera.add({
     pubsub$: true,
     topic: "math",
-    cmd: "add",
-    a: {
-        type$: "number"
-    }
+    cmd: "add"
 }, function (req) {
 
 })
@@ -143,10 +140,7 @@ hemera.add({
 hemera.act({
     pubsub$: true,
     topic: "math",
-    cmd: "add",
-    a: {
-        type$: "number"
-    }
+    cmd: "add"
 })
 </code>
                     </pre>
@@ -159,10 +153,7 @@ hemera.act({
 //Subscribe
 hemera.add({
     topic: "math",
-    cmd: "add",
-    a: {
-        type$: "number"
-    }
+    cmd: "add"
 }, function (req) {
 
 })
@@ -171,22 +162,17 @@ hemera.add({
 hemera.act({
     pubsub$: true,
     topic: "math",
-    cmd: "add",
-    a: {
-        type$: "number"
-    }
+    cmd: "add"
 })
 </code>
                     </pre>
                     <h4 class="section-h4">Auto-unsubscribe after <code>maxMessages$</code> messages received</h4>
                     <pre>
 <code class="javascript">
-hemera.add({ 
+hemera.add({
   pubsub$: true,
   topic: "math",
   cmd: "add",
-  a: Joi.number().required(),
-  b: Joi.number().required(),
   maxMessages$: 1
 }, function (req, cb) {
   cb(null, req.a + req.b)
