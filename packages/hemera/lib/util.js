@@ -200,7 +200,10 @@ class Util {
     args = args || {}
     let sb = []
     _.each(args, function(v, k) {
-      if ((!~k.indexOf('$') && !_.isFunction(v) && !_.isObject(v)) || _.isRegExp(v)) {
+      if (
+        (!~k.indexOf('$') && !_.isFunction(v) && !_.isObject(v)) ||
+        _.isRegExp(v)
+      ) {
         sb.push(k + ':' + v)
       }
     })

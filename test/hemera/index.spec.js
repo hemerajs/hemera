@@ -177,17 +177,19 @@ describe('Hemera', function() {
         }
       )
 
-      hemera.act({
-        topic: 'email',
-        cmd: 'send',
-        id: 1
-      }, (err, req) => {
-        expect(req).to.be.equals('id')
-        hemera.close(done)
-      })
+      hemera.act(
+        {
+          topic: 'email',
+          cmd: 'send',
+          id: 1
+        },
+        (err, req) => {
+          expect(req).to.be.equals('id')
+          hemera.close(done)
+        }
+      )
     })
   })
-
 
   it('Should be able to act without a callback', function(done) {
     const nats = require('nats').connect(authUrl)

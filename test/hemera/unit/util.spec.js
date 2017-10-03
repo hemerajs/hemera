@@ -63,7 +63,7 @@ describe('Util', function() {
       regex: /./,
       a: { b: 1 }
     })
-    expect(pattern).to.be.equals({  regex: /./, topic: 'foo' })
+    expect(pattern).to.be.equals({ regex: /./, topic: 'foo' })
 
     pattern = HemeraUtil.cleanPattern(null)
     expect(pattern).to.be.equals(null)
@@ -86,7 +86,6 @@ describe('Util', function() {
   })
 
   it('Get pattern in string form', function(done) {
-
     // special $ variables
     let pattern = HemeraUtil.pattern({
       topic: 'foo',
