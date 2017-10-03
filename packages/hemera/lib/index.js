@@ -1374,8 +1374,10 @@ class Hemera extends EventEmitter {
   close(cb) {
     this.shutdown((err, instance, done) => {
       instance._onClose(err, err => {
+        if (_.isFunction(cb)) {
+          cb(err)
+        }
         done(err)
-        cb(err)
       })
     })
   }

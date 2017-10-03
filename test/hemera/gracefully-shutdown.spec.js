@@ -160,6 +160,19 @@ describe('Gracefully shutdown', function() {
     })
   })
 
+  it('Should close without callback', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      logLevel: 'silent'
+    })
+
+    hemera.ready(() => {
+      hemera.close()
+      done()
+    })
+  })
+
   it('Should gracefully shutdown even when NATS connection is already closed', function(
     done
   ) {
