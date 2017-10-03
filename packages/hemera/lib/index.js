@@ -123,9 +123,6 @@ class Hemera extends EventEmitter {
     // start tracking process stats
     this._heavy.start()
 
-    // contains the list of circuit breaker of all act calls
-    this._circuitBreakerMap = new Map()
-
     this._ext = new Extension()
     this._ext.add('onClientPreRequest', DefaultExtensions.onClientPreRequest)
     this._ext.add('onClientPostRequest', DefaultExtensions.onClientPostRequest)
