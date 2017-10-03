@@ -19,7 +19,7 @@ class CodecPipeline {
    * Creates an instance of CodecPipeline.
    * @memberof CodecPipeline
    */
-  constructor (type) {
+  constructor(type) {
     this._type = type
     this._stack = []
     return this
@@ -30,7 +30,7 @@ class CodecPipeline {
    *
    * @memberof CodecPipeline
    */
-  add (step) {
+  add(step) {
     this._stack.push(step)
     return this
   }
@@ -42,7 +42,7 @@ class CodecPipeline {
    * @returns
    * @memberof CodecPipeline
    */
-  reset (step) {
+  reset(step) {
     this._stack = step ? [step] : []
     return this
   }
@@ -54,7 +54,7 @@ class CodecPipeline {
    * @returns
    * @memberof CodecPipeline
    */
-  first (step) {
+  first(step) {
     this._stack.unshift(step)
     return this
   }
@@ -64,7 +64,7 @@ class CodecPipeline {
    * @returns
    * @memberof CodecPipeline
    */
-  run (msg, ctx) {
+  run(msg, ctx) {
     let firstError = null
 
     const value = this._stack.reduce((data, item, index) => {

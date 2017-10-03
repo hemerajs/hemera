@@ -8,7 +8,6 @@
     "type": "git"
   },
   "scripts": {
-    "lint": "eslint index.js",
     "test": "nyc mocha -t 5000 ./test/**/*.js",
     "coverage": "npm run test && nyc report --reporter=html"
   },

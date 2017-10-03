@@ -19,7 +19,7 @@ const hemera = new Hemera(nats, {
  */
 
 hemera.ready(() => {
-  hemera.close((err) => {
+  hemera.close(err => {
     console.error(err)
     process.exit(0)
   })

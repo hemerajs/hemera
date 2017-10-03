@@ -20,7 +20,7 @@ class ClientRequest {
    *
    * @memberOf ClientRequest
    */
-  constructor () {
+  constructor() {
     this._request = {}
   }
 
@@ -31,7 +31,7 @@ class ClientRequest {
    * @type {*}
    * @memberOf ClientRequest
    */
-  get payload () {
+  get payload() {
     return this._request.value
   }
 
@@ -42,7 +42,7 @@ class ClientRequest {
    * @type {*}
    * @memberOf ClientRequest
    */
-  get error () {
+  get error() {
     return this._request.error
   }
 
@@ -52,7 +52,7 @@ class ClientRequest {
    *
    * @memberOf ClientRequest
    */
-  set payload (value) {
+  set payload(value) {
     this._request.value = value
   }
 
@@ -62,7 +62,7 @@ class ClientRequest {
    *
    * @memberOf ClientRequest
    */
-  set error (error) {
+  set error(error) {
     this._request.error = error
   }
 }

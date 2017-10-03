@@ -50,14 +50,12 @@ The key features of NATS in combination with Hemera are:
 
 ## Built in protection
 * **Process policy**: Will exit the process when the policy (memory, event loop) could not be fullfilled (Option: `heavy`).
-* **Circuit breaker**: Will prevent from cascading failures (Option: `circuitBreaker`).
 * **Message loop detection**: Will return an error if you call a route recursively (Option: `maxRecursion`). 
 
 ## What Hemera code looks like
 
 **We support:**
 - Async/Await (Node 7.6+)
-- Generators (Node 4+)
 - Error-first-callback style
 
 ```js
@@ -71,7 +69,7 @@ hemera.use(HemeraJoi)
 hemera.ready(() => {
 
   hemera.setOption('payloadValidator', 'hemera-joi')
-  let Joi = hemera.exposition['hemera-joi'].joi
+  let Joi = hemera.joi
 
   hemera.add({ 
     topic: 'math',
@@ -137,6 +135,7 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 | [hemera-cli](https://github.com/hemerajs/hemera-cli) | [![npm](https://img.shields.io/npm/v/hemera-cli.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-cli)
 | [hemera-mail](https://github.com/hemerajs/hemera/tree/master/packages/hemera-mail) | [![npm](https://img.shields.io/npm/v/hemera-mail.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-mail)
 | [hemera-slackbot](https://github.com/hemerajs/hemera/tree/master/packages/hemera-slackbot) | [![npm](https://img.shields.io/npm/v/hemera-slackbot.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-slackbot)
+| [hemera-graceful-shutdown](https://github.com/hemerajs/hemera/tree/master/packages/hemera-graceful-shutdown) | [![npm](https://img.shields.io/npm/v/hemera-graceful-shutdown.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-graceful-shutdown)
 
 | Messaging bridges | Version |
 |--------|-------|

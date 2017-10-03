@@ -122,8 +122,7 @@
                     <h4 class="section-h4">Create a plugin for publishing as package</h4>
                     <pre>
 <code class="javascript">
-exports.plugin = function myPlugin (options, next) {
-  const hemera = this
+exports.plugin = function myPlugin (hemera, opts, next) {
   const topic = "math"
 
   hemera.add({
@@ -136,10 +135,8 @@ exports.plugin = function myPlugin (options, next) {
   next()
 }
 
-exports.options = {}
-
-exports.attributes = {
-  pkg: require("./package.json")
+exports.options = {
+  name: require("./package.json").name
 }
 </code>
                     </pre>
@@ -147,8 +144,7 @@ exports.attributes = {
                     <h4 class="section-h4">Create a pluging inline</h4>
                     <pre>
 <code class="javascript">
-const myPlugin = function (options, next) {
-  const hemera = this
+const myPlugin = function (hemera, opts, next) {
   const topic = "math"
 
   hemera.add({
@@ -166,28 +162,24 @@ const myPlugin = function (options, next) {
 
 hemera.use({
  plugin: myPlugin,
- options: {},
- attributes: {
-  name: "test",
-  version: "1.0.0",
-  description: "my first plugin"
+ options: {
+  name: "test"
  }
 })
 </code>
                     </pre>
                     <h4 class="section-h4">Plugin dependencies</h4>
-                    <p>Plugin dependencies are installed as usual with NPM. Every plugin instance create a new <code>scope</code> this means that any mondifications (via decorators, expose) on the <code>hemera</code> instance will not be reflected to the current context ancestors, but only to its descendants.</p>
+                    <p>Plugin dependencies are installed as usual with NPM. Every plugin instance create a new <code>scope</code>.</p>
 
                     <h4 class="section-h4">Plugin registration</h4>
-                    <p>A plugin must be registered before the <code>ready</code> function is called. The <code>ready</code>                        function will initialize all plugins. Default plugin options are preserved if you don't overwrite
+                    <p>A plugin must be registered before the <code>ready</code> function is called. The <code>ready</code> function will initialize all plugins. Default plugin options are preserved if you don't overwrite
                         them.
                     </p>
                     <pre>
 <code class="javascript">
 hemera.use({
-  plugin: function(options, next) {},
-  attributes: { name: "foo" },
-  options: { a: 1 }
+  plugin: function(hemera, opts, next) {},
+  options: { name: "foo", a: 1 }
 })
 </code>
                     </pre>
@@ -195,9 +187,9 @@ hemera.use({
                     <pre>
 <code class="javascript">
 hemera.use({
-  plugin: function(options, next) {},
-  attributes: { name: "foo" }
-}, { a: 1 })
+  plugin: function(hemera, opts, next) {},
+  options: { name: "foo" }
+})
 </code>
                     </pre>
                     <h4 class="section-h4">Payload validators</h4>
@@ -211,17 +203,10 @@ hemera.setOption("payloadValidator", "hemera-joi")
 </code>
                     </pre>
                     <h4 class="section-h4">Shared data</h4>
-                    <p>Sometimes it is useful to share data across plugins. This data can be accessed from all other plugins
-                        which were initialized after that.</p>
+                    <p>Sometimes it is useful to share data across plugins. This data can be accessed from all other plugins. You can also declare the dependencies of your function.</p>
                     <pre>
 <code class="javascript">
-hemera.expose("magicNumber", 42)
-</code>
-                    </pre>
-                    <p>Access the value in any plugin</p>
-                    <pre>
-<code class="javascript">
-hemera.exposition.pluginName.magicNumber //42
+hemera.decorate("magicNumber", fn, ['dep1', 'dep2'])
 </code>
                     </pre>
                 </div>

@@ -5,24 +5,31 @@ const Knex = require('knex')
 const SqlStore = require('./store')
 const StorePattern = require('hemera-store/pattern')
 
-exports.plugin = Hp(function hemeraSqlStore (options) {
-  const hemera = this
+exports.plugin = Hp(hemeraSqlStore, '>=1.5.0')
+exports.options = {
+  name: require('./package.json').name,
+  payloadValidator: 'hemera-joi'
+}
+
+function hemeraSqlStore(hemera, opts, done) {
   const connections = {}
   const topic = 'sql-store'
 
-  hemera.expose('useDb', useDb)
+  hemera.decorate('sql', {
+    useDb
+  })
 
-  function useDb (databaseName) {
+  function useDb(databaseName) {
     if (connections[databaseName]) {
       return connections[databaseName]
     }
 
     if (databaseName) {
-      let option = Object.assign({}, options.connection)
+      let option = Object.assign({}, opts.connection)
       option.database = databaseName
 
       connections[databaseName] = Knex({
-        dialect: options.dialect,
+        dialect: opts.dialect,
         connection: option,
         pool: {
           min: 0,
@@ -33,7 +40,7 @@ exports.plugin = Hp(function hemeraSqlStore (options) {
       return connections[databaseName]
     }
 
-    connections[databaseName] = options.knex.driver
+    connections[databaseName] = opts.knex.driver
 
     return connections[databaseName]
   }
@@ -41,7 +48,7 @@ exports.plugin = Hp(function hemeraSqlStore (options) {
   /**
    * Create a new record
    */
-  hemera.add(StorePattern.create(topic), function (req, cb) {
+  hemera.add(StorePattern.create(topic), function(req, cb) {
     let db = useDb(req.database)
 
     const store = new SqlStore(db)
@@ -52,7 +59,7 @@ exports.plugin = Hp(function hemeraSqlStore (options) {
   /**
    * Find a record by id
    */
-  hemera.add(StorePattern.findById(topic), function (req, cb) {
+  hemera.add(StorePattern.findById(topic), function(req, cb) {
     let db = useDb(req.database)
 
     const store = new SqlStore(db)
@@ -63,7 +70,7 @@ exports.plugin = Hp(function hemeraSqlStore (options) {
   /**
    * Update a record by id
    */
-  hemera.add(StorePattern.updateById(topic), function (req, cb) {
+  hemera.add(StorePattern.updateById(topic), function(req, cb) {
     let db = useDb(req.database)
 
     const store = new SqlStore(db)
@@ -74,7 +81,7 @@ exports.plugin = Hp(function hemeraSqlStore (options) {
   /**
    * Replace a record by id
    */
-  hemera.add(StorePattern.replaceById(topic), function (req, cb) {
+  hemera.add(StorePattern.replaceById(topic), function(req, cb) {
     let db = useDb(req.database)
 
     const store = new SqlStore(db)
@@ -85,7 +92,7 @@ exports.plugin = Hp(function hemeraSqlStore (options) {
   /**
    * Update entities
    */
-  hemera.add(StorePattern.update(topic), function (req, cb) {
+  hemera.add(StorePattern.update(topic), function(req, cb) {
     let db = useDb(req.database)
 
     const store = new SqlStore(db)
@@ -96,7 +103,7 @@ exports.plugin = Hp(function hemeraSqlStore (options) {
   /**
    * Update entities
    */
-  hemera.add(StorePattern.replace(topic), function (req, cb) {
+  hemera.add(StorePattern.replace(topic), function(req, cb) {
     let db = useDb(req.database)
 
     const store = new SqlStore(db)
@@ -107,7 +114,7 @@ exports.plugin = Hp(function hemeraSqlStore (options) {
   /**
    * Remove an entity by id
    */
-  hemera.add(StorePattern.removeById(topic), function (req, cb) {
+  hemera.add(StorePattern.removeById(topic), function(req, cb) {
     let db = useDb(req.database)
 
     const store = new SqlStore(db)
@@ -118,7 +125,7 @@ exports.plugin = Hp(function hemeraSqlStore (options) {
   /**
    * Remove by query
    */
-  hemera.add(StorePattern.remove(topic), function (req, cb) {
+  hemera.add(StorePattern.remove(topic), function(req, cb) {
     let db = useDb(req.database)
 
     const store = new SqlStore(db)
@@ -129,7 +136,7 @@ exports.plugin = Hp(function hemeraSqlStore (options) {
   /**
    * find
    */
-  hemera.add(StorePattern.find(topic), function (req, cb) {
+  hemera.add(StorePattern.find(topic), function(req, cb) {
     let db = useDb(req.database)
 
     const store = new SqlStore(db)
@@ -140,19 +147,13 @@ exports.plugin = Hp(function hemeraSqlStore (options) {
   /**
    * exists
    */
-  hemera.add(StorePattern.exists(topic), function (req, cb) {
+  hemera.add(StorePattern.exists(topic), function(req, cb) {
     let db = useDb(req.database)
 
     const store = new SqlStore(db)
 
     store.exists(req, cb)
   })
-})
 
-exports.options = {
-  payloadValidator: 'hemera-joi'
-}
-
-exports.attributes = {
-  pkg: require('./package.json')
+  done()
 }

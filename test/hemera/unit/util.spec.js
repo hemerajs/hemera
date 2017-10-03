@@ -1,7 +1,9 @@
 'use strict'
 
-describe('Util', function () {
-  it('Should be able to convert NATS wildcard subject to the RegexExp equivalent', function (done) {
+describe('Util', function() {
+  it('Should be able to convert NATS wildcard subject to the RegexExp equivalent', function(
+    done
+  ) {
     const tokenWildcard = 'europe-system.*'
     const fullWildcard = 'europe-system.>'
     const regex1 = HemeraUtil.natsWildcardToRegex(tokenWildcard)
@@ -11,7 +13,9 @@ describe('Util', function () {
     done()
   })
 
-  it('Should be able to convert NATS wildcard subject to the RegexExp in different positions', function (done) {
+  it('Should be able to convert NATS wildcard subject to the RegexExp in different positions', function(
+    done
+  ) {
     const tokenWildcard = 'a.*.b'
     const fullWildcard = 'a.>'
     const regex1 = HemeraUtil.natsWildcardToRegex(tokenWildcard)
@@ -21,13 +25,89 @@ describe('Util', function () {
     done()
   })
 
-  it('Should be able to detect generator function', function (done) {
-    const a = HemeraUtil.isGeneratorFunction(function * test () {})
-    const b = HemeraUtil.isGeneratorFunction(function test () {})
-    const c = HemeraUtil.isGeneratorFunction('')
-    expect(a).to.be.equals(true)
-    expect(b).to.be.equals(false)
-    expect(c).to.be.equals(false)
+  it('Extract schema', function(done) {
+    let schema = HemeraUtil.extractSchema({
+      topic: 'foo',
+      a: { b: 1 }
+    })
+    expect(schema).to.be.equals({ a: { b: 1 } })
+
+    schema = HemeraUtil.extractSchema(null)
+    expect(schema).to.be.equals(null)
+
+    done()
+  })
+
+  it('Generate random id', function(done) {
+    let schema = HemeraUtil.randomId()
+    expect(schema).to.be.string()
+    expect(schema.length).to.be.equals(32)
+
+    done()
+  })
+
+  it('toPromiseFact', function(done) {
+    const a = function() {}
+    let fn = HemeraUtil.toPromiseFact(a)
+    expect(fn).to.be.function()
+    expect(fn.length).to.be.equals(0)
+    expect(fn).to.be.equals(a)
+
+    done()
+  })
+
+  it('Clean pattern', function(done) {
+    let pattern = HemeraUtil.cleanPattern({
+      topic: 'foo',
+      test$: 'a',
+      regex: /./,
+      a: { b: 1 }
+    })
+    expect(pattern).to.be.equals({  regex: /./, topic: 'foo' })
+
+    pattern = HemeraUtil.cleanPattern(null)
+    expect(pattern).to.be.equals(null)
+
+    done()
+  })
+
+  it('Clean from special variables', function(done) {
+    let pattern = HemeraUtil.cleanFromSpecialVars({
+      topic: 'foo',
+      test$: 'a',
+      a: { b: 1 }
+    })
+    expect(pattern).to.be.equals({ topic: 'foo', a: { b: 1 } })
+
+    pattern = HemeraUtil.cleanFromSpecialVars(null)
+    expect(pattern).to.be.equals(null)
+
+    done()
+  })
+
+  it('Get pattern in string form', function(done) {
+
+    // special $ variables
+    let pattern = HemeraUtil.pattern({
+      topic: 'foo',
+      test$: 'a',
+      a: { b: 1 }
+    })
+    expect(pattern).to.be.equals('topic:foo')
+
+    pattern = HemeraUtil.pattern('topic:foo')
+    expect(pattern).to.be.equals('topic:foo')
+
+    // null
+    pattern = HemeraUtil.pattern(null)
+    expect(pattern).to.be.equals('')
+
+    // regex
+    pattern = HemeraUtil.pattern({
+      topic: /./
+    })
+    expect(pattern).to.be.equals('topic:/./')
+
     done()
   })
 })

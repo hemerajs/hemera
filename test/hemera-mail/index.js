@@ -1,6 +1,6 @@
 'use strict'
 
-describe('Hemera-mail', function () {
+describe('Hemera-mail', function() {
   const PORT = 6243
   var authUrl = 'nats://localhost:' + PORT
   var server
@@ -8,7 +8,7 @@ describe('Hemera-mail', function () {
   let HemeraJoi
 
   // Start up our own nats-server
-  before(function (done) {
+  before(function(done) {
     HemeraMail = require('../../packages/hemera-mail')
     HemeraJoi = require('../../packages/hemera-joi')
 
@@ -16,11 +16,11 @@ describe('Hemera-mail', function () {
   })
 
   // Shutdown our server after we are done
-  after(function () {
+  after(function() {
     server.kill()
   })
 
-  it('Should be able to send an email', function (done) {
+  it('Should be able to send an email', function(done) {
     const nats = require('nats').connect({
       url: authUrl
     })
@@ -40,20 +40,23 @@ describe('Hemera-mail', function () {
         text: 'Plaintext version of the message',
         html: '<p>HTML version of the message</p>'
       }
-      hemera.act({
-        topic: 'mail',
-        cmd: 'send',
-        message
-      }, (err, resp) => {
-        expect(err).to.be.not.exists()
-        expect(resp.messageId).to.be.exists()
-        expect(resp.envelope).to.be.exists()
-        hemera.close(done)
-      })
+      hemera.act(
+        {
+          topic: 'mail',
+          cmd: 'send',
+          message
+        },
+        (err, resp) => {
+          expect(err).to.be.not.exists()
+          expect(resp.messageId).to.be.exists()
+          expect(resp.envelope).to.be.exists()
+          hemera.close(done)
+        }
+      )
     })
   })
 
-  it('Should not be able to send without subject', function (done) {
+  it('Should not be able to send without subject', function(done) {
     const nats = require('nats').connect({
       url: authUrl
     })
@@ -71,16 +74,18 @@ describe('Hemera-mail', function () {
         text: 'Plaintext version of the message',
         html: '<p>HTML version of the message</p>'
       }
-      hemera.act({
-        topic: 'mail',
-        cmd: 'send',
-        message
-      }, (err, resp) => {
-        expect(err).to.be.exists()
-        expect(err.name).to.be.equals('PreValidationError')
-        hemera.close(done)
-      })
+      hemera.act(
+        {
+          topic: 'mail',
+          cmd: 'send',
+          message
+        },
+        (err, resp) => {
+          expect(err).to.be.exists()
+          expect(err.name).to.be.equals('PreValidationError')
+          hemera.close(done)
+        }
+      )
     })
   })
 })
-

@@ -10,7 +10,7 @@ const Knex = require('knex')
 
 const expect = Code.expect
 
-describe('Hemera-sql-store', function () {
+describe('Hemera-sql-store', function() {
   let PORT = 6242
   var flags = ['--user', 'derek', '--pass', 'foobar']
   var authUrl = 'nats://derek:foobar@localhost:' + PORT
@@ -28,16 +28,18 @@ describe('Hemera-sql-store', function () {
    * @param {any} cb
    * @returns
    */
-  function setup (driver, cb) {
+  function setup(driver, cb) {
     driver.schema.dropTableIfExists(testTable).asCallback(() => {
-      driver.schema.createTableIfNotExists(testTable, function (table) {
-        table.increments()
-        table.string('name')
-      }).asCallback(cb)
+      driver.schema
+        .createTableIfNotExists(testTable, function(table) {
+          table.increments()
+          table.string('name')
+        })
+        .asCallback(cb)
     })
   }
 
-  before(function (done) {
+  before(function(done) {
     knex = Knex({
       dialect: 'mysql', // do not use mariosql cause https://github.com/tgriesser/bookshelf/issues/415
       connection: {
@@ -67,263 +69,320 @@ describe('Hemera-sql-store', function () {
     })
   })
 
-  after(function () {
+  after(function() {
     hemera.close()
     server.kill()
   })
 
-  it('create', function (done) {
-    hemera.act({
-      topic: 'sql-store',
-      cmd: 'create',
-      collection: testTable,
-      data: {
-        name: 'olaf'
-      }
-    }, (err, resp) => {
-      expect(err).to.be.not.exists()
-      expect(resp[0]).to.be.greaterThan(0)
-      done()
-    })
-  })
-
-  it('findById', function (done) {
-    hemera.act({
-      topic: 'sql-store',
-      cmd: 'create',
-      collection: testTable,
-      data: {
-        name: 'deletia'
-      }
-    }, (err, ids) => {
-      expect(err).to.be.not.exists()
-      hemera.act({
+  it('create', function(done) {
+    hemera.act(
+      {
         topic: 'sql-store',
-        cmd: 'findById',
+        cmd: 'create',
         collection: testTable,
-        id: ids[0]
-      }, (err, resp) => {
-        expect(err).to.be.not.exists()
-        expect(resp[0].id).to.be.equal(ids[0])
-        done()
-      })
-    })
-  })
-
-  it('updateById', function (done) {
-    hemera.act({
-      topic: 'sql-store',
-      cmd: 'create',
-      collection: testTable,
-      data: {
-        name: 'deletia'
-      }
-    }, (err, ids) => {
-      expect(err).to.be.not.exists()
-      hemera.act({
-        topic: 'sql-store',
-        cmd: 'updateById',
-        collection: testTable,
-        id: ids[0],
         data: {
-          name: 'new name'
+          name: 'olaf'
         }
-      }, (err, resp) => {
+      },
+      (err, resp) => {
         expect(err).to.be.not.exists()
-        expect(resp).to.be.equal(1)
+        expect(resp[0]).to.be.greaterThan(0)
         done()
-      })
-    })
+      }
+    )
   })
 
-  it('update', function (done) {
-    hemera.act({
-      topic: 'sql-store',
-      cmd: 'create',
-      collection: testTable,
-      data: {
-        name: 'deletia'
-      }
-    }, (err, ids) => {
-      expect(err).to.be.not.exists()
-      hemera.act({
+  it('findById', function(done) {
+    hemera.act(
+      {
         topic: 'sql-store',
-        cmd: 'update',
+        cmd: 'create',
         collection: testTable,
-        query: {
-          id: ids[0]
-        },
         data: {
-          name: 'new new name'
+          name: 'deletia'
         }
-      }, (err, resp) => {
+      },
+      (err, ids) => {
         expect(err).to.be.not.exists()
-        expect(resp).to.be.equal(1)
-        done()
-      })
-    })
+        hemera.act(
+          {
+            topic: 'sql-store',
+            cmd: 'findById',
+            collection: testTable,
+            id: ids[0]
+          },
+          (err, resp) => {
+            expect(err).to.be.not.exists()
+            expect(resp[0].id).to.be.equal(ids[0])
+            done()
+          }
+        )
+      }
+    )
   })
 
-  it('replace', function (done) {
-    hemera.act({
-      topic: 'sql-store',
-      cmd: 'create',
-      collection: testTable,
-      data: {
-        name: 'deletia'
-      }
-    }, (err, ids) => {
-      expect(err).to.be.not.exists()
-      hemera.act({
+  it('updateById', function(done) {
+    hemera.act(
+      {
         topic: 'sql-store',
-        cmd: 'replace',
+        cmd: 'create',
         collection: testTable,
-        query: {
-          id: ids[0]
-        },
         data: {
-          name: 'new new name'
+          name: 'deletia'
         }
-      }, (err, resp) => {
+      },
+      (err, ids) => {
         expect(err).to.be.not.exists()
-        expect(resp).to.be.equal(1)
-        done()
-      })
-    })
+        hemera.act(
+          {
+            topic: 'sql-store',
+            cmd: 'updateById',
+            collection: testTable,
+            id: ids[0],
+            data: {
+              name: 'new name'
+            }
+          },
+          (err, resp) => {
+            expect(err).to.be.not.exists()
+            expect(resp).to.be.equal(1)
+            done()
+          }
+        )
+      }
+    )
   })
 
-  it('replaceById', function (done) {
-    hemera.act({
-      topic: 'sql-store',
-      cmd: 'create',
-      collection: testTable,
-      data: {
-        name: 'deletia'
-      }
-    }, (err, ids) => {
-      expect(err).to.be.not.exists()
-      hemera.act({
+  it('update', function(done) {
+    hemera.act(
+      {
         topic: 'sql-store',
-        cmd: 'replaceById',
+        cmd: 'create',
         collection: testTable,
-        id: ids[0],
         data: {
-          name: 'new name'
+          name: 'deletia'
         }
-      }, (err, resp) => {
+      },
+      (err, ids) => {
         expect(err).to.be.not.exists()
-        expect(resp).to.be.equal(1)
-        done()
-      })
-    })
+        hemera.act(
+          {
+            topic: 'sql-store',
+            cmd: 'update',
+            collection: testTable,
+            query: {
+              id: ids[0]
+            },
+            data: {
+              name: 'new new name'
+            }
+          },
+          (err, resp) => {
+            expect(err).to.be.not.exists()
+            expect(resp).to.be.equal(1)
+            done()
+          }
+        )
+      }
+    )
   })
 
-  it('removeById', function (done) {
-    hemera.act({
-      topic: 'sql-store',
-      cmd: 'create',
-      collection: testTable,
-      data: {
-        name: 'deletia'
-      }
-    }, (err, ids) => {
-      expect(err).to.be.not.exists()
-      hemera.act({
+  it('replace', function(done) {
+    hemera.act(
+      {
         topic: 'sql-store',
-        cmd: 'removeById',
+        cmd: 'create',
         collection: testTable,
-        id: ids[0]
-      }, (err, resp) => {
-        expect(err).to.be.not.exists()
-        expect(resp).to.be.equal(1)
-        done()
-      })
-    })
-  })
-
-  it('remove', function (done) {
-    hemera.act({
-      topic: 'sql-store',
-      cmd: 'create',
-      collection: testTable,
-      data: {
-        name: 'denora'
-      }
-    }, (err, ids) => {
-      expect(err).to.be.not.exists()
-      hemera.act({
-        topic: 'sql-store',
-        cmd: 'remove',
-        collection: testTable,
-        query: {
-          id: ids[0]
+        data: {
+          name: 'deletia'
         }
-      }, (err, resp) => {
+      },
+      (err, ids) => {
         expect(err).to.be.not.exists()
-        expect(resp).to.be.equal(1)
-        done()
-      })
-    })
+        hemera.act(
+          {
+            topic: 'sql-store',
+            cmd: 'replace',
+            collection: testTable,
+            query: {
+              id: ids[0]
+            },
+            data: {
+              name: 'new new name'
+            }
+          },
+          (err, resp) => {
+            expect(err).to.be.not.exists()
+            expect(resp).to.be.equal(1)
+            done()
+          }
+        )
+      }
+    )
   })
 
-  it('find', function (done) {
-    hemera.act({
-      topic: 'sql-store',
-      cmd: 'create',
-      collection: testTable,
-      data: {
-        name: 'bernd'
-      }
-    }, (err, resp) => {
-      expect(err).to.be.not.exists()
-      expect(resp[0]).to.be.greaterThan(0)
-
-      hemera.act({
+  it('replaceById', function(done) {
+    hemera.act(
+      {
         topic: 'sql-store',
-        cmd: 'find',
+        cmd: 'create',
         collection: testTable,
-        query: {
+        data: {
+          name: 'deletia'
+        }
+      },
+      (err, ids) => {
+        expect(err).to.be.not.exists()
+        hemera.act(
+          {
+            topic: 'sql-store',
+            cmd: 'replaceById',
+            collection: testTable,
+            id: ids[0],
+            data: {
+              name: 'new name'
+            }
+          },
+          (err, resp) => {
+            expect(err).to.be.not.exists()
+            expect(resp).to.be.equal(1)
+            done()
+          }
+        )
+      }
+    )
+  })
+
+  it('removeById', function(done) {
+    hemera.act(
+      {
+        topic: 'sql-store',
+        cmd: 'create',
+        collection: testTable,
+        data: {
+          name: 'deletia'
+        }
+      },
+      (err, ids) => {
+        expect(err).to.be.not.exists()
+        hemera.act(
+          {
+            topic: 'sql-store',
+            cmd: 'removeById',
+            collection: testTable,
+            id: ids[0]
+          },
+          (err, resp) => {
+            expect(err).to.be.not.exists()
+            expect(resp).to.be.equal(1)
+            done()
+          }
+        )
+      }
+    )
+  })
+
+  it('remove', function(done) {
+    hemera.act(
+      {
+        topic: 'sql-store',
+        cmd: 'create',
+        collection: testTable,
+        data: {
+          name: 'denora'
+        }
+      },
+      (err, ids) => {
+        expect(err).to.be.not.exists()
+        hemera.act(
+          {
+            topic: 'sql-store',
+            cmd: 'remove',
+            collection: testTable,
+            query: {
+              id: ids[0]
+            }
+          },
+          (err, resp) => {
+            expect(err).to.be.not.exists()
+            expect(resp).to.be.equal(1)
+            done()
+          }
+        )
+      }
+    )
+  })
+
+  it('find', function(done) {
+    hemera.act(
+      {
+        topic: 'sql-store',
+        cmd: 'create',
+        collection: testTable,
+        data: {
           name: 'bernd'
-        },
-        options: {
-          orderBy: 'id desc',
-          limit: 2
         }
-      }, (err, resp) => {
+      },
+      (err, resp) => {
         expect(err).to.be.not.exists()
-        expect(resp.result.length).to.be.equals(1)
-        expect(resp.result[0].name).to.be.equals('bernd')
-        expect(resp.orderBy).to.be.equals('id desc')
-        expect(resp.limit).to.be.equals(2)
-        done()
-      })
-    })
+        expect(resp[0]).to.be.greaterThan(0)
+
+        hemera.act(
+          {
+            topic: 'sql-store',
+            cmd: 'find',
+            collection: testTable,
+            query: {
+              name: 'bernd'
+            },
+            options: {
+              orderBy: 'id desc',
+              limit: 2
+            }
+          },
+          (err, resp) => {
+            expect(err).to.be.not.exists()
+            expect(resp.result.length).to.be.equals(1)
+            expect(resp.result[0].name).to.be.equals('bernd')
+            expect(resp.orderBy).to.be.equals('id desc')
+            expect(resp.limit).to.be.equals(2)
+            done()
+          }
+        )
+      }
+    )
   })
 
-  it('exists', function (done) {
-    hemera.act({
-      topic: 'sql-store',
-      cmd: 'create',
-      collection: testTable,
-      data: {
-        name: 'maria'
-      }
-    }, (err, resp) => {
-      expect(err).to.be.not.exists()
-      expect(resp[0]).to.be.greaterThan(0)
-
-      hemera.act({
+  it('exists', function(done) {
+    hemera.act(
+      {
         topic: 'sql-store',
-        cmd: 'exists',
+        cmd: 'create',
         collection: testTable,
-        query: {
+        data: {
           name: 'maria'
         }
-      }, (err, resp) => {
+      },
+      (err, resp) => {
         expect(err).to.be.not.exists()
-        expect(resp).to.be.true()
-        done()
-      })
-    })
+        expect(resp[0]).to.be.greaterThan(0)
+
+        hemera.act(
+          {
+            topic: 'sql-store',
+            cmd: 'exists',
+            collection: testTable,
+            query: {
+              name: 'maria'
+            }
+          },
+          (err, resp) => {
+            expect(err).to.be.not.exists()
+            expect(resp).to.be.true()
+            done()
+          }
+        )
+      }
+    )
   })
 })

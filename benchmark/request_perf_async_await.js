@@ -19,21 +19,24 @@ hemera.ready(() => {
   var start = new Date()
 
   for (var i = 0; i < loop; i++) {
-    hemera.act({
-      topic: 'math',
-      cmd: 'add',
-      a: 1,
-      b: 2
-    }, async function (err, resp) {
-      await {}
-    })
+    hemera.act(
+      {
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      },
+      async function(err, resp) {
+        await {}
+      }
+    )
 
     if (i % hash === 0) {
       process.stdout.write('+')
     }
   }
 
-  hemera.close(function () {
+  hemera.close(function() {
     var stop = new Date()
     var mps = parseInt(loop / ((stop - start) / 1000))
     console.log('\nPublished at ' + mps + ' msgs/sec')

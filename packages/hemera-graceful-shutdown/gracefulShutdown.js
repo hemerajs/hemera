@@ -13,9 +13,6 @@
  * Module Dependencies
  */
 
-const _ = require('lodash')
-const Errors = require('./errors')
-const Constants = require('./constants')
 const parallel = require('fastparallel')()
 
 /**
@@ -28,7 +25,7 @@ class GracefulShutdown {
    * Creates an instance of GracefulShutdown.
    * @memberof GracefulShutdown
    */
-  constructor (logger) {
+  constructor(logger) {
     this.logger = logger
     this.process = null
     this.handlers = []
@@ -42,9 +39,9 @@ class GracefulShutdown {
    * @param {any} fn
    * @memberof GracefulShutdown
    */
-  addHandler (fn) {
-    if (!_.isFunction(fn)) {
-      throw new Errors.HemeraError('Expected a function but got a ' + typeof fn)
+  addHandler(fn) {
+    if (typeof fn !== 'function') {
+      throw new Error('Expected a function but got a ' + typeof fn)
     }
 
     this.handlers.push(fn)
@@ -57,12 +54,12 @@ class GracefulShutdown {
    * @param {any} signal
    * @memberof GracefulShutdown
    */
-  completed (err, signal) {
+  completed(err, signal) {
     if (err) {
-      this.logger.error({ err, signal }, Constants.PROCESS_TERMINATED)
+      this.logger.error({ err, signal }, 'process terminated')
       this.process.exit(1)
     } else {
-      this.logger.info({ signal }, Constants.PROCESS_TERMINATED)
+      this.logger.info({ signal }, 'process terminated')
       this.process.exit(0)
     }
   }
@@ -74,12 +71,9 @@ class GracefulShutdown {
    * @param {any} timeout
    * @memberof GracefulShutdown
    */
-  terminateAfterTimeout (signal, timeout) {
+  terminateAfterTimeout(signal, timeout) {
     setTimeout(() => {
-      this.logger.error(
-        { signal, timeout },
-        Constants.TERMINATE_AFTER_TIMEOUT
-      )
+      this.logger.error({ signal, timeout }, 'terminate process after timeout')
       this.process.exit(1)
     }, timeout).unref()
   }
@@ -90,8 +84,8 @@ class GracefulShutdown {
    * @param {any} signal
    * @memberof GracefulShutdown
    */
-  shutdown (signal) {
-    parallel(null, this.handlers, signal, (err) => this.completed(err, signal))
+  shutdown(signal) {
+    parallel(null, this.handlers, signal, err => this.completed(err, signal))
   }
 
   /**
@@ -100,7 +94,7 @@ class GracefulShutdown {
    * @param {any} signal
    * @memberof GracefulShutdown
    */
-  sigHandler (signal) {
+  sigHandler(signal) {
     this.terminateAfterTimeout(signal, this.timeout)
     this.shutdown(signal)
   }
@@ -110,8 +104,8 @@ class GracefulShutdown {
    *
    * @memberof GracefulShutdown
    */
-  init () {
-    this.signals.forEach((signal) => {
+  init() {
+    this.signals.forEach(signal => {
       if (this.process.listenerCount(signal) > 0) {
         this.logger.warn(`${signal} handler was already registered`)
       }

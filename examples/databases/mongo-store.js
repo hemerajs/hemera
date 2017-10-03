@@ -16,14 +16,17 @@ hemera.use(hemeraMongo, {
 })
 
 hemera.ready(() => {
-  hemera.act({
-    topic: 'mongo-store',
-    cmd: 'create',
-    collection: 'collTest',
-    data: {
-      name: 'peter'
+  hemera.act(
+    {
+      topic: 'mongo-store',
+      cmd: 'create',
+      collection: 'collTest',
+      data: {
+        name: 'peter'
+      }
+    },
+    function(err, resp) {
+      this.log.info(resp, 'Query result')
     }
-  }, function (err, resp) {
-    this.log.info(resp, 'Query result')
-  })
+  )
 })

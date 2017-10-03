@@ -1,7 +1,7 @@
 # Hemera-avro package
 
 [![npm](https://img.shields.io/npm/v/hemera-avro.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-avro)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
+[![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
 This is a plugin to use [Avro](https://avro.apache.org) with Hemera.
 
@@ -62,7 +62,7 @@ hemera.ready(() => {
 ```js
 hemera.ready(() => {
 
-  let Avro = hemera.exposition['hemera-avro'].avro
+  let Avro = hemera.avro
 
   const type = Avro.parse({
   name: 'Person',

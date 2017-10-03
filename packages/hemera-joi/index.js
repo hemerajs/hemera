@@ -3,24 +3,29 @@
 const Hp = require('hemera-plugin')
 const Joi = require('joi')
 
-exports.plugin = Hp(function hemeraJoi () {
-  const hemera = this
+exports.plugin = Hp(hemeraJoi, '>=1.5.0')
+exports.options = {
+  name: require('./package.json').name
+}
+
+function hemeraJoi(hemera, opts, done) {
   const PreValidationError = hemera.createError('PreValidationError')
   const PostValidationError = hemera.createError('PostValidationError')
+  const pluginName = exports.options.name
 
-  hemera.expose('joi', Joi)
-  hemera.expose('errors', {
+  hemera.decorate('joi', Joi)
+  hemera.decorate('joiErrors', {
     PreValidationError,
     PostValidationError
   })
 
-  hemera.ext('onServerPreHandler', function (ctx, req, res, next) {
+  hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
     let plugin = ctx._actMeta.plugin
     let schema = ctx._actMeta.schema
     let pattern = req.payload.pattern
     let currentPayloadValidator = plugin.options.payloadValidator
 
-    if (currentPayloadValidator !== exports.attributes.name) {
+    if (currentPayloadValidator !== pluginName) {
       return next()
     }
 
@@ -34,19 +39,29 @@ exports.plugin = Hp(function hemeraJoi () {
       }
     }
 
-    Joi.validate(pattern, joiSchema, {
-      allowUnknown: true
-    }, (err, value) => {
-      req.payload.pattern = value
-      if (err) {
-        res.send(new PreValidationError({ message: err.message, details: err.details }))
-      } else {
-        res.send()
+    Joi.validate(
+      pattern,
+      joiSchema,
+      {
+        allowUnknown: true
+      },
+      (err, value) => {
+        req.payload.pattern = value
+        if (err) {
+          next(
+            new PreValidationError({
+              message: err.message,
+              details: err.details
+            })
+          )
+        } else {
+          next()
+        }
       }
-    })
+    )
   })
 
-  hemera.ext('onServerPreResponse', function (ctx, req, res, next) {
+  hemera.ext('onServerPreResponse', function(ctx, req, res, next) {
     // actMeta can be null when pattern was not found
     if (!ctx._actMeta) {
       return next()
@@ -57,7 +72,7 @@ exports.plugin = Hp(function hemeraJoi () {
     let response = res.payload
     let currentPayloadValidator = plugin.options.payloadValidator
 
-    if (currentPayloadValidator !== exports.attributes.name) {
+    if (currentPayloadValidator !== pluginName) {
       return next()
     }
 
@@ -77,20 +92,27 @@ exports.plugin = Hp(function hemeraJoi () {
       return next()
     }
 
-    Joi.validate(response, joiSchema, {
-      allowUnknown: true
-    }, (err, value) => {
-      if (err) {
-        res.send(new PostValidationError({ message: err.message, details: err.details }))
-      } else {
-        res.send(value)
+    Joi.validate(
+      response,
+      joiSchema,
+      {
+        allowUnknown: true
+      },
+      (err, value) => {
+        if (err) {
+          next(
+            new PostValidationError({
+              message: err.message,
+              details: err.details
+            })
+          )
+        } else {
+          res.send(value)
+          next()
+        }
       }
-    })
+    )
   })
-}, '>=1.5.0')
 
-exports.options = {}
-
-exports.attributes = {
-  pkg: require('./package.json')
+  done()
 }

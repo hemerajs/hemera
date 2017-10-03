@@ -1,7 +1,7 @@
 # Hemera-mongo-store package
 
 [![npm](https://img.shields.io/npm/v/hemera-mongo-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-mongo-store)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
+[![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
 This is a plugin to use [Mongodb](https://www.mongodb.com/) with Hemera.
 
@@ -60,7 +60,7 @@ See [Store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store
 Because the underlying NATs transport is simply passing JSON stringified messages between actions, certain native (or extended) MongoDB types will be lost. For example, sending the following action will result in the `date` and `objectId` fields being saved as strings, not as their corresponding `Date` and `ObjectId` types.
 ```js
 hemera.ready(() => {
-  const ObjectID = hemera.exposition['hemera-mongo-store'].mongodb.ObjectID
+  const ObjectID = hemera.mongodb.client.ObjectID
   hemera.act({
     topic: 'mongo-store',
     cmd: 'create',
@@ -78,7 +78,7 @@ hemera.ready(() => {
 In order to "fix" this issue, the `mongo-store` supports the use of [MongoDB Extended JSON](https://docs.mongodb.com/manual/reference/mongodb-extended-json/). For example:
 ```js
 hemera.ready(() => {
-  const ObjectID = hemera.exposition['hemera-mongo-store'].mongodb.ObjectID
+  const ObjectID = hemera.mongodb.client.ObjectID
   hemera.act({
     topic: 'mongo-store',
     cmd: 'create',
@@ -95,10 +95,10 @@ hemera.ready(() => {
 ```
 To make things easiser, you can also use the `mongodb-extended-json` [package](https://www.npmjs.com/package/mongodb-extended-json) and its serialization capabilities (which the store uses under the hood), to make the objects "less messy." For example:
 ```js
-const EJSON = require('mongodb-extended-json');
+const EJSON = require('mongodb-extended-json')
 
 hemera.ready(() => {
-  const ObjectID = hemera.exposition['hemera-mongo-store'].mongodb.ObjectID
+  const ObjectID = hemera.mongodb.client.ObjectID
   hemera.act({
     topic: 'mongo-store',
     cmd: 'create',
@@ -120,7 +120,7 @@ Be default, responses returned from the `mongo-store` (via `find` or other actio
 
 That being said, if you want responses to be converted into extended format, you can enable the `serializeResult` plugin option. Also, to "auto-magically" convert all extended types, you can utilize mongodb-extended-json's deserialization capabilities. Example:
 ```js
-const EJSON = require('mongodb-extended-json');
+const EJSON = require('mongodb-extended-json')
 
 hemera.use(hemeraMongo, {
   serializeResult: true,
@@ -136,7 +136,7 @@ hemera.ready(() => {
     collection: 'collTest',
     id: 'some-id-value',
   }, function (err, resp) {
-    const doc = EJSON.deserialize(resp);
+    const doc = EJSON.deserialize(resp)
     // Now `doc.date` and `doc.objectId` will be deserialized into
     // `Date` and `ObjectId` types, respectively.
   })
@@ -144,7 +144,7 @@ hemera.ready(() => {
 ```
 Finally, extended JSON can also be used in queries. This is useful when you need to query an `ObjectId` value that isn't the native `_id` field, or for Regular Expressions. For example:
 ```js
-const EJSON = require('mongodb-extended-json');
+const EJSON = require('mongodb-extended-json')
 
 hemera.ready(() => {
   hemera.act({

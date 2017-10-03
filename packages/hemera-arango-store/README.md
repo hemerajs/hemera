@@ -1,7 +1,7 @@
 # :avocado: Hemera-arango-store package
 
 [![npm](https://img.shields.io/npm/v/hemera-arango-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-arango-store)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
+[![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
 This is a plugin to use [Arangodb](https://github.com/arangodb) with Hemera.
 
@@ -51,7 +51,7 @@ hemera.use(HemeraArango, {
 
 hemera.ready(() => {
 
-  let aql = hemera.exposition['hemera-arango-store'].aqlTemplate
+  let aql = hemera.aqlTemplate
 
   hemera.act({
     topic: 'arango-store',

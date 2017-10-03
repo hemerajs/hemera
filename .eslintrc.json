@@ -1,0 +1,8 @@
+{
+  "extends": ["prettier", "standard"],
+  "plugins": ["prettier", "mocha"],
+  "rules": {
+    "mocha/no-exclusive-tests": "error",
+    "space-before-function-paren": "off"
+  }
+}

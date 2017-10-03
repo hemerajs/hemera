@@ -8,7 +8,7 @@ const HemeraTestsuite = require('hemera-testsuite')
 const EJSON = require('mongodb-extended-json')
 const expect = require('code').expect
 
-function createExtendedData (mongodb, date) {
+function createExtendedData(mongodb, date) {
   const oid = new mongodb.ObjectID('58c6c65ed78c6a977a0041a8')
   return EJSON.serialize({
     date: date || new Date(),
@@ -17,17 +17,18 @@ function createExtendedData (mongodb, date) {
   })
 }
 
-function testExtendedData (plugin, testCollection, id, done) {
+function testExtendedData(plugin, testCollection, id, done) {
   plugin.db.collection(testCollection).findOne({
     _id: new plugin.mongodb.ObjectID(id)
-  }, (err, doc) => {
+  },
+  (err, doc) => {
     expect(err).to.be.null()
     testExtendedDoc(plugin, doc)
     done()
   })
 }
 
-function testExtendedDoc (plugin, doc) {
+function testExtendedDoc(plugin, doc) {
   const ObjectID = plugin.mongodb.ObjectID
   const DBRef = plugin.mongodb.DBRef
 
@@ -36,7 +37,7 @@ function testExtendedDoc (plugin, doc) {
   expect(doc.ref).to.be.an.instanceof(DBRef)
 }
 
-function initServer (topic, testCollection, pluginOptions, cb) {
+function initServer(topic, testCollection, pluginOptions, cb) {
   let PORT = 6242
   var flags = ['--user', 'derek', '--pass', 'foobar']
   var authUrl = 'nats://derek:foobar@localhost:' + PORT
@@ -49,14 +50,20 @@ function initServer (topic, testCollection, pluginOptions, cb) {
     hemera.use(HemeraJoi)
     hemera.use(HemeraMongoStore, pluginOptions)
     hemera.ready(() => {
-      const plugin = hemera.exposition['hemera-mongo-store']
-      hemera.act({
-        topic,
-        cmd: 'dropCollection',
-        collection: testCollection
-      }, function (err, resp) {
-        cb(err, { server, hemera, plugin })
-      })
+      const plugin = {
+        mongodb: hemera.mongodb.client,
+        db: hemera.mongodb.db
+      }
+      hemera.act(
+        {
+          topic,
+          cmd: 'dropCollection',
+          collection: testCollection
+        },
+        function(err, resp) {
+          cb(null, { server, hemera })
+        }
+      )
     })
   })
 }

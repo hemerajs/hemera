@@ -1,7 +1,7 @@
 # Hemera-joi package
 
 [![npm](https://img.shields.io/npm/v/hemera-joi.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-joi)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
+[![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
 This is a plugin to use [Joi](https://github.com/hapijs/joi) with Hemera.
 
@@ -21,7 +21,7 @@ hemera.ready(() => {
   // Use Joi as payload validator
   hemera.setOption('payloadValidator', 'hemera-joi')
 
-  let Joi = hemera.exposition['hemera-joi'].joi
+  let Joi = hemera.joi
   /**
    * Your Implementations
    */
@@ -48,7 +48,7 @@ hemera.ready(() => {
 
 ### Pass the full schema
 ```js
-  let Joi = hemera.exposition['hemera-joi'].joi
+  let Joi = hemera.joi
   
   hemera.add({
     topic: 'math',
@@ -62,7 +62,7 @@ hemera.ready(() => {
 
 ### Pre and Post validation
 ```js
-  let Joi = hemera.exposition['hemera-joi'].joi
+  let Joi = hemera.joi
   
   hemera.add({
     topic: 'math',

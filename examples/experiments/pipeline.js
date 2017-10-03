@@ -15,28 +15,37 @@ const hemera = new Hemera(nats, {
 })
 
 hemera.ready(() => {
-  hemera.add({
-    topic: 'users',
-    cmd: 'filterById'
-  }, function * (req) {
-    return {
-      users: req.users.filter(u => u.userId === req.userId)
+  hemera.add(
+    {
+      topic: 'users',
+      cmd: 'filterById'
+    },
+    function(req, cb) {
+      cb(null, {
+        users: req.users.filter(u => u.userId === req.userId)
+      })
     }
-  })
-  hemera.add({
-    topic: 'users',
-    cmd: 'getAll'
-  }, function * (req) {
-    return {
-      users: [{
-        userId: 1,
-        name: 'peter'
-      }, {
-        userId: 2,
-        name: 'klaus'
-      }]
+  )
+  hemera.add(
+    {
+      topic: 'users',
+      cmd: 'getAll'
+    },
+    function(req, cb) {
+      cb(null, {
+        users: [
+          {
+            userId: 1,
+            name: 'peter'
+          },
+          {
+            userId: 2,
+            name: 'klaus'
+          }
+        ]
+      })
     }
-  })
+  )
 
   new Pipeline(hemera)
     .pipe({
@@ -49,10 +58,10 @@ hemera.ready(() => {
       userId: 1
     })
     .exec()
-    .then((res) => {
+    .then(res => {
       hemera.log.info(res)
     })
-    .catch((err) => {
+    .catch(err => {
       hemera.log.error(err)
     })
 })
@@ -69,7 +78,7 @@ class Pipeline {
    *
    * @memberof Pipeline
    */
-  constructor (hemera) {
+  constructor(hemera) {
     this._hemera = hemera
     this._stack = []
   }
@@ -82,8 +91,8 @@ class Pipeline {
    *
    * @memberof Pipeline
    */
-  pipe (pattern) {
-    this._stack.push((prev) => {
+  pipe(pattern) {
+    this._stack.push(prev => {
       return this._hemera.act(Object.assign(pattern, prev))
     })
     return this
@@ -96,10 +105,10 @@ class Pipeline {
    *
    * @memberof Pipeline
    */
-  exec () {
+  exec() {
     return this._stack.reduce((promise, item) => {
       return promise
-        .then((result) => {
+        .then(result => {
           return item(result)
         })
         .catch(console.error)

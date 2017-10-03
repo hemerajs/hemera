@@ -10,7 +10,6 @@
  */
 
 const _ = require('lodash')
-const Co = require('co')
 const Util = require('./util')
 
 /**
@@ -26,7 +25,7 @@ class Add {
    *
    * @memberOf Add
    */
-  constructor (actMeta, options) {
+  constructor(actMeta, options) {
     this.actMeta = actMeta
     this.options = options
     this.isPromisable = false
@@ -40,7 +39,7 @@ class Add {
    *
    * @memberof Add
    */
-  _use (handler) {
+  _use(handler) {
     this.actMeta.middleware.push(Util.toPromiseFact(handler))
   }
 
@@ -52,7 +51,7 @@ class Add {
    *
    * @memberOf Add
    */
-  use (handler) {
+  use(handler) {
     if (_.isArray(handler)) {
       handler.forEach(h => this._use(h))
     } else {
@@ -68,7 +67,7 @@ class Add {
    *
    * @memberOf Add
    */
-  end (cb) {
+  end(cb) {
     this.action = cb
   }
 
@@ -81,10 +80,14 @@ class Add {
    *
    * @memberof Add
    */
-  dispatch (request, response, cb) {
-    Util.serial(this.middleware, (item, next) => {
-      item(request, response, next)
-    }, cb)
+  run(request, response, cb) {
+    Util.eachSeries(
+      this.middleware,
+      (item, next) => {
+        item(request, response, next)
+      },
+      cb
+    )
   }
 
   /**
@@ -94,7 +97,7 @@ class Add {
    *
    * @memberOf Add
    */
-  get middleware () {
+  get middleware() {
     return this.actMeta.middleware
   }
   /**
@@ -104,7 +107,7 @@ class Add {
    *
    * @memberOf Add
    */
-  get schema () {
+  get schema() {
     return this.actMeta.schema
   }
 
@@ -115,7 +118,7 @@ class Add {
    *
    * @memberOf Add
    */
-  get pattern () {
+  get pattern() {
     return this.actMeta.pattern
   }
 
@@ -125,11 +128,8 @@ class Add {
    *
    * @memberOf Add
    */
-  set action (action) {
-    if (Util.isGeneratorFunction(action)) {
-      this.actMeta.action = Co.wrap(action)
-      this.isPromisable = true
-    } else if (Util.isAsyncFunction(action)) {
+  set action(action) {
+    if (Util.isAsyncFunction(action)) {
       this.actMeta.action = action
       this.isPromisable = true
     } else {
@@ -144,7 +144,7 @@ class Add {
    *
    * @memberOf Add
    */
-  get action () {
+  get action() {
     return this.actMeta.action
   }
   /**
@@ -154,7 +154,7 @@ class Add {
    *
    * @memberOf Add
    */
-  get plugin () {
+  get plugin() {
     return this.actMeta.plugin
   }
 }

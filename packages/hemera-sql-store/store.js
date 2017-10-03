@@ -22,7 +22,7 @@ class SqlStore extends Store {
    *
    * @memberOf SqlStore
    */
-  constructor (driver, options) {
+  constructor(driver, options) {
     options = Hoek.applyToDefaults(defaultConfig, options || {})
     super(driver, options)
   }
@@ -35,7 +35,7 @@ class SqlStore extends Store {
    *
    * @memberOf Store
    */
-  create (req, cb) {
+  create(req, cb) {
     this._driver
       .insert(req.data)
       .into(req.collection)
@@ -50,8 +50,11 @@ class SqlStore extends Store {
    *
    * @memberOf Store
    */
-  remove (req, cb) {
-    this._driver(req.collection).where(req.query).del().asCallback(cb)
+  remove(req, cb) {
+    this._driver(req.collection)
+      .where(req.query)
+      .del()
+      .asCallback(cb)
   }
 
   /**
@@ -62,8 +65,11 @@ class SqlStore extends Store {
    *
    * @memberOf Store
    */
-  removeById (req, cb) {
-    this._driver(req.collection).where(this._options.idField, req.id).del().asCallback(cb)
+  removeById(req, cb) {
+    this._driver(req.collection)
+      .where(this._options.idField, req.id)
+      .del()
+      .asCallback(cb)
   }
 
   /**
@@ -75,8 +81,11 @@ class SqlStore extends Store {
    *
    * @memberOf Store
    */
-  update (req, data, cb) {
-    this._driver(req.collection).where(req.query).update(data).asCallback(cb)
+  update(req, data, cb) {
+    this._driver(req.collection)
+      .where(req.query)
+      .update(data)
+      .asCallback(cb)
   }
 
   /**
@@ -88,8 +97,11 @@ class SqlStore extends Store {
    *
    * @memberOf Store
    */
-  updateById (req, data, cb) {
-    this._driver(req.collection).where(this._options.idField, req.id).update(data).asCallback(cb)
+  updateById(req, data, cb) {
+    this._driver(req.collection)
+      .where(this._options.idField, req.id)
+      .update(data)
+      .asCallback(cb)
   }
 
   /**
@@ -101,7 +113,7 @@ class SqlStore extends Store {
    *
    * @memberOf Store
    */
-  find (req, options, cb) {
+  find(req, options, cb) {
     const queryBuilder = this._driver(req.collection).where(req.query)
     if (options.orderBy) {
       queryBuilder.orderByRaw(options.orderBy)
@@ -115,13 +127,16 @@ class SqlStore extends Store {
     if (options.fields) {
       queryBuilder.select(options.fields)
     }
-    queryBuilder.asCallback(function (err, resp) {
+    queryBuilder.asCallback(function(err, resp) {
       if (err) {
         return cb(err)
       }
-      const result = Object.assign({
-        result: resp
-      }, options)
+      const result = Object.assign(
+        {
+          result: resp
+        },
+        options
+      )
       cb(err, result)
     })
   }
@@ -134,8 +149,10 @@ class SqlStore extends Store {
    *
    * @memberOf Store
    */
-  findById (req, cb) {
-    this._driver(req.collection).where(this._options.idField, req.id).asCallback(cb)
+  findById(req, cb) {
+    this._driver(req.collection)
+      .where(this._options.idField, req.id)
+      .asCallback(cb)
   }
 
   /**
@@ -147,7 +164,7 @@ class SqlStore extends Store {
    *
    * @memberOf Store
    */
-  replace (req, data, cb) {
+  replace(req, data, cb) {
     this.update(req, data, cb)
   }
 
@@ -160,7 +177,7 @@ class SqlStore extends Store {
    *
    * @memberOf Store
    */
-  replaceById (req, data, cb) {
+  replaceById(req, data, cb) {
     this.updateById(req, data, cb)
   }
 
@@ -172,8 +189,10 @@ class SqlStore extends Store {
    *
    * @memberOf Store
    */
-  exists (req, cb) {
-    this._driver(req.collection).where(req.query).first(this._options.idField)
+  exists(req, cb) {
+    this._driver(req.collection)
+      .where(req.query)
+      .first(this._options.idField)
       .then(row => {
         cb(null, row !== null)
       })

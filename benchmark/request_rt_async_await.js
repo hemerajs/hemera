@@ -18,35 +18,41 @@ const hemera2 = new Hemera(nats2)
 hemera1.ready(() => {
   var start = new Date()
 
-  hemera1.add({
-    topic: 'math',
-    cmd: 'add'
-  }, async function (req) {
-    return await Promise.resolve(true)
-  })
+  hemera1.add(
+    {
+      topic: 'math',
+      cmd: 'add'
+    },
+    async function(req) {
+      return await Promise.resolve(true)
+    }
+  )
 
-  hemera1.close(function () {
+  hemera1.close(function() {
     for (var i = 0; i < loop; i++) {
-      hemera2.act({
-        topic: 'math',
-        cmd: 'add',
-        a: 1,
-        b: 2,
-        maxMessages$: 1
-      }, function (err, resp) {
-        received += 1
+      hemera2.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2,
+          maxMessages$: 1
+        },
+        function(err, resp) {
+          received += 1
 
-        if (received === loop) {
-          var stop = new Date()
-          var rps = parseInt(loop / ((stop - start) / 1000))
-          console.log('\n' + rps + ' request-responses/sec')
-          var lat = parseInt(((stop - start) * 1000) / (loop * 2)) // Request=2, Reponse=2 RTs
-          console.log('Avg roundtrip latency: ' + lat + ' microseconds')
-          process.exit()
-        } else if (received % hash === 0) {
-          process.stdout.write('+')
+          if (received === loop) {
+            var stop = new Date()
+            var rps = parseInt(loop / ((stop - start) / 1000))
+            console.log('\n' + rps + ' request-responses/sec')
+            var lat = parseInt((stop - start) * 1000 / (loop * 2)) // Request=2, Reponse=2 RTs
+            console.log('Avg roundtrip latency: ' + lat + ' microseconds')
+            process.exit()
+          } else if (received % hash === 0) {
+            process.stdout.write('+')
+          }
         }
-      })
+      )
     }
   })
 })

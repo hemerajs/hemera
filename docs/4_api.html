@@ -187,10 +187,12 @@
                     <p>Unsubcribe all registered topics from NATS and removes all pattern from index.</p>
                     <h4 class="section-header">ext(type: String, handler: Function)</h4>
                     <p>Register an extension.</p>
-                    <h4 class="section-header">use(params: Object, handler: Function)</h4>
+                    <h4 class="section-header">use(plugin: Object, opts: Object, cb: Function)</h4>
                     <p>Register a plugin.</p>
-                    <h4 class="section-header">expose(key: String, object: Object)</h4>
+                    <h4 class="section-header">decorate(key: String, object: Object, array<string>: deps)</h4>
                     <p>Expose data which can be accessed from all plugins.</p>
+                    <h4 class="section-header">hasDecorator(key: String)</h4>
+                    <p>Dheck the presence of a decorator</p>
                     <h4 class="section-header">setOption(key: String, value: Any)</h4>
                     <p>Updates the plugin option value.</p>
                     <h4 class="section-header">setConfig(key: String, value: Any)</h4>

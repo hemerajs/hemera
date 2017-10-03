@@ -12,7 +12,7 @@
 const SafeStringify = require('fast-safe-stringify')
 
 class Encoder {
-  static encode (msg) {
+  static encode(msg) {
     try {
       return {
         value: SafeStringify(msg)

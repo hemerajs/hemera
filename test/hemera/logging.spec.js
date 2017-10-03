@@ -1,32 +1,32 @@
 'use strict'
 
-describe('Logging interface', function () {
+describe('Logging interface', function() {
   var PORT = 6242
   var authUrl = 'nats://localhost:' + PORT
   var server
 
   // Start up our own nats-server
-  before(function (done) {
+  before(function(done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
   // Shutdown our server after we are done
-  after(function () {
+  after(function() {
     server.kill()
   })
 
-  it('Should be able to use custom logger', function (done) {
+  it('Should be able to use custom logger', function(done) {
     const nats = require('nats').connect(authUrl)
 
     var logSpy = Sinon.spy()
 
     let logger = {
-      debug: function () {},
-      info: function () {
+      debug: function() {},
+      info: function() {
         logSpy()
       },
-      warn: function () {},
-      fatal: function () {}
+      warn: function() {},
+      fatal: function() {}
     }
 
     const hemera = new Hemera(nats, {
@@ -39,7 +39,7 @@ describe('Logging interface', function () {
     hemera.close(done)
   })
 
-  it('Should be able to log with default logger', function (done) {
+  it('Should be able to log with default logger', function(done) {
     const nats = require('nats').connect(authUrl)
     const hemera = new Hemera(nats, {
       logLevel: 'silent'
@@ -54,7 +54,7 @@ describe('Logging interface', function () {
     hemera.close(done)
   })
 
-  it('Should be able to log with none pretty logger', function (done) {
+  it('Should be able to log with none pretty logger', function(done) {
     const nats = require('nats').connect(authUrl)
     const hemera = new Hemera(nats, {
       logLevel: 'silent',

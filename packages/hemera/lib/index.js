@@ -16,20 +16,18 @@
 const EventEmitter = require('events')
 const Bloomrun = require('bloomrun')
 const Errio = require('errio')
-const Hoek = require('hoek')
 const Heavy = require('heavy')
 const _ = require('lodash')
 const Pino = require('pino')
 const TinySonic = require('tinysonic')
 const SuperError = require('super-error')
-const Co = require('co')
+const Hoek = require('hoek')
 const Joi = require('joi')
+const Avvio = require('avvio')
+const Series = require('fastseries')
 
-const GracefulShutdown = require('./gracefulShutdown')
 const Errors = require('./errors')
 const Constants = require('./constants')
-const Extension = require('./extension')
-const ServerExtension = require('./serverExtension')
 const Util = require('./util')
 const NatsTransport = require('./transport')
 const DefaultExtensions = require('./extensions')
@@ -42,16 +40,10 @@ const ClientResponse = require('./clientResponse')
 const Serializers = require('./serializer')
 const ConfigScheme = require('./configScheme')
 const CodecPipeline = require('./codecPipeline')
+const Reply = require('./reply')
 const Add = require('./add')
-const Plugin = require('./plugin')
-
-// Extension finish handler
-const onServerPreResponse = require('./onServerPreResponse')
-const onServerPreRequest = require('./onServerPreRequest')
-const onClientTimeoutPostRequest = require('./onClientTimeoutPostRequest')
-const onPreRequest = require('./onPreRequest')
-const onClientPostRequest = require('./onClientPostRequest')
-const onClose = require('./onClose')
+const Extension = require('./extension')
+const pDefer = require('p-defer')
 
 /**
  * @class Hemera
@@ -65,7 +57,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  constructor (transport, params) {
+  constructor(transport, params) {
     super()
 
     const config = Joi.validate(params || {}, ConfigScheme)
@@ -80,19 +72,17 @@ class Hemera extends EventEmitter {
       transport
     })
     this._topics = {}
-    this._exposition = {}
+    this.plugin$ = {
+      options: {
+        name: 'core'
+      }
+    }
 
     // special variables for the new execution context
     this.context$ = {}
     this.meta$ = {}
     this.delegate$ = {}
     this.auth$ = {}
-    this.plugin$ = new Plugin({
-      options: {},
-      attributes: {
-        name: 'core'
-      }
-    })
     this.trace$ = {}
     this.request$ = {
       parentId: '',
@@ -111,29 +101,15 @@ class Hemera extends EventEmitter {
     this._actCallback = null
     this._execute = null
     this._cleanPattern = ''
-    this._pluginRegistrations = []
-    this._decorations = {}
-    // create reference to root hemera instance
-    this._root = this
-
-    // contains the list of all registered plugins
-    // the core is also a plugin
     this._plugins = {
-      core: this.plugin$
+      core: this
     }
+
+    // keep reference to root hemera instance
+    this._root = this
 
     this._encoderPipeline = new CodecPipeline().add(DefaultEncoder.encode)
     this._decoderPipeline = new CodecPipeline().add(DefaultDecoder.decode)
-
-    // define extension points
-    this._extensions = {
-      onClientPreRequest: new Extension('onClientPreRequest'),
-      onClientPostRequest: new Extension('onClientPostRequest'),
-      onServerPreHandler: new ServerExtension('onServerPreHandler'),
-      onServerPreRequest: new ServerExtension('onServerPreRequest'),
-      onServerPreResponse: new ServerExtension('onServerPreResponse'),
-      onClose: new Extension('onClose')
-    }
 
     // errio settings
     Errio.setDefaults(this._config.errio)
@@ -150,16 +126,56 @@ class Hemera extends EventEmitter {
     // contains the list of circuit breaker of all act calls
     this._circuitBreakerMap = new Map()
 
-    // will be executed before the client request is executed.
-    this._extensions.onClientPreRequest.add(DefaultExtensions.onClientPreRequest)
-    // will be executed after the client has received and decoded the request
-    this._extensions.onClientPostRequest.add(DefaultExtensions.onClientPostRequest)
-    // will be executed before the server has received the requests
-    this._extensions.onServerPreRequest.add(DefaultExtensions.onServerPreRequest)
-    // will be executed before the server action is executed
-    this._extensions.onServerPreHandler.add(DefaultExtensions.onServerPreHandler)
-    // will be executed before the server has replied the response and build the message
-    this._extensions.onServerPreResponse.add(DefaultExtensions.onServerPreResponse)
+    this._ext = new Extension()
+    this._ext.add('onClientPreRequest', DefaultExtensions.onClientPreRequest)
+    this._ext.add('onClientPostRequest', DefaultExtensions.onClientPostRequest)
+    this._ext.add('onServerPreRequest', DefaultExtensions.onServerPreRequest)
+    this._ext.add('onServerPreHandler', DefaultExtensions.onServerPreHandler)
+    this._ext.add('onServerPreResponse', DefaultExtensions.onServerPreResponse)
+
+    this._avvio = Avvio(this, {
+      expose: {
+        use: 'register',
+        close: 'shutdown',
+        onClose: 'onShutdown',
+        ready: 'bootstrap'
+      }
+    })
+
+    this._avvio.override = (hemera, plugin, opts) => {
+      const res = Object.create(hemera)
+      const proto = Object.getPrototypeOf(res)
+
+      if (hemera._config.childLogger) {
+        res.log = hemera.log.child({ plugin: opts.name })
+      }
+
+      // plugin seperated prototype propertys
+      res.plugin$ = {
+        options: opts,
+        name: opts.name
+      }
+
+      // extend prototype so that each nested plugin have access
+      res.decorate = function decorate(prop, value, deps) {
+        if (prop in this) {
+          throw new Errors.HemeraError(Constants.DECORATION_ALREADY_DEFINED)
+        }
+
+        if (deps) {
+          res._checkDecoraterDependencies(deps)
+        }
+
+        // extend prototype
+        proto[prop] = value
+      }
+
+      this._plugins[opts.name] = res
+
+      return res
+    }
+
+    this._series = Series()
 
     // use own logger
     if (this._config.logger) {
@@ -167,12 +183,15 @@ class Hemera extends EventEmitter {
     } else {
       if (this._config.prettyLog) {
         let pretty = Pino.pretty()
-        this.log = Pino({
-          name: this._config.name,
-          safe: true, // avoid error caused by circular references
-          level: this._config.logLevel,
-          serializers: Serializers
-        }, pretty)
+        this.log = Pino(
+          {
+            name: this._config.name,
+            safe: true, // avoid error caused by circular references
+            level: this._config.logLevel,
+            serializers: Serializers
+          },
+          pretty
+        )
 
         // Leads to too much listeners in tests
         if (this._config.logLevel !== 'silent') {
@@ -187,17 +206,6 @@ class Hemera extends EventEmitter {
         })
       }
     }
-
-    const gs = new GracefulShutdown()
-    gs.process = process
-    gs.logger = this.log
-    gs.addHandler((signal, cb) => {
-      this.log.info({ signal }, Constants.TRIGGERING_CLOSE_HOOK)
-      this.close(cb)
-    })
-    gs.init()
-
-    this._gracefulShutdown = gs
   }
 
   /**
@@ -205,7 +213,7 @@ class Hemera extends EventEmitter {
    *
    * @memberof Hemera
    */
-  _registerErrors () {
+  _registerErrors() {
     for (var error in Hemera.errors) {
       Errio.register(Hemera.errors[error])
     }
@@ -216,7 +224,7 @@ class Hemera extends EventEmitter {
    * @readonly
    * @memberof Hemera
    */
-  get decoder () {
+  get decoder() {
     return this._decoderPipeline
   }
 
@@ -226,19 +234,8 @@ class Hemera extends EventEmitter {
    * @readonly
    * @memberof Hemera
    */
-  get encoder () {
+  get encoder() {
     return this._encoderPipeline
-  }
-
-  /**
-   * Return all registered plugins
-   *
-   * @readonly
-   *
-   * @memberOf Hemera
-   */
-  get plugins () {
-    return this._plugins
   }
 
   /**
@@ -248,7 +245,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  get router () {
+  get router() {
     return this._router
   }
 
@@ -259,19 +256,8 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  get load () {
+  get load() {
     return this._heavy.load
-  }
-
-  /**
-   * Return the shared object of all exposed data
-   *
-   * @readonly
-   * @type {Exposition}
-   * @memberOf Hemera
-   */
-  get exposition () {
-    return this._exposition
   }
 
   /**
@@ -281,7 +267,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  get transport () {
+  get transport() {
     return this._transport.driver
   }
 
@@ -292,7 +278,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  get topics () {
+  get topics() {
     return this._topics
   }
 
@@ -303,7 +289,7 @@ class Hemera extends EventEmitter {
  *
  * @memberOf Hemera
  */
-  get config () {
+  get config() {
     return this._config
   }
 
@@ -314,7 +300,7 @@ class Hemera extends EventEmitter {
  *
  * @memberof Hemera
  */
-  get errorDetails () {
+  get errorDetails() {
     if (this._isServer) {
       return {
         app: this._config.name,
@@ -338,7 +324,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  static get errors () {
+  static get errors() {
     return Errors
   }
 
@@ -349,31 +335,11 @@ class Hemera extends EventEmitter {
  *
  * @memberOf Hemera
  */
-  static createError (name) {
+  static createError(name) {
     const ctor = SuperError.subclass(name)
     // Register the class with Errio.
     Errio.register(ctor)
     return ctor
-  }
-
-  /**
- * Exposed data in context of the current plugin
- * It is accessible by this.expositions[<plugin>][<key>]
- *
- * @param {string} key
- * @param {mixed} object
- *
- * @memberOf Hemera
- */
-  expose (key, object) {
-    let pluginName = this.plugin$.attributes.name
-
-    if (!this._exposition[pluginName]) {
-      this._exposition[pluginName] = {}
-      this._exposition[pluginName][key] = object
-    } else {
-      this._exposition[pluginName][key] = object
-    }
   }
 
   /**
@@ -384,75 +350,22 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  ext (type, handler) {
-    if (!this._extensions[type]) {
-      let error = new Errors.HemeraError(Constants.INVALID_EXTENSION_TYPE, {
-        type
-      })
-      this.log.error(error)
-      throw error
+  ext(type, handler) {
+    if (type === 'onClose') {
+      this.onShutdown(handler)
+    } else {
+      this._ext.add(type, handler)
     }
-
-    this._extensions[type].add(handler)
   }
 
   /**
-   * Use a plugin.
    *
-   * @param {any} plugin
    *
-   * @memberOf Hemera
+   * @readonly
+   * @memberof Hemera
    */
-  use (params, options) {
-    // use plugin infos from package.json
-    if (_.isObject(params.attributes.pkg)) {
-      params.attributes = params.attributes || {}
-      params.attributes = Hoek.applyToDefaults(params.attributes, _.pick(params.attributes.pkg, ['name', 'description', 'version']))
-    }
-
-    let pluginOptions = {}
-
-    // pass options as second argument during plugin registration
-    if (_.isObject(options)) {
-      pluginOptions = Hoek.clone(params.options) || {}
-      pluginOptions = Hoek.applyToDefaults(pluginOptions, options)
-    } else if (params.options) {
-      pluginOptions = Hoek.clone(params.options)
-    }
-
-    // plugin name is required
-    if (!params.attributes.name) {
-      let error = new Errors.HemeraError(Constants.PLUGIN_NAME_REQUIRED)
-      this.log.error(error)
-      this.emit('error', error)
-      return
-    }
-
-    // create new execution context
-    let ctx = this.createContext()
-
-    const plugin = new Plugin({
-      register: params.plugin.bind(ctx),
-      attributes: params.attributes,
-      parentPluginName: this.plugin$.attributes.name,
-      options: pluginOptions
-    })
-
-    ctx.plugin$ = plugin
-
-    if (ctx._config.childLogger) {
-      ctx.log = this.log.child({ plugin: plugin.attributes.name })
-    }
-
-    ctx.use = () => {
-      ctx.log.error(Constants.NO_USE_IN_PLUGINS)
-      throw new Errors.HemeraError(Constants.NO_USE_IN_PLUGINS)
-    }
-
-    this._pluginRegistrations.push(plugin)
-
-    this.log.info(params.attributes.name, Constants.PLUGIN_ADDED)
-    this._plugins[params.attributes.name] = plugin
+  get plugins() {
+    return this._plugins
   }
 
   /**
@@ -463,7 +376,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  setOption (key, value) {
+  setOption(key, value) {
     this.plugin$.options[key] = value
   }
 
@@ -473,8 +386,18 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  setConfig (key, value) {
+  setConfig(key, value) {
     this._config[key] = value
+  }
+
+  /**
+   * Return the root instance
+   *
+   * @returns
+   * @memberof Hemera
+   */
+  root() {
+    return this._root
   }
 
   /**
@@ -482,32 +405,98 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  fatal () {
-    this._gracefulShutdown.shutdown('fatal')
+  fatal() {
+    process.exit(1)
+  }
+
+  /**
+   *
+   *
+   * @param {any} prop
+   * @returns
+   * @memberof Hemera
+   */
+  hasDecorator(prop) {
+    return prop in this
   }
 
   /**
    * Decorate the root instance
-   * Value is globaly accesible
+   * Value is globaly accessible
    *
    * @param {any} prop
    * @param {any} value
    *
    * @memberOf Hemera
    */
-  decorate (prop, value) {
-    if (this._decorations[prop]) {
-      throw new Error(Constants.DECORATION_ALREADY_DEFINED)
-    } else if (this[prop]) {
-      throw new Error(Constants.OVERRIDE_BUILTIN_METHOD_NOT_ALLOWED)
+  decorate(prop, value, deps) {
+    if (this[prop]) {
+      throw new Errors.HemeraError(Constants.DECORATION_ALREADY_DEFINED)
     }
 
-    this._decorations[prop] = {
-      plugin: this.plugin$,
-      value
+    if (deps) {
+      this._checkDecoraterDependencies(deps)
     }
-    // decorate root hemera instance
-    this._root[prop] = value
+
+    this[prop] = value
+  }
+
+  /**
+   *
+   *
+   * @param {any} deps
+   * @memberof Hemera
+   */
+  _checkDecoraterDependencies(deps) {
+    for (var i = 0; i < deps.length; i++) {
+      if (!(deps in this)) {
+        throw new Error(Constants.MISSING_DECORATE_DEPENDENCY)
+      }
+    }
+  }
+
+  /**
+   *
+   *
+   * @returns
+   * @memberof Hemera
+   */
+  _use(plugin, opts, cb) {
+    const pluginOpts = Hoek.clone(plugin.options || {})
+    const options = Hoek.applyToDefaults(pluginOpts, opts || {}, true)
+
+    if (!options.name) {
+      throw new Errors.HemeraError(Constants.PLUGIN_NAME_REQUIRED)
+    }
+
+    this.register(plugin.plugin, options, cb)
+  }
+
+  /**
+   *
+   *
+   * @param {any} plugin
+   * @param {any} opts
+   * @param {any} cb
+   * @returns
+   * @memberof Hemera
+   */
+  use(plugin, opts, cb) {
+    // when opts is omitted
+    if (_.isFunction(opts)) {
+      cb = opts
+      opts = {}
+    }
+
+    if (_.isArray(plugin)) {
+      plugin.forEach(p => {
+        this._use(p, opts, cb)
+      })
+    } else {
+      this._use(plugin, opts, cb)
+    }
+
+    return this._avvio
   }
 
   /**
@@ -518,7 +507,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  createError (name) {
+  createError(name) {
     const ctor = SuperError.subclass(name)
     // Register the class with Errio.
     Errio.register(ctor)
@@ -528,57 +517,14 @@ class Hemera extends EventEmitter {
   /**
    *
    *
-   * @param {any} plugins
-   * @param {any} cb
-   * @memberof Hemera
-   */
-  registerPlugins (cb) {
-    const each = (item, next) => {
-      // plugin has no callback
-      if (item.register.length < 2) {
-        item.register(item.options)
-        return next()
-      }
-
-      // Detect plugin timeouts
-      const pluginTimer = setTimeout(() => {
-        const internalError = new Errors.PluginTimeoutError(Constants.PLUGIN_TIMEOUT_ERROR)
-        this.log.error(internalError, `Plugin: ${item.attributes.name}`)
-        next(internalError)
-      }, this._config.pluginTimeout)
-
-      item.register(item.options, (err) => {
-        clearTimeout(pluginTimer)
-        next(err)
-      })
-    }
-
-    // register all plugins in serie
-    Util.serial(this._pluginRegistrations, each, (err) => {
-      if (err) {
-        if (err instanceof SuperError) {
-          err = err.rootCause || err.cause || err
-        }
-        const internalError = new Errors.HemeraError(Constants.PLUGIN_REGISTRATION_ERROR).causedBy(err)
-        this.log.error(internalError)
-        this.emit('error', internalError)
-      } else if (_.isFunction(cb)) {
-        cb.call(this)
-      }
-    })
-  }
-
-  /**
-   *
-   *
    * @param {Function} cb
    *
    * @memberOf Hemera
    */
-  ready (cb) {
-    this._transport.driver.on('error', (err) => {
+  ready(cb) {
+    this._transport.driver.on('error', err => {
       this.log.error(err, Constants.NATS_TRANSPORT_ERROR)
-      this.log.error('NATS Code: \'%s\', Message: %s', err.code, err.message)
+      this.log.error("NATS Code: '%s', Message: %s", err.code, err.message)
 
       // Exit only on connection issues.
       // Authorization and protocol issues don't lead to process termination
@@ -588,7 +534,7 @@ class Hemera extends EventEmitter {
       }
     })
 
-    this._transport.driver.on('permission_error', (err) => {
+    this._transport.driver.on('permission_error', err => {
       this.log.error(err, Constants.NATS_PERMISSION_ERROR)
     })
 
@@ -610,42 +556,12 @@ class Hemera extends EventEmitter {
 
     this._transport.driver.on('connect', () => {
       this.log.info(Constants.NATS_TRANSPORT_CONNECTED)
-      this.registerPlugins(cb)
+      this.bootstrap(err => {
+        if (_.isFunction(cb)) {
+          cb(err)
+        }
+      })
     })
-  }
-
-  /**
-   * Build the final payload for the response
-   *
-   *
-   * @memberOf Hemera
-   */
-  _buildMessage () {
-    let result = this._response
-
-    let message = {
-      meta: this.meta$ || {},
-      trace: this.trace$ || {},
-      request: this.request$,
-      result: result.error ? null : result.payload,
-      error: result.error ? Errio.toObject(result.error) : null
-    }
-
-    let m = this._encoderPipeline.run(message, this)
-
-    // attach encoding issues
-    if (m.error) {
-      let internalError = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR).causedBy(m.error)
-      message.error = Errio.toObject(internalError)
-      message.result = null
-      // Retry to encode with issue perhaps the reason was data related
-      m = this._encoderPipeline.run(message, this)
-      this.log.error(internalError)
-      this.emit('serverResponseError', m.error)
-    }
-
-    // final response
-    this._message = m.value
   }
 
   /**
@@ -654,9 +570,105 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  finish () {
-    this._extensions.onServerPreResponse
-      .dispatch(this, (err, val) => onServerPreResponse(this, err, val))
+  finish() {
+    const self = this
+
+    const args = [self, self._request, self._reply]
+    self._series(self, self._ext['onServerPreResponse'], args, err =>
+      self._onServerPreResponseCompleted(err)
+    )
+  }
+
+  /**
+   *
+   *
+   * @param {any} extensionError
+   * @memberof Hemera
+   */
+  _onServerPreResponseCompleted(extensionError) {
+    const self = this
+    // check if any error was set before
+    if (extensionError) {
+      self._reply.error = extensionError
+      const internalError = new Errors.HemeraError(
+        Constants.EXTENSION_ERROR,
+        self.errorDetails
+      ).causedBy(extensionError)
+      self.log.error(internalError)
+      self.emit('serverResponseError', self._reply.error)
+    }
+
+    const result = self._createMessage()
+    self._send(result)
+  }
+
+  /**
+   *
+   *
+   * @param {any} msg
+   * @memberof Hemera
+   */
+  _send(msg) {
+    const self = this
+
+    // indicates that an error occurs and that the program should exit
+    if (self._shouldCrash) {
+      // only when we have an inbox othwerwise exit the service immediately
+      if (self._replyTo) {
+        // send error back to callee
+        self._transport.send(self._replyTo, msg, () => {
+          // let it crash
+          if (self._config.crashOnFatal) {
+            self.fatal()
+          }
+        })
+        return
+      } else if (self._config.crashOnFatal) {
+        self.fatal()
+        return
+      }
+    }
+
+    // reply only when we have an inbox
+    if (self._replyTo) {
+      self._transport.send(self._replyTo, msg)
+    }
+  }
+
+  /**
+   *
+   *
+   * @param {any} err
+   * @returns
+   * @memberof Hemera
+   */
+  _createMessage() {
+    const self = this
+
+    let message = {
+      meta: self.meta$ || {},
+      trace: self.trace$ || {},
+      request: self.request$,
+      result: self._reply.error ? null : self._reply.payload,
+      error: self._reply.error ? Errio.toObject(self._reply.error) : null
+    }
+
+    let m = self._encoderPipeline.run(message, self)
+
+    // attach encoding issues
+    if (m.error) {
+      let internalError = new Errors.ParseError(
+        Constants.PAYLOAD_PARSING_ERROR
+      ).causedBy(m.error)
+      message.error = Errio.toObject(internalError)
+      message.result = null
+      // Retry to encode with issue perhaps the reason was data related
+      m = self._encoderPipeline.run(message, self)
+      self.log.error(internalError)
+      self.emit('serverResponseError', m.error)
+    }
+
+    return m.value
   }
 
   /**
@@ -668,7 +680,7 @@ class Hemera extends EventEmitter {
    *
    * @memberof Hemera
    */
-  _actionHandler (err, resp) {
+  _actionHandler(err, resp) {
     const self = this
 
     if (err) {
@@ -686,19 +698,16 @@ class Hemera extends EventEmitter {
         err.hops = [errorDetails]
       }
 
-      if (err instanceof SuperError) {
-        self._response.error = err.rootCause || err.cause || err
-      } else {
-        self._response.error = err
-      }
+      self._reply.error = self.getRootError(err)
 
-      return self.finish()
+      self.finish()
+      return
     }
 
-    // assign action result
-    self._response.payload = resp
-    // delete error we have payload
-    self._response.error = null
+    // set only when we have a result and the reply interface wasn't called
+    if (resp && !self._reply.sent) {
+      self._reply.payload = resp
+    }
 
     self.finish()
   }
@@ -714,7 +723,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  subscribe (topic, subToMany, maxMessages, queue) {
+  subscribe(topic, subToMany, maxMessages, queue) {
     const self = this
 
     // avoid duplicate subscribers of the emit stream
@@ -725,32 +734,147 @@ class Hemera extends EventEmitter {
 
     let handler = (request, replyTo) => {
       // create new execution context
-      let ctx = this.createContext()
-      ctx._shouldCrash = false
-      ctx._replyTo = replyTo
-      ctx._topic = topic
-      ctx._request = new ServerRequest(request)
-      ctx._response = new ServerResponse()
-      ctx._pattern = {}
-      ctx._actMeta = {}
-      ctx._isServer = true
+      let hemera = self.createContext()
+      hemera._topic = topic
+      hemera._replyTo = replyTo
+      hemera._request = new ServerRequest(request)
+      hemera._response = new ServerResponse()
+      hemera._reply = new Reply(hemera._request, hemera._response, hemera.log)
+      hemera._pattern = {}
+      hemera._actMeta = {}
+      hemera._isServer = true
 
-      ctx._extensions.onServerPreRequest
-        .dispatch(ctx, (err, val) => onServerPreRequest(ctx, err, val))
+      const args = [hemera, hemera._request, hemera._reply]
+      hemera._series(hemera, self._ext['onServerPreRequest'], args, err =>
+        hemera._onServerPreRequestCompleted(err)
+      )
     }
 
     // standard pubsub with optional max proceed messages
     if (subToMany) {
-      self._topics[topic] = self._transport.subscribe(topic, {
-        max: maxMessages
-      }, handler)
+      self._topics[topic] = self._transport.subscribe(
+        topic,
+        {
+          max: maxMessages
+        },
+        handler
+      )
     } else {
       const queueGroup = queue || `${Constants.NATS_QUEUEGROUP_PREFIX}.${topic}`
       // queue group names allow load balancing of services
-      self._topics[topic] = self._transport.subscribe(topic, {
-        'queue': queueGroup,
-        max: maxMessages
-      }, handler)
+      self._topics[topic] = self._transport.subscribe(
+        topic,
+        {
+          queue: queueGroup,
+          max: maxMessages
+        },
+        handler
+      )
+    }
+  }
+
+  /**
+   *
+   * @param {any} extensionError
+   * @param {any} value
+   * @memberof Hemera
+   */
+  _onServerPreRequestCompleted(extensionError) {
+    const self = this
+
+    // check if any error was set before
+    if (extensionError) {
+      self._reply.error = extensionError
+      self.finish()
+      return
+    }
+
+    // check if a handler is registered with this pattern
+    if (self._actMeta) {
+      const args = [self, self._request, self._reply]
+      self._series(self, self._ext['onServerPreHandler'], args, err =>
+        self._onServerPreHandlerCompleted(err)
+      )
+    } else {
+      const internalError = new Errors.PatternNotFound(
+        Constants.PATTERN_NOT_FOUND,
+        self.errorDetails
+      )
+      self.log.error(internalError)
+      self._reply.error = internalError
+      self.emit('serverResponseError', self._reply.error)
+
+      // send error back to callee
+      self.finish()
+    }
+  }
+
+  /**
+   *
+   *
+   * @param {any} extensionError
+   * @memberof Hemera
+   */
+  _onServerPreHandlerCompleted(extensionError) {
+    const self = this
+
+    // check if any error was set before
+    if (extensionError) {
+      self._reply.error = extensionError
+
+      const internalError = new Errors.HemeraError(
+        Constants.EXTENSION_ERROR,
+        self.errorDetails
+      ).causedBy(extensionError)
+      self.log.error(internalError)
+      self.emit('serverResponseError', self._reply.error)
+      self.finish()
+      return
+    }
+
+    try {
+      let action = self._actMeta.action.bind(self)
+
+      self._actMeta.run(self._request, self._reply, err => {
+        if (err) {
+          self._reply.error = err
+          const internalError = new Errors.HemeraError(
+            Constants.ADD_MIDDLEWARE_ERROR,
+            self.errorDetails
+          ).causedBy(err)
+          self.log.error(internalError)
+          self.emit('serverResponseError', self._reply.error)
+          self.finish()
+          return
+        }
+
+        // if request type is 'pubsub' we dont have to reply back
+        if (
+          self._request.payload.request.type === Constants.REQUEST_TYPE_PUBSUB
+        ) {
+          action(self._request.payload.pattern)
+          self.finish()
+          return
+        }
+
+        // execute RPC action
+        if (self._actMeta.isPromisable) {
+          action(self._request.payload.pattern)
+            .then(x => self._actionHandler(null, x))
+            .catch(e => self._actionHandler(e))
+        } else {
+          action(self._request.payload.pattern, (err, result) =>
+            self._actionHandler(err, result)
+          )
+        }
+      })
+    } catch (err) {
+      self._reply.error = self.getRootError(err)
+
+      // service should exit
+      self._shouldCrash = true
+
+      self.finish()
     }
   }
 
@@ -763,11 +887,13 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  remove (topic, maxMessages) {
+  remove(topic, maxMessages) {
     const self = this
 
     if (!topic) {
-      let error = new Errors.HemeraError(Constants.TOPIC_SID_REQUIRED_FOR_DELETION)
+      let error = new Errors.HemeraError(
+        Constants.TOPIC_SID_REQUIRED_FOR_DELETION
+      )
       self.log.error(error)
       throw error
     }
@@ -794,7 +920,7 @@ class Hemera extends EventEmitter {
    * @param {any} topic
    * @memberof Hemera
    */
-  cleanTopic (topic) {
+  cleanTopic(topic) {
     // release topic so we can add it again
     delete this._topics[topic]
     // remove pattern which belongs to the topic
@@ -813,7 +939,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  add (pattern, cb) {
+  add(pattern, cb) {
     // check for use quick syntax for JSON objects
     if (_.isString(pattern)) {
       pattern = TinySonic(pattern)
@@ -848,7 +974,6 @@ class Hemera extends EventEmitter {
 
     let addDefinition = new Add(actMeta)
 
-    // cb is null when we use chaining syntax
     if (cb) {
       // set callback
       addDefinition.action = cb
@@ -867,9 +992,12 @@ class Hemera extends EventEmitter {
         pattern
       })
 
-      this.log.error({
-        pattern
-      }, error)
+      this.log.error(
+        {
+          pattern
+        },
+        error
+      )
       this.emit('error', error)
     }
 
@@ -883,7 +1011,8 @@ class Hemera extends EventEmitter {
       pattern.topic,
       pattern.pubsub$,
       pattern.maxMessages$,
-      pattern.queue$)
+      pattern.queue$
+    )
 
     return addDefinition
   }
@@ -895,7 +1024,7 @@ class Hemera extends EventEmitter {
    *
    * @memberof Hemera
    */
-  _sendRequestHandler (response) {
+  _sendRequestHandler(response) {
     const self = this
     const res = self._decoderPipeline.run(response, self)
     self._response.payload = res.value
@@ -904,32 +1033,73 @@ class Hemera extends EventEmitter {
     try {
       // decoding error
       if (self._response.error) {
-        let error = new Errors.ParseError(Constants.PAYLOAD_PARSING_ERROR, self.errorDetails).causedBy(self._response.error)
+        let error = new Errors.ParseError(
+          Constants.PAYLOAD_PARSING_ERROR,
+          self.errorDetails
+        ).causedBy(self._response.error)
         self.log.error(error)
         self.emit('clientResponseError', error)
-
         self._execute(error)
         return
       }
 
-      self._extensions.onClientPostRequest.dispatch(self, (err) => onClientPostRequest(self, err))
+      // Execute onClientPostRequest extension
+      self._series(self, self._ext['onClientPostRequest'], [self], err =>
+        self._onClientPostRequestCompleted(err)
+      )
     } catch (err) {
-      let error = null
-      if (err instanceof SuperError) {
-        error = err.rootCause || err.cause || err
-      } else {
-        error = err
-      }
-
-      const internalError = new Errors.FatalError(Constants.FATAL_ERROR, self.errorDetails).causedBy(err)
+      let error = self.getRootError(err)
+      const internalError = new Errors.FatalError(
+        Constants.FATAL_ERROR,
+        self.errorDetails
+      ).causedBy(err)
       self.log.fatal(internalError)
       self.emit('clientResponseError', error)
 
       // let it crash
       if (self._config.crashOnFatal) {
         self.fatal()
+      } else {
+        self._execute(error)
       }
     }
+  }
+
+  /**
+   *
+   *
+   * @param {any} extensionError
+   * @memberof Hemera
+   */
+  _onClientPostRequestCompleted(extensionError) {
+    const self = this
+
+    if (extensionError) {
+      let error = self.getRootError(extensionError)
+      const internalError = new Errors.HemeraError(
+        Constants.EXTENSION_ERROR,
+        self.errorDetails
+      ).causedBy(extensionError)
+      self.log.error(internalError)
+      self.emit('clientResponseError', error)
+      self._execute(error)
+      return
+    }
+
+    if (self._response.payload.error) {
+      let error = Errio.fromObject(self._response.payload.error)
+      const internalError = new Errors.BusinessError(
+        Constants.BUSINESS_ERROR,
+        self.errorDetails
+      ).causedBy(error)
+      self.log.error(internalError)
+      self.emit('clientResponseError', error)
+
+      self._execute(error)
+      return
+    }
+
+    self._execute(null, self._response.payload.result)
   }
 
   /**
@@ -940,7 +1110,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  act (pattern, cb) {
+  act(pattern, cb) {
     // check for use quick syntax for JSON objects
     if (_.isString(pattern)) {
       pattern = TinySonic(pattern)
@@ -953,78 +1123,142 @@ class Hemera extends EventEmitter {
     }
 
     // create new execution context
-    let ctx = this.createContext()
-    ctx._pattern = pattern
-    ctx._prevContext = this
-    ctx._cleanPattern = Util.cleanFromSpecialVars(pattern)
-    ctx._response = new ClientResponse()
-    ctx._request = new ClientRequest()
-    ctx._isServer = false
-    ctx._execute = null
-    ctx._hasCallback = false
-    ctx._isPromisable = false
+    let hemera = this.createContext()
+    hemera._pattern = pattern
+    hemera._prevContext = this
+    hemera._cleanPattern = Util.cleanFromSpecialVars(pattern)
+    hemera._response = new ClientResponse()
+    hemera._request = new ClientRequest()
+    hemera._isServer = false
+    hemera._execute = null
+    hemera._defer = pDefer()
+    hemera._isPromisable = false
+    hemera._actCallback = null
 
     // topic is needed to subscribe on a subject in NATS
     if (!pattern.topic) {
-      let error = new Errors.HemeraError(Constants.NO_TOPIC_TO_REQUEST, ctx.errorDetails)
+      let error = new Errors.HemeraError(
+        Constants.NO_TOPIC_TO_REQUEST,
+        hemera.errorDetails
+      )
       this.log.error(error)
       throw error
     }
 
     if (cb) {
-      ctx._hasCallback = true
-
-      if (Util.isGeneratorFunction(cb)) {
-        ctx._actCallback = Co.wrap(cb.bind(ctx))
-        ctx._isPromisable = true
-      } else if (Util.isAsyncFunction(cb)) {
-        ctx._actCallback = cb.bind(ctx)
-        ctx._isPromisable = true
+      if (Util.isAsyncFunction(cb)) {
+        hemera._actCallback = cb.bind(hemera)
+        hemera._isPromisable = true
       } else {
-        ctx._actCallback = cb.bind(ctx)
-        ctx._isPromisable = false
+        hemera._actCallback = cb.bind(hemera)
+        hemera._isPromisable = false
       }
     }
 
-    const promise = new Promise((resolve, reject) => {
-      ctx._execute = (err, result) => {
-        if (ctx._config.circuitBreaker.enabled) {
-          const circuitBreaker = ctx._circuitBreakerMap.get(ctx.trace$.method)
-          if (err) {
-            circuitBreaker.failure()
-          } else {
-            circuitBreaker.success()
-          }
-        }
-
-        if (ctx._hasCallback) {
-          if (ctx._isPromisable) {
-            ctx._actCallback(err, result)
-              .then(x => resolve(x))
-              .catch(x => reject(x))
-          } else {
-            // any return value in a callback function will fullfilled the
-            // promise but an error will reject it
-            const r = ctx._actCallback(err, result)
-            if (r instanceof Error) {
-              reject(r)
-            } else {
-              resolve(r)
-            }
-          }
+    hemera._execute = (err, result) => {
+      if (hemera._isPromisable) {
+        hemera
+          ._actCallback(err, result)
+          .then(hemera._defer.resolve)
+          .catch(hemera._defer.reject)
+      } else if (hemera._actCallback) {
+        const res = hemera._actCallback(err, result)
+        hemera._defer.resolve(res)
+      } else {
+        if (err) {
+          hemera._defer.reject(err)
         } else {
-          if (err) {
-            reject(err)
-          } else {
-            resolve(result)
-          }
+          hemera._defer.resolve(result)
         }
       }
-    })
+    }
 
-    ctx._extensions.onClientPreRequest.dispatch(ctx, (err) => onPreRequest(ctx, err))
+    // Execute onClientPreRequest extension
+    hemera._series(hemera, hemera._ext['onClientPreRequest'], [hemera], err =>
+      hemera._onPreRequestCompleted(err)
+    )
 
-    return promise
+    return hemera._defer.promise
+  }
+
+  /**
+   *
+   *
+   * @param {any} err
+   * @returns
+   * @memberof Hemera
+   */
+  getRootError(err) {
+    let error = null
+    if (err instanceof SuperError) {
+      error = err.rootCause || err.cause || err
+    } else {
+      error = err
+    }
+    return error
+  }
+
+  /**
+   *
+   *
+   * @param {any} err
+   * @memberof Hemera
+   */
+  _onPreRequestCompleted(err) {
+    const self = this
+    let m = self._encoderPipeline.run(self._message, self)
+
+    // encoding issue
+    if (m.error) {
+      let error = new Errors.ParseError(
+        Constants.PAYLOAD_PARSING_ERROR
+      ).causedBy(m.error)
+      self.log.error(error)
+      self.emit('clientResponseError', error)
+      self._execute(error)
+      return
+    }
+
+    if (err) {
+      let error = self.getRootError(err)
+      const internalError = new Errors.HemeraError(
+        Constants.EXTENSION_ERROR
+      ).causedBy(err)
+      self.log.error(internalError)
+      self.emit('clientResponseError', error)
+      self._execute(error)
+      return
+    }
+
+    self._request.payload = m.value
+    self._request.error = m.error
+
+    // use simple publish mechanism instead of request/reply
+    if (self._pattern.pubsub$ === true) {
+      if (self._actCallback) {
+        self.log.info(Constants.PUB_CALLBACK_REDUNDANT)
+      }
+
+      self._transport.send(self._pattern.topic, self._request.payload)
+    } else {
+      const optOptions = {}
+      // limit on the number of responses the requestor may receive
+      if (self._pattern.maxMessages$ > 0) {
+        optOptions.max = self._pattern.maxMessages$
+      } else if (self._pattern.maxMessages$ !== -1) {
+        optOptions.max = 1
+      }
+      // send request
+      self._sid = self._transport.sendRequest(
+        self._pattern.topic,
+        self._request.payload,
+        optOptions,
+        resp => self._sendRequestHandler(resp)
+      )
+
+      // handle timeout
+      self.handleTimeout()
+    }
   }
   /**
    * Handle the timeout when a pattern could not be resolved. Can have different reasons:
@@ -1035,19 +1269,63 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  handleTimeout () {
+  handleTimeout() {
     const self = this
     const timeout = self._pattern.timeout$ || this._config.timeout
 
     let timeoutHandler = () => {
-      const error = new Errors.TimeoutError(Constants.ACT_TIMEOUT_ERROR, self.errorDetails)
+      const error = new Errors.TimeoutError(
+        Constants.ACT_TIMEOUT_ERROR,
+        self.errorDetails
+      )
       self.log.error(error)
       self._response.error = error
       self.emit('clientResponseError', error)
-      self._extensions.onClientPostRequest.dispatch(self, (err) => onClientTimeoutPostRequest(self, err))
+
+      // Execute onClientPostRequest extension
+      self._series(self, self._ext['onClientPostRequest'], [self], err =>
+        self._onClientTimeoutPostRequestCompleted(err)
+      )
     }
 
     self._transport.timeout(self._sid, timeout, 1, timeoutHandler)
+  }
+
+  /**
+   *
+   *
+   * @param {any} err
+   * @memberof Hemera
+   */
+  _onClientTimeoutPostRequestCompleted(err) {
+    const self = this
+
+    if (err) {
+      let error = self.getRootError(err)
+      const internalError = new Errors.HemeraError(
+        Constants.EXTENSION_ERROR
+      ).causedBy(err)
+      self.log.error(internalError)
+      self._response.error = error
+      self.emit('clientResponseError', error)
+    }
+
+    try {
+      self._execute(self._response.error)
+    } catch (err) {
+      let error = self.getRootError(err)
+      const internalError = new Errors.FatalError(
+        Constants.FATAL_ERROR,
+        self.errorDetails
+      ).causedBy(err)
+      self.log.fatal(internalError)
+      self.emit('clientResponseError', error)
+
+      // let it crash
+      if (self._config.crashOnFatal) {
+        self.fatal()
+      }
+    }
   }
 
   /**
@@ -1058,12 +1336,12 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  createContext () {
+  createContext() {
     const self = this
 
-    const ctx = Object.create(self)
+    const hemera = Object.create(self)
 
-    return ctx
+    return hemera
   }
 
   /**
@@ -1075,7 +1353,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  list (pattern, options) {
+  list(pattern, options) {
     return this._router.list(pattern, options)
   }
 
@@ -1084,19 +1362,55 @@ class Hemera extends EventEmitter {
    *
    * @memberof Hemera
    */
-  removeAll () {
+  removeAll() {
     _.each(this._topics, (val, key) => this.remove(key))
   }
 
   /**
-   * Gracefully shutdown of all resources.
-   * Unsubscribe all subscriptiuons and close the underlying NATS connection
    *
+   *
+   * @memberof Hemera
+   */
+  close(cb) {
+    this.shutdown((err, instance, done) => {
+      instance._onClose(err, err => {
+        done(err)
+        cb(err)
+      })
+    })
+  }
+
+  /**
+   *
+   *
+   * @param {any} err
    * @param {any} cb
    * @memberof Hemera
    */
-  close (cb) {
-    this._extensions.onClose.dispatch(this, (err, val) => onClose(this, err, val, cb))
+  _onClose(err, cb) {
+    const self = this
+    // remove all active subscriptions
+    self.removeAll()
+
+    // Waiting before all queued messages was proceed
+    // and then close hemera and nats
+    self._transport.flush(() => {
+      self._heavy.stop()
+      // Does not throw an issue when connection is not available
+      self._transport.close()
+
+      if (err) {
+        self.log.error(err)
+        self.emit('error', err)
+        if (_.isFunction(cb)) {
+          cb(err)
+        }
+      } else {
+        if (_.isFunction(cb)) {
+          cb()
+        }
+      }
+    })
   }
 }
 
