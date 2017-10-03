@@ -208,6 +208,17 @@ hemera.use(plugin, [opts], [cb])
   }], (err) => {  })
 </code>
                     </pre>
+
+                    <h4 class="section-h4">After</h4>
+                    <p>Calls a function after all the previously defined plugins are loaded, including all their dependencies.</p>
+                    <pre>
+<code class="javascript">
+  hemera.use(plugin).after(cb)
+  // or
+  hemera.use(plugin)
+  hemera.after(cb)
+</code>
+                    </pre>
                     <h4 class="section-h4">Payload validators</h4>
                     <p>Registered plugins can have different payload validators. This feature depends on the implementation
                         of the validator. In Joi and Parambulator the option <code>payloadValidator</code> will be used to
