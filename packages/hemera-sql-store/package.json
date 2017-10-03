@@ -1,6 +1,6 @@
 {
   "name": "hemera-sql-store",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "This is a plugin to use SQL with Hemera",
   "main": "index.js",
   "repository": {
@@ -14,7 +14,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-plugin": "^0.0.13",
+    "hemera-plugin": "^0.0.14",
     "hemera-store": "^1.1.13",
     "hoek": "4.2.x",
     "knex": "0.13.x",
@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "code": "4.0.x",
-    "hemera-joi": "^2.0.0",
+    "hemera-joi": "^2.0.1",
     "hemera-testsuite": "1.1.x",
     "istanbul": "0.4.x",
     "mocha": "3.3.x",
