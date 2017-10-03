@@ -130,13 +130,13 @@
           <br>
           <pre>
 <code class="javascript">
-hemera.ext("onClientPreRequest", function(ctx, next) {
+hemera.ext("onClientPreRequest", function(hemera, next) {
    next()
 })
 </code>
                     </pre>
           <ul>
-            <code>ctx</code> current hemera instance</li>
+            <code>hemera</code> current hemera instance</li>
           </ul>
           <br>
           <h4 class="section-h4">Server</h4>
@@ -149,7 +149,7 @@ hemera.ext("onClientPreRequest", function(ctx, next) {
           <br>
           <pre>
 <code class="javascript">
-hemera.ext("onServerPreHandler", function(ctx, req, reply, next) {
+hemera.ext("onServerPreHandler", function(hemera, req, reply, next) {
    next()
 })
 </code>
@@ -159,7 +159,7 @@ hemera.ext("onServerPreHandler", function(ctx, req, reply, next) {
             <li>
               <code>next()</code> will call the next extension handler on the stack. If you pass an error the extension lifecycle is aborted.</li>
             <li>
-              <code>ctx</code> current hemera instance</li>
+              <code>hemera</code> current hemera instance</li>
             <li>
               <code>req</code> contains the current request.
             </li>
