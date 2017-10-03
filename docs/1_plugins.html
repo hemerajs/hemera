@@ -151,7 +151,6 @@ const myPlugin = function (hemera, opts, next) {
     topic,
     cmd: "add"
   }, function (req, cb) {
-
     cb(null, {
       result: req.a + req.b
     })
@@ -161,15 +160,15 @@ const myPlugin = function (hemera, opts, next) {
 }
 
 hemera.use({
- plugin: myPlugin,
- options: {
-  name: "test"
- }
+    plugin: myPlugin,
+    options: {
+      name: "test"
+    }
 })
 </code>
                     </pre>
                     <h4 class="section-h4">Plugin dependencies</h4>
-                    <p>Plugin dependencies are installed as usual with NPM. Every plugin instance create a new <code>scope</code>.</p>
+                    <p>Plugin dependencies are installed as usual with NPM.</p>
 
                     <h4 class="section-h4">Plugin registration</h4>
                     <p>A plugin must be registered before the <code>ready</code> function is called. The <code>ready</code> function will initialize all plugins. Default plugin options are preserved if you don't overwrite
@@ -177,19 +176,36 @@ hemera.use({
                     </p>
                     <pre>
 <code class="javascript">
-hemera.use({
-  plugin: function(hemera, opts, next) {},
-  options: { name: "foo", a: 1 }
-})
+hemera.use(plugin, [opts], [cb])
 </code>
                     </pre>
-                    <p>Pass plugin options as second argument to the use function.</p>
+                    <h4 class="section-h4">Default options.</h4>
+                    <p>Pass an object as second arguments to share default options.</p>
                     <pre>
 <code class="javascript">
-hemera.use({
-  plugin: function(hemera, opts, next) {},
-  options: { name: "foo" }
-})
+  hemera.use({
+    plugin: function(hemera, opts, next) { next() },
+    options: { name: "foo" }
+  }, { a: 1 })
+</code>
+                    </pre>
+                    <h4 class="section-h4">Ready callback</h4>
+                    <p>Pass a callback function to get notified when the plugins were initalized.</p>
+                    <pre>
+<code class="javascript">
+  hemera.use({
+    plugin: function(hemera, opts, next) { next() },
+    options: { name: "foo" }
+  }, (err) => {  })
+</code>
+                    </pre>
+                    <h4 class="section-h4">Register multiple plugins at once</h4>
+                    <pre>
+<code class="javascript">
+  hemera.use([{
+    plugin: function(hemera, opts, next) { next() },
+    options: { name: "foo" }
+  }], (err) => {  })
 </code>
                     </pre>
                     <h4 class="section-h4">Payload validators</h4>
