@@ -22,7 +22,6 @@ class ServerRequest {
    */
   constructor(payload) {
     this._request = {}
-    this._locals = {}
     this.payload = payload
   }
 
@@ -35,17 +34,6 @@ class ServerRequest {
    */
   get payload() {
     return this._request.value
-  }
-
-  /**
-   *
-   *
-   * @readonly
-   *
-   * @memberof ServerRequest
-   */
-  get locals() {
-    return this._locals
   }
 
   /**

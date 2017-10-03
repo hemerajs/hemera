@@ -94,45 +94,6 @@ describe('Middleware', function() {
     })
   })
 
-  it('Should be able to use locals on the serverRequest object', function(
-    done
-  ) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    hemera.ready(() => {
-      hemera
-        .add({
-          topic: 'math',
-          cmd: 'add'
-        })
-        .use(function(req, resp, next) {
-          const a = { a: 1 }
-          req.locals.test = a
-          next()
-        })
-        .end(function(req, cb) {
-          expect(this._request.locals).to.be.equals({ test: { a: 1 } })
-          cb(null, req.a + req.b)
-        })
-
-      hemera.act(
-        {
-          topic: 'math',
-          cmd: 'add',
-          a: 1,
-          b: 2
-        },
-        function(err, resp) {
-          expect(err).to.be.not.exists()
-          expect(resp).to.be.equals(3)
-          hemera.close(done)
-        }
-      )
-    })
-  })
-
   it('Should be able to pass an array of middleware function for a server method', function(
     done
   ) {

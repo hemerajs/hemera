@@ -145,6 +145,50 @@ describe('Hemera', function() {
     })
   })
 
+  it('Should be able to define a pattern with regex', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      bloomrun: {
+        indexing: 'depth'
+      }
+    })
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'email',
+          cmd: 'send',
+          id: /.*/
+        },
+        (resp, cb) => {
+          cb(null, 'id')
+        }
+      )
+
+      hemera.add(
+        {
+          topic: 'email',
+          cmd: 'send',
+          name: /.*/
+        },
+        (resp, cb) => {
+          cb(null, 'name')
+        }
+      )
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        id: 1
+      }, (err, req) => {
+        expect(req).to.be.equals('id')
+        hemera.close(done)
+      })
+    })
+  })
+
+
   it('Should be able to act without a callback', function(done) {
     const nats = require('nats').connect(authUrl)
 

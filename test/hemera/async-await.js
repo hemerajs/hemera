@@ -28,10 +28,8 @@ describe('Async / Await support', function() {
         })
         .use(async function(req, resp) {
           const a = await { a: 1 }
-          req.locals.test = a
         })
         .end(function(req, cb) {
-          expect(this._request.locals).to.be.equals({ test: { a: 1 } })
           cb(null, req.a + req.b)
         })
 
