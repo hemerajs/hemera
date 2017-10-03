@@ -1401,13 +1401,10 @@ class Hemera extends EventEmitter {
       if (err) {
         self.log.error(err)
         self.emit('error', err)
-        if (_.isFunction(cb)) {
-          cb(err)
-        }
-      } else {
-        if (_.isFunction(cb)) {
-          cb()
-        }
+      }
+
+      if (_.isFunction(cb)) {
+        cb(err)
       }
     })
   }
