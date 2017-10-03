@@ -3,7 +3,7 @@
 const Hp = require('hemera-plugin')
 const Nsq = require('nsqjs')
 
-exports.plugin = Hp(hemeraNsqStore, '>=1.5.0')
+exports.plugin = Hp(hemeraNsqStore, '>=2.0.0-0')
 exports.options = {
   name: require('./package.json').name,
   payloadValidator: 'hemera-joi'

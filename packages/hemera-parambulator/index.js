@@ -3,7 +3,7 @@
 const Hp = require('hemera-plugin')
 const Parambulator = require('parambulator')
 
-exports.plugin = Hp(hemeraParambulator, '>=1.5.0')
+exports.plugin = Hp(hemeraParambulator, '>=2.0.0-0')
 exports.options = {
   name: require('./package.json').name
 }

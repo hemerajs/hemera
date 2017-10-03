@@ -3,7 +3,7 @@
 const Redis = require('redis')
 const Hp = require('hemera-plugin')
 
-exports.plugin = Hp(hemeraRedisCache, '>= 1.5.0')
+exports.plugin = Hp(hemeraRedisCache, '>=2.0.0-0')
 
 exports.options = {
   name: require('./package.json').name,

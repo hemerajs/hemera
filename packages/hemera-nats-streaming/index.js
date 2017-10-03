@@ -5,7 +5,7 @@ const SafeStringify = require('nats-hemera/lib/encoder').encode
 const SafeParse = require('nats-hemera/lib/decoder').decode
 const Nats = require('node-nats-streaming')
 
-exports.plugin = Hp(hemeraNatsStreaming, '>=1.5.0')
+exports.plugin = Hp(hemeraNatsStreaming, '>=2.0.0-0')
 exports.options = {
   name: require('./package.json').name,
   payloadValidator: 'hemera-joi',

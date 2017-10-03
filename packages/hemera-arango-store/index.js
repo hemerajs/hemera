@@ -5,7 +5,7 @@ const Arangojs = require('arangojs')
 const ArangoStore = require('./store')
 const StorePattern = require('hemera-store/pattern')
 
-exports.plugin = Hp(hemeraArangoStore, '>=1.5.0')
+exports.plugin = Hp(hemeraArangoStore, '>=2.0.0-0')
 exports.options = {
   name: require('./package.json'),
   payloadValidator: 'hemera-joi'

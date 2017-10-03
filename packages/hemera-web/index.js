@@ -11,7 +11,7 @@ const contentBinaryStream = ['application/octet-stream']
 const contentText = ['text/*']
 const contentForm = ['application/x-www-form-*', 'multipart']
 
-exports.plugin = Hp(hemeraWeb, '>= 1.5.0')
+exports.plugin = Hp(hemeraWeb, '>=2.0.0-0')
 exports.options = {
   name: require('./package.json').name,
   port: 3000,

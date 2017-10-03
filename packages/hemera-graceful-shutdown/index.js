@@ -3,7 +3,7 @@
 const Hp = require('hemera-plugin')
 const GracefulShutdown = require('./gracefulShutdown')
 
-exports.plugin = Hp(hemeraGracefulShutdown, '>=1.5.0')
+exports.plugin = Hp(hemeraGracefulShutdown, '>=2.0.0-0')
 exports.options = {
   name: require('./package.json').name
 }

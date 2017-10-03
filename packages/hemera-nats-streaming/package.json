@@ -12,7 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "hemera-plugin": "^0.0.12",
-    "nats-hemera": "^1.5.1",
+    "nats-hemera": "^2.0.0-0",
     "node-nats-streaming": "0.0.x"
   }
 }
