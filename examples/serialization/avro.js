@@ -25,9 +25,7 @@ hemera.ready(() => {
       }
     ]
   })
-  /**
-   * Your Implementations
-   */
+
   hemera.add(
     {
       topic: 'peopleDirectory',

@@ -14,9 +14,6 @@ const hemera = new Hemera(nats, {
 hemera.use(HemeraMsgpack)
 
 hemera.ready(() => {
-  /**
-   * Your Implementations
-   */
   hemera.add(
     {
       topic: 'math',

@@ -26,9 +26,11 @@ hemera.ready(function() {
     function(args, cb) {
       this.act({ topic: 'math', cmd: 'sub', a: 100, b: 50 }, function(
         err,
-        resp
+        result
       ) {
-        cb(err, args.a + args.b - resp)
+        expect(err).to.be.not.exists()
+        expect(result).to.be.equals(50)
+        cb(err, args.a + args.b - result)
       })
     }
   )
@@ -45,7 +47,8 @@ hemera.ready(function() {
     { topic: 'math', cmd: 'add' },
     { a: 100, b: 200 },
     function(err, result) {
-      console.log(err, result)
+      expect(err).to.be.not.exists()
+      expect(result).to.be.equals(250)
     }
   )
 
@@ -57,7 +60,8 @@ hemera.ready(function() {
       b: 200
     },
     function(err, result) {
-      console.log(err, result)
+      expect(err).to.be.not.exists()
+      expect(result).to.be.equals(300)
     }
   )
 })
