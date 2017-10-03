@@ -1,6 +1,6 @@
 {
   "name": "hemera-nats-streaming",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "This is a plugin to use NATS-Streaming with Hemera",
   "main": "index.js",
   "repository": {
@@ -11,7 +11,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-plugin": "^0.0.12",
+    "hemera-plugin": "^0.0.13",
     "nats-hemera": "^2.0.0-0",
     "node-nats-streaming": "0.0.x"
   }

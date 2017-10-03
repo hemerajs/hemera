@@ -1,6 +1,6 @@
 {
   "name": "hemera-graceful-shutdown",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Gracefully shutdown hemera",
   "main": "index.js",
   "repository": {
@@ -14,6 +14,6 @@
   "license": "MIT",
   "dependencies": {
     "fastparallel": "^2.3.0",
-    "hemera-plugin": "^0.0.12"
+    "hemera-plugin": "^0.0.13"
   }
 }

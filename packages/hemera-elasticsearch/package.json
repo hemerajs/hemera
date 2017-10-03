@@ -1,6 +1,6 @@
 {
   "name": "hemera-elasticsearch",
-  "version": "1.0.34",
+  "version": "2.0.0",
   "description": "This is a plugin to use Elasticsearch with Hemera",
   "main": "index.js",
   "repository": {
@@ -16,7 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "elasticsearch": "13.2.x",
-    "hemera-plugin": "^0.0.12"
+    "hemera-plugin": "^0.0.13"
   },
   "devDependencies": {
     "code": "4.0.x",
