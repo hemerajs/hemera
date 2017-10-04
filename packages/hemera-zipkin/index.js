@@ -172,13 +172,6 @@ function hemeraZipkin(hemera, opts, done) {
     }
 
     Tracer.addBinary(meta, ctx.delegate$)
-    Tracer.addBinary(meta, {
-      'rpc.topic': ctx.trace$.service,
-      'rpc.method': ctx.trace$.method,
-      'rpc.timeout': ctx._pattern.timeout$ || ctx.config.timeout,
-      'rpc.maxMessages': ctx._pattern.maxMessages$ || 0,
-      'rpc.pubsub': ctx._pattern.pubsub$ || false
-    })
 
     hemera.log.debug(
       {
