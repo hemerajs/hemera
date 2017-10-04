@@ -16,7 +16,7 @@ let defaultConfig = {
 
 exports.plugin = Hp(hemeraZipkin, '>=2.0.0')
 exports.options = {
-  name: require('./package.json')
+  name: require('./package.json').name
 }
 
 function hemeraZipkin(hemera, opts, done) {
