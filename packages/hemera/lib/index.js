@@ -953,13 +953,12 @@ class Hemera extends EventEmitter {
       throw error
     }
 
-    let origPattern = _.cloneDeep(pattern)
-    let schema = Util.extractSchema(origPattern)
-    origPattern = Util.cleanPattern(origPattern)
+    let schema = Util.extractSchema(pattern)
+    let patternOnly = Util.cleanPattern(pattern)
 
     const actMeta = {
       schema: schema,
-      pattern: origPattern,
+      pattern: patternOnly,
       plugin: this.plugin$
     }
 
@@ -971,21 +970,20 @@ class Hemera extends EventEmitter {
     }
 
     // Support full / token wildcards in subject
-    const bloomrunPattern = _.clone(origPattern)
     // Convert nats wildcard tokens to RegexExp
-    bloomrunPattern.topic = Util.natsWildcardToRegex(bloomrunPattern.topic)
+    patternOnly.topic = Util.natsWildcardToRegex(patternOnly.topic)
 
-    let handler = this._router.lookup(bloomrunPattern)
+    let handler = this._router.lookup(patternOnly)
 
     // check if pattern is already registered
     if (this._config.bloomrun.lookupBeforeAdd && handler) {
       let error = new Errors.HemeraError(Constants.PATTERN_ALREADY_IN_USE, {
-        pattern
+        pattern: patternOnly
       })
 
       this.log.error(
         {
-          pattern
+          pattern: patternOnly
         },
         error
       )
@@ -993,9 +991,9 @@ class Hemera extends EventEmitter {
     }
 
     // add to bloomrun
-    this._router.add(bloomrunPattern, addDefinition)
+    this._router.add(patternOnly, addDefinition)
 
-    this.log.info(origPattern, Constants.ADD_ADDED)
+    this.log.info(patternOnly, Constants.ADD_ADDED)
 
     // subscribe on topic
     this.subscribe(
