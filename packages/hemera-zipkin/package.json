@@ -1,6 +1,6 @@
 {
   "name": "hemera-zipkin",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "This is a plugin to use Zipkin with Hemera",
   "main": "index.js",
   "repository": {
