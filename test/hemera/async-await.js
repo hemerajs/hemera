@@ -332,6 +332,34 @@ describe('Async / Await support', function() {
     })
   })
 
+  it('Should be able to await an act in pubsub mode', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(async () => {
+      hemera.add(
+        {
+          pubsub$: true,
+          topic: 'math',
+          cmd: 'add'
+        },
+        function(resp) {}
+      )
+
+      await hemera.act(
+        {
+          pubsub$: true,
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        }
+      )
+      hemera.close(done)
+    })
+  })
+
   it('Should be able to propagate errors in add', function(done) {
     const nats = require('nats').connect(authUrl)
 
