@@ -43,7 +43,7 @@ describe('Publish / Subscribe', function() {
     })
   })
 
-  it('Should be able to publish even with a callback', function(done) {
+  it('Should be able to publish with a callback', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -54,9 +54,7 @@ describe('Publish / Subscribe', function() {
           topic: 'email',
           cmd: 'send'
         },
-        resp => {
-          hemera.close(done)
-        }
+        resp => {}
       )
 
       hemera.act(
@@ -67,8 +65,40 @@ describe('Publish / Subscribe', function() {
           email: 'foobar@gmail.com',
           msg: 'Hi!'
         },
-        () => {}
+        (a) => {
+          expect(a).to.be.undefined()
+          hemera.close(done)
+        }
       )
+    })
+  })
+
+  it('Should return fullfilled promise', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'email',
+          cmd: 'send'
+        },
+        resp => {}
+      )
+
+      hemera.act(
+        {
+          pubsub$: true,
+          topic: 'email',
+          cmd: 'send',
+          email: 'foobar@gmail.com',
+          msg: 'Hi!'
+        }
+      ).then((a) => {
+        expect(a).to.be.undefined()
+        hemera.close(done)
+      })
     })
   })
 

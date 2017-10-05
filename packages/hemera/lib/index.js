@@ -1224,11 +1224,8 @@ class Hemera extends EventEmitter {
 
     // use simple publish mechanism instead of request/reply
     if (self._pattern.pubsub$ === true) {
-      if (self._actCallback) {
-        self.log.info(Constants.PUB_CALLBACK_REDUNDANT)
-      }
-
       self._transport.send(self._pattern.topic, self._request.payload)
+      self._execute()
     } else {
       const optOptions = {}
       // limit on the number of responses the requestor may receive
