@@ -479,6 +479,12 @@ class Hemera extends EventEmitter {
    * @memberof Hemera
    */
   use(plugin, opts) {
+    // name has to be set in plugin options
+    // when we register an array of plugins it would collide
+    if (opts && opts.name) {
+      delete opts.name
+    }
+
     if (_.isArray(plugin)) {
       plugin.forEach(p => {
         this._use(p, opts)
