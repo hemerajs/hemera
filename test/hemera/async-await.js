@@ -347,15 +347,13 @@ describe('Async / Await support', function() {
         function(resp) {}
       )
 
-      await hemera.act(
-        {
-          pubsub$: true,
-          topic: 'math',
-          cmd: 'add',
-          a: 1,
-          b: 2
-        }
-      )
+      await hemera.act({
+        pubsub$: true,
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      })
       hemera.close(done)
     })
   })

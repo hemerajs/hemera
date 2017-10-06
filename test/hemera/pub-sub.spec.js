@@ -65,7 +65,7 @@ describe('Publish / Subscribe', function() {
           email: 'foobar@gmail.com',
           msg: 'Hi!'
         },
-        (a) => {
+        a => {
           expect(a).to.be.undefined()
           hemera.close(done)
         }
@@ -87,18 +87,18 @@ describe('Publish / Subscribe', function() {
         resp => {}
       )
 
-      hemera.act(
-        {
+      hemera
+        .act({
           pubsub$: true,
           topic: 'email',
           cmd: 'send',
           email: 'foobar@gmail.com',
           msg: 'Hi!'
-        }
-      ).then((a) => {
-        expect(a).to.be.undefined()
-        hemera.close(done)
-      })
+        })
+        .then(a => {
+          expect(a).to.be.undefined()
+          hemera.close(done)
+        })
     })
   })
 
