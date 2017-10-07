@@ -56,6 +56,7 @@ The key features of NATS in combination with Hemera are:
 
 **We support:**
 - Async/Await (Node 7.6+)
+- Promise
 - Error-first-callback style
 
 ```js
@@ -174,6 +175,25 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 | Granting / Authenticating | Version |
 |--------|-------|
 | [hemera-jwt-auth](https://github.com/hemerajs/hemera/tree/master/packages/hemera-jwt-auth) | [![npm](https://img.shields.io/npm/v/hemera-jwt-auth.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-jwt-auth)
+
+## Performance
+
+```
+Platform info:
+==============
+   Windows_NT 10.0.15063 x64
+   Node.JS: 8.4.0
+   V8: 6.0.286.52
+   Intel(R) Core(TM) i5-6600K CPU @ 3.50GHz × 4
+==============
+.\benchmark\request_rt.js
+22436 request-responses/sec
+Avg roundtrip latency: 22 microseconds
+
+.\benchmark\request_rt_async_await.js
+22002 request-responses/sec
+Avg roundtrip latency: 22 microseconds
+```
 
 ## Changelog
 
