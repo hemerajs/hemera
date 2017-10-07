@@ -31,21 +31,23 @@ describe('Promise', function() {
         }
       )
 
-      hemera.act(
-        {
-          topic: 'math',
-          cmd: 'add',
-          a: 1,
-          b: 2
-        },
-        (err, resp) => {
-          expect(err).not.to.be.exists()
-          return Promise.resolve(resp.result)
-        }
-      ).then((result) => {
-        expect(result).to.be.equals(3)
-        hemera.close(done)
-      })
+      hemera
+        .act(
+          {
+            topic: 'math',
+            cmd: 'add',
+            a: 1,
+            b: 2
+          },
+          (err, resp) => {
+            expect(err).not.to.be.exists()
+            return Promise.resolve(resp.result)
+          }
+        )
+        .then(result => {
+          expect(result).to.be.equals(3)
+          hemera.close(done)
+        })
     })
   })
 
@@ -65,20 +67,22 @@ describe('Promise', function() {
         }
       )
 
-      hemera.act(
-        {
-          topic: 'math',
-          cmd: 'add',
-          a: 1,
-          b: 2
-        },
-        (err, resp) => {
-          return Promise.reject(err)
-        }
-      ).catch((err) => {
-        expect(err).to.be.exists()
-        hemera.close(done)
-      })
+      hemera
+        .act(
+          {
+            topic: 'math',
+            cmd: 'add',
+            a: 1,
+            b: 2
+          },
+          (err, resp) => {
+            return Promise.reject(err)
+          }
+        )
+        .catch(err => {
+          expect(err).to.be.exists()
+          hemera.close(done)
+        })
     })
   })
 })

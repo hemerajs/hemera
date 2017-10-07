@@ -21,9 +21,7 @@ function hemeraOpentracing(hemera, opts, done) {
   }
 
   const sampler = new Jaeger.RateLimitingSampler(opts.jaeger.maxTracesPerSecond)
-  const reporter = new Jaeger.RemoteReporter(
-    new UDPSender()
-  )
+  const reporter = new Jaeger.RemoteReporter(new UDPSender())
   const tracer = new Jaeger.Tracer(opts.serviceName, reporter, sampler, opts)
 
   hemera.on('serverPreRequest', function(ctx) {
