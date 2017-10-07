@@ -1127,7 +1127,6 @@ class Hemera extends EventEmitter {
     hemera._isServer = false
     hemera._execute = null
     hemera._defer = pDefer()
-    hemera._isPromisable = false
     hemera._actCallback = null
 
     // topic is needed to subscribe on a subject in NATS
@@ -1141,30 +1140,29 @@ class Hemera extends EventEmitter {
     }
 
     if (cb) {
-      if (Util.isAsyncFunction(cb)) {
-        hemera._actCallback = cb.bind(hemera)
-        hemera._isPromisable = true
-      } else {
-        hemera._actCallback = cb.bind(hemera)
-        hemera._isPromisable = false
-      }
+      hemera._actCallback = cb.bind(hemera)
     }
 
     hemera._execute = (err, result) => {
-      if (hemera._isPromisable) {
-        hemera
-          ._actCallback(err, result)
-          .then(hemera._defer.resolve)
-          .catch(hemera._defer.reject)
-      } else if (hemera._actCallback) {
-        const res = hemera._actCallback(err, result)
-        hemera._defer.resolve(res)
-      } else {
-        if (err) {
-          hemera._defer.reject(err)
-        } else {
-          hemera._defer.resolve(result)
+      if (hemera._actCallback) {
+        const promise = hemera._actCallback(err, result)
+        if (promise) {
+          // check when using async / await
+          if (typeof promise.then === 'function') {
+            promise.then(hemera._defer.resolve).catch(hemera._defer.reject)
+          } else {
+            // when using callback style we awlays resolve with the function result
+            hemera._defer.resolve(promise)
+          }
         }
+        return
+      }
+
+      // when no callback was passed we handle it as promise style
+      if (err) {
+        hemera._defer.reject(err)
+      } else {
+        hemera._defer.resolve(result)
       }
     }
 
