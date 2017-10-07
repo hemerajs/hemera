@@ -40,7 +40,7 @@ class Add {
    * @memberof Add
    */
   _use(handler) {
-    this.actMeta.middleware.push(Util.toPromiseFact(handler))
+    this.actMeta.middleware.push(Util.wrapFuncAsPromise(handler))
   }
 
   /**

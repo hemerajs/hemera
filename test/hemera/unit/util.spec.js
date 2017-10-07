@@ -46,9 +46,9 @@ describe('Util', function() {
     done()
   })
 
-  it('toPromiseFact', function(done) {
+  it('wrapFuncAsPromise', function(done) {
     const a = function() {}
-    let fn = HemeraUtil.toPromiseFact(a)
+    let fn = HemeraUtil.wrapFuncAsPromise(a)
     expect(fn).to.be.function()
     expect(fn.length).to.be.equals(0)
     expect(fn).to.be.equals(a)

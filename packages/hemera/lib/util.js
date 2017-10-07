@@ -49,7 +49,7 @@ class Util {
    * @param {any} handler
    * @memberof Util
    */
-  static toPromiseFact(handler) {
+  static wrapFuncAsPromise(handler) {
     if (Util.isAsyncFunction(handler)) {
       return function() {
         // -1 because (req, res, next)

@@ -1151,7 +1151,7 @@ class Hemera extends EventEmitter {
           if (typeof promise.then === 'function') {
             promise.then(hemera._defer.resolve).catch(hemera._defer.reject)
           } else {
-            // when using callback style we awlays resolve with the function result
+            // when using callback style we always resolve with the function result
             hemera._defer.resolve(promise)
           }
         }
