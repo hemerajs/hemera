@@ -91,7 +91,21 @@ hemera.ready(() => {
 ```
 
 ## Documentation
-There is an extensive <a href="https://hemerajs.github.io/hemera/">documentation</a> or look in the <a href="https://github.com/hemerajs/hemera/tree/master/examples">Examples</a>.
+* <a href="https://hemerajs.github.io/hemera/getting-started.html"><code><b>Getting Started</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_request_reply.html"><code><b>Request & Reply</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_pattern_matching.html"><code><b>Pattern Matching</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_pub_sub.html"><code><b>Publish & Subscribe</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_payload_validation.html"><code><b>Payload validation</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_middleware.html"><code><b>Middleware</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_extension_points.html"><code><b>Extension</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_logging.html"><code><b>Logging</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_plugins.html"><code><b>Plugins</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_metadata.html"><code><b>Metadata</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_context.html"><code><b>Context</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_delegate.html"><code><b>Delegate</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_life_cycle_events.html"><code><b>Lifecycle events</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/2_basic.html"><code><b>Error handling</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/5_testing.html"><code><b>Testing</b></code></a>
 
 ## Who's using Hemera?
 
