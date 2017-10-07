@@ -77,8 +77,7 @@ hemera.ready(() => {
     a: Joi.number().required(),
     b: Joi.number().required()
   }, async function (req) {
-    const a = await req.a + req.b
-    return a
+    return await req.a + req.b
   })
 
   const a = hemera.act({ topic: 'math', cmd: 'add', a: 10, b: 30 })
