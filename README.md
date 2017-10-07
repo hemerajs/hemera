@@ -107,6 +107,7 @@ hemera.ready(() => {
 * <a href="https://hemerajs.github.io/hemera/1_life_cycle_events.html"><code><b>Lifecycle events</b></code></a>
 * <a href="https://hemerajs.github.io/hemera/2_basic.html"><code><b>Error handling</b></code></a>
 * <a href="https://hemerajs.github.io/hemera/5_testing.html"><code><b>Testing</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/4_api.html"><code><b>Api</b></code></a>
 * <a href="https://github.com/hemerajs/hemera/tree/master/examples"><code><b>Examples</b></code></a>
 
 ## Who's using Hemera?
