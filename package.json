@@ -32,6 +32,7 @@
     "queueing"
   ],
   "scripts": {
+    "precommit": "npm run format",
     "lint": "eslint --fix ./packages/**/*.js ./test/**/*.js",
     "format": "prettier ./packages/**/*.js ./examples/**/*.js ./test/**/*.js --write && npm run lint",
     "setup": "npm i && lerna bootstrap",
@@ -62,6 +63,7 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
     "hemera-testsuite": "^1.2.0",
+    "husky": "^0.14.3",
     "istanbul": "0.4.x",
     "joi": "10.6.x",
     "lerna": "^2.2.0",
