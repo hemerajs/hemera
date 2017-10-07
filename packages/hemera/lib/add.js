@@ -28,7 +28,6 @@ class Add {
   constructor(actMeta, options) {
     this.actMeta = actMeta
     this.options = options
-    this.isPromisable = false
     this.actMeta.middleware = actMeta.middleware || []
   }
 
@@ -129,13 +128,7 @@ class Add {
    * @memberOf Add
    */
   set action(action) {
-    if (Util.isAsyncFunction(action)) {
-      this.actMeta.action = action
-      this.isPromisable = true
-    } else {
-      this.actMeta.action = action
-      this.isPromisable = false
-    }
+    this.actMeta.action = action
   }
   /**
    *

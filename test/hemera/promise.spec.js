@@ -13,6 +13,70 @@ describe('Promise', function() {
     server.kill()
   })
 
+  it('Should be able to return a promise in add', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        (resp) => {
+          return Promise.resolve(resp.a + resp.b)
+        }
+      )
+
+      hemera
+        .act(
+          {
+            topic: 'math',
+            cmd: 'add',
+            a: 1,
+            b: 2
+          },
+          (err, resp) => {
+            expect(resp).to.be.equals(3)
+            hemera.close(done)
+          }
+        )
+    })
+  })
+
+  it('Should be able to reject a promise in add', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        (resp) => {
+          return Promise.reject(new Error('test'))
+        }
+      )
+
+      hemera
+        .act(
+          {
+            topic: 'math',
+            cmd: 'add',
+            a: 1,
+            b: 2
+          },
+          (err, resp) => {
+            expect(err).to.be.exists()
+            hemera.close(done)
+          }
+        )
+    })
+  })
+
   it('Should be able to return a promise in act', function(done) {
     const nats = require('nats').connect(authUrl)
 

@@ -854,15 +854,19 @@ class Hemera extends EventEmitter {
           return
         }
 
-        // execute RPC action
-        if (self._actMeta.isPromisable) {
-          action(self._request.payload.pattern)
-            .then(x => self._actionHandler(null, x))
-            .catch(e => self._actionHandler(e))
-        } else {
+        // when we have 2 arguments defined we expect to use the callback style
+        if (action.length === 2) {
           action(self._request.payload.pattern, (err, result) =>
             self._actionHandler(err, result)
           )
+        } else {
+          const promise = action(self._request.payload.pattern)
+
+          if (promise && typeof promise.then === 'function') {
+            action(self._request.payload.pattern)
+              .then(x => self._actionHandler(null, x))
+              .catch(e => self._actionHandler(e))
+          }
         }
       })
     } catch (err) {
