@@ -77,7 +77,7 @@ hemera.ready(() => {
     a: Joi.number().required(),
     b: Joi.number().required()
   }, async function (req) {
-    const a = await Promise.resolve(req.a + req.b)
+    const a = await req.a + req.b
     return a
   })
 
