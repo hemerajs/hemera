@@ -20,7 +20,10 @@ exports.options = {
       options: true
     },
     options: {
-      tags: {}
+      tags: {
+        'hemera.version': 'Node-' + require('nats-hemera/package.json').version,
+        'nodejs.version': process.versions.node
+      }
     }
   }
 }
@@ -51,6 +54,11 @@ function hemeraOpentracing(hemera, opts, done) {
     sampler = new Jaeger.RateLimitingSampler(opts.jaeger.sampler.options)
   } else if (opts.jaeger.sampler.type === 'Probabilistic') {
     sampler = new Jaeger.ProbabilisticSampler(opts.jaeger.sampler.options)
+  } else if (opts.jaeger.sampler.type === 'GuaranteedThroughput') {
+    sampler = new Jaeger.GuaranteedThroughputSampler(
+      opts.jaeger.sampler.options.lowerBound,
+      opts.jaeger.sampler.options.samplingRate
+    )
   } else {
     sampler = new Jaeger.ConstSampler(opts.jaeger.sampler.options)
   }
@@ -97,17 +105,14 @@ function hemeraOpentracing(hemera, opts, done) {
 
     if (ctx._opentracing) {
       span = tracer.startSpan('act', { childOf: ctx._opentracing })
-      const textCarrier = {}
-      tracer.inject(span, Opentracing.FORMAT_TEXT_MAP, textCarrier)
-      // for cross process communication
-      ctx.trace$.opentracing = textCarrier
     } else {
       span = tracer.startSpan('act')
-      const textCarrier = {}
-      tracer.inject(span, Opentracing.FORMAT_TEXT_MAP, textCarrier)
-      // for cross process communication
-      ctx.trace$.opentracing = textCarrier
     }
+
+    // for cross process communication
+    const textCarrier = {}
+    tracer.inject(span, Opentracing.FORMAT_TEXT_MAP, textCarrier)
+    ctx.trace$.opentracing = textCarrier
 
     span.setTag(Opentracing.Tags.PEER_SERVICE, 'hemera')
     span.setTag(tags.HEMERA_SERVICE, ctx.trace$.service)
