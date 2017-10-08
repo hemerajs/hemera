@@ -17,11 +17,35 @@ Since nats-streaming based on NATS Server you are able to run both technologies 
 
 We provide a simple interface to work with nats-streaming
 
-- `act("topic:nats-streaming,cmd:publish,subject:<subject>")`: Publish a message to nats-streaming.
-- `act("topic:nats-streaming,cmd:subscribe,subject:<subject>")`: Create a nats-streaming subscription and return an ack when the subscription was created.
-- `act("topic:nats-streaming,cmd:unsubscribe,subject:<subject>")`: Unsubscribe an active nats-streaming subscription.
-- `act("topic:nats-streaming,cmd:suspend,subject:<subject>")`: Suspend a durable nats-streaming subscription. You can active it if you call `subscribe` again.
-- `add("topic:nats-streaming.<subject>")`: Create a NATS subscription to listen on NATS-Streaming events. You have to call the callback handler to acknowledge the message.
+## Publishing
+```js
+act("topic:nats-streaming,cmd:publish,subject:<subject>", (err, resp) => {  })
+```
+
+## Create subscription
+Return an ack when the subscription was created.
+```js
+act("topic:nats-streaming,cmd:subscribe,subject:<subject>", (err, resp) => {  })
+```
+
+## Unsubscribing
+Return an ack when the subscription was unsubscribed.
+```js
+act("topic:nats-streaming,cmd:unsubscribe,subject:<subject>", (err, resp) => {  })
+```
+
+## Suspending
+Suspend a durable nats-streaming subscription. You can active it if you call `subscribe` again.
+```js
+act("topic:nats-streaming,cmd:suspend,subject:<subject>", (err, resp) => {  })
+```
+
+## Subscribing
+Create a NATS subscription to listen on NATS-Streaming events. You have to call the callback handler to acknowledge the message.
+
+```js
+add("topic:nats-streaming.<subject>", (err, resp) => {  })
+```
 
 ### Why you don't implement nats-streaming in hemera?
 They use the same server but the purpose is quite different with hemera we want to provide a simple toolkit without any delivery guarantee. NATS-streaming was created to fill this gap with a mimimalistic protocol extension. We can use this feature while creating a simple bridge to nats-streaming. It will create a minimal roundtrip overhead but it's tolerable. The greatest fact is that we can run both technologies side by side* with one nats-streaming-server.
