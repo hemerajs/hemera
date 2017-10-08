@@ -29,7 +29,7 @@ hemera.use(hemeraJaeger, {
 ```
 
 ## Add contextual data
-Loot in the [documentation](https://hemerajs.github.io/hemera/1_delegate.html) to learn more about delegate in hemera.
+Look in the [documentation](https://hemerajs.github.io/hemera/1_delegate.html) to learn more about delegate in hemera.
 
 ```js
 hemera.use(hemeraJaeger, {
