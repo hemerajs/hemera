@@ -43,5 +43,25 @@ hemera.use(hemeraOpentracing, {
 })
 ```
 
+## Use different sampler
+Default is `Const`. See [here](https://github.com/uber/jaeger-client-node/tree/master/src/samplers) for all samplers.
+
+```js
+hemera.use(hemeraOpentracing, {
+  serviceName: 'math',
+  jaeger: {
+    sampler: {
+      type: 'RateLimiting',
+      options: 1
+    }
+  }
+})
+```
+
+
+## Caveats
+
+- This plugin will use the property `hemera.trace$.opentracing` to transfer data across processes.
+
 ## Advanced example
 [here](/examples/monitoring/jaeger.js)

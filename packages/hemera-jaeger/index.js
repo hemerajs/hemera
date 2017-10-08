@@ -15,6 +15,10 @@ exports.options = {
     }
   ],
   jaeger: {
+    sampler: {
+      type: 'Const',
+      options: true
+    },
     options: {
       tags: {}
     }
@@ -41,7 +45,16 @@ function hemeraOpentracing(hemera, opts, done) {
     HEMERA_ACT_MAXMSG: 'hemera.act.maxMsg',
     HEMERA_PUBSUB: 'hemera.pubsub'
   }
-  const sampler = new Jaeger.ConstSampler(true)
+  let sampler
+  if (opts.jaeger.sampler.type === 'RateLimiting') {
+    sampler = new Jaeger.RateLimitingSampler(opts.jaeger.sampler.options)
+  }
+  if (opts.jaeger.sampler.type === 'Probabilistic') {
+    sampler = new Jaeger.ProbabilisticSampler(opts.jaeger.sampler.options)
+  } else {
+    sampler = new Jaeger.ConstSampler(opts.jaeger.sampler.options)
+  }
+
   const reporter = new Jaeger.RemoteReporter(new UDPSender())
   const tracer = new Jaeger.Tracer(
     opts.serviceName,
