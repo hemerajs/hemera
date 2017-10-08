@@ -1,6 +1,7 @@
 'use strict'
 
 const semver = require('semver')
+const console = require('console')
 
 function plugin(fn, version) {
   if (typeof fn !== 'function') {
@@ -16,8 +17,14 @@ function plugin(fn, version) {
       )
     }
 
-    const hemeraVersion = require('nats-hemera/package.json').version
-    if (!semver.satisfies(hemeraVersion, version)) {
+    let hemeraVersion
+    try {
+      hemeraVersion = require('nats-hemera/package.json').version
+    } catch (_) {
+      console.info('hemera not found, proceeding anyway')
+    }
+
+    if (hemeraVersion && !semver.satisfies(hemeraVersion, version)) {
       throw new Error(
         `hemera-plugin - expected '${version}' nats-hemera version, '${hemeraVersion}' is installed`
       )

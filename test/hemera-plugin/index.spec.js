@@ -1,6 +1,7 @@
 'use strict'
 
 const HemeraPlugin = require('./../../packages/hemera-plugin')
+const Proxyquire = require('proxyquire')
 
 describe('Hemera plugin', function() {
   var PORT = 6242
@@ -37,6 +38,24 @@ describe('Hemera plugin', function() {
     hemera.ready(() => {
       hemera.close(done)
     })
+  })
+
+  it('Should not throw if hemera is not found', function(done) {
+    const HemeraPlugin = Proxyquire('./../../packages/hemera-plugin/index.js', {
+      'nats-hemera/package.json': null,
+      console: {
+        info: function(msg) {
+          expect(msg).to.be.equals('hemera not found, proceeding anyway')
+          done()
+        }
+      }
+    })
+
+    function plugin(hemera, opts, done) {
+      done()
+    }
+
+    HemeraPlugin(plugin, '>= 0')
   })
 
   it('Should throw an error because semver version does not match', function(
