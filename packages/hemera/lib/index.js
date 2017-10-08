@@ -1124,7 +1124,7 @@ class Hemera extends EventEmitter {
     // create new execution context
     let hemera = this.createContext()
     hemera._pattern = pattern
-    hemera._prevContext = this
+    hemera._parentContext = this
     hemera._cleanPattern = Util.cleanFromSpecialVars(pattern)
     hemera._response = new ClientResponse()
     hemera._request = new ClientRequest()

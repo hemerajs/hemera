@@ -110,14 +110,6 @@ function hemeraZipkin(hemera, opts, done) {
       name: ctx.trace$.method
     }
 
-    if (ctx._prevContext._isServer === true) {
-      meta.service = ctx._prevContext._topic
-    } else if (ctx._prevContext._isServer === false) {
-      meta.service = ctx._prevContext._pattern.topic
-    } else {
-      meta.service = ctx.config.tag // when act is on root level
-    }
-
     if (config.subscriptionBased === false) {
       meta.service = ctx.config.tag
     }
@@ -157,14 +149,6 @@ function hemeraZipkin(hemera, opts, done) {
   hemera.on('clientPostRequest', function(ctx) {
     let meta = {
       name: ctx.trace$.method
-    }
-
-    if (ctx._prevContext._isServer === true) {
-      meta.service = ctx._prevContext._topic
-    } else if (ctx._prevContext._isServer === false) {
-      meta.service = ctx._prevContext._pattern.topic
-    } else {
-      meta.service = ctx.config.tag // when act is on root level
     }
 
     if (config.subscriptionBased === false) {

@@ -22,12 +22,12 @@ const Errors = require('./errors')
 function onClientPreRequest(context, next) {
   let pattern = context._pattern
 
-  let prevCtx = context._prevContext
+  let parentContext = context._parentContext
   let cleanPattern = context._cleanPattern
   let currentTime = Util.nowHrTime()
 
   // shared context
-  context.context$ = pattern.context$ || prevCtx.context$
+  context.context$ = pattern.context$ || parentContext.context$
 
   // set metadata by passed pattern or current message context
   context.meta$ = Object.assign(pattern.meta$ || {}, context.meta$)
@@ -36,9 +36,10 @@ function onClientPreRequest(context, next) {
 
   // tracing
   context.trace$ = pattern.trace$ || {}
-  context.trace$.parentSpanId = context.trace$.spanId || prevCtx.trace$.spanId
+  context.trace$.parentSpanId =
+    context.trace$.spanId || parentContext.trace$.spanId
   context.trace$.traceId =
-    context.trace$.traceId || prevCtx.trace$.traceId || Util.randomId()
+    context.trace$.traceId || parentContext.trace$.traceId || Util.randomId()
   context.trace$.spanId = Util.randomId()
   context.trace$.timestamp = currentTime
   context.trace$.service = pattern.topic
