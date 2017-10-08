@@ -19,32 +19,66 @@ We provide a simple interface to work with nats-streaming
 
 ## Publishing
 ```js
-act("topic:nats-streaming,cmd:publish,subject:<subject>", (err, resp) => {  })
+hemera.act({
+  topic: 'nats-streaming',
+  cmd: 'publish',
+  subject: '<subject>',
+  (err, resp) => {
+    // ...
+  }
+)
 ```
 
 ## Create subscription
 Return an ack when the subscription was created.
 ```js
-act("topic:nats-streaming,cmd:subscribe,subject:<subject>", (err, resp) => {  })
+hemera.act({
+  topic: 'nats-streaming',
+  cmd: 'subscribe',
+  subject: '<subject>',
+  (err, resp) => {
+    // ...
+  }
+)
 ```
 
-## Unsubscribing
+## Remove subscription
 Return an ack when the subscription was unsubscribed.
 ```js
-act("topic:nats-streaming,cmd:unsubscribe,subject:<subject>", (err, resp) => {  })
+hemera.act({
+  topic: 'nats-streaming',
+  cmd: 'unsubscribe',
+  subject: '<subject>',
+  (err, resp) => {
+    // ...
+  }
+)
 ```
 
 ## Suspending
 Suspend a durable nats-streaming subscription. You can active it if you call `subscribe` again.
 ```js
-act("topic:nats-streaming,cmd:suspend,subject:<subject>", (err, resp) => {  })
+hemera.act({
+  topic: 'nats-streaming',
+  cmd: 'suspend',
+  subject: '<subject>',
+  (err, resp) => {
+    // ...
+  }
+)
 ```
 
 ## Subscribing
 Create a NATS subscription to listen on NATS-Streaming events. You have to call the callback handler to acknowledge the message.
 
 ```js
-add("topic:nats-streaming.<subject>", (err, resp) => {  })
+hemera.add({
+  topic: 'nats-streaming.<subject>',
+  (err, reply) => {
+    // ...
+    reply() // ACK
+  }
+)
 ```
 
 ### Why you don't implement nats-streaming in hemera?
