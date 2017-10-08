@@ -23,7 +23,7 @@ You can then navigate to http://localhost:16686 to access the Jaeger UI.
 ## Usage
 
 ```js
-hemera.use(hemeraOpentracing, {
+hemera.use(hemeraJaeger, {
   serviceName: 'math'
 })
 ```
@@ -32,7 +32,7 @@ hemera.use(hemeraOpentracing, {
 Loot in the [documentation](https://hemerajs.github.io/hemera/1_delegate.html) to learn more about delegate in hemera.
 
 ```js
-hemera.use(hemeraOpentracing, {
+hemera.use(hemeraJaeger, {
   serviceName: 'math',
   delegateTags: [
     {
@@ -47,7 +47,7 @@ hemera.use(hemeraOpentracing, {
 Default is `Const`. See [here](https://github.com/uber/jaeger-client-node/tree/master/src/samplers) for all samplers.
 
 ```js
-hemera.use(hemeraOpentracing, {
+hemera.use(hemeraJaeger, {
   serviceName: 'math',
   jaeger: {
     sampler: {

@@ -2,7 +2,7 @@
 
 const Hemera = require('./../../packages/hemera')
 const nats = require('nats').connect()
-const hemeraOpentracing = require('./../../packages/hemera-opentracing')
+const hemeraJaeger = require('./../../packages/hemera-jaeger')
 
 const hemera = new Hemera(nats, {
   logLevel: 'debug',
@@ -10,7 +10,7 @@ const hemera = new Hemera(nats, {
   tag: 'math'
 })
 
-hemera.use(hemeraOpentracing, {
+hemera.use(hemeraJaeger, {
   serviceName: 'math'
 })
 
