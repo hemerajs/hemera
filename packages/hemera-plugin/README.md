@@ -14,9 +14,7 @@ Example:
 ```js
 const hp = require('hemera-plugin')
 
-module.exports = hp(function (opts, next) {
-  // your plugin code
-  const hemera = this
+module.exports = hp(function (hemera, opts, next) {
   next()
 })
 ```
@@ -25,9 +23,7 @@ If you need to set a bare-minimum version of Hemera for your plugin, just add th
 ```js
 const hp = require('hemera-plugin')
 
-module.exports = hp(function (opts, next) {
-  // your plugin code
-  const hemera = this
+module.exports = hp(function (hemera, opts, next) {
   next()
 }, '0.x')
 ```
