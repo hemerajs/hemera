@@ -145,7 +145,6 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 |--------|-------|
 | [nats-hemera](https://github.com/hemerajs/hemera/tree/master/packages/hemera) | [![npm](https://img.shields.io/npm/v/nats-hemera.svg?maxAge=3600)](https://www.npmjs.com/package/nats-hemera)
 | [hemera-plugin](https://github.com/hemerajs/hemera/tree/master/packages/hemera-plugin) | [![npm](https://img.shields.io/npm/v/hemera-plugin.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-plugin)
-| [hemera-zipkin](https://github.com/hemerajs/hemera/tree/master/packages/hemera-zipkin) | [![npm](https://img.shields.io/npm/v/hemera-zipkin.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-zipkin)
 | [hemera-store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store) | [![npm](https://img.shields.io/npm/v/hemera-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-store)
 | [hemera-stats](https://github.com/hemerajs/hemera/tree/master/packages/hemera-stats) | [![npm](https://img.shields.io/npm/v/hemera-stats.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-stats)
 | [hemera-controlplane](https://github.com/hemerajs/hemera/tree/master/packages/hemera-controlplane) | [![npm](https://img.shields.io/npm/v/hemera-controlplane.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-controlplane)
@@ -153,6 +152,11 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 | [hemera-mail](https://github.com/hemerajs/hemera/tree/master/packages/hemera-mail) | [![npm](https://img.shields.io/npm/v/hemera-mail.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-mail)
 | [hemera-slackbot](https://github.com/hemerajs/hemera/tree/master/packages/hemera-slackbot) | [![npm](https://img.shields.io/npm/v/hemera-slackbot.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-slackbot)
 | [hemera-graceful-shutdown](https://github.com/hemerajs/hemera/tree/master/packages/hemera-graceful-shutdown) | [![npm](https://img.shields.io/npm/v/hemera-graceful-shutdown.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-graceful-shutdown)
+
+| Tracer | Version |
+|--------|-------|
+| [hemera-zipkin](https://github.com/hemerajs/hemera/tree/master/packages/hemera-zipkin) | [![npm](https://img.shields.io/npm/v/hemera-zipkin.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-zipkin)
+| [hemera-jaeger](https://github.com/hemerajs/hemera/tree/master/packages/hemera-jaeger) | [![npm](https://img.shields.io/npm/v/hemera-jaeger.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-jaeger)
 
 | Messaging bridges | Version |
 |--------|-------|
