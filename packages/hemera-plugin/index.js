@@ -24,10 +24,12 @@ function plugin(fn, version) {
       console.info('hemera not found, proceeding anyway')
     }
 
-    if (hemeraVersion && !semver.satisfies(hemeraVersion, version)) {
-      throw new Error(
-        `hemera-plugin - expected '${version}' nats-hemera version, '${hemeraVersion}' is installed`
-      )
+    if (hemeraVersion) {
+      if (!semver.satisfies(hemeraVersion, version)) {
+        throw new Error(
+          `hemera-plugin - expected '${version}' nats-hemera version, '${hemeraVersion}' is installed`
+        )
+      }
     }
   }
 
