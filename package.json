@@ -71,7 +71,7 @@
     "mocha": "3.5.x",
     "mocha-lcov-reporter": "1.3.x",
     "nats": "0.7.x",
-    "nats-hemera": "^1.5.0",
+    "nats-hemera": "^2.1.6",
     "node-nats-streaming": "^0.0.26",
     "nyc": "11.1.x",
     "prettier": "^1.7.3",
