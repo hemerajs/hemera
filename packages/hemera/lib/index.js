@@ -592,7 +592,7 @@ class Hemera extends EventEmitter {
         self.errorDetails
       ).causedBy(extensionError)
       self.log.error(internalError)
-      self.emit('serverResponseError', self._reply.error)
+      self.emit('serverResponseError', extensionError)
     }
 
     const result = self._createMessage()
@@ -782,6 +782,7 @@ class Hemera extends EventEmitter {
     // check if any error was set before
     if (extensionError) {
       self._reply.error = extensionError
+      self.emit('serverResponseError', extensionError)
       self.finish()
       return
     }
@@ -1037,7 +1038,7 @@ class Hemera extends EventEmitter {
           self.errorDetails
         ).causedBy(self._response.error)
         self.log.error(error)
-        self.emit('clientResponseError', error)
+        self.emit('clientResponseError', self._response.error)
         self._execute(error)
         return
       }
@@ -1080,7 +1081,7 @@ class Hemera extends EventEmitter {
         self.errorDetails
       ).causedBy(extensionError)
       self.log.error(internalError)
-      self.emit('clientResponseError', error)
+      self.emit('clientResponseError', extensionError)
       self._execute(error)
       return
     }
