@@ -5,13 +5,14 @@ Granting and authenticating solution with JWT for Hemera
 [![npm](https://img.shields.io/npm/v/hemera-jwt-auth.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-jwt-auth)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
-#### Example
+## Install
+```
+npm i hemera-jwt-auth --save
+```
+
+#### Usage
 
 ```js
-const Hemera = require('nats-hemera')
-const nats = require('nats').connect()
-const hemeraJwt = require('hemera-jwt-auth')
-
 // token encoded with { scope: ['math'] }
 const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZSI6WyJtYXRoIl0sImlhdCI6MTQ4ODEyMjIwN30.UPLLbjDgkB_ajQjI7BUlpUGfZYvsqHP3NqWQIavibeQ'
 
