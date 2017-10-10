@@ -24,6 +24,9 @@ exports.options = {
         'hemera.version': 'Node-' + require('nats-hemera/package.json').version,
         'nodejs.version': process.versions.node
       }
+    },
+    reporter: {
+        host: 'localhost'
     }
   }
 }
@@ -63,7 +66,7 @@ function hemeraOpentracing(hemera, opts, done) {
     sampler = new Jaeger.ConstSampler(opts.jaeger.sampler.options)
   }
 
-  const reporter = new Jaeger.RemoteReporter(new UDPSender())
+  const reporter = new Jaeger.RemoteReporter(new UDPSender(opts.jaeger.reporter))
   const tracer = new Jaeger.Tracer(
     opts.serviceName,
     reporter,
