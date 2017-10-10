@@ -10,7 +10,7 @@ Granting and authenticating solution with JWT for Hemera
 npm i hemera-jwt-auth --save
 ```
 
-#### Usage
+## Usage
 
 ```js
 // token encoded with { scope: ['math'] }
