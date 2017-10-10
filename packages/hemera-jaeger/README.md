@@ -10,7 +10,7 @@ https://eng.uber.com/distributed-tracing/
 ## Install
 
 ```
-npm i hemera-opentracing --save
+npm i hemera-jaeger --save
 ```
 
 ## Getting started
