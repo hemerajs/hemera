@@ -112,9 +112,9 @@ hemera.ready(async () => {
 
 ## Who's using Hemera?
 
-| [![appcom-interactive](http://www.appcom-interactive.de/images/appcom-logo.svg)](http://www.appcom-interactive.de/) |
-| -------------|
-| appcom interactive |
+| [![appcom-interactive](http://www.appcom-interactive.de/images/appcom-logo.svg)](http://www.appcom-interactive.de/) | [![amerbank](https://github.com/hemerajs/hemera/blob/master/media/companies/amerbank.png?raw=true)](https://amerbank.com/)
+| -------------| --- |
+| appcom interactive | amerbank |
 
 ## Get Involved
 
