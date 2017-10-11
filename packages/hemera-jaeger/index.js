@@ -26,7 +26,7 @@ exports.options = {
       }
     },
     reporter: {
-        host: 'localhost'
+      host: 'localhost'
     }
   }
 }
@@ -66,7 +66,9 @@ function hemeraOpentracing(hemera, opts, done) {
     sampler = new Jaeger.ConstSampler(opts.jaeger.sampler.options)
   }
 
-  const reporter = new Jaeger.RemoteReporter(new UDPSender(opts.jaeger.reporter))
+  const reporter = new Jaeger.RemoteReporter(
+    new UDPSender(opts.jaeger.reporter)
+  )
   const tracer = new Jaeger.Tracer(
     opts.serviceName,
     reporter,

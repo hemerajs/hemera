@@ -152,6 +152,44 @@ describe('Async / Await support', function() {
     })
   })
 
+  it('Should call add handler only once', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    const spy = Sinon.spy()
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        async function(resp) {
+          spy()
+          const a = await {
+            result: resp.a + resp.b
+          }
+          return a
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        (err, resp) => {
+          expect(err).not.to.be.exists()
+          expect(resp.result).to.be.equals(3)
+          expect(spy.calledOnce).to.be.equals(true)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
   it('Should be able to await in add', function(done) {
     const nats = require('nats').connect(authUrl)
 

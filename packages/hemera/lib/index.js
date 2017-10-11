@@ -864,7 +864,7 @@ class Hemera extends EventEmitter {
           const promise = action(self._request.payload.pattern)
 
           if (promise && typeof promise.then === 'function') {
-            action(self._request.payload.pattern)
+            promise
               .then(x => self._actionHandler(null, x))
               .catch(e => self._actionHandler(e))
           }
