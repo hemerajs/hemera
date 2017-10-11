@@ -449,24 +449,23 @@ describe('Async / Await support', function() {
         }
       )
 
-      hemera
-        .act(
-          {
-            topic: 'math',
-            cmd: 'add',
-            a: 1,
-            b: 2
-          },
-          async function(err, resp) {
-            spy()
-            expect(err).to.be.not.exists()
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        async function(err, resp) {
+          spy()
+          expect(err).to.be.not.exists()
 
-            setTimeout(() => {
-              expect(spy.calledOnce).to.be.equals(true)
-              hemera.close(done)
-            }, 30)
-          }
-        )
+          setTimeout(() => {
+            expect(spy.calledOnce).to.be.equals(true)
+            hemera.close(done)
+          }, 30)
+        }
+      )
     })
   })
 
