@@ -429,6 +429,47 @@ describe('Async / Await support', function() {
     })
   })
 
+  it('Should call the act handler only once per call', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    const spy = Sinon.spy()
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        async function(resp) {
+          const result = await Promise.resolve({
+            result: true
+          })
+          return result
+        }
+      )
+
+      hemera
+        .act(
+          {
+            topic: 'math',
+            cmd: 'add',
+            a: 1,
+            b: 2
+          },
+          async function(err, resp) {
+            spy()
+            expect(err).to.be.not.exists()
+
+            setTimeout(() => {
+              expect(spy.calledOnce).to.be.equals(true)
+              hemera.close(done)
+            }, 30)
+          }
+        )
+    })
+  })
+
   it('Should be able to chain an act', function(done) {
     const nats = require('nats').connect(authUrl)
 

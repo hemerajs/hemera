@@ -44,6 +44,40 @@ describe('Promise', function() {
     })
   })
 
+  it('Should call add handler only once', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    const spy = Sinon.spy()
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        resp => {
+          spy()
+          return Promise.resolve(resp.a + resp.b)
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        (err, resp) => {
+          expect(resp).to.be.equals(3)
+          expect(spy.calledOnce).to.be.equals(true)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
   it('Should be able to reject a promise in add', function(done) {
     const nats = require('nats').connect(authUrl)
 
@@ -110,6 +144,42 @@ describe('Promise', function() {
           expect(result).to.be.equals(3)
           hemera.close(done)
         })
+    })
+  })
+
+  it('Should call act handler only once', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    const spy = Sinon.spy()
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        resp => {
+          return Promise.resolve(resp.a + resp.b)
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        (err, resp) => {
+          spy()
+          expect(resp).to.be.equals(3)
+          setTimeout(() => {
+            expect(spy.calledOnce).to.be.equals(true)
+            hemera.close(done)
+          }, 20)
+        }
+      )
     })
   })
 
