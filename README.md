@@ -67,7 +67,7 @@ const nats = require('nats').connect()
 const hemera = new Hemera(nats, { logLevel: 'info' })
 hemera.use(HemeraJoi)
 
-hemera.ready(() => {
+hemera.ready(async () => {
 
   hemera.setOption('payloadValidator', 'hemera-joi')
   let Joi = hemera.joi
