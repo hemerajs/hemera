@@ -58,10 +58,10 @@ hemera.use(hemeraJaeger, {
 })
 ```
 
-
 ## Caveats
 
 - This plugin will use the property `hemera.trace$.opentracing` to transfer data across processes.
+- Client and Server response errors are logged as `error` events.
 
 ## Advanced example
 [here](/examples/monitoring/jaeger.js)

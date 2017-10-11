@@ -3,6 +3,7 @@
 const Hemera = require('./../../packages/hemera')
 const nats = require('nats').connect()
 const hemeraJaeger = require('./../../packages/hemera-jaeger')
+const HemeraJoi = require('./../../packages/hemera-joi')
 
 const hemera = new Hemera(nats, {
   logLevel: 'debug',
@@ -14,7 +15,13 @@ hemera.use(hemeraJaeger, {
   serviceName: 'math'
 })
 
+hemera.use(HemeraJoi)
+
 hemera.ready(() => {
+  hemera.setOption('payloadValidator', 'hemera-joi')
+
+  const Joi = hemera.joi
+
   hemera.add(
     {
       topic: 'search',
@@ -48,7 +55,8 @@ hemera.ready(() => {
   hemera.add(
     {
       topic: 'profile',
-      cmd: 'get'
+      cmd: 'get',
+      a: Joi.number().required()
     },
     function(req, cb) {
       this.delegate$.query = 'SELECT FROM User;'

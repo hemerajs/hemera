@@ -94,11 +94,11 @@ function hemeraOpentracing(hemera, opts, done) {
 
     addContextTags(span, ctx, 'delegate$', opts.delegateTags)
 
-    ctx._opentracing = span
+    ctx.opentracing = span
   })
 
   hemera.on('serverPreResponse', function(ctx) {
-    const span = ctx._opentracing
+    const span = ctx.opentracing
 
     addContextTags(span, ctx, 'delegate$', opts.delegateTags)
 
@@ -108,8 +108,8 @@ function hemeraOpentracing(hemera, opts, done) {
   hemera.on('clientPreRequest', function(ctx) {
     let span
 
-    if (ctx._opentracing) {
-      span = tracer.startSpan('act', { childOf: ctx._opentracing })
+    if (ctx.opentracing) {
+      span = tracer.startSpan('act', { childOf: ctx.opentracing })
     } else {
       span = tracer.startSpan('act')
     }
@@ -129,11 +129,29 @@ function hemeraOpentracing(hemera, opts, done) {
       ctx._pattern.timeout$ || ctx.config.timeout
     )
 
-    ctx._opentracing = span
+    ctx.opentracing = span
   })
 
   hemera.on('clientPostRequest', function(ctx) {
-    ctx._opentracing.finish()
+    ctx.opentracing.finish()
+  })
+
+  hemera.on('serverResponseError', function(err) {
+    this.opentracing.log({
+      event: 'error',
+      'error.object': err,
+      message: err.message,
+      stack: err.stack
+    })
+  })
+
+  hemera.on('clientResponseError', function(err) {
+    this.opentracing.log({
+      event: 'error',
+      'error.object': err,
+      message: err.message,
+      stack: err.stack
+    })
   })
 
   done()
