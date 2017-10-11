@@ -84,8 +84,8 @@ hemera.ready(() => {
   const a = hemera.act({ topic: 'math', cmd: 'add', a: 10, b: 30 })
   const b = hemera.act({ topic: 'math', cmd: 'add', a: 10, b: 60 })
 
-  Promise.all([a, b])
-    .then(x => hemera.log.info(x))
+  const result = await Promise.all([a, b])
+  hemera.log.info(result)
 
 })
 ```
