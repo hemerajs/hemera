@@ -1,6 +1,6 @@
 {
   "name": "hemera-sql-store",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "This is a plugin to use SQL with Hemera",
   "main": "index.js",
   "repository": {
