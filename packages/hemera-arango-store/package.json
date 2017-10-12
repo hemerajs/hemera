@@ -16,8 +16,9 @@
   "license": "MIT",
   "dependencies": {
     "arangojs": "5.7.x",
-    "hemera-plugin": "^0.0.14",
-    "hemera-store": "^1.1.13"
+    "hemera-joi": "^2.0.1",
+    "hemera-plugin": "^0.0.17",
+    "hemera-store": "^1.1.14"
   },
   "devDependencies": {
     "code": "4.0.x",

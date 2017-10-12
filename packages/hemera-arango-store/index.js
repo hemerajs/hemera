@@ -8,7 +8,8 @@ const StorePattern = require('hemera-store/pattern')
 exports.plugin = Hp(hemeraArangoStore, '>=2.0.0')
 exports.options = {
   name: require('./package.json'),
-  payloadValidator: 'hemera-joi'
+  payloadValidator: 'hemera-joi',
+  arango: {}
 }
 
 function hemeraArangoStore(hemera, opts, done) {
@@ -19,26 +20,34 @@ function hemeraArangoStore(hemera, opts, done) {
   hemera.decorate('arango', Arangojs)
   hemera.decorate('aqlTemplate', Arangojs.aql)
 
-  /**
-   * Create pool of database connections
-   */
   function useDb(databaseName) {
     if (connections[databaseName]) {
       return connections[databaseName]
     }
 
-    if (databaseName) {
-      let option = Object.assign({}, opts.arango)
-      option.databaseName = databaseName
+    // try to create new db connection based on knex settings
+    if (opts.arango.databaseName) {
+      let options = Object.assign({}, opts.arango)
 
-      connections[databaseName] = new Arangojs.Database(option)
+      if (databaseName) {
+        options.databaseName = databaseName
+      }
+
+      connections[databaseName] = new Arangojs.Database(options)
 
       return connections[databaseName]
     }
 
-    connections[databaseName] = opts.arango.driver
+    // fallback to passed database instance
+    const dbName = opts.arango.driver.name
 
-    return connections[databaseName]
+    if (dbName !== databaseName) {
+      throw new Error(
+        `Default database is '${dbName}' but trying to connect to '${databaseName}'`
+      )
+    }
+    connections[dbName] = opts.arango.driver
+    return connections[dbName]
   }
 
   /**

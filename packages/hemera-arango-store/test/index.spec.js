@@ -46,10 +46,6 @@ describe('Hemera-arango-store', function() {
 
   before(function(done) {
     arangodb = Arangojs(arangoOptions)
-    HemeraArangoStore.options.arango = {
-      driver: arangodb,
-      url: arangoOptions.url
-    }
 
     // clear and bootstrap db
     clearArangodb()
@@ -62,7 +58,12 @@ describe('Hemera-arango-store', function() {
             logLevel: 'silent'
           })
           hemera.use(HemeraJoi)
-          hemera.use(HemeraArangoStore)
+          hemera.use(HemeraArangoStore, {
+            arango: {
+              url: arangoOptions.url,
+              databaseName: testDatabase
+            }
+          })
           hemera.ready(function() {
             aql = hemera.aqlTemplate
             done()

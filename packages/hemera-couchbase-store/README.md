@@ -19,6 +19,12 @@ Visit http://localhost:8091
 ## Dependencies
 - hemera-joi
 
+## Install
+
+```
+npm i hemera-couchbase-store --save
+```
+
 ## API
 
 See [Store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store) Interface.

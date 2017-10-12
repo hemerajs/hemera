@@ -27,11 +27,15 @@ authentication = false
 npm run test
 ```
 
-#### Example
+## Install
+
+```
+npm i hemera-arango-store --save
+```
+
+## Usage
 
 ```js
-'use strict'
-
 const Hemera = require('nats-hemera')
 const HemeraJoi = require('hemera-joi')
 const nats = require('nats').connect()
@@ -49,38 +53,10 @@ hemera.use(HemeraArango, {
   }
 })
 
-hemera.ready(() => {
-
-  let aql = hemera.aqlTemplate
-
-  hemera.act({
-    topic: 'arango-store',
-    cmd: 'executeAqlQuery',
-    type: 'all',
-    query: `
-    FOR u IN users
-    RETURN u
-`
-  }, function (err, resp) {
-
-    this.log.info(resp, 'Query result')
-  })
-
-  const user = {
-    name: 'olaf'
-  }
-
-  hemera.act({
-    topic: 'arango-store',
-    cmd: 'executeAqlQuery',
-    type: 'one',
-    query: aql`INSERT ${user} INTO users`
-  }, function (err, resp) {
-
-    this.log.info(resp, 'Query result')
-  })
-
-})
+// arangojs driver
+hemera.arango
+// create aql queries
+hemera.aqlTemplate
 ```
 
 #### Dependencies

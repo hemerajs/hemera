@@ -19,11 +19,16 @@ Username: elastic
 Password: changeme
 ```
 
-#### Example
+
+## Install
+
+```
+npm i hemera-elasticsearch --save
+```
+
+## Usage
 
 ```js
-'use strict'
-
 const Hemera = require('nats-hemera')
 const HemeraJoi = require('hemera-joi')
 const nats = require('nats').connect()
@@ -40,39 +45,8 @@ hemera.use(hemeraElasticsearch, {
   }
 })
 
-hemera.ready(() => {
-
-  hemera.act({
-    topic: 'elasticsearch',
-    cmd: 'create',
-    data: {
-      index: 'myindex',
-      type: 'mytype',
-      id: '3',
-      body: {
-        title: 'Test 1',
-        tags: ['y', 'z'],
-        published: true,
-        published_at: '2013-01-01',
-        counter: 1
-      }
-    }
-  }, function (err, req) {
-    this.log.info(req, 'Data')
-  })
-
-  hemera.act({
-    topic: 'elasticsearch',
-    cmd: 'search',
-    data: {
-      index: 'myindex',
-      q: 'title:test'
-    }
-  }, function (err, req) {
-    this.log.info(req, 'Data')
-  })
-
-})
+// elasticsearch client instance
+hemera.elasticsearch
 ```
 
 ## Dependencies

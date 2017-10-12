@@ -8,7 +8,8 @@ const StorePattern = require('hemera-store/pattern')
 exports.plugin = Hp(hemeraSqlStore, '>=2.0.0')
 exports.options = {
   name: require('./package.json').name,
-  payloadValidator: 'hemera-joi'
+  payloadValidator: 'hemera-joi',
+  knex: {}
 }
 
 function hemeraSqlStore(hemera, opts, done) {
@@ -18,9 +19,6 @@ function hemeraSqlStore(hemera, opts, done) {
   hemera.decorate('sqlStore', {
     useDb
   })
-
-  // init default database
-  connections[opts.knex.connection.database] = Knex(opts.knex)
 
   /**
    * Create new knex per database
@@ -34,24 +32,28 @@ function hemeraSqlStore(hemera, opts, done) {
       return connections[databaseName]
     }
 
-    if (databaseName) {
-      let option = Object.assign({}, opts.connection)
-      option.database = databaseName
+    // try to create new db connection based on knex settings
+    if (opts.knex.connection) {
+      let options = Object.assign({}, opts.knex)
 
-      connections[databaseName] = Knex({
-        dialect: opts.dialect,
-        connection: option,
-        pool: {
-          min: 0,
-          max: 7
-        }
-      })
+      if (databaseName) {
+        options.connection.database = databaseName
+      }
+
+      connections[databaseName] = Knex(options)
 
       return connections[databaseName]
     }
 
-    // return default database
-    return connections[opts.knex.connection.database]
+    // fallback to passed knex instance
+    const dbName = opts.knex.driver.client.database()
+    if (dbName !== databaseName) {
+      throw new Error(
+        `Default database is '${dbName}' but trying to connect to '${databaseName}'`
+      )
+    }
+    connections[dbName] = opts.knex.driver
+    return connections[dbName]
   }
 
   /**
