@@ -16,12 +16,12 @@
   "license": "MIT",
   "dependencies": {
     "arangojs": "5.7.x",
-    "hemera-joi": "^2.0.1",
     "hemera-plugin": "^0.0.17",
     "hemera-store": "^1.1.14"
   },
   "devDependencies": {
     "code": "4.0.x",
+    "hemera-joi": "^2.0.1",
     "hemera-testsuite": "1.1.x",
     "istanbul": "0.4.x",
     "mocha": "3.3.x",
