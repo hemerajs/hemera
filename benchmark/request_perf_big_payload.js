@@ -41,8 +41,7 @@ hemera1.ready(() => {
       cmd: 'add'
     },
     function(req, reply) {
-      // response with big file
-      return reply(null, payloadExtraBig)
+      return reply(null, req.data)
     }
   )
 
@@ -53,7 +52,7 @@ hemera1.ready(() => {
         cmd: 'add',
         a: 1,
         b: 2,
-        data: payloadExtraBig // request with big file
+        data: payloadSmall
       },
       function(err, resp) {
         let stop = new Date()
