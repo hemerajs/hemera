@@ -15,10 +15,20 @@ function hemeraSqlStore(hemera, opts, done) {
   const connections = {}
   const topic = 'sql-store'
 
-  hemera.decorate('sql', {
+  hemera.decorate('sqlStore', {
     useDb
   })
 
+  // init default database
+  connections[opts.knex.connection.database] = Knex(opts.knex)
+
+  /**
+   * Create new knex per database
+   * Connection pooling is handled by knex
+   *
+   * @param {any} databaseName
+   * @returns
+   */
   function useDb(databaseName) {
     if (connections[databaseName]) {
       return connections[databaseName]
@@ -40,9 +50,8 @@ function hemeraSqlStore(hemera, opts, done) {
       return connections[databaseName]
     }
 
-    connections[databaseName] = opts.knex.driver
-
-    return connections[databaseName]
+    // return default database
+    return connections[opts.knex.connection.database]
   }
 
   /**

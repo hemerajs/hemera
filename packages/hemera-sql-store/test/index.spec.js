@@ -17,7 +17,6 @@ describe('Hemera-sql-store', function() {
 
   let server
   let hemera
-  let knex
   let testDatabase = 'test'
   let testTable = 'user'
 
@@ -40,31 +39,27 @@ describe('Hemera-sql-store', function() {
   }
 
   before(function(done) {
-    knex = Knex({
-      dialect: 'mysql', // do not use mariosql cause https://github.com/tgriesser/bookshelf/issues/415
-      connection: {
-        host: '127.0.0.1',
-        user: 'test',
-        password: 'test',
-        database: testDatabase
-      },
-      pool: {
-        min: 0,
-        max: 7
-      }
-    })
-
-    HemeraSqlStore.options.knex = {
-      driver: knex
-    }
-
     server = HemeraTestsuite.start_server(PORT, flags, () => {
       const nats = Nats.connect(authUrl)
       hemera = new Hemera(nats)
       hemera.use(HemeraJoi)
-      hemera.use(HemeraSqlStore)
+      hemera.use(HemeraSqlStore, {
+        knex: {
+          dialect: 'mysql',
+          connection: {
+            host: '127.0.0.1',
+            user: 'test',
+            password: 'test',
+            database: testDatabase
+          },
+          pool: {
+            min: 0,
+            max: 7
+          }
+        }
+      })
       hemera.ready(() => {
-        setup(knex, done)
+        setup(hemera.sqlStore.useDb(testDatabase), done)
       })
     })
   })

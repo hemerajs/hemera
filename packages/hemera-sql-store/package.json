@@ -18,8 +18,8 @@
     "hemera-store": "^1.1.13",
     "hoek": "4.2.x",
     "knex": "0.13.x",
-    "mysql": "2.14.x",
-    "pg": "7.0.x",
+    "mysql": "2.15.x",
+    "pg": "7.3.x",
     "pg-hstore": "2.3.x"
   },
   "devDependencies": {

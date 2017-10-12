@@ -6,55 +6,30 @@
 This is a plugin to use a SQL Database with Hemera.
 This plugin is based on [Knex](http://knexjs.org/).
 
-It can handle following dialects
+## Install
 
-- pg
-- mysql
-- mariasql
-- mssql
-- mysql2
-- strong-oracle
-- sqlite3
-- oracle
-
-Mysql and postgresql driver are preinstalled. If you need a different you can install it easily with
 ```
-npm install --save <driver>
+npm i hemera-sql-store --save
 ```
 
-### Start Mariadb with Docker
+## Start Mariadb with Docker
 
 ```
 docker-compose up
 ```
 
-### Running the tests
+## Running the tests
 
 ```
 npm run test
 ```
 
-#### Example
+## Example
 
 ```js
-'use strict'
-
 const Hemera = require('nats-hemera')
 const nats = require('nats').connect()
 const HemeraJoi = require('hemera-joi')
-const knex = Knex({
-  dialect: 'mysql' || 'pg' || 'pg-hstore',
-  connection: {
-    host: '127.0.0.1',
-    user: '',
-    password: '',
-    database: testDatabase
-  },
-  pool: {
-    min: 0,
-    max: 7
-  }
-})
 
 const hemera = new Hemera(nats, {
   logLevel: 'info'
@@ -63,27 +38,28 @@ const hemera = new Hemera(nats, {
 hemera.use(HemeraJoi)
 hemera.use(HemeraSql, {
   knex: {
-    driver: knex
+    dialect: 'mysql',
+    connection: {
+      host: '127.0.0.1',
+      user: '',
+      password: '',
+      database: 'test'
+    },
+    pool: {
+      min: 0,
+      max: 7
+    }
   }
 })
 
-hemera.ready(() => {
-
-  const user = {
-    name: 'olaf'
-  }
-
-  hemera.act({
-    topic: 'sql-store',
-    cmd: 'create',
-    table: testTable,
-    data: user
-  }, (err, resp) => {
-
-  })
-})
+// get the knex instance of a different database
+hemera.sqlStore.useDb('test2')
 ```
 
 ## API
 
 See [Store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store) Interface.
+
+## Caveats
+
+- Mysql and postgresql driver are preinstalled. If you need a different you can install it easily with `npm install --save <driver>`
