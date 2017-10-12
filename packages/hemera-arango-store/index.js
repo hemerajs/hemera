@@ -25,7 +25,7 @@ function hemeraArangoStore(hemera, opts, done) {
       return connections[databaseName]
     }
 
-    // try to create new db connection based on knex settings
+    // try to create new db connection based on arango settings
     if (opts.arango.databaseName) {
       let options = Object.assign({}, opts.arango)
 
