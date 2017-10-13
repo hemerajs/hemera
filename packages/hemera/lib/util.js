@@ -9,8 +9,6 @@
  *
  */
 
-const _ = require('lodash')
-
 const lut = []
 for (let i = 0; i < 256; i++) {
   lut[i] = (i < 16 ? '0' : '') + i.toString(16)
@@ -152,9 +150,15 @@ class Util {
   static extractSchema(obj) {
     if (obj === null) return obj
 
-    return _.pickBy(obj, function(val, prop) {
-      return _.isObject(val)
-    })
+    const o = {}
+
+    for (var key in obj) {
+      if (typeof obj[key] === 'object') {
+        o[key] = obj[key]
+      }
+    }
+
+    return o
   }
   /**
    * @static
@@ -166,9 +170,19 @@ class Util {
   static cleanPattern(obj) {
     if (obj === null) return obj
 
-    return _.pickBy(obj, function(val, prop) {
-      return (!_.includes(prop, '$') && !_.isObject(val)) || _.isRegExp(val)
-    })
+    const o = {}
+
+    for (var key in obj) {
+      if (
+        !key.endsWith('$') &&
+        (typeof obj[key] !== 'object' || obj[key] instanceof RegExp) &&
+        typeof obj[key] !== 'function'
+      ) {
+        o[key] = obj[key]
+      }
+    }
+
+    return o
   }
 
   /**
@@ -181,9 +195,14 @@ class Util {
   static cleanFromSpecialVars(obj) {
     if (obj === null) return obj
 
-    return _.pickBy(obj, function(val, prop) {
-      return !_.includes(prop, '$')
-    })
+    const o = {}
+
+    for (var key in obj) {
+      if (!key.endsWith('$')) {
+        o[key] = obj[key]
+      }
+    }
+    return o
   }
 
   /**
@@ -193,20 +212,16 @@ class Util {
    * @memberOf Util
    */
   static pattern(args) {
-    if (_.isString(args)) {
+    if (typeof args === 'string') {
       return args
     }
 
-    args = args || {}
+    const obj = Util.cleanPattern(args)
     let sb = []
-    _.each(args, function(v, k) {
-      if (
-        (!~k.indexOf('$') && !_.isFunction(v) && !_.isObject(v)) ||
-        _.isRegExp(v)
-      ) {
-        sb.push(k + ':' + v)
-      }
-    })
+
+    for (var key in obj) {
+      sb.push(key + ':' + obj[key])
+    }
 
     sb.sort()
 

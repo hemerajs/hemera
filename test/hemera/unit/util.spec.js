@@ -1,6 +1,6 @@
 'use strict'
 
-describe('Util', function() {
+describe.only('Util', function() {
   it('Should be able to convert NATS wildcard subject to the RegexExp equivalent', function(
     done
   ) {
@@ -28,6 +28,7 @@ describe('Util', function() {
   it('Extract schema', function(done) {
     let schema = HemeraUtil.extractSchema({
       topic: 'foo',
+      fn: function() {},
       a: { b: 1 }
     })
     expect(schema).to.be.equals({ a: { b: 1 } })
@@ -61,6 +62,7 @@ describe('Util', function() {
       topic: 'foo',
       test$: 'a',
       regex: /./,
+      fn: function() {},
       a: { b: 1 }
     })
     expect(pattern).to.be.equals({ regex: /./, topic: 'foo' })
@@ -72,12 +74,21 @@ describe('Util', function() {
   })
 
   it('Clean from special variables', function(done) {
-    let pattern = HemeraUtil.cleanFromSpecialVars({
+    let obj = {
+      topic: 'foo',
+      test$: 'a',
+      a: { b: 1 }
+    }
+    let pattern = HemeraUtil.cleanFromSpecialVars(obj)
+    expect(pattern).to.be.equals({
+      topic: 'foo',
+      a: { b: 1 }
+    })
+    expect(obj).to.be.equals({
       topic: 'foo',
       test$: 'a',
       a: { b: 1 }
     })
-    expect(pattern).to.be.equals({ topic: 'foo', a: { b: 1 } })
 
     pattern = HemeraUtil.cleanFromSpecialVars(null)
     expect(pattern).to.be.equals(null)
@@ -90,10 +101,13 @@ describe('Util', function() {
     let pattern = HemeraUtil.pattern({
       topic: 'foo',
       test$: 'a',
-      a: { b: 1 }
+      a: { b: 1 },
+      fn: function() {}
     })
+
     expect(pattern).to.be.equals('topic:foo')
 
+    // return as it is
     pattern = HemeraUtil.pattern('topic:foo')
     expect(pattern).to.be.equals('topic:foo')
 
