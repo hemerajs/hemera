@@ -1,6 +1,6 @@
 'use strict'
 
-describe.only('Util', function() {
+describe('Util', function() {
   it('Should be able to convert NATS wildcard subject to the RegexExp equivalent', function(
     done
   ) {
