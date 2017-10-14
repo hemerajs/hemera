@@ -412,15 +412,18 @@ describe('Async / Await support', function() {
         function(resp) {}
       )
 
-      const a = await hemera.act({
-        pubsub$: true,
-        topic: 'math',
-        cmd: 'add',
-        a: 1,
-        b: 2
-      }, async () => {
-        return await true
-      })
+      const a = await hemera.act(
+        {
+          pubsub$: true,
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        async () => {
+          return await true
+        }
+      )
 
       expect(a).to.be.equals(true)
       hemera.close(done)
