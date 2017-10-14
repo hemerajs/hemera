@@ -17,12 +17,12 @@ class StorePattern {
    *
    * @memberOf StorePattern
    */
-  static create (topic) {
+  static create(topic) {
     return {
       topic,
       cmd: 'create',
       collection: Joi.string().required(),
-      data: Joi.object().required()
+      data: Joi.required()
     }
   }
 
@@ -35,7 +35,7 @@ class StorePattern {
    *
    * @memberOf StorePattern
    */
-  static remove (topic) {
+  static remove(topic) {
     return {
       topic,
       cmd: 'remove',
@@ -53,12 +53,14 @@ class StorePattern {
    *
    * @memberOf StorePattern
    */
-  static removeById (topic) {
+  static removeById(topic) {
     return {
       topic,
       cmd: 'removeById',
       collection: Joi.string().required(),
-      id: Joi.alternatives().try(Joi.number(), Joi.string()).required()
+      id: Joi.alternatives()
+        .try(Joi.number(), Joi.string())
+        .required()
     }
   }
 
@@ -71,7 +73,7 @@ class StorePattern {
    *
    * @memberOf StorePattern
    */
-  static update (topic) {
+  static update(topic) {
     return {
       topic,
       cmd: 'update',
@@ -90,13 +92,15 @@ class StorePattern {
    *
    * @memberOf StorePattern
    */
-  static updateById (topic) {
+  static updateById(topic) {
     return {
       topic,
       cmd: 'updateById',
       collection: Joi.string().required(),
       data: Joi.object().required(),
-      id: Joi.alternatives().try(Joi.number(), Joi.string()).required()
+      id: Joi.alternatives()
+        .try(Joi.number(), Joi.string())
+        .required()
     }
   }
 
@@ -109,18 +113,24 @@ class StorePattern {
    *
    * @memberOf StorePattern
    */
-  static find (topic) {
+  static find(topic) {
     return {
       topic,
       cmd: 'find',
       collection: Joi.string().required(),
       query: Joi.object().required(),
-      options: Joi.object().keys({
-        fields: Joi.alternatives().try(Joi.object(), Joi.array()),
-        orderBy: Joi.alternatives().try(Joi.object(), Joi.array(), Joi.string()),
-        offset: Joi.number().integer(),
-        limit: Joi.number().integer()
-      }).default({})
+      options: Joi.object()
+        .keys({
+          fields: Joi.alternatives().try(Joi.object(), Joi.array()),
+          orderBy: Joi.alternatives().try(
+            Joi.object(),
+            Joi.array(),
+            Joi.string()
+          ),
+          offset: Joi.number().integer(),
+          limit: Joi.number().integer()
+        })
+        .default({})
     }
   }
 
@@ -133,12 +143,14 @@ class StorePattern {
    *
    * @memberOf StorePattern
    */
-  static findById (topic) {
+  static findById(topic) {
     return {
       topic,
       cmd: 'findById',
       collection: Joi.string().required(),
-      id: Joi.alternatives().try(Joi.number(), Joi.string()).required()
+      id: Joi.alternatives()
+        .try(Joi.number(), Joi.string())
+        .required()
     }
   }
 
@@ -151,7 +163,7 @@ class StorePattern {
    *
    * @memberOf StorePattern
    */
-  static replace (topic) {
+  static replace(topic) {
     return {
       topic,
       cmd: 'replace',
@@ -170,13 +182,15 @@ class StorePattern {
    *
    * @memberOf StorePattern
    */
-  static replaceById (topic) {
+  static replaceById(topic) {
     return {
       topic,
       cmd: 'replaceById',
       collection: Joi.string().required(),
       data: Joi.object().required(),
-      id: Joi.alternatives().try(Joi.number(), Joi.string()).required()
+      id: Joi.alternatives()
+        .try(Joi.number(), Joi.string())
+        .required()
     }
   }
 
@@ -189,7 +203,7 @@ class StorePattern {
    *
    * @memberOf StorePattern
    */
-  static exists (topic) {
+  static exists(topic) {
     return {
       topic,
       cmd: 'exists',

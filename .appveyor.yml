@@ -2,7 +2,7 @@ os: Visual Studio 2015
 
 environment:
   matrix:
-    - nodejs_version: '4'
+    - nodejs_version: '6'
 
       # PYTHON2.7 REQUIRED FOR NODE-GYP & ELECTRON
       PYTHON2: "C:\\Python27"
@@ -37,7 +37,7 @@ init:
   - cmd: node --version
   - cmd: npm --version
     # CRITICAL FOR NODE-GYP TO WORK
-  - cmd: npm -g install npm@latest
+  - cmd: npm -g install npm@5.3 #TODO restore to npm@latest when npm stops breaking builds https://github.com/npm/npm/issues/18380
   - cmd: npm --version
 
   # SET THE RELEVANT PYTHON AND PIP LOCATIONS IN THE PATH
@@ -46,8 +46,8 @@ init:
 
 install:
   # Install gnats
-  - appveyor DownloadFile https://github.com/nats-io/gnatsd/releases/download/v0.9.6/gnatsd-v0.9.6-windows-386.zip
-  - 7z e gnatsd-v0.9.6-windows-386.zip gnatsd.exe -r -oc:\projects\hemera\build
+  - appveyor DownloadFile https://github.com/nats-io/gnatsd/releases/download/v1.0.2/gnatsd-v1.0.2-windows-386.zip
+  - 7z e gnatsd-v1.0.2-windows-386.zip gnatsd.exe -r -oc:\projects\hemera\build
   - cmd: set PATH=%PATH%;C:\projects\hemera\build
 
   - cmd: "%PIP2% freeze"

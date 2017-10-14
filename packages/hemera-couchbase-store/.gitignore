@@ -35,6 +35,7 @@ jspm_packages
 
 # npm lock
 package-lock.json
+yarn.lock
 
 # Optional REPL history
 .node_repl_history

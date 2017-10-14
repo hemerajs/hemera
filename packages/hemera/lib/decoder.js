@@ -10,12 +10,12 @@
  */
 
 class Decoder {
-  static decode (msg) {
+  static decode(msg) {
     return Parse(msg)
   }
 }
 
-function Parse (data) {
+function Parse(data) {
   if (!(this instanceof Parse)) {
     return new Parse(data)
   }

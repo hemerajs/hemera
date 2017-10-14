@@ -11,46 +11,57 @@ const AddStub = require('hemera-testsuite/addStub')
 const Code = require('code')
 const expect = Code.expect
 
-describe('Math', function () {
-  it('Should do some math operations', function (done) {
-    const nats = new Nats()
-    const hemera = new Hemera(nats, {
-      logLevel: 'info'
-    })
-    const actStub = new ActStub(hemera)
+const nats = new Nats()
+const hemera = new Hemera(nats, {
+  logLevel: 'info'
+})
+const actStub = new ActStub(hemera)
 
-    hemera.ready(function () {
-      hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      }, function (args, cb) {
-        this.act({ topic: 'math', cmd: 'sub', a: 100, b: 50 }, function (err, resp) {
-          cb(err, args.a + args.b - resp)
-        })
-      })
-
-      // stub act calls
-      actStub.stub({ topic: 'math', cmd: 'sub', a: 100, b: 50 }, null, 50)
-      actStub.stub({ topic: 'math', cmd: 'add' }, new Error('wrong arguments'))
-      actStub.stub({ topic: 'math', cmd: 'add', a: 100, b: 200 }, null, 300)
-
-      // Important run it when "add" was already added
-      // Should execute the server method with the pattern topic:math,cmd:add,a:100,b:200"
-      AddStub.run(hemera, { topic: 'math', cmd: 'add' }, { a: 100, b: 200 }, function (err, result) {
+hemera.ready(function() {
+  hemera.add(
+    {
+      topic: 'math',
+      cmd: 'add'
+    },
+    function(args, cb) {
+      this.act({ topic: 'math', cmd: 'sub', a: 100, b: 50 }, function(
+        err,
+        result
+      ) {
         expect(err).to.be.not.exists()
-        expect(result).to.be.equals(250)
+        expect(result).to.be.equals(50)
+        cb(err, args.a + args.b - result)
       })
+    }
+  )
 
-      hemera.act({
-        topic: 'math',
-        cmd: 'add',
-        a: 100,
-        b: 200
-      }, function (err, result) {
-        expect(err).to.be.not.exists()
-        expect(result).to.be.equals(300)
-        done()
-      })
-    })
-  })
+  // stub act calls
+  actStub.stub({ topic: 'math', cmd: 'sub', a: 100, b: 50 }, null, 50)
+  actStub.stub({ topic: 'math', cmd: 'add' }, new Error('wrong arguments'))
+  actStub.stub({ topic: 'math', cmd: 'add', a: 100, b: 200 }, null, 300)
+
+  // Important run it when "add" was already added
+  // Should execute the server method with the pattern topic:math,cmd:add,a:100,b:200"
+  AddStub.run(
+    hemera,
+    { topic: 'math', cmd: 'add' },
+    { a: 100, b: 200 },
+    function(err, result) {
+      expect(err).to.be.not.exists()
+      expect(result).to.be.equals(250)
+    }
+  )
+
+  hemera.act(
+    {
+      topic: 'math',
+      cmd: 'add',
+      a: 100,
+      b: 200
+    },
+    function(err, result) {
+      expect(err).to.be.not.exists()
+      expect(result).to.be.equals(300)
+    }
+  )
 })

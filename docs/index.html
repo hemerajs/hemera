@@ -120,7 +120,7 @@
 					<p class="section-content">
 						<img class="section-image" src="images/logo-hemera.png" style="max-width: 100%">
 						<strong>Hemera</strong> is a small wrapper around the NATS driver. We want to provide a toolkit to develop micro services
-						in an easy and powerful way. We use bloom filters to provide a pattern matching RPC style. You don't have to worry
+						in an easy and powerful way. We use pattern matching RPC style. You don't have to worry
 						about the transport. NATS is powerful.<br><br> A <strong>Hemera</strong> instance doesn't care about where other services
 						lives. You can start your service as many as you want on different hosts to ensure maximal availability. The only dependency
 						you have is a single binary of 7MB. Mind your own business NATS do the rest for you: <br><br>
@@ -141,7 +141,7 @@
 							<li><strong>Auto-pruning</strong>: NATS automatically handles a slow consumer and cut it off.</li>
 							<li><strong>Pattern driven</strong>: Define the signatures of your RPC's in JSON and use the flexibility of pattern-matching.</li>
 							<li><strong>Request & Reply</strong>: By default point-to-point involves the fastest or first to respond.</li>
-							<li><strong>Pubish & Subscribe</strong>: Hemera supports all features of NATS. This includes wildcards in subjects and normal publish
+							<li><strong>Publish & Subscribe</strong>: Hemera supports all features of NATS. This includes wildcards in subjects and normal publish
 								and fanout mechanism.</li>
 							<li><strong>Tracing</strong>: Any distributed system need good tracing capabilities. We provide support for Zipkin a tracing
 								system which manages both the collection and lookup of this data.</li>

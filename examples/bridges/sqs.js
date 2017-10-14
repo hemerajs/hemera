@@ -15,28 +15,32 @@ hemera.ready(() => {
   const params = {
     DelaySeconds: 10,
     MessageAttributes: {
-      'Title': {
+      Title: {
         DataType: 'String',
         StringValue: 'The Whistler'
       },
-      'Author': {
+      Author: {
         DataType: 'String',
         StringValue: 'John Grisham'
       },
-      'WeeksOn': {
+      WeeksOn: {
         DataType: 'Number',
         StringValue: '6'
       }
     },
-    MessageBody: 'Information about current NY Times fiction bestseller for week of 12/11/2016.',
+    MessageBody:
+      'Information about current NY Times fiction bestseller for week of 12/11/2016.',
     QueueUrl: 'SQS_QUEUE_URL'
   }
 
-  hemera.act({
-    topic: 'sqs',
-    cmd: 'sendMessage',
-    params
-  }, function (err, resp) {
-    this.log.info(resp || err)
-  })
+  hemera.act(
+    {
+      topic: 'sqs',
+      cmd: 'sendMessage',
+      params
+    },
+    function(err, resp) {
+      this.log.info(resp || err)
+    }
+  )
 })

@@ -1,16 +1,18 @@
 'use strict'
 
 const SnappyJS = require('snappyjs')
-const Buffer = require('safe-buffer').Buffer
 const Hp = require('hemera-plugin')
 
-exports.plugin = Hp(function hemeraSnappy () {
-  const hemera = this
+exports.plugin = Hp(hemeraSnappy, '>=2.0.0')
+exports.options = {
+  name: require('./package.json').name
+}
 
-  hemera._decoder.decode = (msg) => {
+function hemeraSnappy(hemera, opts, done) {
+  function uncompress(msg) {
     try {
       return {
-        value: JSON.parse(SnappyJS.uncompress(msg))
+        value: SnappyJS.uncompress(msg)
       }
     } catch (error) {
       return {
@@ -19,10 +21,10 @@ exports.plugin = Hp(function hemeraSnappy () {
     }
   }
 
-  hemera._encoder.encode = (msg) => {
+  function compress(msg) {
     try {
       return {
-        value: SnappyJS.compress(new Buffer(JSON.stringify(msg)))
+        value: SnappyJS.compress(Buffer.from(msg))
       }
     } catch (error) {
       return {
@@ -30,10 +32,10 @@ exports.plugin = Hp(function hemeraSnappy () {
       }
     }
   }
-})
 
-exports.options = {}
+  hemera.encoder.add(compress)
+  // first uncompress then decode
+  hemera.decoder.first(uncompress)
 
-exports.attributes = {
-  pkg: require('./package.json')
+  done()
 }

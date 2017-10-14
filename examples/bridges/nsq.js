@@ -26,35 +26,44 @@ hemera.use(hemeraNsq, {
 hemera.ready(() => {
   // create subscriber which listen on NSQ events
   // can be subcribed in any hemera service
-  hemera.add({
-    topic: 'nsq.newsletter.germany',
-    cmd: 'subscribe'
-  }, function (req, cb) {
-    this.log.info(req, 'Data')
+  hemera.add(
+    {
+      topic: 'nsq.newsletter.germany',
+      cmd: 'subscribe'
+    },
+    function(req, cb) {
+      this.log.info(req, 'Data')
 
-    cb()
-  })
+      cb()
+    }
+  )
 
   // create NSQ subscriber
-  hemera.act({
-    topic: 'nsq',
-    cmd: 'subscribe',
-    subject: 'newsletter',
-    channel: 'germany'
-  }, function (err, resp) {
-    this.log.info(resp, 'Subscribed ACK')
-  })
+  hemera.act(
+    {
+      topic: 'nsq',
+      cmd: 'subscribe',
+      subject: 'newsletter',
+      channel: 'germany'
+    },
+    function(err, resp) {
+      this.log.info(resp, 'Subscribed ACK')
+    }
+  )
 
   // Send a message to NSQ
-  hemera.act({
-    topic: 'nsq',
-    cmd: 'publish',
-    subject: 'newsletter',
-    data: {
-      to: 'klaus',
-      text: 'You got a gift!'
+  hemera.act(
+    {
+      topic: 'nsq',
+      cmd: 'publish',
+      subject: 'newsletter',
+      data: {
+        to: 'klaus',
+        text: 'You got a gift!'
+      }
+    },
+    function(err, resp) {
+      this.log.info(resp, 'Publish ACK')
     }
-  }, function (err, resp) {
-    this.log.info(resp, 'Publish ACK')
-  })
+  )
 })

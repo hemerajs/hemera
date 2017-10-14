@@ -4,7 +4,7 @@ const Hemera = require('./../../packages/hemera')
 const nats = require('nats').connect()
 
 class Logger {
-  info (msg) {
+  info(msg) {
     console.log(msg)
   }
 }
@@ -15,12 +15,15 @@ const hemera = new Hemera(nats, {
 })
 
 hemera.ready(() => {
-  hemera.act({
-    topic: 'math',
-    cmd: 'add',
-    a: 1,
-    b: 2
-  }, function (err, resp) {
-    this.log.info(resp, 'Result')
-  })
+  hemera.act(
+    {
+      topic: 'math',
+      cmd: 'add',
+      a: 1,
+      b: 2
+    },
+    function(err, resp) {
+      this.log.info(resp, 'Result')
+    }
+  )
 })

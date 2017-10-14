@@ -12,7 +12,6 @@
 const Util = require('./util')
 const Constants = require('./constants')
 const Errors = require('./errors')
-const CircuitBreaker = require('./circuitBreaker')
 
 /**
  *
@@ -20,73 +19,78 @@ const CircuitBreaker = require('./circuitBreaker')
  * @param {any} next
  * @returns
  */
-function onClientPreRequest (next) {
-  let ctx = this
+function onClientPreRequest(context, next) {
+  let pattern = context._pattern
 
-  let pattern = this._pattern
-
-  let prevCtx = this._prevContext
-  let cleanPattern = this._cleanPattern
+  let parentContext = context._parentContext
+  let cleanPattern = context._cleanPattern
   let currentTime = Util.nowHrTime()
 
   // shared context
-  ctx.context$ = pattern.context$ || prevCtx.context$
+  context.context$ = pattern.context$ || parentContext.context$
 
   // set metadata by passed pattern or current message context
-  ctx.meta$ = Object.assign(pattern.meta$ || {}, ctx.meta$)
+  context.meta$ = Object.assign(pattern.meta$ || {}, context.meta$)
   // is only passed by msg
-  ctx.delegate$ = pattern.delegate$ || {}
+  context.delegate$ = pattern.delegate$ || {}
 
   // tracing
-  ctx.trace$ = pattern.trace$ || {}
-  ctx.trace$.parentSpanId = ctx.trace$.spanId || prevCtx.trace$.spanId
-  ctx.trace$.traceId = ctx.trace$.traceId || prevCtx.trace$.traceId || Util.randomId()
-  ctx.trace$.spanId = Util.randomId()
-  ctx.trace$.timestamp = currentTime
-  ctx.trace$.service = pattern.topic
-  ctx.trace$.method = Util.pattern(pattern)
+  context.trace$ = pattern.trace$ || {}
+  context.trace$.parentSpanId =
+    context.trace$.spanId || parentContext.trace$.spanId
+  context.trace$.traceId =
+    context.trace$.traceId || parentContext.trace$.traceId || Util.randomId()
+  context.trace$.spanId = Util.randomId()
+  context.trace$.timestamp = currentTime
+  context.trace$.service = pattern.topic
+  context.trace$.method = Util.pattern(pattern)
 
   // detect recursion
-  if (this._config.maxRecursion > 1) {
-    const callSignature = `${ctx.trace$.traceId}:${ctx.trace$.method}`
-    if (ctx.meta$ && ctx.meta$.referrers) {
-      var count = ctx.meta$.referrers[callSignature]
+  if (context._config.maxRecursion > 1) {
+    const callSignature = `${context.trace$.traceId}:${context.trace$.method}`
+    if (context.meta$ && context.meta$.referrers) {
+      var count = context.meta$.referrers[callSignature]
       count += 1
-      ctx.meta$.referrers[callSignature] = count
-      if (count > this._config.maxRecursion) {
-        ctx.meta$.referrers = null
-        return next(new Errors.MaxRecursionError({
-          count: --count
-        }))
+      context.meta$.referrers[callSignature] = count
+      if (count > context._config.maxRecursion) {
+        context.meta$.referrers = null
+        return next(
+          new Errors.MaxRecursionError({
+            count: --count
+          })
+        )
       }
     } else {
-      ctx.meta$.referrers = {}
-      ctx.meta$.referrers[callSignature] = 1
+      context.meta$.referrers = {}
+      context.meta$.referrers[callSignature] = 1
     }
   }
 
   // request
   let request = {
     id: pattern.requestId$ || Util.randomId(),
-    parentId: ctx.request$.id || pattern.requestParentId$,
-    type: pattern.pubsub$ === true ? Constants.REQUEST_TYPE_PUBSUB : Constants.REQUEST_TYPE_REQUEST
+    parentId: context.request$.id || pattern.requestParentId$,
+    type:
+      pattern.pubsub$ === true
+        ? Constants.REQUEST_TYPE_PUBSUB
+        : Constants.REQUEST_TYPE_REQUEST
   }
 
-  ctx.emit('clientPreRequest')
+  context.emit('clientPreRequest', context)
 
   // build msg
   let message = {
     pattern: cleanPattern,
-    meta: ctx.meta$,
-    delegate: ctx.delegate$,
-    trace: ctx.trace$,
+    meta: context.meta$,
+    delegate: context.delegate$,
+    trace: context.trace$,
     request: request
   }
 
-  ctx._message = message
+  context._message = message
 
-  ctx.log.debug({
-    outbound: ctx
+  context.log.debug({
+    outbound: context
   })
 
   next()
@@ -96,60 +100,30 @@ function onClientPreRequest (next) {
  *
  *
  * @param {any} next
- * @returns
  */
-function onClientPreRequestCircuitBreaker (next) {
-  let ctx = this
-
-  if (ctx._config.circuitBreaker.enabled) {
-    // any pattern represent an own circuit breaker
-    const circuitBreaker = ctx._circuitBreakerMap.get(ctx.trace$.method)
-    if (!circuitBreaker) {
-      const cb = new CircuitBreaker(ctx._config.circuitBreaker)
-      this._circuitBreakerMap.set(ctx.trace$.method, cb)
-    } else {
-      if (!circuitBreaker.available()) {
-        // trigger half-open timer
-        circuitBreaker.record()
-        return next(new Errors.CircuitBreakerError(`Circuit breaker is ${circuitBreaker.state}`, { state: circuitBreaker.state, method: ctx.trace$.method, service: ctx.trace$.service }))
-      }
-    }
-
-    next()
-  } else {
-    next()
-  }
-}
-
-/**
- *
- *
- * @param {any} next
- */
-function onClientPostRequest (next) {
-  let ctx = this
-  let pattern = this._pattern
-  let msg = ctx._response.payload
+function onClientPostRequest(context, next) {
+  let pattern = context._pattern
+  let msg = context._response.payload
 
   // pass to act context
   if (msg) {
-    ctx.request$ = msg.request || {}
-    ctx.trace$ = msg.trace || {}
-    ctx.meta$ = msg.meta || {}
+    context.request$ = msg.request || {}
+    context.trace$ = msg.trace || {}
+    context.meta$ = msg.meta || {}
   }
 
   // calculate request duration
-  let diff = Util.nowHrTime() - ctx.trace$.timestamp
-  ctx.trace$.duration = diff
+  let diff = Util.nowHrTime() - context.trace$.timestamp
+  context.trace$.duration = diff
 
-  ctx.request$.service = pattern.topic
-  ctx.request$.method = ctx.trace$.method
+  context.request$.service = pattern.topic
+  context.request$.method = context.trace$.method
 
-  ctx.log.debug({
-    inbound: ctx
+  context.log.debug({
+    inbound: context
   })
 
-  ctx.emit('clientPostRequest')
+  context.emit('clientPostRequest', context)
 
   next()
 }
@@ -162,34 +136,33 @@ function onClientPostRequest (next) {
  * @param {any} next
  * @returns
  */
-function onServerPreRequest (req, res, next) {
-  let ctx = this
-
-  let m = ctx._decoder.decode.call(ctx, ctx._request.payload)
+function onServerPreRequest(context, req, res, next) {
+  let m = context._decoderPipeline.run(context._request.payload, context)
 
   if (m.error) {
-    return res.send(m.error)
+    next(m.error)
+    return
   }
 
   let msg = m.value
 
   if (msg) {
-    ctx.meta$ = msg.meta || {}
-    ctx.trace$ = msg.trace || {}
-    ctx.delegate$ = msg.delegate || {}
-    ctx.request$ = msg.request || {}
-    ctx.auth$ = {}
+    context.meta$ = msg.meta || {}
+    context.trace$ = msg.trace || {}
+    context.delegate$ = msg.delegate || {}
+    context.request$ = msg.request || {}
+    context.auth$ = {}
   }
 
-  ctx._request.payload = m.value
-  ctx._request.error = m.error
+  context._request.payload = m.value
+  context._request.error = m.error
 
   // icnoming pattern
-  ctx._pattern = ctx._request.payload.pattern
+  context._pattern = context._request.payload.pattern
   // find matched route
-  ctx._actMeta = ctx._router.lookup(ctx._pattern)
+  context._actMeta = context._router.lookup(context._pattern)
 
-  ctx.emit('serverPreRequest')
+  context.emit('serverPreRequest', context)
 
   next()
 }
@@ -202,13 +175,11 @@ function onServerPreRequest (req, res, next) {
  * @param {any} next
  * @returns
  */
-function onServerPreRequestLoadTest (req, res, next) {
-  let ctx = this
-
-  if (ctx._config.load.checkPolicy) {
-    const error = this._loadPolicy.check()
+function onServerPreRequestLoadTest(context, req, res, next) {
+  if (context._config.load.checkPolicy) {
+    const error = context._loadPolicy.check()
     if (error) {
-      ctx._shouldCrash = ctx._config.load.shouldCrash
+      context._shouldCrash = context._config.load.shouldCrash
       return next(new Errors.ProcessLoadError(error.message, error.data))
     }
   }
@@ -223,24 +194,23 @@ function onServerPreRequestLoadTest (req, res, next) {
  * @param {any} res
  * @param {any} next
  */
-function onServerPreHandler (req, res, next) {
-  let ctx = this
-
-  ctx.emit('serverPreHandler')
+function onServerPreHandler(context, req, res, next) {
+  context.emit('serverPreHandler', context)
 
   next()
 }
 
-function onServerPreResponse (req, res, next) {
-  let ctx = this
-
-  ctx.emit('serverPreResponse')
+function onServerPreResponse(context, req, res, next) {
+  context.emit('serverPreResponse', context)
 
   next()
 }
 
-module.exports.onClientPreRequest = [onClientPreRequest, onClientPreRequestCircuitBreaker]
+module.exports.onClientPreRequest = [onClientPreRequest]
 module.exports.onClientPostRequest = [onClientPostRequest]
-module.exports.onServerPreRequest = [onServerPreRequest, onServerPreRequestLoadTest]
+module.exports.onServerPreRequest = [
+  onServerPreRequest,
+  onServerPreRequestLoadTest
+]
 module.exports.onServerPreHandler = [onServerPreHandler]
 module.exports.onServerPreResponse = [onServerPreResponse]

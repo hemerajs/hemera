@@ -1,0 +1,19 @@
+{
+  "name": "hemera-graceful-shutdown",
+  "version": "0.0.2",
+  "description": "Gracefully shutdown hemera",
+  "main": "index.js",
+  "repository": {
+    "url": "git@github.com:hemerajs/hemera.git",
+    "type": "git"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "author": "Dustin Deus (https://github.com/StarpTech)",
+  "license": "MIT",
+  "dependencies": {
+    "fastparallel": "^2.3.0",
+    "hemera-plugin": "^0.0.14"
+  }
+}

@@ -1,7 +1,247 @@
 Changelog
 =========
 
+**Further changelogs are tracked in Github releases**
+
 # 1.x
+
+### 1.6.3
+## Summary
+- Implement more robust graceful shutdown
+- Activate async / await tests in CI
+
+### 1.6.2
+## Summary
+- Remove `exit` event in graceful shutdown routine.
+
+### 1.6.1
+## Summary
+- Refactor graceful shutdown implementation [Commit](https://github.com/hemerajs/hemera/commit/396594d074809b9cf3c17229530550266990208e)
+- Fixed some lint issues [Commit](https://github.com/hemerajs/hemera/commit/396594d074809b9cf3c17229530550266990208e)
+
+### 1.6.0
+## Summary
+Update bloomrun to [4.0.0](https://github.com/mcollina/bloomrun/releases/tag/v4.0.0)
+
+### 1.5.13
+
+## Summary
+Update `tinysonic` to 1.3.0 to fix parsing issues in short json syntax e.g `act('a:22de')`, `àct('a: null')`
+
+### 1.5.12
+
+## Summary
+The `bloomrun` config `lookupBeforeAdd` is set to `false` by default. This allows to add pattern without to respecting the pattern matching order.
+It has no impact on the pattern matching rules.
+
+### 1.5.11
+
+## Summary
+
+- Register hemera and plugin errors in errio to use it in `instanceof` comparison.
+- Any error which is created with `hemera.createError` is registered in errio.
+
+### 1.5.9
+
+## Summary
+
+- Throw errors instead emiting
+
+### 1.5.8
+
+## Summary
+
+- Remove typings property from package.json
+
+### 1.5.7
+
+## Summary
+
+- Remove typescript definition files. Thanks to [@vforv](https://github.com/vforv) we provide official [@types/nats-hemera](https://www.npmjs.com/package/@types/nats-hemera)
+
+### 1.5.6
+
+## Summary
+
+- update typescript definition files
+
+### 1.5.5
+
+## Summary
+
+- Throw error when trying to register plugins with `.use()` inside plugins
+
+### 1.5.4
+
+## Summary
+
+- update typescript definition files
+
+### 1.5.3
+
+## Summary
+
+- Check for pattern in `act` and `add` and throw error when pattern is undefined
+
+### 1.5.2
+
+## Summary
+
+- Check if pattern is not undefined in `act`
+
+### 1.5.1
+
+- dump version
+
+## Summary
+
+- Check if pattern is not undefined in `act`
+
+### 1.5.0
+
+## Summary
+
+Functional style in extensions and life-cycle-events. In future we can provide a more consistent and encapsulated interface.
+
+### Updated modules without breaking changes
+
+- hemera-joi
+- hemera-avro
+- hemera-redis-cache
+- hemera-jwt-auth
+- hemera-mongo-store
+- hemera-rethinkdb-store
+- hemera-parambulator
+- hemera-slackbot
+- hemera-web
+- hemera-zipkin
+- hemera-nats-streaming
+
+## Breaking change
+
+- Extension and Life-cycle hooks are no longer scoped with the current hemera instance we pass the instance as the first argument
+
+## Migration Checklist
+
+1. Extensions
+
+**Old:**
+
+```js
+hemera.ext('onServerPreRequest', function (req, res, next) {
+  const ctx = this
+  next()
+})
+hemera.ext('onClose', (done) => {
+  const ctx = this
+  done()
+})
+```
+
+**New:**
+
+```js
+hemera.ext('onServerPreRequest', function (ctx, req, res, next) {
+  next()
+})
+hemera.ext('onClose', (ctx, done) => {
+  done()
+})
+```
+
+2. Life-cycle events
+
+**Old:**
+
+```js
+hemera.ext('clientPostRequest', function () {
+  const ctx = this
+})
+
+```
+
+**New:**
+
+```js
+hemera.ext('onServerPreRequest', function (ctx) {
+    next()
+})
+```
+
+### 1.4.3 - 1.4.4
+
+Lerna issues
+
+### 1.4.2
+
+## Summary
+Much better Typescript support
+
+### 1.4.1
+
+## Summary
+Implement a new interface to create a pipeline for encoding and decoding the messages. `hemera-msgpack`, `hemera-snappy` and `hemera-avro` was updated.
+
+**New:**
+
+```js
+// Replace the default decoder/encoder
+hemera.decoder.reset(decode)
+hemera.encoder.reset(decode)
+// Remove all steps
+hemera.decoder.reset()
+// Move the pipeline at the first place e.g for compressing algorithms
+hemera.decoder.first(uncompress)
+// Add a new pipeline step
+hemera.decoder.add(function() {
+  return { value: <payload>, error: <error> }
+})
+```
+
+## Summary
+
+### 1.4.0
+
+## Summary
+
+The `close` method is async and accept a callback. Before the close callback is called all registered subscriptions are unsubscribed from NATS as well as all registered pattern. Plugins which have been registered an `onClose` extension can clean up. Every IO will be flushed to NATS before the close callback is called.
+
+- **Upgrade time:** low - none to a couple of hours for most users
+- **Complexity:** low - requires following the list of changes to verifying their impact
+- **Risk:** none
+- **Dependencies:** low - existing plugins will work as-is
+
+## Breaking change
+
+- The `close` method is async and accept a callback
+
+## Migration Checklist
+
+1. If you want to check the error from the `onClose` extension you can do:
+**Old:**
+
+```js
+hemera.close()
+```
+
+**New:**
+
+```js
+hemera.close((err) => ...)
+```
+
+2. The callback of your tests should be called in the `onClose` handler otherwise the server won't gracefully shutdown before the next test can start.
+
+**Old:**
+```js
+hemera.close()
+```
+
+**New:**
+
+```js
+hemera.close(done)
+```
 
 ### 1.3.24
 

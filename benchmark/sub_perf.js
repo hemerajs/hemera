@@ -20,26 +20,29 @@ const nats = Nats.connect(noAuthUrl)
 const hemera = new Hemera(nats)
 
 hemera.ready(() => {
-  hemera.add({
-    topic: 'math',
-    cmd: 'add'
-  }, (resp, cb) => {
-    received += 1
+  hemera.add(
+    {
+      topic: 'math',
+      cmd: 'add'
+    },
+    (resp, cb) => {
+      received += 1
 
-    if (received === 1) {
-      start = new Date()
+      if (received === 1) {
+        start = new Date()
+      }
+
+      if (received === loop) {
+        var stop = new Date()
+        console.log('\nDone test')
+        var mps = parseInt(loop / ((stop - start) / 1000))
+        console.log('Received at ' + mps + ' msgs/sec')
+        process.exit()
+      } else if (received % hash === 0) {
+        process.stdout.write('+')
+      }
+
+      cb()
     }
-
-    if (received === loop) {
-      var stop = new Date()
-      console.log('\nDone test')
-      var mps = parseInt(loop / ((stop - start) / 1000))
-      console.log('Received at ' + mps + ' msgs/sec')
-      process.exit()
-    } else if (received % hash === 0) {
-      process.stdout.write('+')
-    }
-
-    cb()
-  })
+  )
 })

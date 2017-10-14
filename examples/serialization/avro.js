@@ -13,35 +13,41 @@ const hemera = new Hemera(nats, {
 hemera.use(HemeraAvro)
 
 hemera.ready(() => {
-  let Avro = hemera.exposition['hemera-avro'].avro
+  let Avro = hemera.avro
 
   const type = Avro.parse({
     name: 'Person',
     type: 'record',
-    fields: [{
-      name: 'a',
-      type: 'int'
-    }]
-  })
-  /**
-   * Your Implementations
-   */
-  hemera.add({
-    topic: 'peopleDirectory',
-    cmd: 'create',
-    avro$: type // how to encode the request
-  }, (req, cb) => {
-    cb(null, {
-      a: 1
-    })
+    fields: [
+      {
+        name: 'a',
+        type: 'int'
+      }
+    ]
   })
 
-  hemera.act({
-    topic: 'peopleDirectory',
-    cmd: 'create',
-    name: 'peter',
-    avro$: type // how to decode the response
-  }, function (err, resp) {
-    this.log.info(resp, 'Result')
-  })
+  hemera.add(
+    {
+      topic: 'peopleDirectory',
+      cmd: 'create',
+      avro$: type // how to encode the request
+    },
+    (req, cb) => {
+      cb(null, {
+        a: 1
+      })
+    }
+  )
+
+  hemera.act(
+    {
+      topic: 'peopleDirectory',
+      cmd: 'create',
+      name: 'peter',
+      avro$: type // how to decode the response
+    },
+    function(err, resp) {
+      this.log.info(resp, 'Result')
+    }
+  )
 })

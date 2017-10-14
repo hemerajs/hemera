@@ -141,7 +141,8 @@
 hemera.act({
     topic: "math",
     cmd: "add",
-    a: 1, b: 1
+    a: 1,
+    b: 1
 }, function(err, resp) {
 })
 </code></pre>
@@ -167,8 +168,6 @@ hemera.act({
 hemera.add({
   topic: "math",
   cmd: "add",
-  a: Joi.number().required(),
-  b: Joi.number().required()
 }, function (req, cb) {
   cb(null, req.a + req.b)
 })
@@ -182,11 +181,26 @@ hemera.add({
 hemera.add({
   topic: "math",
   cmd: "add",
-  a: Joi.number().required(),
-  b: Joi.number().required(),
   maxMessages$: 1
 }, function (req, cb) {
   cb(null, req.a + req.b)
+})
+</code>
+                    </pre>
+                    <h4 class="section-h4">Async / Await</h4>
+                    <p>You can also pass an async function.</p>
+                    <pre>
+<code class="javascript">
+const result = await hemera.add({
+  topic: "math",
+  cmd: "add",
+}, async function (req) {
+  return await req.a + req.b
+})
+
+const result = await hemera.add({
+  topic: "math",
+  cmd: "add",
 })
 </code>
                     </pre>

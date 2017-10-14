@@ -135,7 +135,7 @@ hemera.act({
 </code>
 </pre>
                     </p>
-                    <h4 class="section-h4">Set log levels</h4>
+                    <h4 class="section-h4">Set log level</h4>
                     <pre>
 <code class="javascript">
 const hemera = new Hemera(nats, {
@@ -143,7 +143,7 @@ const hemera = new Hemera(nats, {
 })
 </code>
 </pre>
-                    <h4 class="section-h4">Log level</h4>
+                    <h4 class="section-h4">Log levels</h4>
                     <pre>
 <code class="javascript">
 ["info", "warn", "debug", "trace", "error", "fatal"]
@@ -152,20 +152,20 @@ const hemera = new Hemera(nats, {
                     <h4 class="section-h4">Logging output example</h4>
                     <pre>
 <code>
-[2017-02-04T22:19:34.156Z] INFO (app/2056 on starptech): Connected!
-[2017-02-04T22:19:34.160Z] INFO (app/2056 on starptech): ADD - ADDED
+[2017-08-15T18:34:10.815Z] INFO (hemera-starptech/12008 on starptech): Connected!
+[2017-08-15T18:34:10.818Z] INFO (hemera-starptech/12008 on starptech): ADD - ADDED
     topic: "math"
     cmd: "add"
-[2017-02-04T22:19:34.163Z] INFO (app/2056 on starptech):
+[2017-08-15T18:34:10.820Z] DEBUG (hemera-starptech/12008 on starptech):
     outbound: {
-      "id": "5ecdad999267f031109df50f653a7f46",
-      "pattern": "a:1,b:2,cmd:add,topic:math"
+      "id": "0961413a3a8040b7a2054370581d0d51",
+      "pattern": "a:1,b:20,cmd:add,topic:math"
     }
-[2017-02-04T22:19:34.167Z] INFO (app/2056 on starptech):
+[2017-08-15T18:34:10.824Z] DEBUG (hemera-starptech/12008 on starptech):
     inbound: {
-      "id": "5ecdad999267f031109df50f653a7f46",
-      "duration": 0.003826,
-      "pattern": "a:1,b:2,cmd:add,topic:math"
+      "id": "0961413a3a8040b7a2054370581d0d51",
+      "duration": "4.65ms",
+      "pattern": "a:1,b:20,cmd:add,topic:math"
     }
 </code>
                     </pre>

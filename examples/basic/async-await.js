@@ -7,29 +7,26 @@ const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
-hemera.ready(() => {
-  hemera.ext('onServerPreRequest', async function (req, res) {
-    await Promise.resolve()
-  })
+hemera.ready(async () => {
+  hemera.add(
+    {
+      topic: 'math',
+      cmd: 'add'
+    },
+    async function(req) {
+      return await Promise.resolve(req.a + req.b)
+    }
+  )
 
-  hemera.add({
-    topic: 'math',
-    cmd: 'add'
-  }, async function (req) {
-    var result = await Promise.resolve({
-      result: req.a - req.b
+  try {
+    const result = await hemera.act({
+      topic: 'math',
+      cmd: 'add',
+      a: 10,
+      b: 10
     })
-    return result
-  })
-
-  hemera.act({
-    topic: 'math',
-    cmd: 'add',
-    a: 10,
-    b: 10
-  }, async function (err, result) {
-    await result
-    return 'test'
-  })
-    .then(x => console.log(x))
+    hemera.log.info(result)
+  } catch (err) {
+    hemera.log.error(err)
+  }
 })

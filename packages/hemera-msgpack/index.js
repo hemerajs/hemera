@@ -2,16 +2,17 @@
 
 const Hp = require('hemera-plugin')
 const msgpack = require('msgpack-lite')
-const encode = msgpack.encode
-const decode = msgpack.decode
 
-exports.plugin = Hp(function hemeraMsgpack () {
-  const hemera = this
+exports.plugin = Hp(hemeraMsgpack, '>=2.0.0')
+exports.options = {
+  name: require('./package.json').name
+}
 
-  hemera._decoder.decode = (msg) => {
+function hemeraMsgpack(hemera, opts, done) {
+  function decode(msg) {
     try {
       return {
-        value: decode(msg)
+        value: msgpack.decode(msg)
       }
     } catch (error) {
       return {
@@ -20,10 +21,10 @@ exports.plugin = Hp(function hemeraMsgpack () {
     }
   }
 
-  hemera._encoder.encode = (msg) => {
+  function encode(msg) {
     try {
       return {
-        value: encode(msg)
+        value: msgpack.encode(msg)
       }
     } catch (error) {
       return {
@@ -31,10 +32,10 @@ exports.plugin = Hp(function hemeraMsgpack () {
       }
     }
   }
-})
 
-exports.options = {}
+  // Will replace default encoder/decoder
+  hemera.decoder.reset(decode)
+  hemera.encoder.reset(encode)
 
-exports.attributes = {
-  pkg: require('./package.json')
+  done()
 }

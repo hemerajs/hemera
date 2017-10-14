@@ -13,7 +13,12 @@ module.exports = {
   // General
   NATS_QUEUEGROUP_PREFIX: 'queue',
   // NATS conn error codes
-  NATS_CONN_ERROR_CODES: ['CONN_ERR', 'SECURE_CONN_REQ_MSG', 'NON_SECURE_CONN_REQ_MSG', 'CLIENT_CERT_REQ_MSG'],
+  NATS_CONN_ERROR_CODES: [
+    'CONN_ERR',
+    'SECURE_CONN_REQ_MSG',
+    'NON_SECURE_CONN_REQ_MSG',
+    'CLIENT_CERT_REQ_MSG'
+  ],
   // NATS erros
   NATS_TRANSPORT_ERROR: 'Could not connect to NATS!',
   NATS_TRANSPORT_CLOSED: 'NATS connection closed!',
@@ -37,19 +42,21 @@ module.exports = {
   IMPLEMENTATION_ERROR: 'Bad implementation',
   PAYLOAD_PARSING_ERROR: 'Invalid payload',
   ADD_MIDDLEWARE_ERROR: 'Middleware error',
-  PLUGIN_ALREADY_REGISTERED: 'Plugin was already registered',
-  PLUGIN_ADDED: 'PLUGIN - ADDED!',
   PAYLOAD_VALIDATION_ERROR: 'Invalid payload',
   ADD_ADDED: 'ADD - ADDED',
   BUSINESS_ERROR: 'Business error',
   FATAL_ERROR: 'Fatal error',
   EXTENSION_ERROR: 'Extension error',
-  PUB_CALLBACK_REDUNDANT: 'Specify a callback as publisher is redundant',
   INVALID_EXTENSION_TYPE: 'Invalid extension type',
   PLUGIN_NAME_REQUIRED: 'Plugin name is required',
-  PLUGIN_REGISTRATION_ERROR: 'Error during plugin registration',
-  DECORATION_ALREADY_DEFINED: 'Server decoration already defined',
-  OVERRIDE_BUILTIN_METHOD_NOT_ALLOWED: 'Cannot override the built-in server interface method',
+  MISSING_DECORATE_DEPENDENCY: 'Missing decorate dependency',
+  DECORATION_ALREADY_DEFINED: 'Decoration has been already added',
   GRACEFULLY_SHUTDOWN: 'Gracefully shutdown',
-  PLUGIN_TIMEOUT_ERROR: 'Plugin callback was not called'
+  ACT_PATTERN_REQUIRED: 'Pattern is required to start an act call',
+  ADD_PATTERN_REQUIRED: 'Pattern is required to define an add',
+  TERMINATE_AFTER_TIMEOUT: 'Terminate process after timeout',
+  PROCESS_TERMINATED: 'Process terminated',
+  TRIGGERING_CLOSE_HOOK: 'Triggering close hook',
+  REPLY_ERROR_ALREADY_SET: 'Error already set',
+  REPLY_ALREADY_SENT: 'Reply already sent'
 }

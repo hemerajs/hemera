@@ -17,7 +17,7 @@ class MongoStore extends Store {
    *
    * @memberOf MongoStore
    */
-  constructor (driver, options = {}) {
+  constructor(driver, options = {}) {
     options.mongo = {}
     super(driver, options)
   }
@@ -30,9 +30,12 @@ class MongoStore extends Store {
    *
    * @memberOf MongoStore
    */
-  create (req, cb) {
+  create(req, cb) {
     if (req.data instanceof Array) {
-      this._driver.insertMany(req.data, this.options.store.create, function (err, resp) {
+      this._driver.insertMany(req.data, this.options.store.create, function(
+        err,
+        resp
+      ) {
         if (err) {
           return cb(err)
         }
@@ -42,7 +45,10 @@ class MongoStore extends Store {
         cb(err, result)
       })
     } else if (req.data instanceof Object) {
-      this._driver.insertOne(req.data, this.options.store.create, function (err, resp) {
+      this._driver.insertOne(req.data, this.options.store.create, function(
+        err,
+        resp
+      ) {
         if (err) {
           return cb(err)
         }
@@ -62,8 +68,11 @@ class MongoStore extends Store {
    *
    * @memberOf MongoStore
    */
-  remove (req, cb) {
-    this._driver.deleteMany(req.query, this.options.store.remove, function (err, resp) {
+  remove(req, cb) {
+    this._driver.deleteMany(req.query, this.options.store.remove, function(
+      err,
+      resp
+    ) {
       if (err) {
         return cb(err)
       }
@@ -82,16 +91,20 @@ class MongoStore extends Store {
    *
    * @memberOf MongoStore
    */
-  removeById (req, cb) {
-    this._driver.findOneAndDelete({
-      _id: this.ObjectID(req.id)
-    }, this.options.store.removeById, function (err, resp) {
-      if (err) {
-        return cb(err)
+  removeById(req, cb) {
+    this._driver.findOneAndDelete(
+      {
+        _id: this.ObjectID(req.id)
+      },
+      this.options.store.removeById,
+      function(err, resp) {
+        if (err) {
+          return cb(err)
+        }
+        const result = resp.value
+        cb(err, result)
       }
-      const result = resp.value
-      cb(err, result)
-    })
+    )
   }
 
   /**
@@ -103,14 +116,19 @@ class MongoStore extends Store {
    *
    * @memberOf MongoStore
    */
-  update (req, data, cb) {
-    this._driver.findOneAndUpdate(req.query, data, this.options.store.update, function (err, resp) {
-      if (err) {
-        return cb(err)
+  update(req, data, cb) {
+    this._driver.findOneAndUpdate(
+      req.query,
+      data,
+      this.options.store.update,
+      function(err, resp) {
+        if (err) {
+          return cb(err)
+        }
+        const result = resp.value
+        cb(err, result)
       }
-      const result = resp.value
-      cb(err, result)
-    })
+    )
   }
 
   /**
@@ -122,16 +140,21 @@ class MongoStore extends Store {
    *
    * @memberOf MongoStore
    */
-  updateById (req, data, cb) {
-    this._driver.findOneAndUpdate({
-      _id: this.ObjectID(req.id)
-    }, data, this.options.store.updateById, function (err, resp) {
-      if (err) {
-        return cb(err)
+  updateById(req, data, cb) {
+    this._driver.findOneAndUpdate(
+      {
+        _id: this.ObjectID(req.id)
+      },
+      data,
+      this.options.store.updateById,
+      function(err, resp) {
+        if (err) {
+          return cb(err)
+        }
+        const result = resp.value
+        cb(err, result)
       }
-      const result = resp.value
-      cb(err, result)
-    })
+    )
   }
 
   /**
@@ -142,7 +165,7 @@ class MongoStore extends Store {
    *
    * @memberOf MongoStore
    */
-  find (req, options, cb) {
+  find(req, options, cb) {
     let cursor = this._driver.find(req.query, this.options.store.find)
 
     if (options) {
@@ -159,13 +182,16 @@ class MongoStore extends Store {
         cursor = cursor.sort(options.orderBy)
       }
     }
-    cursor.toArray(function (err, resp) {
+    cursor.toArray(function(err, resp) {
       if (err) {
         return cb(err)
       }
-      const result = Object.assign({
-        result: resp
-      }, options)
+      const result = Object.assign(
+        {
+          result: resp
+        },
+        options
+      )
       cb(err, result)
     })
   }
@@ -178,12 +204,16 @@ class MongoStore extends Store {
    *
    * @memberOf MongoStore
    */
-  findById (req, cb) {
-    this._driver.findOne({
-      _id: this.ObjectID(req.id)
-    }, this.options.store.findById, function (err, resp) {
-      cb(err, resp)
-    })
+  findById(req, cb) {
+    this._driver.findOne(
+      {
+        _id: this.ObjectID(req.id)
+      },
+      this.options.store.findById,
+      function(err, resp) {
+        cb(err, resp)
+      }
+    )
   }
 
   /**
@@ -194,20 +224,24 @@ class MongoStore extends Store {
    *
    * @memberOf MongoStore
    */
-  replace (req, data, cb) {
-    this._driver.updateMany(req.query, data, this.options.store.replace,
-    function (err, resp) {
-      if (err) {
-        return cb(err)
+  replace(req, data, cb) {
+    this._driver.updateMany(
+      req.query,
+      data,
+      this.options.store.replace,
+      function(err, resp) {
+        if (err) {
+          return cb(err)
+        }
+        const result = {
+          matchedCount: resp.matchedCount,
+          modifiedCount: resp.modifiedCount,
+          upsertedCount: resp.upsertedCount,
+          upsertedId: resp.upsertedId
+        }
+        cb(err, result)
       }
-      const result = {
-        matchedCount: resp.matchedCount,
-        modifiedCount: resp.modifiedCount,
-        upsertedCount: resp.upsertedCount,
-        upsertedId: resp.upsertedId
-      }
-      cb(err, result)
-    })
+    )
   }
 
   /**
@@ -218,16 +252,21 @@ class MongoStore extends Store {
    *
    * @memberOf MongoStore
    */
-  replaceById (req, data, cb) {
-    this._driver.findOneAndReplace({
-      _id: this.ObjectID(req.id)
-    }, data, this.options.store.replaceById, function (err, resp) {
-      if (err) {
-        return cb(err)
+  replaceById(req, data, cb) {
+    this._driver.findOneAndReplace(
+      {
+        _id: this.ObjectID(req.id)
+      },
+      data,
+      this.options.store.replaceById,
+      function(err, resp) {
+        if (err) {
+          return cb(err)
+        }
+        const result = resp.value
+        cb(err, result)
       }
-      const result = resp.value
-      cb(err, result)
-    })
+    )
   }
 }
 

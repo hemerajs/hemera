@@ -1,7 +1,7 @@
 # Hemera-snappy package
 
 [![npm](https://img.shields.io/npm/v/hemera-snappy.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-snappy)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
+[![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
 This is a plugin to use [Google Snappy](https://github.com/google/snappy) with Hemera.
 
@@ -28,10 +28,6 @@ const hemera = new Hemera(nats, {
 hemera.use(HemeraSnappy)
 
 hemera.ready(() => {
-
-  /**
-   * Your Implementations
-   */
   hemera.add({
     topic: 'math',
     cmd: 'add'

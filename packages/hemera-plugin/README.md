@@ -1,7 +1,7 @@
 # Hemera-plugin package
 
 [![npm](https://img.shields.io/npm/v/hemera-plugin.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-plugin)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
+[![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
 `hemera-plugin` is a plugin helper for [Hemera](https://github.com/hemerajs/hemera).  
 
@@ -14,9 +14,7 @@ Example:
 ```js
 const hp = require('hemera-plugin')
 
-module.exports = hp(function (opts, next) {
-  // your plugin code
-  const hemera = this
+module.exports = hp(function (hemera, opts, next) {
   next()
 })
 ```
@@ -25,9 +23,7 @@ If you need to set a bare-minimum version of Hemera for your plugin, just add th
 ```js
 const hp = require('hemera-plugin')
 
-module.exports = hp(function (opts, next) {
-  // your plugin code
-  const hemera = this
+module.exports = hp(function (hemera, opts, next) {
   next()
 }, '0.x')
 ```

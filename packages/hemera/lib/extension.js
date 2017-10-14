@@ -8,27 +8,67 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-const BaseExtension = require('./baseExtension')
+
+const _ = require('lodash')
+const Constants = require('./constants')
+const Errors = require('./errors')
 
 /**
- *
- *
  * @class Extension
  */
-class Extension extends BaseExtension {
+class Extension {
+  constructor() {
+    this._stack = []
+    this._types = [
+      'onClientPreRequest',
+      'onClientPostRequest',
+      'onServerPreHandler',
+      'onServerPreRequest',
+      'onServerPreResponse',
+      'onClose'
+    ]
+    this.onClientPreRequest = []
+    this.onClientPostRequest = []
+
+    this.onServerPreHandler = []
+    this.onServerPreRequest = []
+    this.onServerPreResponse = []
+  }
+
   /**
-   * Executes the stack of functions
    *
-   * @param {any} ctx
-   * @param {any} cb
+   *
+   * @param {any} handler
+   *
    * @memberof Extension
    */
-  dispatch (ctx, cb) {
-    const each = (item, next) => {
-      item.call(ctx, next)
+  _add(type, handler) {
+    if (this._types.indexOf(type) === -1) {
+      let error = new Errors.HemeraError(Constants.INVALID_EXTENSION_TYPE, {
+        type
+      })
+      throw error
     }
 
-    this.run(each, cb)
+    this[type].push((arg, next) => {
+      arg.push(next)
+      handler.apply(null, arg)
+    })
+  }
+
+  /**
+   *
+   *
+   * @param {any} handler
+   *
+   * @memberOf Extension
+   */
+  add(type, handler) {
+    if (_.isArray(handler)) {
+      handler.forEach(h => this._add(type, h))
+    } else {
+      this._add(type, handler)
+    }
   }
 }
 

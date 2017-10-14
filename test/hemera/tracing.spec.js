@@ -1,21 +1,23 @@
 'use strict'
 
-describe('Tracing', function () {
+describe('Tracing', function() {
   var PORT = 6242
   var authUrl = 'nats://localhost:' + PORT
   var server
 
   // Start up our own nats-server
-  before(function (done) {
+  before(function(done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
   // Shutdown our server after we are done
-  after(function () {
+  after(function() {
     server.kill()
   })
 
-  it('Should set correct request parentId$, span and request$ context', function (done) {
+  it('Should set correct request parentId$, span and request$ context', function(
+    done
+  ) {
     /**
      * math:add-->math:sub
      *            math:add
@@ -32,115 +34,131 @@ describe('Tracing', function () {
 
       let traceId = '' // Is unique in a request
 
-      hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      }, function (resp, cb) {
-        expect(this.trace$.traceId).to.be.string()
-        expect(this.trace$.spanId).to.be.string()
-
-        cb(null, resp.a + resp.b)
-      })
-
-      hemera.add({
-        topic: 'math',
-        cmd: 'sub'
-      }, function (resp, cb) {
-        let r1 = this.request$.id
-
-        expect(this.trace$.traceId).to.be.string()
-        expect(this.trace$.spanId).to.be.string()
-        expect(this.request$.parentId).to.be.exists()
-        expect(this.trace$.parentSpanId).to.be.string()
-
-        this.act({
+      hemera.add(
+        {
           topic: 'math',
-          cmd: 'add',
-          a: 1,
-          b: 2
-        })
+          cmd: 'add'
+        },
+        function(resp, cb) {
+          expect(this.trace$.traceId).to.be.string()
+          expect(this.trace$.spanId).to.be.string()
 
-        setTimeout(() => {
+          cb(null, resp.a + resp.b)
+        }
+      )
+
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'sub'
+        },
+        function(resp, cb) {
+          let r1 = this.request$.id
+
+          expect(this.trace$.traceId).to.be.string()
+          expect(this.trace$.spanId).to.be.string()
+          expect(this.request$.parentId).to.be.exists()
+          expect(this.trace$.parentSpanId).to.be.string()
+
           this.act({
             topic: 'math',
             cmd: 'add',
             a: 1,
             b: 2
-          }, function (err, resp2) {
-            let r2 = this.request$.id
-
-            expect(err).to.be.not.exists()
-            expect(this.request$.parentId).to.be.equals(r1)
-
-            expect(this.trace$.traceId).to.be.equals(traceId)
-            expect(this.trace$.spanId).to.be.string()
-            expect(this.trace$.timestamp).to.be.number()
-
-            this.act({
-              topic: 'math',
-              cmd: 'add',
-              a: 10,
-              b: 2
-            }, function (err, resp2) {
-              expect(err).to.be.not.exists()
-              expect(this.request$.parentId).to.be.equals(r2)
-              expect(this.trace$.parentSpanId).to.be.string()
-              expect(this.trace$.traceId).to.be.equals(traceId)
-              expect(this.trace$.spanId).to.be.string()
-              expect(this.trace$.timestamp).to.be.number()
-
-              cb(null, resp.a - resp.b)
-            })
           })
-        }, 200)
-      })
 
-      hemera.act({
-        topic: 'math',
-        cmd: 'add',
-        a: 1,
-        b: 2
-      }, function (err, resp) {
-        let r1 = this.request$.id
-        expect(err).to.be.not.exists()
-        expect(this.trace$.traceId).to.be.exists()
-        expect(this.trace$.spanId).to.be.string()
-        expect(this.trace$.timestamp).to.be.number()
-        expect(this.request$.id).to.be.string()
+          setTimeout(() => {
+            this.act(
+              {
+                topic: 'math',
+                cmd: 'add',
+                a: 1,
+                b: 2
+              },
+              function(err, resp2) {
+                let r2 = this.request$.id
 
-        traceId = this.trace$.traceId
+                expect(err).to.be.not.exists()
+                expect(this.request$.parentId).to.be.equals(r1)
 
-        this.act({
+                expect(this.trace$.traceId).to.be.equals(traceId)
+                expect(this.trace$.spanId).to.be.string()
+                expect(this.trace$.timestamp).to.be.number()
+
+                this.act(
+                  {
+                    topic: 'math',
+                    cmd: 'add',
+                    a: 10,
+                    b: 2
+                  },
+                  function(err, resp2) {
+                    expect(err).to.be.not.exists()
+                    expect(this.request$.parentId).to.be.equals(r2)
+                    expect(this.trace$.parentSpanId).to.be.string()
+                    expect(this.trace$.traceId).to.be.equals(traceId)
+                    expect(this.trace$.spanId).to.be.string()
+                    expect(this.trace$.timestamp).to.be.number()
+
+                    cb(null, resp.a - resp.b)
+                  }
+                )
+              }
+            )
+          }, 200)
+        }
+      )
+
+      hemera.act(
+        {
           topic: 'math',
-          cmd: 'sub',
+          cmd: 'add',
           a: 1,
-          b: resp
-        }, function (err, resp) {
+          b: 2
+        },
+        function(err, resp) {
+          let r1 = this.request$.id
           expect(err).to.be.not.exists()
-          expect(this.request$.parentId).to.be.equals(r1)
-
-          expect(this.trace$.traceId).to.be.equals(traceId)
+          expect(this.trace$.traceId).to.be.exists()
           expect(this.trace$.spanId).to.be.string()
-          expect(this.trace$.parentSpanId).to.be.string()
           expect(this.trace$.timestamp).to.be.number()
           expect(this.request$.id).to.be.string()
-          expect(this.request$.parentId).to.be.a.string()
 
-          hemera.close()
-          done()
-        })
-      })
+          traceId = this.trace$.traceId
+
+          this.act(
+            {
+              topic: 'math',
+              cmd: 'sub',
+              a: 1,
+              b: resp
+            },
+            function(err, resp) {
+              expect(err).to.be.not.exists()
+              expect(this.request$.parentId).to.be.equals(r1)
+
+              expect(this.trace$.traceId).to.be.equals(traceId)
+              expect(this.trace$.spanId).to.be.string()
+              expect(this.trace$.parentSpanId).to.be.string()
+              expect(this.trace$.timestamp).to.be.number()
+              expect(this.request$.id).to.be.string()
+              expect(this.request$.parentId).to.be.a.string()
+
+              hemera.close(done)
+            }
+          )
+        }
+      )
     })
   })
 
-  it('Should get correct tracing informations', function (done) {
+  it('Should get correct tracing informations', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.on('serverPreRequest', function () {
-        const ctx = this
+      hemera.on('serverPreRequest', function(ctx) {
         let meta = {
           service: ctx.trace$.service,
           name: ctx.trace$.method
@@ -162,8 +180,7 @@ describe('Tracing', function () {
         expect(traceData.sampled).to.be.exist()
       })
 
-      hemera.on('serverPreResponse', function () {
-        const ctx = this
+      hemera.on('serverPreResponse', function(ctx) {
         let meta = {
           service: ctx.trace$.service,
           name: ctx.trace$.method
@@ -173,8 +190,7 @@ describe('Tracing', function () {
         expect(meta.name).to.be.equals('a:1,b:2,cmd:add,topic:math')
       })
 
-      hemera.on('clientPreRequest', function () {
-        const ctx = this
+      hemera.on('clientPreRequest', function(ctx) {
         let meta = {
           service: ctx.trace$.service,
           name: ctx.trace$.method
@@ -196,8 +212,7 @@ describe('Tracing', function () {
         expect(traceData.sampled).to.be.exist()
       })
 
-      hemera.on('clientPostRequest', function () {
-        const ctx = this
+      hemera.on('clientPostRequest', function(ctx) {
         let meta = {
           service: ctx.trace$.service,
           name: ctx.trace$.method
@@ -207,51 +222,61 @@ describe('Tracing', function () {
         expect(meta.name).to.be.equals('a:1,b:2,cmd:add,topic:math')
       })
 
-      hemera.add({
-        cmd: 'add',
-        topic: 'math'
-      }, (resp, cb) => {
-        cb(null, resp.a + resp.b)
-      })
-
-      hemera.act({
-        cmd: 'add',
-        topic: 'math',
-        a: 1,
-        b: 2
-      }, (err, resp) => {
-        expect(err).to.be.not.exists()
-        expect(resp).to.be.equals(3)
-        hemera.close()
-        done()
-      })
-    })
-  })
-
-  it('Should extract trace method from pattern', function (done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    hemera.ready(() => {
-      hemera.add({
-        topic: 'TOPIC',
-        cmd: 'CMD'
-      }, function (err, next) {
-        next()
-      })
-      hemera.act({
-        topic: 'TOPIC',
-        cmd: 'CMD',
-        a: {
-          b: 1
+      hemera.add(
+        {
+          cmd: 'add',
+          topic: 'math'
         },
-        timeout$: 5000
-      }, function (err, resp) {
-        expect(this.trace$.method).to.be.equals('cmd:CMD,topic:TOPIC')
-        hemera.close()
-        done()
-      })
+        (resp, cb) => {
+          cb(null, resp.a + resp.b)
+        }
+      )
+
+      hemera.act(
+        {
+          cmd: 'add',
+          topic: 'math',
+          a: 1,
+          b: 2
+        },
+        (err, resp) => {
+          expect(err).to.be.not.exists()
+          expect(resp).to.be.equals(3)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should extract trace method from pattern', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'TOPIC',
+          cmd: 'CMD'
+        },
+        function(err, next) {
+          next()
+        }
+      )
+      hemera.act(
+        {
+          topic: 'TOPIC',
+          cmd: 'CMD',
+          a: {
+            b: 1
+          },
+          timeout$: 5000
+        },
+        function(err, resp) {
+          expect(this.trace$.method).to.be.equals('cmd:CMD,topic:TOPIC')
+          hemera.close(done)
+        }
+      )
     })
   })
 })

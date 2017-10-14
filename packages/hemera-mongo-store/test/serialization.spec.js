@@ -7,7 +7,7 @@ const Utils = require('./utils')
 const now = new Date()
 const expect = Code.expect
 
-describe('Hemera-mongo-store with response serialization', function () {
+describe('Hemera-mongo-store with response serialization', function() {
   const topic = 'mongo-store'
   const testCollection = 'test-serialize'
   const options = {
@@ -20,7 +20,7 @@ describe('Hemera-mongo-store with response serialization', function () {
   let hemera
   let plugin
 
-  before(function (done) {
+  before(function(done) {
     Utils.initServer(topic, testCollection, options, (err, resp) => {
       if (err) {
         throw err
@@ -33,187 +33,223 @@ describe('Hemera-mongo-store with response serialization', function () {
     })
   })
 
-  after(function (done) {
+  after(function(done) {
     hemera.close()
     server.kill()
     done()
   })
 
-  it('find will return an extended json result', function (done) {
-    hemera.act({
-      topic,
-      cmd: 'create',
-      collection: testCollection,
-      data: Utils.createExtendedData(plugin.mongodb, now)
-    }, function (err, resp) {
-      expect(err).to.be.not.exists()
-      expect(resp).to.be.an.object()
-
-      hemera.act({
+  it('find will return an extended json result', function(done) {
+    hemera.act(
+      {
         topic,
-        cmd: 'find',
+        cmd: 'create',
         collection: testCollection,
-        query: EJSON.serialize({ date: now })
-      }, function (err, resp) {
-        resp = EJSON.deserialize(resp)
-        expect(err).to.be.not.exists()
-        expect(resp.result).to.be.an.array()
-        expect(resp.result[0]._id).to.be.instanceof(plugin.mongodb.ObjectID)
-        Utils.testExtendedDoc(plugin, resp.result[0])
-        done()
-      })
-    })
-  })
-
-  it('findById will return an extended json result', function (done) {
-    hemera.act({
-      topic,
-      cmd: 'create',
-      collection: testCollection,
-      data: Utils.createExtendedData(plugin.mongodb, now)
-    }, function (err, resp) {
-      expect(err).to.be.not.exists()
-      expect(resp).to.be.an.object()
-
-      hemera.act({
-        topic,
-        cmd: 'findById',
-        collection: testCollection,
-        id: resp._id
-      }, function (err, resp) {
-        resp = EJSON.deserialize(resp)
-        expect(err).to.be.not.exists()
-        expect(resp._id).to.be.instanceof(plugin.mongodb.ObjectID)
-        Utils.testExtendedDoc(plugin, resp)
-        done()
-      })
-    })
-  })
-
-  it('update will return an extended json result', function (done) {
-    hemera.act({
-      topic,
-      cmd: 'create',
-      collection: testCollection,
-      data: EJSON.serialize({
-        name: 'jacob',
-        date: new Date()
-      })
-    }, function (err, resp) {
-      expect(err).to.be.not.exists()
-      expect(resp).to.be.an.object()
-
-      hemera.act({
-        topic,
-        cmd: 'update',
-        collection: testCollection,
-        data: {
-          $set: { name: 'foo' }
-        },
-        query: {
-          name: 'jacob'
-        }
-      }, function (err, resp) {
-        resp = EJSON.deserialize(resp)
+        data: Utils.createExtendedData(plugin.mongodb, now)
+      },
+      function(err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.an.object()
-        expect(resp._id).to.be.instanceof(plugin.mongodb.ObjectID)
-        expect(resp.date).to.be.a.date()
-        done()
-      })
-    })
+
+        hemera.act(
+          {
+            topic,
+            cmd: 'find',
+            collection: testCollection,
+            query: EJSON.serialize({ date: now })
+          },
+          function(err, resp) {
+            resp = EJSON.deserialize(resp)
+            expect(err).to.be.not.exists()
+            expect(resp.result).to.be.an.array()
+            expect(resp.result[0]._id).to.be.instanceof(plugin.mongodb.ObjectID)
+            Utils.testExtendedDoc(plugin, resp.result[0])
+            done()
+          }
+        )
+      }
+    )
   })
 
-  it('updateById will return an extended json result', function (done) {
-    hemera.act({
-      topic,
-      cmd: 'create',
-      collection: testCollection,
-      data: EJSON.serialize({
-        name: 'jacob',
-        date: new Date()
-      })
-    }, function (err, resp) {
-      expect(err).to.be.not.exists()
-      expect(resp).to.be.an.object()
-
-      hemera.act({
+  it('findById will return an extended json result', function(done) {
+    hemera.act(
+      {
         topic,
-        cmd: 'updateById',
+        cmd: 'create',
         collection: testCollection,
-        data: {
-          $set: { name: 'foo' }
-        },
-        id: resp._id
-      }, function (err, resp) {
-        resp = EJSON.deserialize(resp)
+        data: Utils.createExtendedData(plugin.mongodb, now)
+      },
+      function(err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.an.object()
-        expect(resp._id).to.be.instanceof(plugin.mongodb.ObjectID)
-        expect(resp.date).to.be.a.date()
-        done()
-      })
-    })
+
+        hemera.act(
+          {
+            topic,
+            cmd: 'findById',
+            collection: testCollection,
+            id: resp._id
+          },
+          function(err, resp) {
+            resp = EJSON.deserialize(resp)
+            expect(err).to.be.not.exists()
+            expect(resp._id).to.be.instanceof(plugin.mongodb.ObjectID)
+            Utils.testExtendedDoc(plugin, resp)
+            done()
+          }
+        )
+      }
+    )
   })
 
-  it('removeById will return an extended json result', function (done) {
-    hemera.act({
-      topic,
-      cmd: 'create',
-      collection: testCollection,
-      data: EJSON.serialize({
-        name: 'jacob',
-        date: new Date()
-      })
-    }, function (err, resp) {
-      expect(err).to.be.not.exists()
-      expect(resp).to.be.an.object()
-
-      hemera.act({
+  it('update will return an extended json result', function(done) {
+    hemera.act(
+      {
         topic,
-        cmd: 'removeById',
+        cmd: 'create',
         collection: testCollection,
-        id: resp._id
-      }, function (err, resp) {
-        resp = EJSON.deserialize(resp)
+        data: EJSON.serialize({
+          name: 'jacob',
+          date: new Date()
+        })
+      },
+      function(err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.an.object()
-        expect(resp._id).to.be.instanceof(plugin.mongodb.ObjectID)
-        expect(resp.date).to.be.a.date()
-        done()
-      })
-    })
+
+        hemera.act(
+          {
+            topic,
+            cmd: 'update',
+            collection: testCollection,
+            data: {
+              $set: { name: 'foo' }
+            },
+            query: {
+              name: 'jacob'
+            }
+          },
+          function(err, resp) {
+            resp = EJSON.deserialize(resp)
+            expect(err).to.be.not.exists()
+            expect(resp).to.be.an.object()
+            expect(resp._id).to.be.instanceof(plugin.mongodb.ObjectID)
+            expect(resp.date).to.be.a.date()
+            done()
+          }
+        )
+      }
+    )
   })
 
-  it('replaceById will return an extended json result', function (done) {
-    hemera.act({
-      topic,
-      cmd: 'create',
-      collection: testCollection,
-      data: EJSON.serialize({
-        name: 'jacob',
-        date: new Date()
-      })
-    }, function (err, resp) {
-      expect(err).to.be.not.exists()
-      expect(resp).to.be.an.object()
-
-      hemera.act({
+  it('updateById will return an extended json result', function(done) {
+    hemera.act(
+      {
         topic,
-        cmd: 'replaceById',
+        cmd: 'create',
         collection: testCollection,
-        data: {
-          $set: { name: 'foo' }
-        },
-        id: resp._id
-      }, function (err, resp) {
-        resp = EJSON.deserialize(resp)
+        data: EJSON.serialize({
+          name: 'jacob',
+          date: new Date()
+        })
+      },
+      function(err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.an.object()
-        expect(resp._id).to.be.instanceof(plugin.mongodb.ObjectID)
-        expect(resp.date).to.be.a.date()
-        done()
-      })
-    })
+
+        hemera.act(
+          {
+            topic,
+            cmd: 'updateById',
+            collection: testCollection,
+            data: {
+              $set: { name: 'foo' }
+            },
+            id: resp._id
+          },
+          function(err, resp) {
+            resp = EJSON.deserialize(resp)
+            expect(err).to.be.not.exists()
+            expect(resp).to.be.an.object()
+            expect(resp._id).to.be.instanceof(plugin.mongodb.ObjectID)
+            expect(resp.date).to.be.a.date()
+            done()
+          }
+        )
+      }
+    )
+  })
+
+  it('removeById will return an extended json result', function(done) {
+    hemera.act(
+      {
+        topic,
+        cmd: 'create',
+        collection: testCollection,
+        data: EJSON.serialize({
+          name: 'jacob',
+          date: new Date()
+        })
+      },
+      function(err, resp) {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.an.object()
+
+        hemera.act(
+          {
+            topic,
+            cmd: 'removeById',
+            collection: testCollection,
+            id: resp._id
+          },
+          function(err, resp) {
+            resp = EJSON.deserialize(resp)
+            expect(err).to.be.not.exists()
+            expect(resp).to.be.an.object()
+            expect(resp._id).to.be.instanceof(plugin.mongodb.ObjectID)
+            expect(resp.date).to.be.a.date()
+            done()
+          }
+        )
+      }
+    )
+  })
+
+  it('replaceById will return an extended json result', function(done) {
+    hemera.act(
+      {
+        topic,
+        cmd: 'create',
+        collection: testCollection,
+        data: EJSON.serialize({
+          name: 'jacob',
+          date: new Date()
+        })
+      },
+      function(err, resp) {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.an.object()
+
+        hemera.act(
+          {
+            topic,
+            cmd: 'replaceById',
+            collection: testCollection,
+            data: {
+              $set: { name: 'foo' }
+            },
+            id: resp._id
+          },
+          function(err, resp) {
+            resp = EJSON.deserialize(resp)
+            expect(err).to.be.not.exists()
+            expect(resp).to.be.an.object()
+            expect(resp._id).to.be.instanceof(plugin.mongodb.ObjectID)
+            expect(resp.date).to.be.a.date()
+            done()
+          }
+        )
+      }
+    )
   })
 })

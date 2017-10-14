@@ -2,23 +2,23 @@
 
 const HemeraPlugin = require('./../../packages/hemera-plugin')
 
-exports.plugin = HemeraPlugin(function myPlugin (options) {
-  var hemera = this
+exports.plugin = HemeraPlugin(function myPlugin(hemera, opts, done) {
+  hemera.add(
+    {
+      topic: 'math',
+      cmd: 'add'
+    },
+    (req, cb) => {
+      cb(null, req.a + req.b)
+    }
+  )
 
-  hemera.expose('somethingToExpose', 4)
-
-  hemera.add({
-    topic: 'math',
-    cmd: 'add'
-  }, (req, cb) => {
-    cb(null, req.a + req.b)
-  })
+  done()
 })
 
-exports.options = {}
-
-exports.attributes = {
-  pkg: require('./package.json')
+exports.options = {
+  name: require('./package.json').name
+  //.. options
 }
 
 /**
@@ -30,9 +30,9 @@ exports.attributes = {
 
   const hemera = new Hemera(nats, { logLevel: 'info', childLogger: true })
   const plugin = require('./plugin-as-file')
-  hemera.use(plugin, { ...plugin options })
+  hemera.use(plugin)
 
-  hemera.ready(() => {
+  hemera.ready(err => {
 
   })
 

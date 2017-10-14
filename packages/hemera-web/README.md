@@ -8,7 +8,7 @@ Http route mapping for Hemera microservices. Based on [Express 4](https://github
 - Returns correct Hemera errors without stack traces
 
 [![npm](https://img.shields.io/npm/v/hemera-web.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-web)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
+[![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
 #### Example
 
@@ -139,7 +139,7 @@ hemera.use(hemeraWeb, {
   host: '127.0.0.1'
 })
 hemera.ready(() => {
-  const app = hemera.exposition['hemera-web'].express
+  const app = hemera.express
   // Define Auth layer ... use it as always
   app.use(passport.session())
 })

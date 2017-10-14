@@ -10,7 +10,7 @@ const Arangojs = require('arangojs')
 
 const expect = Code.expect
 
-describe('Hemera-arango-store', function () {
+describe('Hemera-arango-store', function() {
   let PORT = 6242
   var flags = ['--user', 'derek', '--pass', 'foobar']
   var authUrl = 'nats://derek:foobar@localhost:' + PORT
@@ -25,51 +25,55 @@ describe('Hemera-arango-store', function () {
   let testDatabase = 'test'
   let testCollection = 'testColl'
 
-  function clearArangodb () {
+  function clearArangodb() {
     arangodb.useDatabase('_system')
 
-    return arangodb.listUserDatabases()
-      .then(names => {
-        return Promise.all(names.filter(f => f.indexOf('system') < 0)
-          .map(x => arangodb.dropDatabase(x)))
-      })
+    return arangodb.listUserDatabases().then(names => {
+      return Promise.all(
+        names
+          .filter(f => f.indexOf('system') < 0)
+          .map(x => arangodb.dropDatabase(x))
+      )
+    })
   }
 
-  function bootstrapArangodb () {
-    return arangodb.createDatabase(testDatabase)
-      .then(() => {
-        arangodb.useDatabase(testDatabase)
-        return arangodb.collection(testCollection).create()
-      })
+  function bootstrapArangodb() {
+    return arangodb.createDatabase(testDatabase).then(() => {
+      arangodb.useDatabase(testDatabase)
+      return arangodb.collection(testCollection).create()
+    })
   }
 
-  before(function (done) {
+  before(function(done) {
     arangodb = Arangojs(arangoOptions)
-    HemeraArangoStore.options.arango = {
-      driver: arangodb,
-      url: arangoOptions.url
-    }
 
     // clear and bootstrap db
-    clearArangodb().then(bootstrapArangodb).then(() => {
-      server = HemeraTestsuite.start_server(PORT, flags, () => {
-        const nats = Nats.connect(authUrl)
-        hemera = new Hemera(nats, {
-          crashOnFatal: false,
-          logLevel: 'silent'
-        })
-        hemera.use(HemeraJoi)
-        hemera.use(HemeraArangoStore)
-        hemera.ready(function () {
-          aql = hemera.exposition['hemera-arango-store'].aqlTemplate
-          done()
+    clearArangodb()
+      .then(bootstrapArangodb)
+      .then(() => {
+        server = HemeraTestsuite.start_server(PORT, flags, () => {
+          const nats = Nats.connect(authUrl)
+          hemera = new Hemera(nats, {
+            crashOnFatal: false,
+            logLevel: 'silent'
+          })
+          hemera.use(HemeraJoi)
+          hemera.use(HemeraArangoStore, {
+            arango: {
+              url: arangoOptions.url,
+              databaseName: testDatabase
+            }
+          })
+          hemera.ready(function() {
+            aql = hemera.aqlTemplate
+            done()
+          })
         })
       })
-    })
-    .catch(done)
+      .catch(done)
   })
 
-  after(function () {
+  after(function() {
     // clear arangodb and kill gnats and hemera
     return clearArangodb().then(() => {
       hemera.close()
@@ -77,385 +81,454 @@ describe('Hemera-arango-store', function () {
     })
   })
 
-  it('Create database', function (done) {
+  it('Create database', function(done) {
     const testDb = 'testdb'
 
-    hemera.act({
-      topic: 'arango-store',
-      cmd: 'createDatabase',
-      name: testDb
-    }, (err, resp) => {
-      expect(err).to.be.not.exists()
-      expect(resp).to.be.an.object()
-      expect(resp.result).to.be.equals(true)
+    hemera.act(
+      {
+        topic: 'arango-store',
+        cmd: 'createDatabase',
+        name: testDb
+      },
+      (err, resp) => {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.an.object()
+        expect(resp.result).to.be.equals(true)
 
-      done()
-    })
+        done()
+      }
+    )
   })
 
-  it('Create edge collection', function (done) {
+  it('Create edge collection', function(done) {
     const testCollection = 'payments'
 
-    hemera.act({
-      topic: 'arango-store',
-      cmd: 'createCollection',
-      type: 'edge',
-      name: testCollection,
-      databaseName: testDatabase
-    }, (err, resp) => {
-      expect(err).to.be.not.exists()
-      expect(resp).to.be.an.object()
-      expect(resp.name).to.be.equals(testCollection)
+    hemera.act(
+      {
+        topic: 'arango-store',
+        cmd: 'createCollection',
+        type: 'edge',
+        name: testCollection,
+        databaseName: testDatabase
+      },
+      (err, resp) => {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.an.object()
+        expect(resp.name).to.be.equals(testCollection)
 
-      done()
-    })
+        done()
+      }
+    )
   })
 
-  it('Create collection', function (done) {
+  it('Create collection', function(done) {
     const testCollection = 'users'
 
-    hemera.act({
-      topic: 'arango-store',
-      cmd: 'createCollection',
-      name: testCollection,
-      databaseName: testDatabase
-    }, (err, resp) => {
-      expect(err).to.be.not.exists()
-      expect(resp).to.be.an.object()
-      expect(resp.name).to.be.equals(testCollection)
+    hemera.act(
+      {
+        topic: 'arango-store',
+        cmd: 'createCollection',
+        name: testCollection,
+        databaseName: testDatabase
+      },
+      (err, resp) => {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.an.object()
+        expect(resp.name).to.be.equals(testCollection)
 
-      done()
-    })
+        done()
+      }
+    )
   })
 
-  it('Execute AQL Query with one result', function (done) {
+  it('Execute AQL Query with one result', function(done) {
     const user = {
       name: 'olaf'
     }
 
-    hemera.act({
-      topic: 'arango-store',
-      cmd: 'executeAqlQuery',
-      type: 'one',
-      databaseName: testDatabase,
-      query: aql`INSERT ${user} INTO testColl return NEW`
-    }, function (err, resp) {
-      expect(err).to.be.not.exists()
-      expect(resp).to.be.an.object()
+    hemera.act(
+      {
+        topic: 'arango-store',
+        cmd: 'executeAqlQuery',
+        type: 'one',
+        databaseName: testDatabase,
+        query: aql`INSERT ${user} INTO testColl return NEW`
+      },
+      function(err, resp) {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.an.object()
 
-      done()
-    })
+        done()
+      }
+    )
   })
 
-  it('Execute AQL Query with multiple returns', function (done) {
-    hemera.act({
-      topic: 'arango-store',
-      cmd: 'executeAqlQuery',
-      type: 'all',
-      databaseName: testDatabase,
-      query: `
+  it('Execute AQL Query with multiple returns', function(done) {
+    hemera.act(
+      {
+        topic: 'arango-store',
+        cmd: 'executeAqlQuery',
+        type: 'all',
+        databaseName: testDatabase,
+        query: `
             FOR u IN testColl
             RETURN u
             `
-    }, function (err, resp) {
-      expect(err).to.be.not.exists()
-      expect(resp).to.be.an.array()
+      },
+      function(err, resp) {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.an.array()
 
-      done()
-    })
+        done()
+      }
+    )
   })
 
-  it('Execute Transaction', function (done) {
-    var action = String(function () {
+  it('Execute Transaction', function(done) {
+    var action = String(function() {
       return true
     })
 
-    hemera.act({
-      topic: 'arango-store',
-      cmd: 'executeTransaction',
-      databaseName: testDatabase,
-      action,
-      params: {
-        age: 12
-      },
-      collections: {
-        read: 'users'
-      }
-    }, function (err, resp) {
-      expect(err).to.be.not.exists()
-
-      expect(resp).to.be.equals(true)
-
-      done()
-    })
-  })
-
-  it('create', function (done) {
-    hemera.act({
-      topic: 'arango-store',
-      cmd: 'create',
-      collection: testCollection,
-      databaseName: testDatabase,
-      data: {
-        name: 'peter'
-      }
-    }, function (err, resp) {
-      expect(err).to.be.not.exists()
-      expect(resp).to.be.an.object()
-      expect(resp._id).to.be.a.string()
-
-      done()
-    })
-  })
-
-  it('update', function (done) {
-    hemera.act({
-      topic: 'arango-store',
-      cmd: 'create',
-      collection: testCollection,
-      databaseName: testDatabase,
-      data: {
-        name: 'peter'
-      }
-    }, function (err, resp) {
-      expect(err).to.be.not.exists()
-      expect(resp).to.be.an.object()
-      expect(resp._id).to.be.a.string()
-
-      hemera.act({
+    hemera.act(
+      {
         topic: 'arango-store',
-        cmd: 'update',
+        cmd: 'executeTransaction',
+        databaseName: testDatabase,
+        action,
+        params: {
+          age: 12
+        },
+        collections: {
+          read: 'users'
+        }
+      },
+      function(err, resp) {
+        expect(err).to.be.not.exists()
+
+        expect(resp).to.be.equals(true)
+
+        done()
+      }
+    )
+  })
+
+  it('create', function(done) {
+    hemera.act(
+      {
+        topic: 'arango-store',
+        cmd: 'create',
         collection: testCollection,
         databaseName: testDatabase,
         data: {
-          name: 'klaus'
-        },
-        query: {
           name: 'peter'
         }
-      }, function (err, resp) {
+      },
+      function(err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.an.object()
+        expect(resp._id).to.be.a.string()
 
         done()
-      })
-    })
+      }
+    )
   })
 
-  it('updatebyId', function (done) {
-    hemera.act({
-      topic: 'arango-store',
-      cmd: 'create',
-      collection: testCollection,
-      databaseName: testDatabase,
-      data: {
-        name: 'peter'
-      }
-    }, function (err, resp) {
-      expect(err).to.be.not.exists()
-      expect(resp).to.be.an.object()
-      expect(resp._id).to.be.a.string()
-
-      hemera.act({
+  it('update', function(done) {
+    hemera.act(
+      {
         topic: 'arango-store',
-        cmd: 'updateById',
+        cmd: 'create',
         collection: testCollection,
         databaseName: testDatabase,
         data: {
-          name: 'klaus'
-        },
-        id: resp._id
-      }, function (err, resp) {
+          name: 'peter'
+        }
+      },
+      function(err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.an.object()
+        expect(resp._id).to.be.a.string()
 
-        done()
-      })
-    })
+        hemera.act(
+          {
+            topic: 'arango-store',
+            cmd: 'update',
+            collection: testCollection,
+            databaseName: testDatabase,
+            data: {
+              name: 'klaus'
+            },
+            query: {
+              name: 'peter'
+            }
+          },
+          function(err, resp) {
+            expect(err).to.be.not.exists()
+            expect(resp).to.be.an.object()
+
+            done()
+          }
+        )
+      }
+    )
   })
 
-  it('remove', function (done) {
-    hemera.act({
-      topic: 'arango-store',
-      cmd: 'create',
-      collection: testCollection,
-      databaseName: testDatabase,
-      data: {
-        name: 'olaf'
-      }
-    }, function (err, resp) {
-      expect(err).to.be.not.exists()
-      expect(resp).to.be.an.object()
-      expect(resp._id).to.be.a.string()
-
-      hemera.act({
+  it('updatebyId', function(done) {
+    hemera.act(
+      {
         topic: 'arango-store',
-        cmd: 'remove',
+        cmd: 'create',
         collection: testCollection,
         databaseName: testDatabase,
-        query: {
+        data: {
+          name: 'peter'
+        }
+      },
+      function(err, resp) {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.an.object()
+        expect(resp._id).to.be.a.string()
+
+        hemera.act(
+          {
+            topic: 'arango-store',
+            cmd: 'updateById',
+            collection: testCollection,
+            databaseName: testDatabase,
+            data: {
+              name: 'klaus'
+            },
+            id: resp._id
+          },
+          function(err, resp) {
+            expect(err).to.be.not.exists()
+            expect(resp).to.be.an.object()
+
+            done()
+          }
+        )
+      }
+    )
+  })
+
+  it('remove', function(done) {
+    hemera.act(
+      {
+        topic: 'arango-store',
+        cmd: 'create',
+        collection: testCollection,
+        databaseName: testDatabase,
+        data: {
           name: 'olaf'
         }
-      }, function (err, resp) {
+      },
+      function(err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.an.object()
-        expect(resp.deleted).to.be.an.equals(2)
+        expect(resp._id).to.be.a.string()
 
-        done()
-      })
-    })
+        hemera.act(
+          {
+            topic: 'arango-store',
+            cmd: 'remove',
+            collection: testCollection,
+            databaseName: testDatabase,
+            query: {
+              name: 'olaf'
+            }
+          },
+          function(err, resp) {
+            expect(err).to.be.not.exists()
+            expect(resp).to.be.an.object()
+            expect(resp.deleted).to.be.an.equals(2)
+
+            done()
+          }
+        )
+      }
+    )
   })
 
-  it('removeById', function (done) {
-    hemera.act({
-      topic: 'arango-store',
-      cmd: 'create',
-      collection: testCollection,
-      databaseName: testDatabase,
-      data: {
-        name: 'olaf'
-      }
-    }, function (err, resp) {
-      expect(err).to.be.not.exists()
-      expect(resp).to.be.an.object()
-      expect(resp._id).to.be.a.string()
-
-      hemera.act({
+  it('removeById', function(done) {
+    hemera.act(
+      {
         topic: 'arango-store',
-        cmd: 'removeById',
-        collection: testCollection,
-        databaseName: testDatabase,
-        id: resp._id
-      }, function (err, resp) {
-        expect(err).to.be.not.exists()
-        expect(resp).to.be.an.object()
-        expect(resp.deleted).to.be.an.equals(1)
-
-        done()
-      })
-    })
-  })
-
-  it('findById', function (done) {
-    hemera.act({
-      topic: 'arango-store',
-      cmd: 'create',
-      collection: testCollection,
-      databaseName: testDatabase,
-      data: {
-        name: 'jens'
-      }
-    }, function (err, resp) {
-      expect(err).to.be.not.exists()
-      expect(resp).to.be.an.object()
-      expect(resp._id).to.be.a.string()
-
-      hemera.act({
-        topic: 'arango-store',
-        cmd: 'findById',
-        collection: testCollection,
-        databaseName: testDatabase,
-        id: resp._id
-      }, function (err, resp) {
-        expect(err).to.be.not.exists()
-        expect(resp).to.be.an.object()
-
-        done()
-      })
-    })
-  })
-
-  it('find', function (done) {
-    hemera.act({
-      topic: 'arango-store',
-      cmd: 'create',
-      collection: testCollection,
-      databaseName: testDatabase,
-      data: {
-        name: 'jens'
-      }
-    }, function (err, resp) {
-      expect(err).to.be.not.exists()
-      expect(resp).to.be.an.object()
-      expect(resp._id).to.be.a.string()
-
-      hemera.act({
-        topic: 'arango-store',
-        cmd: 'find',
-        collection: testCollection,
-        databaseName: testDatabase,
-        query: {}
-      }, function (err, resp) {
-        expect(err).to.be.not.exists()
-        expect(resp).to.be.an.array()
-        done()
-      })
-    })
-  })
-
-  it('replace', function (done) {
-    hemera.act({
-      topic: 'arango-store',
-      cmd: 'create',
-      collection: testCollection,
-      databaseName: testDatabase,
-      data: {
-        name: 'nadine'
-      }
-    }, function (err, resp) {
-      expect(err).to.be.not.exists()
-      expect(resp).to.be.an.object()
-      expect(resp._id).to.be.a.string()
-
-      hemera.act({
-        topic: 'arango-store',
-        cmd: 'replace',
+        cmd: 'create',
         collection: testCollection,
         databaseName: testDatabase,
         data: {
-          name: 'chris'
-        },
-        query: {
-          name: 'nadine'
+          name: 'olaf'
         }
-      }, function (err, resp) {
+      },
+      function(err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.an.object()
+        expect(resp._id).to.be.a.string()
 
-        done()
-      })
-    })
+        hemera.act(
+          {
+            topic: 'arango-store',
+            cmd: 'removeById',
+            collection: testCollection,
+            databaseName: testDatabase,
+            id: resp._id
+          },
+          function(err, resp) {
+            expect(err).to.be.not.exists()
+            expect(resp).to.be.an.object()
+            expect(resp.deleted).to.be.an.equals(1)
+
+            done()
+          }
+        )
+      }
+    )
   })
 
-  it('replaceById', function (done) {
-    hemera.act({
-      topic: 'arango-store',
-      cmd: 'create',
-      collection: testCollection,
-      databaseName: testDatabase,
-      data: {
-        name: 'nadja'
-      }
-    }, function (err, resp) {
-      expect(err).to.be.not.exists()
-      expect(resp).to.be.an.object()
-      expect(resp._id).to.be.a.string()
-
-      hemera.act({
+  it('findById', function(done) {
+    hemera.act(
+      {
         topic: 'arango-store',
-        cmd: 'replaceById',
+        cmd: 'create',
+        collection: testCollection,
+        databaseName: testDatabase,
+        data: {
+          name: 'jens'
+        }
+      },
+      function(err, resp) {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.an.object()
+        expect(resp._id).to.be.a.string()
+
+        hemera.act(
+          {
+            topic: 'arango-store',
+            cmd: 'findById',
+            collection: testCollection,
+            databaseName: testDatabase,
+            id: resp._id
+          },
+          function(err, resp) {
+            expect(err).to.be.not.exists()
+            expect(resp).to.be.an.object()
+
+            done()
+          }
+        )
+      }
+    )
+  })
+
+  it('find', function(done) {
+    hemera.act(
+      {
+        topic: 'arango-store',
+        cmd: 'create',
+        collection: testCollection,
+        databaseName: testDatabase,
+        data: {
+          name: 'jens'
+        }
+      },
+      function(err, resp) {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.an.object()
+        expect(resp._id).to.be.a.string()
+
+        hemera.act(
+          {
+            topic: 'arango-store',
+            cmd: 'find',
+            collection: testCollection,
+            databaseName: testDatabase,
+            query: {}
+          },
+          function(err, resp) {
+            expect(err).to.be.not.exists()
+            expect(resp).to.be.an.array()
+            done()
+          }
+        )
+      }
+    )
+  })
+
+  it('replace', function(done) {
+    hemera.act(
+      {
+        topic: 'arango-store',
+        cmd: 'create',
+        collection: testCollection,
+        databaseName: testDatabase,
+        data: {
+          name: 'nadine'
+        }
+      },
+      function(err, resp) {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.an.object()
+        expect(resp._id).to.be.a.string()
+
+        hemera.act(
+          {
+            topic: 'arango-store',
+            cmd: 'replace',
+            collection: testCollection,
+            databaseName: testDatabase,
+            data: {
+              name: 'chris'
+            },
+            query: {
+              name: 'nadine'
+            }
+          },
+          function(err, resp) {
+            expect(err).to.be.not.exists()
+            expect(resp).to.be.an.object()
+
+            done()
+          }
+        )
+      }
+    )
+  })
+
+  it('replaceById', function(done) {
+    hemera.act(
+      {
+        topic: 'arango-store',
+        cmd: 'create',
         collection: testCollection,
         databaseName: testDatabase,
         data: {
           name: 'nadja'
-        },
-        id: resp._id
-      }, function (err, resp) {
+        }
+      },
+      function(err, resp) {
         expect(err).to.be.not.exists()
         expect(resp).to.be.an.object()
+        expect(resp._id).to.be.a.string()
 
-        done()
-      })
-    })
+        hemera.act(
+          {
+            topic: 'arango-store',
+            cmd: 'replaceById',
+            collection: testCollection,
+            databaseName: testDatabase,
+            data: {
+              name: 'nadja'
+            },
+            id: resp._id
+          },
+          function(err, resp) {
+            expect(err).to.be.not.exists()
+            expect(resp).to.be.an.object()
+
+            done()
+          }
+        )
+      }
+    )
   })
 })
