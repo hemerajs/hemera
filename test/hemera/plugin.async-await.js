@@ -1,21 +1,21 @@
 'use strict'
 
-describe('Async await Plugin interface', function() {
+describe('Async await Plugin interface', function () {
   var PORT = 6242
   var authUrl = 'nats://localhost:' + PORT
   var server
 
   // Start up our own nats-server
-  before(function(done) {
+  before(function (done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
   // Shutdown our server after we are done
-  after(function() {
+  after(function () {
     server.kill()
   })
 
-  it('Should be able to use a plugin', function(done) {
+  it('Should be able to use a plugin', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -66,7 +66,48 @@ describe('Async await Plugin interface', function() {
     })
   })
 
-  it('Should be able to register an array of plugins', function(done) {
+  it('Should able to run async await callback function', function (done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    // Plugin
+    function plugin(hemera, options) {
+      hemera.add({
+        topic: 'math',
+        cmd: 'add',
+      }, async (req) => {
+        const result = await Promise.resolve({
+          result: req.a + req.b,
+        });
+        return result;
+      });
+    }
+
+    hemera.use({
+      plugin: plugin,
+      options: {
+        name: 'myPlugin',
+      }
+    })
+    hemera.ready(async () => {
+
+      try {
+        const resp = await hemera.act({
+          topic,
+          cmd: 'add',
+          a: 1,
+          b: 20,
+        });
+        expect(resp.result).toEqual(21);
+        hemera.close(done);
+      } catch (err) {
+        hemera.close(done.fail);
+      }
+    });
+  })
+
+  it('Should be able to register an array of plugins', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
