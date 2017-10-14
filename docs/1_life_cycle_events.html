@@ -132,7 +132,8 @@
                     <br>
                     <pre>
 <code class="javascript">
-hemera.on("clientPreRequest", function (hemera) {
+hemera.on("clientPreRequest", function () {
+  const hemera = this
 })
 </code>
                     </pre>
