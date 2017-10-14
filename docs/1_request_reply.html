@@ -187,6 +187,23 @@ hemera.add({
 })
 </code>
                     </pre>
+                    <h4 class="section-h4">Async / Await</h4>
+                    <p>You can also pass an async function.</p>
+                    <pre>
+<code class="javascript">
+const result = await hemera.add({
+  topic: "math",
+  cmd: "add",
+}, async function (req) {
+  return await req.a + req.b
+})
+
+const result = await hemera.add({
+  topic: "math",
+  cmd: "add",
+})
+</code>
+                    </pre>
                 </div>
                 <!-- END CONTENT -->
 

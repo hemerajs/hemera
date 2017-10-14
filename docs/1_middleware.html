@@ -301,10 +301,10 @@ hemera.add({
   topic: "test",
   cmd: "add"
 }).use(async function(req, reply) {
-  return await Promise.resolve()
+  return await true
 })
-.end(function(req, cb) {
-  cb(null, true)
+.end(async function(req) {
+  return await true
 })
 </code>
                     </pre>

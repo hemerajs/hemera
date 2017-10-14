@@ -177,6 +177,27 @@ hemera.add({
 }, function (req, cb) {
   cb(null, req.a + req.b)
 })
+</code>
+                    </pre>
+                    <h4 class="section-h4">Async / Await</h4>
+                    <p>You can also pass an async function.</p>
+                    <pre>
+<code class="javascript">
+const result = await hemera.add({
+  pubsub$: true,
+  topic: "math",
+  cmd: "add"
+}, async function () {
+  return await req.a + req.b
+})
+
+const result = await hemera.add({
+  pubsub$: true,
+  topic: "math",
+  cmd: "add"
+})
+</code>
+                    </pre>
                 </div>
                 <!-- END CONTENT -->
 
