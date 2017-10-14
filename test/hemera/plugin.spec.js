@@ -527,6 +527,47 @@ describe('Plugin interface', function() {
     })
   })
 
+  it('Should be able to access the decorated prototype propertys inside nested plugins', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    const spy = Sinon.spy()
+
+    let plugin = function(hemera, options, next) {
+      hemera.decorate('test', 1)
+
+      let plugin2 = function(hemera, options, next) {
+        spy()
+        expect(hemera.test).to.be.equals(1)
+        next()
+      }
+
+      hemera.use({
+        plugin: plugin2,
+        options: {
+          name: 'myPlugin2'
+        }
+      })
+
+      next()
+    }
+
+    hemera.use({
+      plugin: plugin,
+      options: {
+        name: 'myPlugin'
+      }
+    })
+
+    hemera.ready(err => {
+      expect(err).to.not.exists()
+      expect(spy.calledOnce).to.be.equals(true)
+      expect(hemera.test).to.be.equals(1)
+      expect(hemera.plugins.myPlugin.test).to.be.equals(1)
+      hemera.close(done)
+    })
+  })
+
   it('Should thrown plugin error during initialization', function(done) {
     const nats = require('nats').connect(authUrl)
 
