@@ -21,7 +21,7 @@ function hemeraNsq(hemera, opts, done) {
     const readerKey = `${subject}.${channel}`
     // only one reader per topic channel combination
     if (readers.has(readerKey)) {
-      return reply(null)
+      return reply()
     }
 
     // if not exist, create Reader instance
@@ -31,7 +31,7 @@ function hemeraNsq(hemera, opts, done) {
 
     reader.on(Nsq.Reader.NSQD_CONNECTED, (host, port) => {
       hemera.log.info('NSQ Reader connected to %s:%s', host, port)
-      reply(null)
+      reply()
     })
 
     reader.on(Nsq.Reader.DISCARD, msg => {
@@ -102,7 +102,7 @@ function hemeraNsq(hemera, opts, done) {
             return reply(err)
           }
 
-          reply(null)
+          reply()
         })
       }
     )
