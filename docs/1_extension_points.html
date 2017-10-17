@@ -130,13 +130,13 @@
           <br>
           <pre>
 <code class="javascript">
-hemera.ext("onClientPreRequest", function(ctx, next) {
+hemera.ext("onClientPreRequest", function(hemera, next) {
    next()
 })
 </code>
                     </pre>
           <ul>
-            <li><code>i</code> s the index of the handler.</li>
+            <code>hemera</code> current hemera instance</li>
           </ul>
           <br>
           <h4 class="section-h4">Server</h4>
@@ -149,7 +149,7 @@ hemera.ext("onClientPreRequest", function(ctx, next) {
           <br>
           <pre>
 <code class="javascript">
-hemera.ext("onServerPreHandler", function(ctx, req, res, next) {
+hemera.ext("onServerPreHandler", function(hemera, req, reply, next) {
    next()
 })
 </code>
@@ -157,20 +157,20 @@ hemera.ext("onServerPreHandler", function(ctx, req, res, next) {
           <br>
           <ul>
             <li>
-              <code>next()</code> will call the next extension handler on the stack.</li>
+              <code>next()</code> will call the next extension handler on the stack. If you pass an error the extension lifecycle is aborted.</li>
             <li>
-              <code>res.send(&lt;error&gt; or &lt;payload&gt;)</code> will end the request-response cycle and send the data
-              back to the callee but <strong>other</strong> extensions will be called.</li>
+              <code>hemera</code> current hemera instance</li>
             <li>
-              <code>res.end(&lt;error&gt; or &lt;payload&gt;)</code> will end the request-response cycle and send the data
-              back to the callee but <strong>no</strong> other extensions will be called.</li>
+              <code>req</code> contains the current request.
+            </li>
             <li>
-              <code>ctx</code> current hemera instance</li>
-            <li>
-              <code>req</code> contains the current request. Its an object with two properties <code>payload</code> and <code>error</code> because decoding issues. Payload and error object can be manipulated.</li>
-            <li>
-              <code>res</code> contains the current reply interface. Its an object with two properties <code>payload</code> and
-              <code>error</code>. Payload and error object can be manipulated.</li>
+              <code>reply</code> contains the current reply interface.
+              <ul>
+                  <li><code>send()</code></li>
+                  <li><code>payload</code></li>
+                  <li><code>error</code></li>
+                </ul>
+            </li>
           </ul>
 
         </div>

@@ -14,16 +14,19 @@ let defaultConfig = {
   sampling: 0.1
 }
 
-exports.plugin = Hp(function hemeraZipkin (options) {
-  var hemera = this
+exports.plugin = Hp(hemeraZipkin, '>=2.0.0')
+exports.options = {
+  name: require('./package.json').name
+}
 
-  const config = Hoek.applyToDefaults(defaultConfig, options || {})
+function hemeraZipkin(hemera, opts, done) {
+  const config = Hoek.applyToDefaults(defaultConfig, opts || {})
   const Tracer = new Zipkin(config)
 
   /**
    * Server send
    */
-  hemera.on('serverPreResponse', function (ctx) {
+  hemera.on('serverPreResponse', function(ctx) {
     let meta = {
       service: ctx._topic,
       name: ctx.trace$.method
@@ -36,14 +39,21 @@ exports.plugin = Hp(function hemeraZipkin (options) {
     Tracer.addBinary(meta, ctx.delegate$)
     Tracer.addBinary(meta, {
       'server.topic': ctx._topic,
-      'server.maxMessages': ctx._actMeta ? ctx._actMeta.pattern.maxMessages$ || 0 : 0,
-      'server.pubsub': ctx._actMeta ? ctx._actMeta.pattern.pubsub$ || false : false
+      'server.maxMessages': ctx._actMeta
+        ? ctx._actMeta.pattern.maxMessages$ || 0
+        : 0,
+      'server.pubsub': ctx._actMeta
+        ? ctx._actMeta.pattern.pubsub$ || false
+        : false
     })
 
-    hemera.log.debug({
-      traceData: ctx._zkTrace,
-      meta: meta
-    }, 'sendServerSend')
+    hemera.log.debug(
+      {
+        traceData: ctx._zkTrace,
+        meta: meta
+      },
+      'sendServerSend'
+    )
 
     Tracer.sendServerSend(ctx._zkTrace, meta)
   })
@@ -51,7 +61,7 @@ exports.plugin = Hp(function hemeraZipkin (options) {
   /**
    * Server received
    */
-  hemera.on('serverPreRequest', function (ctx) {
+  hemera.on('serverPreRequest', function(ctx) {
     let meta = {
       service: ctx._topic,
       name: ctx.trace$.method
@@ -65,8 +75,12 @@ exports.plugin = Hp(function hemeraZipkin (options) {
 
     Tracer.addBinary(meta, {
       'server.topic': ctx._topic,
-      'server.maxMessages': ctx._actMeta ? ctx._actMeta.pattern.maxMessages$ || 0 : 0,
-      'server.pubsub': ctx._actMeta ? ctx._actMeta.pattern.pubsub$ || false : false
+      'server.maxMessages': ctx._actMeta
+        ? ctx._actMeta.pattern.maxMessages$ || 0
+        : 0,
+      'server.pubsub': ctx._actMeta
+        ? ctx._actMeta.pattern.pubsub$ || false
+        : false
     })
 
     let traceData = {
@@ -77,10 +91,13 @@ exports.plugin = Hp(function hemeraZipkin (options) {
       sampled: ctx.trace$.sampled
     }
 
-    hemera.log.debug({
-      traceData: traceData,
-      meta: meta
-    }, 'sendServerRecv')
+    hemera.log.debug(
+      {
+        traceData: traceData,
+        meta: meta
+      },
+      'sendServerRecv'
+    )
 
     ctx._zkTrace = Tracer.sendServerRecv(traceData, meta)
   })
@@ -88,17 +105,9 @@ exports.plugin = Hp(function hemeraZipkin (options) {
   /**
    * Client send
    */
-  hemera.on('clientPreRequest', function (ctx) {
+  hemera.on('clientPreRequest', function(ctx) {
     let meta = {
       name: ctx.trace$.method
-    }
-
-    if (ctx._prevContext._isServer === true) {
-      meta.service = ctx._prevContext._topic
-    } else if (ctx._prevContext._isServer === false) {
-      meta.service = ctx._prevContext._pattern.topic
-    } else {
-      meta.service = ctx.config.tag // when act is on root level
     }
 
     if (config.subscriptionBased === false) {
@@ -123,10 +132,13 @@ exports.plugin = Hp(function hemeraZipkin (options) {
       sampled: ctx.trace$.sampled
     }
 
-    hemera.log.debug({
-      traceData: traceData,
-      meta: meta
-    }, 'sendClientSend')
+    hemera.log.debug(
+      {
+        traceData: traceData,
+        meta: meta
+      },
+      'sendClientSend'
+    )
 
     ctx._zkTrace = Tracer.sendClientSend(traceData, meta)
   })
@@ -134,17 +146,9 @@ exports.plugin = Hp(function hemeraZipkin (options) {
   /**
    * Client received
    */
-  hemera.on('clientPostRequest', function (ctx) {
+  hemera.on('clientPostRequest', function(ctx) {
     let meta = {
       name: ctx.trace$.method
-    }
-
-    if (ctx._prevContext._isServer === true) {
-      meta.service = ctx._prevContext._topic
-    } else if (ctx._prevContext._isServer === false) {
-      meta.service = ctx._prevContext._pattern.topic
-    } else {
-      meta.service = ctx.config.tag // when act is on root level
     }
 
     if (config.subscriptionBased === false) {
@@ -152,25 +156,17 @@ exports.plugin = Hp(function hemeraZipkin (options) {
     }
 
     Tracer.addBinary(meta, ctx.delegate$)
-    Tracer.addBinary(meta, {
-      'rpc.topic': ctx.trace$.service,
-      'rpc.method': ctx.trace$.method,
-      'rpc.timeout': ctx._pattern.timeout$ || ctx.config.timeout,
-      'rpc.maxMessages': ctx._pattern.maxMessages$ || 0,
-      'rpc.pubsub': ctx._pattern.pubsub$ || false
-    })
 
-    hemera.log.debug({
-      traceData: ctx._zkTrace,
-      meta: meta
-    }, 'sendClientRecv')
+    hemera.log.debug(
+      {
+        traceData: ctx._zkTrace,
+        meta: meta
+      },
+      'sendClientRecv'
+    )
 
     Tracer.sendClientRecv(ctx._zkTrace, meta)
   })
-}, '>=1.5.0')
 
-exports.options = {}
-
-exports.attributes = {
-  pkg: require('./package.json')
+  done()
 }

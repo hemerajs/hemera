@@ -6,13 +6,17 @@ const avroType = require('./avro')
 const SafeStringify = require('nats-hemera/lib/encoder').encode
 const SafeParse = require('nats-hemera/lib/decoder').decode
 
-exports.plugin = Hp(function hemeraAvro () {
-  const hemera = this
+exports.plugin = Hp(hemeraAvro, '>=2.0.0')
+exports.options = {
+  name: require('./package.json').name
+}
+
+function hemeraAvro(hemera, opts, done) {
   const type = Avro.parse(avroType)
 
-  hemera.expose('avro', Avro)
+  hemera.decorate('avro', Avro)
 
-  hemera.ext('onClientPreRequest', function (ctx, next) {
+  hemera.ext('onClientPreRequest', function(ctx, next) {
     // mark that request as "avro encoded" so we can easily determine how to decode the response
     if (ctx._pattern.avro$) {
       ctx.meta$.avro = true
@@ -21,7 +25,7 @@ exports.plugin = Hp(function hemeraAvro () {
     next()
   })
 
-  function decode (msg) {
+  function decode(msg) {
     try {
       let m = type.fromBuffer(msg)
 
@@ -62,7 +66,7 @@ exports.plugin = Hp(function hemeraAvro () {
     }
   }
 
-  function encode (msg) {
+  function encode(msg) {
     try {
       // server request encoding
       if (this._isServer) {
@@ -104,10 +108,6 @@ exports.plugin = Hp(function hemeraAvro () {
   // Will replace default encoder/decoder
   hemera.decoder.reset(decode)
   hemera.encoder.reset(encode)
-}, '>=1.5.0')
 
-exports.options = {}
-
-exports.attributes = {
-  pkg: require('./package.json')
+  done()
 }

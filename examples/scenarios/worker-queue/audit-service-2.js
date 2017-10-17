@@ -8,11 +8,14 @@ const hemera = new Hemera(nats, {
 })
 
 hemera.ready(() => {
-  hemera.add({
-    topic: 'payment.events',
-    cmd: 'created',
-    queue$: 'audit'
-  }, function (req) {
-    console.log('auditService-2')
-  })
+  hemera.add(
+    {
+      topic: 'payment.events',
+      cmd: 'created',
+      queue$: 'audit'
+    },
+    function(req) {
+      console.log('auditService-2')
+    }
+  )
 })

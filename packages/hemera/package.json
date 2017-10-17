@@ -1,7 +1,7 @@
 {
   "name": "nats-hemera",
   "author": "Dustin Deus (https://github.com/StarpTech)",
-  "version": "1.5.13",
+  "version": "2.2.0",
   "main": "lib/index.js",
   "homepage": "https://hemerajs.github.io/hemera/",
   "description": "The core package of hemera",
@@ -40,16 +40,19 @@
   },
   "license": "MIT",
   "dependencies": {
-    "bloomrun": "3.0.x",
-    "co": "4.6.x",
+    "avvio": "3.0.x",
+    "bloomrun": "4.0.x",
     "errio": "1.2.x",
     "fast-safe-stringify": "1.2.x",
+    "fastparallel": "2.3.x",
+    "fastseries": "1.7.x",
     "heavy": "4.0.x",
     "hoek": "4.2.x",
-    "joi": "10.6.x",
+    "joi": "11.1.x",
     "lodash": "4.17.x",
+    "p-defer": "1.0.x",
     "pino": "4.7.x",
-    "super-error": "2.0.x",
+    "super-error": "2.1.x",
     "tinysonic": "1.3.x"
   },
   "peerDependencies": {

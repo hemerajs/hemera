@@ -1,21 +1,21 @@
 'use strict'
 
-describe('Gracefully shutdown', function () {
+describe('Gracefully shutdown', function() {
   var PORT = 6242
   var authUrl = 'nats://localhost:' + PORT
   var server
 
   // Start up our own nats-server
-  before(function (done) {
+  before(function(done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
   // Shutdown our server after we are done
-  after(function () {
+  after(function() {
     server.kill()
   })
 
-  it('Should be able to unsubscribe active subscription', function (done) {
+  it('Should be able to unsubscribe active subscription', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -25,26 +25,32 @@ describe('Gracefully shutdown', function () {
     const callback = Sinon.spy()
 
     hemera.ready(() => {
-      hemera.add({
-        topic: 'math',
-        cmd: 'sub'
-      }, function (resp, cb) {
-        cb()
-      })
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'sub'
+        },
+        function(resp, cb) {
+          cb()
+        }
+      )
 
-      hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      }, function (resp, cb) {
-        cb()
-      })
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        function(resp, cb) {
+          cb()
+        }
+      )
 
       nats.on('unsubscribe', (sid, subject) => {
         expect(subject).to.be.equals('math')
         callback()
       })
 
-      hemera.close((err) => {
+      hemera.close(err => {
         expect(err).not.to.be.exists()
         expect(Object.keys(hemera.topics).length).to.be.equals(0)
         expect(callback.called).to.be.equals(true)
@@ -53,7 +59,9 @@ describe('Gracefully shutdown', function () {
     })
   })
 
-  it('Should be able to unsubscribe multiple active subscriptions', function (done) {
+  it('Should be able to unsubscribe multiple active subscriptions', function(
+    done
+  ) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -63,39 +71,51 @@ describe('Gracefully shutdown', function () {
     const callback = Sinon.spy()
 
     hemera.ready(() => {
-      hemera.add({
-        topic: 'math',
-        cmd: 'sub'
-      }, function (resp, cb) {
-        cb()
-      })
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'sub'
+        },
+        function(resp, cb) {
+          cb()
+        }
+      )
 
-      hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      }, function (resp, cb) {
-        cb()
-      })
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        function(resp, cb) {
+          cb()
+        }
+      )
 
-      hemera.add({
-        topic: 'user',
-        cmd: 'add'
-      }, function (resp, cb) {
-        cb()
-      })
+      hemera.add(
+        {
+          topic: 'user',
+          cmd: 'add'
+        },
+        function(resp, cb) {
+          cb()
+        }
+      )
 
-      hemera.add({
-        topic: 'order',
-        cmd: 'add'
-      }, function (resp, cb) {
-        cb()
-      })
+      hemera.add(
+        {
+          topic: 'order',
+          cmd: 'add'
+        },
+        function(resp, cb) {
+          cb()
+        }
+      )
 
       nats.on('unsubscribe', (sid, subject) => {
         callback()
       })
 
-      hemera.close((err) => {
+      hemera.close(err => {
         expect(err).not.to.be.exists()
         expect(Object.keys(hemera.topics).length).to.be.equals(0)
         expect(callback.callCount).to.be.equals(3)
@@ -104,7 +124,7 @@ describe('Gracefully shutdown', function () {
     })
   })
 
-  it('Should close the underlying nats connection', function (done) {
+  it('Should close the underlying nats connection', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -112,21 +132,27 @@ describe('Gracefully shutdown', function () {
     })
 
     hemera.ready(() => {
-      hemera.add({
-        topic: 'math',
-        cmd: 'sub'
-      }, function (resp, cb) {
-        cb()
-      })
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'sub'
+        },
+        function(resp, cb) {
+          cb()
+        }
+      )
 
-      hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      }, function (resp, cb) {
-        cb()
-      })
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        function(resp, cb) {
+          cb()
+        }
+      )
 
-      hemera.close((err) => {
+      hemera.close(err => {
         expect(err).not.to.be.exists()
         expect(nats.closed).to.be.equals(true)
         done()
@@ -134,7 +160,22 @@ describe('Gracefully shutdown', function () {
     })
   })
 
-  it('Should gracefully shutdown even when NATS connection is already closed', function (done) {
+  it('Should close without callback', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      logLevel: 'silent'
+    })
+
+    hemera.ready(() => {
+      hemera.close()
+      done()
+    })
+  })
+
+  it('Should gracefully shutdown even when NATS connection is already closed', function(
+    done
+  ) {
     const nats = require('nats').connect(authUrl)
 
     let callback = Sinon.spy()
@@ -144,27 +185,33 @@ describe('Gracefully shutdown', function () {
     })
 
     hemera.ready(() => {
-      hemera.ext('onClose', function (ctx, next) {
+      hemera.ext('onClose', function(ctx, next) {
         callback()
         next()
       })
-      hemera.add({
-        topic: 'math',
-        cmd: 'sub'
-      }, function (resp, cb) {
-        cb()
-      })
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'sub'
+        },
+        function(resp, cb) {
+          cb()
+        }
+      )
 
-      hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      }, function (resp, cb) {
-        cb()
-      })
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        function(resp, cb) {
+          cb()
+        }
+      )
 
       nats.close()
       expect(nats.closed).to.be.equals(true)
-      hemera.close((err) => {
+      hemera.close(err => {
         expect(err).not.to.be.exists()
         expect(callback.called).to.be.equals(true)
         done()
@@ -172,15 +219,13 @@ describe('Gracefully shutdown', function () {
     })
   })
 
-  it('Should call close callback even when we did no IO', function (done) {
+  it('Should call close callback even when we did no IO', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      logLevel: 'debug'
-    })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.close((err) => {
+      hemera.close(err => {
         expect(err).not.to.be.exists()
         expect(nats.closed).to.be.equals(true)
         done()
@@ -188,7 +233,7 @@ describe('Gracefully shutdown', function () {
     })
   })
 
-  it('Should be able to listen on error events before exit', function (done) {
+  it('Should be able to listen on error events before exit', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -198,14 +243,14 @@ describe('Gracefully shutdown', function () {
     let callback = Sinon.spy()
 
     hemera.ready(() => {
-      hemera.on('error', (err) => {
+      hemera.on('error', err => {
         expect(err.message).to.be.equals('test')
         callback()
       })
-      hemera.ext('onClose', function (ctx, next) {
+      hemera.ext('onClose', function(ctx, next) {
         next(new Error('test'))
       })
-      hemera.close((err) => {
+      hemera.close(err => {
         expect(err).to.be.exists()
         expect(nats.closed).to.be.equals(true)
         expect(callback.called).to.be.equals(true)

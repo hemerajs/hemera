@@ -11,10 +11,13 @@ hemera.ready(() => {
   /**
    * Your Implementations
    */
-  hemera.add({
-    topic: 'math',
-    cmd: 'add'
-  }, function (req, cb) {
-    cb(null, req.a + req.b)
-  })
+  hemera.add(
+    {
+      topic: 'math',
+      cmd: 'add'
+    },
+    function(req, cb) {
+      cb(null, req.a + req.b)
+    }
+  )
 })

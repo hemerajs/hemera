@@ -1,7 +1,27 @@
 Changelog
 =========
 
+**Further changelogs are tracked in Github releases**
+
 # 1.x
+
+### 1.6.3
+## Summary
+- Implement more robust graceful shutdown
+- Activate async / await tests in CI
+
+### 1.6.2
+## Summary
+- Remove `exit` event in graceful shutdown routine.
+
+### 1.6.1
+## Summary
+- Refactor graceful shutdown implementation [Commit](https://github.com/hemerajs/hemera/commit/396594d074809b9cf3c17229530550266990208e)
+- Fixed some lint issues [Commit](https://github.com/hemerajs/hemera/commit/396594d074809b9cf3c17229530550266990208e)
+
+### 1.6.0
+## Summary
+Update bloomrun to [4.0.0](https://github.com/mcollina/bloomrun/releases/tag/v4.0.0)
 
 ### 1.5.13
 

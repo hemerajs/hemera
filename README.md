@@ -50,14 +50,13 @@ The key features of NATS in combination with Hemera are:
 
 ## Built in protection
 * **Process policy**: Will exit the process when the policy (memory, event loop) could not be fullfilled (Option: `heavy`).
-* **Circuit breaker**: Will prevent from cascading failures (Option: `circuitBreaker`).
 * **Message loop detection**: Will return an error if you call a route recursively (Option: `maxRecursion`). 
 
 ## What Hemera code looks like
 
 **We support:**
 - Async/Await (Node 7.6+)
-- Generators (Node 4+)
+- Promise
 - Error-first-callback style
 
 ```js
@@ -68,10 +67,10 @@ const nats = require('nats').connect()
 const hemera = new Hemera(nats, { logLevel: 'info' })
 hemera.use(HemeraJoi)
 
-hemera.ready(() => {
+hemera.ready(async () => {
 
   hemera.setOption('payloadValidator', 'hemera-joi')
-  let Joi = hemera.exposition['hemera-joi'].joi
+  let Joi = hemera.joi
 
   hemera.add({ 
     topic: 'math',
@@ -79,27 +78,43 @@ hemera.ready(() => {
     a: Joi.number().required(),
     b: Joi.number().required()
   }, async function (req) {
-    const a = await Promise.resolve(req.a + req.b)
-    return a
+    return await req.a + req.b
   })
 
   const a = hemera.act({ topic: 'math', cmd: 'add', a: 10, b: 30 })
   const b = hemera.act({ topic: 'math', cmd: 'add', a: 10, b: 60 })
 
-  Promise.all([a, b])
-    .then(x => hemera.log.info(x))
+  const result = await Promise.all([a, b])
+  hemera.log.info(result)
 
 })
 ```
 
 ## Documentation
-There is an extensive <a href="https://hemerajs.github.io/hemera/">documentation</a> or look in the <a href="https://github.com/hemerajs/hemera/tree/master/examples">Examples</a>.
+* <a href="https://hemerajs.github.io/hemera/getting-started.html"><code><b>Getting Started</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_request_reply.html"><code><b>Request & Reply</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_pattern_matching.html"><code><b>Pattern Matching</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_pub_sub.html"><code><b>Publish & Subscribe</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_payload_validation.html"><code><b>Payload validation</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_middleware.html"><code><b>Middlewares</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_extension_points.html"><code><b>Extensions</b></code></a>
+* <a href="https://github.com/hemerajs/hemera/blob/master/examples/basic/decorators.js"><code><b>Decorators</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_logging.html"><code><b>Logging</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_plugins.html"><code><b>Plugins</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_metadata.html"><code><b>Metadata</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_context.html"><code><b>Context</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_delegate.html"><code><b>Delegate</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/1_life_cycle_events.html"><code><b>Lifecycle events</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/2_basic.html"><code><b>Error handling</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/5_testing.html"><code><b>Testing</b></code></a>
+* <a href="https://hemerajs.github.io/hemera/4_api.html"><code><b>Api</b></code></a>
+* <a href="https://github.com/hemerajs/hemera/tree/master/examples"><code><b>Examples</b></code></a>
 
 ## Who's using Hemera?
 
-| [![appcom-interactive](http://www.appcom-interactive.de/images/appcom-logo.svg)](http://www.appcom-interactive.de/) |
-| -------------|
-| appcom interactive |
+| [![appcom-interactive](http://www.appcom-interactive.de/images/appcom-logo.svg)](http://www.appcom-interactive.de/) | [![amerbank](https://github.com/hemerajs/hemera/blob/master/media/companies/amerbank.png?raw=true)](https://amerbank.com/)
+| -------------| --- |
+| appcom interactive | amerbank |
 
 ## Get Involved
 
@@ -130,13 +145,18 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 |--------|-------|
 | [nats-hemera](https://github.com/hemerajs/hemera/tree/master/packages/hemera) | [![npm](https://img.shields.io/npm/v/nats-hemera.svg?maxAge=3600)](https://www.npmjs.com/package/nats-hemera)
 | [hemera-plugin](https://github.com/hemerajs/hemera/tree/master/packages/hemera-plugin) | [![npm](https://img.shields.io/npm/v/hemera-plugin.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-plugin)
-| [hemera-zipkin](https://github.com/hemerajs/hemera/tree/master/packages/hemera-zipkin) | [![npm](https://img.shields.io/npm/v/hemera-zipkin.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-zipkin)
 | [hemera-store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store) | [![npm](https://img.shields.io/npm/v/hemera-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-store)
 | [hemera-stats](https://github.com/hemerajs/hemera/tree/master/packages/hemera-stats) | [![npm](https://img.shields.io/npm/v/hemera-stats.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-stats)
 | [hemera-controlplane](https://github.com/hemerajs/hemera/tree/master/packages/hemera-controlplane) | [![npm](https://img.shields.io/npm/v/hemera-controlplane.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-controlplane)
 | [hemera-cli](https://github.com/hemerajs/hemera-cli) | [![npm](https://img.shields.io/npm/v/hemera-cli.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-cli)
 | [hemera-mail](https://github.com/hemerajs/hemera/tree/master/packages/hemera-mail) | [![npm](https://img.shields.io/npm/v/hemera-mail.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-mail)
 | [hemera-slackbot](https://github.com/hemerajs/hemera/tree/master/packages/hemera-slackbot) | [![npm](https://img.shields.io/npm/v/hemera-slackbot.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-slackbot)
+| [hemera-graceful-shutdown](https://github.com/hemerajs/hemera/tree/master/packages/hemera-graceful-shutdown) | [![npm](https://img.shields.io/npm/v/hemera-graceful-shutdown.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-graceful-shutdown)
+
+| Tracer | Version |
+|--------|-------|
+| [hemera-zipkin](https://github.com/hemerajs/hemera/tree/master/packages/hemera-zipkin) | [![npm](https://img.shields.io/npm/v/hemera-zipkin.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-zipkin)
+| [hemera-jaeger](https://github.com/hemerajs/hemera/tree/master/packages/hemera-jaeger) | [![npm](https://img.shields.io/npm/v/hemera-jaeger.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-jaeger)
 
 | Messaging bridges | Version |
 |--------|-------|
@@ -177,9 +197,28 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 |--------|-------|
 | [hemera-jwt-auth](https://github.com/hemerajs/hemera/tree/master/packages/hemera-jwt-auth) | [![npm](https://img.shields.io/npm/v/hemera-jwt-auth.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-jwt-auth)
 
+## Performance
+
+```
+Platform info:
+==============
+   Windows_NT 10.0.15063 x64
+   Node.JS: 8.4.0
+   V8: 6.0.286.52
+   Intel(R) Core(TM) i5-6600K CPU @ 3.50GHz × 4
+==============
+.\benchmark\request_rt.js
+22436 request-responses/sec
+Avg roundtrip latency: 22 microseconds
+
+.\benchmark\request_rt_async_await.js
+22002 request-responses/sec
+Avg roundtrip latency: 22 microseconds
+```
+
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md)
+See [Releases](https://github.com/hemerajs/hemera/releases)
 
 ## Contributing
 

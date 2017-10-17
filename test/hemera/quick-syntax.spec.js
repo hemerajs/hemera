@@ -1,21 +1,21 @@
 'use strict'
 
-describe('Quick syntax for JSON objects', function () {
+describe('Quick syntax for JSON objects', function() {
   var PORT = 6242
   var authUrl = 'nats://localhost:' + PORT
   var server
 
   // Start up our own nats-server
-  before(function (done) {
+  before(function(done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
   // Shutdown our server after we are done
-  after(function () {
+  after(function() {
     server.kill()
   })
 
-  it('Should be able to use a string as pattern', function (done) {
+  it('Should be able to use a string as pattern', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

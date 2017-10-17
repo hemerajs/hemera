@@ -14,7 +14,7 @@ class Store {
    *
    * @memberOf Store
    */
-  constructor (driver, options) {
+  constructor(driver, options) {
     this._driver = driver
     this._options = options
   }
@@ -26,7 +26,7 @@ class Store {
    *
    * @memberOf Store
    */
-  get driver () {
+  get driver() {
     return this._driver
   }
 
@@ -37,7 +37,7 @@ class Store {
    *
    * @memberOf Store
    */
-  get options () {
+  get options() {
     return this._options
   }
   /**
@@ -46,8 +46,8 @@ class Store {
    *
    * @memberOf Store
    */
-  create () {
-    throw (new Error('Not implemented yet'))
+  create() {
+    throw new Error('Not implemented yet')
   }
 
   /**
@@ -56,8 +56,8 @@ class Store {
    *
    * @memberOf Store
    */
-  remove () {
-    throw (new Error('Not implemented yet'))
+  remove() {
+    throw new Error('Not implemented yet')
   }
 
   /**
@@ -66,8 +66,8 @@ class Store {
    *
    * @memberOf Store
    */
-  removeById () {
-    throw (new Error('Not implemented yet'))
+  removeById() {
+    throw new Error('Not implemented yet')
   }
   /**
    * Update an entity
@@ -75,8 +75,8 @@ class Store {
    *
    * @memberOf Store
    */
-  update () {
-    throw (new Error('Not implemented yet'))
+  update() {
+    throw new Error('Not implemented yet')
   }
 
   /**
@@ -85,8 +85,8 @@ class Store {
    *
    * @memberOf Store
    */
-  updateById () {
-    throw (new Error('Not implemented yet'))
+  updateById() {
+    throw new Error('Not implemented yet')
   }
 
   /**
@@ -95,8 +95,8 @@ class Store {
    *
    * @memberOf Store
    */
-  find () {
-    throw (new Error('Not implemented yet'))
+  find() {
+    throw new Error('Not implemented yet')
   }
 
   /**
@@ -105,8 +105,8 @@ class Store {
    *
    * @memberOf Store
    */
-  findById () {
-    throw (new Error('Not implemented yet'))
+  findById() {
+    throw new Error('Not implemented yet')
   }
 
   /**
@@ -115,8 +115,8 @@ class Store {
    *
    * @memberOf Store
    */
-  replace () {
-    throw (new Error('Not implemented yet'))
+  replace() {
+    throw new Error('Not implemented yet')
   }
 
   /**
@@ -125,8 +125,8 @@ class Store {
    *
    * @memberOf Store
    */
-  replaceById () {
-    throw (new Error('Not implemented yet'))
+  replaceById() {
+    throw new Error('Not implemented yet')
   }
 
   /**
@@ -134,8 +134,8 @@ class Store {
    *
    * @memberOf Store
    */
-  exists () {
-    throw (new Error('Not implemented yet'))
+  exists() {
+    throw new Error('Not implemented yet')
   }
 }
 

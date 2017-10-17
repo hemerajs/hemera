@@ -30,7 +30,7 @@ hemera.ready(() => {
     }
   }
 
-  hemera.close(function () {
+  hemera.close(function() {
     var stop = new Date()
     var mps = parseInt(loop / ((stop - start) / 1000))
     console.log('\nPublished at ' + mps + ' msgs/sec')

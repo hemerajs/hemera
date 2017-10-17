@@ -1,270 +1,387 @@
 'use strict'
 
-describe('Plugin interface', function () {
+describe('Plugin interface', function() {
   var PORT = 6242
   var authUrl = 'nats://localhost:' + PORT
   var server
 
   // Start up our own nats-server
-  before(function (done) {
+  before(function(done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
   // Shutdown our server after we are done
-  after(function () {
+  after(function() {
     server.kill()
   })
 
-  it('Should be able to use a plugin', function (done) {
+  it('Should be able to use a plugin', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
     // Plugin
-    let plugin = function (options) {
-      let hemera = this
-
-      hemera.expose('test', 1)
-
+    let plugin = function(hemera, options, done) {
       expect(options.a).to.be.equals('1')
 
-      hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      }, (resp, cb) => {
-        cb(null, {
-          result: resp.a + resp.b
-        })
-      })
-    }
-
-    let pluginOptions = {
-      a: '1'
-    }
-
-    hemera.use({
-      plugin: plugin,
-      attributes: {
-        name: 'myPlugin'
-      },
-      options: pluginOptions
-    })
-
-    hemera.ready(() => {
-      expect(hemera.exposition.myPlugin.test).to.be.equals(1)
-
-      hemera.act({
-        topic: 'math',
-        cmd: 'add',
-        a: 1,
-        b: 2
-      }, (err, resp) => {
-        expect(err).to.be.not.exists()
-        expect(resp).not.to.be.equals(3)
-        hemera.close(done)
-      })
-    })
-  })
-
-  it('Should be able to compare plugin hemera errors with instanceof', function (done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    // Plugin
-    let plugin = function (options) {
-      let hemera = this
-
-      const FooBarError = hemera.createError('FooBarError')
-
-      hemera.expose('errors', {
-        FooBarError
-      })
-
-      hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      }, (resp, cb) => {
-        cb(new FooBarError('test'))
-      })
-    }
-
-    hemera.use({
-      plugin: plugin,
-      attributes: {
-        name: 'myPlugin'
-      }
-    })
-
-    hemera.ready(() => {
-      hemera.act({
-        topic: 'math',
-        cmd: 'add'
-      }, (err, resp) => {
-        expect(err).to.be.exists()
-        expect(err.name).to.be.equals('FooBarError')
-        expect(err.message).to.be.equals('test')
-        expect(err instanceof hemera.exposition['myPlugin'].errors.FooBarError).to.be.equals(true)
-        hemera.close(done)
-      })
-    })
-  })
-
-  it('Should be able to get a map of registered plugins', function (done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    let pluginOptions = {
-      a: '1'
-    }
-
-    // Plugin
-    let plugin1 = function (options) {
-      let hemera = this
-
-      expect(options.a).to.be.equals('1')
-
-      hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      }, (resp, cb) => {
-        cb(null, {
-          result: resp.a + resp.b
-        })
-      })
-    }
-
-    hemera.use({
-      plugin: plugin1,
-      attributes: {
-        name: 'myPlugin1'
-      },
-      options: pluginOptions
-    })
-
-    // Plugin
-    let plugin2 = function (options) {
-      let hemera = this
-
-      expect(options.a).to.be.equals('1')
-
-      hemera.add({
-        topic: 'math',
-        cmd: 'add2'
-      }, (resp, cb) => {
-        cb(null, {
-          result: resp.a + resp.b
-        })
-      })
-    }
-
-    hemera.use({
-      plugin: plugin2,
-      attributes: {
-        name: 'myPlugin2'
-      },
-      options: pluginOptions
-    })
-
-    hemera.ready(() => {
-      expect(JSON.parse(JSON.stringify(hemera.plugins))).to.include({
-        core: {
-          attributes: {
-            name: 'core'
-          },
-          options: {}
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
         },
-        myPlugin1: {
-          attributes: {
-            name: 'myPlugin1'
-          },
-          parentPluginName: 'core',
+        (resp, cb) => {
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        }
+      )
+
+      done()
+    }
+
+    let pluginOptions = {
+      name: 'myPlugin',
+      a: '1'
+    }
+
+    hemera.use({
+      plugin: plugin,
+      options: pluginOptions
+    })
+
+    hemera.ready(() => {
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        (err, resp) => {
+          expect(err).to.be.not.exists()
+          expect(resp).not.to.be.equals(3)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should be able to register an array of plugins', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    // Plugin
+    let plugin = function(hemera, options, done) {
+      done()
+    }
+
+    let plugin2 = function(hemera, options, done) {
+      done()
+    }
+
+    hemera.use([
+      {
+        plugin: plugin,
+        options: {
+          name: 'myPlugin',
+          a: 1
+        }
+      },
+      {
+        plugin: plugin2,
+        options: {
+          name: 'myPlugin2',
+          a: 2
+        }
+      }
+    ])
+
+    hemera.ready(err => {
+      expect(err).to.be.not.exists()
+      expect(hemera.plugins.myPlugin.plugin$.options).to.be.equals({
+        name: 'myPlugin',
+        a: 1
+      })
+      expect(hemera.plugins.myPlugin2.plugin$.options).to.be.equals({
+        name: 'myPlugin2',
+        a: 2
+      })
+      hemera.close(done)
+    })
+  })
+
+  it('Should not be possible to overwrite the plugin name for an array of plugins', function(
+    done
+  ) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    // Plugin
+    let plugin = function(hemera, options, done) {
+      done()
+    }
+
+    let plugin2 = function(hemera, options, done) {
+      done()
+    }
+
+    hemera.use(
+      [
+        {
+          plugin: plugin,
           options: {
-            a: '1'
+            name: 'myPlugin',
+            a: 1
           }
         },
-        myPlugin2: {
-          attributes: {
-            name: 'myPlugin2'
-          },
-          parentPluginName: 'core',
+        {
+          plugin: plugin2,
           options: {
-            a: '1'
+            name: 'myPlugin2',
+            a: 2
           }
         }
+      ],
+      {
+        name: 'fooBar'
+      }
+    )
+
+    hemera.ready(err => {
+      expect(err).to.be.not.exists()
+      expect(hemera.plugins.myPlugin.plugin$.options).to.be.equals({
+        name: 'myPlugin',
+        a: 1
+      })
+      expect(hemera.plugins.myPlugin2.plugin$.options).to.be.equals({
+        name: 'myPlugin2',
+        a: 2
+      })
+      hemera.close(done)
+    })
+  })
+
+  it('Should be able to register a callback after an array of plugins was registered', function(
+    done
+  ) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    const spy = Sinon.spy()
+
+    // Plugin
+    let plugin = function(hemera, options, done) {
+      done()
+    }
+
+    let plugin2 = function(hemera, options, done) {
+      done()
+    }
+
+    hemera
+      .use([
+        {
+          plugin: plugin,
+          options: {
+            name: 'myPlugin',
+            a: 1
+          }
+        },
+        {
+          plugin: plugin2,
+          options: {
+            name: 'myPlugin2',
+            a: 2
+          }
+        }
+      ])
+      .after(err => {
+        expect(err).to.be.not.exists()
+        spy()
       })
 
+    hemera.ready(err => {
+      expect(err).to.be.not.exists()
+      expect(spy.calledOnce).to.be.equals(true)
+      expect(hemera.plugins.myPlugin.plugin$.options.a).to.be.equals(1)
+      expect(hemera.plugins.myPlugin2.plugin$.options.a).to.be.equals(2)
       hemera.close(done)
     })
   })
 
-  it('Should thrown plugin error during initialization', function (done) {
+  it('Should be able to use after', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
-    let plugin = function (options, next) {
-      next(new Error('test'))
+    // Plugin
+    let plugin = function(hemera, options, done) {
+      done()
     }
 
-    hemera.on('error', (err) => {
-      expect(err).to.exists()
-      expect(err.name).to.be.equals('HemeraError')
-      expect(err.message).to.be.equals('Error during plugin registration')
-      hemera.close(done)
-    })
+    let pluginOptions = {
+      name: 'myPlugin',
+      a: '1'
+    }
 
-    hemera.use({
-      plugin: plugin,
-      attributes: {
-        name: 'myPlugin'
-      }
-    })
+    hemera
+      .use({
+        plugin: plugin,
+        options: pluginOptions
+      })
+      .after(err => {
+        expect(err).to.be.not.exists()
+        hemera.close(done)
+      })
 
-    hemera.ready()
+    hemera.ready(err => {
+      expect(err).to.be.not.exists()
+    })
   })
 
-  it('Should thrown super plugin error during initialization', function (done) {
+  it('Should be able to use after on root', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
-    let plugin = function (options, next) {
-      next(new UnauthorizedError('test'))
+    // Plugin
+    let plugin = function(hemera, options, done) {
+      done()
     }
 
-    hemera.on('error', (err) => {
-      expect(err).to.exists()
-      expect(err.name).to.be.equals('HemeraError')
-      expect(err.message).to.be.equals('Error during plugin registration')
-      hemera.close(done)
-    })
+    let pluginOptions = {
+      name: 'myPlugin',
+      a: '1'
+    }
 
     hemera.use({
       plugin: plugin,
-      attributes: {
-        name: 'myPlugin'
-      }
+      options: pluginOptions
     })
 
-    hemera.ready()
+    hemera.after(err => {
+      expect(err).to.be.not.exists()
+      hemera.close(done)
+    })
+
+    hemera.ready(err => {
+      expect(err).to.be.not.exists()
+    })
   })
 
-  it('Should thrown error when trying to register plugin in plugin', function (done) {
-    let hemera
-
+  it('Should be able to register a plugin in a plugin', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    hemera = new Hemera(nats)
+    const hemera = new Hemera(nats)
 
-    let plugin = function (options, next) {
+    // Plugin
+    let plugin = function(hemera, options, done) {
+      hemera.use({
+        plugin: (hemera, opts, done) => {
+          done()
+        },
+        options: { name: 'foo', a: 1 }
+      })
+
+      done()
+    }
+
+    hemera.use({
+      plugin,
+      options: { name: 'bar', a: 2 }
+    })
+
+    hemera.ready(err => {
+      expect(err).to.be.not.exists()
+      expect(Object.keys(hemera.plugins)).to.be.equals(['core', 'bar', 'foo'])
+      expect(hemera.plugins.foo.plugin$.options).to.be.equals({
+        name: 'foo',
+        a: 1
+      })
+      expect(hemera.plugins.bar.plugin$.options).to.be.equals({
+        name: 'bar',
+        a: 2
+      })
+      hemera.close(done)
+    })
+  })
+
+  it('Should be able to pass a callback after plugins was initialized', function(
+    done
+  ) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    // Plugin
+    let plugin = function(hemera, options, done) {
+      done()
+    }
+
+    let pluginOptions = {
+      name: 'myPlugin',
+      a: '1'
+    }
+
+    hemera
+      .use({
+        plugin: plugin,
+        options: pluginOptions
+      })
+      .after(err => {
+        expect(err).to.be.not.exists()
+        hemera.close(done)
+      })
+
+    hemera.ready(err => {
+      expect(err).to.be.not.exists()
+    })
+  })
+
+  it('Should be able to list all plugins', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let plugin = function(hemera, options, done) {
+      done()
+    }
+
+    let pluginOptions = {
+      name: 'myPlugin'
+    }
+
+    hemera.use({
+      plugin: plugin,
+      options: pluginOptions
+    })
+
+    hemera.ready(() => {
+      expect(hemera.plugins).to.be.an.object()
+      expect(Object.keys(hemera.plugins)).to.be.equals(['core', 'myPlugin'])
+      expect(hemera.plugins.core).to.be.exists()
+      expect(hemera.plugins.myPlugin).to.be.exists()
+      expect(hemera.plugins.myPlugin instanceof Hemera).to.be.equals(true)
+      hemera.close(done)
+    })
+  })
+
+  it('Should throw error because could not resolve all decorate deps', function(
+    done
+  ) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let plugin = function(hemera, options, next) {
       try {
-        this.use()
+        hemera.decorate('b', 1, ['a'])
       } catch (err) {
-        expect(err).to.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Call `use()` inside plugins not allowed')
+        expect(err.message).to.exists(
+          HemeraConstants.MISSING_DECORATE_DEPENDENCY
+        )
         hemera.close(done)
       }
       next()
@@ -272,7 +389,7 @@ describe('Plugin interface', function () {
 
     hemera.use({
       plugin: plugin,
-      attributes: {
+      options: {
         name: 'myPlugin'
       }
     })
@@ -280,7 +397,257 @@ describe('Plugin interface', function () {
     hemera.ready()
   })
 
-  it('Plugin name is required', function (done) {
+  it('Should satisfy all decorate deps', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let plugin = function(hemera, options, next) {
+      hemera.decorate('a', 2)
+      hemera.decorate('b', 1, ['a'])
+      next()
+    }
+
+    hemera.use({
+      plugin: plugin,
+      options: {
+        name: 'myPlugin'
+      }
+    })
+
+    hemera.ready(() => {
+      hemera.close(done)
+    })
+  })
+
+  it('Should be able to compare plugin hemera errors with instanceof', function(
+    done
+  ) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    // Plugin
+    let plugin = function(hemera, options, done) {
+      const FooBarError = hemera.createError('FooBarError')
+
+      hemera.decorate('pluginErrors', {
+        FooBarError
+      })
+
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        (resp, cb) => {
+          cb(new FooBarError('test'))
+        }
+      )
+
+      done()
+    }
+
+    hemera.use({
+      plugin: plugin,
+      options: {
+        name: 'myPlugin'
+      }
+    })
+
+    hemera.ready(() => {
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        (err, resp) => {
+          expect(err).to.be.exists()
+          expect(err.name).to.be.equals('FooBarError')
+          expect(err.message).to.be.equals('test')
+          expect(err instanceof hemera.pluginErrors.FooBarError).to.be.equals(
+            true
+          )
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should throw an error when we trying to overwrite an existing prototype property', function(
+    done
+  ) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let plugin = function(hemera, options, next) {
+      hemera.decorate('test', 1)
+      try {
+        hemera.decorate('test', 1)
+      } catch (err) {
+        expect(err).to.exists()
+        hemera.close(done)
+      }
+      next()
+    }
+
+    hemera.use({
+      plugin: plugin,
+      options: {
+        name: 'myPlugin'
+      }
+    })
+
+    hemera.ready()
+  })
+
+  it('Should be able to decorate the prototype chain', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let plugin = function(hemera, options, next) {
+      hemera.decorate('test', 1)
+      next()
+    }
+
+    hemera.use({
+      plugin: plugin,
+      options: {
+        name: 'myPlugin'
+      }
+    })
+
+    hemera.ready(err => {
+      expect(err).to.not.exists()
+      expect(hemera.test).to.be.equals(1)
+      expect(hemera.plugins.myPlugin.test).to.be.equals(1)
+      hemera.close(done)
+    })
+  })
+
+  it('Should be able to access the decorated prototype propertys inside nested plugins', function(
+    done
+  ) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let plugin = function(hemera, options, next) {
+      hemera.decorate('test', 1)
+
+      expect(hemera.test).to.be.equals(1)
+
+      let plugin2 = function(hemera, options, next) {
+        expect(hemera.test).to.be.equals(1)
+        next()
+      }
+
+      hemera.use({
+        plugin: plugin2,
+        options: {
+          name: 'myPlugin2'
+        }
+      })
+
+      next()
+    }
+
+    hemera.use({
+      plugin: plugin,
+      options: {
+        name: 'myPlugin'
+      }
+    })
+
+    hemera.ready(err => {
+      expect(err).to.not.exists()
+      expect(hemera.test).to.be.equals(1)
+      expect(hemera.plugins.myPlugin.test).to.be.equals(1)
+      hemera.close(done)
+    })
+  })
+
+  it('Should thrown plugin error during initialization', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let plugin = function(hemera, options, next) {
+      next(new Error('test'))
+    }
+
+    hemera.use({
+      plugin: plugin,
+      options: {
+        name: 'myPlugin'
+      }
+    })
+
+    hemera.ready(err => {
+      expect(err).to.exists()
+      expect(err.name).to.be.equals('Error')
+      expect(err.message).to.be.equals('test')
+      hemera.close(done)
+    })
+  })
+
+  it('Should thrown super plugin error during initialization', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let plugin = function(hemera, options, done) {
+      done(new UnauthorizedError('test'))
+    }
+
+    hemera.use({
+      plugin: plugin,
+      options: {
+        name: 'myPlugin'
+      }
+    })
+
+    hemera.ready(err => {
+      expect(err).to.exists()
+      expect(err.name).to.be.equals('Unauthorized')
+      expect(err.message).to.be.equals('test')
+      hemera.close(done)
+    })
+  })
+
+  it('Should not decorate the root prototype chain', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let plugin = function(hemera, options, next) {
+      hemera.decorate('test', 1)
+      next()
+    }
+
+    hemera.use({
+      plugin: plugin,
+      options: {
+        name: 'myPlugin'
+      }
+    })
+
+    hemera.ready(err => {
+      expect(err).to.not.exists()
+      expect(hemera.test).to.be.equals(1)
+      expect(hemera.plugins.myPlugin.test).to.be.equals(1)
+
+      let hemera2 = new Hemera(nats)
+      expect(hemera2.test).to.not.exists()
+      hemera.close(() => {
+        hemera2.close(done)
+      })
+    })
+  })
+
+  it('Plugin name is required', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -290,23 +657,25 @@ describe('Plugin interface', function () {
     }
 
     // Plugin
-    let plugin = function (options) {
+    let plugin = function(options) {
       let hemera = this
 
-      hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      }, (resp, cb) => {
-        cb(null, {
-          result: resp.a + resp.b
-        })
-      })
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        (resp, cb) => {
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        }
+      )
     }
 
     try {
       hemera.use({
         plugin: plugin,
-        attributes: {},
         options: pluginOptions
       })
     } catch (err) {
@@ -317,7 +686,9 @@ describe('Plugin interface', function () {
     }
   })
 
-  it('Should be able to specify plugin options as second argument in use method', function (done) {
+  it('Should be not possible to pass plugin name as additional options', function(
+    done
+  ) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -327,37 +698,89 @@ describe('Plugin interface', function () {
     }
 
     // Plugin
-    let plugin = function (options) {
+    let plugin = function(options) {
       let hemera = this
 
-      expect(options.a).to.be.equals('1')
-
-      hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      }, (resp, cb) => {
-        cb(null, {
-          result: resp.a + resp.b
-        })
-      })
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        (resp, cb) => {
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        }
+      )
     }
 
-    hemera.use({
-      plugin: plugin,
-      attributes: {
-        name: 'foo',
-        description: 'test',
-        version: '1.0.0'
-      }
-    }, pluginOptions)
+    try {
+      hemera.use(
+        {
+          plugin: plugin,
+          options: pluginOptions
+        },
+        {
+          name: 'foo'
+        }
+      )
+    } catch (err) {
+      expect(err).to.exists()
+      expect(err.name).to.be.equals('HemeraError')
+      expect(err.message).to.be.equals('Plugin name is required')
+      hemera.close(done)
+    }
+  })
+
+  it('Should be able to specify plugin options as second argument in use method', function(
+    done
+  ) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let pluginOptions = {
+      a: '1'
+    }
+
+    // Plugin
+    let plugin = function(hemera, options, done) {
+      expect(options.a).to.be.equals('1')
+
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        (resp, cb) => {
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        }
+      )
+
+      done()
+    }
+
+    hemera.use(
+      {
+        plugin: plugin,
+        options: {
+          name: 'foo'
+        }
+      },
+      pluginOptions
+    )
 
     hemera.ready(() => {
-      expect(hemera.plugins.foo.options.a).to.be.equals('1')
+      expect(hemera.plugins.foo.plugin$.options.a).to.be.equals('1')
       hemera.close(done)
     })
   })
 
-  it('Should not overwrite plugin default options when options are passed as second argument', function (done) {
+  it('Should not overwrite plugin default options when options are passed as second argument', function(
+    done
+  ) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -367,176 +790,104 @@ describe('Plugin interface', function () {
     }
 
     // Plugin
-    let plugin = function (options) {
-      let hemera = this
-
+    let plugin = function(hemera, options, done) {
       expect(options.a).to.be.equals(1)
 
-      hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      }, (resp, cb) => {
-        cb(null, {
-          result: resp.a + resp.b
-        })
-      })
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        (resp, cb) => {
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        }
+      )
+
+      done()
     }
 
     const defaultOptions = {
+      name: 'foo',
       a: 33
     }
 
-    hemera.use({
-      plugin: plugin,
-      options: defaultOptions,
-      attributes: {
-        name: 'foo',
-        description: 'test',
-        version: '1.0.0'
-      }
-    }, pluginOptions)
+    hemera.use(
+      {
+        plugin: plugin,
+        options: defaultOptions
+      },
+      pluginOptions
+    )
 
     hemera.ready(() => {
-      expect(hemera.plugins.foo.options.a).to.be.equals(1)
+      expect(hemera.plugins.foo.plugin$.options.a).to.be.equals(1)
       expect(defaultOptions.a).to.be.equals(33)
       hemera.close(done)
     })
   })
 
-  it('Should not overwrite plugin default options', function (done) {
+  it('Should not modify original plugin default options', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
     // Plugin
-    let plugin = function (options) {
-      let hemera = this
-
+    let plugin = function(hemera, options, done) {
       hemera.setOption('a', 1)
 
-      hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      }, (resp, cb) => {
-        cb(null, {
-          result: resp.a + resp.b
-        })
-      })
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        (resp, cb) => {
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        }
+      )
+
+      done()
     }
 
     const defaultOptions = {
+      name: 'foo',
       a: 33
     }
 
     hemera.use({
       plugin: plugin,
-      options: defaultOptions,
-      attributes: {
-        name: 'foo',
-        description: 'test',
-        version: '1.0.0'
-      }
+      options: defaultOptions
     })
 
     hemera.ready(() => {
-      expect(hemera.plugins.foo.options.a).to.be.equals(1)
+      expect(hemera.plugins.foo.plugin$.options.a).to.be.equals(1)
       expect(defaultOptions.a).to.be.equals(33)
       hemera.close(done)
     })
   })
 
-  it('Should be able to specify plugin attributes by package.json', function (done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    let pluginOptions = {
-      a: '1'
-    }
-
-    // Plugin
-    let plugin = function (options) {
-      let hemera = this
-
-      hemera.add({
-        topic: 'math',
-        cmd: 'add'
-      }, (resp, cb) => {
-        cb(null, {
-          result: resp.a + resp.b
-        })
-      })
-    }
-
-    const packageJson = {
-      name: 'foo',
-      description: 'test',
-      version: '1.0.0'
-    }
-
-    hemera.use({
-      plugin: plugin,
-      attributes: {
-        pkg: packageJson
-      },
-      options: pluginOptions
-    })
-
-    hemera.ready(() => {
-      expect(hemera.plugins.foo.attributes.name).to.be.equals('foo')
-      expect(hemera.plugins.foo.attributes.description).to.be.equals('test')
-      expect(hemera.plugins.foo.attributes.version).to.be.equals('1.0.0')
-      expect(hemera.plugins.foo.options).to.be.equals(pluginOptions)
-      hemera.close(done)
-    })
-  })
-
-  it('Should be able to use child logger', function (done) {
+  it('Should be able to use child logger', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
       childLogger: true
     })
 
-    let plugin = function (options) {
-      this.log.info('test')
+    let plugin = function(hemera, options, done) {
+      hemera.log.info('test')
+      done()
     }
 
     hemera.use({
       plugin: plugin,
-      attributes: {
+      options: {
         name: 'myPlugin'
       }
     })
 
     hemera.close(done)
-  })
-
-  it('Should emit timeout error when plugin callback was not called within time range', function (done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats, {
-      childLogger: true,
-      logLevel: 'silent',
-      pluginTimeout: 1000
-    })
-
-    hemera.on('error', (err) => {
-      expect(err instanceof Hemera.errors.HemeraError).to.be.equals(true)
-      expect(err.cause instanceof Hemera.errors.PluginTimeoutError).to.be.equals(true)
-      done()
-    })
-
-    let plugin = function (options, next) {
-      this.log.info('test')
-    }
-
-    hemera.use({
-      plugin: plugin,
-      attributes: {
-        name: 'myPlugin'
-      }
-    })
-    hemera.ready()
   })
 })

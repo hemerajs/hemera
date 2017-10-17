@@ -10,18 +10,24 @@ const hemera = new Hemera(nats, {
 })
 
 hemera.ready(() => {
-  hemera.add({
-    topic: 'math',
-    cmd: 'add'
-  }, (req, cb) => {
-    cb(new Hemera.errors.BusinessError('test'))
-  })
+  hemera.add(
+    {
+      topic: 'math',
+      cmd: 'add'
+    },
+    (req, cb) => {
+      cb(new Hemera.errors.BusinessError('test'))
+    }
+  )
 
-  hemera.act({
-    topic: 'math',
-    cmd: 'add',
-    a: 'ddd'
-  }, function (err, resp) {
-    this.log.debug(err instanceof Hemera.errors.BusinessError)
-  })
+  hemera.act(
+    {
+      topic: 'math',
+      cmd: 'add',
+      a: 'ddd'
+    },
+    function(err, resp) {
+      this.log.debug(err instanceof Hemera.errors.BusinessError)
+    }
+  )
 })

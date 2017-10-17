@@ -10,7 +10,7 @@ const Couchbase = require('couchbase').Mock
 
 const expect = Code.expect
 
-describe('Hemera-couchbase-store', function () {
+describe('Hemera-couchbase-store', function() {
   let PORT = 6242
   var flags = ['--user', 'derek', '--pass', 'foobar']
   var authUrl = 'nats://derek:foobar@localhost:' + PORT
@@ -20,7 +20,7 @@ describe('Hemera-couchbase-store', function () {
   let cluster
   let bucket
 
-  before(function (done) {
+  before(function(done) {
     cluster = new Couchbase.Cluster()
     bucket = cluster.openBucket()
 
@@ -35,22 +35,25 @@ describe('Hemera-couchbase-store', function () {
     })
   })
 
-  after(function (done) {
+  after(function(done) {
     hemera.close()
     server.kill()
     done()
   })
 
-  it('Execute a N1ql Query', function (done) {
-    hemera.act({
-      topic: 'couchbase-store',
-      cmd: 'query',
-      query: 'SELECT FROM default LIMIT 1'
-    }, (err, resp) => {
-      expect(err).to.be.not.exists()
-      expect(resp).to.be.an.object()
+  it('Execute a N1ql Query', function(done) {
+    hemera.act(
+      {
+        topic: 'couchbase-store',
+        cmd: 'query',
+        query: 'SELECT FROM default LIMIT 1'
+      },
+      (err, resp) => {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.an.object()
 
-      done()
-    })
+        done()
+      }
+    )
   })
 })

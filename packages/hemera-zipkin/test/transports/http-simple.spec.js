@@ -14,26 +14,26 @@ const options = {
   path: '/api/v1/spans'
 }
 
-describe('Transports', function () {
-  describe('http-simple', function () {
+describe('Transports', function() {
+  describe('http-simple', function() {
     let fakeServer
 
-    before(function (done) {
+    before(function(done) {
       fakeServer = FakeServer(FAKE_SERVER_PORT, done)
     })
 
-    beforeEach(function (done) {
+    beforeEach(function(done) {
       fakeServer.reset()
       done()
     })
 
-    after(function (done) {
+    after(function(done) {
       fakeServer.stop()
       done()
     })
 
-    it('sends received data to the correct url', function (done) {
-      fakeServer.on('request', function (data) {
+    it('sends received data to the correct url', function(done) {
+      fakeServer.on('request', function(data) {
         expect(data.url).to.equal('/api/v1/spans')
         expect(data.body).to.be.an.array()
         expect(data.body).to.have.length(1)
@@ -45,10 +45,13 @@ describe('Transports', function () {
         done()
       })
 
-      Transport({
-        traceId: 'test trace',
-        id: 'test span'
-      }, options)
+      Transport(
+        {
+          traceId: 'test trace',
+          id: 'test span'
+        },
+        options
+      )
     })
   })
 })

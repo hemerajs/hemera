@@ -15,10 +15,13 @@ hemera.use(HemeraControlPlane, {
 })
 
 hemera.ready(() => {
-  hemera.add({
-    topic: 'math',
-    cmd: 'add'
-  }, (req, cb) => {
-    cb(null, req.a + req.b)
-  })
+  hemera.add(
+    {
+      topic: 'math',
+      cmd: 'add'
+    },
+    (req, cb) => {
+      cb(null, req.a + req.b)
+    }
+  )
 })

@@ -1,21 +1,21 @@
 'use strict'
 
-describe('Public interface', function () {
+describe('Public interface', function() {
   var PORT = 6242
   var authUrl = 'nats://localhost:' + PORT
   var server
 
   // Start up our own nats-server
-  before(function (done) {
+  before(function(done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
   // Shutdown our server after we are done
-  after(function () {
+  after(function() {
     server.kill()
   })
 
-  it('public getter', function (done) {
+  it('public getter', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -27,7 +27,7 @@ describe('Public interface', function () {
     hemera.close(done)
   })
 
-  it('public set options', function (done) {
+  it('public set options', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

@@ -1,178 +1,222 @@
 'use strict'
 
-describe('Response error events', function () {
+describe('Response error events', function() {
   var PORT = 6242
   var authUrl = 'nats://localhost:' + PORT
   var server
 
   // Start up our own nats-server
-  before(function (done) {
+  before(function(done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
   // Shutdown our server after we are done
-  after(function () {
+  after(function() {
     server.kill()
   })
 
-  it('server response extension error', function (done) {
+  it('onServerPreResponse extension error', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.on('serverResponseError', function (err) {
+      hemera.on('serverResponseError', function(err) {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Error')
         expect(err.message).to.be.equals('test')
         hemera.close(done)
       })
 
-      hemera.ext('onServerPreResponse', function (ctx, resp, req, next) {
+      hemera.ext('onServerPreResponse', function(ctx, resp, req, next) {
         next(new Error('test'))
       })
 
-      hemera.add({
-        cmd: 'add',
-        topic: 'math'
-      }, (resp, cb) => {
-        cb(null, resp.a + resp.b)
-      })
+      hemera.add(
+        {
+          cmd: 'add',
+          topic: 'math'
+        },
+        (resp, cb) => {
+          cb(null, resp.a + resp.b)
+        }
+      )
 
-      hemera.act({
-        topic: 'math',
-        cmd: 'add',
-        a: 1,
-        b: 2
-      })
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        err => {
+          expect(err).to.be.exists()
+        }
+      )
     })
   })
 
-  it('server response error result', function (done) {
+  it('onServerPreRequest extension error', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.on('serverResponseError', function (err) {
+      hemera.on('serverResponseError', function(err) {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Error')
         expect(err.message).to.be.equals('test')
         hemera.close(done)
       })
 
-      hemera.add({
-        cmd: 'add',
-        topic: 'math'
-      }, (resp, cb) => {
-        cb(new Error('test'))
-      })
-
-      hemera.act({
-        topic: 'math',
-        cmd: 'add',
-        a: 1,
-        b: 2
-      })
-    })
-  })
-
-  it('client response error result', function (done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
-
-    hemera.ready(() => {
-      hemera.on('clientResponseError', function (err) {
-        expect(err).to.be.exists()
-        expect(err.name).to.be.equals('Error')
-        expect(err.message).to.be.equals('test')
-        hemera.close(done)
-      })
-
-      hemera.add({
-        cmd: 'add',
-        topic: 'math'
-      }, (resp, cb) => {
-        cb()
-      })
-
-      hemera.act({
-        topic: 'math',
-        cmd: 'add',
-        a: 1,
-        b: 2
-      }, function () {
-        throw new Error('test')
-      })
-    })
-  })
-
-  it('client response error result with a custom super error', function (done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
-
-    hemera.ready(() => {
-      hemera.on('clientResponseError', function (err) {
-        expect(err).to.be.exists()
-        expect(err.name).to.be.equals('Unauthorized')
-        expect(err.message).to.be.equals('test')
-        hemera.close(done)
-      })
-
-      hemera.add({
-        cmd: 'add',
-        topic: 'math'
-      }, (resp, cb) => {
-        cb()
-      })
-
-      hemera.act({
-        topic: 'math',
-        cmd: 'add',
-        a: 1,
-        b: 2
-      }, function () {
-        throw new UnauthorizedError('test')
-      })
-    })
-  })
-
-  it('client response extension error', function (done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    hemera.ready(() => {
-      hemera.on('clientResponseError', function (err) {
-        expect(err).to.be.exists()
-        expect(err.name).to.be.equals('Error')
-        expect(err.message).to.be.equals('test')
-        hemera.close(done)
-      })
-
-      hemera.ext('onClientPostRequest', function (ctx, next) {
+      hemera.ext('onServerPreRequest', function(ctx, resp, req, next) {
         next(new Error('test'))
       })
 
-      hemera.add({
-        cmd: 'add',
-        topic: 'math'
-      }, (resp, cb) => {
-        cb(null, resp.a + resp.b)
+      hemera.add(
+        {
+          cmd: 'add',
+          topic: 'math'
+        },
+        (resp, cb) => {
+          cb(null, resp.a + resp.b)
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        err => {
+          expect(err).to.be.exists()
+        }
+      )
+    })
+  })
+
+  it('onServerPreHandler extension error', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.on('serverResponseError', function(err) {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
+        hemera.close(done)
       })
 
-      hemera.act({
-        topic: 'math',
-        cmd: 'add',
-        a: 1,
-        b: 2
+      hemera.ext('onServerPreHandler', function(ctx, resp, req, next) {
+        next(new Error('test'))
       })
+
+      hemera.add(
+        {
+          cmd: 'add',
+          topic: 'math'
+        },
+        (resp, cb) => {
+          cb(null, resp.a + resp.b)
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        err => {
+          expect(err).to.be.exists()
+        }
+      )
+    })
+  })
+
+  it('onClientPostRequest extension error', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.on('clientResponseError', function(err) {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
+        hemera.close(done)
+      })
+
+      hemera.ext('onClientPostRequest', function(ctx, next) {
+        next(new Error('test'))
+      })
+
+      hemera.add(
+        {
+          cmd: 'add',
+          topic: 'math'
+        },
+        (resp, cb) => {
+          cb(null, resp.a + resp.b)
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        err => {
+          expect(err).to.be.exists()
+        }
+      )
+    })
+  })
+
+  it('onClientPreRequest extension error', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.on('clientResponseError', function(err) {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
+        hemera.close(done)
+      })
+
+      hemera.ext('onClientPreRequest', function(ctx, next) {
+        next(new Error('test'))
+      })
+
+      hemera.add(
+        {
+          cmd: 'add',
+          topic: 'math'
+        },
+        (resp, cb) => {
+          cb(null, resp.a + resp.b)
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        err => {
+          expect(err).to.be.exists()
+        }
+      )
     })
   })
 })

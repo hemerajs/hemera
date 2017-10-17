@@ -18,36 +18,45 @@ hemera.use(hemeraRethinkdb, {
 })
 
 hemera.ready(() => {
-  hemera.act({
-    topic: 'rethinkdb-store',
-    cmd: 'create',
-    collection: 'users',
-    data: {
-      name: 'peter'
-    }
-  }, function (err, resp) {
-    this.log.info(resp, 'User inserted!')
-  })
-
-  hemera.act({
-    topic: 'rethinkdb-store',
-    cmd: 'changes',
-    collection: 'users',
-    maxMessages$: -1
-  }, function (err, resp) {
-    this.log.info(resp, 'Change detected!')
-  })
-
-  setTimeout(() => {
-    hemera.act({
+  hemera.act(
+    {
       topic: 'rethinkdb-store',
       cmd: 'create',
       collection: 'users',
       data: {
         name: 'peter'
       }
-    }, function (err, resp) {
+    },
+    function(err, resp) {
       this.log.info(resp, 'User inserted!')
-    })
+    }
+  )
+
+  hemera.act(
+    {
+      topic: 'rethinkdb-store',
+      cmd: 'changes',
+      collection: 'users',
+      maxMessages$: -1
+    },
+    function(err, resp) {
+      this.log.info(resp, 'Change detected!')
+    }
+  )
+
+  setTimeout(() => {
+    hemera.act(
+      {
+        topic: 'rethinkdb-store',
+        cmd: 'create',
+        collection: 'users',
+        data: {
+          name: 'peter'
+        }
+      },
+      function(err, resp) {
+        this.log.info(resp, 'User inserted!')
+      }
+    )
   }, 2000)
 })

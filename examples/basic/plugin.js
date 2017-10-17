@@ -2,15 +2,18 @@
 
 const HemeraPlugin = require('./../../packages/hemera-plugin')
 
-function myPlugin (options) {
-  var hemera = this
+function myPlugin(hemera, options, done) {
+  hemera.add(
+    {
+      topic: 'math',
+      cmd: 'add'
+    },
+    (resp, cb) => {
+      cb(null, resp.a + resp.b)
+    }
+  )
 
-  hemera.add({
-    topic: 'math',
-    cmd: 'add'
-  }, (resp, cb) => {
-    cb(null, resp.a + resp.b)
-  })
+  done()
 }
 
 const Hemera = require('./../../packages/hemera')
@@ -20,15 +23,14 @@ const hemera = new Hemera(nats, {
   logLevel: 'info',
   childLogger: true
 })
-hemera.expose('somethingToExpose', 4)
-hemera.use({
-  plugin: HemeraPlugin(myPlugin),
-  attributes: {
-    name: 'myPlugin'
-  },
-  options: {}
+
+const plugin = HemeraPlugin({
+  plugin: myPlugin,
+  options: { name: 'foo' }
 })
 
+hemera.use(plugin)
+
 hemera.ready(() => {
-  // now you can use the plugin
+  // hemera is bootstrapped
 })

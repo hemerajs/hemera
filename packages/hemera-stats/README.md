@@ -1,7 +1,7 @@
 # Hemera-stats package
 
 [![npm](https://img.shields.io/npm/v/hemera-stats.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-stats)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
+[![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
 Provide informations about process stats and registered actions of all hemera instances. This is a broadcast operation.
 
@@ -33,7 +33,7 @@ const hemera = new Hemera(nats, {
 
 hemera.use(HemeraStats)
 hemera.ready(() => {
-  let Joi = hemera.exposition['hemera-joi'].joi
+  let Joi = hemera.joi
 
   hemera.add({
     topic: 'math',
