@@ -30,18 +30,18 @@ const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
-const options = {
-  reader: {
-    lookupdHTTPAddresses: 'http://127.0.0.1:4161'
-  },
-  writer: {
-    url: '127.0.0.1',
-    port: 4150
-  }
-}
-
 hemera.use(HemeraJoi)
-hemera.use(HemeraNsq, { nsq: options })
+hemera.use(HemeraNsq, {
+  nsqReader: {
+    lookupdHTTPAddresses: [
+      'http://localhost:4161'
+    ]
+  },
+  nsqWriter: {
+    nsqdHost: 'localhost',
+    nsqdPort: 4150
+  }
+})
 
 hemera.ready(() => {
   // create subscriber which listen on NSQ events
@@ -49,10 +49,11 @@ hemera.ready(() => {
   hemera.add({
     topic: 'nsq.newsletter.germany',
     cmd: 'subscribe'
-  }, function (req, cb) {
+  }, function (req, reply) {
     this.log.info(req, 'Data')
 
-    cb()
+    // ACK Message, if you pass an error the message is reququed
+    reply(/* new Error('test') */)
   })
 
   // create NSQ subscriber
@@ -61,8 +62,12 @@ hemera.ready(() => {
     cmd: 'subscribe',
     subject: 'newsletter',
     channel: 'germany'
-  }, function (err, resp) {
-    this.log.info(resp, 'Subscribed ACK')
+  }, function (err) {
+    if (err) {
+      return
+    }
+
+    this.log.info('Subscribed ACK')
   })
 
   // Send a message to NSQ
@@ -74,14 +79,18 @@ hemera.ready(() => {
       to: 'klaus',
       text: 'You got a gift!'
     }
-  }, function (err, resp) {
-    this.log.info(resp, 'Publish ACK')
+  }, function (err) {
+    if (err) {
+      return
+    }
+
+    this.log.info('Publish ACK')
   })
 })
 ```
 
 ## Dependencies
-- hemera-joi
+- nsqjs
 
 ## Interface
 
