@@ -64,6 +64,7 @@ hemera.ready(() => {
     channel: 'germany'
   }, function (err) {
     if (err) {
+      this.log.error(err)
       return
     }
 
@@ -81,6 +82,7 @@ hemera.ready(() => {
     }
   }, function (err) {
     if (err) {
+      this.log.error(err)
       return
     }
 
