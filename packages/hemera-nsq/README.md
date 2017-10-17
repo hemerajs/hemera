@@ -38,8 +38,8 @@ hemera.use(HemeraNsq, {
     ]
   },
   nsqWriter: {
-    nsqdHost: 'localhost',
-    nsqdPort: 4150
+    host: 'localhost',
+    port: 4150
   }
 })
 

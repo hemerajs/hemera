@@ -69,8 +69,8 @@ function hemeraNsq(hemera, opts, done) {
 
   // only one writer for this service
   const writer = new Nsq.Writer(
-    opts.nsqWriter.nsqdHost,
-    opts.nsqWriter.nsqdPort,
+    opts.nsqWriter.host,
+    opts.nsqWriter.port,
     opts.nsqWriter.options
   )
 
