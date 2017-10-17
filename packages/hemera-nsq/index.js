@@ -124,7 +124,7 @@ function hemeraNsq(hemera, opts, done) {
   })
 
   // Gracefully shutdown
-  hemera.ext('onClose', (ctx, done) => {
+  hemera.ext('onClose', (hemera, done) => {
     writer.close()
     readers.forEach(reader => {
       reader.close()
