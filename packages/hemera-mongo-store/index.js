@@ -31,7 +31,8 @@ exports.options = {
 }
 
 function hemeraMongoStore(hemera, opts, done) {
-  const topic = 'mongo-store'
+  let topic = 'mongo-store'
+
 
   const preResponseHandler = result => {
     if (opts.serializeResult === true) {
@@ -40,7 +41,7 @@ function hemeraMongoStore(hemera, opts, done) {
     return result
   }
 
-  Mongodb.MongoClient.connect(opts.mongo.url, opts.mongos.options, function(
+  Mongodb.MongoClient.connect(opts.mongo.url, opts.mongos.options, function (
     err,
     db
   ) {
@@ -57,20 +58,26 @@ function hemeraMongoStore(hemera, opts, done) {
     hemera.ext('onClose', (ctx, done) => {
       hemera.log.debug('Mongodb connection closed!')
       db.close(done)
-    })
+    });
+
+    const dbName = db.s.databaseName;
+    
+    if (opts.multiDb) {
+      topic = `mongo-store.${dbName}`;
+    }
 
     hemera.add(
       {
         topic,
         cmd: 'dropCollection'
       },
-      function(req, cb) {
+      function (req, cb) {
         const collection = db.collection(req.collection)
         collection.drop(cb)
       }
     )
 
-    hemera.add(StorePattern.create(topic), function(req, cb) {
+    hemera.add(StorePattern.create(topic), function (req, cb) {
       const collection = db.collection(req.collection)
       const store = new MongoStore(collection, opts)
       store.ObjectID = ObjectID
@@ -79,7 +86,7 @@ function hemeraMongoStore(hemera, opts, done) {
       store.create(req, cb)
     })
 
-    hemera.add(StorePattern.update(topic), function(req, cb) {
+    hemera.add(StorePattern.update(topic), function (req, cb) {
       const collection = db.collection(req.collection)
       const store = new MongoStore(collection, opts)
       store.ObjectID = ObjectID
@@ -94,7 +101,7 @@ function hemeraMongoStore(hemera, opts, done) {
       })
     })
 
-    hemera.add(StorePattern.updateById(topic), function(req, cb) {
+    hemera.add(StorePattern.updateById(topic), function (req, cb) {
       const collection = db.collection(req.collection)
       const store = new MongoStore(collection, opts)
       store.ObjectID = ObjectID
@@ -108,7 +115,7 @@ function hemeraMongoStore(hemera, opts, done) {
       })
     })
 
-    hemera.add(StorePattern.remove(topic), function(req, cb) {
+    hemera.add(StorePattern.remove(topic), function (req, cb) {
       const collection = db.collection(req.collection)
       const store = new MongoStore(collection, opts)
       store.ObjectID = ObjectID
@@ -117,7 +124,7 @@ function hemeraMongoStore(hemera, opts, done) {
       store.remove(req, cb)
     })
 
-    hemera.add(StorePattern.removeById(topic), function(req, cb) {
+    hemera.add(StorePattern.removeById(topic), function (req, cb) {
       const collection = db.collection(req.collection)
       const store = new MongoStore(collection, opts)
       store.ObjectID = ObjectID
@@ -131,7 +138,7 @@ function hemeraMongoStore(hemera, opts, done) {
       })
     })
 
-    hemera.add(StorePattern.replace(topic), function(req, cb) {
+    hemera.add(StorePattern.replace(topic), function (req, cb) {
       const collection = db.collection(req.collection)
       const store = new MongoStore(collection, opts)
       store.ObjectID = ObjectID
@@ -140,7 +147,7 @@ function hemeraMongoStore(hemera, opts, done) {
       store.replace(req, deserialize(req.data), cb)
     })
 
-    hemera.add(StorePattern.replaceById(topic), function(req, cb) {
+    hemera.add(StorePattern.replaceById(topic), function (req, cb) {
       const collection = db.collection(req.collection)
       const store = new MongoStore(collection, opts)
       store.ObjectID = ObjectID
@@ -154,7 +161,7 @@ function hemeraMongoStore(hemera, opts, done) {
       })
     })
 
-    hemera.add(StorePattern.findById(topic), function(req, cb) {
+    hemera.add(StorePattern.findById(topic), function (req, cb) {
       const collection = db.collection(req.collection)
       const store = new MongoStore(collection, opts)
       store.ObjectID = ObjectID
@@ -168,7 +175,7 @@ function hemeraMongoStore(hemera, opts, done) {
       })
     })
 
-    hemera.add(StorePattern.find(topic), function(req, cb) {
+    hemera.add(StorePattern.find(topic), function (req, cb) {
       const collection = db.collection(req.collection)
       const store = new MongoStore(collection, opts)
       store.ObjectID = ObjectID

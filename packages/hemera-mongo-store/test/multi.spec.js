@@ -4,11 +4,7 @@ const Code = require('code')
 const Utils = require('./utils')
 const expect = Code.expect
 
-<<<<<<< HEAD
-describe('Hemera-mongo-store, multiple databases', function () {
-=======
-describe('Hemera-mongo-store', function () {
->>>>>>> 09247a0
+describe.only('Hemera-mongo-store, multiple databases', function () {
   const topic = 'mongo-store.test'
   const testCollection = 'test'
   const options = {
@@ -38,11 +34,7 @@ describe('Hemera-mongo-store', function () {
     done()
   })
 
-<<<<<<< HEAD
   it('create, multi db support', function (done) {
-=======
-  it('create', function (done) {
->>>>>>> 09247a0
     hemera.act({
       topic,
       cmd: 'create',
@@ -59,11 +51,7 @@ describe('Hemera-mongo-store', function () {
     })
   })
 
-<<<<<<< HEAD
   it('create multiple documents, multi db support', function (done) {
-=======
-  it('create multiple documents', function (done) {
->>>>>>> 09247a0
     hemera.act({
       topic,
       cmd: 'create',
@@ -80,11 +68,7 @@ describe('Hemera-mongo-store', function () {
     })
   })
 
-<<<<<<< HEAD
   it('update, multi db support', function (done) {
-=======
-  it('update', function (done) {
->>>>>>> 09247a0
     hemera.act({
       topic,
       cmd: 'create',
@@ -119,11 +103,7 @@ describe('Hemera-mongo-store', function () {
     })
   })
 
-<<<<<<< HEAD
   it('updatebyId, multi db support', function (done) {
-=======
-  it('updatebyId', function (done) {
->>>>>>> 09247a0
     hemera.act({
       topic,
       cmd: 'create',
@@ -156,11 +136,7 @@ describe('Hemera-mongo-store', function () {
     })
   })
 
-<<<<<<< HEAD
   it('remove, multi db support', function (done) {
-=======
-  it('remove', function (done) {
->>>>>>> 09247a0
     hemera.act({
       topic,
       cmd: 'create',
@@ -189,11 +165,7 @@ describe('Hemera-mongo-store', function () {
     })
   })
 
-<<<<<<< HEAD
   it('removeById, multi db support', function (done) {
-=======
-  it('removeById', function (done) {
->>>>>>> 09247a0
     hemera.act({
       topic,
       cmd: 'create',
@@ -220,11 +192,7 @@ describe('Hemera-mongo-store', function () {
     })
   })
 
-<<<<<<< HEAD
   it('findById, multi db support', function (done) {
-=======
-  it('findById', function (done) {
->>>>>>> 09247a0
     hemera.act({
       topic,
       cmd: 'create',
@@ -251,11 +219,7 @@ describe('Hemera-mongo-store', function () {
     })
   })
 
-<<<<<<< HEAD
   it('find, multi db support', function (done) {
-=======
-  it('find', function (done) {
->>>>>>> 09247a0
     hemera.act({
       topic,
       cmd: 'create',
@@ -282,11 +246,7 @@ describe('Hemera-mongo-store', function () {
     })
   })
 
-<<<<<<< HEAD
   it('find with pagination, multi db support', function (done) {
-=======
-  it('find with pagination', function (done) {
->>>>>>> 09247a0
     hemera.act({
       topic,
       cmd: 'create',
@@ -319,11 +279,7 @@ describe('Hemera-mongo-store', function () {
     })
   })
 
-<<<<<<< HEAD
   it('replace, multi db support', function (done) {
-=======
-  it('replace', function (done) {
->>>>>>> 09247a0
     hemera.act({
       topic,
       cmd: 'create',
@@ -357,11 +313,7 @@ describe('Hemera-mongo-store', function () {
     })
   })
 
-<<<<<<< HEAD
   it('replaceById, multi db support', function (done) {
-=======
-  it('replaceById', function (done) {
->>>>>>> 09247a0
     hemera.act({
       topic,
       cmd: 'create',
