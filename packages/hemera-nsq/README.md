@@ -91,6 +91,9 @@ hemera.ready(() => {
 })
 ```
 
+## Requirements
+- node >=6.0.0 - 'nsqjs' module doesn't support of Node.JS versions less than 6.0.0
+
 ## Dependencies
 - nsqjs
 
