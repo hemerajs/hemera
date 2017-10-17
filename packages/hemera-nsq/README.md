@@ -14,24 +14,18 @@ The client use JSON to transfer data.
 [Steps](http://nsq.io/deployment/docker.html)
 
 ### How does it work with NATS and Hemera
-We use a seperate topic for every NSQ Topic/Channels because with that you can listen in every hemera service for events. Every message will be forwarded to the NATS subscriber. As you can see NSQ give you new possibilities how to distribute your data but without lossing the benefits of nats-hemera with regard to load balancing and service-discovery.
+We use a seperate topic for each NSQ Topic/Channels because with that you can listen in every hemera service for events. Every message will be forwarded to the NATS subscriber. As you can see NSQ give you new possibilities how to distribute your data but without lossing the benefits of nats-hemera with regard to load balancing and service-discovery.
 
-#### Example
+## Install
+
+```
+npm i hemera-nsq --save
+```
+
+## Example
 
 ```js
-'use strict'
-
-const Hemera = require('nats-hemera')
-const HemeraJoi = require('hemera-joi')
-const nats = require('nats').connect()
-const HemeraNsq = require('hemera-nsq')
-
-const hemera = new Hemera(nats, {
-  logLevel: 'info'
-})
-
-hemera.use(HemeraJoi)
-hemera.use(HemeraNsq, {
+hemera.use(require('hemera-nsq'), {
   nsqReader: {
     lookupdHTTPAddresses: [
       'http://localhost:4161'
@@ -93,9 +87,6 @@ hemera.ready(() => {
 
 ## Requirements
 - node >=6.0.0 - Due to the rewrite of the nsqjs module only Node >= 6 is supported.
-
-## Dependencies
-- nsqjs
 
 ## Interface
 

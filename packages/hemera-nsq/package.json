@@ -18,15 +18,15 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-plugin": "^0.0.14",
+    "hemera-plugin": "^0.0.17",
     "nsqjs": "0.9.x"
   },
   "devDependencies": {
     "code": "4.0.x",
-    "hemera-testsuite": "1.1.x",
+    "hemera-testsuite": "1.4.x",
     "istanbul": "0.4.x",
-    "mocha": "3.3.x",
+    "mocha": "4.0.x",
     "mocha-lcov-reporter": "1.3.x",
-    "nyc": "10.3.x"
+    "nyc": "11.2.x"
   }
 }

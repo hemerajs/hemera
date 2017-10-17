@@ -6,19 +6,20 @@ const Nsq = require('nsqjs')
 exports.plugin = Hp(hemeraNsq, '>=2.0.0')
 exports.options = {
   name: require('./package.json').name,
-  payloadValidator: 'hemera-joi',
   nsqReader: {},
   nsqWriter: {}
 }
 
 function hemeraNsq(hemera, opts, done) {
   const readers = new Map()
+
   hemera.decorate('nsq', {
     readers
   })
 
   function consume(subject, channel, reply) {
     const readerKey = `${subject}.${channel}`
+
     // only one reader per topic channel combination
     if (readers.has(readerKey)) {
       return reply()
@@ -41,7 +42,8 @@ function hemeraNsq(hemera, opts, done) {
     reader.on(Nsq.Reader.ERROR, err => {
       hemera.log.error(err, 'NSQ Reader error')
       reply(err)
-      hemera.fatal() // Let it crash and restart
+      // Let it crash and restart
+      hemera.fatal()
     })
 
     reader.on(Nsq.Reader.MESSAGE, msg => {

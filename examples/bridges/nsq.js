@@ -1,25 +1,21 @@
 'use strict'
 
 const Hemera = require('./../../packages/hemera')
-const hemeraJoi = require('./../../packages/hemera-joi')
 const nats = require('nats').connect()
 const hemeraNsq = require('./../../packages/hemera-nsq')
 
 const hemera = new Hemera(nats, {
-  logLevel: 'info',
+  logLevel: 'debug',
   childLogger: true
 })
 
-hemera.use(hemeraJoi)
 hemera.use(hemeraNsq, {
-  nsq: {
-    reader: {
-      lookupdHTTPAddresses: '127.0.0.1:4161'
-    },
-    writer: {
-      url: '127.0.0.1',
-      port: 4150
-    }
+  nsqReader: {
+    lookupdHTTPAddresses: '127.0.0.1:4161'
+  },
+  nsqWriter: {
+    url: '127.0.0.1',
+    port: 4150
   }
 })
 
@@ -47,7 +43,7 @@ hemera.ready(() => {
       channel: 'germany'
     },
     function(err, resp) {
-      this.log.info(resp, 'Subscribed ACK')
+      this.log.info(err || resp, 'Subscribed ACK')
     }
   )
 
@@ -63,7 +59,7 @@ hemera.ready(() => {
       }
     },
     function(err, resp) {
-      this.log.info(resp, 'Publish ACK')
+      this.log.info(err || resp, 'Publish ACK')
     }
   )
 })

@@ -15,6 +15,12 @@ Since nats-streaming based on NATS Server you are able to run both technologies 
 - Start hemera and use this plugin to initialize a connection to the streaming server
 - You can now use hemera and nats-streaming with one server!
 
+## Install
+
+```
+npm i hemera-nats-streaming --save
+```
+
 We provide a simple interface to work with nats-streaming
 
 ## Publishing
