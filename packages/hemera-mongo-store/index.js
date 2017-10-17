@@ -8,13 +8,6 @@ const StorePattern = require('hemera-store/pattern')
 const serialize = require('mongodb-extended-json').serialize
 const deserialize = require('mongodb-extended-json').deserialize
 
-<<<<<<< HEAD
-exports.plugin = Hp(function hemeraMongoStore(options, next) {
-  const hemera = this
-  let topic = 'mongo-store'
-  const preResponseHandler = (result) => {
-    if (options.serializeResult === true) {
-=======
 exports.plugin = Hp(hemeraMongoStore, '>=2.0.0')
 exports.options = {
   name: require('./package.json').name,
@@ -42,7 +35,6 @@ function hemeraMongoStore(hemera, opts, done) {
 
   const preResponseHandler = result => {
     if (opts.serializeResult === true) {
->>>>>>> 09247a0
       return serialize(result)
     }
     return result
@@ -56,21 +48,10 @@ function hemeraMongoStore(hemera, opts, done) {
       return hemera.emit('error', err)
     }
 
-<<<<<<< HEAD
-    const dbName = db.s.databaseName;
-    if (options.multiDb) {
-      topic = `mongo-store.${dbName}`;
-    }
-
-
-    hemera.expose('db', db)
-    hemera.expose('mongodb', Mongodb)
-=======
     hemera.decorate('mongodb', {
       client: Mongodb,
       db
     })
->>>>>>> 09247a0
 
     // Gracefully shutdown
     hemera.ext('onClose', (ctx, done) => {
