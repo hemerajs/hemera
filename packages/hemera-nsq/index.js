@@ -122,4 +122,15 @@ function hemeraNsq(hemera, opts, done) {
 
     done()
   })
+
+  // Gracefully shutdown
+  hemera.ext('onClose', (ctx, done) => {
+    writer.close()
+    readers.forEach(reader => {
+      reader.close()
+    })
+
+    hemera.log.debug('NSQ connections closed!')
+    done()
+  })
 }
