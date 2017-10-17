@@ -1,6 +1,6 @@
 {
   "name": "hemera-nsq",
-  "version": "2.0.0",
+  "version": "1.0.1",
   "description": "This is a plugin to use NSQ with Hemera",
   "main": "index.js",
   "repository": {
