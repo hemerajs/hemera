@@ -3,47 +3,54 @@
 const Hp = require('hemera-plugin')
 const Nsq = require('nsqjs')
 
-exports.plugin = Hp(hemeraNsqStore, '>=2.0.0')
+exports.plugin = Hp(hemeraNsq, '>=2.0.0')
 exports.options = {
   name: require('./package.json').name,
-  payloadValidator: 'hemera-joi'
+  payloadValidator: 'hemera-joi',
+  nsqReader: {},
+  nsqWriter: {}
 }
 
-function hemeraNsqStore(hemera, opts, done) {
-  const readers = {}
-
+function hemeraNsq(hemera, opts, done) {
+  const readers = new Map()
   hemera.decorate('nsq', {
     readers
   })
 
-  const Joi = hemera.joi
-
-  function consume(subject, channel, cb) {
+  function consume(subject, channel, reply) {
+    const readerKey = `${subject}.${channel}`
     // only one reader per topic channel combination
-    if (readers[subject + channel]) {
-      return cb(null, true)
+    if (readers.has(readerKey)) {
+      return reply(null, {
+        reader: readers.get(readerKey),
+        alreadyExist: true
+      })
     }
 
-    var reader = new Nsq.Reader(subject, channel, opts.nsq.reader)
+    // if not exist, create Reader instance
+    const reader = new Nsq.Reader(subject, channel, opts.nsqReader)
 
     reader.connect()
 
-    reader.on(Nsq.Reader.NSQD_CONNECTED, function(host, port) {
-      hemera.log.info('Reader connected to %s:%s', host, port)
-      cb(null, true)
+    reader.on(Nsq.Reader.NSQD_CONNECTED, (host, port) => {
+      hemera.log.info('NSQ Reader connected to %s:%s', host, port)
+      reply(null, {
+        alreadyExist: false,
+        reader
+      })
     })
 
-    reader.on(Nsq.Reader.DISCARD, function(msg) {
-      hemera.log.warn(msg, 'Message was discarded')
+    reader.on(Nsq.Reader.DISCARD, msg => {
+      hemera.log.warn(msg, 'NSQ Message was discarded')
     })
 
-    reader.on(Nsq.Reader.ERROR, function(err) {
-      hemera.log.error(err, 'Reader error')
-      cb(err)
+    reader.on(Nsq.Reader.ERROR, err => {
+      hemera.log.error(err, 'NSQ Reader error')
+      reply(err)
       hemera.fatal() // Let it crash and restart
     })
 
-    reader.on(Nsq.Reader.MESSAGE, function(msg) {
+    reader.on(Nsq.Reader.MESSAGE, msg => {
       /*
        * Forward all message of the NSQ topic/channel to the NATS subscriber
        */
@@ -63,29 +70,29 @@ function hemeraNsqStore(hemera, opts, done) {
       )
     })
 
-    readers[subject + channel] = reader
+    readers.set(readerKey, reader)
   }
 
   // only one writer for this service
-  var w = new Nsq.Writer(
-    opts.nsq.writer.url,
-    opts.nsq.writer.port,
-    opts.nsq.writer.options
+  const writer = new Nsq.Writer(
+    opts.nsqWriter.nsqdHost,
+    opts.nsqWriter.nsqdPort,
+    opts.nsqWriter.options
   )
 
-  w.connect()
+  writer.connect()
 
-  w.on('error', function(err) {
-    hemera.log.error(err, 'Writer error')
+  writer.on('error', err => {
+    hemera.log.error(err, 'NSQ Writer error')
     hemera.fatal() // Let it crash and restart
   })
 
-  w.on('closed', function() {
-    hemera.log.warn('Writer closed')
+  writer.on('closed', () => {
+    hemera.log.warn('NSQ Writer closed')
   })
 
-  w.on('ready', function() {
-    hemera.log.info('Writer is ready')
+  writer.on('ready', () => {
+    hemera.log.info('NSQ Writer is ready')
 
     /*
      * Publish a message to a NSQ topic
@@ -93,17 +100,15 @@ function hemeraNsqStore(hemera, opts, done) {
     hemera.add(
       {
         topic: 'nsq',
-        cmd: 'publish',
-        subject: Joi.string().required(),
-        data: Joi.object().required()
+        cmd: 'publish'
       },
-      function(req, cb) {
-        w.publish(req.subject, req.data, function(err) {
+      function(req, reply) {
+        writer.publish(req.subject, req.data, err => {
           if (err) {
-            return cb(err)
+            return reply(err)
           }
 
-          cb(null, true)
+          reply(null)
         })
       }
     )
@@ -114,12 +119,10 @@ function hemeraNsqStore(hemera, opts, done) {
     hemera.add(
       {
         topic: 'nsq',
-        cmd: 'subscribe',
-        subject: Joi.string().required(),
-        channel: Joi.string().required()
+        cmd: 'subscribe'
       },
-      function(req, cb) {
-        consume(req.subject, req.channel, cb)
+      function(req, reply) {
+        consume(req.subject, req.channel, reply)
       }
     )
 
