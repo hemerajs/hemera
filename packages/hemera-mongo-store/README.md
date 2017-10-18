@@ -5,33 +5,22 @@
 
 This is a plugin to use [Mongodb](https://www.mongodb.com/) with Hemera.
 
+## Install
+
+```
+npm i hemera-mongo-store --save
+```
+
 ## Start Mongodb with Docker
 
 ```js
 docker run -d -p 27017:27017 -p 28017:28017 -e AUTH=no tutum/mongodb
 ```
 
-### Running the tests
-
-```
-npm install
-npm run test
-```
-
-#### Example
+## Example
 
 ```js
-'use strict'
-
-const Hemera = require('nats-hemera')
-const nats = require('nats').connect()
-const hemeraMongo = require('hemera-mongo-store')
-
-const hemera = new Hemera(nats, {
-  logLevel: 'info'
-})
-
-hemera.use(hemeraMongo, {
+hemera.use(require('hemera-mongo-store'), {
   mongo: {
     url: 'mongodb://localhost:27017/test'
   }
@@ -49,11 +38,18 @@ hemera.ready(() => {
     this.log.info(resp, 'Query result')
   })
 })
+```
+
+## Tests
 
 ```
-## Database name as topic suffix
+npm run test
+```
 
-If you decide to use multiple MongoDB databases for your services you can use `useDbAsTopicSuffix` option in plugin configuration.
+## Access multiple databases
+
+If you decide to use multiple MongoDB databases for your services you can use the `useDbAsTopicSuffix` option.
+The database name e.g `test` is appended to the topic name `mongo-store.test`. This ensures that your database is accessible from a seperate hemera service. 
 
 You can find a full example [here](https://github.com/hemerajs/hemera/blob/master/examples/databases/mongo-store-suffix.js)
 

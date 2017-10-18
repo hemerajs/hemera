@@ -9,7 +9,7 @@
   },
   "scripts": {
     "lint": "eslint ./**/*.js",
-    "test": "nyc mocha -t 5000 ./test/**/*.js",
+    "test": "nyc mocha -t 5000 --exit ./test/**/*.js",
     "coverage": "npm run test && nyc report --reporter=html"
   },
   "engines": {
@@ -18,12 +18,14 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-plugin": "^0.0.14",
-    "hemera-store": "^1.1.13",
+    "hemera-plugin": "^0.0.17",
+    "hemera-store": "^1.1.14",
     "mongodb": "2.2.x",
     "mongodb-extended-json": "^1.10.0"
   },
   "devDependencies": {
-    "hemera-joi": "^2.0.1"
+    "hemera-joi": "^2.0.1",
+    "mocha": "^4.0.1",
+    "nyc": "^11.2.1"
   }
 }

@@ -61,7 +61,7 @@ function initServer(topic, testCollection, pluginOptions, cb) {
           collection: testCollection
         },
         function(err, resp) {
-          cb(null, { server, hemera })
+          cb(null, { server, hemera, plugin })
         }
       )
     })

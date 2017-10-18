@@ -4,7 +4,7 @@ const Code = require('code')
 const Utils = require('./utils')
 const expect = Code.expect
 
-describe.only('Hemera-mongo-store, with suffix', function () {
+describe('Hemera-mongo-store with database name as topic suffix', function () {
   const topic = 'mongo-store.test'
   const testCollection = 'test'
   const options = {
