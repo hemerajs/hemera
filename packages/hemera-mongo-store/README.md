@@ -51,6 +51,11 @@ hemera.ready(() => {
 })
 
 ```
+## Database name as topic suffix
+
+If you decide to use multiple MongoDB databases for your services you can use `useDbAsTopicSuffix` option in plugin configuration.
+
+You can find a full example [here](https://github.com/hemerajs/hemera/blob/master/examples/databases/mongo-store-suffix.js)
 
 ## API
 
