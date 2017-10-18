@@ -48,8 +48,8 @@ function hemeraMongoStore(hemera, opts, done) {
     if (err) {
       return hemera.emit('error', err)
     }
-
-    const dbName = db.s.databaseName;
+    
+    const dbName = db.databaseName;
     
     if (opts.useDbAsTopicSuffix) {
       topic = `mongo-store.${dbName}`;
