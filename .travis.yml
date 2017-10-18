@@ -1,6 +1,9 @@
 language: node_js
 sudo: true
 
+services:
+  - mongodb
+
 node_js:
   - "4"
   - "6"
@@ -9,6 +12,7 @@ node_js:
 
 script:
   - npm run ci:setup && npm run ci
+  - lerna run test --scope hemera-mongo-store
 
 env:
   - CXX="g++-4.8"
