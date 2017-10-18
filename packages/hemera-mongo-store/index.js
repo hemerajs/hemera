@@ -49,6 +49,12 @@ function hemeraMongoStore(hemera, opts, done) {
       return hemera.emit('error', err)
     }
 
+    const dbName = db.s.databaseName;
+    
+    if (opts.useDbAsTopicSuffix) {
+      topic = `mongo-store.${dbName}`;
+    }
+
     hemera.decorate('mongodb', {
       client: Mongodb,
       db
@@ -59,13 +65,7 @@ function hemeraMongoStore(hemera, opts, done) {
       hemera.log.debug('Mongodb connection closed!')
       db.close(done)
     });
-
-    const dbName = db.s.databaseName;
     
-    if (opts.multiDb) {
-      topic = `mongo-store.${dbName}`;
-    }
-
     hemera.add(
       {
         topic,

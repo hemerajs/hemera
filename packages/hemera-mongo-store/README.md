@@ -51,80 +51,11 @@ hemera.ready(() => {
 })
 
 ```
+## Database name as topic suffix
 
-## Multiple databases example
+If you decide to use multiple MongoDB databases for your services you can use `useDbAsTopicSuffix` option in plugin configuration.
 
-Service 1
-
-```js
-'use strict'
-
-const Hemera = require('nats-hemera')
-const nats = require('nats').connect()
-const hemeraMongo = require('hemera-mongo-store')
-
-const hemera = new Hemera(nats, {
-  logLevel: 'info'
-})
-
-hemera.use(hemeraMongo, {
-  mongo: {
-    url: 'mongodb://localhost:27017/firstDb',
-    multiDB: true
-  }
-})
-```
-
-Service 2
-
-```js
-'use strict'
-
-const Hemera = require('nats-hemera')
-const nats = require('nats').connect()
-const hemeraMongo = require('hemera-mongo-store')
-
-const hemera = new Hemera(nats, {
-  logLevel: 'info'
-})
-
-hemera.use(hemeraMongo, {
-  multiDb: true,
-  mongo: {
-    url: 'mongodb://localhost:27017/secondDb'
-  }
-})
-```
-
-Access to first and second dbs:
-
-```js
-hemera.ready(() => {
-  hemera.act({
-    topic: 'mongo-store.firstDb',
-    cmd: 'create',
-    collection: 'collTest',
-    data: {
-      name: 'peter'
-    }
-  }, function (err, resp) {
-    this.log.info(resp, 'Query result')
-  })
-})
-
-hemera.ready(() => {
-  hemera.act({
-    topic: 'mongo-store.secondDb',
-    cmd: 'create',
-    collection: 'collTest',
-    data: {
-      name: 'peter'
-    }
-  }, function (err, resp) {
-    this.log.info(resp, 'Query result')
-  })
-})
-```
+You can find a full example [here](https://github.com/hemerajs/hemera/blob/master/examples/databases/mongo-store-suffix.js)
 
 ## API
 

@@ -20,7 +20,7 @@
   "dependencies": {
     "hemera-plugin": "^0.0.14",
     "hemera-store": "^1.1.13",
-    "mongodb": "2.2.x",
+    "mongodb": "^2.2.33",
     "mongodb-extended-json": "^1.10.0"
   },
   "devDependencies": {
