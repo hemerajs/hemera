@@ -17,6 +17,14 @@ platform: x64
 
 configuration: Release
 
+skip_commits:
+  files:
+    - docs/*
+    - Dockerfile
+    - travis.yml
+    - '**/*.html'
+    - '*.md'
+
 init:
   - cmd: node --version
   - cmd: npm --version
