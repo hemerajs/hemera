@@ -139,8 +139,8 @@ hemera.add({ topic: "math", cmd: "add", foo: "bar" }, function (req, cb) {
 hemera.act({ topic: "math", cmd: "add", a: 1, b: 1 })
 </code>
                     </pre>
-                                        <h4 class="section-h4">Hemera <code>$</code> variables</h4>
-                    <p>In Hemera we use special <code>$</code> suffixed variables to configure additional transport options in NATS. Please consider that those properties are not part of the pattern and will be ingored at pattern matching.</p>
+                                        <h4 class="section-h4">Hemera <code>$</code> properties</h4>
+                    <p>In Hemera we use special <code>$</code> suffixed properties to configure additional transport options in NATS. Please consider that those properties are not part of the pattern and will be ingored at pattern matching.</p>
                     <pre>
 <code class="javascript">
 hemera.add({
