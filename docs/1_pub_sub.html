@@ -183,18 +183,18 @@ hemera.add({
                     <p>You can also pass an async function.</p>
                     <pre>
 <code class="javascript">
-const result = await hemera.add({
+hemera.add({
   pubsub$: true,
   topic: "math",
   cmd: "add"
 }, async function () {
-  return await req.a + req.b
 })
 
-const result = await hemera.add({
+const result = await hemera.act({
   pubsub$: true,
   topic: "math",
   cmd: "add"
+}, async function () {
 })
 </code>
                     </pre>
