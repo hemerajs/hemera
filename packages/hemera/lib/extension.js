@@ -50,10 +50,7 @@ class Extension {
       throw error
     }
 
-    this[type].push((arg, next) => {
-      arg.push(next)
-      handler.apply(null, arg)
-    })
+    this[type].push(handler)
   }
 
   /**

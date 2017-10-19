@@ -149,7 +149,8 @@ hemera.ext("onClientPreRequest", function(hemera, next) {
           <br>
           <pre>
 <code class="javascript">
-hemera.ext("onServerPreHandler", function(hemera, req, reply, next) {
+hemera.ext("onServerPreHandler", function(hemera, request, reply, next) {
+   res.send(new Error('test'))
    next()
 })
 </code>
@@ -161,7 +162,7 @@ hemera.ext("onServerPreHandler", function(hemera, req, reply, next) {
             <li>
               <code>hemera</code> current hemera instance</li>
             <li>
-              <code>req</code> contains the current request.
+              <code>request</code> contains the current request.
             </li>
             <li>
               <code>reply</code> contains the current reply interface.
@@ -172,6 +173,19 @@ hemera.ext("onServerPreHandler", function(hemera, req, reply, next) {
                 </ul>
             </li>
           </ul>
+
+          <h4 class="section-h4">Async / Await</h4>
+          <p>You can also pass an async function.</p>
+          <pre>
+<code class="javascript">
+hemera.ext("onServerPreHandler", async function(hemera, request, reply) {
+  res.send(new Error('test'))
+})
+
+hemera.ext("onClientPreRequest", async function(hemera) {
+})
+</code>
+                    </pre>
 
         </div>
         <!-- END CONTENT -->
