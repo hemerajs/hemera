@@ -562,6 +562,21 @@ class Hemera extends EventEmitter {
   }
 
   /**
+   *
+   *
+   * @static
+   * @param {any} fn
+   * @param {any} cb
+   * @memberof Hemera
+   */
+  _serverExtIterator(fn, cb) {
+    const ret = fn(this, this._request, this._reply, cb)
+    if (ret && typeof ret.then === 'function') {
+      ret.then(cb).catch(cb)
+    }
+  }
+
+  /**
    * Last step before the response is send to the callee.
    * The preResponse extension is dispatched and previous errors are evaluated.
    *
@@ -570,9 +585,11 @@ class Hemera extends EventEmitter {
   finish() {
     const self = this
 
-    const args = [self, self._request, self._reply]
-    self._series(self, self._ext['onServerPreResponse'], args, err =>
-      self._onServerPreResponseCompleted(err)
+    self._series(
+      self,
+      self._serverExtIterator,
+      self._ext['onServerPreResponse'],
+      err => self._onServerPreResponseCompleted(err)
     )
   }
 
@@ -741,9 +758,11 @@ class Hemera extends EventEmitter {
       hemera._actMeta = {}
       hemera._isServer = true
 
-      const args = [hemera, hemera._request, hemera._reply]
-      hemera._series(hemera, self._ext['onServerPreRequest'], args, err =>
-        hemera._onServerPreRequestCompleted(err)
+      hemera._series(
+        hemera,
+        hemera._serverExtIterator,
+        hemera._ext['onServerPreRequest'],
+        err => hemera._onServerPreRequestCompleted(err)
       )
     }
 
@@ -789,9 +808,11 @@ class Hemera extends EventEmitter {
 
     // check if a handler is registered with this pattern
     if (self._actMeta) {
-      const args = [self, self._request, self._reply]
-      self._series(self, self._ext['onServerPreHandler'], args, err =>
-        self._onServerPreHandlerCompleted(err)
+      self._series(
+        self,
+        self._serverExtIterator,
+        self._ext['onServerPreHandler'],
+        err => self._onServerPreHandlerCompleted(err)
       )
     } else {
       const internalError = new Errors.PatternNotFound(
@@ -1020,6 +1041,20 @@ class Hemera extends EventEmitter {
   /**
    *
    *
+   * @param {any} fn
+   * @param {any} cb
+   * @memberof Hemera
+   */
+  _clientExtIterator(fn, cb) {
+    const ret = fn(this, cb)
+    if (ret && typeof ret.then === 'function') {
+      ret.then(cb).catch(cb)
+    }
+  }
+
+  /**
+   *
+   *
    * @param {any} response
    *
    * @memberof Hemera
@@ -1043,9 +1078,11 @@ class Hemera extends EventEmitter {
         return
       }
 
-      // Execute onClientPostRequest extension
-      self._series(self, self._ext['onClientPostRequest'], [self], err =>
-        self._onClientPostRequestCompleted(err)
+      self._series(
+        self,
+        self._clientExtIterator,
+        self._ext['onClientPostRequest'],
+        err => self._onClientPostRequestCompleted(err)
       )
     } catch (err) {
       let error = self.getRootError(err)
@@ -1171,9 +1208,11 @@ class Hemera extends EventEmitter {
       }
     }
 
-    // Execute onClientPreRequest extension
-    hemera._series(hemera, hemera._ext['onClientPreRequest'], [hemera], err =>
-      hemera._onPreRequestCompleted(err)
+    hemera._series(
+      hemera,
+      hemera._clientExtIterator,
+      hemera._ext['onClientPreRequest'],
+      err => hemera._onPreRequestCompleted(err)
     )
 
     return hemera._defer.promise
@@ -1278,9 +1317,11 @@ class Hemera extends EventEmitter {
       self._response.error = error
       self.emit('clientResponseError', error)
 
-      // Execute onClientPostRequest extension
-      self._series(self, self._ext['onClientPostRequest'], [self], err =>
-        self._onClientTimeoutPostRequestCompleted(err)
+      self._series(
+        self,
+        self._clientExtIterator,
+        self._ext['onClientPostRequest'],
+        err => self._onClientTimeoutPostRequestCompleted(err)
       )
     }
 
