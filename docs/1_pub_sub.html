@@ -124,6 +124,7 @@
                         messages are delivered to the subscriber’s message handler. If there is no handler, the subscription
                         is synchronous and the client may be blocked until it can process the message.
                     </p>
+                    <div class="alert alert-warning" role="alert"><i class="fa fa-info" aria-hidden="true"></i> It's not possible to run server methods with different transport options <code>$</code> with the same topic. You have to use a different topic name.</div>
                     <h4 class="section-h4">Normal (one-to-many)</h4>
                     <pre>
 <code class="javascript">
