@@ -2,7 +2,6 @@
 <img src="https://github.com/StarpTech/hemera/raw/master/media/hemera-logo.png" alt="Hemera" style="max-width:100%;">
 </p>
 
-<p align="center">
 <a href="http://opensource.org/licenses/MIT"><img src="https://camo.githubusercontent.com/11ad3ffb000cd7668567587af947347c738b6472/68747470733a2f2f696d672e736869656c64732e696f2f6e706d2f6c2f657870726573732e7376673f7374796c653d666c61742d737175617265266d61784167653d33363030" alt="License MIT" data-canonical-src="https://img.shields.io/npm/l/express.svg?amp;maxAge=3600" style="max-width:100%;"></a>
 <a href="https://travis-ci.org/hemerajs/hemera"><img src="https://travis-ci.org/hemerajs/hemera.svg?branch=master" alt="Build Status" data-canonical-src="https://travis-ci.org/hemerajs/hemera.svg?branch=master" style="max-width:100%;"></a>
 <a href="https://ci.appveyor.com/project/StarpTech/hemera"><img src="https://ci.appveyor.com/api/projects/status/s3to4boq8yawulpn?svg=true" alt="Build Status" data-canonical-src="https://ci.appveyor.com/project/StarpTech/hemera" style="max-width:100%;"></a>
@@ -197,25 +196,6 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 |--------|-------|
 | [hemera-jwt-auth](https://github.com/hemerajs/hemera/tree/master/packages/hemera-jwt-auth) | [![npm](https://img.shields.io/npm/v/hemera-jwt-auth.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-jwt-auth)
 
-## Performance
-
-```
-Platform info:
-==============
-   Windows_NT 10.0.15063 x64
-   Node.JS: 8.4.0
-   V8: 6.0.286.52
-   Intel(R) Core(TM) i5-6600K CPU @ 3.50GHz × 4
-==============
-.\benchmark\request_rt.js
-22436 request-responses/sec
-Avg roundtrip latency: 22 microseconds
-
-.\benchmark\request_rt_async_await.js
-22002 request-responses/sec
-Avg roundtrip latency: 22 microseconds
-```
-
 ## Changelog
 
 See [Releases](https://github.com/hemerajs/hemera/releases)
@@ -246,4 +226,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 Hemera is free for any use (MIT license). If you are in production don't miss the professional support service. For courses and training send me an email to [deusdustin@gmail.com](deusdustin@gmail.com) or contact me private on <a href="https://gitter.im/hemerajs/hemera"><img src="https://camo.githubusercontent.com/e7536e01bc9c129b974e11c26b174f54e50c6d69/68747470733a2f2f696d672e736869656c64732e696f2f6769747465722f726f6f6d2f6e776a732f6e772e6a732e7376673f7374796c653d666c61742d737175617265266d61784167653d33363030" alt="Gitter" data-canonical-src="https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=3600" style="max-width:100%;"></a>
 
 ## Support / Donate
-We prefer a PR but if you have no time but want to give us something back you can support us with a starbucks coffee [PaypalMe](https://paypal.me/payinstant/5)
+<p>
+  <a href="https://www.patreon.com/starptech">
+    <img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" height="40px" />
+  </a>
+</p>
