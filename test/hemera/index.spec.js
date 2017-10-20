@@ -218,6 +218,37 @@ describe('Hemera', function() {
     })
   })
 
+  it('Should be able to support zero as a server response', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'multiply'
+        },
+        (req, cb) => {
+          cb(null, req.a * req.b)
+        }
+      )
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'multiply',
+          a: 0,
+          b: 0
+        },
+        function(err, resp) {
+          expect(err).to.be.not.exists()
+          expect(resp).to.be.equals(0)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
   it('Should be able to set specific config', function(done) {
     const nats = require('nats').connect(authUrl)
 
