@@ -226,17 +226,19 @@ describe('Hemera', function() {
     hemera.ready(() => {
       hemera.add(
         {
-          topic: 'systems-europe.a.*',
-          cmd: 'info'
+          topic: 'math',
+          cmd: 'multiply'
         },
         (req, cb) => {
-          cb(null, 0)
+          cb(null, req.a * req.b)
         }
       )
       hemera.act(
         {
-          topic: 'systems-europe.a.info',
-          cmd: 'info'
+          topic: 'math',
+          cmd: 'multiply',
+          a: 0,
+          b: 0
         },
         function(err, resp) {
           expect(err).to.be.not.exists()
