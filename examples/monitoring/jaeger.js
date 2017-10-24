@@ -56,7 +56,7 @@ hemera.ready(() => {
     {
       topic: 'profile',
       cmd: 'get',
-      a: Joi.number().required()
+      id: Joi.number().required()
     },
     function(req, cb) {
       this.delegate$.query = 'SELECT FROM User;'
@@ -70,7 +70,7 @@ hemera.ready(() => {
       cmd: 'login'
     },
     function(req, cb) {
-      this.act('topic:profile,cmd:get', function() {
+      this.act('topic:profile,cmd:get,id:1', function() {
         this.act('topic:email,cmd:send', function() {
           this.act('topic:account,cmd:delete', cb)
         })
