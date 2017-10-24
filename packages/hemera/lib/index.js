@@ -719,7 +719,7 @@ class Hemera extends EventEmitter {
     }
 
     // set only when we have a result and the reply interface wasn't called
-    if ((resp !== undefined) && !self._reply.sent) {
+    if (resp !== undefined && !self._reply.sent) {
       self._reply.payload = resp
     }
 
