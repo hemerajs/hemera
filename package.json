@@ -51,7 +51,7 @@
   "license": "MIT",
   "devDependencies": {
     "async": "2.5.x",
-    "axios": "0.16.x",
+    "axios": "0.17.x",
     "chokidar-cli": "1.2.x",
     "code": "4.1.x",
     "coveralls": "3.0.x",

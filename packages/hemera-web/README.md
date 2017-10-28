@@ -1,9 +1,9 @@
 # Hemera-web
 Http route mapping for Hemera microservices. Based on [Express 4](https://github.com/expressjs/express)
 
-- Depends on minimalist web framework
+- Depends on minimalist and new web framework Express 4
 - Respect `Body` and `Query` payload as pattern
-- Provide a REST like interface `/:topic/:cmd`
+- Provide a REST like interface `/:topic/:cmd` to Hemera
 - Transport small binary or text data in pattern
 - Returns correct Hemera errors without stack traces
 
@@ -13,11 +13,6 @@ Http route mapping for Hemera microservices. Based on [Express 4](https://github
 #### Example
 
 ```js
-const Hemera = require('nats-hemera')
-const nats = require('nats').connect()
-const hemeraWeb = require('hemera-web')
-
-const hemera = new Hemera(nats)
 hemera.use(hemeraWeb, {
   port: 3000,
   host: '127.0.0.1',
@@ -29,7 +24,7 @@ hemera.ready(() => {
     topic: 'math',
     cmd: 'add'
   }, (req, cb) => {
-    cb(null, req.a + req.b)
+    cb(null, parseInt(req.a) + parseInt(req.b))
   })
 })
 ```

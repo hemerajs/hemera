@@ -21,7 +21,7 @@ hemera.ready(() => {
     },
     (req, cb) => {
       cb(null, {
-        result: req.a + req.b
+        result: parseInt(req.a) + parseInt(req.b)
       })
     }
   )
