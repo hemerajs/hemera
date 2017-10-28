@@ -2,125 +2,275 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hemera</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800">
-    <link rel="stylesheet" href="scripts/highlight/styles/github-gist.css">
-    <link rel="stylesheet" href="stylesheets/styles.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hemera</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800">
+  <link rel="stylesheet" href="scripts/highlight/styles/github-gist.css">
+  <link rel="stylesheet" href="stylesheets/styles.css">
 </head>
 
 <body>
 
-    <!-- BEGIN NAVIGATION BAR -->
-    <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
-                    aria-controls="navbar">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-                <a class="navbar-brand" href="https://github.com/hemerajs/hemera"><img src="images/logo.png" height="36px"></a>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="active"><a href="index.html">Hemera</a></li>
-                    <li><a href="https://github.com/hemerajs/hemera">GitHub</a></li>
-                </ul>
-            </div>
-            <!--/.nav-collapse -->
+  <!-- BEGIN NAVIGATION BAR -->
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+          aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://github.com/hemerajs/hemera">
+          <img src="images/logo.png" height="36px">
+        </a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="active">
+            <a href="index.html">Hemera</a>
+          </li>
+          <li>
+            <a href="https://github.com/hemerajs/hemera">GitHub</a>
+          </li>
+        </ul>
+      </div>
+      <!--/.nav-collapse -->
+    </div>
+  </nav>
+  <!-- END NAVIGATION BAR -->
+
+  <div class="container body-container">
+    <div class="main-content">
+      <div class="row">
+
+        <!-- BEGIN SIDEBAR -->
+        <div class="col-sm-3 border-right section-left">
+          <div saveheight="1" class="sidebar-nav">
+            <h4>INTRODUCTION</h4>
+            <ul>
+              <li>
+                <a href="index.html">
+                  <span>Introduction</span>
+                </a>
+              </li>
+              <li>
+                <a href="getting-started.html">
+                  <span>Getting Started</span>
+                </a>
+              </li>
+              <li>
+                <a href="packages.html">
+                  <span>Packages</span>
+                </a>
+              </li>
+            </ul>
+
+            <h4>1. Basics</h4>
+            <ul>
+              <li>
+                <a href="1_request_reply.html">
+                  <span>Request & Reply</span>
+                </a>
+              </li>
+              <li>
+                <a href="1_pattern_matching.html">
+                  <span>Pattern matching</span>
+                </a>
+              </li>
+              <li>
+                <a href="1_pub_sub.html">
+                  <span>Publish & Subscribe</span>
+                </a>
+              </li>
+              <li>
+                <a href="1_payload_validation.html">
+                  <span>Payload validation</span>
+                </a>
+              </li>
+              <li>
+                <a href="1_middleware.html">
+                  <span>Middleware</span>
+                </a>
+              </li>
+              <li>
+                <a href="1_extension_points.html">
+                  <span>Extension Points</span>
+                </a>
+              </li>
+              <li>
+                <a href="1_logging.html">
+                  <span>Logging</span>
+                </a>
+              </li>
+              <li>
+                <a href="1_plugins.html">
+                  <span>Plugins</span>
+                </a>
+              </li>
+              <li>
+                <a href="1_metadata.html">
+                  <span>Metadata</span>
+                </a>
+              </li>
+              <li>
+                <a href="1_context.html">
+                  <span>Context</span>
+                </a>
+              </li>
+              <li>
+                <a href="1_delegate.html">
+                  <span>Delegate</span>
+                </a>
+              </li>
+              <li>
+                <a href="1_life_cycle_events.html">
+                  <span>Life-cycle events</span>
+                </a>
+              </li>
+            </ul>
+
+            <h4>2. ERROR HANDLING</h4>
+            <ul>
+              <li>
+                <a href="2_basic.html">
+                  <span>Basic</span>
+                </a>
+              </li>
+              <li>
+                <a href="2_timeout_errors.html">
+                  <span>Timeout errors</span>
+                </a>
+              </li>
+              <li>
+                <a href="2_fatal_errors.html">
+                  <span>Fatal errors</span>
+                </a>
+              </li>
+              <li>
+                <a href="2_error_propagation.html">
+                  <span>Error propagation</span>
+                </a>
+              </li>
+              <li>
+                <a href="2_transport_errors.html">
+                  <span>Listen on transport errors</span>
+                </a>
+              </li>
+              <li>
+                <a href="2_response_errors.html">
+                  <span>Listen on response errors</span>
+                </a>
+              </li>
+              <li>
+                <a href="2_custom_timeout.html">
+                  <span>Custom timeout per Act</span>
+                </a>
+              </li>
+            </ul>
+
+            <h4>3. Internals</h4>
+            <ul>
+              <li>
+                <a href="4_overview.html" class="active">
+                  <span>Protocol</span>
+                </a>
+              </li>
+              <li>
+                <a href="4_api.html">
+                  <span>API</span>
+                </a>
+              </li>
+            </ul>
+
+            <h4>4. ADVANCED</h4>
+            <ul>
+              <li>
+                <a href="5_clustering.html">
+                  <span>Clustering</span>
+                </a>
+              </li>
+              <li>
+                <a href="5_api_versioning.html">
+                  <span>API Versioning</span>
+                </a>
+              </li>
+              <li>
+                <a href="5_nats_limits.html">
+                  <span>Nats limits & features</span>
+                </a>
+              </li>
+              <li>
+                <a href="5_testing.html">
+                  <span>Testing</span>
+                </a>
+              </li>
+              <li>
+                <a href="5_bridge.html">
+                  <span>Bridge</span>
+                </a>
+              </li>
+              <li>
+                <a href="5_nginx_integration_for_nats.html">
+                  <span>Nginx integration for NATS</span>
+                </a>
+              </li>
+              <li>
+                <a href="5_contributing.html">
+                  <span>Contributing</span>
+                </a>
+              </li>
+              <li>
+                <a href="5_hemera_vs_seneca.html">
+                  <span>Hemera vs Seneca</span>
+                </a>
+              </li>
+            </ul>
+
+            <h4>5. TOOLING</h4>
+            <ul>
+              <li>
+                <a href="6_monitoring.html">
+                  <span>Monitoring</span>
+                </a>
+              </li>
+              <li>
+                <a href="6_zipkin.html">
+                  <span>Zipkin</span>
+                </a>
+              </li>
+              <li>
+                <a href="6_cli.html">
+                  <span>CLI</span>
+                </a>
+              </li>
+            </ul>
+            <h4>6. BEST PRACTICE</h4>
+            <ul>
+              <li>
+                <a href="7_docker.html">
+                  <span>Docker</span>
+                </a>
+              </li>
+            </ul>
+
+          </div>
         </div>
-    </nav>
-    <!-- END NAVIGATION BAR -->
+        <!-- END SIDEBAR -->
 
-    <div class="container body-container">
-        <div class="main-content">
-            <div class="row">
+        <!-- BEGIN CONTENT -->
+        <div class="col-sm-9 border-left section-right">
+          <h1 class="section-header">Protocol</h1>
+          <hr>
 
-                <!-- BEGIN SIDEBAR -->
-                <div class="col-sm-3 border-right section-left">
-                    <div saveheight="1" class="sidebar-nav">
-                        <h4>INTRODUCTION</h4>
-                        <ul>
-                            <li><a href="index.html"><span>Introduction</span></a></li>
-                            <li><a href="getting-started.html"><span>Getting Started</span></a></li>
-                            <li><a href="packages.html"><span>Packages</span></a></li>
-                        </ul>
-
-                        <h4>1. Basics</h4>
-                        <ul>
-                            <li><a href="1_request_reply.html"><span>Request & Reply</span></a></li>
-                            <li><a href="1_pattern_matching.html"><span>Pattern matching</span></a></li>
-                            <li><a href="1_pub_sub.html"><span>Publish & Subscribe</span></a></li>
-                            <li><a href="1_payload_validation.html"><span>Payload validation</span></a></li>
-                            <li><a href="1_middleware.html"><span>Middleware</span></a></li>
-                            <li><a href="1_extension_points.html"><span>Extension Points</span></a></li>
-                            <li><a href="1_logging.html"><span>Logging</span></a></li>
-                            <li><a href="1_plugins.html"><span>Plugins</span></a></li>
-                            <li><a href="1_metadata.html"><span>Metadata</span></a></li>
-                            <li><a href="1_context.html"><span>Context</span></a></li>
-                            <li><a href="1_delegate.html"><span>Delegate</span></a></li>
-                            <li><a href="1_life_cycle_events.html"><span>Life-cycle events</span></a></li>
-                        </ul>
-
-                        <h4>2. ERROR HANDLING</h4>
-                        <ul>
-                            <li><a href="2_basic.html"><span>Basic</span></a></li>
-                            <li><a href="2_timeout_errors.html"><span>Timeout errors</span></a></li>
-                            <li><a href="2_fatal_errors.html"><span>Fatal errors</span></a></li>
-                            <li><a href="2_error_propagation.html"><span>Error propagation</span></a></li>
-                            <li><a href="2_transport_errors.html"><span>Listen on transport errors</span></a></li>
-                            <li><a href="2_response_errors.html"><span>Listen on response errors</span></a></li>
-                            <li><a href="2_custom_timeout.html"><span>Custom timeout per Act</span></a></li>
-                        </ul>
-
-                        <h4>3. Internals</h4>
-                        <ul>
-                            <li><a href="4_overview.html" class="active"><span>Protocol</span></a></li>
-                            <li><a href="4_api.html"><span>API</span></a></li>
-                        </ul>
-
-                        <h4>4. ADVANCED</h4>
-                        <ul>
-                            <li><a href="5_clustering.html"><span>Clustering</span></a></li>
-                            <li><a href="5_api_versioning.html"><span>API Versioning</span></a></li>
-                            <li><a href="5_nats_limits.html"><span>Nats limits & features</span></a></li>
-                            <li><a href="5_testing.html"><span>Testing</span></a></li>
-                            <li><a href="5_bridge.html"><span>Bridge</span></a></li>
-                            <li><a href="5_nginx_integration_for_nats.html"><span>Nginx integration for NATS</span></a></li>
-                            <li><a href="5_contributing.html"><span>Contributing</span></a></li>
-                            <li><a href="5_hemera_vs_seneca.html"><span>Hemera vs Seneca</span></a></li>
-                        </ul>
-
-                        <h4>5. TOOLING</h4>
-                        <ul>
-                            <li><a href="6_monitoring.html"><span>Monitoring</span></a></li>
-                            <li><a href="6_zipkin.html"><span>Zipkin</span></a></li>
-                            <li><a href="6_cli.html"><span>CLI</span></a></li>
-                        </ul>
-                        <h4>6. BEST PRACTICE</h4>
-                        <ul>
-                            <li><a href="7_docker.html"><span>Docker</span></a></li>
-                        </ul>
-
-                    </div>
-                </div>
-                <!-- END SIDEBAR -->
-
-                <!-- BEGIN CONTENT -->
-                <div class="col-sm-9 border-left section-right">
-                    <h1 class="section-header">Protocol</h1>
-                    <hr>
-
-                    <p class="section-content">
-                    </p>
-                    <h4 class="section-h4">Definition</h4>
-                    <pre>
+          <p class="section-content">
+          </p>
+          <h4 class="section-h4">Definition</h4>
+          <pre>
 <code>
 enum RequestType {
   pubsub = 0;
@@ -169,26 +319,22 @@ message Protocol {
 }
 </code>
 </pre>
-                    <h4 class="section-h4">Example Request</h4>
-                    <pre>
+          <h4 class="section-h4">Example Request</h4>
+          <pre>
 <code class="javascript">
 {
-  // Map<string, any>
   "pattern": {
     "topic": "math",
     "cmd": "add",
     "a": 1,
     "b": 20
   },
-  // Map<string, any>, will be passed (Max hops: infinite)
   "meta": {
     "a": "b"
   },
-  // Map<string, any>, Won't be passed (Max hop: 1)
   "delegate": {
     "a": "b"
   },
-  // Tracing informations are collected by Hemera
   "trace": {
     "traceId": "b3d8b880c679406084636e7aac0ae7b3",
     "spanId": "f475733e391a416b9458263f0adbaa49",
@@ -196,7 +342,6 @@ message Protocol {
     "service": "math",
     "method": "a:1,b:20,cmd:add,topic:math"
   },
-  // General informations about the request
   "request": {
     "id": "0d8c3df07244436d8c3c63f2cc2f296e",
     "type": "request", // Enum "request" or "pubsub"
@@ -204,14 +349,13 @@ message Protocol {
 }
 </code>
                     </pre>
-<h4 class="section-h4">Example Response</h4>
-<pre>
+          <h4 class="section-h4">Example Response</h4>
+          <pre>
   <code class="javascript">
 {
   "meta": {
     "a": "b"
   },
-  // Same data as above but we can calculate the request duration
   "trace": {
     "traceId": "b3d8b880c679406084636e7aac0ae7b3",
     "spanId": "f475733e391a416b9458263f0adbaa49",
@@ -220,14 +364,11 @@ message Protocol {
     "method": "a:1,b:20,cmd:add,topic:math",
     "duration": 5690
   },
-  // Same data as above
   "request": {
     "id": "0d8c3df07244436d8c3c63f2cc2f296e",
     "type": "request"
   },
-  // Response result
   "result": 21,
-  // The root issue
   "error": {
     "name": "Unauthorized",
     "message": "test",
@@ -244,34 +385,34 @@ message Protocol {
 }
   </code>
 </pre>
-                </div>
-                <!-- END CONTENT -->
-
-            </div>
-            <!-- /row -->
         </div>
-        <!-- /main-content -->
+        <!-- END CONTENT -->
+
+      </div>
+      <!-- /row -->
     </div>
-    <!-- /container -->
+    <!-- /main-content -->
+  </div>
+  <!-- /container -->
 
-    <!-- BEGIN FOOTER -->
-    <footer class="navbar-fixed-bottom">
-        <div class="container footer">
-            <p>
-            </p>
-        </div>
-    </footer>
-    <!-- END FOOTER -->
+  <!-- BEGIN FOOTER -->
+  <footer class="navbar-fixed-bottom">
+    <div class="container footer">
+      <p>
+      </p>
+    </div>
+  </footer>
+  <!-- END FOOTER -->
 
-    <!-- Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <!-- Highlights JS -->
-    <script src="scripts/highlight/highlight.min.js"></script>
-    <script>
-        hljs.initHighlightingOnLoad();
-    </script>
+  <!-- Highlights JS -->
+  <script src="scripts/highlight/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
 
 </body>
 
