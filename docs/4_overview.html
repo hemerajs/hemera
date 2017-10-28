@@ -268,54 +268,55 @@
           <hr>
 
           <p class="section-content">
+            Pseudo-code
           </p>
           <h4 class="section-h4">Definition</h4>
           <pre>
 <code>
 enum RequestType {
-  pubsub = 0;
-  request = 1;
+  pubsub
+  request
 }
 
 message Error {
-  string message = 1;
-  string name = 2;
-  string code = 3;
-  string stack = 4;
+  string message
+  string name
+  string code
+  string stack
 }
 
 message Request {
-  string id = 1;
-  RequestType type = 2;
+  string id
+  RequestType type
 }
 
 message Trace {
-  string traceId = 1;
-  string parentSpanId = 2;
-  string spanId = 3;
-  int64 timestamp = 4;
-  string service = 5;
-  string method = 6;
-  int32 duration = 7;
+  string traceId
+  string parentSpanId
+  string spanId
+  int64 timestamp
+  string service
+  string method
+  int32 duration
 }
 
 enum RequestType {
-  request = "request";
-  pubsub = "pubsub";
+  request = "request"
+  pubsub = "pubsub"
 }
 
-message Pattern = Object;
-message Result = Any;
-message Delegate = Object;
-message Meta = Object;
+message Pattern = Object
+message Result = Any
+message Delegate = Object
+message Meta = Object
 
 message Protocol {
-    Trace trace = 1;
-    Request request = 2;
-    Result result = 3;
-    Error error = 4;
-    Meta meta = 5;
-    Delegate delegate = 6;
+    Trace trace
+    Request request
+    Result result
+    Error error
+    Meta meta
+    Delegate delegate
 }
 </code>
 </pre>
