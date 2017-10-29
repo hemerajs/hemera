@@ -20,7 +20,6 @@ describe('Hemera default config', function() {
 
     var defaultConfig = {
       timeout: 2000, // Max execution time of a request
-      pluginTimeout: 3000,
       tag: '',
       prettyLog: true,
       name: 'test', // node name
