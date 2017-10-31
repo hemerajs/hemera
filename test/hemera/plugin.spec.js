@@ -308,6 +308,67 @@ describe('Plugin interface', function() {
     })
   })
 
+  it('Plugin is encapsulated', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.use({
+      plugin: (hemera, opts, done) => {
+        hemera.use({
+          plugin: (hemera, opts, done) => {
+            hemera.decorate('test', true)
+            expect(hemera.test).to.be.exists()
+            done()
+          },
+          options: { name: 'foo2', a: 3 }
+        })
+        hemera.use({
+          plugin: (hemera, opts, done) => {
+            expect(hemera.test).to.be.exists()
+            done()
+          },
+          options: { name: 'foo2', a: 3 }
+        })
+        done()
+      },
+      options: { name: 'foo', a: 1 }
+    })
+
+    hemera.use({
+      plugin: function(hemera, options, done) {
+        expect(hemera.test).to.be.not.exists()
+        done()
+      },
+      options: { name: 'bar', a: 2 }
+    })
+
+    hemera.ready(err => {
+      expect(err).to.be.not.exists()
+      expect(hemera.test).to.be.not.exists()
+
+      expect(Object.keys(hemera.plugins)).to.be.equals([
+        'core',
+        'foo',
+        'foo2',
+        'bar'
+      ])
+      expect(hemera.plugins.foo.plugin$.options).to.be.equals({
+        name: 'foo',
+        a: 1
+      })
+      expect(hemera.plugins.bar.plugin$.options).to.be.equals({
+        name: 'bar',
+        a: 2
+      })
+      expect(hemera.plugins.foo2.plugin$.options).to.be.equals({
+        name: 'foo2',
+        a: 3
+      })
+      hemera.close(done)
+    })
+  })
+
   it('Should be able to pass a callback after plugins was initialized', function(
     done
   ) {
