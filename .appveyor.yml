@@ -2,9 +2,20 @@ os: Visual Studio 2015
 
 environment:
   matrix:
-    - nodejs_version: '6'
-
+    - nodejs_version: '9'
       # PYTHON2.7 REQUIRED FOR NODE-GYP & ELECTRON
+      PYTHON2: "C:\\Python27"
+      PYTHON2_VERSION: "2.7.9"
+      PYTHON2_ARCH: "64"
+    - nodejs_version: '8'
+      PYTHON2: "C:\\Python27"
+      PYTHON2_VERSION: "2.7.9"
+      PYTHON2_ARCH: "64"
+    - nodejs_version: '6'
+      PYTHON2: "C:\\Python27"
+      PYTHON2_VERSION: "2.7.9"
+      PYTHON2_ARCH: "64"
+    - nodejs_version: '4'
       PYTHON2: "C:\\Python27"
       PYTHON2_VERSION: "2.7.9"
       PYTHON2_ARCH: "64"
@@ -66,7 +77,5 @@ install:
 
   - npm run setup
   - npm run test
-
-
 
 build: off
