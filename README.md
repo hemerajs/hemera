@@ -158,6 +158,10 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 | [hemera-zipkin](https://github.com/hemerajs/hemera/tree/master/packages/hemera-zipkin) | [![npm](https://img.shields.io/npm/v/hemera-zipkin.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-zipkin)
 | [hemera-jaeger](https://github.com/hemerajs/hemera/tree/master/packages/hemera-jaeger) | [![npm](https://img.shields.io/npm/v/hemera-jaeger.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-jaeger)
 
+| Metrics | Version |
+|--------|-------|
+| [hemera-prometheus](https://github.com/hemerajs/hemera/tree/master/packages/hemera-prometheus) | [![npm](https://img.shields.io/npm/v/hemera-prometheus.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-prometheus)
+
 | Messaging bridges | Version |
 |--------|-------|
 | [hemera-nats-streaming](https://github.com/hemerajs/hemera/tree/master/packages/hemera-nats-streaming) | [![npm](https://img.shields.io/npm/v/hemera-nats-streaming.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-nats-streaming)
