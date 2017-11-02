@@ -1,3 +1,5 @@
+'use strict'
+
 const SlackBot = require('slackbots')
 const Hp = require('hemera-plugin')
 
