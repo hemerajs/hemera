@@ -1,6 +1,6 @@
 {
   "name": "hemera-prometheus",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Prometheus collector for hemera",
   "main": "index.js",
   "repository": {
