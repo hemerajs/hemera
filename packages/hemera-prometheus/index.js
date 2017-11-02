@@ -19,7 +19,7 @@ function hemeraPrometheus(hemera, opts, done) {
   const server = Express()
 
   hemera.decorate('prom', Prom)
-  hemera.decorate('httpServer', server)
+  hemera.decorate('express', server)
 
   if (opts.collectDefaultMetrics) {
     // Enable collection of default metrics
