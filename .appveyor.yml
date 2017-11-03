@@ -18,6 +18,8 @@ environment:
 
 platform: x64
 
+shallow_clone: true
+
 configuration: Release
 
 skip_commits:
@@ -29,9 +31,6 @@ skip_commits:
     - '*.md'
 
 init:
-  - cmd: node --version
-  - cmd: npm --version
-
   - cmd: node --version
   - cmd: npm --version
 
