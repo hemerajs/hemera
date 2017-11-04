@@ -727,18 +727,20 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   * Attach one handler to the topic subscriber.
-   * With subToMany and maxMessages you control NATS specific behaviour.
+   *  Attach one handler to the topic subscriber.
+   *  With subToMany and maxMessages you control NATS specific behaviour.
    *
-   * @param {string} topic
-   * @param {boolean} subToMany
-   * @param {number} maxMessages
-   * @param {string} queue
-   *
-   * @memberOf Hemera
+   * @param {any} addDefinition
+   * @memberof Hemera
    */
-  subscribe(topic, subToMany, maxMessages, queue) {
+  subscribe(addDefinition) {
     const self = this
+
+    const topic = addDefinition.actMeta.transport.topic
+    const maxMessages = addDefinition.actMeta.transport.maxMessages
+    const queue = addDefinition.actMeta.transport.queue
+    const pubsub = addDefinition.actMeta.transport.pubsub
+    const queueGroup = queue || `${Constants.NATS_QUEUEGROUP_PREFIX}.${topic}`
 
     // avoid duplicate subscribers of the emit stream
     // we use one subscriber per topic
@@ -767,7 +769,7 @@ class Hemera extends EventEmitter {
     }
 
     // standard pubsub with optional max proceed messages
-    if (subToMany) {
+    if (pubsub) {
       self._topics[topic] = self._transport.subscribe(
         topic,
         {
@@ -776,7 +778,6 @@ class Hemera extends EventEmitter {
         handler
       )
     } else {
-      const queueGroup = queue || `${Constants.NATS_QUEUEGROUP_PREFIX}.${topic}`
       // queue group names allow load balancing of services
       self._topics[topic] = self._transport.subscribe(
         topic,
@@ -957,27 +958,27 @@ class Hemera extends EventEmitter {
   /**
    * The topic is subscribed on NATS and can be called from any client.
    *
-   * @param {any} pattern
+   * @param {any} definition
    * @param {any} cb
    *
    * @memberOf Hemera
    */
-  add(pattern, cb) {
+  add(definition, cb) {
     // check for use quick syntax for JSON objects
-    if (_.isString(pattern)) {
-      pattern = TinySonic(pattern)
+    if (_.isString(definition)) {
+      definition = TinySonic(definition)
     }
 
-    if (!_.isObject(pattern)) {
+    if (!_.isObject(definition)) {
       let error = new Errors.HemeraError(Constants.ADD_PATTERN_REQUIRED)
       this.log.error(error)
       throw error
     }
 
     // topic is needed to subscribe on a subject in NATS
-    if (!pattern.topic) {
+    if (!definition.topic) {
       let error = new Errors.HemeraError(Constants.NO_TOPIC_TO_SUBSCRIBE, {
-        pattern,
+        definition,
         app: this._config.name
       })
 
@@ -985,13 +986,19 @@ class Hemera extends EventEmitter {
       throw error
     }
 
-    let schema = Util.extractSchema(pattern)
-    let patternOnly = Util.cleanPattern(pattern)
+    let schema = Util.extractSchema(definition)
+    let patternOnly = Util.cleanPattern(definition)
 
     const actMeta = {
       schema: schema,
       pattern: patternOnly,
-      plugin: this.plugin$
+      plugin: this.plugin$,
+      transport: {
+        topic: definition.topic,
+        pubsub: definition.pubsub$,
+        maxMessages: definition.maxMessages$,
+        queue: definition.queue$
+      }
     }
 
     let addDefinition = new Add(actMeta)
@@ -1001,25 +1008,42 @@ class Hemera extends EventEmitter {
       addDefinition.action = cb
     }
 
+    addDefinition.actMeta.transport.topic = patternOnly.topic
+
     // Support full / token wildcards in subject
     // Convert nats wildcard tokens to RegexExp
-    patternOnly.topic = Util.natsWildcardToRegex(patternOnly.topic)
+    addDefinition.actMeta.pattern.topic = Util.natsWildcardToRegex(
+      patternOnly.topic
+    )
 
-    let handler = this._router.lookup(patternOnly)
+    let handler = this._router.lookup(addDefinition.actMeta.pattern)
 
     // check if pattern is already registered
     if (this._config.bloomrun.lookupBeforeAdd && handler) {
       let error = new Errors.HemeraError(Constants.PATTERN_ALREADY_IN_USE, {
-        pattern: patternOnly
+        pattern: addDefinition.actMeta.pattern
       })
 
       this.log.error(
         {
-          pattern: patternOnly
+          pattern: addDefinition.actMeta.pattern
         },
         error
       )
       this.emit('error', error)
+    }
+
+    // check for invalid topic subscriptions
+    // it's not possible to register multiple patterns
+    // with different transport options to the same topic
+    const def = this._checkForTransportCollision(addDefinition)
+    if (def) {
+      this.log.error(
+        Constants.TRANSPORT_OPTIONS_DIFFER_DESC,
+        Util.pattern(addDefinition.actMeta.pattern),
+        Util.pattern(def.actMeta.pattern)
+      )
+      throw new Errors.HemeraError(Constants.TRANSPORT_OPTIONS_DIFFER)
     }
 
     // add to bloomrun
@@ -1027,15 +1051,44 @@ class Hemera extends EventEmitter {
 
     this.log.info(patternOnly, Constants.ADD_ADDED)
 
-    // subscribe on topic
-    this.subscribe(
-      pattern.topic,
-      pattern.pubsub$,
-      pattern.maxMessages$,
-      pattern.queue$
-    )
+    this.subscribe(addDefinition)
 
     return addDefinition
+  }
+  /**
+   * Check if a topic was already registered with different transport
+   * options
+   *
+   * @param {any} addDefinition
+   * @memberof Hemera
+   */
+  _checkForTransportCollision(addDefinition) {
+    const definitions = this._router.list()
+
+    definitions.push(addDefinition)
+
+    for (var i = 0; i < definitions.length; i++) {
+      const def = definitions[i]
+      const mT1 = def.actMeta.transport
+      const mT2 = addDefinition.actMeta.transport
+
+      // looking for another pattern with same topic but
+      // different transport options
+      if (
+        !Object.is(addDefinition, def) &&
+        addDefinition.actMeta.pattern.topic === def.actMeta.pattern.topic
+      ) {
+        if (
+          mT1.maxMessages !== mT2.maxMessages ||
+          mT1.queue !== mT2.queue ||
+          mT1.pubsub !== mT2.pubsub
+        ) {
+          return def
+        }
+      }
+    }
+
+    return null
   }
 
   /**

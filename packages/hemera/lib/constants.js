@@ -58,5 +58,9 @@ module.exports = {
   PROCESS_TERMINATED: 'Process terminated',
   TRIGGERING_CLOSE_HOOK: 'Triggering close hook',
   REPLY_ERROR_ALREADY_SET: 'Error already set',
-  REPLY_ALREADY_SENT: 'Reply already sent'
+  REPLY_ALREADY_SENT: 'Reply already sent',
+  TRANSPORT_OPTIONS_DIFFER:
+    'Transport options differ from the first registration to this topic',
+  TRANSPORT_OPTIONS_DIFFER_DESC:
+    'Could not register pattern "%s" because pattern "%s" has different transport configuration but the same topic. Please use a different topic name!'
 }
