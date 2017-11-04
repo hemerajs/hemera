@@ -118,25 +118,52 @@
                     <hr>
 
                     <p class="section-content">
-                        A match happens when all properties of added pattern matches with the one in the passed object.
+                        Hemera provides two different ways to index your pattern efficiently. This functionality is provided by the package <a href="https://github.com/mcollina/bloomrun">Bloomrun</a>
+                        <ul>
+                          <li>Insertion (Default)</li>
+                          <li>Depth</li>
+                        </ul>
                     </p>
-                    <h4 class="section-h4">Matched</h4>
+                    <h4 class="section-h4">Insertion</h4>
+                    <p>By default all patterns are indexed in insertion order.</p>
                     <pre>
 <code class="javascript">
-hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
-  cb(resp.a + resp.b)
+const hemera = new Hemera({
+  bloomrun: {
+    indexing: 'insertion'
+  }
 })
-hemera.act({ topic: "math", cmd: "add", a: 1, b: 1 })
+
+// Matched
+hemera.add({ topic: "service", cmd: "a" }, function (req, cb) {
+  cb(null, 1)
+})
+
+hemera.add({ topic: "service", cmd: "a", foo: "bar"  }, function (req, cb) {
+  cb(null, 2)
+})
+hemera.act({ topic: "service", cmd: "a", foo: "bar" }) // return 1
 </code>
                     </pre>
-                    <h4 class="section-h4">Not Matched</h4>
-                    <p>Because <code>foo:"bar"</code> is required.</p>
+                    <h4 class="section-h4">Depth indexing</h4>
+                    <p>Depth indexing provides you more flexibility.</p>
                     <pre>
 <code class="javascript">
-hemera.add({ topic: "math", cmd: "add", foo: "bar" }, function (req, cb) {
-  cb(resp.a + resp.b)
+const hemera = new Hemera({
+  bloomrun: {
+    indexing: 'depth'
+  }
 })
-hemera.act({ topic: "math", cmd: "add", a: 1, b: 1 })
+
+hemera.add({ topic: "service", cmd: "a" }, function (req, cb) {
+  cb(null, 1)
+})
+
+// Matched
+hemera.add({ topic: "service", cmd: "a", foo: "bar"  }, function (req, cb) {
+  cb(null, 2)
+})
+hemera.act({ topic: "service", cmd: "a", foo: "bar" }) // return 2
 </code>
                     </pre>
                                         <h4 class="section-h4">Hemera <code>$</code> properties</h4>
