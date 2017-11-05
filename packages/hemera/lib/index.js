@@ -603,7 +603,7 @@ class Hemera extends EventEmitter {
     const self = this
     // check if any error was set before
     if (extensionError) {
-      self._reply.error = extensionError
+      self._reply.error = self._attachHops(extensionError)
       const internalError = new Errors.HemeraError(
         Constants.EXTENSION_ERROR,
         self.errorDetails
@@ -684,17 +684,14 @@ class Hemera extends EventEmitter {
 
     return m.value
   }
-
   /**
    *
    *
    * @param {any} err
-   * @param {any} resp
    * @returns
-   *
    * @memberof Hemera
    */
-  _actionHandler(err, resp) {
+  _attachHops(err) {
     const self = this
 
     if (err) {
@@ -711,8 +708,26 @@ class Hemera extends EventEmitter {
       } else {
         err.hops = [errorDetails]
       }
+    }
 
+    return err
+  }
+
+  /**
+   *
+   *
+   * @param {any} err
+   * @param {any} resp
+   * @returns
+   *
+   * @memberof Hemera
+   */
+  _actionHandler(err, resp) {
+    const self = this
+
+    if (err) {
       self._reply.error = self.getRootError(err)
+      self._reply.error = self._attachHops(self._reply.error)
 
       self.finish()
       return
@@ -801,7 +816,7 @@ class Hemera extends EventEmitter {
 
     // check if any error was set before
     if (extensionError) {
-      self._reply.error = extensionError
+      self._reply.error = self._attachHops(extensionError)
       self.emit('serverResponseError', extensionError)
       self.finish()
       return
@@ -840,7 +855,7 @@ class Hemera extends EventEmitter {
 
     // check if any error was set before
     if (extensionError) {
-      self._reply.error = extensionError
+      self._reply.error = self._attachHops(extensionError)
 
       const internalError = new Errors.HemeraError(
         Constants.EXTENSION_ERROR,

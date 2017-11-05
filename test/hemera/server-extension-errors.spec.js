@@ -59,6 +59,10 @@ describe('Server Extension error', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('Unauthorized')
           expect(err.message).to.be.equals('test')
+          expect(err.hops).to.be.exists()
+          expect(err.hops.length).to.be.equals(1)
+          expect(err.hops[0].service).to.be.equals('math')
+          expect(err.hops[0].method).to.be.equals('a:1,b:2,cmd:add,topic:math')
           hemera.close(done)
         }
       )
@@ -107,6 +111,10 @@ describe('Server Extension error', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('Error')
           expect(err.message).to.be.equals('test')
+          expect(err.hops).to.be.exists()
+          expect(err.hops.length).to.be.equals(1)
+          expect(err.hops[0].service).to.be.equals('math')
+          expect(err.hops[0].method).to.be.equals('a:1,b:2,cmd:add,topic:math')
           hemera.close(done)
         }
       )
@@ -157,6 +165,10 @@ describe('Server Extension error', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('Unauthorized')
           expect(err.message).to.be.equals('test')
+          expect(err.hops).to.be.exists()
+          expect(err.hops.length).to.be.equals(1)
+          expect(err.hops[0].service).to.be.equals('math')
+          expect(err.hops[0].method).to.be.equals('a:1,b:2,cmd:add,topic:math')
           hemera.close(done)
         }
       )
@@ -205,6 +217,10 @@ describe('Server Extension error', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('Error')
           expect(err.message).to.be.equals('test')
+          expect(err.hops).to.be.exists()
+          expect(err.hops.length).to.be.equals(1)
+          expect(err.hops[0].service).to.be.equals('math')
+          expect(err.hops[0].method).to.be.equals('a:1,b:2,cmd:add,topic:math')
           hemera.close(done)
         }
       )
