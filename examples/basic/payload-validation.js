@@ -5,8 +5,7 @@ const nats = require('nats').connect()
 const HemeraJoi = require('./../../packages/hemera-joi')
 
 const hemera = new Hemera(nats, {
-  logLevel: 'error',
-  prettyLog: false
+  logLevel: 'error'
 })
 
 hemera.use(HemeraJoi)
