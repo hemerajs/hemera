@@ -1,0 +1,46 @@
+{
+  "name": "hemera-neo4j-store",
+  "version": "1.0.0",
+  "description": "A hemera store for the neo4j database",
+  "main": "index.js",
+  "scripts": {
+    "test": "cd dist && mocha test/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sittingbool/hemera-neo4j-store.git"
+  },
+  "keywords": [
+    "hemera",
+    "neo4j",
+    "store",
+    "nats",
+    "microservice"
+  ],
+  "author": "Richard Habermann <sittingbool@gmx.de> (https://github.com/sittingbool)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sittingbool/hemera-neo4j-store/issues"
+  },
+  "homepage": "https://github.com/sittingbool/hemera-neo4j-store#readme",
+  "dependencies": {
+    "hemera-plugin": "0.0.12",
+    "hemera-store": "^1.1.13",
+    "joi": "^10.6.0",
+    "neo4j-driver": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/code": "^4.0.3",
+    "@types/node": "^8.0.19",
+    "@types/should": "^8.3.0",
+    "code": "^4.1.0",
+    "hemera-joi": "^1.2.1",
+    "hemera-testsuite": "^1.2.0",
+    "mocha": "^3.5.0",
+    "mocha-typescript": "^1.1.7",
+    "nats": "^0.7.20",
+    "nats-hemera": "^1.5.3",
+    "neo4j-driver": "^1.4.0",
+    "should": "^11.2.1"
+  }
+}
