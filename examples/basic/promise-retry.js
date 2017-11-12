@@ -22,7 +22,7 @@ hemera.ready(() => {
       topic: 'math',
       cmd: 'add'
     },
-    async function (req) {
+    async function(req) {
       throw new Error('Uuups!')
     }
   )
