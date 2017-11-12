@@ -22,8 +22,8 @@ hemera.ready(() => {
       topic: 'math',
       cmd: 'add'
     },
-    function*(req, cb) {
-      return Promise.reject(new Error('Uuups!'))
+    async function (req) {
+      throw new Error('Uuups!')
     }
   )
 
