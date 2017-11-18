@@ -45,7 +45,8 @@ function hemeraMongoStore(hemera, opts, done) {
     db
   ) {
     if (err) {
-      return hemera.emit('error', err)
+      done(err)
+      return
     }
 
     // from mongodb driver
