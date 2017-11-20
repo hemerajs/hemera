@@ -81,7 +81,7 @@ export class Neo4JStorePattern
      *
      * @memberOf StorePattern
      */
-    static remove(topic) // FIXME: pattern should be
+    static remove(topic)
     //------------------------------------------------------------------------------------------------------
     {
         return {

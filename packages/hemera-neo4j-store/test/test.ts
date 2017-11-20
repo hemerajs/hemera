@@ -3119,6 +3119,7 @@ class Neo4JStoreTest
     }
 
 
+
     //------------------------------------------------------------------------------------------------------
     @test
     testFindByRelationNodesWithQuery(done)

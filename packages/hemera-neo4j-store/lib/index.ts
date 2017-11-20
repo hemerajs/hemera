@@ -8,8 +8,8 @@ const integer = require("neo4j-driver/lib/v1/integer");
 
 export const HemeraNeo4JStore: any = {};
 
-HemeraNeo4JStore.plugin = Hp(function hemeraNeo4JStore (options) {
-    const hemera = this;
+HemeraNeo4JStore.plugin = Hp(function hemeraNeo4JStore (hemera, options, done) {
+    //const hemera = this;
     const topic = 'neo4j-store';
 
     const CNeo4jDriver =
@@ -19,10 +19,10 @@ HemeraNeo4JStore.plugin = Hp(function hemeraNeo4JStore (options) {
 
     console.log(options);
 
-    hemera.expose('neo4j', Neo4JStore);
-    hemera.expose('neo4j-node-model', Neo4JNodeModel);
-    hemera.expose('neo4j-node-model', Neo4JRelationModel);
-    hemera.expose('neo4j-integer', integer);
+    hemera.decorate('neo4j', Neo4JStore);
+    hemera.decorate('neo4j-node-model', Neo4JNodeModel);
+    hemera.decorate('neo4j-rel-model', Neo4JRelationModel);
+    hemera.decorate('neo4j-integer', integer);
 
     hemera.add(Neo4JStorePattern.create(topic), function (req, cb) {
 
@@ -181,9 +181,12 @@ HemeraNeo4JStore.plugin = Hp(function hemeraNeo4JStore (options) {
 
         store.executeCypherQuery(req, cb);
     });
-});
+
+    done();
+}, '>=2.0.0');
 
 HemeraNeo4JStore.options = {
+    name: require("../../package.json").name,
     payloadValidator: 'hemera-joi'
 };
 
