@@ -22,8 +22,8 @@ hemera.ready(() => {
       topic: 'math',
       cmd: 'add'
     },
-    function*(req, cb) {
-      return Promise.reject(new Error('Uuups!'))
+    async function(req) {
+      throw new Error('Uuups!')
     }
   )
 
@@ -38,12 +38,7 @@ hemera.ready(() => {
         b: 20
       })
       .catch(retry)
-  }, opt).then(
-    function(value) {
-      console.log(value)
-    },
-    function(err) {
-      console.error(err)
-    }
-  )
+  }, opt)
+    .then(value => console.log(value))
+    .catch(value => console.log(value))
 })

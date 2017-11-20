@@ -113,7 +113,7 @@ hemera.ready(async () => {
 
 ## Who's using Hemera?
 
-| [![appcom-interactive](http://www.appcom-interactive.de/images/appcom-logo.svg)](http://www.appcom-interactive.de/) | [![amerbank](https://github.com/hemerajs/hemera/blob/master/media/companies/amerbank.png?raw=true)](https://www.savicontrols.com/) | [![amerbank](https://github.com/hemerajs/hemera/blob/master/media/companies/savi.png?raw=true)](https://www.savicontrols.com/) |
+| [![appcom-interactive](http://www.appcom-interactive.de/images/appcom-logo.svg)](http://www.appcom-interactive.de/) | [![amerbank](https://github.com/hemerajs/hemera/blob/master/media/companies/amerbank.png?raw=true)](https://amerbank.com/) | [![amerbank](https://github.com/hemerajs/hemera/blob/master/media/companies/savi.png?raw=true)](https://www.savicontrols.com/) |
 | -------------| --- | --- |
 | appcom interactive | amerbank | savicontrols |
 

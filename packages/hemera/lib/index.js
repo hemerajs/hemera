@@ -1045,7 +1045,7 @@ class Hemera extends EventEmitter {
         },
         error
       )
-      this.emit('error', error)
+      throw error
     }
 
     // check for invalid topic subscriptions
