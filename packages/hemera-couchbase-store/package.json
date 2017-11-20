@@ -15,16 +15,16 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "couchbase": "2.3.x",
-    "hemera-plugin": "^0.0.14",
-    "hemera-store": "^1.1.13"
+    "couchbase": "2.4.x",
+    "hemera-plugin": "^0.0.17",
+    "hemera-store": "^1.1.14"
   },
   "devDependencies": {
     "code": "4.0.x",
-    "hemera-testsuite": "1.1.x",
+    "hemera-testsuite": "1.4.x",
     "istanbul": "0.4.x",
-    "mocha": "3.3.x",
+    "mocha": "4.0.x",
     "mocha-lcov-reporter": "1.3.x",
-    "nyc": "10.3.x"
+    "nyc": "11.3.x"
   }
 }
