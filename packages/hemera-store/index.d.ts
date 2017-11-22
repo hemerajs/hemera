@@ -1,6 +1,5 @@
-export = HemeraStore;
-declare module HemeraStore {
-    class Store {
+export = Store;
+declare class Store {
         readonly driver: any;
         readonly options: any;
 
@@ -25,6 +24,4 @@ declare module HemeraStore {
         update(...args: any[]);
 
         updateById(...args: any[]);
-
-    }
 }
