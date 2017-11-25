@@ -63,7 +63,7 @@ function hemeraZipkin(hemera, opts, done) {
    */
   hemera.on('serverPreRequest', function(ctx) {
     let meta = {
-      service: ctx._topic,
+      service: ctx.trace$.service,
       name: ctx.trace$.method
     }
 
@@ -107,6 +107,7 @@ function hemeraZipkin(hemera, opts, done) {
    */
   hemera.on('clientPreRequest', function(ctx) {
     let meta = {
+      service: ctx.trace$.service,
       name: ctx.trace$.method
     }
 
@@ -148,6 +149,7 @@ function hemeraZipkin(hemera, opts, done) {
    */
   hemera.on('clientPostRequest', function(ctx) {
     let meta = {
+      service: ctx.trace$.service,
       name: ctx.trace$.method
     }
 
