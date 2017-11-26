@@ -39,6 +39,14 @@ function addContextTags(span, ctx, key, tags) {
   })
 }
 
+/**
+ * Hemera jaeger-opentracing plugin
+ *
+ * @param {any} hemera
+ * @param {any} opts
+ * @param {any} done
+ * @returns
+ */
 function hemeraOpentracing(hemera, opts, done) {
   if (!opts.serviceName) {
     return done(new Error('serviceName is required'))
@@ -85,7 +93,7 @@ function hemeraOpentracing(hemera, opts, done) {
     let span = tracer.startSpan('add', { childOf: wireCtx })
 
     span.setTag(Opentracing.Tags.PEER_SERVICE, 'hemera')
-    span.setTag(tags.HEMERA_SERVICE, ctx._topic)
+    span.setTag(tags.HEMERA_SERVICE, ctx.trace$.service)
     span.setTag(tags.HEMERA_PATTERN, ctx.trace$.method)
     span.setTag(
       tags.HEMERA_PUBSUB,
