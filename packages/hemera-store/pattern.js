@@ -211,6 +211,24 @@ class StorePattern {
       query: Joi.object().required()
     }
   }
+
+  /**
+   *
+   *
+   * @static
+   * @param {any} topic
+   * @returns
+   *
+   * @memberOf StorePattern
+   */
+  static count(topic) {
+    return {
+      topic,
+      cmd: 'count',
+      collection: Joi.string().required(),
+      query: Joi.object().required(),
+    }
+  }
 }
 
 module.exports = StorePattern

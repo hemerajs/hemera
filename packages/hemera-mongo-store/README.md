@@ -178,6 +178,7 @@ Fine-tuning of the calls to the MongoDB Node.js driver can be performed via `opt
 * [replace](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store#replace) => [updateMany](http://mongodb.github.io/node-mongodb-native/2.2/api/Collection.html#updateMany)
 * [replaceById](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store#replacebyid) => [findOneAndReplace](http://mongodb.github.io/node-mongodb-native/2.2/api/Collection.html#findOneAndReplace)
 * [exists](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store#exists): NA
+* [count](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store#count) => [count](http://mongodb.github.io/node-mongodb-native/2.2/api/Collection.html#count)
 
 ### Example:
 

@@ -18,6 +18,7 @@ Simple API to be interoperable with most database interfaces.
   * [replace](#replace)
   * [replaceById](#replacebyid)
   * [exists](#exists)
+  * [count](#count)
 
 Provide a unique pattern set for all common api methods. We had to choose for some conventions across document and table oriented stores.
 
@@ -249,3 +250,24 @@ hemera.act({
   query: {}
 }, function(err, resp) ...)
 ```
+
+-------------------------------------------------------
+### count
+
+The pattern is:
+
+* `topic`: is the store name to publish to `<name>-store`
+* `cmd`: is the command to execute `count`
+* `collection`: the name of the table or collection `string`
+* `query`: the search criteria `object`
+
+Example:
+```js
+hemera.act({
+  topic: 'sql-store',
+  cmd: 'count',
+  collection: 'product',
+  query: {}
+}, function(err, resp) ...)
+```
+

@@ -191,7 +191,7 @@ function hemeraMongoStore(hemera, opts, done) {
       })
     })
 
-    hemera.add({ topic: 'mongo-store', cmd: 'count' }, function(req, cb) {
+    hemera.add(StorePattern.count(topic), function(req, cb) {
       const collection = db.collection(req.collection)
       const store = new MongoStore(collection, opts)
       store.ObjectID = ObjectID
