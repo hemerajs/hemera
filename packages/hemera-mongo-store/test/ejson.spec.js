@@ -398,4 +398,22 @@ describe('Hemera-mongo-store with EJSON', function() {
       }
     )
   })
+
+  it('count', function(done) {
+    hemera.act(
+      {
+        topic,
+        cmd: 'count',
+        collection: testCollection,
+        query: EJSON.serialize({ name: new RegExp(/^nad/, 'i') })
+        //query: { },
+      },
+      function(err, resp) {
+        expect(err).to.be.not.exists()
+        expect(resp).to.be.a.number()
+        expect(resp).to.be.equal(2)
+        done()
+      }
+    )
+  })
 })

@@ -268,6 +268,21 @@ class MongoStore extends Store {
       }
     )
   }
+  /**
+   */
+  count(req, options, cb) {
+    this._driver.count(
+      req.query,
+      this.options.store.count,
+      function(err, resp) {
+        if (err) {
+          return cb(err)
+        }
+        const result = resp
+        cb(err, result)
+      }
+    )
+  }
 }
 
 module.exports = MongoStore

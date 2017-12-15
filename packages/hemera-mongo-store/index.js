@@ -26,7 +26,8 @@ exports.options = {
     remove: {},
     removeById: {},
     replace: { upsert: true },
-    replaceById: {}
+    replaceById: {},
+    count: {}
   }
 }
 
@@ -183,6 +184,21 @@ function hemeraMongoStore(hemera, opts, done) {
       req.query = deserialize(req.query)
 
       store.find(req, req.options, (err, result) => {
+        if (err) {
+          cb(err)
+        } else {
+          cb(null, preResponseHandler(result))
+        }
+      })
+    })
+
+    hemera.add(StorePattern.count(topic), function(req, cb) {
+      const collection = db.collection(req.collection)
+      const store = new MongoStore(collection, opts)
+      store.ObjectID = ObjectID
+      req.query = deserialize(req.query)
+
+      store.count(req, req.options, (err, result) => {
         if (err) {
           cb(err)
         } else {
