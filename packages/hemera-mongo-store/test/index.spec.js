@@ -407,7 +407,7 @@ describe('Hemera-mongo-store', function() {
         topic,
         cmd: 'count',
         collection: testCollection,
-        query: { }
+        query: {}
       },
       function(err, resp) {
         expect(err).to.be.not.exists()

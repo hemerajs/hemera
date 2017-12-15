@@ -19,12 +19,9 @@ Apache Avro™ is a data serialization system.
 Only the protocol schema will be validated with Avro
 
 ```js
-'use strict'
-
 const Hemera = require('nats-hemera')
 // Use NATS driver >= 0.7.2
 const nats = require('nats').connect({ 
-  // otherwise NATS will interpret all data as LATIN1 (binary encoding)
   preserveBuffers: true
 })
 const HemeraAvro = require('hemera-avro')
@@ -34,27 +31,6 @@ const hemera = new Hemera(nats, {
 })
 
 hemera.use(HemeraAvro)
-
-hemera.ready(() => {
-  hemera.add({
-    topic: 'math',
-    cmd: 'add'
-  }, (req, cb) => {
-
-    cb(null, req.a + req.b)
-  })
-
-  hemera.act({
-    topic: 'math',
-    cmd: 'add',
-    a: 1,
-    b: 20
-  }, function (err, resp) {
-
-    this.log.info('Result', resp)
-  })
-})
-
 ```
 
 #### Example with payload schema
