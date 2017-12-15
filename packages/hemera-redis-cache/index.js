@@ -141,4 +141,39 @@ function hemeraRedisCache(hemera, opts, done) {
       client.ttl(req.key, cb)
     }
   )
+
+  hemera.add(
+    {
+      topic,
+      cmd: 'del',
+      key: Joi.string().required()
+    },
+    function(req, cb) {
+      client.del(req.key, cb)
+    }
+  )
+
+  hemera.add(
+    {
+      topic,
+      cmd: 'lpush',
+      key: Joi.string().required(),
+      values: Joi.any().required()
+    },
+    function(req, cb) {
+      client.lpush(req.key, req.values, cb)
+    }
+  )
+
+  hemera.add(
+    {
+      topic,
+      cmd: 'rpush',
+      key: Joi.string().required(),
+      values: Joi.any().required()
+    },
+    function(req, cb) {
+      client.rpush(req.key, req.values, cb)
+    }
+  )
 }
