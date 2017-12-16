@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800">
-    <link rel="stylesheet" href="scripts/highlight/styles/github-gist.css">
+    <link rel="stylesheet" href="stylesheets/github-gist.css">
     <link rel="stylesheet" href="stylesheets/styles.css">
 </head>
 
@@ -127,7 +127,7 @@
                     <div class="alert alert-warning" role="alert"><i class="fa fa-info" aria-hidden="true"></i> It's not possible to run server methods with different transport options <code>$</code> with the same topic. You have to use a different topic name.</div>
                     <h4 class="section-h4">Normal (one-to-many)</h4>
                     <pre>
-<code class="javascript">
+<code class="language-javascript">
 //Subscribe
 hemera.add({
     pubsub$: true,
@@ -150,7 +150,7 @@ hemera.act({
                         queue group <code>math</code> so only one subscriber will proceed the message. This has big performance
                         benefits in comparison with the request-reply model.</p>
                     <pre>
-<code class="javascript">
+<code class="language-javascript">
 //Subscribe
 hemera.add({
     topic: "math",
@@ -169,7 +169,7 @@ hemera.act({
                     </pre>
                     <h4 class="section-h4">Auto-unsubscribe after <code>maxMessages$</code> messages received</h4>
                     <pre>
-<code class="javascript">
+<code class="language-javascript">
 hemera.add({
   pubsub$: true,
   topic: "math",
@@ -183,7 +183,7 @@ hemera.add({
                     <h4 class="section-h4">Async / Await</h4>
                     <p>You can also pass an async function.</p>
                     <pre>
-<code class="javascript">
+<code class="language-javascript">
 hemera.add({
   pubsub$: true,
   topic: "math",
@@ -223,9 +223,9 @@ const result = await hemera.act({
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <!-- Highlights JS -->
-    <script src="scripts/highlight/highlight.min.js"></script>
+    <script src="scripts/prism.min.js"></script>
     <script>
-        hljs.initHighlightingOnLoad();
+        
     </script>
 
 </body>

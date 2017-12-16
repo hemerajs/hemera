@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800">
-    <link rel="stylesheet" href="scripts/highlight/styles/github-gist.css">
+    <link rel="stylesheet" href="stylesheets/github-gist.css">
     <link rel="stylesheet" href="stylesheets/styles.css">
 </head>
 
@@ -122,7 +122,7 @@
                         use your own.
                         <h4 class="section-h4">Logging</h4>
                         <pre>
-<code class="javascript">
+<code class="language-javascript">
 hemera.log.info("fooBar")
 hemera.log.error("fooBar")
 
@@ -137,7 +137,7 @@ hemera.act({
                     </p>
                     <h4 class="section-h4">Set log level</h4>
                     <pre>
-<code class="javascript">
+<code class="language-javascript">
 const hemera = new Hemera(nats, {
   logLevel: "info"
 })
@@ -145,7 +145,7 @@ const hemera = new Hemera(nats, {
 </pre>
                     <h4 class="section-h4">Log levels</h4>
                     <pre>
-<code class="javascript">
+<code class="language-javascript">
 ["info", "warn", "debug", "trace", "error", "fatal"]
 </code>
 </pre>
@@ -171,7 +171,7 @@ const hemera = new Hemera(nats, {
                     </pre>
                     <h4 class="section-h4">Use custom logger</h4>
                     <pre>
-<code class="javascript">
+<code class="language-javascript">
 class Logger {
   info (msg) {
     console.log(msg)
@@ -209,9 +209,9 @@ const hemera = new Hemera(nats, {
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <!-- Highlights JS -->
-    <script src="scripts/highlight/highlight.min.js"></script>
+    <script src="scripts/prism.min.js"></script>
     <script>
-        hljs.initHighlightingOnLoad();
+        
     </script>
 
 </body>

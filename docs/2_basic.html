@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800">
-    <link rel="stylesheet" href="scripts/highlight/styles/github-gist.css">
+    <link rel="stylesheet" href="stylesheets/github-gist.css">
     <link rel="stylesheet" href="stylesheets/styles.css">
 </head>
 
@@ -122,7 +122,7 @@
                     <h4 class="section-h4">Synchronous errors</h4>
                     <p>By default, Hemera will catch any exception thrown within the initial synchronous execution of a request and pass it along to the next error-handling middleware or gracefully exit the process:</p>
                     <pre>
-<code class="javascript">
+<code class="language-javascript">
 hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
   throw new Error()
 })
@@ -131,7 +131,7 @@ hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
                     <h4 class="section-h4">Asynchronous errors</h4>
                     <p>In asynchronous code, Hemera cannot catch exceptions as you’ve lost your stack once you have entered a callback:</p>
                     <pre>
-<code class="javascript">
+<code class="language-javascript">
 hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
   process.nextTick(() => {
       throw new Error()
@@ -142,7 +142,7 @@ hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
                     <p>"How can I deal with them in a proper way?" Read this <a href="https://strongloop.com/strongblog/async-error-handling-expressjs-es7-promises-generators/">article</a> about async error handling in express its very useful.</p>
                     <h4 class="section-h4">For these cases, use the callback function to propagate errors:</h4>
                     <pre>
-<code class="javascript">
+<code class="language-javascript">
 hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
   cb(new CustomError("Invalid operation"))
 })
@@ -150,7 +150,7 @@ hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
                     </pre>
                     <h4 class="section-h4">Hemera strictly follows the Error-first-callback convention.</h4>
                     <pre>
-<code class="javascript">
+<code class="language-javascript">
 hemera.act({ topic: "math", cmd: "add", a: 1, b: 1 }, function (err, resp) {
  err instanceOf CustomError // true
 })
@@ -158,7 +158,7 @@ hemera.act({ topic: "math", cmd: "add", a: 1, b: 1 }, function (err, resp) {
                     </pre>
                     <h4 class="section-h4">Create custom errors</h4>
                     <pre>
-<code class="javascript">
+<code class="language-javascript">
 const UnauthorizedError = Hemera.createError("Unauthorized")
 
 hemera.add({
@@ -203,9 +203,9 @@ hemera.act({
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <!-- Highlights JS -->
-    <script src="scripts/highlight/highlight.min.js"></script>
+    <script src="scripts/prism.min.js"></script>
     <script>
-        hljs.initHighlightingOnLoad();
+        
     </script>
 
 </body>

@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800">
-  <link rel="stylesheet" href="scripts/highlight/styles/github-gist.css">
+  <link rel="stylesheet" href="stylesheets/github-gist.css">
   <link rel="stylesheet" href="stylesheets/styles.css">
   <script src="https://use.fontawesome.com/2e9ff283e5.js"></script>
 </head>
@@ -129,7 +129,7 @@
           </ul>
           <br>
           <pre>
-<code class="javascript">
+<code class="language-javascript">
 hemera.ext("onClientPreRequest", function(hemera, next) {
    next()
 })
@@ -148,7 +148,7 @@ hemera.ext("onClientPreRequest", function(hemera, next) {
           </ul>
           <br>
           <pre>
-<code class="javascript">
+<code class="language-javascript">
 hemera.ext("onServerPreHandler", function(hemera, request, reply, next) {
    res.send(new Error('test'))
    next()
@@ -177,7 +177,7 @@ hemera.ext("onServerPreHandler", function(hemera, request, reply, next) {
           <h4 class="section-h4">Async / Await</h4>
           <p>You can also pass an async function.</p>
           <pre>
-<code class="javascript">
+<code class="language-javascript">
 hemera.ext("onServerPreHandler", async function(hemera, request, reply) {
   res.send(new Error('test'))
 })
@@ -211,9 +211,9 @@ hemera.ext("onClientPreRequest", async function(hemera) {
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
   <!-- Highlights JS -->
-  <script src="scripts/highlight/highlight.min.js"></script>
+  <script src="scripts/prism.min.js"></script>
   <script>
-    hljs.initHighlightingOnLoad();
+    
 
   </script>
 

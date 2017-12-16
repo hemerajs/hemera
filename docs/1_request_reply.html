@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800">
-    <link rel="stylesheet" href="scripts/highlight/styles/github-gist.css">
+    <link rel="stylesheet" href="stylesheets/github-gist.css">
     <link rel="stylesheet" href="stylesheets/styles.css">
     <script src="https://use.fontawesome.com/2e9ff283e5.js"></script>
 </head>
@@ -137,7 +137,7 @@
                     <div class="alert alert-info" role="alert"><i class="fa fa-info" aria-hidden="true"></i> You can define a different queue if you pass the <code>queue$: name</code> as property to the add pattern. Any subscriber with a different queue on this topic will receive a message. You can only have one different queue name per Hemera instance.</div>
                     <h4 class="section-h4">Request (point-to-point) by default</h4>
                     <pre>
-<code class="javascript">
+<code class="language-javascript">
 hemera.act({
     topic: "math",
     cmd: "add",
@@ -150,7 +150,7 @@ hemera.act({
                     <p>This means that the subscriber has the chance to respond multiple messages (in this case 10) even when
                         first response was an issue.</p>
                     <pre>
-<code class="javascript">
+<code class="language-javascript">
 hemera.act({
     topic: "math",
     cmd: "add",
@@ -164,7 +164,7 @@ hemera.act({
                     <p>You can reply any value even primitive values like <code>true, 1, 5.0</code>. The first argument expect
                         an error object.</p>
                     <pre>
-<code class="javascript">
+<code class="language-javascript">
 hemera.add({
   topic: "math",
   cmd: "add",
@@ -177,7 +177,7 @@ hemera.add({
                     <p>As soon as the subscriber proceed (in this case the first message) the subscriber will be unsubscribed
                         from NATS.</p>
                     <pre>
-<code class="javascript">
+<code class="language-javascript">
 hemera.add({
   topic: "math",
   cmd: "add",
@@ -190,7 +190,7 @@ hemera.add({
                     <h4 class="section-h4">Async / Await</h4>
                     <p>You can also pass an async function.</p>
                     <pre>
-<code class="javascript">
+<code class="language-javascript">
 hemera.add({
   topic: "math",
   cmd: "add",
@@ -230,9 +230,9 @@ const result = await hemera.act({
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <!-- Highlights JS -->
-    <script src="scripts/highlight/highlight.min.js"></script>
+    <script src="scripts/prism.min.js"></script>
     <script>
-        hljs.initHighlightingOnLoad();
+        
     </script>
 
 </body>

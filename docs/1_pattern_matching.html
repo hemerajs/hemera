@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800">
-    <link rel="stylesheet" href="scripts/highlight/styles/github-gist.css">
+    <link rel="stylesheet" href="stylesheets/github-gist.css">
     <link rel="stylesheet" href="stylesheets/styles.css">
 </head>
 
@@ -127,7 +127,7 @@
                     <h4 class="section-h4">Insertion</h4>
                     <p>By default all patterns are indexed in insertion order.</p>
                     <pre>
-<code class="javascript">
+<code class="language-javascript">
 const hemera = new Hemera({
   bloomrun: {
     indexing: 'insertion'
@@ -148,7 +148,7 @@ hemera.act({ topic: "service", cmd: "a", foo: "bar" }) // return 1
                     <h4 class="section-h4">Depth indexing</h4>
                     <p>Depth indexing provides you more flexibility.</p>
                     <pre>
-<code class="javascript">
+<code class="language-javascript">
 const hemera = new Hemera({
   bloomrun: {
     indexing: 'depth'
@@ -170,7 +170,7 @@ hemera.act({ topic: "service", cmd: "a", foo: "bar" }) // return 2
                     <p>In Hemera we use special <code>$</code> suffixed properties to configure additional transport options in NATS. Please consider that those properties are not part of the pattern and will be ingored at pattern matching.</p>
                     <div class="alert alert-warning" role="alert"><i class="fa fa-info" aria-hidden="true"></i> It's not possible to run server methods with different transport options <code>$</code> with the same topic. You have to use a different topic name.</div>
                     <pre>
-<code class="javascript">
+<code class="language-javascript">
 hemera.add({
     topic: "math",
     pubsub$: true,
@@ -206,9 +206,9 @@ hemera.add({
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <!-- Highlights JS -->
-    <script src="scripts/highlight/highlight.min.js"></script>
+    <script src="scripts/prism.min.js"></script>
     <script>
-        hljs.initHighlightingOnLoad();
+        
     </script>
 
 </body>
