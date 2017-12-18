@@ -56,9 +56,9 @@ hemera.act({
 The pattern is:
 
 * `topic`: is the store name to publish to `<name>-store`
-* `cmd`: is the command to execute `create`
+* `cmd`: is the command to execute `update`
 * `collection`: the name of the table or collection `string`
-* `data`: the data which represent the entity to create `object`
+* `data`: the data which represent the entity to update `object`
 * `query`: the search criteria `object`
 
 Example:
@@ -80,7 +80,7 @@ hemera.act({
 The pattern is:
 
 * `topic`: is the store name to publish to `<name>-store`
-* `cmd`: is the command to execute `create`
+* `cmd`: is the command to execute `updateById`
 * `collection`: the name of the table or collection `string`
 * `data`: the data which represent the entity to create `object`
 * `id`: the primary identifier of your entity `string` or `number`
@@ -104,7 +104,7 @@ hemera.act({
 The pattern is:
 
 * `topic`: is the store name to publish to `<name>-store`
-* `cmd`: is the command to execute `create`
+* `cmd`: is the command to execute `find`
 * `collection`: the name of the table or collection `string`
 * `query`: the search criteria `object`
 * `options`: the search criteria `object` (*optional*)
@@ -129,7 +129,7 @@ hemera.act({
 The pattern is:
 
 * `topic`: is the store name to publish to `<name>-store`
-* `cmd`: is the command to execute `create`
+* `cmd`: is the command to execute `findById`
 * `collection`: the name of the table or collection `string`
 * `id`: the primary identifier of your entity `string` or `number`
 
@@ -149,7 +149,7 @@ hemera.act({
 The pattern is:
 
 * `topic`: is the store name to publish to `<name>-store`
-* `cmd`: is the command to execute `create`
+* `cmd`: is the command to execute `remove`
 * `collection`: the name of the table or collection `string`
 * `query`: the search criteria `object`
 
@@ -169,7 +169,7 @@ hemera.act({
 The pattern is:
 
 * `topic`: is the topic to publish to `sql-store`
-* `cmd`: is the command to execute `create`
+* `cmd`: is the command to execute `removeById`
 * `collection`: the name of the table or collection `string`
 * `id`: the primary identifier of your entity `string` or `number`
 
@@ -189,9 +189,9 @@ hemera.act({
 The pattern is:
 
 * `topic`: is the store name to publish to `<name>-store`
-* `cmd`: is the command to execute `create`
+* `cmd`: is the command to execute `replace`
 * `collection`: the name of the table or collection `string`
-* `data`: the data which represent the entity to create `object`
+* `data`: the data which represent the entity to replace `object`
 * `query`: the search criteria `object`
 
 Example:
@@ -213,9 +213,9 @@ hemera.act({
 The pattern is:
 
 * `topic`: is the store name to publish to `<name>-store`
-* `cmd`: is the command to execute `create`
+* `cmd`: is the command to execute `replaceById`
 * `collection`: the name of the table or collection `string`
-* `data`: the data which represent the entity to create `object`
+* `data`: the data which represent the entity to update `object`
 * `id`: the primary identifier of your entity `string` or `number`
 
 Example:
@@ -237,7 +237,7 @@ hemera.act({
 The pattern is:
 
 * `topic`: is the store name to publish to `<name>-store`
-* `cmd`: is the command to execute `create`
+* `cmd`: is the command to execute `exists`
 * `collection`: the name of the table or collection `string`
 * `query`: the search criteria `object`
 
