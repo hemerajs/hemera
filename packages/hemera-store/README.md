@@ -137,7 +137,7 @@ Example:
 ```js
 hemera.act({
   topic: 'sql-store',
-  cmd: 'updateById',
+  cmd: 'findById',
   id: 1,
   collection: 'product'
 }, function(err, resp) ...)
