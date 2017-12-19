@@ -18,6 +18,6 @@
     "lodash": "4.17.x"
   },
   "engines": {
-    "node": ">=4"
+    "node": ">=6"
   }
 }
