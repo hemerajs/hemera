@@ -14,11 +14,6 @@ let defaultConfig = {
   sampling: 0.1
 }
 
-exports.plugin = Hp(hemeraZipkin, '>=2.0.0')
-exports.options = {
-  name: require('./package.json').name
-}
-
 function hemeraZipkin(hemera, opts, done) {
   const config = Hoek.applyToDefaults(defaultConfig, opts || {})
   const Tracer = new Zipkin(config)
@@ -172,3 +167,7 @@ function hemeraZipkin(hemera, opts, done) {
 
   done()
 }
+
+const plugin = Hp(hemeraZipkin, '>=2.0.0')
+plugin[Symbol.for('name')] = require('./package.json').name
+module.exports = plugin

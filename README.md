@@ -17,7 +17,7 @@
 A <a href="http://nodejs.org/">Node.js</a> microservices toolkit for the <a href="https://nats.io">NATS messaging system</a>
 </p>
 
-- __Node:__ v4.5 (Recommended v6+)
+- __Node:__ v6+
 - __Documentation:__ https://hemerajs.github.io/hemera/
 - __Website:__ https://hemerajs.github.io/hemera-site/
 - __Lead Maintainer:__ [Dustin Deus](https://github.com/StarpTech)
@@ -43,7 +43,7 @@ The key features of NATS in combination with Hemera are:
 * **Publish & Subscribe**: Hemera supports all features of NATS. This includes wildcards in subjects and normal publish and fanout mechanism.
 * **Tracing**: Any distributed system need good tracing capabilities. We provide support for Zipkin or Jaeger tracing systems which manages both the collection and lookup of this data.
 * **Monitoring**: Your NATS server can be monitored by cli or a dashboard.
-* **Payload validation**: Create your own validator or use existing plugins for Joi and Parambulator.
+* **Payload validation**: Create your own validator or use existing plugins e.g Hemera-Joi.
 * **Serialization**: Use JSON, Msgpack or Avro to serialize your data (dynamic or static).
 * **Metadata**: Transfer metadata across services or attach contextual data to tracing systems.
 * **Dependencies**: NATS is a single binary of 7MB and can be deployed in seconds.
@@ -56,7 +56,7 @@ The key features of NATS in combination with Hemera are:
 ## What Hemera code looks like
 
 **We support:**
-- Async/Await (Node 7.6+)
+- Async/Await (Node 8+)
 - Promise
 - Error-first-callback style
 
@@ -177,22 +177,17 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 | [hemera-sql-store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-sql-store) | [![npm](https://img.shields.io/npm/v/hemera-sql-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-sql-store)
 | [hemera-elasticsearch](https://github.com/hemerajs/hemera/tree/master/packages/hemera-elasticsearch) | [![npm](https://img.shields.io/npm/v/hemera-elasticsearch.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-elasticsearch)
 | [hemera-couchbase-store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-couchbase-store) | [![npm](https://img.shields.io/npm/v/hemera-couchbase-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-couchbase-store)
-| [hemera-mongo-store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-mongo-store) | [![npm](https://img.shields.io/npm/v/hemera-mongo-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-mongo-store)
+| [hemera-mongo-store](https://github.com/hemerajs/hemera-mongo-store) | [![npm](https://img.shields.io/npm/v/hemera-mongo-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-mongo-store)
 | [hemera-rethinkdb-store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-rethinkdb-store) | [![npm](https://img.shields.io/npm/v/hemera-rethinkdb-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-rethinkdb-store)
 
 | Payload validation | Version |
 |--------|-------|
 | [hemera-joi](https://github.com/hemerajs/hemera/tree/master/packages/hemera-joi) | [![npm](https://img.shields.io/npm/v/hemera-joi.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-joi)
-| [hemera-parambulator](https://github.com/hemerajs/hemera/tree/master/packages/hemera-parambulator) | [![npm](https://img.shields.io/npm/v/hemera-parambulator.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-parambulator)
 
 | Data serialization | Version |
 |--------|-------|
 | [hemera-msgpack](https://github.com/hemerajs/hemera/tree/master/packages/hemera-msgpack) | [![npm](https://img.shields.io/npm/v/hemera-msgpack.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-msgpack)
 | [hemera-avro](https://github.com/hemerajs/hemera/tree/master/packages/hemera-avro) | [![npm](https://img.shields.io/npm/v/hemera-avro.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-avro)
-
-| Data compression | Version |
-|--------|-------|
-| [hemera-snappy](https://github.com/hemerajs/hemera/tree/master/packages/hemera-snappy) | [![npm](https://img.shields.io/npm/v/hemera-snappy.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-snappy)
 
 | Cache | Version |
 |--------|-------|

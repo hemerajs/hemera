@@ -11,17 +11,6 @@ const contentBinaryStream = ['application/octet-stream']
 const contentText = ['text/*']
 const contentForm = ['application/x-www-form-*', 'multipart']
 
-exports.plugin = Hp(hemeraWeb, '>=2.0.0')
-exports.options = {
-  name: require('./package.json').name,
-  port: 3000,
-  host: '127.0.0.1',
-  errors: {
-    propBlacklist: ['stack']
-  },
-  pattern: {}
-}
-
 function hemeraWeb(hemera, opts, done) {
   const app = Express()
   app.use(BodyParser.json())
@@ -116,3 +105,15 @@ function hemeraWeb(hemera, opts, done) {
     done()
   })
 }
+
+const plugin = Hp(hemeraWeb, '>=2.0.0')
+plugin[Symbol.for('name')] = require('./package.json').name
+plugin[Symbol.for('options')] = {
+  port: 3000,
+  host: '127.0.0.1',
+  errors: {
+    propBlacklist: ['stack']
+  },
+  pattern: {}
+}
+module.exports = plugin

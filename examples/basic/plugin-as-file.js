@@ -1,39 +1,23 @@
 'use strict'
 
-const HemeraPlugin = require('./../../packages/hemera-plugin')
+const Hp = require('./../../packages/hemera-plugin')
 
-exports.plugin = HemeraPlugin(function myPlugin(hemera, opts, done) {
+const myPlugin = Hp(function myPlugin(hemera, options, done) {
   hemera.add(
     {
       topic: 'math',
       cmd: 'add'
     },
-    (req, cb) => {
-      cb(null, req.a + req.b)
+    (resp, cb) => {
+      cb(null, resp.a + resp.b)
     }
   )
 
   done()
 })
 
-exports.options = {
-  name: require('./package.json').name
-  //.. options
-}
+myPlugin[Symbol.for('dependencies')] = []
+myPlugin[Symbol.for('name')] = 'foo'
+myPlugin[Symbol.for('options')] = {}
 
-/**
- * Usage
- *
-
-  const Hemera = require('./../')
-  const nats = require('nats').connect()
-
-  const hemera = new Hemera(nats, { logLevel: 'info', childLogger: true })
-  const plugin = require('./plugin-as-file')
-  hemera.use(plugin)
-
-  hemera.ready(err => {
-
-  })
-
- */
+module.exports = myPlugin

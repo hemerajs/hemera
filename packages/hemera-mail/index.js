@@ -3,15 +3,6 @@
 const Hp = require('hemera-plugin')
 const Nodemailer = require('nodemailer')
 
-exports.plugin = Hp(hemeraEmail, '>=2.0.0')
-exports.options = {
-  name: require('./package.json').name,
-  payloadValidator: 'hemera-joi',
-  transport: {
-    jsonTransport: true // for debugging
-  }
-}
-
 function hemeraEmail(hemera, opts, done) {
   const topic = 'mail'
   const Joi = hemera.joi
@@ -52,3 +43,14 @@ function hemeraEmail(hemera, opts, done) {
 
   done()
 }
+
+const plugin = Hp(hemeraEmail, '>=2.0.0')
+plugin[Symbol.for('name')] = require('./package.json').name
+plugin[Symbol.for('options')] = {
+  name: require('./package.json').name,
+  payloadValidator: 'hemera-joi',
+  transport: {
+    jsonTransport: true // for debugging
+  }
+}
+module.exports = plugin

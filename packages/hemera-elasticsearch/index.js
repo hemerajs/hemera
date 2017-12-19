@@ -3,17 +3,6 @@
 const Hp = require('hemera-plugin')
 const Elasticsearch = require('elasticsearch')
 
-exports.plugin = Hp(hemeraElasticSearch, '>=2.0.0')
-exports.options = {
-  name: require('./package.json').name,
-  payloadValidator: 'hemera-joi',
-  elasticsearch: {
-    timeout: 3000,
-    host: 'localhost:9200',
-    apiVersion: '5.0'
-  }
-}
-
 function hemeraElasticSearch(hemera, opts, done) {
   const topic = 'elasticsearch'
   const Joi = hemera.joi
@@ -139,3 +128,16 @@ function hemeraElasticSearch(hemera, opts, done) {
     }
   )
 }
+
+const plugin = Hp(hemeraElasticSearch, '>=2.0.0')
+plugin[Symbol.for('name')] = require('./package.json').name
+plugin[Symbol.for('options')] = {
+  payloadValidator: 'hemera-joi',
+  elasticsearch: {
+    timeout: 3000,
+    host: 'localhost:9200',
+    apiVersion: '5.0'
+  }
+}
+plugin[Symbol.for('dependencies')] = ['hemera-joi']
+module.exports = plugin

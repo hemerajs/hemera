@@ -15,6 +15,6 @@
     "slackbots": "1.0.x"
   },
   "engines": {
-    "node": ">=4"
+    "node": ">=6"
   }
 }

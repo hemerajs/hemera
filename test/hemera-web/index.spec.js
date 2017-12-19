@@ -220,7 +220,7 @@ describe('Hemera-web', function() {
 
     hemera.use(HemeraWeb, {
       errors: {
-        propBlacklist: [] // default 'stack'
+        propBlacklist: []
       }
     })
 
@@ -381,7 +381,9 @@ describe('Hemera-web', function() {
     })
 
     hemera.use(HemeraWeb, {
-      pattern: { topic: 'math' }
+      pattern: {
+        topic: 'math'
+      }
     })
 
     hemera.ready(() => {

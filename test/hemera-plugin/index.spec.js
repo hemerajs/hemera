@@ -28,12 +28,7 @@ describe('Hemera plugin', function() {
       done()
     })
 
-    hemera.use({
-      plugin: plugin,
-      options: {
-        name: 'myPlugin'
-      }
-    })
+    hemera.use(plugin)
 
     hemera.ready(() => {
       hemera.close(done)
@@ -70,12 +65,7 @@ describe('Hemera plugin', function() {
         done()
       }, '500.400.300')
 
-      hemera.use({
-        plugin: plugin,
-        options: {
-          name: 'myPlugin'
-        }
-      })
+      hemera.use(plugin)
 
       hemera.ready()
     }
@@ -94,12 +84,7 @@ describe('Hemera plugin', function() {
       // Plugin
       let plugin = HemeraPlugin(true, '1')
 
-      hemera.use({
-        plugin: plugin,
-        options: {
-          name: 'myPlugin'
-        }
-      })
+      hemera.use(plugin)
 
       hemera.ready()
     }
@@ -121,12 +106,7 @@ describe('Hemera plugin', function() {
       // Plugin
       let plugin = HemeraPlugin(() => {}, true)
 
-      hemera.use({
-        plugin: plugin,
-        options: {
-          name: 'myPlugin'
-        }
-      })
+      hemera.use(plugin)
 
       hemera.ready()
     }

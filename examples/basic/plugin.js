@@ -1,8 +1,10 @@
 'use strict'
 
-const HemeraPlugin = require('./../../packages/hemera-plugin')
+const Hemera = require('./../../packages/hemera')
+const nats = require('nats').connect()
+const Hp = require('./../../packages/hemera-plugin')
 
-function myPlugin(hemera, options, done) {
+const myPlugin = Hp(function myPlugin(hemera, options, done) {
   hemera.add(
     {
       topic: 'math',
@@ -14,23 +16,17 @@ function myPlugin(hemera, options, done) {
   )
 
   done()
-}
+})
 
-const Hemera = require('./../../packages/hemera')
-const nats = require('nats').connect()
+myPlugin[Symbol.for('dependencies')] = []
+myPlugin[Symbol.for('name')] = 'foo'
+myPlugin[Symbol.for('options')] = {}
 
 const hemera = new Hemera(nats, {
   logLevel: 'info',
   childLogger: true
 })
 
-const plugin = HemeraPlugin({
-  plugin: myPlugin,
-  options: { name: 'foo' }
-})
+hemera.use(myPlugin)
 
-hemera.use(plugin)
-
-hemera.ready(() => {
-  // hemera is bootstrapped
-})
+hemera.ready()

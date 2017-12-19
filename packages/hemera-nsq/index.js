@@ -3,13 +3,6 @@
 const Hp = require('hemera-plugin')
 const Nsq = require('nsqjs')
 
-exports.plugin = Hp(hemeraNsq, '>=2.0.0')
-exports.options = {
-  name: require('./package.json').name,
-  nsqReader: {},
-  nsqWriter: {}
-}
-
 function hemeraNsq(hemera, opts, done) {
   const readers = new Map()
 
@@ -136,3 +129,11 @@ function hemeraNsq(hemera, opts, done) {
     done()
   })
 }
+
+const plugin = Hp(hemeraNsq, '>=2.0.0')
+plugin[Symbol.for('name')] = require('./package.json').name
+plugin[Symbol.for('options')] = {
+  nsqReader: {},
+  nsqWriter: {}
+}
+module.exports = plugin

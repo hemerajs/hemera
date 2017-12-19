@@ -5,13 +5,6 @@ const Knex = require('knex')
 const SqlStore = require('./store')
 const StorePattern = require('hemera-store/pattern')
 
-exports.plugin = Hp(hemeraSqlStore, '>=2.0.0')
-exports.options = {
-  name: require('./package.json').name,
-  payloadValidator: 'hemera-joi',
-  knex: {}
-}
-
 function hemeraSqlStore(hemera, opts, done) {
   const connections = {}
   const topic = 'sql-store'
@@ -168,3 +161,12 @@ function hemeraSqlStore(hemera, opts, done) {
 
   done()
 }
+
+const plugin = Hp(hemeraSqlStore, '>=2.0.0')
+plugin[Symbol.for('name')] = require('./package.json').name
+plugin[Symbol.for('options')] = {
+  payloadValidator: 'hemera-joi',
+  knex: {}
+}
+plugin[Symbol.for('dependencies')] = ['hemera-joi']
+module.exports = plugin

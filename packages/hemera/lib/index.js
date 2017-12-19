@@ -21,9 +21,9 @@ const _ = require('lodash')
 const Pino = require('pino')
 const TinySonic = require('tinysonic')
 const SuperError = require('super-error')
-const Hoek = require('hoek')
 const Joi = require('joi')
 const Avvio = require('avvio')
+const Hoek = require('hoek')
 const Series = require('fastseries')
 
 const Errors = require('./errors')
@@ -142,15 +142,20 @@ class Hemera extends EventEmitter {
     this._avvio.override = (hemera, plugin, opts) => {
       const res = Object.create(hemera)
       const proto = Object.getPrototypeOf(res)
+      const pluginCount = Object.keys(this._plugins).length + 1
+      const pluginName =
+        plugin[Symbol.for('name')] || 'anonymous-' + pluginCount
+      const pluginDeps = plugin[Symbol.for('dependencies')] || []
 
       if (hemera._config.childLogger) {
-        res.log = hemera.log.child({ plugin: opts.name })
+        res.log = hemera.log.child({ plugin: pluginName })
       }
 
       // plugin seperated prototype propertys
       res.plugin$ = {
         options: opts,
-        name: opts.name
+        name: pluginName,
+        dependencies: pluginDeps
       }
 
       // extend prototype so that each nested plugin have access
@@ -167,7 +172,7 @@ class Hemera extends EventEmitter {
         proto[prop] = value
       }
 
-      this._plugins[opts.name] = res
+      this._plugins[pluginName] = res
 
       return res
     }
@@ -451,6 +456,28 @@ class Hemera extends EventEmitter {
       }
     }
   }
+  /**
+   *
+   *
+   * @param {any} deps
+   * @memberof Hemera
+   */
+  checkPluginDependencies(plugin) {
+    const deps = plugin[Symbol.for('dependencies')]
+    if (!deps) return
+    if (!Array.isArray(deps)) {
+      throw new Error(Constants.PLUGIN_DEP_STRINGS)
+    }
+
+    deps.forEach(dependency => {
+      if (!this._plugins[dependency]) {
+        throw new Error(
+          `The dependency '${dependency}' was not registered before plugin '${this
+            .plugin$.name}'`
+        )
+      }
+    })
+  }
 
   /**
    *
@@ -458,41 +485,24 @@ class Hemera extends EventEmitter {
    * @returns
    * @memberof Hemera
    */
-  _use(plugin, opts) {
-    const pluginOpts = Hoek.clone(plugin.options || {})
-    const options = Hoek.applyToDefaults(pluginOpts, opts || {}, true)
-
-    if (!options.name) {
-      throw new Errors.HemeraError(Constants.PLUGIN_NAME_REQUIRED)
-    }
-
-    this.register(plugin.plugin, options)
+  _use(plugin, opts, shallowKeys) {
+    let pluginOpts = Hoek.clone(plugin[Symbol.for('options')] || {})
+    pluginOpts = Object.assign(pluginOpts, opts)
+    this.register(plugin, pluginOpts)
   }
 
   /**
    *
    *
    * @param {any} plugin
-   * @param {any} opts
-   * @param {any} cb
    * @returns
    * @memberof Hemera
    */
-  use(plugin, opts) {
-    // name has to be set in plugin options
-    // when we register an array of plugins it would collide
-    if (opts && opts.name) {
-      delete opts.name
-    }
-
-    if (_.isArray(plugin)) {
-      plugin.forEach(p => {
-        this._use(p, opts)
-      })
-    } else {
+  use(plugins, opts) {
+    const p = _.isArray(plugins) ? plugins : [plugins]
+    p.forEach(plugin => {
       this._use(plugin, opts)
-    }
-
+    })
     return this._avvio
   }
 

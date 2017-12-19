@@ -3,11 +3,6 @@
 const Hp = require('hemera-plugin')
 const msgpack = require('msgpack-lite')
 
-exports.plugin = Hp(hemeraMsgpack, '>=2.0.0')
-exports.options = {
-  name: require('./package.json').name
-}
-
 function hemeraMsgpack(hemera, opts, done) {
   function decode(msg) {
     try {
@@ -39,3 +34,7 @@ function hemeraMsgpack(hemera, opts, done) {
 
   done()
 }
+
+const plugin = Hp(hemeraMsgpack, '>=2.0.0')
+plugin[Symbol.for('name')] = require('./package.json').name
+module.exports = plugin

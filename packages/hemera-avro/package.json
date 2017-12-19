@@ -11,7 +11,7 @@
     "lint": "eslint index.js"
   },
   "engines": {
-    "node": ">=5.10.0"
+    "node": ">=6"
   },
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",

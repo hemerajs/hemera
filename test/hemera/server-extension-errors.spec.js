@@ -40,12 +40,7 @@ describe('Server Extension error', function() {
       done()
     }
 
-    hemera.use({
-      plugin: plugin,
-      options: {
-        name: 'myPlugin'
-      }
-    })
+    hemera.use(plugin)
 
     hemera.ready(() => {
       hemera.act(
@@ -92,12 +87,7 @@ describe('Server Extension error', function() {
       done()
     }
 
-    hemera.use({
-      plugin: plugin,
-      options: {
-        name: 'myPlugin'
-      }
-    })
+    hemera.use(plugin)
 
     hemera.ready(() => {
       hemera.act(
@@ -144,12 +134,7 @@ describe('Server Extension error', function() {
       done()
     }
 
-    hemera.use({
-      plugin: plugin,
-      options: {
-        name: 'myPlugin'
-      }
-    })
+    hemera.use(plugin)
 
     hemera.ready(() => {
       hemera.act(
@@ -198,12 +183,7 @@ describe('Server Extension error', function() {
       done()
     }
 
-    hemera.use({
-      plugin: plugin,
-      options: {
-        name: 'myPlugin'
-      }
-    })
+    hemera.use(plugin)
 
     hemera.ready(() => {
       hemera.act(
@@ -250,12 +230,7 @@ describe('Server Extension error', function() {
       done()
     }
 
-    hemera.use({
-      plugin: plugin,
-      options: {
-        name: 'myPlugin'
-      }
-    })
+    hemera.use(plugin)
 
     hemera.ready(() => {
       hemera.act(
