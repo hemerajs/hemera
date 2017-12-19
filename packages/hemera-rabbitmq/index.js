@@ -81,7 +81,7 @@ function hemeraRabbitmq(hemera, opts, done) {
   })
 }
 
-const plugin = Hp(hemeraRabbitmq, '>=2.0.0')
+const plugin = Hp(hemeraRabbitmq, '>=3')
 plugin[Symbol.for('name')] = require('./package.json').name
 plugin[Symbol.for('options')] = {
   payloadValidator: 'hemera-joi'

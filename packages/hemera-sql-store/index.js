@@ -162,7 +162,7 @@ function hemeraSqlStore(hemera, opts, done) {
   done()
 }
 
-const plugin = Hp(hemeraSqlStore, '>=2.0.0')
+const plugin = Hp(hemeraSqlStore, '>=3')
 plugin[Symbol.for('name')] = require('./package.json').name
 plugin[Symbol.for('options')] = {
   payloadValidator: 'hemera-joi',

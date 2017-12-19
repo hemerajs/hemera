@@ -230,7 +230,7 @@ function hemeraControlplane(hemera, opts, done) {
   done()
 }
 
-const plugin = Hp(hemeraControlplane, '>=2.0.0')
+const plugin = Hp(hemeraControlplane, '>=3')
 plugin[Symbol.for('name')] = require('./package.json').name
 plugin[Symbol.for('options')] = {
   payloadValidator: 'hemera-joi',

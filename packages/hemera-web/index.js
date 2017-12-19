@@ -106,7 +106,7 @@ function hemeraWeb(hemera, opts, done) {
   })
 }
 
-const plugin = Hp(hemeraWeb, '>=2.0.0')
+const plugin = Hp(hemeraWeb, '>=3')
 plugin[Symbol.for('name')] = require('./package.json').name
 plugin[Symbol.for('options')] = {
   port: 3000,

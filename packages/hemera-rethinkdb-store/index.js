@@ -274,7 +274,7 @@ function hemeraRethinkdbStore(hemera, opts, done) {
   done()
 }
 
-const plugin = Hp(hemeraRethinkdbStore, '>=2.0.0')
+const plugin = Hp(hemeraRethinkdbStore, '>=3')
 plugin[Symbol.for('name')] = require('./package.json').name
 plugin[Symbol.for('options')] = {
   payloadValidator: 'hemera-joi',

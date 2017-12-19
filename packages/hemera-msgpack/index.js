@@ -35,6 +35,6 @@ function hemeraMsgpack(hemera, opts, done) {
   done()
 }
 
-const plugin = Hp(hemeraMsgpack, '>=2.0.0')
+const plugin = Hp(hemeraMsgpack, '>=3')
 plugin[Symbol.for('name')] = require('./package.json').name
 module.exports = plugin

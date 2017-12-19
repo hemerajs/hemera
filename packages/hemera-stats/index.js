@@ -73,6 +73,6 @@ function hemeraStats(hemera, opts, done) {
   done()
 }
 
-const plugin = Hp(hemeraStats, '>=2.0.0')
+const plugin = Hp(hemeraStats, '>=3')
 plugin[Symbol.for('name')] = require('./package.json').name
 module.exports = plugin

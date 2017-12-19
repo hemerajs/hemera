@@ -70,7 +70,7 @@ function isSubset(scope, subset) {
   return common.length === subset.length
 }
 
-const plugin = Hp(hemeraJwtAuth, '>=2.0.0')
+const plugin = Hp(hemeraJwtAuth, '>=3')
 plugin[Symbol.for('name')] = require('./package.json').name
 plugin[Symbol.for('options')] = {
   name: require('./package.json').name,

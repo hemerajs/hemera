@@ -44,7 +44,7 @@ function hemeraEmail(hemera, opts, done) {
   done()
 }
 
-const plugin = Hp(hemeraEmail, '>=2.0.0')
+const plugin = Hp(hemeraEmail, '>=3')
 plugin[Symbol.for('name')] = require('./package.json').name
 plugin[Symbol.for('options')] = {
   name: require('./package.json').name,

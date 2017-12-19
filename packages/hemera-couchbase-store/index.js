@@ -45,7 +45,7 @@ function hemeraCouchbaseStore(hemera, opts, done) {
   done()
 }
 
-const plugin = Hp(hemeraCouchbaseStore, '>=2.0.0')
+const plugin = Hp(hemeraCouchbaseStore, '>=3')
 plugin[Symbol.for('name')] = require('./package.json').name
 plugin[Symbol.for('options')] = {
   payloadValidator: 'hemera-joi',

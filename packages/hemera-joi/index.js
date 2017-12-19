@@ -112,7 +112,7 @@ function hemeraJoi(hemera, opts, done) {
   done()
 }
 
-const plugin = Hp(hemeraJoi, '>=2.0.0')
+const plugin = Hp(hemeraJoi, '>=3')
 plugin[Symbol.for('name')] = require('./package.json').name
 
 module.exports = plugin

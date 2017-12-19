@@ -130,7 +130,7 @@ function hemeraNsq(hemera, opts, done) {
   })
 }
 
-const plugin = Hp(hemeraNsq, '>=2.0.0')
+const plugin = Hp(hemeraNsq, '>=3')
 plugin[Symbol.for('name')] = require('./package.json').name
 plugin[Symbol.for('options')] = {
   nsqReader: {},

@@ -139,7 +139,7 @@ function hemeraOpentracing(hemera, opts, done) {
   done()
 }
 
-const plugin = Hp(hemeraOpentracing, '>=2.0.0')
+const plugin = Hp(hemeraOpentracing, '>=3')
 plugin[Symbol.for('name')] = require('./package.json').name
 plugin[Symbol.for('options')] = {
   delegateTags: [

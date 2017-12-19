@@ -45,7 +45,7 @@ function hemeraPrometheus(hemera, opts, done) {
   server.listen(opts.httpServer.port, opts.httpServer.host, done)
 }
 
-const plugin = Hp(hemeraPrometheus, '>=2.0.0')
+const plugin = Hp(hemeraPrometheus, '>=3')
 plugin[Symbol.for('name')] = require('./package.json').name
 plugin[Symbol.for('options')] = {
   collectDefaultMetrics: true,

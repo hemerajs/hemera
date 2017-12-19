@@ -18,7 +18,7 @@ function hemeraGracefulShutdown(hemera, opts, done) {
   done()
 }
 
-const plugin = Hp(hemeraGracefulShutdown, '>=2.0.0')
+const plugin = Hp(hemeraGracefulShutdown, '>=3')
 plugin[Symbol.for('name')] = require('./package.json').name
 
 module.exports = plugin
