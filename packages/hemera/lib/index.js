@@ -141,15 +141,10 @@ class Hemera extends EventEmitter {
     this._avvio.override = (hemera, plugin, opts) => {
       const res = Object.create(hemera)
       const proto = Object.getPrototypeOf(res)
-      const isHemeraPlugin = plugin[Symbol.for('isHemera')]
       const pluginCount = Object.keys(this._plugins).length + 1
       const pluginName =
         plugin[Symbol.for('name')] || 'anonymous-' + pluginCount
       const pluginDeps = plugin[Symbol.for('dependencies')] || []
-
-      if (!pluginName && isHemeraPlugin) {
-        throw new Errors.HemeraError(Constants.PLUGIN_NAME_REQUIRED)
-      }
 
       if (hemera._config.childLogger) {
         res.log = hemera.log.child({ plugin: pluginName })

@@ -48,7 +48,6 @@ module.exports = {
   FATAL_ERROR: 'Fatal error',
   EXTENSION_ERROR: 'Extension error',
   INVALID_EXTENSION_TYPE: 'Invalid extension type',
-  PLUGIN_NAME_REQUIRED: 'Plugin name is required',
   MISSING_DECORATE_DEPENDENCY: 'Missing decorate dependency',
   DECORATION_ALREADY_DEFINED: 'Decoration has been already added',
   GRACEFULLY_SHUTDOWN: 'Gracefully shutdown',
