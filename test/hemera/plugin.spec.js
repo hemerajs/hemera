@@ -344,6 +344,28 @@ describe('Plugin interface', function() {
     hemera.ready()
   })
 
+  it('Should throw error when dependency was not registered before', function(
+    done
+  ) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let plugin = function(hemera, options, next) {
+      next()
+    }
+
+    plugin[Symbol.for('name')] = 'myPlugin'
+    plugin[Symbol.for('dependencies')] = ['test']
+
+    try {
+      hemera.checkPluginDependencies(plugin)
+    } catch (err) {
+      expect(err).to.be.exists()
+      done()
+    }
+  })
+
   it('Should satisfy all decorate deps', function(done) {
     const nats = require('nats').connect(authUrl)
 

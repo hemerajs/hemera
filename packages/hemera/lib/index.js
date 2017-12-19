@@ -158,9 +158,6 @@ class Hemera extends EventEmitter {
         dependencies: pluginDeps
       }
 
-      // Check plugin dependencies
-      res._checkDependencies(pluginDeps)
-
       // extend prototype so that each nested plugin have access
       res.decorate = function decorate(prop, value, deps) {
         if (prop in this) {
@@ -465,7 +462,8 @@ class Hemera extends EventEmitter {
    * @param {any} deps
    * @memberof Hemera
    */
-  _checkDependencies(deps) {
+  checkPluginDependencies(plugin) {
+    const deps = plugin[Symbol.for('dependencies')]
     if (!deps) return
     if (!Array.isArray(deps)) {
       throw new Error(Constants.PLUGIN_DEP_STRINGS)
