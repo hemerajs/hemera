@@ -5,32 +5,6 @@ const Jaeger = require('jaeger-client')
 const UDPSender = require('jaeger-client/dist/src/reporters/udp_sender').default
 const Opentracing = require('opentracing')
 
-exports.plugin = Hp(hemeraOpentracing, '>=2.0.0')
-exports.options = {
-  name: require('./package.json').name,
-  delegateTags: [
-    {
-      key: 'query',
-      tag: 'hemera.db.query'
-    }
-  ],
-  jaeger: {
-    sampler: {
-      type: 'Const',
-      options: true
-    },
-    options: {
-      tags: {
-        'hemera.version': 'Node-' + require('nats-hemera/package.json').version,
-        'nodejs.version': process.versions.node
-      }
-    },
-    reporter: {
-      host: 'localhost'
-    }
-  }
-}
-
 function addContextTags(span, ctx, key, tags) {
   tags.forEach(function(entry) {
     if (ctx[key][entry.key]) {
@@ -164,3 +138,30 @@ function hemeraOpentracing(hemera, opts, done) {
 
   done()
 }
+
+const plugin = Hp(hemeraOpentracing, '>=2.0.0')
+plugin[Symbol.for('name')] = require('./package.json').name
+plugin[Symbol.for('options')] = {
+  delegateTags: [
+    {
+      key: 'query',
+      tag: 'hemera.db.query'
+    }
+  ],
+  jaeger: {
+    sampler: {
+      type: 'Const',
+      options: true
+    },
+    options: {
+      tags: {
+        'hemera.version': 'Node-' + require('nats-hemera/package.json').version,
+        'nodejs.version': process.versions.node
+      }
+    },
+    reporter: {
+      host: 'localhost'
+    }
+  }
+}
+module.exports = plugin

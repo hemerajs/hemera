@@ -34,4 +34,6 @@ function plugin(fn, version) {
   return fn
 }
 
+plugin[Symbol.for('isHemera')] = true
+
 module.exports = plugin

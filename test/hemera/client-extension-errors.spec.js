@@ -40,12 +40,7 @@ describe('Client Extension error', function() {
       done()
     }
 
-    hemera.use({
-      plugin: plugin,
-      options: {
-        name: 'myPlugin'
-      }
-    })
+    hemera.use(plugin)
 
     hemera.ready(() => {
       hemera.act(
@@ -88,12 +83,7 @@ describe('Client Extension error', function() {
       done()
     }
 
-    hemera.use({
-      plugin: plugin,
-      options: {
-        name: 'myPlugin'
-      }
-    })
+    hemera.use(plugin)
 
     hemera.ready(() => {
       hemera.act(
@@ -138,12 +128,7 @@ describe('Client Extension error', function() {
       done()
     }
 
-    hemera.use({
-      plugin: plugin,
-      options: {
-        name: 'myPlugin'
-      }
-    })
+    hemera.use(plugin)
 
     hemera.ready(() => {
       hemera.act(
@@ -186,12 +171,7 @@ describe('Client Extension error', function() {
       done()
     }
 
-    hemera.use({
-      plugin: plugin,
-      options: {
-        name: 'myPlugin'
-      }
-    })
+    hemera.use(plugin)
 
     hemera.ready(() => {
       hemera.act(

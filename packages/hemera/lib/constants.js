@@ -62,5 +62,6 @@ module.exports = {
   TRANSPORT_OPTIONS_DIFFER:
     'Transport options differ from the first registration to this topic',
   TRANSPORT_OPTIONS_DIFFER_DESC:
-    'Could not register pattern "%s" because pattern "%s" has different transport configuration but the same topic. Please use a different topic name!'
+    'Could not register pattern "%s" because pattern "%s" has different transport configuration but the same topic. Please use a different topic name!',
+  PLUGIN_DEP_STRINGS: 'The dependencies should be an array of strings'
 }

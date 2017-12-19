@@ -22,8 +22,6 @@ describe('Async await Plugin interface', function() {
 
     // Plugin
     async function plugin(hemera, options) {
-      expect(options.a).to.be.equals('1')
-
       hemera.add(
         {
           topic: 'math',
@@ -39,15 +37,7 @@ describe('Async await Plugin interface', function() {
       return await Promise.resolve()
     }
 
-    let pluginOptions = {
-      name: 'myPlugin',
-      a: '1'
-    }
-
-    hemera.use({
-      plugin: plugin,
-      options: pluginOptions
-    })
+    hemera.use(plugin)
 
     hemera.ready(() => {
       hemera.act(
@@ -80,33 +70,15 @@ describe('Async await Plugin interface', function() {
       return await Promise.resolve()
     }
 
-    hemera.use([
-      {
-        plugin: plugin1,
-        options: {
-          name: 'myPlugin1',
-          a: 1
-        }
-      },
-      {
-        plugin: plugin2,
-        options: {
-          name: 'myPlugin2',
-          a: 2
-        }
-      }
-    ])
+    hemera.use([plugin1, plugin2])
 
     hemera.ready(err => {
       expect(err).to.be.not.exists()
-      expect(hemera.plugins.myPlugin1.plugin$.options).to.be.equals({
-        name: 'myPlugin1',
-        a: 1
-      })
-      expect(hemera.plugins.myPlugin2.plugin$.options).to.be.equals({
-        name: 'myPlugin2',
-        a: 2
-      })
+      expect(Object.keys(hemera.plugins)).to.be.equals([
+        'core',
+        'anonymous-2',
+        'anonymous-3'
+      ])
       hemera.close(done)
     })
   })

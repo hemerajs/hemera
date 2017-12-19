@@ -3,16 +3,6 @@
 const Hp = require('hemera-plugin')
 const Couchbase = require('couchbase')
 
-exports.plugin = Hp(hemeraCouchbaseStore, '>=2.0.0')
-exports.options = {
-  name: require('./package.json').name,
-  payloadValidator: 'hemera-joi',
-  couchbase: {
-    url: 'couchbase://localhost/',
-    defaultBucket: 'default'
-  }
-}
-
 function hemeraCouchbaseStore(hemera, opts, done) {
   const topic = 'couchbase-store'
 
@@ -54,3 +44,15 @@ function hemeraCouchbaseStore(hemera, opts, done) {
 
   done()
 }
+
+const plugin = Hp(hemeraCouchbaseStore, '>=2.0.0')
+plugin[Symbol.for('name')] = require('./package.json').name
+plugin[Symbol.for('options')] = {
+  payloadValidator: 'hemera-joi',
+  couchbase: {
+    url: 'couchbase://localhost/',
+    defaultBucket: 'default'
+  }
+}
+plugin[Symbol.for('dependencies')] = ['hemera-joi']
+module.exports = plugin

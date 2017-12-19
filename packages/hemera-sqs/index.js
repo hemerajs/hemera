@@ -3,14 +3,6 @@
 const AWS = require('aws-sdk')
 const Hp = require('hemera-plugin')
 
-exports.plugin = Hp(hemeraSQS, '>=2.0.0')
-exports.options = {
-  name: require('./package.json').name,
-  sqs: {
-    apiVersion: '2012-11-05'
-  }
-}
-
 function hemeraSQS(hemera, opts, done) {
   const topic = 'sqs'
 
@@ -184,3 +176,12 @@ function hemeraSQS(hemera, opts, done) {
 
   done()
 }
+
+const plugin = Hp(hemeraSQS, '>=2.0.0')
+plugin[Symbol.for('name')] = require('./package.json').name
+plugin[Symbol.for('options')] = {
+  sqs: {
+    apiVersion: '2012-11-05'
+  }
+}
+module.exports = plugin

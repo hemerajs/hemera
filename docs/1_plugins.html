@@ -278,22 +278,25 @@
           <pre>
 <code class="language-javascript">
 const hp = require('hemera-plugin')
-exports.plugin = hp(function myPlugin (hemera, opts, next) {
+const myPlugin = hp((hemera, opts, done) => {
   const topic = "math"
 
   hemera.add({
     topic,
     cmd: "add"
   }, function (req, cb) {
-    cb(null, req.a + req.b)
+    cb(null, {
+      result: req.a + req.b
+    })
   })
 
-  next()
-}, '>=2')
+  done()
+}, '>=3')
 
-exports.options = {
-  name: require("./package.json").name
-}
+myPlugin[Symbol.for('name')] = 'foo'
+myPlugin[Symbol.for('options')] = {}
+
+module.exports = myPlugin
 </code>
                     </pre>
           <div class="alert alert-info" role="alert">
@@ -303,7 +306,7 @@ exports.options = {
           <pre>
 <code class="language-javascript">
 const hp = require('hemera-plugin')
-const myPlugin = hp(function myPlugin (hemera, opts, next) {
+const myPlugin = hp((hemera, opts, done) => {
   const topic = "math"
 
   hemera.add({
@@ -315,22 +318,20 @@ const myPlugin = hp(function myPlugin (hemera, opts, next) {
     })
   })
 
-  next()
-}, '>=2')
+  done()
+}, '>=3')
 
-hemera.use({
-    plugin: myPlugin,
-    options: {
-      name: "test"
-    }
-})
+myPlugin[Symbol.for('name')] = 'foo'
+myPlugin[Symbol.for('options')] = {}
+
+hemera.use(myPlugin)
 </code>
 </pre>
           <h4 class="section-h4">Async / Await</h4>
           <pre>
 <code class="language-javascript">
 const hp = require('hemera-plugin')
-exports.plugin = hp(async (hemera, opts) => {
+const myPlugin = hp(async (hemera, opts) => {
   const topic = "math"
 
   hemera.add({
@@ -341,15 +342,42 @@ exports.plugin = hp(async (hemera, opts) => {
       result: req.a + req.b
     })
   })
-}, '>=2')
+}, '>=3')
 
-exports.options = {
-  name: require("./package.json").name
-}
+myPlugin[Symbol.for('name')] = 'foo'
+myPlugin[Symbol.for('options')] = {}
+
+module.exports = myPlugin
 </code>
                     </pre>
           <h4 class="section-h4">Plugin dependencies</h4>
-          <p>Plugin dependencies are installed as usual with NPM.</p>
+          <pre>
+<code class="language-javascript">
+const hp = require('hemera-plugin')
+const myPlugin = hp((hemera, opts, done) => {
+  const topic = "math"
+
+  hemera.add({
+    topic,
+    cmd: "add"
+  }, function (req, cb) {
+    cb(null, {
+      result: req.a + req.b
+    })
+  })
+
+  done()
+}, '>=3')
+
+myPlugin[Symbol.for('dependencies')] = []
+myPlugin[Symbol.for('name')] = 'foo'
+myPlugin[Symbol.for('options')] = {}
+
+module.exports = myPlugin
+</code>
+</pre>
+          <h4 class="section-h4">Plugin versioning</h4>
+          <p>Plugin dependencies are managed with NPM.</p>
 
           <h4 class="section-h4">Plugin registration</h4>
           <p>A plugin must be registered before the
@@ -358,28 +386,23 @@ exports.options = {
           </p>
           <pre>
 <code class="language-javascript">
-hemera.use(plugin, [opts])
-</code>
-                    </pre>
-          <h4 class="section-h4">Default options.</h4>
-          <p>Pass an object as second arguments to share default options.</p>
-          <pre>
-<code class="language-javascript">
-hemera.use({
-  plugin: function(hemera, opts, next) { next() },
-  options: { name: "foo" }
-}, { a: 1 })
+hemera.use(plugin)
 </code>
                     </pre>
           <h4 class="section-h4">Register multiple plugins at once</h4>
           <pre>
 <code class="language-javascript">
-hemera.use([{
-  plugin: function(hemera, opts, next) { next() },
-  options: { name: "foo" }
-}]).after((err) => { })
+hemera.use([plugin, plugin])
 </code>
                     </pre>
+
+          <h4 class="section-h4">Default options.</h4>
+          <p>Pass an object as second arguments to overwrite default options.</p>
+<pre>
+<code class="language-javascript">
+hemera.use(plugin, { a: 1 })
+</code>
+</pre>
 
           <h4 class="section-h4">After</h4>
           <p>Calls a function after all the previously defined plugins are loaded, including all their dependencies.</p>
@@ -403,23 +426,11 @@ hemera.setOption("payloadValidator", "hemera-joi")
                     </pre>
           <h4 class="section-h4">Shared data</h4>
           <p>Sometimes it is useful to share data across plugins. This data can be accessed from all other plugins. You can
-            also declare the dependencies of your function.</p>
+            also declare other decorators as dependencies.</p>
           <pre>
 <code class="language-javascript">
 hemera.decorate("magicNumber", fn, ['dep1', 'dep2'])
 hemera.magicNumber
-</code>
-                    </pre>
-          <h4 class="section-h4">Async / Await</h4>
-          <p>You can also pass an async function to the use function.</p>
-          <pre>
-<code class="language-javascript">
-hemera.use({
-  plugin: async function(hemera, opts) {
-    return await Promise.resolve()
-  },
-  options: { name: "foo" }
-})
 </code>
                     </pre>
         </div>

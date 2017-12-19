@@ -37,12 +37,7 @@ describe('onClose extension', function() {
       done()
     }
 
-    hemera.use({
-      plugin: plugin,
-      options: {
-        name: 'myPlugin'
-      }
-    })
+    hemera.use(plugin)
 
     hemera.ready(() => {
       hemera.close(x => {
@@ -77,12 +72,7 @@ describe('onClose extension', function() {
       done()
     }
 
-    hemera.use({
-      plugin: plugin,
-      options: {
-        name: 'myPlugin'
-      }
-    })
+    hemera.use(plugin)
 
     hemera.on('error', err => {
       expect(err.message).to.be.equals('test')

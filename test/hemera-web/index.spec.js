@@ -220,7 +220,7 @@ describe('Hemera-web', function() {
 
     hemera.use(HemeraWeb, {
       errors: {
-        propBlacklist: [] // default 'stack'
+        propBlacklist: []
       }
     })
 
@@ -242,6 +242,7 @@ describe('Hemera-web', function() {
       ).catch(resp => {
         expect(resp.response.data.error.stack).to.be.exists()
         expect(resp.response.status).to.be.equals(404)
+        HemeraWeb[Symbol.for('options')].errors.propBlacklist = ['stack']
         hemera.close(done)
       })
     })
@@ -381,7 +382,9 @@ describe('Hemera-web', function() {
     })
 
     hemera.use(HemeraWeb, {
-      pattern: { topic: 'math' }
+      pattern: {
+        topic: 'math'
+      }
     })
 
     hemera.ready(() => {
@@ -398,6 +401,7 @@ describe('Hemera-web', function() {
       Axios.get('http://127.0.0.1:3000?cmd=add&a=1&b=2')
         .then(resp => {
           expect(resp.data.result).to.be.equals(3)
+          HemeraWeb[Symbol.for('options')].pattern = {}
           hemera.close(done)
         })
         .catch(done)
@@ -434,6 +438,7 @@ describe('Hemera-web', function() {
       Axios.get('http://127.0.0.1:3000?cmd=add&a=1&b=2')
         .then(resp => {
           expect(resp.data.result).to.be.equals(3)
+          HemeraWeb[Symbol.for('options')].pattern = {}
           hemera.close(done)
         })
         .catch(done)

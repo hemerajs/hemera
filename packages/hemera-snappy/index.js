@@ -3,11 +3,6 @@
 const SnappyJS = require('snappyjs')
 const Hp = require('hemera-plugin')
 
-exports.plugin = Hp(hemeraSnappy, '>=2.0.0')
-exports.options = {
-  name: require('./package.json').name
-}
-
 function hemeraSnappy(hemera, opts, done) {
   function uncompress(msg) {
     try {
@@ -39,3 +34,7 @@ function hemeraSnappy(hemera, opts, done) {
 
   done()
 }
+
+const plugin = Hp(hemeraSnappy, '>=2.0.0')
+plugin[Symbol.for('name')] = require('./package.json').name
+module.exports = plugin

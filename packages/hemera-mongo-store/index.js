@@ -8,29 +8,6 @@ const StorePattern = require('hemera-store/pattern')
 const serialize = require('mongodb-extended-json').serialize
 const deserialize = require('mongodb-extended-json').deserialize
 
-exports.plugin = Hp(hemeraMongoStore, '>=2.0.0')
-exports.options = {
-  name: require('./package.json').name,
-  payloadValidator: 'hemera-joi',
-  mongos: {},
-  serializeResult: false,
-  mongo: {
-    url: 'mongodb://localhost:27017/'
-  },
-  store: {
-    create: {},
-    update: {},
-    updateById: {},
-    find: {},
-    findById: {},
-    remove: {},
-    removeById: {},
-    replace: { upsert: true },
-    replaceById: {},
-    count: {}
-  }
-}
-
 function hemeraMongoStore(hemera, opts, done) {
   let topic = 'mongo-store'
 
@@ -211,3 +188,28 @@ function hemeraMongoStore(hemera, opts, done) {
     done()
   })
 }
+
+const plugin = Hp(hemeraMongoStore, '>=2.0.0')
+plugin[Symbol.for('name')] = require('./package.json').name
+plugin[Symbol.for('options')] = {
+  payloadValidator: 'hemera-joi',
+  mongos: {},
+  serializeResult: false,
+  mongo: {
+    url: 'mongodb://localhost:27017/'
+  },
+  store: {
+    create: {},
+    update: {},
+    updateById: {},
+    find: {},
+    findById: {},
+    remove: {},
+    removeById: {},
+    replace: { upsert: true },
+    replaceById: {},
+    count: {}
+  }
+}
+plugin[Symbol.for('dependencies')] = ['hemera-joi']
+module.exports = plugin

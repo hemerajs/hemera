@@ -4,17 +4,6 @@ const Prom = require('prom-client')
 const Express = require('express')
 const Hp = require('hemera-plugin')
 
-exports.plugin = Hp(hemeraPrometheus, '>=2.0.0')
-
-exports.options = {
-  name: require('./package.json').name,
-  collectDefaultMetrics: true,
-  httpServer: {
-    port: 3000,
-    hostname: '127.0.0.1'
-  }
-}
-
 function hemeraPrometheus(hemera, opts, done) {
   const server = Express()
 
@@ -55,3 +44,14 @@ function hemeraPrometheus(hemera, opts, done) {
 
   server.listen(opts.httpServer.port, opts.httpServer.host, done)
 }
+
+const plugin = Hp(hemeraPrometheus, '>=2.0.0')
+plugin[Symbol.for('name')] = require('./package.json').name
+plugin[Symbol.for('options')] = {
+  collectDefaultMetrics: true,
+  httpServer: {
+    port: 3000,
+    hostname: '127.0.0.1'
+  }
+}
+module.exports = plugin

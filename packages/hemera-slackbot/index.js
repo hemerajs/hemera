@@ -3,13 +3,6 @@
 const SlackBot = require('slackbots')
 const Hp = require('hemera-plugin')
 
-exports.plugin = Hp(hemeraSlackbot, '>=2.0.0')
-
-exports.options = {
-  name: require('./package.json').name,
-  payloadValidator: 'hemera-joi'
-}
-
 function hemeraSlackbot(hemera, opts, done) {
   const topic = 'slackbot'
 
@@ -104,3 +97,11 @@ function hemeraSlackbot(hemera, opts, done) {
     hemera.log.info('Websocket connection closed!')
   })
 }
+
+const plugin = Hp(hemeraSlackbot, '>=2.0.0')
+plugin[Symbol.for('name')] = require('./package.json').name
+plugin[Symbol.for('options')] = {
+  payloadValidator: 'hemera-joi'
+}
+plugin[Symbol.for('dependencies')] = ['hemera-joi']
+module.exports = plugin

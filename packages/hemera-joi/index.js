@@ -3,15 +3,10 @@
 const Hp = require('hemera-plugin')
 const Joi = require('joi')
 
-exports.plugin = Hp(hemeraJoi, '>=2.0.0')
-exports.options = {
-  name: require('./package.json').name
-}
-
 function hemeraJoi(hemera, opts, done) {
   const PreValidationError = hemera.createError('PreValidationError')
   const PostValidationError = hemera.createError('PostValidationError')
-  const pluginName = exports.options.name
+  const pluginName = hemera.plugin$.name
 
   hemera.decorate('joi', Joi)
   hemera.decorate('joiErrors', {
@@ -116,3 +111,8 @@ function hemeraJoi(hemera, opts, done) {
 
   done()
 }
+
+const plugin = Hp(hemeraJoi, '>=2.0.0')
+plugin[Symbol.for('name')] = require('./package.json').name
+
+module.exports = plugin

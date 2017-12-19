@@ -7,13 +7,6 @@ const Os = require('os')
 let workers = []
 const cpuCount = Os.cpus().length
 
-exports.plugin = Hp(hemeraControlplane, '>=2.0.0')
-
-exports.options = {
-  name: require('./package.json').name,
-  payloadValidator: 'hemera-joi'
-}
-
 function hemeraControlplane(hemera, opts, done) {
   const topic = 'controlplane'
   const Joi = hemera.joi
@@ -236,3 +229,12 @@ function hemeraControlplane(hemera, opts, done) {
 
   done()
 }
+
+const plugin = Hp(hemeraControlplane, '>=2.0.0')
+plugin[Symbol.for('name')] = require('./package.json').name
+plugin[Symbol.for('options')] = {
+  payloadValidator: 'hemera-joi',
+  arango: {}
+}
+plugin[Symbol.for('dependencies')] = ['hemera-joi']
+module.exports = plugin

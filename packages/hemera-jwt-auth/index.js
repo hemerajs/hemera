@@ -4,15 +4,6 @@ const Hp = require('hemera-plugin')
 const JWT = require('jsonwebtoken')
 const Hoek = require('hoek')
 
-exports.plugin = Hp(hemeraJwtAuth, '>=2.0.0')
-exports.options = {
-  name: require('./package.json').name,
-  enforceAuth: true,
-  jwt: {
-    secret: false
-  }
-}
-
 function hemeraJwtAuth(hemera, opts, done) {
   const JwtError = hemera.createError('JwtError')
 
@@ -78,3 +69,14 @@ function isSubset(scope, subset) {
   const common = Hoek.intersect(scope, subset)
   return common.length === subset.length
 }
+
+const plugin = Hp(hemeraJwtAuth, '>=2.0.0')
+plugin[Symbol.for('name')] = require('./package.json').name
+plugin[Symbol.for('options')] = {
+  name: require('./package.json').name,
+  enforceAuth: true,
+  jwt: {
+    secret: false
+  }
+}
+module.exports = plugin

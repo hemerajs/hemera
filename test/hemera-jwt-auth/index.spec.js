@@ -1,7 +1,7 @@
 'use strict'
 
 const HemeraJwt = require('../../packages/hemera-jwt-auth')
-HemeraJwt.options.jwt.secret = 'test'
+HemeraJwt[Symbol.for('options')].jwt.secret = 'test'
 
 process.setMaxListeners(0)
 
@@ -544,7 +544,7 @@ describe('Hemera-jwt-auth', function() {
     })
 
     hemera.use(HemeraJwt, {
-      enforceAuth: false
+      crashOnFatal: false
     })
 
     hemera.ready(() => {

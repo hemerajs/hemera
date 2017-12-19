@@ -3,12 +3,6 @@
 const Hp = require('hemera-plugin')
 const Rabbit = require('rabbot')
 
-exports.plugin = Hp(hemeraRabbitmq, '>=2.0.0')
-exports.options = {
-  name: require('./package.json').name,
-  payloadValidator: 'hemera-joi'
-}
-
 function hemeraRabbitmq(hemera, opts, done) {
   const handlers = []
   const Joi = hemera.joi
@@ -86,3 +80,11 @@ function hemeraRabbitmq(hemera, opts, done) {
     done()
   })
 }
+
+const plugin = Hp(hemeraRabbitmq, '>=2.0.0')
+plugin[Symbol.for('name')] = require('./package.json').name
+plugin[Symbol.for('options')] = {
+  payloadValidator: 'hemera-joi'
+}
+plugin[Symbol.for('dependencies')] = ['hemera-joi']
+module.exports = plugin
