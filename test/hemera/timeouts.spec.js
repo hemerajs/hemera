@@ -266,7 +266,7 @@ describe('Timeouts', function() {
     })
   })
 
-  it.skip('Should crash when an unexpected error thrown during timeout issue', function(done) {
+  it('Should crash when an unexpected error thrown during timeout issue', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -302,7 +302,7 @@ describe('Timeouts', function() {
     })
   })
 
-  it.skip('Should crash when an unexpected super error thrown during timeout issue', function(done) {
+  it('Should crash when an unexpected super error thrown during timeout issue', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
