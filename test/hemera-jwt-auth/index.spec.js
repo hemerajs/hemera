@@ -544,7 +544,7 @@ describe('Hemera-jwt-auth', function() {
     })
 
     hemera.use(HemeraJwt, {
-      crashOnFatal: false
+      enforceAuth: false
     })
 
     hemera.ready(() => {

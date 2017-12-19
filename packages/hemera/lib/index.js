@@ -23,6 +23,7 @@ const TinySonic = require('tinysonic')
 const SuperError = require('super-error')
 const Joi = require('joi')
 const Avvio = require('avvio')
+const Hoek = require('hoek')
 const Series = require('fastseries')
 
 const Errors = require('./errors')
@@ -486,8 +487,8 @@ class Hemera extends EventEmitter {
    * @returns
    * @memberof Hemera
    */
-  _use(plugin, opts) {
-    let pluginOpts = plugin[Symbol.for('options')] || {}
+  _use(plugin, opts, shallowKeys) {
+    let pluginOpts = Hoek.clone(plugin[Symbol.for('options')] || {})
     pluginOpts = Object.assign(pluginOpts, opts)
     this.register(plugin, pluginOpts)
   }
