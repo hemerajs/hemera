@@ -15,9 +15,7 @@ describe('Pattern matching', function() {
     server.kill()
   })
 
-  it('Should throw an error when the pattern is already defined', function(
-    done
-  ) {
+  it('Should throw an error when the pattern is already defined', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -68,9 +66,7 @@ describe('Pattern matching', function() {
     })
   })
 
-  it('Should not throw an error when a pattern is a subset of another', function(
-    done
-  ) {
+  it('Should not throw an error when a pattern is a subset of another', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

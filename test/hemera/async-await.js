@@ -118,9 +118,7 @@ describe('Async / Await support', function() {
     })
   })
 
-  it('Should be able to await in end function of the middleware', function(
-    done
-  ) {
+  it('Should be able to await in end function of the middleware', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

@@ -48,9 +48,7 @@ describe('onClose extension', function() {
     })
   })
 
-  it('Should be able to pass an error to onClose extension handler', function(
-    done
-  ) {
+  it('Should be able to pass an error to onClose extension handler', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

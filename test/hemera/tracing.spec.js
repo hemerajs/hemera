@@ -15,9 +15,7 @@ describe('Tracing', function() {
     server.kill()
   })
 
-  it('Should set correct request parentId$, span and request$ context', function(
-    done
-  ) {
+  it('Should set correct request parentId$, span and request$ context', function(done) {
     /**
      * math:add-->math:sub
      *            math:add

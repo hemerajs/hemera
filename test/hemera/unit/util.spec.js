@@ -1,9 +1,7 @@
 'use strict'
 
 describe('Util', function() {
-  it('Should be able to convert NATS wildcard subject to the RegexExp equivalent', function(
-    done
-  ) {
+  it('Should be able to convert NATS wildcard subject to the RegexExp equivalent', function(done) {
     const tokenWildcard = 'europe-system.*'
     const fullWildcard = 'europe-system.>'
     const regex1 = HemeraUtil.natsWildcardToRegex(tokenWildcard)
@@ -13,9 +11,7 @@ describe('Util', function() {
     done()
   })
 
-  it('Should be able to convert NATS wildcard subject to the RegexExp in different positions', function(
-    done
-  ) {
+  it('Should be able to convert NATS wildcard subject to the RegexExp in different positions', function(done) {
     const tokenWildcard = 'a.*.b'
     const fullWildcard = 'a.>'
     const regex1 = HemeraUtil.natsWildcardToRegex(tokenWildcard)

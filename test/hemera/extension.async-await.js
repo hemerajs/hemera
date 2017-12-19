@@ -200,9 +200,7 @@ describe('Extension Async / Await', function() {
     })
   })
 
-  it('Should be able to reject an error in onServerPreResponse', function(
-    done
-  ) {
+  it('Should be able to reject an error in onServerPreResponse', function(done) {
     let ext1 = Sinon.spy()
 
     const nats = require('nats').connect(authUrl)
@@ -350,9 +348,7 @@ describe('Extension Async / Await', function() {
     })
   })
 
-  it('Should be able to reject an error in onClientPostRequest', function(
-    done
-  ) {
+  it('Should be able to reject an error in onClientPostRequest', function(done) {
     let ext1 = Sinon.spy()
 
     const nats = require('nats').connect(authUrl)

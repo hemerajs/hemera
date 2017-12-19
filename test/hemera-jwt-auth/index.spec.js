@@ -26,9 +26,7 @@ describe('Hemera-jwt-auth', function() {
     server.kill()
   })
 
-  it('Should be able to pass the metadata (token) to nested acts', function(
-    done
-  ) {
+  it('Should be able to pass the metadata (token) to nested acts', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -408,9 +406,7 @@ describe('Hemera-jwt-auth', function() {
     })
   })
 
-  it('Should return an error because requestor has not full rights', function(
-    done
-  ) {
+  it('Should return an error because requestor has not full rights', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -534,9 +530,7 @@ describe('Hemera-jwt-auth', function() {
     })
   })
 
-  it('Should not enfore authentication but allows to enable it selectively', function(
-    done
-  ) {
+  it('Should not enfore authentication but allows to enable it selectively', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {

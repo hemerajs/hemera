@@ -23,9 +23,7 @@ describe('Hemera-stats', function() {
     process.env.NODE_ENV = prevNodeEnv
   })
 
-  it('Should be able to get process informations about the hemera process', function(
-    done
-  ) {
+  it('Should be able to get process informations about the hemera process', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -53,9 +51,7 @@ describe('Hemera-stats', function() {
     })
   })
 
-  it('Should be able to get a list of all registered server actions', function(
-    done
-  ) {
+  it('Should be able to get a list of all registered server actions', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {

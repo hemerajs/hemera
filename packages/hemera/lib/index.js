@@ -285,23 +285,23 @@ class Hemera extends EventEmitter {
   }
 
   /**
- *
- *
- * @readonly
- *
- * @memberOf Hemera
- */
+   *
+   *
+   * @readonly
+   *
+   * @memberOf Hemera
+   */
   get config() {
     return this._config
   }
 
   /**
- *
- *
- * @readonly
- *
- * @memberof Hemera
- */
+   *
+   *
+   * @readonly
+   *
+   * @memberof Hemera
+   */
   get errorDetails() {
     if (this._isServer) {
       return {
@@ -331,12 +331,12 @@ class Hemera extends EventEmitter {
   }
 
   /**
- * Create a custom super error object without to start hemera
- *
- * @readonly
- *
- * @memberOf Hemera
- */
+   * Create a custom super error object without to start hemera
+   *
+   * @readonly
+   *
+   * @memberOf Hemera
+   */
   static createError(name) {
     const ctor = SuperError.subclass(name)
     // Register the class with Errio.
@@ -472,8 +472,9 @@ class Hemera extends EventEmitter {
     deps.forEach(dependency => {
       if (!this._plugins[dependency]) {
         throw new Error(
-          `The dependency '${dependency}' was not registered before plugin '${this
-            .plugin$.name}'`
+          `The dependency '${dependency}' was not registered before plugin '${
+            this.plugin$.name
+          }'`
         )
       }
     })

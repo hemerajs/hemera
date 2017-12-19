@@ -95,9 +95,7 @@ describe('Plugin interface', function() {
     })
   })
 
-  it('Should be able to register a callback after an array of plugins was registered', function(
-    done
-  ) {
+  it('Should be able to register a callback after an array of plugins was registered', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -272,9 +270,7 @@ describe('Plugin interface', function() {
     })
   })
 
-  it('Should be able to pass a callback after plugins was initialized', function(
-    done
-  ) {
+  it('Should be able to pass a callback after plugins was initialized', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -318,9 +314,7 @@ describe('Plugin interface', function() {
     })
   })
 
-  it('Should throw error because could not resolve all decorate deps', function(
-    done
-  ) {
+  it('Should throw error because could not resolve all decorate deps', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -344,9 +338,7 @@ describe('Plugin interface', function() {
     hemera.ready()
   })
 
-  it('Should throw error when dependency was not registered before', function(
-    done
-  ) {
+  it('Should throw error when dependency was not registered before', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -386,9 +378,7 @@ describe('Plugin interface', function() {
     })
   })
 
-  it('Should be able to compare plugin hemera errors with instanceof', function(
-    done
-  ) {
+  it('Should be able to compare plugin hemera errors with instanceof', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -437,9 +427,7 @@ describe('Plugin interface', function() {
     })
   })
 
-  it('Should throw an error when we trying to overwrite an existing prototype property', function(
-    done
-  ) {
+  it('Should throw an error when we trying to overwrite an existing prototype property', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -512,9 +500,7 @@ describe('Plugin interface', function() {
     })
   })
 
-  it('Should be able to access the decorated prototype propertys inside nested plugins', function(
-    done
-  ) {
+  it('Should be able to access the decorated prototype propertys inside nested plugins', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

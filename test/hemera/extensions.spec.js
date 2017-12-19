@@ -213,9 +213,7 @@ describe('Extension reply', function() {
     })
   })
 
-  it('Should be able to access request and response in server extensions', function(
-    done
-  ) {
+  it('Should be able to access request and response in server extensions', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

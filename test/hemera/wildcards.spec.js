@@ -15,9 +15,7 @@ describe('Topic wildcards', function() {
     server.kill()
   })
 
-  it('Should be able to use token wildcard in topic declaration', function(
-    done
-  ) {
+  it('Should be able to use token wildcard in topic declaration', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -47,9 +45,7 @@ describe('Topic wildcards', function() {
     })
   })
 
-  it('Should be able to use full wildcard in topic declaration', function(
-    done
-  ) {
+  it('Should be able to use full wildcard in topic declaration', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -79,9 +75,7 @@ describe('Topic wildcards', function() {
     })
   })
 
-  it('Should call the first server method twice because order is significant', function(
-    done
-  ) {
+  it('Should call the first server method twice because order is significant', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

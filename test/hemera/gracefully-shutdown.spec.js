@@ -59,9 +59,7 @@ describe('Gracefully shutdown', function() {
     })
   })
 
-  it('Should be able to unsubscribe multiple active subscriptions', function(
-    done
-  ) {
+  it('Should be able to unsubscribe multiple active subscriptions', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -173,9 +171,7 @@ describe('Gracefully shutdown', function() {
     })
   })
 
-  it('Should gracefully shutdown even when NATS connection is already closed', function(
-    done
-  ) {
+  it('Should gracefully shutdown even when NATS connection is already closed', function(done) {
     const nats = require('nats').connect(authUrl)
 
     let callback = Sinon.spy()

@@ -50,9 +50,7 @@ describe('Unsubscribe NATS topic', function() {
     })
   })
 
-  it('Should be able to unsubscribe multiple pattern with the same pattern', function(
-    done
-  ) {
+  it('Should be able to unsubscribe multiple pattern with the same pattern', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -98,9 +96,7 @@ describe('Unsubscribe NATS topic', function() {
     })
   })
 
-  it('Should not be able to unsubscribe a NATS topic because topic is required', function(
-    done
-  ) {
+  it('Should not be able to unsubscribe a NATS topic because topic is required', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

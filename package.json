@@ -50,7 +50,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "async": "2.5.x",
+    "async": "^2.6.0",
     "axios": "0.17.x",
     "chokidar-cli": "1.2.x",
     "code": "4.1.x",
@@ -71,16 +71,16 @@
     "joi": "13.0.x",
     "lerna": "^2.5.1",
     "lint-staged": "^4.3.0",
-    "mocha": "4.0.x",
+    "mocha": "^4.0.1",
     "mocha-lcov-reporter": "1.3.x",
-    "nats": "0.7.x",
-    "nats-hemera": "^2.2.0",
+    "nats": "^0.7.24",
+    "nats-hemera": "^3.0.0",
     "node-nats-streaming": "^0.0.26",
     "nyc": "11.2.x",
-    "prettier": "^1.7.4",
-    "prettier-eslint": "^8.2.0",
-    "promise-retry": "1.1.x",
+    "prettier": "^1.9.2",
+    "prettier-eslint": "^8.4.0",
+    "promise-retry": "^1.1.1",
     "proxyquire": "^1.8.0",
-    "sinon": "4.0.1"
+    "sinon": "4.1.3"
   }
 }

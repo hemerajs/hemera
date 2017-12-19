@@ -15,9 +15,7 @@ describe('Middleware', function() {
     server.kill()
   })
 
-  it('Should be able to define server method with chaining syntax', function(
-    done
-  ) {
+  it('Should be able to define server method with chaining syntax', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -51,9 +49,7 @@ describe('Middleware', function() {
     })
   })
 
-  it('Should be able to define middleware for a server method with chaining syntax', function(
-    done
-  ) {
+  it('Should be able to define middleware for a server method with chaining syntax', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -94,9 +90,7 @@ describe('Middleware', function() {
     })
   })
 
-  it('Should be able to pass an array of middleware function for a server method', function(
-    done
-  ) {
+  it('Should be able to pass an array of middleware function for a server method', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -210,9 +204,7 @@ describe('Middleware', function() {
     })
   })
 
-  it('Should be able to handle an middleware error of a server method', function(
-    done
-  ) {
+  it('Should be able to handle an middleware error of a server method', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -247,9 +239,7 @@ describe('Middleware', function() {
     })
   })
 
-  it('Should be able to pass a custom super error to the middleware handler', function(
-    done
-  ) {
+  it('Should be able to pass a custom super error to the middleware handler', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -285,9 +275,7 @@ describe('Middleware', function() {
     })
   })
 
-  it('A middleware error should abort the response with the error', function(
-    done
-  ) {
+  it('A middleware error should abort the response with the error', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

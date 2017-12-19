@@ -53,9 +53,7 @@ describe('Hemera plugin', function() {
     HemeraPlugin(plugin, '>= 0')
   })
 
-  it('Should throw an error because semver version does not match', function(
-    done
-  ) {
+  it('Should throw an error because semver version does not match', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -74,9 +72,7 @@ describe('Hemera plugin', function() {
     hemera.close(done)
   })
 
-  it('Should throw an error because plugin function is not a function', function(
-    done
-  ) {
+  it('Should throw an error because plugin function is not a function', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -96,9 +92,7 @@ describe('Hemera plugin', function() {
     hemera.close(done)
   })
 
-  it('Should throw an error because plugin version is not a string', function(
-    done
-  ) {
+  it('Should throw an error because plugin version is not a string', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

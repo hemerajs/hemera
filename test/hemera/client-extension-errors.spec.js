@@ -15,9 +15,7 @@ describe('Client Extension error', function() {
     server.kill()
   })
 
-  it('Should be able to pass a super error to onClientPostRequest', function(
-    done
-  ) {
+  it('Should be able to pass a super error to onClientPostRequest', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -103,9 +101,7 @@ describe('Client Extension error', function() {
     })
   })
 
-  it('Should be able to pass a custom super error to onClientPreRequest', function(
-    done
-  ) {
+  it('Should be able to pass a custom super error to onClientPreRequest', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

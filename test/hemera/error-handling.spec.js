@@ -98,9 +98,7 @@ describe('Error handling', function() {
     })
   })
 
-  it('Should be able to compare custom hemera errors with instanceof', function(
-    done
-  ) {
+  it('Should be able to compare custom hemera errors with instanceof', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -136,9 +134,7 @@ describe('Error handling', function() {
     })
   })
 
-  it('Should be able to serialize and deserialize an error back to the callee', function(
-    done
-  ) {
+  it('Should be able to serialize and deserialize an error back to the callee', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -413,9 +409,7 @@ describe('Error handling', function() {
     })
   })
 
-  it('Should be able to handle business errors with super errors', function(
-    done
-  ) {
+  it('Should be able to handle business errors with super errors', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -565,9 +559,7 @@ describe('Error handling', function() {
     })
   })
 
-  it('Should crash when an expected error happens in the ACT handler', function(
-    done
-  ) {
+  it('Should crash when an expected error happens in the ACT handler', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {

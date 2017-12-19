@@ -15,9 +15,7 @@ describe('Load policy for server component', function() {
     server.kill()
   })
 
-  it('Should throw an ProcessLoadError with (Server under heavy load) and return the error without crash the process', function(
-    done
-  ) {
+  it('Should throw an ProcessLoadError with (Server under heavy load) and return the error without crash the process', function(done) {
     const nats = require('nats').connect(authUrl)
     let respondedSpy = Sinon.spy()
     const hemera = new Hemera(nats, {

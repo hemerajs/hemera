@@ -15,9 +15,7 @@ describe('Timeouts', function() {
     server.kill()
   })
 
-  it('Should not receive more messages when the INBOX timeouts', function(
-    done
-  ) {
+  it('Should not receive more messages when the INBOX timeouts', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -92,9 +90,7 @@ describe('Timeouts', function() {
     })
   })
 
-  it('Should not receive more messages with maxMessages$ set when the INBOX timeouts', function(
-    done
-  ) {
+  it('Should not receive more messages with maxMessages$ set when the INBOX timeouts', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -223,9 +219,7 @@ describe('Timeouts', function() {
     })
   })
 
-  it('Should be able listen on client timeout events in onClientPostRequest', function(
-    done
-  ) {
+  it('Should be able listen on client timeout events in onClientPostRequest', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -272,9 +266,7 @@ describe('Timeouts', function() {
     })
   })
 
-  it('Should crash when an unexpected error thrown during timeout issue', function(
-    done
-  ) {
+  it('Should crash when an unexpected error thrown during timeout issue', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -310,9 +302,7 @@ describe('Timeouts', function() {
     })
   })
 
-  it('Should crash when an unexpected super error thrown during timeout issue', function(
-    done
-  ) {
+  it('Should crash when an unexpected super error thrown during timeout issue', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -348,9 +338,7 @@ describe('Timeouts', function() {
     })
   })
 
-  it('Should be able handle super error in extension onClientPostRequest', function(
-    done
-  ) {
+  it('Should be able handle super error in extension onClientPostRequest', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -387,9 +375,7 @@ describe('Timeouts', function() {
     })
   })
 
-  it('Should be able handle error in extension onClientPostRequest', function(
-    done
-  ) {
+  it('Should be able handle error in extension onClientPostRequest', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -426,9 +412,7 @@ describe('Timeouts', function() {
     })
   })
 
-  it('Should throw timeout error when pattern is not defined on the network', function(
-    done
-  ) {
+  it('Should throw timeout error when pattern is not defined on the network', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {

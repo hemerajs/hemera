@@ -417,9 +417,7 @@ describe('Zipkin client', function() {
         })
       })
 
-      it('sends timestamp and creates a serverOnly trace if no trace passed in', function(
-        done
-      ) {
+      it('sends timestamp and creates a serverOnly trace if no trace passed in', function(done) {
         function testTransport(data) {
           try {
             expect(data).to.part.include({

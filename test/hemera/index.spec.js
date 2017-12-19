@@ -75,9 +75,7 @@ describe('Hemera', function() {
     })
   })
 
-  it('Should be able to add a handler and act it with complex types', function(
-    done
-  ) {
+  it('Should be able to add a handler and act it with complex types', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -476,9 +474,7 @@ describe('Hemera', function() {
     })
   })
 
-  it('Should call server function only one time (queue groups by default)', function(
-    done
-  ) {
+  it('Should call server function only one time (queue groups by default)', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera1 = new Hemera(nats)
@@ -530,9 +526,7 @@ describe('Hemera', function() {
     })
   })
 
-  it('Should be able to use token wildcard in topic declaration', function(
-    done
-  ) {
+  it('Should be able to use token wildcard in topic declaration', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -561,9 +555,7 @@ describe('Hemera', function() {
     })
   })
 
-  it('Should be able to use full wildcard in topic declaration', function(
-    done
-  ) {
+  it('Should be able to use full wildcard in topic declaration', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

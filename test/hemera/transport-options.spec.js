@@ -15,9 +15,7 @@ describe('Transport options', function() {
     server.kill()
   })
 
-  it('Should not be able to register pubsub and request mode with the same topic / 1', function(
-    done
-  ) {
+  it('Should not be able to register pubsub and request mode with the same topic / 1', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -55,9 +53,7 @@ describe('Transport options', function() {
     })
   })
 
-  it('Should not be able to register pubsub and request mode with the same topic / 2', function(
-    done
-  ) {
+  it('Should not be able to register pubsub and request mode with the same topic / 2', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -95,9 +91,7 @@ describe('Transport options', function() {
     })
   })
 
-  it('Should not be able to register custom queue and default queue with the same topic / 1', function(
-    done
-  ) {
+  it('Should not be able to register custom queue and default queue with the same topic / 1', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -135,9 +129,7 @@ describe('Transport options', function() {
     })
   })
 
-  it('Should not be able to register custom queue and default queue with the same topic / 2', function(
-    done
-  ) {
+  it('Should not be able to register custom queue and default queue with the same topic / 2', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -175,9 +167,7 @@ describe('Transport options', function() {
     })
   })
 
-  it('Should not be able to register custom maxMessages and default with the same topic / 1', function(
-    done
-  ) {
+  it('Should not be able to register custom maxMessages and default with the same topic / 1', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -215,9 +205,7 @@ describe('Transport options', function() {
     })
   })
 
-  it('Should not be able to register custom maxMessages and default with the same topic / 2', function(
-    done
-  ) {
+  it('Should not be able to register custom maxMessages and default with the same topic / 2', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -255,9 +243,7 @@ describe('Transport options', function() {
     })
   })
 
-  it('Should be able to register server method with different transport options', function(
-    done
-  ) {
+  it('Should be able to register server method with different transport options', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

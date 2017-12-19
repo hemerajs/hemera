@@ -15,9 +15,7 @@ describe('Custom queues', function() {
     server.kill()
   })
 
-  it('Should be able distribute content to different queues for the same topic', function(
-    done
-  ) {
+  it('Should be able distribute content to different queues for the same topic', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

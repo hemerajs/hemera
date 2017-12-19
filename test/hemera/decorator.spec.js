@@ -27,9 +27,7 @@ describe('Root Decorator', function() {
     })
   })
 
-  it('Should throw error because could not resolve all decorate deps', function(
-    done
-  ) {
+  it('Should throw error because could not resolve all decorate deps', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

@@ -15,9 +15,7 @@ describe('Publish / Subscribe', function() {
     server.kill()
   })
 
-  it('Should be able to publish one message to one subscriber (1 to 1 without reply)', function(
-    done
-  ) {
+  it('Should be able to publish one message to one subscriber (1 to 1 without reply)', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -102,9 +100,7 @@ describe('Publish / Subscribe', function() {
     })
   })
 
-  it('Should be able to use normal publish/subscribe behaviour (1 to many)', function(
-    done
-  ) {
+  it('Should be able to use normal publish/subscribe behaviour (1 to many)', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera1 = new Hemera(nats)
@@ -194,9 +190,7 @@ describe('Publish / Subscribe', function() {
     })
   })
 
-  it('Should not crash on unhandled business errors when crashOnFatal is set to false', function(
-    done
-  ) {
+  it('Should not crash on unhandled business errors when crashOnFatal is set to false', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {

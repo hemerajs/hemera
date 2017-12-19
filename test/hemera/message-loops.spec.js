@@ -98,9 +98,7 @@ describe('Message loop detection', function() {
     })
   })
 
-  it('Should return an MaxRecursionError even on different instances', function(
-    done
-  ) {
+  it('Should return an MaxRecursionError even on different instances', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const maxRecursion = 10
@@ -199,9 +197,7 @@ describe('Message loop detection', function() {
     }, 500)
   })
 
-  it('Should return an MaxRecursionError even on different instances - with error propagation', function(
-    done
-  ) {
+  it('Should return an MaxRecursionError even on different instances - with error propagation', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const maxRecursion = 10

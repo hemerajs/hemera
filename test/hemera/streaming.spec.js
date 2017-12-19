@@ -15,9 +15,7 @@ describe('Streaming', function() {
     server.kill()
   })
 
-  it('Should be able to receive lots of messages from the INBOX channel', function(
-    done
-  ) {
+  it('Should be able to receive lots of messages from the INBOX channel', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

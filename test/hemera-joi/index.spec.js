@@ -56,9 +56,7 @@ describe('Hemera-joi', function() {
     })
   })
 
-  it('Should be able to use joi as payload validator for the response payload', function(
-    done
-  ) {
+  it('Should be able to use joi as payload validator for the response payload', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -107,9 +105,7 @@ describe('Hemera-joi', function() {
     })
   })
 
-  it('Should be able modify payload by custom payload validator', function(
-    done
-  ) {
+  it('Should be able modify payload by custom payload validator', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -148,9 +144,7 @@ describe('Hemera-joi', function() {
     })
   })
 
-  it('Should be able to pass the full joi schema to the action', function(
-    done
-  ) {
+  it('Should be able to pass the full joi schema to the action', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -392,9 +386,7 @@ describe('Hemera-joi pre/post', function() {
     })
   })
 
-  it('Should extend the response payload with default values also when no response was set', function(
-    done
-  ) {
+  it('Should extend the response payload with default values also when no response was set', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

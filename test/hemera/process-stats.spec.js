@@ -15,9 +15,7 @@ describe('Process stats', function() {
     server.kill()
   })
 
-  it('Should return informations about the current load of the running process', function(
-    done
-  ) {
+  it('Should return informations about the current load of the running process', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
