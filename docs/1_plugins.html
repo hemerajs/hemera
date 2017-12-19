@@ -376,8 +376,15 @@ myPlugin[Symbol.for('options')] = {}
 module.exports = myPlugin
 </code>
 </pre>
+<h4 class="section-h4">Check Plugin dependencies</h4>
+<p>Throws an error when the dependencies could not be resolved.</p>
+<pre>
+<code class="language-javascript">
+hemera.checkPluginDependencies(plugin)
+</code>
+</pre>
           <h4 class="section-h4">Plugin versioning</h4>
-          <p>Plugin dependencies are managed with NPM.</p>
+          <p>Plugin dependencies is managed with NPM.</p>
 
           <h4 class="section-h4">Plugin registration</h4>
           <p>A plugin must be registered before the
@@ -405,7 +412,7 @@ hemera.use(plugin, { a: 1 })
 </pre>
 
           <h4 class="section-h4">After</h4>
-          <p>Calls a function after all the previously defined plugins are loaded, including all their dependencies.</p>
+          <p>Calls a function after all plugins are loaded, including all their dependencies.</p>
           <pre>
 <code class="language-javascript">
 hemera.use(plugin).after(cb)
