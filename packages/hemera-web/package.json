@@ -1,6 +1,6 @@
 {
   "name": "hemera-web",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Http route mapping for Hemera microservices.",
   "main": "index.js",
   "repository": {

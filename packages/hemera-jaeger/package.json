@@ -1,6 +1,6 @@
 {
   "name": "hemera-jaeger",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "This is a plugin to use the Jaeger Opentracing tracer with Hemera",
   "main": "index.js",
   "repository": {

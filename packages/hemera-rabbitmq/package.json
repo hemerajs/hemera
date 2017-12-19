@@ -1,6 +1,6 @@
 {
   "name": "hemera-rabbitmq",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "This is a plugin to use Rabbitmq with Hemera",
   "main": "index.js",
   "repository": {
