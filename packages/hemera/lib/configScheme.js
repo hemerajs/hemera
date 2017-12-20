@@ -16,7 +16,7 @@ module.exports = Joi.object().keys({
   crashOnFatal: Joi.boolean().default(true),
   logLevel: Joi.any()
     .valid(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'])
-    .default('silent'),
+    .default(process.env.LOG_LEVEL || 'silent'),
   // Create a child logger per section / plugin. Only possible with default logger Pino.
   childLogger: Joi.boolean().default(false),
   // Max recursive method calls
