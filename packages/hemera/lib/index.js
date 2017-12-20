@@ -73,9 +73,8 @@ class Hemera extends EventEmitter {
     })
     this._topics = {}
     this.plugin$ = {
-      options: {
-        name: 'core'
-      }
+      name: 'core',
+      options: {}
     }
 
     // special variables for the new execution context
