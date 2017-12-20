@@ -483,10 +483,11 @@ class Hemera extends EventEmitter {
   /**
    *
    *
-   * @returns
+   * @param {any} plugin
+   * @param {any} opts
    * @memberof Hemera
    */
-  _use(plugin, opts, shallowKeys) {
+  _use(plugin, opts) {
     let pluginOpts = Hoek.clone(plugin[Symbol.for('options')] || {})
     pluginOpts = Object.assign(pluginOpts, opts)
     this.register(plugin, pluginOpts)
@@ -909,12 +910,19 @@ class Hemera extends EventEmitter {
             self._actionHandler(err, result)
           )
         } else {
-          const promise = action(self._request.payload.pattern)
+          let result = action(self._request.payload.pattern)
+          const isPromise = result && typeof result.then === 'function'
 
-          if (promise && typeof promise.then === 'function') {
-            promise
+          if (isPromise) {
+            result
               .then(x => self._actionHandler(null, x))
               .catch(e => self._actionHandler(e))
+          } else {
+            if (result instanceof Error) {
+              self._actionHandler(result)
+            } else {
+              self._actionHandler(null, result)
+            }
           }
         }
       })
