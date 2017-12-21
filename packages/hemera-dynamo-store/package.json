@@ -1,0 +1,25 @@
+{
+  "name": "hemera-dynamo-store",
+  "version": "0.0.1",
+  "description": "This is a plugin to use AWS DynamoDb with Hemera",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nikola,Simeon",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.171.0",
+    "code": "^5.1.2",
+    "hemera-plugin": "0.0.17",
+    "hemera-store": "^1.1.14",
+    "hemera-testsuite": "^1.4.1",
+    "joi": "^13.0.2",
+    "mocha": "^4.0.1",
+    "nyc": "^11.3.0"
+  },
+  "devDependencies": {
+    "dynamodb-local": "0.0.18",
+    "hemera-joi": "^2.0.1"
+  }
+}
