@@ -306,6 +306,19 @@ hemera.add({
 })
 </code>
                     </pre>
+                    <h4 class="section-h4">Skip the server action</h4>
+                    <p>This is useful e.g if you want to use a cache mechanism inside a middleware and don't want to call the server action.</p>
+<pre>
+<code class="language-javascript">
+hemera.add({
+  topic: "test",
+  cmd: "add"
+}).use(async function(req, reply) {
+  reply.end({ a: 1 })
+})
+.end(async function(req) {})
+</code>
+</pre>
 
         </div>
         <!-- END CONTENT -->
@@ -333,7 +346,7 @@ hemera.add({
   <!-- Highlights JS -->
   <script src="scripts/prism.min.js"></script>
   <script>
-    
+
   </script>
 
 </body>

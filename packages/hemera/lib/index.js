@@ -883,19 +883,18 @@ class Hemera extends EventEmitter {
 
       self._actMeta.run(self._request, self._reply, err => {
         if (err) {
-          self._reply.error = err
           const internalError = new Errors.HemeraError(
             Constants.ADD_MIDDLEWARE_ERROR,
             self.errorDetails
           ).causedBy(err)
           self.log.error(internalError)
-          self.emit('serverResponseError', self._reply.error)
-          self.finish()
+          self.emit('serverResponseError', err)
+          self._actionHandler(err)
           return
         }
 
         if (self._reply.finished) {
-          self.finish()
+          self._actionHandler()
           return
         }
 
@@ -904,7 +903,7 @@ class Hemera extends EventEmitter {
           self._request.payload.request.type === Constants.REQUEST_TYPE_PUBSUB
         ) {
           action(self._request.payload.pattern)
-          self.finish()
+          self._actionHandler()
           return
         }
 
