@@ -68,8 +68,7 @@ const nats = require('nats').connect()
 const hemera = new Hemera(nats, { logLevel: 'info' })
 hemera.use(HemeraJoi)
 
-hemera.ready(async () => {
-
+hemera.ready(async (err) => {
   hemera.setOption('payloadValidator', 'hemera-joi')
   let Joi = hemera.joi
 
@@ -82,12 +81,10 @@ hemera.ready(async () => {
     return await req.a + req.b
   })
 
-  const a = hemera.act({ topic: 'math', cmd: 'add', a: 10, b: 30 })
-  const b = hemera.act({ topic: 'math', cmd: 'add', a: 10, b: 60 })
+  const a = await hemera.act({ topic: 'math', cmd: 'add', a: 10, b: 30 })
+  const b = await hemera.act({ topic: 'math', cmd: 'add', a: 10, b: 60 })
 
-  const result = await Promise.all([a, b])
-  hemera.log.info(result)
-
+  hemera.log.info(a, b)
 })
 ```
 
