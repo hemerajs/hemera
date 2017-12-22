@@ -119,7 +119,7 @@
 
                     <p class="section-content">
                     </p>
-                    <h4 class="section-h4">End-to-end test</h4>
+                    <h4 class="section-h4">Integration test</h4>
                     <pre>
 <code class="language-javascript">
 "use strict"
@@ -146,90 +146,28 @@ describe("Basic", function () {
   after(function () {
     server.kill()
   })
-
-  it("test", function (done) {
-    const nats = require("nats").connect()
-
-    const hemera = new Hemera(nats)
-
-    hemera.use(HemeraPlugin)
-
-    hemera.ready(function () {
-      hemera.add({
-        topic: "math",
-        cmd: "add"
-      }, function (resp, cb) {
-        cb(null, resp.a + resp.b)
-      })
-
-      hemera.act({
-        topic: "math",
-        cmd: "add",
-        a: 1,
-        b: 2
-      }, function (err, resp) {
-        expect(err).to.be.not.exists()
-        expect(resp).to.be.equals(3)
-        hemera.close()
-        done()
-      })
-    })
-  })
 })
 </code>
                     </pre>
                     <h4 class="section-h4">Unit test</h4>
+                    <p>Here we are using an in-memory compatible nats transport layer.</p>
                     <pre>
 <code class="language-javascript">
 const Hemera = require("nats-hemera")
-const Nats = require("hemera-testsuite/natsStub")
-const ActStub = require("hemera-testsuite/actStub")
-const AddStub = require("hemera-testsuite/addStub")
-const Code = require("code")
-const expect = Code.expect
+const Nats = require('hemera-testsuite/nats')
+const nats = new Nats()
+const hemera = new Hemera(nats)
 
-describe("Math", function () {
-  it("Should do some math operations", function (done) {
-    const nats = new Nats()
-    const hemera = new Hemera(nats, {
-      logLevel: "info"
-    })
-    const actStub = new ActStub(hemera)
-
-    hemera.ready(function () {
-      hemera.add({
-        topic: "math",
-        cmd: "add"
-      }, function (args, cb) {
-        this.act({ topic: "math", cmd: "sub", a: 100, b: 50 }, function (err, resp) {
-          cb(err, args.a + args.b - resp)
-        })
-      })
-
-      // stub act calls
-      actStub.stub({ topic: "math", cmd: "sub", a: 100, b: 50 }, null, 50)
-      actStub.stub({ topic: "math", cmd: "add" }, new Error("wrong arguments"))
-      actStub.stub({ topic: "math", cmd: "add", a: 100, b: 200 }, null, 300)
-
-      // Important run it when "add" was already added
-      // Should execute the server method with the pattern topic:math,cmd:add,a:100,b:200"
-      AddStub.run(hemera, { topic: "math", cmd: "add" }, { a: 100, b: 200 }, function (err, result) {
-        expect(err).to.be.not.exists()
-        expect(result).to.be.equals(250)
-      })
-
-      hemera.act({
-        topic: "math",
-        cmd: "add",
-        a: 100,
-        b: 200
-      }, function(err, result) {
-        expect(err).to.be.not.exists()
-        expect(result).to.be.equals(300)
-        done()
-      })
-
-    })
+hemera.ready(function() {
+  hemera.add(
+    {
+      topic: 'math',
+      cmd: 'add'
+    },
+    req => req.a + req.b
+  )
+  hemera.act(`topic:math,cmd:add,a:1,b:2`, (err, resp) => {
+    console.log(err, resp)
   })
 })
 </code>
