@@ -26,11 +26,11 @@ hemera.ready(() => {
     {
       topic: 'math',
       cmd: 'add',
-      maxMessages$: 10
+      maxMessages$: 1000
     },
     function(err, resp) {
       results.push(resp)
-      if (results.length === 10) {
+      if (results.length === 1000) {
         console.log('Received 1000 Messages!')
       }
     }
