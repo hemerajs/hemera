@@ -49,6 +49,38 @@ describe('Middleware', function() {
     })
   })
 
+  it('Should be able to return promise', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, { logLevel: 'info' })
+
+    hemera.ready(() => {
+      hemera
+        .add({
+          topic: 'math',
+          cmd: 'add'
+        })
+        .use(function(req, resp) {
+          return Promise.resolve('test')
+        })
+        .end(req => req.a + req.b)
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        function(err, resp) {
+          expect(err).to.be.not.exists()
+          expect(resp).to.be.equals(3)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
   it('Should be able to define middleware for a server method with chaining syntax', function(done) {
     const nats = require('nats').connect(authUrl)
 
@@ -150,6 +182,41 @@ describe('Middleware', function() {
         })
         .end(function(req, cb) {
           cb(null, req.a + req.b)
+        })
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        function(err, resp) {
+          expect(err).to.be.not.exists()
+          expect(resp.a).to.be.equals(1)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should not call action when end() was called middlewares', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, { logLevel: 'info' })
+
+    hemera.ready(() => {
+      hemera
+        .add({
+          topic: 'math',
+          cmd: 'add'
+        })
+        .use(function(req, reply, next) {
+          reply.end({ a: 1 })
+          next()
+        })
+        .end(function(req) {
+          throw new Error('test')
         })
 
       hemera.act(

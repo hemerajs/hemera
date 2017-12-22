@@ -894,6 +894,11 @@ class Hemera extends EventEmitter {
           return
         }
 
+        if (self._reply.finished) {
+          self.finish()
+          return
+        }
+
         // if request type is 'pubsub' we dont have to reply back
         if (
           self._request.payload.request.type === Constants.REQUEST_TYPE_PUBSUB

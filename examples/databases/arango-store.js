@@ -3,7 +3,7 @@
 const Hemera = require('./../../packages/hemera')
 const nats = require('nats').connect()
 const hemeraJoi = require('./../../packages/hemera-joi')
-const hemeraArango = require('./../../packages/hemera-arango-store')
+const hemeraArango = require('hemera-arango-store')
 
 const hemera = new Hemera(nats, {
   logLevel: 'info',

@@ -43,25 +43,6 @@ class Util {
   }
 
   /**
-   * @static
-   * @param {any} handler
-   * @memberof Util
-   */
-  static wrapFuncAsPromise(handler) {
-    if (Util.isAsyncFunction(handler)) {
-      return function() {
-        // -1 because (req, res, next)
-        const next = arguments[arguments.length - 1]
-        return handler
-          .apply(null, arguments)
-          .then(x => next(null, x))
-          .catch(next)
-      }
-    } else {
-      return handler
-    }
-  }
-  /**
    * @returns
    * Fast ID generator: e7 https://jsperf.com/uuid-generator-opt/18
    * @memberOf Util
@@ -226,28 +207,6 @@ class Util {
     sb.sort()
 
     return sb.join(',')
-  }
-
-  /*
-   *
-   *
-   * @static
-   * @param {any} obj
-   * @returns
-   * @memberof Util
-   */
-  static isAsyncFunction(obj) {
-    var constructor = obj.constructor
-    if (!constructor) {
-      return false
-    }
-    if (
-      constructor.name === 'AsyncFunction' ||
-      constructor.displayName === 'AsyncFunction'
-    ) {
-      return true
-    }
-    return false
   }
 }
 

@@ -30,6 +30,7 @@ class Reply {
     this._response = response
     this.log = logger
     this.sent = false
+    this.finished = false
     this._errored = false
   }
 
@@ -80,6 +81,18 @@ class Reply {
    */
   get error() {
     return this._response.error
+  }
+  /**
+   *
+   *
+   * @memberof Reply
+   */
+  end(msg) {
+    this.finished = true
+
+    if (msg) {
+      this.send(msg)
+    }
   }
 
   /**

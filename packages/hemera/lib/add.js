@@ -39,7 +39,7 @@ class Add {
    * @memberof Add
    */
   _use(handler) {
-    this.actMeta.middleware.push(Util.wrapFuncAsPromise(handler))
+    this.actMeta.middleware.push(handler)
   }
 
   /**
@@ -83,7 +83,14 @@ class Add {
     Util.eachSeries(
       this.middleware,
       (item, next) => {
-        item(request, response, next)
+        const result = item(request, response, next)
+        if (result && typeof result.then === 'function') {
+          result.then(x => next(null)).catch(err => next(err))
+        } else if (result instanceof Error) {
+          next(result)
+        } else {
+          next(null, result)
+        }
       },
       cb
     )

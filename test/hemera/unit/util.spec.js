@@ -43,16 +43,6 @@ describe('Util', function() {
     done()
   })
 
-  it('wrapFuncAsPromise', function(done) {
-    const a = function() {}
-    let fn = HemeraUtil.wrapFuncAsPromise(a)
-    expect(fn).to.be.function()
-    expect(fn.length).to.be.equals(0)
-    expect(fn).to.be.equals(a)
-
-    done()
-  })
-
   it('Clean pattern', function(done) {
     let pattern = HemeraUtil.cleanPattern({
       topic: 'foo',
