@@ -5,7 +5,7 @@
 
 `hemera-plugin` is a plugin helper for [Hemera](https://github.com/hemerajs/hemera).  
 
-#### Usage
+## Usage
 `hemera-plugin` can do some things for you:
 - Check the bare-minimum version of Hemera
 - Provide consistent interface to register plugins even when the api is changed
@@ -30,5 +30,13 @@ module.exports = hp(function (hemera, opts, next) {
 
 You can check [here](https://github.com/npm/node-semver#ranges) how to define a `semver` range.
 
-#### Credits 
+## Async / Await
+```js
+const hp = require('hemera-plugin')
+
+module.exports = hp(async function (hemera, opts) {
+}, '0.x')
+```
+
+### Credits 
 [fastify-plugin](https://github.com/fastify/fastify-plugin)
