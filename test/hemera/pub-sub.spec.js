@@ -157,11 +157,10 @@ describe('Publish / Subscribe', function() {
 
     const hemera = new Hemera(nats)
 
-    var stub = Sinon.stub(hemera, 'fatal')
-
-    stub.onCall(1)
-
-    stub.returns(true)
+    hemera.on('error', err => {
+      expect(err).to.be.exists()
+      hemera.close(done)
+    })
 
     hemera.ready(() => {
       hemera.add(
@@ -181,12 +180,6 @@ describe('Publish / Subscribe', function() {
         email: 'foobar@gmail.com',
         msg: 'Hi!'
       })
-
-      setTimeout(() => {
-        expect(stub.called).to.be.equals(true)
-
-        hemera.close(done)
-      }, 100)
     })
   })
 
@@ -197,12 +190,6 @@ describe('Publish / Subscribe', function() {
       crashOnFatal: false
     })
 
-    var stub = Sinon.stub(hemera, 'fatal')
-
-    stub.onCall(1)
-
-    stub.returns(true)
-
     hemera.ready(() => {
       hemera.add(
         {
@@ -220,13 +207,9 @@ describe('Publish / Subscribe', function() {
         cmd: 'send',
         email: 'foobar@gmail.com',
         msg: 'Hi!'
-      })
-
-      setTimeout(() => {
-        expect(stub.called).to.be.equals(false)
-
+      }, () => {
         hemera.close(done)
-      }, 100)
+      })
     })
   })
 })

@@ -15,6 +15,57 @@ describe('Gracefully shutdown', function() {
     server.kill()
   })
 
+  it('Should gracefully shutdown nats and exit the process when calling fatal()', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      logLevel: 'silent'
+    })
+
+    var stub = Sinon.stub(process, 'exit')
+
+    stub.onCall(1)
+
+    stub.returns(true)
+
+    const callback = Sinon.spy()
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'sub'
+        },
+        function(resp, cb) {
+          cb()
+        }
+      )
+
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        function(resp, cb) {
+          cb()
+        }
+      )
+
+      setTimeout(() => {
+        expect(callback.called).to.be.equals(true)
+        expect(stub.called).to.be.equals(true)
+        stub.restore()
+        done()
+      }, 100)
+
+      hemera.ext('onClose', () => {
+        callback()
+      })
+
+      hemera.fatal()
+    })
+  })
+
   it('Should be able to unsubscribe active subscription', function(done) {
     const nats = require('nats').connect(authUrl)
 

@@ -92,11 +92,11 @@ describe('Load policy for server component', function() {
       }
     })
 
-    var stub = Sinon.stub(hemera, 'fatal')
 
-    stub.onCall(1)
-
-    stub.returns(true)
+    hemera.on('error', err => {
+      expect(err).to.be.exists()
+      hemera.close(done)
+    })
 
     hemera.ready(() => {
       hemera.add(
@@ -116,7 +116,7 @@ describe('Load policy for server component', function() {
           cmd: 'a'
         },
         (err, resp) => {
-          // receive error messafe
+          // receive error message
           expect(respondedSpy.called).to.be.equals(false)
           expect(err instanceof Hemera.errors.ProcessLoadError).to.be.equals(
             true
@@ -125,12 +125,6 @@ describe('Load policy for server component', function() {
           expect(err.rss).to.be.least(5)
           expect(err.heapUsed).to.be.exists()
           expect(err.message).to.be.equals('Server under heavy load (rss)')
-
-          // wait for next cycle
-          setTimeout(() => {
-            expect(stub.called).to.be.equals(true)
-            hemera.close(done)
-          }, 50)
         }
       )
     })

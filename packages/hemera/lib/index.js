@@ -407,7 +407,7 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   fatal() {
-    process.exit(1)
+    this.close(() => process.exit(1))
   }
 
   /**
@@ -644,12 +644,12 @@ class Hemera extends EventEmitter {
         self._transport.send(self._replyTo, msg, () => {
           // let it crash
           if (self._config.crashOnFatal) {
-            self.fatal()
+            self.emit('error', self._reply.error)
           }
         })
         return
       } else if (self._config.crashOnFatal) {
-        self.fatal()
+        self.emit('error', self._reply.error)
         return
       }
     }
@@ -1185,7 +1185,7 @@ class Hemera extends EventEmitter {
 
       // let it crash
       if (self._config.crashOnFatal) {
-        self.fatal()
+        self.emit('error', err)
       } else {
         self._execute(error)
       }
@@ -1450,7 +1450,7 @@ class Hemera extends EventEmitter {
 
       // let it crash
       if (self._config.crashOnFatal) {
-        self.fatal()
+        self.emit('error', err)
       }
     }
   }

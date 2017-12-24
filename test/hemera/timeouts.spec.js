@@ -272,11 +272,10 @@ describe('Timeouts', function() {
       timeout: 20
     })
 
-    var stub = Sinon.stub(hemera, 'fatal')
-
-    stub.onCall(1)
-
-    stub.returns(true)
+    hemera.on('error', err => {
+      expect(err).to.be.exists()
+      hemera.close(done)
+    })
 
     hemera.ready(() => {
       hemera.act(
@@ -288,12 +287,6 @@ describe('Timeouts', function() {
         },
         (err, resp) => {
           expect(err).to.be.exists()
-          // Fatal Error will be throw after the server proceed the msg
-          setTimeout(() => {
-            expect(stub.called).to.be.equals(true)
-            stub.restore()
-            hemera.close(done)
-          }, 500)
 
           throw new Error('Test')
         }
@@ -308,11 +301,10 @@ describe('Timeouts', function() {
       timeout: 20
     })
 
-    var stub = Sinon.stub(hemera, 'fatal')
-
-    stub.onCall(1)
-
-    stub.returns(true)
+    hemera.on('error', err => {
+      expect(err).to.be.exists()
+      hemera.close(done)
+    })
 
     hemera.ready(() => {
       hemera.act(
@@ -324,12 +316,6 @@ describe('Timeouts', function() {
         },
         (err, resp) => {
           expect(err).to.be.exists()
-          // Fatal Error will be throw after the server proceed the msg
-          setTimeout(() => {
-            expect(stub.called).to.be.equals(true)
-            stub.restore()
-            hemera.close(done)
-          }, 500)
 
           throw new UnauthorizedError('test')
         }

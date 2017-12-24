@@ -449,15 +449,13 @@ describe('Error handling', function() {
 
     const hemera = new Hemera(nats, {
       crashOnFatal: true,
-      timeout: 10000,
-      logLevel: 'silent'
+      timeout: 10000
     })
 
-    var stub = Sinon.stub(process, 'exit')
-
-    stub.onCall(1)
-
-    stub.returns(true)
+    hemera.on('error', err => {
+      expect(err).to.be.exists()
+      hemera.close(done)
+    })
 
     hemera.ready(() => {
       hemera.add(
@@ -479,14 +477,43 @@ describe('Error handling', function() {
         },
         (err, resp) => {
           expect(err).to.be.exists()
-          // Fatal Error will be throw after the server proceed the msg
-          setTimeout(() => {
-            expect(stub.called).to.be.equals(true)
-            stub.restore()
-            hemera.close(done)
-          }, 20)
         }
       )
+    })
+  })
+
+  it('Should crash on fatal with publish mode', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: true,
+      timeout: 10000
+    })
+
+    hemera.on('error', err => {
+      expect(err).to.be.exists()
+      hemera.close(done)
+    })
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'email',
+          cmd: 'send',
+          pubsub$: true
+        },
+        (resp, cb) => {
+          throw new Error('Shit!')
+        }
+      )
+
+      hemera.act({
+        topic: 'email',
+        cmd: 'send',
+        email: 'foobar@gmail.com',
+        msg: 'Hi!',
+        pubsub$: true
+      })
     })
   })
 
@@ -567,11 +594,9 @@ describe('Error handling', function() {
       timeout: 10000
     })
 
-    var stub = Sinon.stub(hemera, 'fatal')
-
-    stub.onCall(1)
-
-    stub.returns(true)
+    hemera.on('error', err => {
+      hemera.close(done)
+    })
 
     hemera.ready(() => {
       hemera.add(
@@ -593,12 +618,6 @@ describe('Error handling', function() {
         },
         (err, resp) => {
           expect(err).to.be.exists()
-          // Fatal Error will be throw after the server proceed the msg
-          setTimeout(() => {
-            expect(stub.called).to.be.equals(true)
-            stub.restore()
-            hemera.close(done)
-          }, 50)
 
           throw new Error('Test')
         }
