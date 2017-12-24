@@ -381,6 +381,8 @@ describe('Error handling', function() {
       crashOnFatal: false
     })
 
+    let event = Sinon.spy()
+
     hemera.ready(() => {
       hemera.add(
         {
@@ -452,14 +454,55 @@ describe('Error handling', function() {
       timeout: 10000
     })
 
-    let event = Sinon.spy()
-
-    hemera.ext('onClose', () => event())
-
     hemera.on('error', err => {
       expect(err).to.be.exists()
-      expect(event.called).to.be.equals(true)
       hemera.close(done)
+    })
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'email',
+          cmd: 'send'
+        },
+        (resp, cb) => {
+          throw new Error('Shit!')
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'email',
+          cmd: 'send',
+          email: 'foobar@gmail.com',
+          msg: 'Hi!'
+        },
+        (err, resp) => {
+          expect(err).to.be.exists()
+        }
+      )
+    })
+  })
+
+  it('Should close hemera on fatal when no error listener was added', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      crashOnFatal: true,
+      timeout: 10000
+    })
+
+    var stub = Sinon.stub(hemera, 'emit')
+    stub.withArgs('error')
+    stub.onCall(1)
+    stub.returns(true)
+
+    hemera.ext('onClose', err => {
+      // wait until hemera emits an error after close
+      setTimeout(() => {
+        expect(stub.called).to.be.equals(true)
+        done()
+      }, 100)
     })
 
     hemera.ready(() => {
@@ -495,13 +538,8 @@ describe('Error handling', function() {
       timeout: 10000
     })
 
-    let event = Sinon.spy()
-
-    hemera.ext('onClose', () => event())
-
     hemera.on('error', err => {
       expect(err).to.be.exists()
-      expect(event.called).to.be.equals(true)
       hemera.close(done)
     })
 
@@ -604,12 +642,8 @@ describe('Error handling', function() {
       timeout: 10000
     })
 
-    let event = Sinon.spy()
-
-    hemera.ext('onClose', () => event())
-
     hemera.on('error', err => {
-      expect(event.called).to.be.equals(true)
+      expect(err).to.be.exists()
       hemera.close(done)
     })
 

@@ -630,6 +630,19 @@ class Hemera extends EventEmitter {
   /**
    *
    *
+   * @memberof Hemera
+   */
+  _gracefulShutdown(err) {
+    if (this.listenerCount('error') > 0) {
+      this.emit('error', err)
+    } else {
+      this.close(() => this.emit('error', err))
+    }
+  }
+
+  /**
+   *
+   *
    * @param {any} msg
    * @memberof Hemera
    */
@@ -644,12 +657,12 @@ class Hemera extends EventEmitter {
         self._transport.send(self._replyTo, msg, () => {
           // let it crash
           if (self._config.crashOnFatal) {
-            self.close(() => self.emit('error', self._reply.error))
+            self._gracefulShutdown(self._reply.error)
           }
         })
         return
       } else if (self._config.crashOnFatal) {
-        self.close(() => self.emit('error', self._reply.error))
+        self._gracefulShutdown(self._reply.error)
         return
       }
     }
@@ -1185,7 +1198,7 @@ class Hemera extends EventEmitter {
 
       // let it crash
       if (self._config.crashOnFatal) {
-        self.close(() => self.emit('error', error))
+        self._gracefulShutdown(error)
       } else {
         self._execute(error)
       }
@@ -1450,7 +1463,7 @@ class Hemera extends EventEmitter {
 
       // let it crash
       if (self._config.crashOnFatal) {
-        self.close(() => self.emit('error', error))
+        self._gracefulShutdown(error)
       }
     }
   }
