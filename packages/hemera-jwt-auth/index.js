@@ -73,7 +73,6 @@ function isSubset(scope, subset) {
 const plugin = Hp(hemeraJwtAuth, '>=3')
 plugin[Symbol.for('name')] = require('./package.json').name
 plugin[Symbol.for('options')] = {
-  name: require('./package.json').name,
   enforceAuth: true,
   jwt: {
     secret: false

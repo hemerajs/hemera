@@ -226,7 +226,9 @@ class StorePattern {
       topic,
       cmd: 'count',
       collection: Joi.string().required(),
-      query: Joi.object().required()
+      query: Joi.alternatives()
+        .try(Joi.object(), Joi.string())
+        .required()
     }
   }
 }
