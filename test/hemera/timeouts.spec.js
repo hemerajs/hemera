@@ -272,8 +272,13 @@ describe('Timeouts', function() {
       timeout: 20
     })
 
+    let event = Sinon.spy()
+
+    hemera.ext('onClose', () => event())
+
     hemera.on('error', err => {
       expect(err).to.be.exists()
+      expect(event.called).to.be.equals(true)
       hemera.close(done)
     })
 
@@ -301,8 +306,13 @@ describe('Timeouts', function() {
       timeout: 20
     })
 
+    let event = Sinon.spy()
+
+    hemera.ext('onClose', () => event())
+
     hemera.on('error', err => {
       expect(err).to.be.exists()
+      expect(event.called).to.be.equals(true)
       hemera.close(done)
     })
 

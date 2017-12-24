@@ -452,8 +452,13 @@ describe('Error handling', function() {
       timeout: 10000
     })
 
+    let event = Sinon.spy()
+
+    hemera.ext('onClose', () => event())
+
     hemera.on('error', err => {
       expect(err).to.be.exists()
+      expect(event.called).to.be.equals(true)
       hemera.close(done)
     })
 
@@ -490,8 +495,13 @@ describe('Error handling', function() {
       timeout: 10000
     })
 
+    let event = Sinon.spy()
+
+    hemera.ext('onClose', () => event())
+
     hemera.on('error', err => {
       expect(err).to.be.exists()
+      expect(event.called).to.be.equals(true)
       hemera.close(done)
     })
 
@@ -594,7 +604,12 @@ describe('Error handling', function() {
       timeout: 10000
     })
 
+    let event = Sinon.spy()
+
+    hemera.ext('onClose', () => event())
+
     hemera.on('error', err => {
+      expect(event.called).to.be.equals(true)
       hemera.close(done)
     })
 
