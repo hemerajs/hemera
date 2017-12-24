@@ -92,7 +92,6 @@ describe('Load policy for server component', function() {
       }
     })
 
-
     hemera.on('error', err => {
       expect(err).to.be.exists()
       hemera.close(done)

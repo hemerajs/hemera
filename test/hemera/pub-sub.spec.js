@@ -201,15 +201,18 @@ describe('Publish / Subscribe', function() {
         }
       )
 
-      hemera.act({
-        pubsub$: true,
-        topic: 'email',
-        cmd: 'send',
-        email: 'foobar@gmail.com',
-        msg: 'Hi!'
-      }, () => {
-        hemera.close(done)
-      })
+      hemera.act(
+        {
+          pubsub$: true,
+          topic: 'email',
+          cmd: 'send',
+          email: 'foobar@gmail.com',
+          msg: 'Hi!'
+        },
+        () => {
+          hemera.close(done)
+        }
+      )
     })
   })
 })
