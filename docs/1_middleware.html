@@ -279,17 +279,17 @@
 hemera.add({
   topic: "test",
   cmd: "add"
-}).use(function(req, reply, next) {
-  //process request
-  next()
 })
 .use(function(req, reply, next) {
   //process request
   next()
 })
-.end(function(req, cb) {
-  cb(null, true)
-})
+// Pass an array of middlewares
+.use([(req, reply, next) => {
+  next()
+}])
+// This is your server action
+.end(function(req) => 'Hello World')
 </code>
                     </pre>
 
@@ -300,23 +300,27 @@ hemera.add({
 hemera.add({
   topic: "test",
   cmd: "add"
-}).use(async function(req, reply) {
+})
+.use(async function(req, reply) {
 })
 .end(async function(req) {
 })
 </code>
-                    </pre>
-                    <h4 class="section-h4">Skip the server action</h4>
-                    <p>This is useful e.g if you want to use a cache mechanism inside a middleware and don't want to call the server action.</p>
+          </pre>
+          <h4 class="section-h4">Skip the server action</h4>
+          <p>This is useful e.g if you want to use a cache mechanism inside a middleware and want to skip the server action.</p>
 <pre>
 <code class="language-javascript">
 hemera.add({
   topic: "test",
   cmd: "add"
-}).use(async function(req, reply) {
+})
+.use(async function(req, reply) {
   reply.end({ a: 1 })
 })
-.end(async function(req) {})
+.end(async function(req) {
+
+})
 </code>
 </pre>
 

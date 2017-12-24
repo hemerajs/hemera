@@ -119,26 +119,21 @@
                     <p class="section-content">
                     </p>
                     <h4 class="section-h4">Global Interface</h4>
-                    <h4 class="section-header">context$</h4>
+                    <h4 class="section-header"><i class="special-var">special</i> context$</h4>
                     <p>Will be shared across nested actions.</p>
-                    <h4 class="section-header">meta$</h4>
+                    <h4 class="section-header"><i class="special-var">special</i> meta$</h4>
                     <p>Will be shared across nested actions. <b>Data will be transfered.</b></p>
-                    <h4 class="section-header">delegate$</h4>
+                    <h4 class="section-header"><i class="special-var">special</i> delegate$</h4>
                     <p>Will be shared across nested actions but the called service don't pass it to the next. <b>Data will be transfered.</b></p>
-                    <h4 class="section-header">auth$</h4>
+                    <h4 class="section-header"><i class="special-var">special</i> auth$</h4>
                     <p>Will be used to store sensitive data e.g plugins which provide authentication or authorization mechanism.</p>
-                    <h4 class="section-header">plugin$</h4>
+                    <h4 class="section-header"><i class="special-var">special</i> plugin$</h4>
                     <p>Returns the current plugin instance.</p>
                     <ul>
-                        <li><code>register</code> <i>Function</i></li>
-                        <li><code>attributes</code> <i>Object</i></li>
-                        <ul>
-                            <li><code>name</code> <i>String</i></li>
-                        </ul>
-                        <li><code>parentPlugin</code> <i>String</i></li>
+                        <li><code>name</code> <i>String</i></li>
                         <li><code>options</code> <i>Object</i></li>
                     </ul>
-                    <h4 class="section-header">request$</h4>
+                    <h4 class="section-header"><i class="special-var">special</i> request$</h4>
                     <p>Returns the current request object.</p>
                     <ul>
                         <li><code>id</code> <i>String</i></li>
@@ -146,7 +141,7 @@
                         <li><code>service</code> <i>String</i></li>
                         <li><code>method</code> <i>String</i></li>
                     </ul>
-                    <h4 class="section-header">trace$</h4>
+                    <h4 class="section-header"><i class="special-var">special</i> trace$</h4>
                     <p>Returns current tracing informations</p>
                     <ul>
                         <li><code>traceId </code> <i>String</i></li>
@@ -199,50 +194,35 @@
                     <p>Updates the config value.</p>
                     <h4 class="section-header">close()</h4>
                     <p>Gracefully shutdown of all plugins, NATS and hemera.</p>
-                    <h4 class="section-h4">Server method interface</h4>
-                    <h4 class="section-header">_actMeta</h4>
-                    <p>Returns the metadata of the server method.</p>
+                    <h4 class="section-h4">Reply interface</h4>
                     <ul>
-                        <li><code>schema</code> <i>Object</i></li>
-                        <li><code>pattern</code> <i>Object</i></li>
-                        <li><code>action</code> <i>Function</i></li>
-                        <li><code>plugin</code> <i>Object</i></li>
-                    </ul>
-                    <h4 class="section-header">_topic</h4>
-                    <p>Returns the current topic name.</p>
-                    <h4 class="section-header">_request</h4>
-                    <p>Returns the current request object.</p>
-                    <ul>
-                        <li><code>payload</code> <i>Object</i></li>
+                        <li><code>send</code> <i>Function</i></li>
+                        <li><code>end</code> <i>Function</i></li>
                         <li><code>error</code> <i>Object</i></li>
-                    </ul>
-                    <h4 class="section-header">_response</h4>
-                    <p>Returns the current response object.</p>
-                    <ul>
                         <li><code>payload</code> <i>Object</i></li>
-                        <li><code>error</code> <i>Object</i></li>
+                        <li><code>send</code> <i>Object</i></li>
+                        <li><code>finished</code> <i>Object</i></li>
                     </ul>
-                    <h4 class="section-header">_pattern</h4>
-                    <p>Returns the pattern of the server method.</p>
-                    <h4 class="section-h4">Client method interface</h4>
-                    <h4 class="section-header">_actCallback</h4>
-                    <p>Returns the callback of the action.</p>
-                    <h4 class="section-header">_cleanPattern</h4>
-                    <p>Returns the pattern.</p>
-                    <h4 class="section-header">_request</h4>
-                    <p>Returns the current request object.</p>
+                    <h4 class="section-h4">Server Request interface</h4>
                     <ul>
-                        <li><code>payload</code> <i>Object</i></li>
                         <li><code>error</code> <i>Object</i></li>
+                        <li><code>payload</code> <i>Object</i></li>
                     </ul>
-                    <h4 class="section-header">_response</h4>
-                    <p>Returns the current response object.</p>
+                    <h4 class="section-h4">Server Response interface</h4>
                     <ul>
-                        <li><code>payload</code> <i>Object</i></li>
                         <li><code>error</code> <i>Object</i></li>
+                        <li><code>payload</code> <i>Object</i></li>
                     </ul>
-                    <h4 class="section-header">_pattern</h4>
-                    <p>Returns the pattern of the server method.</p>
+                    <h4 class="section-h4">Client Request interface</h4>
+                    <ul>
+                        <li><code>error</code> <i>Object</i></li>
+                        <li><code>payload</code> <i>Object</i></li>
+                    </ul>
+                    <h4 class="section-h4">Client Response interface</h4>
+                    <ul>
+                        <li><code>error</code> <i>Object</i></li>
+                        <li><code>payload</code> <i>Object</i></li>
+                    </ul>
                 </div>
                 <!-- END CONTENT -->
 
