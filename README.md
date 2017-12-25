@@ -174,7 +174,6 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 | [hemera-arango-store](https://github.com/hemerajs/hemera-arango-store) | [![npm](https://img.shields.io/npm/v/hemera-arango-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-arango-store)
 | [hemera-sql-store](https://github.com/hemerajs/hemera-sql-store) | [![npm](https://img.shields.io/npm/v/hemera-sql-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-sql-store)
 | [hemera-elasticsearch](https://github.com/hemerajs/hemera/tree/master/packages/hemera-elasticsearch) | [![npm](https://img.shields.io/npm/v/hemera-elasticsearch.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-elasticsearch)
-| [hemera-couchbase-store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-couchbase-store) | [![npm](https://img.shields.io/npm/v/hemera-couchbase-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-couchbase-store)
 | [hemera-mongo-store](https://github.com/hemerajs/hemera-mongo-store) | [![npm](https://img.shields.io/npm/v/hemera-mongo-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-mongo-store)
 | [hemera-rethinkdb-store](https://github.com/hemerajs/hemera-rethinkdb-store) | [![npm](https://img.shields.io/npm/v/hemera-rethinkdb-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-rethinkdb-store)
 

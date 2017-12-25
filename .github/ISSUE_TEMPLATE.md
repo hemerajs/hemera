@@ -26,16 +26,10 @@ Example:
 - [ ] hemera-stats
 - [ ] hemera-rabbitmq
 - [ ] hemera-nsq
-- [ ] hemera-arango-store
-- [ ] hemera-sql-store
 - [ ] hemera-elasticsearch
-- [ ] hemera-couchbase-store
-- [ ] hemera-mongo-store
 - [ ] hemera-joi
-- [ ] hemera-parambulator
 - [ ] hemera-msgpack
 - [ ] hemera-avro
-- [ ] hemera-redis-cache
 - [ ] hemera-jwt-auth
 
 ## Your Environment
