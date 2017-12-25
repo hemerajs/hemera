@@ -1,9 +1,0 @@
-version: '2'
-services:
-  rethinkdb:
-    image: rethinkdb
-    ports:
-     - "28015:28015"
-     - "29015:29015"
-     - "3500:8080"
-    command: rethinkdb --bind all
