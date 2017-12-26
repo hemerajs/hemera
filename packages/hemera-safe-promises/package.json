@@ -1,5 +1,5 @@
 {
-  "name": "hemera-safe-promise",
+  "name": "hemera-safe-promises",
   "version": "0.0.0",
   "description":
     "Making unhandled promise rejections crash the Node.js process",
