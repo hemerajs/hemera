@@ -230,11 +230,13 @@ function hemeraControlplane(hemera, opts, done) {
   done()
 }
 
-const plugin = Hp(hemeraControlplane, '>=3')
-plugin[Symbol.for('name')] = require('./package.json').name
-plugin[Symbol.for('options')] = {
-  payloadValidator: 'hemera-joi',
-  arango: {}
-}
-plugin[Symbol.for('dependencies')] = ['hemera-joi']
+const plugin = Hp(hemeraControlplane, {
+  hemera: '>=3',
+  name: require('./package.json').name,
+  dependencies: ['hemera-joi'],
+  options: {
+    payloadValidator: 'hemera-joi'
+  }
+})
+
 module.exports = plugin

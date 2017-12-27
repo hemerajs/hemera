@@ -15,9 +15,9 @@ hemera.ready(() => {
       topic: 'math',
       cmd: 'add'
     },
-    (resp, reply) => {
-      for (let i = 0; i < 1000; i++) {
-        reply(null, i)
+    function(resp) {
+      for (let i = 0; i < 10; i++) {
+        this.reply(i)
       }
     }
   )
@@ -26,12 +26,17 @@ hemera.ready(() => {
     {
       topic: 'math',
       cmd: 'add',
-      maxMessages$: 1000
+      maxMessages$: 10
     },
     function(err, resp) {
+      if (err) {
+        throw err
+      }
+
       results.push(resp)
-      if (results.length === 1000) {
-        console.log('Received 1000 Messages!')
+
+      if (results.length === 10) {
+        console.log('Received 10 Messages!')
       }
     }
   )

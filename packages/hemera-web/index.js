@@ -106,14 +106,17 @@ function hemeraWeb(hemera, opts, done) {
   })
 }
 
-const plugin = Hp(hemeraWeb, '>=3')
-plugin[Symbol.for('name')] = require('./package.json').name
-plugin[Symbol.for('options')] = {
-  port: 3000,
-  host: '127.0.0.1',
-  errors: {
-    propBlacklist: ['stack']
-  },
-  pattern: {}
-}
+const plugin = Hp(hemeraWeb, {
+  hemera: '>=3',
+  name: require('./package.json').name,
+  options: {
+    port: 3000,
+    host: '127.0.0.1',
+    errors: {
+      propBlacklist: ['stack']
+    },
+    pattern: {}
+  }
+})
+
 module.exports = plugin

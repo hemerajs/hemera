@@ -139,29 +139,34 @@ function hemeraOpentracing(hemera, opts, done) {
   done()
 }
 
-const plugin = Hp(hemeraOpentracing, '>=3')
-plugin[Symbol.for('name')] = require('./package.json').name
-plugin[Symbol.for('options')] = {
-  delegateTags: [
-    {
-      key: 'query',
-      tag: 'hemera.db.query'
-    }
-  ],
-  jaeger: {
-    sampler: {
-      type: 'Const',
-      options: true
-    },
-    options: {
-      tags: {
-        'hemera.version': 'Node-' + require('nats-hemera/package.json').version,
-        'nodejs.version': process.versions.node
+const plugin = Hp(hemeraOpentracing, {
+  hemera: '>=3',
+  name: require('./package.json').name,
+  dependencies: ['hemera-joi'],
+  options: {
+    delegateTags: [
+      {
+        key: 'query',
+        tag: 'hemera.db.query'
       }
-    },
-    reporter: {
-      host: 'localhost'
+    ],
+    jaeger: {
+      sampler: {
+        type: 'Const',
+        options: true
+      },
+      options: {
+        tags: {
+          'hemera.version':
+            'Node-' + require('nats-hemera/package.json').version,
+          'nodejs.version': process.versions.node
+        }
+      },
+      reporter: {
+        host: 'localhost'
+      }
     }
   }
-}
+})
+
 module.exports = plugin

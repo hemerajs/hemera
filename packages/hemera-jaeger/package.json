@@ -13,7 +13,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-plugin": "^0.0.14",
+    "hemera-plugin": "^0.1.0",
     "jaeger-client": "^3.7.0",
     "opentracing": "^0.14.1"
   }

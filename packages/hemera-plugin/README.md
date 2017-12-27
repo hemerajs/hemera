@@ -9,6 +9,7 @@
 `hemera-plugin` can do some things for you:
 - Check the bare-minimum version of Hemera
 - Provide consistent interface to register plugins even when the api is changed
+- Pass metadata to intialize your plugin with correct dependencies, default options and name. 
 
 Example:
 ```js
@@ -35,7 +36,25 @@ You can check [here](https://github.com/npm/node-semver#ranges) how to define a 
 const hp = require('hemera-plugin')
 
 module.exports = hp(async function (hemera, opts) {
+  // your plugin code
 }, '0.x')
+```
+
+You can also pass some metadata that will be handled by Hemera, such as the dependencies, default options and the name of your plugin.
+```js
+const hp = require('hemera-plugin')
+
+function plugin (hemera, opts, next) {
+  // your plugin code
+  next()
+}
+
+module.exports = hp(plugin, {
+  hemera: '0.x', // bare-minimum version of Hemera
+  name: 'my-plugin', // name of your plugin, will be used e.g for logging purposes
+  dependencies: ['plugin2'], // won't be checked until you use `hemera.checkPluginDependencies(plugin)`
+  options: { host: 'localhost', port: 8003 } // default options for your plugin
+})
 ```
 
 ### Credits 

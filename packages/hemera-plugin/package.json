@@ -16,6 +16,6 @@
     "semver": "5.3.x"
   },
   "devDependencies": {
-    "nats-hemera": "^3.0.0"
+    "nats-hemera": "^3.1.2"
   }
 }

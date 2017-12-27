@@ -177,11 +177,14 @@ function hemeraSQS(hemera, opts, done) {
   done()
 }
 
-const plugin = Hp(hemeraSQS, '>=3')
-plugin[Symbol.for('name')] = require('./package.json').name
-plugin[Symbol.for('options')] = {
-  sqs: {
-    apiVersion: '2012-11-05'
+const plugin = Hp(hemeraSQS, {
+  hemera: '>=3',
+  name: require('./package.json').name,
+  options: {
+    sqs: {
+      apiVersion: '2012-11-05'
+    }
   }
-}
+})
+
 module.exports = plugin

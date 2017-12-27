@@ -291,17 +291,19 @@ const myPlugin = hp((hemera, opts, done) => {
   })
 
   done()
-}, '>=3')
-
-myPlugin[Symbol.for('name')] = 'foo'
-myPlugin[Symbol.for('options')] = {}
+}, {
+  hemera: '0.x', // bare-minimum version of Hemera
+  name: 'my-plugin', // name of your plugin, will be used e.g for logging purposes
+  dependencies: ['plugin2'], // won't be checked until you use `hemera.checkPluginDependencies(plugin)`
+  options: { host: 'localhost', port: 8003 } // default options for your plugin
+})
 
 module.exports = myPlugin
 </code>
                     </pre>
           <div class="alert alert-info" role="alert">
             <i class="fa fa-info" aria-hidden="true"></i> Use always the plugin helper to create new plugins
-            <a href="https://github.com/hemerajs/hemera/tree/master/packages/hemera-plugin">hemera-plugin</a>. It will provide a consistent interface and checks the bare-minimum version of Hemera.</div>
+            <a href="https://github.com/hemerajs/hemera/tree/master/packages/hemera-plugin">hemera-plugin</a>. It will provide a consistent interface and checks the bare-minimum version of Hemera and pass metadata to the plugin.</div>
           <h4 class="section-h4">Create a plugin inline</h4>
           <pre>
 <code class="language-javascript">
@@ -319,10 +321,12 @@ const myPlugin = hp((hemera, opts, done) => {
   })
 
   done()
-}, '>=3')
-
-myPlugin[Symbol.for('name')] = 'foo'
-myPlugin[Symbol.for('options')] = {}
+}, {
+  hemera: '0.x', // bare-minimum version of Hemera
+  name: 'my-plugin', // name of your plugin, will be used e.g for logging purposes
+  dependencies: ['plugin2'], // won't be checked until you use `hemera.checkPluginDependencies(plugin)`
+  options: { host: 'localhost', port: 8003 } // default options for your plugin
+})
 
 hemera.use(myPlugin)
 </code>
@@ -342,12 +346,12 @@ const myPlugin = hp(async (hemera, opts) => {
       result: req.a + req.b
     })
   })
-}, '>=3')
-
-myPlugin[Symbol.for('name')] = 'foo'
-myPlugin[Symbol.for('options')] = {}
-
-module.exports = myPlugin
+}, {
+  hemera: '0.x', // bare-minimum version of Hemera
+  name: 'my-plugin', // name of your plugin, will be used e.g for logging purposes
+  dependencies: ['plugin2'], // won't be checked until you use `hemera.checkPluginDependencies(plugin)`
+  options: { host: 'localhost', port: 8003 } // default options for your plugin
+})
 </code>
                     </pre>
           <h4 class="section-h4">Plugin dependencies</h4>
@@ -367,11 +371,12 @@ const myPlugin = hp((hemera, opts, done) => {
   })
 
   done()
-}, '>=3')
-
-myPlugin[Symbol.for('dependencies')] = []
-myPlugin[Symbol.for('name')] = 'foo'
-myPlugin[Symbol.for('options')] = {}
+}, {
+  hemera: '0.x', // bare-minimum version of Hemera
+  name: 'my-plugin', // name of your plugin, will be used e.g for logging purposes
+  dependencies: ['plugin2'], // won't be checked until you use `hemera.checkPluginDependencies(plugin)`
+  options: { host: 'localhost', port: 8003 } // default options for your plugin
+})
 
 module.exports = myPlugin
 </code>

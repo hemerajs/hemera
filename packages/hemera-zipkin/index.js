@@ -168,6 +168,9 @@ function hemeraZipkin(hemera, opts, done) {
   done()
 }
 
-const plugin = Hp(hemeraZipkin, '>=3')
-plugin[Symbol.for('name')] = require('./package.json').name
+const plugin = Hp(hemeraZipkin, {
+  hemera: '>=3',
+  name: require('./package.json').name
+})
+
 module.exports = plugin

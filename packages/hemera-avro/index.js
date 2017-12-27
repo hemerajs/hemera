@@ -107,7 +107,9 @@ function hemeraAvro(hemera, opts, done) {
   done()
 }
 
-const plugin = Hp(hemeraAvro, '>=3')
-plugin[Symbol.for('name')] = require('./package.json').name
+const plugin = Hp(hemeraAvro, {
+  hemera: '>=3',
+  name: require('./package.json').name
+})
 
 module.exports = plugin

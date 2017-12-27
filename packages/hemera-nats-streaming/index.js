@@ -204,11 +204,14 @@ function hemeraNatsStreaming(hemera, opts, done) {
   })
 }
 
-const plugin = Hp(hemeraNatsStreaming, '>=3')
-plugin[Symbol.for('name')] = require('./package.json').name
-plugin[Symbol.for('options')] = {
-  payloadValidator: 'hemera-joi',
-  opts: {} // object with NATS/STAN options
-}
-plugin[Symbol.for('dependencies')] = ['hemera-joi']
+const plugin = Hp(hemeraNatsStreaming, {
+  hemera: '>=3',
+  name: require('./package.json').name,
+  depdendencies: ['hemera-joi'],
+  options: {
+    payloadValidator: 'hemera-joi',
+    opts: {} // object with NATS/STAN options
+  }
+})
+
 module.exports = plugin

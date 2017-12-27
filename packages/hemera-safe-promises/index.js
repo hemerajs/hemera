@@ -8,7 +8,9 @@ function hemeraSafePromises(hemera, opts, done) {
   done()
 }
 
-const plugin = Hp(hemeraSafePromises, '>=3')
-plugin[Symbol.for('name')] = require('./package.json').name
-plugin[Symbol.for('options')] = {}
+const plugin = Hp(hemeraSafePromises, {
+  hemera: '>=3',
+  name: require('./package.json').name
+})
+
 module.exports = plugin

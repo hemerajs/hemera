@@ -45,13 +45,16 @@ function hemeraPrometheus(hemera, opts, done) {
   server.listen(opts.httpServer.port, opts.httpServer.host, done)
 }
 
-const plugin = Hp(hemeraPrometheus, '>=3')
-plugin[Symbol.for('name')] = require('./package.json').name
-plugin[Symbol.for('options')] = {
-  collectDefaultMetrics: true,
-  httpServer: {
-    port: 3000,
-    hostname: '127.0.0.1'
+const plugin = Hp(hemeraPrometheus, {
+  hemera: '>=3',
+  name: require('./package.json').name,
+  options: {
+    collectDefaultMetrics: true,
+    httpServer: {
+      port: 3000,
+      hostname: '127.0.0.1'
+    }
   }
-}
+})
+
 module.exports = plugin

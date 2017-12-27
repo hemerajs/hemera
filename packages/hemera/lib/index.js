@@ -593,7 +593,7 @@ class Hemera extends EventEmitter {
    *
    * @memberOf Hemera
    */
-  finish() {
+  serverPreResponse() {
     const self = this
 
     self._series(
@@ -740,29 +740,47 @@ class Hemera extends EventEmitter {
   /**
    *
    *
+   * @param {any} result
+   * @memberof Hemera
+   */
+  reply(result) {
+    const self = this
+
+    if (result instanceof Error) {
+      self._reply.error = self._attachHops(self.getRootError(result))
+    } else if (result !== undefined && !self._reply.sent) {
+      // payload can be set multiple times but respect set payload in extensions and midddlewares
+      self._reply.payload = result
+    }
+
+    self._reply.sent = false
+
+    self.serverPreResponse()
+  }
+
+  /**
+   *
+   *
    * @param {any} err
    * @param {any} resp
    * @returns
    *
    * @memberof Hemera
    */
-  _actionHandler(err, resp) {
+  respond(err, resp) {
     const self = this
 
     if (err) {
-      self._reply.error = self.getRootError(err)
-      self._reply.error = self._attachHops(self._reply.error)
-
-      self.finish()
-      return
-    }
-
-    // set only when we have a result and the reply interface wasn't called
-    if (resp !== undefined && !self._reply.sent) {
+      self._reply.error = self._attachHops(self.getRootError(err))
+      self.serverPreResponse()
+    } else if (!self._reply.sent) {
+      // set payload for the first time
       self._reply.payload = resp
+      self.serverPreResponse()
+    } else if (self._reply.sent) {
+      // payload can be set only once
+      self.serverPreResponse()
     }
-
-    self.finish()
   }
 
   /**
@@ -842,7 +860,7 @@ class Hemera extends EventEmitter {
     if (extensionError) {
       self._reply.error = self._attachHops(extensionError)
       self.emit('serverResponseError', extensionError)
-      self.finish()
+      self.serverPreResponse()
       return
     }
 
@@ -864,7 +882,7 @@ class Hemera extends EventEmitter {
       self.emit('serverResponseError', self._reply.error)
 
       // send error back to callee
-      self.finish()
+      self.serverPreResponse()
     }
   }
 
@@ -887,7 +905,7 @@ class Hemera extends EventEmitter {
       ).causedBy(extensionError)
       self.log.error(internalError)
       self.emit('serverResponseError', self._reply.error)
-      self.finish()
+      self.serverPreResponse()
       return
     }
 
@@ -902,12 +920,12 @@ class Hemera extends EventEmitter {
           ).causedBy(err)
           self.log.error(internalError)
           self.emit('serverResponseError', err)
-          self._actionHandler(err)
+          self.respond(err)
           return
         }
 
         if (self._reply.finished) {
-          self._actionHandler()
+          self.respond()
           return
         }
 
@@ -916,28 +934,26 @@ class Hemera extends EventEmitter {
           self._request.payload.request.type === Constants.REQUEST_TYPE_PUBSUB
         ) {
           action(self._request.payload.pattern)
-          self._actionHandler()
+          self.respond()
           return
         }
 
         // when we have 2 arguments defined we expect to use the callback style
         if (action.length === 2) {
           action(self._request.payload.pattern, (err, result) =>
-            self._actionHandler(err, result)
+            self.respond(err, result)
           )
         } else {
           let result = action(self._request.payload.pattern)
           const isPromise = result && typeof result.then === 'function'
 
           if (isPromise) {
-            result
-              .then(x => self._actionHandler(null, x))
-              .catch(e => self._actionHandler(e))
+            result.then(x => self.respond(null, x)).catch(e => self.respond(e))
           } else {
             if (result instanceof Error) {
-              self._actionHandler(result)
+              self.respond(result)
             } else {
-              self._actionHandler(null, result)
+              self.respond(null, result)
             }
           }
         }
@@ -948,7 +964,7 @@ class Hemera extends EventEmitter {
       // service should exit
       self._shouldCrash = true
 
-      self.finish()
+      self.serverPreResponse()
     }
   }
 

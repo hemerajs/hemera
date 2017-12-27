@@ -98,10 +98,13 @@ function hemeraSlackbot(hemera, opts, done) {
   })
 }
 
-const plugin = Hp(hemeraSlackbot, '>=3')
-plugin[Symbol.for('name')] = require('./package.json').name
-plugin[Symbol.for('options')] = {
-  payloadValidator: 'hemera-joi'
-}
-plugin[Symbol.for('dependencies')] = ['hemera-joi']
+const plugin = Hp(hemeraSlackbot, {
+  hemera: '>=3',
+  name: require('./package.json').name,
+  dependencies: ['hemera-joi'],
+  options: {
+    payloadValidator: 'hemera-joi'
+  }
+})
+
 module.exports = plugin
