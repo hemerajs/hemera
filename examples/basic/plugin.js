@@ -4,23 +4,27 @@ const Hemera = require('./../../packages/hemera')
 const nats = require('nats').connect()
 const Hp = require('./../../packages/hemera-plugin')
 
-const myPlugin = Hp(function myPlugin(hemera, options, done) {
-  hemera.add(
-    {
-      topic: 'math',
-      cmd: 'add'
-    },
-    (resp, cb) => {
-      cb(null, resp.a + resp.b)
-    }
-  )
+const myPlugin = Hp(
+  function myPlugin(hemera, options, done) {
+    hemera.add(
+      {
+        topic: 'math',
+        cmd: 'add'
+      },
+      (resp, cb) => {
+        cb(null, resp.a + resp.b)
+      }
+    )
 
-  done()
-})
-
-myPlugin[Symbol.for('dependencies')] = []
-myPlugin[Symbol.for('name')] = 'foo'
-myPlugin[Symbol.for('options')] = {}
+    done()
+  },
+  {
+    hemera: '>=3',
+    name: 'myPlugin',
+    options: {},
+    dependencies: []
+  }
+)
 
 const hemera = new Hemera(nats, {
   logLevel: 'info',
