@@ -1,6 +1,6 @@
 {
   "name": "hemera-prometheus",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Prometheus collector for hemera",
   "main": "index.js",
   "repository": {
@@ -12,7 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.16.2",
-    "hemera-plugin": "^0.1.0",
+    "hemera-plugin": "^0.1.1",
     "prom-client": "^10.2.2"
   },
   "engines": {
