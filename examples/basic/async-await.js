@@ -18,7 +18,7 @@ hemera.ready(async () => {
       cmd: 'add'
     },
     async function(req) {
-      return Promise.resolve(req.a + req.b)
+      return req.a + req.b
     }
   )
 
