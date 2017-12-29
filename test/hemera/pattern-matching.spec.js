@@ -177,7 +177,7 @@ describe('Pattern matching', function() {
           topic: 'TOPIC',
           cmd: 'CMD'
         },
-        function(err, next) {
+        function(req, next) {
           expect(this._pattern).to.be.equals({
             topic: 'TOPIC',
             cmd: 'CMD',
@@ -198,6 +198,7 @@ describe('Pattern matching', function() {
           timeout$: 5000
         },
         function(err, resp) {
+          expect(err).to.be.not.exists()
           hemera.close(done)
         }
       )

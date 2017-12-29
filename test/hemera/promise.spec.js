@@ -37,6 +37,7 @@ describe('Promise', function() {
           b: 2
         },
         (err, resp) => {
+          expect(err).to.be.not.exists()
           expect(resp).to.be.equals(3)
           hemera.close(done)
         }
@@ -70,6 +71,7 @@ describe('Promise', function() {
           b: 2
         },
         (err, resp) => {
+          expect(err).to.be.not.exists()
           expect(resp).to.be.equals(3)
           expect(spy.calledOnce).to.be.equals(true)
           hemera.close(done)
@@ -172,6 +174,7 @@ describe('Promise', function() {
           b: 2
         },
         (err, resp) => {
+          expect(err).to.be.not.exists()
           spy()
           expect(resp).to.be.equals(3)
           setTimeout(() => {

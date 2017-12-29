@@ -27,7 +27,7 @@ describe('Async / Await support', function() {
           cmd: 'add'
         })
         .use(async function(req, resp) {
-          const a = await Promise.resolve()
+          await Promise.resolve()
         })
         .end(function(req, cb) {
           cb(null, req.a + req.b)
@@ -419,7 +419,7 @@ describe('Async / Await support', function() {
           b: 2
         },
         async () => {
-          return await true
+          return true
         }
       )
 

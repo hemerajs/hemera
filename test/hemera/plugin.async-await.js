@@ -34,7 +34,7 @@ describe('Async await Plugin interface', function() {
         }
       )
 
-      return await Promise.resolve()
+      return Promise.resolve()
     }
 
     hemera.use(plugin)
@@ -63,11 +63,11 @@ describe('Async await Plugin interface', function() {
 
     // Plugin
     async function plugin1(hemera, options) {
-      return await Promise.resolve()
+      return Promise.resolve()
     }
 
     async function plugin2(hemera, options) {
-      return await Promise.resolve()
+      return Promise.resolve()
     }
 
     hemera.use([plugin1, plugin2])

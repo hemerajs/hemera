@@ -247,7 +247,7 @@ describe('Extension Async / Await', function() {
     hemera.ready(() => {
       hemera.ext('onClientPreRequest', async function(ctx) {
         ext1()
-        res.send(new Error('test'))
+        return new Error('test')
       })
 
       hemera.add(
@@ -268,6 +268,7 @@ describe('Extension Async / Await', function() {
         (err, resp) => {
           expect(ext1.called).to.be.equals(true)
           expect(err).to.be.exists()
+          expect(err.message).to.be.equals('test')
           hemera.close(done)
         }
       )
@@ -321,7 +322,7 @@ describe('Extension Async / Await', function() {
     hemera.ready(() => {
       hemera.ext('onClientPostRequest', async function(ctx) {
         ext1()
-        res.send(new Error('test'))
+        return new Error('test')
       })
 
       hemera.add(
@@ -342,6 +343,7 @@ describe('Extension Async / Await', function() {
         (err, resp) => {
           expect(ext1.called).to.be.equals(true)
           expect(err).to.be.exists()
+          expect(err.message).to.be.equals('test')
           hemera.close(done)
         }
       )

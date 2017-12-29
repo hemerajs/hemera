@@ -257,7 +257,7 @@ describe('Tracing', function() {
           topic: 'TOPIC',
           cmd: 'CMD'
         },
-        function(err, next) {
+        function(req, next) {
           next()
         }
       )
@@ -271,6 +271,7 @@ describe('Tracing', function() {
           timeout$: 5000
         },
         function(err, resp) {
+          expect(err).to.be.not.exists()
           expect(this.trace$.method).to.be.equals('cmd:CMD,topic:TOPIC')
           hemera.close(done)
         }

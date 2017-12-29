@@ -18,6 +18,9 @@ for (let i = 0; i < 256; i++) {
  * @class Util
  */
 class Util {
+  static escapeTopicForRegExp(string) {
+    return string.replace(/[.+?]/g, '\\$&') // $& Inserts the matched substring.
+  }
   /**
    *
    *
@@ -28,14 +31,24 @@ class Util {
    * @memberof Util
    */
   static natsWildcardToRegex(subject) {
-    let hasTokenWildcard = subject.indexOf('*') > -1
-    let hasFullWildcard = subject.indexOf('>') > -1
+    if (subject instanceof RegExp) {
+      return subject
+    }
+
+    let hasTokenWildcard = subject.toString().indexOf('*') > -1
+    let hasFullWildcard = subject.toString().indexOf('>') > -1
 
     if (hasFullWildcard) {
-      subject = subject.replace('>', '[a-zA-Z0-9\\-\\.]+')
+      subject = Util.escapeTopicForRegExp(subject).replace(
+        '>',
+        '[a-zA-Z0-9-.]+'
+      )
       return new RegExp('^' + subject + '$', 'i')
     } else if (hasTokenWildcard) {
-      subject = subject.replace('*', '[a-zA-Z0-9\\-]+')
+      subject = Util.escapeTopicForRegExp(subject).replace(
+        /\*/g,
+        '[a-zA-Z0-9-]+'
+      )
       return new RegExp('^' + subject + '$', 'i')
     }
 

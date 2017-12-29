@@ -1,3 +1,14 @@
 {
-  "extends": "hemera"
+  "extends": "hemera",
+  "globals": {
+    "Hemera": true,
+    "HemeraConstants": true,
+    "HemeraUtil": true,
+    "expect": true,
+    "UnauthorizedError": true,
+    "HemeraTestsuite": true,
+    "Sinon": true,
+    "CodecPipeline": true,
+    "Code": true
+  }
 }

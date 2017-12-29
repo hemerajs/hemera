@@ -6,7 +6,7 @@ const Proxyquire = require('proxyquire')
 describe('Hemera plugin', function() {
   it('Should register a plugin', function(done) {
     // Plugin
-    let plugin = HemeraPlugin(function(hemera, opts, done) {
+    HemeraPlugin(function(hemera, opts, done) {
       done()
     })
 
@@ -34,7 +34,7 @@ describe('Hemera plugin', function() {
   it('Should throw an error because semver version does not match', function(done) {
     const throws = function() {
       // Plugin
-      let plugin = HemeraPlugin(function(hemera, opts, done) {
+      HemeraPlugin(function(hemera, opts, done) {
         done()
       }, '500.400.300')
     }
@@ -46,7 +46,7 @@ describe('Hemera plugin', function() {
   it('Should throw an error because plugin function is not a function', function(done) {
     const throws = function() {
       // Plugin
-      let plugin = HemeraPlugin(true, '1')
+      HemeraPlugin(true, '1')
     }
 
     expect(throws).to.throw(
@@ -58,7 +58,7 @@ describe('Hemera plugin', function() {
 
   it('Should throw an error because plugin version is not a string', function(done) {
     const throws = function() {
-      let plugin = HemeraPlugin(() => {}, { hemera: true })
+      HemeraPlugin(() => {}, { hemera: true })
     }
 
     expect(throws).to.throw(

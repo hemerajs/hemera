@@ -182,6 +182,7 @@ describe('Hemera', function() {
           id: 1
         },
         (err, req) => {
+          expect(err).to.be.not.exists()
           expect(req).to.be.equals('id')
           hemera.close(done)
         }
@@ -312,7 +313,7 @@ describe('Hemera', function() {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      let result = hemera.setConfig('a', 1)
+      hemera.setConfig('a', 1)
 
       expect(hemera.config.a).to.be.equals(1)
 

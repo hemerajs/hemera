@@ -503,7 +503,7 @@ describe('Hemera-web', function() {
           binaryData: buff
         })
         .then(resp => {
-          expect(new Buffer(resp.data.binary).equals(buff)).to.be.equals(true)
+          expect(Buffer.from(resp.data.binary).equals(buff)).to.be.equals(true)
           expect(resp.data.result).to.be.equals(3)
           hemera.close(done)
         })

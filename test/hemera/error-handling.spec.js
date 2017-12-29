@@ -381,8 +381,6 @@ describe('Error handling', function() {
       crashOnFatal: false
     })
 
-    let event = Sinon.spy()
-
     hemera.ready(() => {
       hemera.add(
         {
@@ -497,7 +495,7 @@ describe('Error handling', function() {
     stub.onCall(1)
     stub.returns(true)
 
-    hemera.ext('onClose', err => {
+    hemera.ext('onClose', _ => {
       // wait until hemera emits an error after close
       setTimeout(() => {
         expect(stub.called).to.be.equals(true)

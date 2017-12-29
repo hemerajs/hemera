@@ -66,7 +66,8 @@ describe('Hemera default config', function() {
     const nats = require('nats').connect(authUrl)
 
     try {
-      const hemera = new Hemera(nats, {
+      // eslint-disable-next-line no-new
+      new Hemera(nats, {
         logLevel: 'foo'
       })
     } catch (err) {

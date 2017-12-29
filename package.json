@@ -56,7 +56,7 @@
     "code": "4.1.x",
     "coveralls": "3.0.x",
     "eslint": "^4.14.0",
-    "eslint-config-hemera": "0.0.1",
+    "eslint-config-hemera": "^0.0.2",
     "hemera-redis-cache": "^3.0.1",
     "hemera-testsuite": "^1.4.1",
     "husky": "^0.14.3",
