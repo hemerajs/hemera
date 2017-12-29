@@ -582,6 +582,7 @@ class Hemera extends EventEmitter {
    */
   _serverExtIterator(fn, cb) {
     const ret = fn(this, this._request, this._reply, cb)
+
     if (ret && typeof ret.then === 'function') {
       ret.then(cb).catch(cb)
     }
