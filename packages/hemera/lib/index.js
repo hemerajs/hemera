@@ -1,5 +1,3 @@
-'use strict'
-
 /**
  * Copyright 2016-present, Dustin Deus (deusdustin@gmail.com)
  * All rights reserved.
@@ -65,6 +63,7 @@ class Hemera extends EventEmitter {
       throw config.error
     }
 
+    this._isReady = false
     this._config = config.value
     this._router = Bloomrun(this._config.bloomrun)
     this._heavy = new Heavy(this._config.load.process)
@@ -530,6 +529,12 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   ready(cb) {
+    if (this._isReady) {
+      throw new Errors.HemeraError('Hemera is already bootstraped')
+    }
+
+    this._isReady = true
+
     this._transport.driver.on('error', err => {
       this.log.error(err, Constants.NATS_TRANSPORT_ERROR)
       this.log.error("NATS Code: '%s', Message: %s", err.code, err.message)
@@ -562,21 +567,22 @@ class Hemera extends EventEmitter {
       this.log.warn(Constants.NATS_TRANSPORT_CLOSED)
     })
 
+    const bootstrapCb = (err, cb) => {
+      if (err) {
+        this.log.error(err)
+      }
+      if (_.isFunction(cb)) {
+        cb(err)
+      }
+    }
+
     if (this._transport.driver.connected) {
       this.log.info(Constants.NATS_TRANSPORT_CONNECTED)
-      this.bootstrap(err => {
-        if (_.isFunction(cb)) {
-          cb(err)
-        }
-      })
+      this.bootstrap(err => bootstrapCb(err, cb))
     } else {
       this._transport.driver.on('connect', () => {
         this.log.info(Constants.NATS_TRANSPORT_CONNECTED)
-        this.bootstrap(err => {
-          if (_.isFunction(cb)) {
-            cb(err)
-          }
-        })
+        this.bootstrap(err => bootstrapCb(err, cb))
       })
     }
   }

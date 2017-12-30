@@ -15,6 +15,19 @@ describe('Hemera', function() {
     server.kill()
   })
 
+  it('Should throw error when hemera is bootstraped twice', function(done) {
+    const nats = require('nats').connect(authUrl)
+    const hemera = new Hemera(nats)
+    hemera.ready(() => {
+      try {
+        hemera.ready()
+      } catch (err) {
+        expect(err.message).to.be.equals('Hemera is already bootstraped')
+        done()
+      }
+    })
+  })
+
   it('Should be able to add a handler and act it', function(done) {
     const nats = require('nats').connect(authUrl)
 
