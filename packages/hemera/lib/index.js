@@ -562,14 +562,23 @@ class Hemera extends EventEmitter {
       this.log.warn(Constants.NATS_TRANSPORT_CLOSED)
     })
 
-    this._transport.driver.on('connect', () => {
+    if (this._transport.driver.connected) {
       this.log.info(Constants.NATS_TRANSPORT_CONNECTED)
       this.bootstrap(err => {
         if (_.isFunction(cb)) {
           cb(err)
         }
       })
-    })
+    } else {
+      this._transport.driver.on('connect', () => {
+        this.log.info(Constants.NATS_TRANSPORT_CONNECTED)
+        this.bootstrap(err => {
+          if (_.isFunction(cb)) {
+            cb(err)
+          }
+        })
+      })
+    }
   }
 
   /**
