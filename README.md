@@ -44,7 +44,7 @@ The key features of NATS in combination with Hemera are:
 * **Tracing**: Any distributed system need good tracing capabilities. We provide support for Zipkin or Jaeger tracing systems which manages both the collection and lookup of this data.
 * **Monitoring**: Your NATS server can be monitored by cli or a dashboard.
 * **Payload validation**: Create your own validator or use existing plugins e.g Hemera-Joi.
-* **Serialization**: Use JSON, Msgpack or Avro to serialize your data (dynamic or static).
+* **Serialization**: Use custom serializer e.g Msgpack.
 * **Metadata**: Transfer metadata across services or attach contextual data to tracing systems.
 * **Dependencies**: NATS is a single binary of 7MB and can be deployed in seconds.
 * **Typescript**: We provide a definition file to support auto-intellisense. 
