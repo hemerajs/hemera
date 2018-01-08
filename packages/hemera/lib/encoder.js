@@ -11,11 +11,16 @@
 
 const SafeStringify = require('fast-safe-stringify')
 
+/**
+ * Why do coerce to a Number?
+ * https://github.com/davidmarkclements/flatstr#how-does-it-work
+ */
+
 class Encoder {
   static encode(msg) {
     try {
       return {
-        value: SafeStringify(msg)
+        value: Number(SafeStringify(msg))
       }
     } catch (error) {
       return {
