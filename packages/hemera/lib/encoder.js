@@ -19,10 +19,8 @@ const SafeStringify = require('fast-safe-stringify')
 class Encoder {
   static encode(msg) {
     try {
-      let value = SafeStringify(msg)
-      Number(value)
       return {
-        value
+        value: Number(SafeStringify(msg))
       }
     } catch (error) {
       return {
