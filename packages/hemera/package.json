@@ -40,10 +40,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "avvio": "4.0.x",
+    "avvio": "5.0.x",
     "bloomrun": "4.0.x",
     "errio": "1.2.x",
-    "fast-safe-stringify": "1.2.x",
+    "fast-safe-stringify": "2.0.x",
     "fastparallel": "2.3.x",
     "fastseries": "1.7.x",
     "heavy": "4.0.x",
