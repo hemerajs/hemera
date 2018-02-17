@@ -60,33 +60,7 @@ The key features of NATS in combination with Hemera are:
 - Promise
 - Error-first-callback style
 
-```js
-const Hemera = require('nats-hemera')
-const HemeraJoi = require('hemera-joi')
-const nats = require('nats').connect()
-
-const hemera = new Hemera(nats, { logLevel: 'info' })
-hemera.use(HemeraJoi)
-
-hemera.ready(async (err) => {
-  hemera.setOption('payloadValidator', 'hemera-joi')
-  let Joi = hemera.joi
-
-  hemera.add({ 
-    topic: 'math',
-    cmd: 'add',
-    a: Joi.number().required(),
-    b: Joi.number().required()
-  }, async function (req) {
-    return await req.a + req.b
-  })
-
-  const a = await hemera.act({ topic: 'math', cmd: 'add', a: 10, b: 30 })
-  const b = await hemera.act({ topic: 'math', cmd: 'add', a: 10, b: 60 })
-
-  hemera.log.info(a, b)
-})
-```
+![code](/media/code.png)
 
 ## Documentation
 * <a href="https://hemerajs.github.io/hemera/getting-started.html"><code><b>Getting Started</b></code></a>
