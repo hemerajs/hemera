@@ -60,7 +60,7 @@ The key features of NATS in combination with Hemera are:
 - Promise
 - Error-first-callback style
 
-![code](/media/code.png)
+[![code](/media/code.png)](https://github.com/hemerajs/hemera/blob/master/media/code.png?raw=true)
 
 ## Documentation
 * <a href="https://hemerajs.github.io/hemera/getting-started.html"><code><b>Getting Started</b></code></a>
