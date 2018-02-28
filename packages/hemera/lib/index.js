@@ -530,7 +530,7 @@ class Hemera extends EventEmitter {
    */
   ready(cb) {
     if (this._isReady) {
-      throw new Errors.HemeraError('Hemera is already bootstraped')
+      throw new Errors.HemeraError('Hemera was already bootstraped')
     }
 
     this._isReady = true
@@ -567,24 +567,42 @@ class Hemera extends EventEmitter {
       this.log.warn(Constants.NATS_TRANSPORT_CLOSED)
     })
 
-    const bootstrapCb = (err, cb) => {
-      if (err) {
-        this.log.error(err)
-      }
-      if (_.isFunction(cb)) {
-        cb(err)
+    const ready = cb => {
+      if (this._transport.driver.connected) {
+        this.log.info(Constants.NATS_TRANSPORT_CONNECTED)
+        this.bootstrap(cb)
+      } else {
+        this._transport.driver.on('connect', () => {
+          this.log.info(Constants.NATS_TRANSPORT_CONNECTED)
+          this.bootstrap(cb)
+        })
       }
     }
 
-    if (this._transport.driver.connected) {
-      this.log.info(Constants.NATS_TRANSPORT_CONNECTED)
-      this.bootstrap(err => bootstrapCb(err, cb))
-    } else {
-      this._transport.driver.on('connect', () => {
-        this.log.info(Constants.NATS_TRANSPORT_CONNECTED)
-        this.bootstrap(err => bootstrapCb(err, cb))
+    // callback style
+    if (_.isFunction(cb)) {
+      ready(err => {
+        if (err) {
+          this.log.error(err)
+          cb(err)
+          return
+        }
+        cb()
       })
+      return
     }
+
+    // promise style
+    return new Promise((resolve, reject) => {
+      ready(err => {
+        if (err) {
+          this.log.error(err)
+          reject(err)
+          return
+        }
+        resolve()
+      })
+    })
   }
 
   /**

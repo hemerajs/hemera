@@ -13,6 +13,55 @@ describe('Promise', function() {
     server.kill()
   })
 
+  it('Should be able to return a promise with ready', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready().then(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        resp => {
+          return Promise.resolve(resp.a + resp.b)
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        (err, resp) => {
+          expect(err).to.be.not.exists()
+          expect(resp).to.be.equals(3)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should be able to catch bootstrapping errors with ready', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.after((err, cb) => {
+      expect(err).to.be.not.exists()
+      cb(new Error('test'))
+    })
+
+    hemera.ready().catch(err => {
+      expect(err.name).to.be.equals('Error')
+      expect(err.message).to.be.equals('test')
+      done()
+    })
+  })
+
   it('Should be able to return a promise in add', function(done) {
     const nats = require('nats').connect(authUrl)
 
