@@ -22,7 +22,7 @@ describe('Hemera', function() {
       try {
         hemera.ready()
       } catch (err) {
-        expect(err.message).to.be.equals('Hemera is already bootstraped')
+        expect(err.message).to.be.equals('Hemera was already bootstraped')
         done()
       }
     })
