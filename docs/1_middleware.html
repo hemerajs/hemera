@@ -308,7 +308,7 @@ hemera.add({
 </code>
           </pre>
           <h4 class="section-h4">Skip the server action</h4>
-          <p>This is useful e.g if you want to use a cache mechanism inside a middleware and want to skip the server action.</p>
+          <p>Sometimes it useful to cancel the server action early. This can be achieved by using the <code>reply.end</code> method. Optionally you can pass the final payload.</p>
 <pre>
 <code class="language-javascript">
 hemera.add({
@@ -319,7 +319,7 @@ hemera.add({
   reply.end({ a: 1 })
 })
 .end(async function(req) {
-
+ // this is never called
 })
 </code>
 </pre>

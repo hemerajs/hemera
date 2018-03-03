@@ -271,10 +271,11 @@
             <a href="https://github.com/hemerajs/hemera-cli">hemera-cli</a>
           </div>
           <div class="alert alert-warning" role="alert">
-            <i class="fa fa-info" aria-hidden="true"></i> Please ensure that a plugin never extends another plugin that use the same
-            <code>topic</code> name. This results in a plugin which can not be run alone because the publisher is not aware of that composition.</div>
-          <p class="section-content">You can create a plugin in two different ways:</p>
-          <h4 class="section-h4">Create a plugin for publishing as package</h4>
+            <i class="fa fa-info" aria-hidden="true"></i> Please notice that a plugin should be responsible for exactly one purpose. Don't use multiple
+            <code>topic</code> names.</div>
+          <p class="section-content">Hemera's plugin system based on the powerful <a href="https://github.com/mcollina/avvio">Avvio</a> package. It is fully reentrant and graph-based. You can load components/plugins within plugins, and be still sure that things will happen in the right order.
+            You can create a plugin in two different ways:</p>
+          <h4 class="section-h4">Create a simple plugin</h4>
           <pre>
 <code class="language-javascript">
 const hp = require('hemera-plugin')
@@ -291,11 +292,6 @@ const myPlugin = hp((hemera, opts, done) => {
   })
 
   done()
-}, {
-  hemera: '0.x', // bare-minimum version of Hemera
-  name: 'my-plugin', // name of your plugin, will be used e.g for logging purposes
-  dependencies: ['plugin2'], // won't be checked until you use `hemera.checkPluginDependencies(plugin)`
-  options: { host: 'localhost', port: 8003 } // default options for your plugin
 })
 
 module.exports = myPlugin
@@ -304,7 +300,7 @@ module.exports = myPlugin
           <div class="alert alert-info" role="alert">
             <i class="fa fa-info" aria-hidden="true"></i> Use always the plugin helper to create new plugins
             <a href="https://github.com/hemerajs/hemera/tree/master/packages/hemera-plugin">hemera-plugin</a>. It will provide a consistent interface and checks the bare-minimum version of Hemera and pass metadata to the plugin.</div>
-          <h4 class="section-h4">Create a plugin inline</h4>
+          <h4 class="section-h4">Create a plugin with metadata</h4>
           <pre>
 <code class="language-javascript">
 const hp = require('hemera-plugin')
@@ -346,11 +342,6 @@ const myPlugin = hp(async (hemera, opts) => {
       result: req.a + req.b
     })
   })
-}, {
-  hemera: '0.x', // bare-minimum version of Hemera
-  name: 'my-plugin', // name of your plugin, will be used e.g for logging purposes
-  dependencies: ['plugin2'], // won't be checked until you use `hemera.checkPluginDependencies(plugin)`
-  options: { host: 'localhost', port: 8003 } // default options for your plugin
 })
 </code>
                     </pre>
@@ -372,10 +363,7 @@ const myPlugin = hp((hemera, opts, done) => {
 
   done()
 }, {
-  hemera: '0.x', // bare-minimum version of Hemera
-  name: 'my-plugin', // name of your plugin, will be used e.g for logging purposes
   dependencies: ['plugin2'], // won't be checked until you use `hemera.checkPluginDependencies(plugin)`
-  options: { host: 'localhost', port: 8003 } // default options for your plugin
 })
 
 module.exports = myPlugin
@@ -389,7 +377,7 @@ hemera.checkPluginDependencies(plugin)
 </code>
 </pre>
           <h4 class="section-h4">Plugin versioning</h4>
-          <p>Plugin dependencies is managed with NPM.</p>
+          <p>Plugin dependencies are managed with NPM.</p>
 
           <h4 class="section-h4">Plugin registration</h4>
           <p>A plugin must be registered before the
