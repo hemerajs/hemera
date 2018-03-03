@@ -57,7 +57,7 @@ hemera.ready(() => {
 ### Long Polling
 
 #### Receive multiple messages
-If you wanto to receive more than one message ensure that you set the `maxMessages$` property to `-1`
+If you want to receive more than one message ensure that you set the `maxMessages$` property to `-1`
 
 #### Increase timeout 
-If you want to enable long pooling ensure that you increase the `timeout$` property to don't run into a timeout error
+If you want to enable long pooling ensure that you adjust the `timeout$` property for your use case.
