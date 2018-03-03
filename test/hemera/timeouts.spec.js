@@ -90,7 +90,7 @@ describe('Timeouts', function() {
     })
   })
 
-  it('Should not receive more messages with maxMessages$ set when the INBOX timeouts', function(done) {
+  it('Should not receive more messages when multiple participants timeouts', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -144,8 +144,7 @@ describe('Timeouts', function() {
         {
           topic: 'test',
           cmd: 'B',
-          timeout$: 150,
-          maxMessages$: 10
+          timeout$: 150
         },
         function(err, resp) {
           if (err) {
@@ -161,6 +160,49 @@ describe('Timeouts', function() {
         expect(aResult).to.be.equals(0)
         expect(bError).to.be.equals(1)
         expect(bResult).to.be.equals(0)
+        hemera.close(done)
+      }, 300)
+    })
+  })
+
+  it('Should receive timeout when expected count of messages could not be received', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let error = 0
+    let result = 0
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'test',
+          cmd: 'A'
+        },
+        (resp, cb) => {
+          cb()
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'test',
+          cmd: 'A',
+          timeout$: 100,
+          expectedMessages$: 2
+        },
+        function(err, resp) {
+          if (err) {
+            error++
+          } else {
+            result++
+          }
+        }
+      )
+
+      setTimeout(() => {
+        expect(error).to.be.equals(1)
+        expect(result).to.be.equals(1)
         hemera.close(done)
       }, 300)
     })

@@ -321,6 +321,27 @@ hemera.act({
 })
 </code>
                     </pre>
+                    <h4 class="section-h4">Expect N messages</h4>
+                    <p>This ensure that you have to receive N messages before a timeout error is thrown and the request is canceled. You can combine it with the <code>maxMessages$</code> flag to require a minimum count of messages within the request-timeout.</p>
+          <pre>
+<code class="language-javascript">
+hemera.add({
+  topic: "math",
+  cmd: "add"
+}, function(req) {
+  this.reply(req.a + req.b)
+})
+
+hemera.act({
+    topic: "math",
+    cmd: "add",
+    a: 1, b: 1,
+    expectedMessages$: 10
+}, function(err, resp) {
+  // Can receive 10 messages
+})
+</code>
+                              </pre>
           <h4 class="section-h4">Reply</h4>
           <p>You can reply any value even primitive values like
             <code>true, 1, 5.0</code>. The first argument expect an error object.</p>

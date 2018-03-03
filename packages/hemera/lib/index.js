@@ -1455,12 +1455,15 @@ class Hemera extends EventEmitter {
    * - Service is actually still processing the request (service takes too long)
    * - Service was processing the request but crashed (service error)
    *
-   *
    * @memberOf Hemera
    */
   handleTimeout() {
     const self = this
     const timeout = self._pattern.timeout$ || this._config.timeout
+    const expectedMsg =
+      (self._pattern.expectedMessages$ > 0
+        ? self._pattern.expectedMessages$
+        : self._pattern.maxMessages$) || 1
 
     let timeoutHandler = () => {
       const error = new Errors.TimeoutError(
@@ -1479,7 +1482,7 @@ class Hemera extends EventEmitter {
       )
     }
 
-    self._transport.timeout(self._sid, timeout, 1, timeoutHandler)
+    self._transport.timeout(self._sid, timeout, expectedMsg, timeoutHandler)
   }
 
   /**
