@@ -958,6 +958,7 @@ class Hemera extends EventEmitter {
           return
         }
 
+        // user cancels the request early
         if (self._reply.finished) {
           self.respond()
           return
