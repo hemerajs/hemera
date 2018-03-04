@@ -323,6 +323,9 @@ hemera.act({
     maxMessages$: 10
 }, function(err, resp) {
   // You can receive 10 messages but also need 10 responses
+
+  // if you receive only 5 you have to close it
+  this.remove(this.sid)
 })
 </code>
 </pre>

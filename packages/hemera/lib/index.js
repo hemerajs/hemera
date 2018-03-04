@@ -1324,6 +1324,7 @@ class Hemera extends EventEmitter {
     hemera._execute = null
     hemera._defer = pDefer()
     hemera._actCallback = null
+    hemera.sid = 0
 
     // topic is needed to subscribe on a subject in NATS
     if (!pattern.topic) {
@@ -1432,13 +1433,17 @@ class Hemera extends EventEmitter {
     } else {
       const optOptions = {}
       // limit on the number of responses the requestor may receive
-      if (self._pattern.maxMessages$ > 0 || self._pattern.expectedMessages$ > 0) {
-        optOptions.max = self._pattern.expectedMessages$ || self._pattern.maxMessages$
+      if (
+        self._pattern.maxMessages$ > 0 ||
+        self._pattern.expectedMessages$ > 0
+      ) {
+        optOptions.max =
+          self._pattern.expectedMessages$ || self._pattern.maxMessages$
       } else if (self._pattern.maxMessages$ !== -1) {
         optOptions.max = 1
       }
       // send request
-      self._sid = self._transport.sendRequest(
+      self.sid = self._transport.sendRequest(
         self._pattern.topic,
         self._request.payload,
         optOptions,
@@ -1485,7 +1490,7 @@ class Hemera extends EventEmitter {
       )
     }
 
-    self._transport.timeout(self._sid, timeout, expectedMsg, timeoutHandler)
+    self._transport.timeout(self.sid, timeout, expectedMsg, timeoutHandler)
   }
 
   /**

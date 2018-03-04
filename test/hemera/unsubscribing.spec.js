@@ -178,7 +178,7 @@ describe('Unsubscribe NATS topic', function() {
         function(err, resp) {
           expect(err).to.be.not.exists()
 
-          const result = hemera.remove(this._sid)
+          const result = hemera.remove(this.sid)
           expect(result).to.be.equals(true)
           hemera.close(done)
         }
