@@ -273,7 +273,7 @@
             or first to respond. In a one-to-many exchange, you set a limit on the number of responses the requestor may
             receive. In a request-response exchange, publish request operation publishes a message with a reply subject expecting
             a response on that reply subject. You can request to automatically wait for a response inline. The request creates
-            an inbox and performs a request call with the inbox reply and returns the first reply received. This is optimized
+            an INBOX-channel and performs a request call with the inbox reply and returns the first reply received. This is optimized
             in the case of multiple responses.
           </p>
           <br>
@@ -289,11 +289,11 @@
             <code>queue$: name</code> as property to the add pattern. Any subscriber with a different queue on this topic will receive a message.
             You can only have one different queue name per Hemera instance.</div>
           <div class="alert alert-warning" role="alert">
-            <i class="fa fa-warning" aria-hidden="true"></i> It's very important to notice that you have to cancel the request INBOX by yourself <code>this.remove(this.sid)</code> if you want to cancel
+            <i class="fa fa-warning" aria-hidden="true"></i> It's very important to notice that you have to cancel the request INBOX-channel by yourself <code>this.remove(this.sid)</code> if you want to cancel
             it before all expected number of messages are reached, the maximum messages are proceed or the timeout is reached.
           </div>
           <h4 class="section-h4">Request (point-to-point) by default</h4>
-          <p>This is the default method to start a request. The INBOX channel is automatically closed after the response.</p>
+          <p>This is the default method to start a request. The INBOX-channel channel is automatically closed after the response.</p>
           <pre>
 <code class="language-javascript">
 hemera.act({
@@ -327,7 +327,7 @@ hemera.act({
 </code>
 </pre>
           <h4 class="section-h4">Receive at least N messages</h4>
-          <p>This ensures that you have to receive at least N responses (in this case 5) within the timeout before a timeout error is thrown and the INBOX channel is unsubscribed.</p>
+          <p>This ensures that you have to receive at least N responses (in this case 5) within the timeout before a timeout error is thrown and the INBOX-channel is unsubscribed.</p>
           <pre>
 <code class="language-javascript">
 hemera.add({
@@ -362,7 +362,7 @@ hemera.add({
 </code>
                     </pre>
           <h4 class="section-h4">Auto-unsubscribe</h4>
-          <p>The INBOX of your request-reply action is automatically closed when the expected number of messages is reached,
+          <p>The INBOX-channel of your request-reply action is automatically closed when the expected number of messages is reached,
             the maximum messages are proceed or the timeout is reached.</p>
           <pre>
           <code class="language-javascript">
