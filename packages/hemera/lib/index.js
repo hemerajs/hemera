@@ -1432,8 +1432,8 @@ class Hemera extends EventEmitter {
     } else {
       const optOptions = {}
       // limit on the number of responses the requestor may receive
-      if (self._pattern.maxMessages$ > 0) {
-        optOptions.max = self._pattern.maxMessages$
+      if (self._pattern.maxMessages$ > 0 || self._pattern.expectedMessages$ > 0) {
+        optOptions.max = self._pattern.expectedMessages$ || self._pattern.maxMessages$
       } else if (self._pattern.maxMessages$ !== -1) {
         optOptions.max = 1
       }
@@ -1460,10 +1460,13 @@ class Hemera extends EventEmitter {
   handleTimeout() {
     const self = this
     const timeout = self._pattern.timeout$ || this._config.timeout
-    const expectedMsg =
-      (self._pattern.expectedMessages$ > 0
-        ? self._pattern.expectedMessages$
-        : self._pattern.maxMessages$) || 1
+    let expectedMsg = 1
+
+    if (self._pattern.expectedMessages$ > 0) {
+      expectedMsg = self._pattern.expectedMessages$
+    } else if (self._pattern.maxMessages$) {
+      expectedMsg = null
+    }
 
     let timeoutHandler = () => {
       const error = new Errors.TimeoutError(
