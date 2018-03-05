@@ -207,6 +207,50 @@ describe('Timeouts', function() {
       }, 300)
     })
   })
+
+  it('Should not timeout when more messages than expected are send because the INBOX is closed automatically', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let error = 0
+    let result = 0
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'test',
+          cmd: 'A'
+        },
+        function(resp) {
+          for (let i = 0; i < 10; i++) {
+            this.reply(i)
+          }
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'test',
+          cmd: 'A',
+          expectedMessages$: 5
+        },
+        function(err, resp) {
+          if (err) {
+            error++
+          } else {
+            result++
+          }
+        }
+      )
+
+      setTimeout(() => {
+        expect(error).to.be.equals(0)
+        expect(result).to.be.equals(5)
+        hemera.close(done)
+      }, 300)
+    })
+  })
 })
 
 describe('Timeouts', function() {
