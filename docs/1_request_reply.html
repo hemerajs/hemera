@@ -330,7 +330,7 @@ hemera.act({
 </code>
 </pre>
           <h4 class="section-h4">Receive at least N messages</h4>
-          <p>This ensures that you have to receive at least N responses (in this case 5) within the timeout before a timeout error is thrown and the INBOX-channel is unsubscribed.</p>
+          <p>This ensures that you have to receive at least N responses (in this case 5) within the timeout before a timeout error is thrown and the INBOX-channel is unsubscribed. You can't receive more than expected messages the INBOX-channel is closed automatically.</p>
           <pre>
 <code class="language-javascript">
 hemera.add({
