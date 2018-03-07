@@ -287,20 +287,14 @@ describe('Gracefully shutdown', function() {
       logLevel: 'silent'
     })
 
-    let callback = Sinon.spy()
-
     hemera.ready(() => {
-      hemera.on('error', err => {
-        expect(err.message).to.be.equals('test')
-        callback()
-      })
       hemera.ext('onClose', function(ctx, next) {
         next(new Error('test'))
       })
       hemera.close(err => {
         expect(err).to.be.exists()
+        expect(err.message).to.be.equals('test')
         expect(nats.closed).to.be.equals(true)
-        expect(callback.called).to.be.equals(true)
         done()
       })
     })

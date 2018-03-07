@@ -13,12 +13,12 @@ describe('Promise', function() {
     server.kill()
   })
 
-  it('Should be able to return a promise with ready', function(done) {
+  it('Should be able to return a promise with ready', function() {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
-    hemera.ready().then(() => {
+    return hemera.ready().then(() => {
       hemera.add(
         {
           topic: 'math',
@@ -29,7 +29,7 @@ describe('Promise', function() {
         }
       )
 
-      hemera.act(
+      return hemera.act(
         {
           topic: 'math',
           cmd: 'add',
@@ -39,13 +39,13 @@ describe('Promise', function() {
         (err, resp) => {
           expect(err).to.be.not.exists()
           expect(resp).to.be.equals(3)
-          hemera.close(done)
+          return hemera.close()
         }
       )
     })
   })
 
-  it('Should be able to catch bootstrapping errors with ready', function(done) {
+  it('Should be able to catch bootstrapping errors with ready', function() {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -55,19 +55,18 @@ describe('Promise', function() {
       cb(new Error('test'))
     })
 
-    hemera.ready().catch(err => {
+    return hemera.ready().catch(err => {
       expect(err.name).to.be.equals('Error')
       expect(err.message).to.be.equals('test')
-      done()
     })
   })
 
-  it('Should be able to return a promise in add', function(done) {
+  it('Should be able to return a promise in add', function() {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
-    hemera.ready(() => {
+    return hemera.ready().then(() => {
       hemera.add(
         {
           topic: 'math',
@@ -78,7 +77,7 @@ describe('Promise', function() {
         }
       )
 
-      hemera.act(
+      return hemera.act(
         {
           topic: 'math',
           cmd: 'add',
@@ -88,19 +87,65 @@ describe('Promise', function() {
         (err, resp) => {
           expect(err).to.be.not.exists()
           expect(resp).to.be.equals(3)
-          hemera.close(done)
+          return hemera.close()
         }
       )
     })
   })
 
-  it('Should call add handler only once', function(done) {
+  it('Should return fullfilled promise when calling close without callback', function() {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    return hemera.ready().then(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        resp => {
+          return Promise.resolve(resp.a + resp.b)
+        }
+      )
+
+      return hemera.close()
+    })
+  })
+
+  it('Should return rejected promise when calling close ext passed an error', function() {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ext('onClose', function(ctx, next) {
+      next(new Error('test'))
+    })
+
+    return hemera.ready().then(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        resp => {
+          return Promise.resolve(resp.a + resp.b)
+        }
+      )
+
+      return hemera.close().catch(err => {
+        expect(err).to.be.exists()
+      })
+    })
+  })
+
+  it('Should call add handler only once', function() {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
     const spy = Sinon.spy()
 
-    hemera.ready(() => {
+    return hemera.ready().then(() => {
       hemera.add(
         {
           topic: 'math',
@@ -112,7 +157,7 @@ describe('Promise', function() {
         }
       )
 
-      hemera.act(
+      return hemera.act(
         {
           topic: 'math',
           cmd: 'add',
@@ -123,18 +168,18 @@ describe('Promise', function() {
           expect(err).to.be.not.exists()
           expect(resp).to.be.equals(3)
           expect(spy.calledOnce).to.be.equals(true)
-          hemera.close(done)
+          return hemera.close()
         }
       )
     })
   })
 
-  it('Should be able to reject a promise in add', function(done) {
+  it('Should be able to reject a promise in add', function() {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
-    hemera.ready(() => {
+    return hemera.ready().then(() => {
       hemera.add(
         {
           topic: 'math',
@@ -145,7 +190,7 @@ describe('Promise', function() {
         }
       )
 
-      hemera.act(
+      return hemera.act(
         {
           topic: 'math',
           cmd: 'add',
@@ -154,18 +199,18 @@ describe('Promise', function() {
         },
         (err, resp) => {
           expect(err).to.be.exists()
-          hemera.close(done)
+          return hemera.close()
         }
       )
     })
   })
 
-  it('Should be able to return a promise in act', function(done) {
+  it('Should be able to return a promise in act', function() {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
-    hemera.ready(() => {
+    return hemera.ready().then(() => {
       hemera.add(
         {
           topic: 'math',
@@ -178,7 +223,7 @@ describe('Promise', function() {
         }
       )
 
-      hemera
+      return hemera
         .act(
           {
             topic: 'math',
@@ -193,7 +238,7 @@ describe('Promise', function() {
         )
         .then(result => {
           expect(result).to.be.equals(3)
-          hemera.close(done)
+          return hemera.close()
         })
     })
   })
@@ -204,7 +249,7 @@ describe('Promise', function() {
     const hemera = new Hemera(nats)
     const spy = Sinon.spy()
 
-    hemera.ready(() => {
+    hemera.ready().then(() => {
       hemera.add(
         {
           topic: 'math',
@@ -235,12 +280,12 @@ describe('Promise', function() {
     })
   })
 
-  it('Should be able to return a rejected promise in act', function(done) {
+  it('Should be able to return a rejected promise in act', function() {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
-    hemera.ready(() => {
+    return hemera.ready().then(() => {
       hemera.add(
         {
           topic: 'math',
@@ -251,7 +296,7 @@ describe('Promise', function() {
         }
       )
 
-      hemera
+      return hemera
         .act(
           {
             topic: 'math',
@@ -265,7 +310,7 @@ describe('Promise', function() {
         )
         .catch(err => {
           expect(err).to.be.exists()
-          hemera.close(done)
+          return hemera.close()
         })
     })
   })
