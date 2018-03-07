@@ -273,8 +273,8 @@
             or first to respond. In a one-to-many exchange, you set a limit on the number of responses the requestor may
             receive. In a request-response exchange, publish request operation publishes a message with a reply subject expecting
             a response on that reply subject. You can request to automatically wait for a response inline. The request creates
-            an inbox and performs a request call with the inbox reply and returns the first reply received. This is optimized
-            in the case of multiple responses.
+            an INBOX-channel and performs a request call with the inbox reply and returns the first reply received. This
+            is optimized in the case of multiple responses.
           </p>
           <br>
           <h4 class="section-header">NATS Queueing</h4>
@@ -288,7 +288,13 @@
             <i class="fa fa-info" aria-hidden="true"></i> You can define a different queue if you pass the
             <code>queue$: name</code> as property to the add pattern. Any subscriber with a different queue on this topic will receive a message.
             You can only have one different queue name per Hemera instance.</div>
-          <h4 class="section-h4">Request (point-to-point) by default</h4>
+          <div class="alert alert-warning" role="alert">
+            <i class="fa fa-warning" aria-hidden="true"></i> It's very important to notice that you have to cancel the request INBOX-channel by yourself
+            <code>this.remove(this.sid)</code> if you want to cancel it before all expected number of messages are reached, the maximum messages are proceed
+            or the timeout is reached.
+          </div>
+          <h4 class="section-h4">Request (point-to-point)</h4>
+          <p>This is the default method to start a request. The INBOX-channel is automatically closed after the response.</p>
           <pre>
 <code class="language-javascript">
 hemera.act({
@@ -300,8 +306,8 @@ hemera.act({
 })
 </code></pre>
           <h4 class="section-h4">Receive multiple messages</h4>
-          <p>This means that the subscriber has the chance to respond multiple messages (in this case 10) even when first response
-            was an issue. You have to change the <code>maxMessages$</code> to a specific number or <code>-1</code> for no limit. Don't call the callback twice use the <code>this.reply([Error, any])</code> method.</p>
+          <p>This allows to receive multiple messages (in this case 10). If you don't receive 10 messages the INBOX channel
+            is still open and you have to close it manually.</p>
           <pre>
 <code class="language-javascript">
 hemera.add({
@@ -314,13 +320,64 @@ hemera.add({
 hemera.act({
     topic: "math",
     cmd: "add",
-    a: 1, b: 1,
+    a: 1,
+    b: 1,
     maxMessages$: 10
 }, function(err, resp) {
-  // Can receive 10 messages
+  // You can receive 10 messages but also need 10 responses
+
+  // if you receive only 5 you have to close it
+  this.remove(this.sid)
 })
 </code>
-                    </pre>
+</pre>
+          <h4 class="section-h4">Receive at least N messages</h4>
+          <p>This ensures that you have to receive at least N responses (in this case 5) within the timeout (default 2000) before
+            a timeout error is thrown and the INBOX-channel is unsubscribed. You can't receive more than expected messages
+            the INBOX-channel is closed automatically.</p>
+          <pre>
+<code class="language-javascript">
+hemera.add({
+  topic: "math",
+  cmd: "add"
+}, function(req) {
+  this.reply(req.a + req.b)
+})
+
+hemera.act({
+    topic: "math",
+    cmd: "add",
+    a: 1,
+    b: 1,
+    expectedMessages$: 5
+}, function(err, resp) {
+  // You have to receive 5 responses
+})
+</code>
+                              </pre>
+          <h4 class="section-h4">Receive unknown count of messages</h4>
+          <p>This allows you to receive an unknown count of messages but be aware that you are responsible to close the INBOX-channel.</p>
+          <pre>
+                    <code class="language-javascript">
+hemera.add({
+  topic: "math",
+  cmd: "add"
+}, function(req) {
+  this.reply(req.a + req.b)
+})
+
+hemera.act({
+    topic: "math",
+    cmd: "add",
+    a: 1,
+    b: 1,
+    maxMessages$: -1
+}, function(err, resp) {
+  // you have to close it
+  this.remove(this.sid)
+})
+</code>
+</pre>
           <h4 class="section-h4">Reply</h4>
           <p>You can reply any value even primitive values like
             <code>true, 1, 5.0</code>. The first argument expect an error object.</p>
@@ -334,20 +391,22 @@ hemera.add({
 })
 </code>
                     </pre>
-          <h4 class="section-h4">Auto-unsubscribe after
-            <code>maxMessages$</code> messages received</h4>
-          <p>As soon as the subscriber proceed (in this case the first message) the subscriber will be unsubscribed from NATS.</p>
+          <h4 class="section-h4">Auto-unsubscribe</h4>
+          <p>The INBOX-channel of your request-reply action is automatically closed when the expected number of messages is
+            reached, the maximum messages are proceed or the timeout is reached.</p>
           <pre>
-<code class="language-javascript">
+          <code class="language-javascript">
 hemera.add({
   topic: "math",
   cmd: "add",
-  maxMessages$: 1
+  maxMessages$: 10,
+  expectedMessages$: 5,
+  timeout$: 2000
 }, function (req, cb) {
   cb(null, req.a + req.b)
 })
-</code>
-                    </pre>
+          </code>
+                              </pre>
           <h4 class="section-h4">Async / Await</h4>
           <p>You can also pass an async function.</p>
           <pre>

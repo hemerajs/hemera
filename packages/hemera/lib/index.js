@@ -11,6 +11,7 @@
  * Module Dependencies
  */
 
+const NATS = require('nats')
 const EventEmitter = require('events')
 const Bloomrun = require('bloomrun')
 const Errio = require('errio')
@@ -958,7 +959,7 @@ class Hemera extends EventEmitter {
           return
         }
 
-        // user cancels the request early
+        // the user can cancel the request early
         if (self._reply.finished) {
           self.respond()
           return
@@ -979,6 +980,7 @@ class Hemera extends EventEmitter {
             self.respond(err, result)
           )
         } else {
+          // we expect to provide promise style
           let result = action(self._request.payload.pattern)
           const isPromise = result && typeof result.then === 'function'
 
@@ -1215,6 +1217,12 @@ class Hemera extends EventEmitter {
    */
   _sendRequestHandler(response) {
     const self = this
+
+    if (response.code && response.code === NATS.REQ_TIMEOUT) {
+      self._timeoutHandler()
+      return
+    }
+
     const res = self._decoderPipeline.run(response, self)
     self._response.payload = res.value
     self._response.error = res.error
@@ -1324,6 +1332,7 @@ class Hemera extends EventEmitter {
     hemera._execute = null
     hemera._defer = pDefer()
     hemera._actCallback = null
+    hemera.sid = 0
 
     // topic is needed to subscribe on a subject in NATS
     if (!pattern.topic) {
@@ -1430,23 +1439,35 @@ class Hemera extends EventEmitter {
         self._execute(err)
       )
     } else {
-      const optOptions = {}
+      const optOptions = {
+        timeout: self._pattern.timeout$ || self.config.timeout,
+        // default is request-reply semantic but we can assign -1 (no limit)
+        // but the user has to unsubscribe it
+        max: 1
+      }
       // limit on the number of responses the requestor may receive
-      if (self._pattern.maxMessages$ > 0) {
-        optOptions.max = self._pattern.maxMessages$
-      } else if (self._pattern.maxMessages$ !== -1) {
-        optOptions.max = 1
+      if (
+        self._pattern.maxMessages$ > 0 ||
+        self._pattern.expectedMessages$ > 0
+      ) {
+        // we can't receive more messages than "expected" messages
+        // the inbox is closed automatically
+        optOptions.max =
+          self._pattern.expectedMessages$ || self._pattern.maxMessages$
       }
       // send request
-      self._sid = self._transport.sendRequest(
+      self.sid = self._transport.sendRequest(
         self._pattern.topic,
         self._request.payload,
         optOptions,
         resp => self._sendRequestHandler(resp)
       )
 
-      // handle timeout
-      self.handleTimeout()
+      // create timeout handler only with a combination of expected msg
+      // the default timeout handler is created by NATS
+      if (self._pattern.expectedMessages$ > 0) {
+        self._handleTimeout()
+      }
     }
   }
   /**
@@ -1455,31 +1476,40 @@ class Hemera extends EventEmitter {
    * - Service is actually still processing the request (service takes too long)
    * - Service was processing the request but crashed (service error)
    *
-   *
    * @memberOf Hemera
    */
-  handleTimeout() {
+  _handleTimeout() {
     const self = this
-    const timeout = self._pattern.timeout$ || this._config.timeout
 
-    let timeoutHandler = () => {
-      const error = new Errors.TimeoutError(
-        Constants.ACT_TIMEOUT_ERROR,
-        self.errorDetails
-      )
-      self.log.error(error)
-      self._response.error = error
-      self.emit('clientResponseError', error)
+    self._transport.timeout(
+      self.sid,
+      self._pattern.timeout$ || this._config.timeout,
+      self._pattern.expectedMessages$,
+      () => this._timeoutHandler()
+    )
+  }
 
-      self._series(
-        self,
-        self._clientExtIterator,
-        self._ext['onClientPostRequest'],
-        err => self._onClientTimeoutPostRequestCompleted(err)
-      )
-    }
+  /**
+   *
+   * @memberof Hemera
+   */
+  _timeoutHandler() {
+    const self = this
 
-    self._transport.timeout(self._sid, timeout, 1, timeoutHandler)
+    const error = new Errors.TimeoutError(
+      Constants.ACT_TIMEOUT_ERROR,
+      self.errorDetails
+    )
+    self.log.error(error)
+    self._response.error = error
+    self.emit('clientResponseError', error)
+
+    self._series(
+      self,
+      self._clientExtIterator,
+      self._ext['onClientPostRequest'],
+      err => self._onClientTimeoutPostRequestCompleted(err)
+    )
   }
 
   /**
