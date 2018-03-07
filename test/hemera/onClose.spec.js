@@ -72,15 +72,13 @@ describe('onClose extension', function() {
 
     hemera.use(plugin)
 
-    hemera.on('error', err => {
-      expect(err.message).to.be.equals('test')
-      done()
-    })
-
-    hemera.ready(x => {
-      hemera.close(x => {
+    hemera.ready(err => {
+      expect(err).to.be.not.exists()
+      hemera.close(err => {
+        expect(err.message).to.be.equals('test')
         expect(secondOnCloseHandler.callCount).to.be.equals(1)
         expect(firstOnCloseHandler.callCount).to.be.equals(1)
+        done()
       })
     })
   })

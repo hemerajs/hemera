@@ -1593,24 +1593,48 @@ class Hemera extends EventEmitter {
    * @memberof Hemera
    */
   close(cb) {
-    this.shutdown((err, instance, done) => {
-      instance._onClose(err, err => {
-        if (_.isFunction(cb)) {
-          cb(err)
-        }
-        done(err)
+    const self = this
+
+    // callback style
+    if (_.isFunction(cb)) {
+      self.shutdown((err, instance, done) => {
+        instance._onClose(() => {
+          if (_.isFunction(cb)) {
+            if (err) {
+              self.log.error(err)
+              cb(err)
+            } else {
+              cb()
+            }
+          }
+          done(err)
+        })
+      })
+      return
+    }
+
+    // promise style
+    return new Promise((resolve, reject) => {
+      self.shutdown((err, instance, done) => {
+        instance._onClose(() => {
+          if (err) {
+            self.log.error(err)
+            reject(err)
+          } else {
+            resolve()
+          }
+          done()
+        })
       })
     })
   }
 
   /**
    *
-   *
-   * @param {any} err
    * @param {any} cb
    * @memberof Hemera
    */
-  _onClose(err, cb) {
+  _onClose(cb) {
     const self = this
     // remove all active subscriptions
     self.removeAll()
@@ -1621,14 +1645,8 @@ class Hemera extends EventEmitter {
       self._heavy.stop()
       // Does not throw an issue when connection is not available
       self._transport.close()
-
-      if (err) {
-        self.log.error(err)
-        self.emit('error', err)
-      }
-
       if (_.isFunction(cb)) {
-        cb(err)
+        cb()
       }
     })
   }
