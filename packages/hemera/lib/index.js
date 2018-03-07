@@ -959,7 +959,7 @@ class Hemera extends EventEmitter {
           return
         }
 
-        // user cancels the request early
+        // the user can cancel the request early
         if (self._reply.finished) {
           self.respond()
           return
@@ -980,6 +980,7 @@ class Hemera extends EventEmitter {
             self.respond(err, result)
           )
         } else {
+          // we expect to provide promise style
           let result = action(self._request.payload.pattern)
           const isPromise = result && typeof result.then === 'function'
 
@@ -1440,8 +1441,8 @@ class Hemera extends EventEmitter {
     } else {
       const optOptions = {
         timeout: self._pattern.timeout$ || self.config.timeout,
-        // default is request-reply semantic but we can assign -1
-        // to define no limit but the user has to unsubscribe it
+        // default is request-reply semantic but we can assign -1 (no limit)
+        // but the user has to unsubscribe it
         max: 1
       }
       // limit on the number of responses the requestor may receive
@@ -1462,7 +1463,7 @@ class Hemera extends EventEmitter {
         resp => self._sendRequestHandler(resp)
       )
 
-      // create timeout handler only when with combination of expected msg
+      // create timeout handler only with a combination of expected msg
       // the default timeout handler is created by NATS
       if (self._pattern.expectedMessages$ > 0) {
         self._handleTimeout()
