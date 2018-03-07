@@ -71,7 +71,7 @@ function hemeraOpentracing(hemera, opts, done) {
     span.setTag(tags.HEMERA_PATTERN, ctx.trace$.method)
     span.setTag(
       tags.HEMERA_PUBSUB,
-      ctx._actMeta ? ctx._actMeta.pattern.pubsub$ || false : false
+      ctx.matchedAction ? ctx.matchedAction.pattern.pubsub$ || false : false
     )
 
     addContextTags(span, ctx, 'delegate$', opts.delegateTags)

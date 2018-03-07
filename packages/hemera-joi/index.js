@@ -15,8 +15,8 @@ function hemeraJoi(hemera, opts, done) {
   })
 
   hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
-    let plugin = ctx._actMeta.plugin
-    let schema = ctx._actMeta.schema
+    let plugin = ctx.matchedAction.plugin
+    let schema = ctx.matchedAction.schema
     let pattern = req.payload.pattern
     let currentPayloadValidator = plugin.options.payloadValidator
 
@@ -57,13 +57,13 @@ function hemeraJoi(hemera, opts, done) {
   })
 
   hemera.ext('onServerPreResponse', function(ctx, req, res, next) {
-    // actMeta can be null when pattern was not found
-    if (!ctx._actMeta) {
+    // matchedAction can be null when pattern was not found
+    if (!ctx.matchedAction) {
       return next()
     }
 
-    let plugin = ctx._actMeta.plugin
-    let schema = ctx._actMeta.schema
+    let plugin = ctx.matchedAction.plugin
+    let schema = ctx.matchedAction.schema
     let response = res.payload
     let currentPayloadValidator = plugin.options.payloadValidator
 

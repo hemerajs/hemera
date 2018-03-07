@@ -157,7 +157,7 @@ describe('Pattern matching', function() {
         type: 'TYPE2'
       })
 
-      expect(a.actMeta.pattern).to.be.equals({
+      expect(a.pattern).to.be.equals({
         topic: 'TOPIC',
         cmd: 'CMD'
       })
@@ -255,7 +255,7 @@ describe('Pattern matching', function() {
         type: 'TYPE2'
       })
 
-      expect(a.actMeta.pattern).to.be.equals({
+      expect(a.pattern).to.be.equals({
         topic: 'TOPIC',
         cmd: 'CMD',
         type: 'TYPE2'

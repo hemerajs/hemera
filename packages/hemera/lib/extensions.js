@@ -159,8 +159,8 @@ function onServerPreRequest(context, req, res, next) {
 
   // icnoming pattern
   context._pattern = context._request.payload.pattern
-  // find matched route
-  context._actMeta = context._router.lookup(context._pattern)
+  // find matched action
+  context.matchedAction = context._router.lookup(context._pattern)
 
   context.emit('serverPreRequest', context)
 

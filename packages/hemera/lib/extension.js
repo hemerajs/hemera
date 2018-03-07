@@ -24,8 +24,7 @@ class Extension {
       'onClientPostRequest',
       'onServerPreHandler',
       'onServerPreRequest',
-      'onServerPreResponse',
-      'onClose'
+      'onServerPreResponse'
     ]
     this.onClientPreRequest = []
     this.onClientPostRequest = []
@@ -44,8 +43,17 @@ class Extension {
    */
   _add(type, handler) {
     if (this._types.indexOf(type) === -1) {
+      let error = new Errors.HemeraError(Constants.INVALID_EXTENSION, {
+        type,
+        handler
+      })
+      throw error
+    }
+
+    if (!_.isFunction(handler)) {
       let error = new Errors.HemeraError(Constants.INVALID_EXTENSION_TYPE, {
-        type
+        type,
+        handler
       })
       throw error
     }
