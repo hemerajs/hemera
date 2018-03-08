@@ -21,14 +21,14 @@ const Util = require('./util')
 class Add {
   /**
    * Creates an instance of Add.
-   * @param {any} actMeta
+   * @param {any} addDef
    *
    * @memberOf Add
    */
-  constructor(actMeta, options) {
-    this.actMeta = actMeta
+  constructor(addDef, options) {
+    this.actMeta = addDef
     this.options = options
-    this.actMeta.middleware = actMeta.middleware || []
+    this.actMeta.middleware = addDef.middleware || []
   }
 
   /**
@@ -156,6 +156,16 @@ class Add {
    */
   get plugin() {
     return this.actMeta.plugin
+  }
+  /**
+   *
+   *
+   * @readonly
+   *
+   * @memberOf Add
+   */
+  get transport() {
+    return this.actMeta.transport
   }
 }
 

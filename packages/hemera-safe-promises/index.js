@@ -9,7 +9,7 @@ function hemeraSafePromises(hemera, opts, done) {
 }
 
 const plugin = Hp(hemeraSafePromises, {
-  hemera: '>=3',
+  hemera: '^3.0.0',
   name: require('./package.json').name
 })
 

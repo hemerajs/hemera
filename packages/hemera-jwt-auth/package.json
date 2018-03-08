@@ -18,6 +18,6 @@
   "dependencies": {
     "hemera-plugin": "^0.1.1",
     "hoek": "4.2.x",
-    "jsonwebtoken": "7.4.x"
+    "jsonwebtoken": "8.2.0"
   }
 }

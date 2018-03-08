@@ -277,7 +277,8 @@
             <i class="fa fa-info" aria-hidden="true"></i> Available extensions</p>
           <ul style="">
             <li>
-              <code>onClientPreRequest</code></li>
+              <code>onClientPreRequest</code>
+            </li>
             <li>
               <code>onClientPostRequest</code>
             </li>
@@ -286,6 +287,7 @@
           <pre>
 <code class="language-javascript">
 hemera.ext("onClientPreRequest", function(hemera, next) {
+  // some code
    next()
 })
 </code>
@@ -352,25 +354,41 @@ hemera.ext("onServerPreHandler", function(hemera, request, reply, next) {
             <li>
               <code>onClose</code>
             </li>
+            <li>
+              <code>onAdd</code>
+            </li>
           </ul>
           <pre>
           <code class="language-javascript">
-// Gracefully shutdown
 hemera.ext('onClose', (hemera, done) => {
+  // some code
   done()
 })
           </code>
           </pre>
+          <pre>
+            <code class="language-javascript">
+hemera.ext('onAdd', (addDefinition) => {
+  // read or manipulate
+  addDefinition.pattern
+  addDefinition.schema
+  addDefinition.action
+  addDefinition.transport
+})
+            </code>
+            </pre>
 
           <h4 class="section-h4">Async / Await</h4>
           <p>You can also pass an async function.</p>
           <pre>
 <code class="language-javascript">
 hemera.ext("onServerPreHandler", async function(hemera, request, reply) {
+  // some code
   res.send(new Error('test'))
 })
 
 hemera.ext("onClientPreRequest", async function(hemera) {
+  // some code
 })
 </code>
                     </pre>

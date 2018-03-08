@@ -96,13 +96,14 @@ class Hemera extends EventEmitter {
     this._request = null
     this._response = null
     this._pattern = null
-    this._actMeta = null
     this._actCallback = null
     this._execute = null
     this._cleanPattern = ''
     this._plugins = {
       core: this
     }
+
+    this.matchedAction = null
 
     // keep reference to root hemera instance
     this._root = this
@@ -121,6 +122,8 @@ class Hemera extends EventEmitter {
 
     // start tracking process stats
     this._heavy.start()
+
+    this._onAddHandlers = []
 
     this._ext = new Extension()
     this._ext.add('onClientPreRequest', DefaultExtensions.onClientPreRequest)
@@ -342,6 +345,23 @@ class Hemera extends EventEmitter {
     Errio.register(ctor)
     return ctor
   }
+  /**
+   * Add an onAdd handler
+   *
+   * @param {any} handler
+   *
+   * @memberOf Hemera
+   */
+  _addOnAddHandler(handler) {
+    if (!_.isFunction(handler)) {
+      let error = new Errors.HemeraError(Constants.INVALID_EXTENSION_TYPE, {
+        type: 'onAdd',
+        handler
+      })
+      throw error
+    }
+    this._onAddHandlers.push(handler)
+  }
 
   /**
    * Add an extension. Extensions are called in serie
@@ -352,7 +372,9 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   ext(type, handler) {
-    if (type === 'onClose') {
+    if (type === 'onAdd') {
+      this._addOnAddHandler(handler)
+    } else if (type === 'onClose') {
       this.onShutdown(handler)
     } else {
       this._ext.add(type, handler)
@@ -828,10 +850,10 @@ class Hemera extends EventEmitter {
   subscribe(addDefinition) {
     const self = this
 
-    const topic = addDefinition.actMeta.transport.topic
-    const maxMessages = addDefinition.actMeta.transport.maxMessages
-    const queue = addDefinition.actMeta.transport.queue
-    const pubsub = addDefinition.actMeta.transport.pubsub
+    const topic = addDefinition.transport.topic
+    const maxMessages = addDefinition.transport.maxMessages
+    const queue = addDefinition.transport.queue
+    const pubsub = addDefinition.transport.pubsub
     const queueGroup = queue || `${Constants.NATS_QUEUEGROUP_PREFIX}.${topic}`
 
     // avoid duplicate subscribers of the emit stream
@@ -849,8 +871,10 @@ class Hemera extends EventEmitter {
       hemera._response = new ServerResponse()
       hemera._reply = new Reply(hemera._request, hemera._response, hemera.log)
       hemera._pattern = {}
-      hemera._actMeta = {}
       hemera._isServer = true
+
+      // represent the matched server action "add"
+      hemera.matchedAction = {}
 
       hemera._series(
         hemera,
@@ -900,7 +924,7 @@ class Hemera extends EventEmitter {
     }
 
     // check if a handler is registered with this pattern
-    if (self._actMeta) {
+    if (self.matchedAction) {
       self._series(
         self,
         self._serverExtIterator,
@@ -945,9 +969,9 @@ class Hemera extends EventEmitter {
     }
 
     try {
-      let action = self._actMeta.action.bind(self)
+      let action = self.matchedAction.action.bind(self)
 
-      self._actMeta.run(self._request, self._reply, err => {
+      self.matchedAction.run(self._request, self._reply, err => {
         if (err) {
           const internalError = new Errors.HemeraError(
             Constants.ADD_MIDDLEWARE_ERROR,
@@ -1092,7 +1116,7 @@ class Hemera extends EventEmitter {
     let schema = Util.extractSchema(definition)
     let patternOnly = Util.cleanPattern(definition)
 
-    const actMeta = {
+    const addDef = {
       schema: schema,
       pattern: patternOnly,
       plugin: this.plugin$,
@@ -1104,32 +1128,30 @@ class Hemera extends EventEmitter {
       }
     }
 
-    let addDefinition = new Add(actMeta)
+    let addDefinition = new Add(addDef)
 
     if (cb) {
       // set callback
       addDefinition.action = cb
     }
 
-    addDefinition.actMeta.transport.topic = patternOnly.topic
+    addDefinition.transport.topic = patternOnly.topic
 
     // Support full / token wildcards in subject
     // Convert nats wildcard tokens to RegexExp
-    addDefinition.actMeta.pattern.topic = Util.natsWildcardToRegex(
-      patternOnly.topic
-    )
+    addDefinition.pattern.topic = Util.natsWildcardToRegex(patternOnly.topic)
 
-    let handler = this._router.lookup(addDefinition.actMeta.pattern)
+    let handler = this._router.lookup(addDefinition.pattern)
 
     // check if pattern is already registered
     if (this._config.bloomrun.lookupBeforeAdd && handler) {
       let error = new Errors.HemeraError(Constants.PATTERN_ALREADY_IN_USE, {
-        pattern: addDefinition.actMeta.pattern
+        pattern: addDefinition.pattern
       })
 
       this.log.error(
         {
-          pattern: addDefinition.actMeta.pattern
+          pattern: addDefinition.pattern
         },
         error
       )
@@ -1143,8 +1165,8 @@ class Hemera extends EventEmitter {
     if (def) {
       this.log.error(
         Constants.TRANSPORT_OPTIONS_DIFFER_DESC,
-        Util.pattern(addDefinition.actMeta.pattern),
-        Util.pattern(def.actMeta.pattern)
+        Util.pattern(addDefinition.pattern),
+        Util.pattern(def.pattern)
       )
       throw new Errors.HemeraError(Constants.TRANSPORT_OPTIONS_DIFFER)
     }
@@ -1156,7 +1178,26 @@ class Hemera extends EventEmitter {
 
     this.subscribe(addDefinition)
 
+    this._runOnAddHandler(addDefinition)
+
     return addDefinition
+  }
+  /**
+   * Run all onAdd handlers in serie
+   * options
+   *
+   * @param {any} addDefinition
+   * @memberof Hemera
+   */
+  _runOnAddHandler(addDefinition) {
+    this._series(
+      this,
+      (fn, cb) => {
+        fn(addDefinition)
+        cb()
+      },
+      this._onAddHandlers
+    )
   }
   /**
    * Check if a topic was already registered with different transport
@@ -1172,14 +1213,14 @@ class Hemera extends EventEmitter {
 
     for (var i = 0; i < definitions.length; i++) {
       const def = definitions[i]
-      const mT1 = def.actMeta.transport
-      const mT2 = addDefinition.actMeta.transport
+      const mT1 = def.transport
+      const mT2 = addDefinition.transport
 
       // looking for another pattern with same topic but
       // different transport options
       if (
         !Object.is(addDefinition, def) &&
-        addDefinition.actMeta.pattern.topic === def.actMeta.pattern.topic
+        addDefinition.pattern.topic === def.pattern.topic
       ) {
         if (
           mT1.maxMessages !== mT2.maxMessages ||

@@ -193,7 +193,7 @@ describe('Topic wildcards', function() {
         cmd: 'info'
       })
 
-      expect(br.actMeta.pattern.topic).to.be.equals('systems-europe.a')
+      expect(br.pattern.topic).to.be.equals('systems-europe.a')
       hemera.close(done)
     })
   })

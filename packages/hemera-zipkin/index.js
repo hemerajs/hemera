@@ -34,11 +34,11 @@ function hemeraZipkin(hemera, opts, done) {
     Tracer.addBinary(meta, ctx.delegate$)
     Tracer.addBinary(meta, {
       'server.topic': ctx._topic,
-      'server.maxMessages': ctx._actMeta
-        ? ctx._actMeta.pattern.maxMessages$ || 0
+      'server.maxMessages': ctx.matchedAction
+        ? ctx.matchedAction.pattern.maxMessages$ || 0
         : 0,
-      'server.pubsub': ctx._actMeta
-        ? ctx._actMeta.pattern.pubsub$ || false
+      'server.pubsub': ctx.matchedAction
+        ? ctx.matchedAction.pattern.pubsub$ || false
         : false
     })
 
@@ -70,11 +70,11 @@ function hemeraZipkin(hemera, opts, done) {
 
     Tracer.addBinary(meta, {
       'server.topic': ctx._topic,
-      'server.maxMessages': ctx._actMeta
-        ? ctx._actMeta.pattern.maxMessages$ || 0
+      'server.maxMessages': ctx.matchedAction
+        ? ctx.matchedAction.pattern.maxMessages$ || 0
         : 0,
-      'server.pubsub': ctx._actMeta
-        ? ctx._actMeta.pattern.pubsub$ || false
+      'server.pubsub': ctx.matchedAction
+        ? ctx.matchedAction.pattern.pubsub$ || false
         : false
     })
 
@@ -169,7 +169,7 @@ function hemeraZipkin(hemera, opts, done) {
 }
 
 const plugin = Hp(hemeraZipkin, {
-  hemera: '>=3',
+  hemera: '^3.0.0',
   name: require('./package.json').name
 })
 

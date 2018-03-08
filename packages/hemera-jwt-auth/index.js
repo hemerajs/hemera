@@ -13,7 +13,7 @@ function hemeraJwtAuth(hemera, opts, done) {
 
   hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
     // Get auth from server method
-    const auth = ctx._actMeta.schema.auth$
+    const auth = ctx.matchedAction.schema.auth$
 
     // Disable auth when it was set explicit
     if (auth && auth.enabled === false) {
@@ -71,7 +71,7 @@ function isSubset(scope, subset) {
 }
 
 const plugin = Hp(hemeraJwtAuth, {
-  hemera: '>=3',
+  hemera: '^3.0.0',
   name: require('./package.json').name,
   options: {
     enforceAuth: true,
