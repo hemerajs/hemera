@@ -107,7 +107,7 @@ function hemeraWeb(hemera, opts, done) {
 }
 
 const plugin = Hp(hemeraWeb, {
-  hemera: '>=3',
+  hemera: '^3.0.0',
   name: require('./package.json').name,
   options: {
     port: 3000,

@@ -231,7 +231,7 @@ function hemeraControlplane(hemera, opts, done) {
 }
 
 const plugin = Hp(hemeraControlplane, {
-  hemera: '>=3',
+  hemera: '^3.0.0',
   name: require('./package.json').name,
   dependencies: ['hemera-joi'],
   options: {

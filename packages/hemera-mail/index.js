@@ -45,7 +45,7 @@ function hemeraEmail(hemera, opts, done) {
 }
 
 const plugin = Hp(hemeraEmail, {
-  hemera: '>=3',
+  hemera: '^3.0.0',
   name: require('./package.json').name,
   depdendencies: ['hemera-joi'],
   options: {

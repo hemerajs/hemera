@@ -178,7 +178,7 @@ function hemeraSQS(hemera, opts, done) {
 }
 
 const plugin = Hp(hemeraSQS, {
-  hemera: '>=3',
+  hemera: '^3.0.0',
   name: require('./package.json').name,
   options: {
     sqs: {

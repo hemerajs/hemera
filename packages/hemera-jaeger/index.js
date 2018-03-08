@@ -140,7 +140,7 @@ function hemeraOpentracing(hemera, opts, done) {
 }
 
 const plugin = Hp(hemeraOpentracing, {
-  hemera: '>=3',
+  hemera: '^3.0.0',
   name: require('./package.json').name,
   dependencies: ['hemera-joi'],
   options: {

@@ -19,7 +19,7 @@ function hemeraGracefulShutdown(hemera, opts, done) {
 }
 
 const plugin = Hp(hemeraGracefulShutdown, {
-  hemera: '>=3',
+  hemera: '^3.0.0',
   name: require('./package.json').name
 })
 

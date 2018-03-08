@@ -113,7 +113,7 @@ function hemeraJoi(hemera, opts, done) {
 }
 
 const plugin = Hp(hemeraJoi, {
-  hemera: '>=3',
+  hemera: '^3.0.0',
   name: require('./package.json').name
 })
 
