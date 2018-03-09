@@ -267,13 +267,126 @@ describe('Tracing', function() {
           cmd: 'CMD',
           a: {
             b: 1
-          },
-          timeout$: 5000
+          }
         },
         function(err, resp) {
           expect(err).to.be.not.exists()
           expect(this.trace$.method).to.be.equals('cmd:CMD,topic:TOPIC')
           hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should overwrite trace$ informations with pattern', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.ext('onClientPreRequest', (hemera, next) => {
+        expect(hemera.trace$.spanId).to.be.equals(1)
+        expect(hemera.trace$.traceId).to.be.equals(2)
+        expect(hemera.trace$.parentSpanId).to.be.not.exists()
+        next()
+      })
+      hemera.add(
+        {
+          topic: 'TOPIC',
+          cmd: 'CMD'
+        },
+        function(req, next) {
+          next()
+        }
+      )
+      hemera.act(
+        {
+          topic: 'TOPIC',
+          cmd: 'CMD',
+          trace$: {
+            spanId: 1,
+            traceId: 2
+          }
+        },
+        function(err, resp) {
+          expect(err).to.be.not.exists()
+          expect(this.trace$.parentSpanId).to.be.not.exists()
+          expect(this.trace$.method).to.be.equals('cmd:CMD,topic:TOPIC')
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should overwrite parentSpanId with pattern', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'TOPIC',
+          cmd: 'CMD'
+        },
+        function(req, next) {
+          next()
+        }
+      )
+      hemera.act(
+        {
+          topic: 'TOPIC',
+          cmd: 'CMD',
+          trace$: {
+            spanId: 1,
+            traceId: 2,
+            parentSpanId: 3
+          }
+        },
+        function(err, resp) {
+          expect(err).to.be.not.exists()
+          expect(this.trace$.parentSpanId).to.be.equals(3)
+          expect(this.trace$.method).to.be.equals('cmd:CMD,topic:TOPIC')
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should get correct parentSpanId information', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'TOPIC',
+          cmd: 'CMD'
+        },
+        function(req, next) {
+          next()
+        }
+      )
+      hemera.act(
+        {
+          topic: 'TOPIC',
+          cmd: 'CMD'
+        },
+        function(err, resp) {
+          expect(err).to.be.not.exists()
+          const parent = this.trace$
+          this.act(
+            {
+              topic: 'TOPIC',
+              cmd: 'CMD'
+            },
+            function(err, resp) {
+              expect(err).to.be.not.exists()
+              expect(this.trace$.parentSpanId).to.be.equals(parent.spanId)
+              hemera.close(done)
+            }
+          )
         }
       )
     })
