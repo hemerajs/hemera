@@ -47,7 +47,7 @@
     "ci": "nyc mocha -r \"./test/hemera/bootstrap\" -t 5000 --exit \"./test/**/*.spec.js\" \"./packages/hemera-zipkin/test/**/*.js\" && nyc report --reporter=text-lcov | coveralls"
   },
   "engines": {
-    "node": ">=4"
+    "node": ">=6"
   },
   "license": "MIT",
   "devDependencies": {
