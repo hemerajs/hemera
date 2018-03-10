@@ -1409,7 +1409,12 @@ class Hemera extends EventEmitter {
         err => hemera._onPreRequestCompleted(err)
       )
 
-      return evaluateResult
+      return evaluateResult.then(resp => {
+        return {
+          context: hemera,
+          data: resp
+        }
+      })
     }
   }
 

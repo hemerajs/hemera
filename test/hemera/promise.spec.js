@@ -36,8 +36,8 @@ describe('Promise', function() {
           a: 1,
           b: 2
         })
-        .then(resp => {
-          expect(resp).to.be.equals(3)
+        .then(out => {
+          expect(out.data).to.be.equals(3)
           return hemera.close()
         })
     })
@@ -82,8 +82,8 @@ describe('Promise', function() {
           a: 1,
           b: 2
         })
-        .then(resp => {
-          expect(resp).to.be.equals(3)
+        .then(out => {
+          expect(out.data).to.be.equals(3)
           return hemera.close()
         })
     })
@@ -160,8 +160,8 @@ describe('Promise', function() {
           a: 1,
           b: 2
         })
-        .then(resp => {
-          expect(resp).to.be.equals(3)
+        .then(out => {
+          expect(out.data).to.be.equals(3)
           expect(spy.calledOnce).to.be.equals(true)
           return hemera.close()
         })

@@ -329,7 +329,7 @@ describe('Async / Await support', function() {
             b: 2
           })
 
-          expect(mult).to.be.equals({
+          expect(mult.data).to.be.equals({
             result: 2
           })
 
@@ -383,13 +383,16 @@ describe('Async / Await support', function() {
         function(resp) {}
       )
 
-      await hemera.act({
+      const result = await hemera.act({
         pubsub$: true,
         topic: 'math',
         cmd: 'add',
         a: 1,
         b: 2
       })
+
+      expect(result.data).to.be.not.exists()
+      expect(result.context).to.be.exists()
 
       hemera.close(done)
     })
@@ -520,8 +523,8 @@ describe('Async / Await support', function() {
           a: 1,
           b: 2
         })
-        .then(function(resp) {
-          expect(resp).to.be.equals({
+        .then(function(out) {
+          expect(out.data).to.be.equals({
             result: true
           })
           hemera.close(done)

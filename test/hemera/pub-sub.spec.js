@@ -94,7 +94,7 @@ describe('Publish / Subscribe', function() {
           msg: 'Hi!'
         })
         .then(a => {
-          expect(a).to.be.undefined()
+          expect(a.data).to.be.undefined()
           hemera.close(done)
         })
     })
