@@ -214,6 +214,14 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages.
 |--------|-------|
 | [hemera-jwt-auth](https://github.com/hemerajs/hemera/tree/master/packages/hemera-jwt-auth) | [![npm](https://img.shields.io/npm/v/hemera-jwt-auth.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-jwt-auth)
 
+## Framwork Integrations
+
+| Name | Version |
+|--------|-------|
+| [fastify-hemera](https://github.com/hemerajs/fastify-hemera) | [![NPM version](https://img.shields.io/npm/v/fastify-hemera.svg?style=flat)](https://www.npmjs.com/package/fastify-hemera)
+| [hapi-hemera](https://github.com/hemerajs/hapi-hemera) | [![npm](https://img.shields.io/npm/v/hapi-hemera.svg?maxAge=3600)](https://www.npmjs.com/package/hapi-hemera)
+| [graphql boilerplate](https://github.com/hemerajs/graphql-hemera) | -
+
 ## Changelog
 
 See [Releases](https://github.com/hemerajs/hemera/releases)
