@@ -29,19 +29,17 @@ describe('Promise', function() {
         }
       )
 
-      return hemera.act(
-        {
+      return hemera
+        .act({
           topic: 'math',
           cmd: 'add',
           a: 1,
           b: 2
-        },
-        (err, resp) => {
-          expect(err).to.be.not.exists()
+        })
+        .then(resp => {
           expect(resp).to.be.equals(3)
           return hemera.close()
-        }
-      )
+        })
     })
   })
 
@@ -205,44 +203,6 @@ describe('Promise', function() {
     })
   })
 
-  it('Should be able to return a promise in act', function() {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    return hemera.ready().then(() => {
-      hemera.add(
-        {
-          topic: 'math',
-          cmd: 'add'
-        },
-        (resp, cb) => {
-          cb(null, {
-            result: resp.a + resp.b
-          })
-        }
-      )
-
-      return hemera
-        .act(
-          {
-            topic: 'math',
-            cmd: 'add',
-            a: 1,
-            b: 2
-          },
-          (err, resp) => {
-            expect(err).not.to.be.exists()
-            return Promise.resolve(resp.result)
-          }
-        )
-        .then(result => {
-          expect(result).to.be.equals(3)
-          return hemera.close()
-        })
-    })
-  })
-
   it('Should call act handler only once', function(done) {
     const nats = require('nats').connect(authUrl)
 
@@ -277,41 +237,6 @@ describe('Promise', function() {
           }, 20)
         }
       )
-    })
-  })
-
-  it('Should be able to return a rejected promise in act', function() {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    return hemera.ready().then(() => {
-      hemera.add(
-        {
-          topic: 'math',
-          cmd: 'add'
-        },
-        (resp, cb) => {
-          cb(new Error('test'))
-        }
-      )
-
-      return hemera
-        .act(
-          {
-            topic: 'math',
-            cmd: 'add',
-            a: 1,
-            b: 2
-          },
-          (err, resp) => {
-            return Promise.reject(err)
-          }
-        )
-        .catch(err => {
-          expect(err).to.be.exists()
-          return hemera.close()
-        })
     })
   })
 })

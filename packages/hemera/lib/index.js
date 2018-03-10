@@ -42,7 +42,6 @@ const CodecPipeline = require('./codecPipeline')
 const Reply = require('./reply')
 const Add = require('./add')
 const Extension = require('./extension')
-const pDefer = require('p-defer')
 
 /**
  * @class Hemera
@@ -1046,14 +1045,17 @@ class Hemera extends EventEmitter {
       throw error
     }
 
+    // when sid was passed
     if (_.isNumber(topic)) {
       self._transport.unsubscribe(topic, maxMessages)
       return true
     } else {
+      // when topic name was passed
       const subId = self._topics[topic]
 
       if (subId) {
         self._transport.unsubscribe(subId, maxMessages)
+        // we remove all subscription related to this topic
         this.cleanTopic(topic)
         return true
       }
@@ -1121,6 +1123,7 @@ class Hemera extends EventEmitter {
         topic: definition.topic,
         pubsub: definition.pubsub$,
         maxMessages: definition.maxMessages$,
+        expectedMessages: definition.expectedMessages$,
         queue: definition.queue$
       }
     }
@@ -1131,8 +1134,6 @@ class Hemera extends EventEmitter {
       // set callback
       addDefinition.action = cb
     }
-
-    addDefinition.transport.topic = patternOnly.topic
 
     // Support full / token wildcards in subject
     // Convert nats wildcard tokens to RegexExp
@@ -1157,7 +1158,7 @@ class Hemera extends EventEmitter {
 
     // check for invalid topic subscriptions
     // it's not possible to register multiple patterns
-    // with different transport options to the same topic
+    // with different transport options with the same topic
     const def = this._checkForTransportCollision(addDefinition)
     if (def) {
       this.log.error(
@@ -1368,7 +1369,6 @@ class Hemera extends EventEmitter {
     hemera._request = new ClientRequest()
     hemera._isServer = false
     hemera._execute = null
-    hemera._defer = pDefer()
     hemera._actCallback = null
     hemera.sid = 0
 
@@ -1384,39 +1384,33 @@ class Hemera extends EventEmitter {
 
     if (cb) {
       hemera._actCallback = cb.bind(hemera)
-    }
-
-    hemera._execute = (err, result) => {
-      if (hemera._actCallback) {
-        const promise = hemera._actCallback(err, result)
-        if (promise) {
-          // check when using async / await
-          if (typeof promise.then === 'function') {
-            promise.then(hemera._defer.resolve).catch(hemera._defer.reject)
+      hemera._execute = hemera._actCallback
+      hemera._series(
+        hemera,
+        hemera._clientExtIterator,
+        hemera._ext['onClientPreRequest'],
+        err => hemera._onPreRequestCompleted(err)
+      )
+    } else {
+      const evaluateResult = new Promise((resolve, reject) => {
+        hemera._execute = (err, result) => {
+          if (err) {
+            reject(err)
           } else {
-            // when using callback style we always resolve with the function result
-            hemera._defer.resolve(promise)
+            resolve(result)
           }
         }
-        return
-      }
+      })
 
-      // when no callback was passed we handle it as promise style
-      if (err) {
-        hemera._defer.reject(err)
-      } else {
-        hemera._defer.resolve(result)
-      }
+      hemera._series(
+        hemera,
+        hemera._clientExtIterator,
+        hemera._ext['onClientPreRequest'],
+        err => hemera._onPreRequestCompleted(err)
+      )
+
+      return evaluateResult
     }
-
-    hemera._series(
-      hemera,
-      hemera._clientExtIterator,
-      hemera._ext['onClientPreRequest'],
-      err => hemera._onPreRequestCompleted(err)
-    )
-
-    return hemera._defer.promise
   }
 
   /**

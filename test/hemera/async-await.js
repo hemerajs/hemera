@@ -383,7 +383,7 @@ describe('Async / Await support', function() {
         function(resp) {}
       )
 
-      hemera.act({
+      await hemera.act({
         pubsub$: true,
         topic: 'math',
         cmd: 'add',
@@ -391,39 +391,6 @@ describe('Async / Await support', function() {
         b: 2
       })
 
-      hemera.close(done)
-    })
-  })
-
-  it('Should be able to pass an async function in pubsub mode', function(done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    hemera.ready(async () => {
-      hemera.add(
-        {
-          pubsub$: true,
-          topic: 'math',
-          cmd: 'add'
-        },
-        function(resp) {}
-      )
-
-      const a = await hemera.act(
-        {
-          pubsub$: true,
-          topic: 'math',
-          cmd: 'add',
-          a: 1,
-          b: 2
-        },
-        async () => {
-          return true
-        }
-      )
-
-      expect(a).to.be.equals(true)
       hemera.close(done)
     })
   })
@@ -547,19 +514,12 @@ describe('Async / Await support', function() {
       )
 
       hemera
-        .act(
-          {
-            topic: 'math',
-            cmd: 'add',
-            a: 1,
-            b: 2
-          },
-          async function(err, resp) {
-            expect(err).to.be.not.exists()
-
-            return resp
-          }
-        )
+        .act({
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        })
         .then(function(resp) {
           expect(resp).to.be.equals({
             result: true
@@ -574,45 +534,7 @@ describe('Async / Await support', function() {
 
     const hemera = new Hemera(nats)
 
-    hemera.ready(() => {
-      hemera.add(
-        {
-          topic: 'math',
-          cmd: 'add'
-        },
-        async function(resp) {
-          await Promise.resolve({
-            result: true
-          })
-        }
-      )
-
-      hemera
-        .act(
-          {
-            topic: 'math',
-            cmd: 'add',
-            a: 1,
-            b: 2
-          },
-          async function(err, resp) {
-            expect(err).to.be.not.exists()
-            await Promise.reject(new Error('test'))
-          }
-        )
-        .catch(function(err) {
-          expect(err).to.be.exists()
-          hemera.close(done)
-        })
-    })
-  })
-
-  it('Should throw when rejection is unhandled', function(done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    hemera.ready(() => {
+    hemera.ready(async () => {
       hemera.add(
         {
           topic: 'math',
@@ -623,18 +545,17 @@ describe('Async / Await support', function() {
         }
       )
 
-      // in future we have to try catch it
-
-      hemera.act({
-        topic: 'math',
-        cmd: 'add',
-        a: 1,
-        b: 2
-      })
-
-      setTimeout(() => {
+      try {
+        await hemera.act({
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        })
+      } catch (err) {
+        expect(err).to.be.exists()
         hemera.close(done)
-      }, 50)
+      }
     })
   })
 
@@ -666,44 +587,6 @@ describe('Async / Await support', function() {
       setTimeout(() => {
         hemera.close(done)
       }, 50)
-    })
-  })
-
-  it('Should be able to catch an uncaught error in act', function(done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    hemera.ready(() => {
-      hemera.add(
-        {
-          topic: 'math',
-          cmd: 'add'
-        },
-        async function(resp) {
-          await Promise.resolve({
-            result: true
-          })
-        }
-      )
-
-      hemera
-        .act(
-          {
-            topic: 'math',
-            cmd: 'add',
-            a: 1,
-            b: 2
-          },
-          async function(err, resp) {
-            expect(err).to.be.not.exists()
-            throw new Error('test')
-          }
-        )
-        .catch(function(err) {
-          expect(err).to.be.exists()
-          hemera.close(done)
-        })
     })
   })
 })
