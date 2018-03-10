@@ -19,7 +19,7 @@ module.exports = {
     'NON_SECURE_CONN_REQ_MSG',
     'CLIENT_CERT_REQ_MSG'
   ],
-  // NATS erros
+  // NATS errors
   NATS_TRANSPORT_ERROR: 'Could not connect to NATS!',
   NATS_TRANSPORT_CLOSED: 'NATS connection closed!',
   NATS_TRANSPORT_CONNECTED: 'Connected!',
