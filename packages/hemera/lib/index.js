@@ -829,15 +829,12 @@ class Hemera extends EventEmitter {
 
     if (err) {
       self._reply.error = self._attachHops(self.getRootError(err))
-      self.serverPreResponse()
     } else if (!self._reply.sent) {
       // set payload for the first time
       self._reply.payload = resp
-      self.serverPreResponse()
-    } else if (self._reply.sent) {
-      // payload can be set only once
-      self.serverPreResponse()
     }
+
+    self.serverPreResponse()
   }
 
   /**
