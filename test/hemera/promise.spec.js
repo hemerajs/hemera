@@ -75,19 +75,17 @@ describe('Promise', function() {
         }
       )
 
-      return hemera.act(
-        {
+      return hemera
+        .act({
           topic: 'math',
           cmd: 'add',
           a: 1,
           b: 2
-        },
-        (err, resp) => {
-          expect(err).to.be.not.exists()
+        })
+        .then(resp => {
           expect(resp).to.be.equals(3)
           return hemera.close()
-        }
-      )
+        })
     })
   })
 
@@ -155,20 +153,18 @@ describe('Promise', function() {
         }
       )
 
-      return hemera.act(
-        {
+      return hemera
+        .act({
           topic: 'math',
           cmd: 'add',
           a: 1,
           b: 2
-        },
-        (err, resp) => {
-          expect(err).to.be.not.exists()
+        })
+        .then(resp => {
           expect(resp).to.be.equals(3)
           expect(spy.calledOnce).to.be.equals(true)
           return hemera.close()
-        }
-      )
+        })
     })
   })
 
@@ -188,18 +184,17 @@ describe('Promise', function() {
         }
       )
 
-      return hemera.act(
-        {
+      return hemera
+        .act({
           topic: 'math',
           cmd: 'add',
           a: 1,
           b: 2
-        },
-        (err, resp) => {
+        })
+        .catch(err => {
           expect(err).to.be.exists()
           return hemera.close()
-        }
-      )
+        })
     })
   })
 
