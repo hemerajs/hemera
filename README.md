@@ -92,13 +92,13 @@ const start = async () => {
     await hemera.ready()
     hemera.log.info(`service listening`)
     // start request
-    const result = await hemera.act({
+    const response = await hemera.act({
       topic: 'math',
       cmd: 'add',
       a: 10,
       b: 10
     })
-    hemera.log.info(result)
+    hemera.log.info(response.data)
   } catch (err) {
     hemera.log.error(err)
     process.exit(1)
