@@ -529,6 +529,9 @@ describe('Hemera-web', function() {
         function(req, cb) {
           expect(this.trace$.parentSpanId).to.be.equals('2')
           expect(this.trace$.traceId).to.be.equals('1')
+          expect(this.trace$.spanId).to.be.exists()
+          expect(this.trace$.service).to.be.equals('math')
+          expect(this.trace$.timestamp).to.be.exists()
           cb(null, { result: parseInt(req.a) + parseInt(req.b) })
         }
       )

@@ -51,7 +51,7 @@ function hemeraWeb(hemera, opts, done) {
     }
     if (xRequestSpanId) {
       pattern.trace$ = pattern.trace$ || {}
-      pattern.trace$.spanId = xRequestSpanId
+      pattern.trace$.parentSpanId = xRequestSpanId
     }
     // respect params
     if (req.params.topic) {

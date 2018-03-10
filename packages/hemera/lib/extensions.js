@@ -35,12 +35,21 @@ function onClientPreRequest(context, next) {
   context.delegate$ = pattern.delegate$ || {}
 
   // tracing
-  context.trace$ = pattern.trace$ || {}
-  context.trace$.parentSpanId =
-    context.trace$.spanId || parentContext.trace$.spanId
-  context.trace$.traceId =
-    context.trace$.traceId || parentContext.trace$.traceId || Util.randomId()
-  context.trace$.spanId = Util.randomId()
+  if (pattern.trace$) {
+    context.trace$ = {
+      spanId: pattern.trace$.spanId || Util.randomId(),
+      traceId: pattern.trace$.traceId || Util.randomId()
+    }
+    context.trace$.parentSpanId =
+      pattern.trace$.parentSpanId || parentContext.trace$.spanId
+  } else {
+    context.trace$ = {
+      spanId: parentContext.trace$.spanId || Util.randomId(),
+      traceId: parentContext.trace$.traceId || Util.randomId()
+    }
+    context.trace$.parentSpanId = parentContext.trace$.spanId
+  }
+
   context.trace$.timestamp = currentTime
   context.trace$.service = pattern.topic
   context.trace$.method = Util.pattern(pattern)
@@ -157,7 +166,7 @@ function onServerPreRequest(context, req, res, next) {
   context._request.payload = m.value
   context._request.error = m.error
 
-  // icnoming pattern
+  // incoming pattern
   context._pattern = context._request.payload.pattern
   // find matched action
   context.matchedAction = context._router.lookup(context._pattern)

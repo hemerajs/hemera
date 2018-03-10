@@ -31,7 +31,10 @@ function hemeraOpentracing(hemera, opts, done) {
     HEMERA_SERVICE: 'hemera.service',
     HEMERA_ACT_TIMEOUT: 'hemera.act.timeout',
     HEMERA_ACT_MAXMSG: 'hemera.act.maxMsg',
-    HEMERA_PUBSUB: 'hemera.pubsub'
+    HEMERA_ACT_EXPECTEDMSG: 'hemera.act.expMsg',
+    HEMERA_PUBSUB: 'hemera.pubsub',
+    HEMERA_OP_TYPE: 'hemera.operationType',
+    HEMERA_CONTEXT: 'hemera.context'
   }
 
   let sampler
@@ -58,25 +61,32 @@ function hemeraOpentracing(hemera, opts, done) {
     opts.jaeger.options
   )
 
-  hemera.on('serverPreRequest', function(ctx) {
+  hemera.decorate('jaeger', {
+    tracer
+  })
+
+  hemera.on('serverPreRequest', function(hemera) {
     let wireCtx = tracer.extract(
       Opentracing.FORMAT_TEXT_MAP,
-      ctx.trace$.opentracing
+      hemera.trace$.opentracing
     )
 
-    let span = tracer.startSpan('add', { childOf: wireCtx })
+    let span = tracer.startSpan(hemera.trace$.method, { childOf: wireCtx })
 
     span.setTag(Opentracing.Tags.PEER_SERVICE, 'hemera')
-    span.setTag(tags.HEMERA_SERVICE, ctx.trace$.service)
-    span.setTag(tags.HEMERA_PATTERN, ctx.trace$.method)
+    span.setTag(tags.HEMERA_SERVICE, hemera.trace$.service)
+    span.setTag(tags.HEMERA_PATTERN, hemera.trace$.method)
+    span.setTag(tags.HEMERA_CONTEXT, 'server')
     span.setTag(
       tags.HEMERA_PUBSUB,
-      ctx.matchedAction ? ctx.matchedAction.pattern.pubsub$ || false : false
+      hemera.matchedAction
+        ? hemera.matchedAction.pattern.pubsub$ || false
+        : false
     )
 
-    addContextTags(span, ctx, 'delegate$', opts.delegateTags)
+    addContextTags(span, hemera, 'delegate$', opts.delegateTags)
 
-    ctx.opentracing = span
+    hemera.opentracing = span
   })
 
   hemera.on('serverPreResponse', function(ctx) {
@@ -87,35 +97,46 @@ function hemeraOpentracing(hemera, opts, done) {
     span.finish()
   })
 
-  hemera.on('clientPreRequest', function(ctx) {
+  hemera.on('clientPreRequest', function(hemera) {
     let span
 
-    if (ctx.opentracing) {
-      span = tracer.startSpan('act', { childOf: ctx.opentracing })
+    if (hemera.opentracing) {
+      span = tracer.startSpan(hemera.trace$.method, {
+        childOf: hemera.opentracing
+      })
+    } else if (hemera.context$.opentracing) {
+      span = tracer.startSpan(hemera.trace$.method, {
+        childOf: hemera.context$.opentracing
+      })
     } else {
-      span = tracer.startSpan('act')
+      span = tracer.startSpan(hemera.trace$.method)
     }
 
     // for cross process communication
     const textCarrier = {}
     tracer.inject(span, Opentracing.FORMAT_TEXT_MAP, textCarrier)
-    ctx.trace$.opentracing = textCarrier
+    hemera.trace$.opentracing = textCarrier
 
     span.setTag(Opentracing.Tags.PEER_SERVICE, 'hemera')
-    span.setTag(tags.HEMERA_SERVICE, ctx.trace$.service)
-    span.setTag(tags.HEMERA_PATTERN, ctx.trace$.method)
-    span.setTag(tags.HEMERA_ACT_MAXMSG, ctx._pattern.maxMessages$ || -1)
-    span.setTag(tags.HEMERA_PUBSUB, ctx._pattern.pubsub$ || false)
+    span.setTag(tags.HEMERA_CONTEXT, 'client')
+    span.setTag(tags.HEMERA_OP_TYPE, hemera.request$.type)
+    span.setTag(tags.HEMERA_SERVICE, hemera.trace$.service)
+    span.setTag(tags.HEMERA_PATTERN, hemera.trace$.method)
+    span.setTag(tags.HEMERA_ACT_MAXMSG, hemera._pattern.maxMessages$ || -1)
+    span.setTag(
+      tags.HEMERA_ACT_EXPECTEDMSG,
+      hemera._pattern.exptectedMessages$ || -1
+    )
     span.setTag(
       tags.HEMERA_ACT_TIMEOUT,
-      ctx._pattern.timeout$ || ctx.config.timeout
+      hemera._pattern.timeout$ || hemera.config.timeout
     )
 
-    ctx.opentracing = span
+    hemera.opentracing = span
   })
 
-  hemera.on('clientPostRequest', function(ctx) {
-    ctx.opentracing.finish()
+  hemera.on('clientPostRequest', function(hemera) {
+    hemera.opentracing.finish()
   })
 
   hemera.on('serverResponseError', function(err) {
@@ -139,7 +160,7 @@ function hemeraOpentracing(hemera, opts, done) {
   done()
 }
 
-const plugin = Hp(hemeraOpentracing, {
+module.exports = Hp(hemeraOpentracing, {
   hemera: '>=3.5.0 < 4.0.0',
   name: require('./package.json').name,
   dependencies: ['hemera-joi'],
@@ -157,8 +178,6 @@ const plugin = Hp(hemeraOpentracing, {
       },
       options: {
         tags: {
-          'hemera.version':
-            'Node-' + require('nats-hemera/package.json').version,
           'nodejs.version': process.versions.node
         }
       },
@@ -168,5 +187,3 @@ const plugin = Hp(hemeraOpentracing, {
     }
   }
 })
-
-module.exports = plugin

@@ -38,7 +38,7 @@ hemera.ready(() => {
       cmd: 'send'
     },
     function(req, cb) {
-      cb(null, true)
+      setTimeout(() => cb(null, true), 100)
     }
   )
 
