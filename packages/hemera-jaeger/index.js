@@ -61,26 +61,32 @@ function hemeraOpentracing(hemera, opts, done) {
     opts.jaeger.options
   )
 
-  hemera.on('serverPreRequest', function(ctx) {
+  hemera.decorate('jaeger', {
+    tracer
+  })
+
+  hemera.on('serverPreRequest', function(hemera) {
     let wireCtx = tracer.extract(
       Opentracing.FORMAT_TEXT_MAP,
-      ctx.trace$.opentracing
+      hemera.trace$.opentracing
     )
 
-    let span = tracer.startSpan(ctx.trace$.method, { childOf: wireCtx })
+    let span = tracer.startSpan(hemera.trace$.method, { childOf: wireCtx })
 
     span.setTag(Opentracing.Tags.PEER_SERVICE, 'hemera')
-    span.setTag(tags.HEMERA_SERVICE, ctx.trace$.service)
-    span.setTag(tags.HEMERA_PATTERN, ctx.trace$.method)
+    span.setTag(tags.HEMERA_SERVICE, hemera.trace$.service)
+    span.setTag(tags.HEMERA_PATTERN, hemera.trace$.method)
     span.setTag(tags.HEMERA_CONTEXT, 'server')
     span.setTag(
       tags.HEMERA_PUBSUB,
-      ctx.matchedAction ? ctx.matchedAction.pattern.pubsub$ || false : false
+      hemera.matchedAction
+        ? hemera.matchedAction.pattern.pubsub$ || false
+        : false
     )
 
-    addContextTags(span, ctx, 'delegate$', opts.delegateTags)
+    addContextTags(span, hemera, 'delegate$', opts.delegateTags)
 
-    ctx.opentracing = span
+    hemera.opentracing = span
   })
 
   hemera.on('serverPreResponse', function(ctx) {
@@ -91,40 +97,46 @@ function hemeraOpentracing(hemera, opts, done) {
     span.finish()
   })
 
-  hemera.on('clientPreRequest', function(ctx) {
+  hemera.on('clientPreRequest', function(hemera) {
     let span
 
-    if (ctx.opentracing) {
-      span = tracer.startSpan(ctx.trace$.method, { childOf: ctx.opentracing })
+    if (hemera.opentracing) {
+      span = tracer.startSpan(hemera.trace$.method, {
+        childOf: hemera.opentracing
+      })
+    } else if (hemera.context$.opentracing) {
+      span = tracer.startSpan(hemera.trace$.method, {
+        childOf: hemera.context$.opentracing
+      })
     } else {
-      span = tracer.startSpan(ctx.trace$.method)
+      span = tracer.startSpan(hemera.trace$.method)
     }
 
     // for cross process communication
     const textCarrier = {}
     tracer.inject(span, Opentracing.FORMAT_TEXT_MAP, textCarrier)
-    ctx.trace$.opentracing = textCarrier
+    hemera.trace$.opentracing = textCarrier
 
     span.setTag(Opentracing.Tags.PEER_SERVICE, 'hemera')
     span.setTag(tags.HEMERA_CONTEXT, 'client')
-    span.setTag(tags.HEMERA_OP_TYPE, ctx.request$.type)
-    span.setTag(tags.HEMERA_SERVICE, ctx.trace$.service)
-    span.setTag(tags.HEMERA_PATTERN, ctx.trace$.method)
-    span.setTag(tags.HEMERA_ACT_MAXMSG, ctx._pattern.maxMessages$ || -1)
+    span.setTag(tags.HEMERA_OP_TYPE, hemera.request$.type)
+    span.setTag(tags.HEMERA_SERVICE, hemera.trace$.service)
+    span.setTag(tags.HEMERA_PATTERN, hemera.trace$.method)
+    span.setTag(tags.HEMERA_ACT_MAXMSG, hemera._pattern.maxMessages$ || -1)
     span.setTag(
       tags.HEMERA_ACT_EXPECTEDMSG,
-      ctx._pattern.exptectedMessages$ || -1
+      hemera._pattern.exptectedMessages$ || -1
     )
     span.setTag(
       tags.HEMERA_ACT_TIMEOUT,
-      ctx._pattern.timeout$ || ctx.config.timeout
+      hemera._pattern.timeout$ || hemera.config.timeout
     )
 
-    ctx.opentracing = span
+    hemera.opentracing = span
   })
 
-  hemera.on('clientPostRequest', function(ctx) {
-    ctx.opentracing.finish()
+  hemera.on('clientPostRequest', function(hemera) {
+    hemera.opentracing.finish()
   })
 
   hemera.on('serverResponseError', function(err) {

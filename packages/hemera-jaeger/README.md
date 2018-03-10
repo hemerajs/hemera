@@ -58,6 +58,54 @@ hemera.use(hemeraJaeger, {
 })
 ```
 
+## Build parent context manually
+
+```js
+const tracer = hemera.jaeger.tracer
+
+// trace parent request
+const span = tracer.startSpan('http_request')
+// enrich the span with metadata
+span.setTag(KEY, VALUE)
+// set the parent span on the context to pass it to all calls
+hemera.context$.opentracing = span
+// send it to jaeger
+span.finish()
+
+hemera.act({
+  topic: 'math',
+  cmd: 'add'
+})
+```
+
+## Build parent context with HTTP headers format
+
+```js
+const tracer = hemera.jaeger.tracer
+
+/**
+ * {
+ *     'x-b3-traceid': '123abc',
+ *     'x-b3-spanid': '456def',
+ *     'x-b3-parentspanid': 'zzzzz',
+ *     'x-b3-sampled': '1',
+ *     'x-b3-flags': '1'
+ *   }
+ **/
+
+// trace parent request
+const span = tracer.extract(FORMAT_HTTP_HEADERS, req.headers)
+// set the parent span on the context to pass it to all calls
+hemera.context$.opentracing = span
+// send it to jaeger
+span.finish()
+
+hemera.act({
+  topic: 'math',
+  cmd: 'add'
+})
+```
+
 ## Caveats
 
 - This plugin will use the property `hemera.trace$.opentracing` to transfer data across processes.

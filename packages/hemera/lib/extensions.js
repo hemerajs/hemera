@@ -166,7 +166,7 @@ function onServerPreRequest(context, req, res, next) {
   context._request.payload = m.value
   context._request.error = m.error
 
-  // icnoming pattern
+  // incoming pattern
   context._pattern = context._request.payload.pattern
   // find matched action
   context.matchedAction = context._router.lookup(context._pattern)
