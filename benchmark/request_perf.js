@@ -7,7 +7,7 @@ const PORT = 4222
 const noAuthUrl = 'nats://localhost:' + PORT
 
 const loop = 50000
-const hash = 5000
+const hash = 1000
 
 console.log('Request Performance Test')
 console.log('Execute %d requests', loop)

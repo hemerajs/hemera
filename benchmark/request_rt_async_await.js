@@ -6,9 +6,9 @@ const Nats = require('nats')
 const PORT = 4222
 const noAuthUrl = 'nats://localhost:' + PORT
 
-var loop = 100000
-var hash = 1000
-var received = 0
+const loop = 50000
+const hash = 1000
+let received = 0
 
 const nats1 = Nats.connect(noAuthUrl)
 const nats2 = Nats.connect(noAuthUrl)
@@ -28,7 +28,8 @@ hemera1.ready(() => {
     }
   )
 
-  hemera1.close(function() {
+  // Need to flush here since using separate connections.
+  hemera1.transport.flush(() => {
     for (var i = 0; i < loop; i++) {
       hemera2.act(
         {
@@ -39,6 +40,9 @@ hemera1.ready(() => {
           maxMessages$: 1
         },
         function(err, resp) {
+          if (err) {
+            throw err
+          }
           received += 1
 
           if (received === loop) {

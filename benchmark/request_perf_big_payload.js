@@ -45,7 +45,8 @@ hemera1.ready(() => {
     }
   )
 
-  nats1.flush(function() {
+  // Need to flush here since using separate connections.
+  hemera1.transport.flush(() => {
     hemera2.act(
       {
         topic: 'math',

@@ -6,8 +6,8 @@ const Nats = require('nats')
 const PORT = 4222
 const noAuthUrl = 'nats://localhost:' + PORT
 
-const loop = 100000
-const hash = 5000
+const loop = 50000
+const hash = 1000
 
 console.log('Publish Performance Test')
 console.log('Publish %d messages', loop)

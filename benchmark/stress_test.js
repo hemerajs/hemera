@@ -8,7 +8,7 @@ const hemera = new Hemera(nats, {
   logLevel: 'silent',
   load: {
     process: {
-      sampleInterval: 100
+      sampleInterval: 200
     }
   }
 })

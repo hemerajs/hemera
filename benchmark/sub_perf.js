@@ -9,8 +9,8 @@ const authUrl = 'nats://derek:foobar@localhost:' + PORT
 const noAuthUrl = 'nats://localhost:' + PORT
 
 let start
-const loop = 100000
-const hash = 5000
+const loop = 50000
+const hash = 1000
 let received = 0
 
 console.log('Subscribe Performance Test')
@@ -41,8 +41,6 @@ hemera.ready(() => {
       } else if (received % hash === 0) {
         process.stdout.write('+')
       }
-
-      cb()
     }
   )
 })
