@@ -73,7 +73,10 @@ const hemera = new Hemera(nats, {
 hemera.use(HemeraJoi)
 hemera.setOption('payloadValidator', 'hemera-joi')
 
+// use exposed lib from plugin
 let Joi = hemera.joi
+
+// define your first sever action
 hemera.add(
   {
     topic: 'math',
@@ -88,11 +91,19 @@ hemera.add(
 
 const start = async () => {
   try {
-    // bootstrap hemera
+    // establish connection and bootstrap hemera
     await hemera.ready()
     hemera.log.info(`service listening`)
-    // start request
-    const response = await hemera.act({
+    // start first request
+    let response = await hemera.act({
+      topic: 'math',
+      cmd: 'add',
+      a: 10,
+      b: 10
+    })
+    hemera.log.info(response.data)
+    // keep the parent context e.g metadata, delegate
+    response = await response.context.act({
       topic: 'math',
       cmd: 'add',
       a: 10,
