@@ -192,14 +192,16 @@ hemera.add({
   return req.a + req.b
 })
 
-const result = await hemera.act({
+let resp = await hemera.act({
   pubsub$: true,
   topic: "math",
   cmd: "add"
 })
 
-result.data
-result.context
+resp.data // response data
+resp.context // the parent context to retain meta and trace informations
+
+resp = await result.context.act(...)
 </code>
                     </pre>
                 </div>

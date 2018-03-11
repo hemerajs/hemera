@@ -413,18 +413,20 @@ hemera.add({
 <code class="language-javascript">
 hemera.add({
   topic: "math",
-  cmd: "add",
+  cmd: "add"
 }, async function (req) {
   return await req.a + req.b
 })
 
-const result = await hemera.act({
+let resp = await hemera.act({
   topic: "math",
-  cmd: "add",
+  cmd: "add"
 })
 
-result.data
-result.context
+resp.data // response data
+resp.context // the parent context to retain meta and trace informations
+
+resp = await resp.context.act(...)
 </code>
                     </pre>
         </div>
