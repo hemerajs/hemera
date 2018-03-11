@@ -76,7 +76,7 @@ hemera.setOption('payloadValidator', 'hemera-joi')
 // use exposed lib from plugin
 let Joi = hemera.joi
 
-// define your first sever action
+// define your first server action
 hemera.add(
   {
     topic: 'math',
