@@ -39,6 +39,6 @@ hemera.ready(() => {
       })
       .catch(retry)
   }, opt)
-    .then(value => console.log(value))
-    .catch(value => console.log(value))
+    .then(resp => console.log(resp.data))
+    .catch(err => console.error(err))
 })

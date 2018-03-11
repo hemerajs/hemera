@@ -188,15 +188,18 @@ hemera.add({
   pubsub$: true,
   topic: "math",
   cmd: "add"
-}, async function () {
+}, async function (req) {
+  return req.a + req.b
 })
 
 const result = await hemera.act({
   pubsub$: true,
   topic: "math",
   cmd: "add"
-}, async function () {
 })
+
+result.data
+result.context
 </code>
                     </pre>
                 </div>
@@ -225,7 +228,7 @@ const result = await hemera.act({
     <!-- Highlights JS -->
     <script src="scripts/prism.min.js"></script>
     <script>
-        
+
     </script>
 
 </body>

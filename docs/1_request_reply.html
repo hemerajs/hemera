@@ -421,9 +421,10 @@ hemera.add({
 const result = await hemera.act({
   topic: "math",
   cmd: "add",
-}, async function (req) {
-  return await req.a + req.b
 })
+
+result.data
+result.context
 </code>
                     </pre>
         </div>

@@ -7,10 +7,6 @@ const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
-hemera.ext('onServerPreRequest', async () => {
-  hemera.log.info('onServerPreRequest')
-})
-
 hemera.add(
   {
     topic: 'math',
@@ -26,13 +22,20 @@ const start = async () => {
     await hemera.ready()
     hemera.log.info(`service listening`)
     // start request
-    const out = await hemera.act({
+    let out = await hemera.act({
       topic: 'math',
       cmd: 'add',
       a: 10,
       b: 10
     })
-    hemera.log.info(out.data)
+    hemera.log.info(`result 1`, out.data)
+    out = await out.context.act({
+      topic: 'math',
+      cmd: 'add',
+      a: 10,
+      b: 30
+    })
+    hemera.log.info(`result 2`, out.data)
   } catch (err) {
     hemera.log.error(err)
     process.exit(1)

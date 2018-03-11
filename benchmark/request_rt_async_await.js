@@ -29,20 +29,17 @@ hemera1.ready(() => {
   )
 
   // Need to flush here since using separate connections.
-  hemera1.transport.flush(() => {
+  hemera1.transport.flush(async () => {
     for (var i = 0; i < loop; i++) {
-      hemera2.act(
-        {
+      hemera2
+        .act({
           topic: 'math',
           cmd: 'add',
           a: 1,
           b: 2,
           maxMessages$: 1
-        },
-        function(err, resp) {
-          if (err) {
-            throw err
-          }
+        })
+        .then(() => {
           received += 1
 
           if (received === loop) {
@@ -55,8 +52,7 @@ hemera1.ready(() => {
           } else if (received % hash === 0) {
             process.stdout.write('+')
           }
-        }
-      )
+        })
     }
   })
 })
