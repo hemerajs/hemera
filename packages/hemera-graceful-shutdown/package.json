@@ -14,6 +14,6 @@
   "license": "MIT",
   "dependencies": {
     "fastparallel": "^2.3.0",
-    "hemera-plugin": "^0.1.2"
+    "hemera-plugin": "^1.0.0"
   }
 }

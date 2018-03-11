@@ -12,7 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.16.2",
-    "hemera-plugin": "^0.1.2",
+    "hemera-plugin": "^1.0.0",
     "prom-client": "^10.2.2"
   },
   "engines": {

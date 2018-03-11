@@ -16,6 +16,6 @@
   "license": "MIT",
   "dependencies": {
     "aws-sdk": "2.93.x",
-    "hemera-plugin": "^0.1.2"
+    "hemera-plugin": "^1.0.0"
   }
 }

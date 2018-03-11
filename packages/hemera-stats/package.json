@@ -13,6 +13,6 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-plugin": "^0.1.2"
+    "hemera-plugin": "^1.0.0"
   }
 }
