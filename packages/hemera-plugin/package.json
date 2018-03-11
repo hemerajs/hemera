@@ -1,6 +1,6 @@
 {
   "name": "hemera-plugin",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "This is a plugin helper for hemera",
   "main": "index.js",
   "repository": {
