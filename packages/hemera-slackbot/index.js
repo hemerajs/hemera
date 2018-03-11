@@ -99,7 +99,7 @@ function hemeraSlackbot(hemera, opts, done) {
 }
 
 const plugin = Hp(hemeraSlackbot, {
-  hemera: '^3.0.0',
+  hemera: '^4.0.0',
   name: require('./package.json').name,
   dependencies: ['hemera-joi'],
   options: {
