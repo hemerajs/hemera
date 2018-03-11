@@ -1,6 +1,6 @@
 {
   "name": "hemera-graceful-shutdown",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "Gracefully shutdown hemera",
   "main": "index.js",
   "repository": {

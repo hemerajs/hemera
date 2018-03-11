@@ -1,6 +1,6 @@
 {
   "name": "hemera-safe-promises",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "Making unhandled promise rejections crash the Node.js process",
   "main": "index.js",
   "repository": {

@@ -1,6 +1,6 @@
 {
   "name": "hemera-sqs",
-  "version": "2.0.2",
+  "version": "3.0.0",
   "description": "This is a plugin to use Aamazon SQS with Hemera",
   "main": "index.js",
   "repository": {
