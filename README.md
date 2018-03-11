@@ -102,7 +102,7 @@ const start = async () => {
       b: 10
     })
     hemera.log.info(response.data)
-    // keep the parent context e.g metadata, delegate
+    // keep the parent "context" to retain meta and trace informations
     response = await response.context.act({
       topic: 'math',
       cmd: 'add',
