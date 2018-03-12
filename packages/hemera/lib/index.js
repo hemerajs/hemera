@@ -794,7 +794,7 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   *
+   * reply is used to send multiple responses in a row
    *
    * @param {any} result
    * @memberof Hemera
@@ -809,8 +809,11 @@ class Hemera extends EventEmitter {
       self._reply.payload = result
     }
 
+    // this is needed to respond multiple times
+    // even when a message was already send
     self._reply.sent = false
 
+    // initiate send
     self.serverPreResponse()
   }
 
@@ -985,7 +988,7 @@ class Hemera extends EventEmitter {
           return
         }
 
-        // if request type is 'pubsub' we dont have to reply back
+        // if request type is 'pubsub' we don't have to reply back
         if (
           self._request.payload.request.type === Constants.REQUEST_TYPE_PUBSUB
         ) {
@@ -994,25 +997,13 @@ class Hemera extends EventEmitter {
           return
         }
 
-        // when we have 2 arguments defined we expect to use the callback style
-        if (action.length === 2) {
-          action(self._request.payload.pattern, (err, result) =>
-            self.respond(err, result)
-          )
-        } else {
-          // we expect to provide promise style
-          let result = action(self._request.payload.pattern)
-          const isPromise = result && typeof result.then === 'function'
+        const result = action(self._request.payload.pattern, (err, result) =>
+          self.respond(err, result)
+        )
 
-          if (isPromise) {
-            result.then(x => self.respond(null, x)).catch(e => self.respond(e))
-          } else {
-            if (result instanceof Error) {
-              self.respond(result)
-            } else {
-              self.respond(null, result)
-            }
-          }
+        const isPromise = result && typeof result.then === 'function'
+        if (isPromise) {
+          result.then(x => self.respond(null, x)).catch(e => self.respond(e))
         }
       })
     } catch (err) {

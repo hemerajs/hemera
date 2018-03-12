@@ -230,65 +230,6 @@ describe('Hemera', function() {
     })
   })
 
-  it('Should fullfill any none error value in add', function(done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    hemera.ready(() => {
-      hemera.add(
-        {
-          topic: 'email',
-          cmd: 'send'
-        },
-        resp => 100
-      )
-
-      hemera.act(
-        {
-          topic: 'email',
-          cmd: 'send',
-          email: 'foobar@gmail.com',
-          msg: 'Hi!'
-        },
-        (err, resp) => {
-          expect(err).to.be.not.exists()
-          expect(resp).to.be.equals(100)
-          hemera.close(done)
-        }
-      )
-    })
-  })
-
-  it('Should reject any error value in add', function(done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    hemera.ready(() => {
-      hemera.add(
-        {
-          topic: 'email',
-          cmd: 'send'
-        },
-        resp => new Error('test')
-      )
-
-      hemera.act(
-        {
-          topic: 'email',
-          cmd: 'send',
-          email: 'foobar@gmail.com',
-          msg: 'Hi!'
-        },
-        (err, resp) => {
-          expect(err).to.be.exists()
-          hemera.close(done)
-        }
-      )
-    })
-  })
-
   it('Should be able to support zero as a server response', function(done) {
     const nats = require('nats').connect(authUrl)
 

@@ -63,7 +63,7 @@ describe('Middleware', function() {
         .use(function(req, resp) {
           return Promise.resolve('test')
         })
-        .end(req => req.a + req.b)
+        .end(req => Promise.resolve(req.a + req.b))
 
       hemera.act(
         {

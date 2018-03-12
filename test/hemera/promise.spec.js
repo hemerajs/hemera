@@ -89,6 +89,66 @@ describe('Promise', function() {
     })
   })
 
+  it('Should handle any rejected promise as error in add', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'email',
+          cmd: 'send'
+        },
+        resp => Promise.reject(new Error('test'))
+      )
+
+      hemera.act(
+        {
+          topic: 'email',
+          cmd: 'send',
+          email: 'foobar@gmail.com',
+          msg: 'Hi!'
+        },
+        (err, resp) => {
+          expect(err).to.be.exists()
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should be able to support zero as a server response', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'multiply'
+        },
+        (req, cb) => {
+          cb(null, req.a * req.b)
+        }
+      )
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'multiply',
+          a: 0,
+          b: 0
+        },
+        function(err, resp) {
+          expect(err).to.be.not.exists()
+          expect(resp).to.be.equals(0)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
   it('Should return fullfilled promise when calling close without callback', function() {
     const nats = require('nats').connect(authUrl)
 
@@ -106,6 +166,65 @@ describe('Promise', function() {
       )
 
       return hemera.close()
+    })
+  })
+
+  it('Should handle any fulfilled promise as value in add', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'email',
+          cmd: 'send'
+        },
+        resp => Promise.resolve(100)
+      )
+
+      hemera.act(
+        {
+          topic: 'email',
+          cmd: 'send',
+          email: 'foobar@gmail.com',
+          msg: 'Hi!'
+        },
+        (err, resp) => {
+          expect(err).to.be.not.exists()
+          expect(resp).to.be.equals(100)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should handle any rejected promise as error in add', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'email',
+          cmd: 'send'
+        },
+        resp => Promise.reject(new Error('test'))
+      )
+
+      hemera.act(
+        {
+          topic: 'email',
+          cmd: 'send',
+          email: 'foobar@gmail.com',
+          msg: 'Hi!'
+        },
+        (err, resp) => {
+          expect(err).to.be.exists()
+          hemera.close(done)
+        }
+      )
     })
   })
 
