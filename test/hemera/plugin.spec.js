@@ -476,26 +476,21 @@ describe('Plugin interface', function() {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
+    const pluginOpts = { test: 5, a: 33 }
 
     let plugin = function(hemera, options, next) {
-      expect(options).to.be.equals({
-        a: 33,
-        test: 5
-      })
+      expect(options).to.be.equals(pluginOpts)
       next()
     }
 
     plugin[Symbol.for('name')] = 'myPlugin'
     plugin[Symbol.for('options')] = { a: 1 }
 
-    hemera.use(plugin, { test: 5, a: 33 })
+    hemera.use(plugin, pluginOpts)
 
     hemera.ready(err => {
       expect(err).to.not.exists()
-      expect(hemera.plugins.myPlugin.plugin$.options).to.be.equals({
-        a: 33,
-        test: 5
-      })
+      expect(hemera.plugins.myPlugin.plugin$.options).to.be.equals(pluginOpts)
       hemera.close(done)
     })
   })
