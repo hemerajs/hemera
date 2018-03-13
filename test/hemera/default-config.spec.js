@@ -23,7 +23,6 @@ describe('Hemera default config', function() {
       tag: '',
       prettyLog: true,
       name: 'test', // node name
-      crashOnFatal: true, // Should gracefully exit the process at unhandled exceptions or fatal errors
       logLevel: 'silent', // 'fatal', 'error', 'warn', 'info', 'debug', 'trace'; also 'silent'
       childLogger: false, // Create a child logger per section / plugin. Only possible with default logger Pino.
       maxRecursion: 0, // Max recursive method calls
@@ -41,7 +40,6 @@ describe('Hemera default config', function() {
       },
       load: {
         checkPolicy: true, // Check on every request (server) if the load policy was observed,
-        shouldCrash: true, // Should gracefully exit the process to recover from memory leaks or load, crashOnFatal must be enabled
         process: {
           sampleInterval: 0 // Frequency of load sampling in milliseconds (zero is no sampling)
         },

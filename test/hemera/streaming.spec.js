@@ -28,9 +28,9 @@ describe('Streaming', function() {
           topic: 'math',
           cmd: 'add'
         },
-        function(resp) {
+        function(resp, reply) {
           for (let i = 0; i < 10; i++) {
-            this.reply(i)
+            reply(i)
           }
         }
       )
@@ -65,9 +65,9 @@ describe('Streaming', function() {
           topic: 'math',
           cmd: 'add'
         },
-        function(resp) {
+        function(resp, reply) {
           for (let i = 0; i < 10; i++) {
-            this.reply(new Error('test'))
+            reply(new Error('test'))
           }
         }
       )
@@ -107,9 +107,9 @@ describe('Streaming', function() {
           topic: 'math',
           cmd: 'add'
         },
-        function(resp) {
+        function(resp, reply) {
           for (let i = 0; i < 5; i++) {
-            this.reply(i)
+            reply(i)
           }
         }
       )
@@ -149,9 +149,9 @@ describe('Streaming', function() {
           reply.send('a')
           next()
         })
-        .end(function(resp) {
+        .end(function(resp, reply) {
           for (let i = 0; i < 5; i++) {
-            this.reply(i)
+            reply(i)
           }
         })
 

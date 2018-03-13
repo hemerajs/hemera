@@ -89,9 +89,7 @@ class Hemera extends EventEmitter {
     }
 
     // client and server locales
-    this._shouldCrash = false
     this._topic = ''
-    this._replyTo = ''
     this._request = null
     this._response = null
     this._pattern = null
@@ -493,7 +491,7 @@ class Hemera extends EventEmitter {
       if (!this._plugins[dependency]) {
         throw new Error(
           `The dependency '${dependency}' was not registered before plugin '${
-            this.plugin$.name
+          this.plugin$.name
           }'`
         )
       }
@@ -644,127 +642,6 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   * Last step before the response is send to the callee.
-   * The preResponse extension is dispatched and previous errors are evaluated.
-   *
-   * @memberOf Hemera
-   */
-  serverPreResponse() {
-    const self = this
-
-    self._series(
-      self,
-      self._serverExtIterator,
-      self._ext['onServerPreResponse'],
-      err => self._onServerPreResponseCompleted(err)
-    )
-  }
-
-  /**
-   *
-   *
-   * @param {any} extensionError
-   * @memberof Hemera
-   */
-  _onServerPreResponseCompleted(extensionError) {
-    const self = this
-    // check if any error was set before
-    if (extensionError) {
-      self._reply.error = self._attachHops(extensionError)
-      const internalError = new Errors.HemeraError(
-        Constants.EXTENSION_ERROR,
-        self.errorDetails
-      ).causedBy(extensionError)
-      self.log.error(internalError)
-      self.emit('serverResponseError', extensionError)
-    }
-
-    const result = self._createMessage()
-    self._send(result)
-  }
-
-  /**
-   *
-   *
-   * @memberof Hemera
-   */
-  _gracefulShutdown(err) {
-    if (this.listenerCount('error') > 0) {
-      this.emit('error', err)
-    } else {
-      this.close(() => this.emit('error', err))
-    }
-  }
-
-  /**
-   *
-   *
-   * @param {any} msg
-   * @memberof Hemera
-   */
-  _send(msg) {
-    const self = this
-
-    // indicates that an error occurs and that the program should exit
-    if (self._shouldCrash) {
-      // only when we have an inbox othwerwise exit the service immediately
-      if (self._replyTo) {
-        // send error back to callee
-        self._transport.send(self._replyTo, msg, () => {
-          // let it crash
-          if (self._config.crashOnFatal) {
-            self._gracefulShutdown(self._reply.error)
-          }
-        })
-        return
-      } else if (self._config.crashOnFatal) {
-        self._gracefulShutdown(self._reply.error)
-        return
-      }
-    }
-
-    // reply only when we have an inbox
-    if (self._replyTo) {
-      self._transport.send(self._replyTo, msg)
-    }
-  }
-
-  /**
-   *
-   *
-   * @param {any} err
-   * @returns
-   * @memberof Hemera
-   */
-  _createMessage() {
-    const self = this
-
-    let message = {
-      meta: self.meta$ || {},
-      trace: self.trace$ || {},
-      request: self.request$,
-      result: self._reply.error ? null : self._reply.payload,
-      error: self._reply.error ? Errio.toObject(self._reply.error) : null
-    }
-
-    let m = self._encoderPipeline.run(message, self)
-
-    // attach encoding issues
-    if (m.error) {
-      let internalError = new Errors.ParseError(
-        Constants.PAYLOAD_PARSING_ERROR
-      ).causedBy(m.error)
-      message.error = Errio.toObject(internalError)
-      message.result = null
-      // Retry to encode with issue perhaps the reason was data related
-      m = self._encoderPipeline.run(message, self)
-      self.log.error(internalError)
-      self.emit('serverResponseError', m.error)
-    }
-
-    return m.value
-  }
-  /**
    *
    *
    * @param {any} err
@@ -794,50 +671,22 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   * reply is used to send multiple responses in a row
-   *
-   * @param {any} result
-   * @memberof Hemera
-   */
-  reply(result) {
-    const self = this
-
-    if (result instanceof Error) {
-      self._reply.error = self._attachHops(self.getRootError(result))
-    } else if (result !== undefined && !self._reply.sent) {
-      // payload can be set multiple times but respect set payload in extensions and midddlewares
-      self._reply.payload = result
-    }
-
-    // this is needed to respond multiple times
-    // even when a message was already send
-    self._reply.sent = false
-
-    // initiate send
-    self.serverPreResponse()
-  }
-
-  /**
    *
    *
    * @param {any} err
-   * @param {any} resp
+   * @param {any} payload
    * @returns
    *
    * @memberof Hemera
    */
-  respond(err, resp) {
+  respond(err, payload) {
     const self = this
 
-    if (!self._reply.sent) {
-      if (err) {
-        self._reply.error = self._attachHops(self.getRootError(err))
-      } else {
-        self._reply.payload = resp
-      }
+    if (err) {
+      self._reply.send(self._attachHops(self.getRootError(err)))
+    } else {
+      self._reply.send(payload)
     }
-
-    self.serverPreResponse()
   }
 
   /**
@@ -866,10 +715,9 @@ class Hemera extends EventEmitter {
       // create new execution context
       let hemera = self.createContext()
       hemera._topic = topic
-      hemera._replyTo = replyTo
       hemera._request = new ServerRequest(request)
-      hemera._response = new ServerResponse()
-      hemera._reply = new Reply(hemera._request, hemera._response, hemera.log)
+      hemera._response = new ServerResponse(replyTo)
+      hemera._reply = new Reply(hemera._request, hemera._response, hemera, hemera.log)
       hemera._pattern = {}
       hemera._isServer = true
 
@@ -917,9 +765,8 @@ class Hemera extends EventEmitter {
 
     // check if any error was set before
     if (extensionError) {
-      self._reply.error = self._attachHops(extensionError)
       self.emit('serverResponseError', extensionError)
-      self.serverPreResponse()
+      self._reply.send(self._attachHops(extensionError))
       return
     }
 
@@ -937,11 +784,8 @@ class Hemera extends EventEmitter {
         self.errorDetails
       )
       self.log.error(internalError)
-      self._reply.error = internalError
       self.emit('serverResponseError', self._reply.error)
-
-      // send error back to callee
-      self.serverPreResponse()
+      self._reply.send(internalError)
     }
   }
 
@@ -966,47 +810,39 @@ class Hemera extends EventEmitter {
       return
     }
 
-    try {
-      let action = self.matchedAction.action.bind(self)
+    let action = self.matchedAction.action.bind(self)
 
-      self.matchedAction.run(self._request, self._reply, err => {
-        if (err) {
-          const internalError = new Errors.HemeraError(
-            Constants.ADD_MIDDLEWARE_ERROR,
-            self.errorDetails
-          ).causedBy(err)
-          self.log.error(internalError)
-          self.emit('serverResponseError', err)
-          self.respond(err)
-          return
-        }
+    self.matchedAction.run(self._request, self._reply, err => {
+      if (err) {
+        const internalError = new Errors.HemeraError(
+          Constants.ADD_MIDDLEWARE_ERROR,
+          self.errorDetails
+        ).causedBy(err)
+        self.log.error(internalError)
+        self.emit('serverResponseError', err)
+        self.respond(err)
+        return
+      }
 
-        // if request type is 'pubsub' we don't have to reply back
-        if (
-          self._request.payload.request.type === Constants.REQUEST_TYPE_PUBSUB
-        ) {
-          action(self._request.payload.pattern)
-          self.respond()
-          return
-        }
+      // if request type is 'pubsub' we don't have to reply back
+      if (
+        self._request.payload.request.type === Constants.REQUEST_TYPE_PUBSUB
+      ) {
+        action(self._request.payload.pattern)
+        self.respond()
+        return
+      }
 
-        const result = action(self._request.payload.pattern, (err, result) =>
-          self.respond(err, result)
-        )
+      const result = action(self._request.payload.pattern, (err, result) =>
+        self.respond(err, result)
+      )
 
-        const isPromise = result && typeof result.then === 'function'
-        if (isPromise) {
-          result.then(x => self.respond(null, x)).catch(e => self.respond(e))
-        }
-      })
-    } catch (err) {
-      self._reply.error = self.getRootError(err)
+      const isPromise = result && typeof result.then === 'function'
+      if (isPromise) {
+        result.then(x => self.respond(null, x)).catch(e => self.respond(e))
+      }
+    })
 
-      // service should exit
-      self._shouldCrash = true
-
-      self.serverPreResponse()
-    }
   }
 
   /**
@@ -1250,41 +1086,24 @@ class Hemera extends EventEmitter {
     self._response.payload = res.value
     self._response.error = res.error
 
-    try {
-      // decoding error
-      if (self._response.error) {
-        let error = new Errors.ParseError(
-          Constants.PAYLOAD_PARSING_ERROR,
-          self.errorDetails
-        ).causedBy(self._response.error)
-        self.log.error(error)
-        self.emit('clientResponseError', self._response.error)
-        self._execute(error)
-        return
-      }
-
-      self._series(
-        self,
-        self._clientExtIterator,
-        self._ext['onClientPostRequest'],
-        err => self._onClientPostRequestCompleted(err)
-      )
-    } catch (err) {
-      let error = self.getRootError(err)
-      const internalError = new Errors.FatalError(
-        Constants.FATAL_ERROR,
+    // decoding error
+    if (self._response.error) {
+      let error = new Errors.ParseError(
+        Constants.PAYLOAD_PARSING_ERROR,
         self.errorDetails
-      ).causedBy(err)
-      self.log.fatal(internalError)
-      self.emit('clientResponseError', error)
-
-      // let it crash
-      if (self._config.crashOnFatal) {
-        self._gracefulShutdown(error)
-      } else {
-        self._execute(error)
-      }
+      ).causedBy(self._response.error)
+      self.log.error(error)
+      self.emit('clientResponseError', self._response.error)
+      self._execute(error)
+      return
     }
+
+    self._series(
+      self,
+      self._clientExtIterator,
+      self._ext['onClientPostRequest'],
+      err => self._onClientPostRequestCompleted(err)
+    )
   }
 
   /**
@@ -1552,22 +1371,7 @@ class Hemera extends EventEmitter {
       self.emit('clientResponseError', error)
     }
 
-    try {
-      self._execute(self._response.error)
-    } catch (err) {
-      let error = self.getRootError(err)
-      const internalError = new Errors.FatalError(
-        Constants.FATAL_ERROR,
-        self.errorDetails
-      ).causedBy(err)
-      self.log.fatal(internalError)
-      self.emit('clientResponseError', error)
-
-      // let it crash
-      if (self._config.crashOnFatal) {
-        self._gracefulShutdown(error)
-      }
-    }
+    self._execute(self._response.error)
   }
 
   /**

@@ -163,43 +163,6 @@ describe('Extension Async / Await', function() {
     })
   })
 
-  it('Should be able to reply an error in onServerPreResponse', function(done) {
-    let ext1 = Sinon.spy()
-
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    hemera.ready(() => {
-      hemera.ext('onServerPreResponse', async function(ctx, req, res) {
-        ext1()
-        res.send(new Error('test'))
-      })
-
-      hemera.add(
-        {
-          topic: 'email',
-          cmd: 'send'
-        },
-        (resp, cb) => {
-          cb()
-        }
-      )
-
-      hemera.act(
-        {
-          topic: 'email',
-          cmd: 'send'
-        },
-        (err, resp) => {
-          expect(ext1.called).to.be.equals(true)
-          expect(err).to.be.exists()
-          hemera.close(done)
-        }
-      )
-    })
-  })
-
   it('Should be able to reject an error in onServerPreResponse', function(done) {
     let ext1 = Sinon.spy()
 
@@ -208,8 +171,12 @@ describe('Extension Async / Await', function() {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreResponse', async function(ctx, req, res) {
+      hemera.on('serverResponseError', async function(err) {
         ext1()
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
+      })
+      hemera.ext('onServerPreResponse', async function(ctx, req, res) {
         return new Error('test')
       })
 
@@ -230,7 +197,6 @@ describe('Extension Async / Await', function() {
         },
         (err, resp) => {
           expect(ext1.called).to.be.equals(true)
-          expect(err).to.be.exists()
           hemera.close(done)
         }
       )

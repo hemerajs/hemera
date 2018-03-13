@@ -20,9 +20,7 @@ describe('Hemera-zipkin', function() {
   it('Should be able to trace', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraZipkin)
 

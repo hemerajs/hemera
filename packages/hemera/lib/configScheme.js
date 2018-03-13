@@ -12,8 +12,6 @@ module.exports = Joi.object().keys({
   prettyLog: Joi.boolean().default(true),
   // The name of the instance
   name: Joi.string().default(`hemera-${Os.hostname()}-${Util.randomId()}`),
-  // Should gracefully exit the process at unhandled exceptions or fatal errors
-  crashOnFatal: Joi.boolean().default(true),
   logLevel: Joi.any()
     .valid(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'])
     .default('silent'),
@@ -60,8 +58,6 @@ module.exports = Joi.object().keys({
     .keys({
       // Check on every request (server) if the load policy was observed,
       checkPolicy: Joi.boolean().default(true),
-      // Should gracefully exit the process to recover from memory leaks or load, crashOnFatal must be enabled
-      shouldCrash: Joi.boolean().default(true),
       process: Joi.object()
         .keys({
           // Frequency of load sampling in milliseconds (zero is no sampling)

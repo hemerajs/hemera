@@ -1,21 +1,21 @@
 'use strict'
 
-describe('Error handling', function() {
+describe('Error handling', function () {
   var PORT = 6242
   var authUrl = 'nats://localhost:' + PORT
   var server
 
   // Start up our own nats-server
-  before(function(done) {
+  before(function (done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
   // Shutdown our server after we are done
-  after(function() {
+  after(function () {
     server.kill()
   })
 
-  it('Should return all hemera error objects', function(done) {
+  it('Should return all hemera error objects', function (done) {
     expect(Hemera.errors.HemeraError).to.be.exists()
     expect(Hemera.errors.ParseError).to.be.exists()
     expect(Hemera.errors.TimeoutError).to.be.exists()
@@ -27,7 +27,7 @@ describe('Error handling', function() {
     done()
   })
 
-  it('Should be able pass a custom super error', function(done) {
+  it('Should be able pass a custom super error', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -64,7 +64,7 @@ describe('Error handling', function() {
     })
   })
 
-  it('Should be able to compare hemera errors with instanceof', function(done) {
+  it('Should be able to compare hemera errors with instanceof', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -98,7 +98,7 @@ describe('Error handling', function() {
     })
   })
 
-  it('Should be able to compare custom hemera errors with instanceof', function(done) {
+  it('Should be able to compare custom hemera errors with instanceof', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -134,7 +134,7 @@ describe('Error handling', function() {
     })
   })
 
-  it('Should be able to serialize and deserialize an error back to the callee', function(done) {
+  it('Should be able to serialize and deserialize an error back to the callee', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -167,7 +167,7 @@ describe('Error handling', function() {
     })
   })
 
-  it('Should be able to transfer the error code', function(done) {
+  it('Should be able to transfer the error code', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -204,7 +204,7 @@ describe('Error handling', function() {
     })
   })
 
-  it('Should be able to transfer additional error data', function(done) {
+  it('Should be able to transfer additional error data', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -242,7 +242,7 @@ describe('Error handling', function() {
     })
   })
 
-  it('Should be able to handle decoding errors', function(done) {
+  it('Should be able to handle decoding errors', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -285,7 +285,7 @@ describe('Error handling', function() {
     })
   })
 
-  it('Should be able to handle response decoding error', function(done) {
+  it('Should be able to handle response decoding error', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -330,7 +330,7 @@ describe('Error handling', function() {
     })
   })
 
-  it('Should be able to handle response encoding error', function(done) {
+  it('Should be able to handle response encoding error', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -374,12 +374,10 @@ describe('Error handling', function() {
     })
   })
 
-  it('Should be able to handle business errors', function(done) {
+  it('Should be able to handle business errors', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
       hemera.add(
@@ -387,8 +385,8 @@ describe('Error handling', function() {
           topic: 'email',
           cmd: 'send'
         },
-        (resp, cb) => {
-          throw new Error('Shit!')
+        (resp) => {
+          return Promise.reject(new Error('Shit!'))
         }
       )
 
@@ -409,12 +407,10 @@ describe('Error handling', function() {
     })
   })
 
-  it('Should be able to handle business errors with super errors', function(done) {
+  it('Should be able to handle business errors with super errors', function (done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
       hemera.add(
@@ -422,8 +418,8 @@ describe('Error handling', function() {
           topic: 'email',
           cmd: 'send'
         },
-        (resp, cb) => {
-          throw new UnauthorizedError('Shit!')
+        (resp) => {
+          return Promise.reject(new UnauthorizedError('Shit!'))
         }
       )
 
@@ -444,161 +440,7 @@ describe('Error handling', function() {
     })
   })
 
-  it('Should crash on fatal', function(done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats, {
-      crashOnFatal: true,
-      timeout: 10000
-    })
-
-    hemera.on('error', err => {
-      expect(err).to.be.exists()
-      hemera.close(done)
-    })
-
-    hemera.ready(() => {
-      hemera.add(
-        {
-          topic: 'email',
-          cmd: 'send'
-        },
-        (resp, cb) => {
-          throw new Error('Shit!')
-        }
-      )
-
-      hemera.act(
-        {
-          topic: 'email',
-          cmd: 'send',
-          email: 'foobar@gmail.com',
-          msg: 'Hi!'
-        },
-        (err, resp) => {
-          expect(err).to.be.exists()
-        }
-      )
-    })
-  })
-
-  it('Should close hemera on fatal when no error listener was added', function(done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats, {
-      crashOnFatal: true,
-      timeout: 10000
-    })
-
-    var stub = Sinon.stub(hemera, 'emit')
-    stub.withArgs('error')
-    stub.onCall(1)
-    stub.returns(true)
-
-    hemera.ext('onClose', _ => {
-      // wait until hemera emits an error after close
-      setTimeout(() => {
-        expect(stub.called).to.be.equals(true)
-        done()
-      }, 100)
-    })
-
-    hemera.ready(() => {
-      hemera.add(
-        {
-          topic: 'email',
-          cmd: 'send'
-        },
-        (resp, cb) => {
-          throw new Error('Shit!')
-        }
-      )
-
-      hemera.act(
-        {
-          topic: 'email',
-          cmd: 'send',
-          email: 'foobar@gmail.com',
-          msg: 'Hi!'
-        },
-        (err, resp) => {
-          expect(err).to.be.exists()
-        }
-      )
-    })
-  })
-
-  it('Should crash on fatal with publish mode', function(done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats, {
-      crashOnFatal: true,
-      timeout: 10000
-    })
-
-    hemera.on('error', err => {
-      expect(err).to.be.exists()
-      hemera.close(done)
-    })
-
-    hemera.ready(() => {
-      hemera.add(
-        {
-          topic: 'email',
-          cmd: 'send',
-          pubsub$: true
-        },
-        (resp, cb) => {
-          throw new Error('Shit!')
-        }
-      )
-
-      hemera.act({
-        topic: 'email',
-        cmd: 'send',
-        email: 'foobar@gmail.com',
-        msg: 'Hi!',
-        pubsub$: true
-      })
-    })
-  })
-
-  it('Should crash on unhandled business errors', function(done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
-
-    hemera.ready(() => {
-      hemera.add(
-        {
-          topic: 'email',
-          cmd: 'send'
-        },
-        (resp, cb) => {
-          throw new Error('Shit!')
-        }
-      )
-
-      hemera.act(
-        {
-          topic: 'email',
-          cmd: 'send',
-          email: 'foobar@gmail.com',
-          msg: 'Hi!'
-        },
-        (err, resp) => {
-          expect(err).to.be.exists()
-          expect(err.name).to.be.equals('Error')
-          expect(err.message).to.be.equals('Shit!')
-          hemera.close(done)
-        }
-      )
-    })
-  })
-
-  it('Pattern not found', function(done) {
+  it('Pattern not found', function (done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -627,46 +469,6 @@ describe('Error handling', function() {
           expect(err.isServer).to.be.equals(true)
           expect(err.message).to.be.equals('No handler found for this pattern')
           hemera.close(done)
-        }
-      )
-    })
-  })
-
-  it('Should crash when an expected error happens in the ACT handler', function(done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats, {
-      crashOnFatal: true,
-      timeout: 10000
-    })
-
-    hemera.on('error', err => {
-      expect(err).to.be.exists()
-      hemera.close(done)
-    })
-
-    hemera.ready(() => {
-      hemera.add(
-        {
-          topic: 'email',
-          cmd: 'send'
-        },
-        (resp, cb) => {
-          cb(new Error('test'))
-        }
-      )
-
-      hemera.act(
-        {
-          topic: 'email',
-          cmd: 'send',
-          email: 'foobar@gmail.com',
-          msg: 'Hi!'
-        },
-        (err, resp) => {
-          expect(err).to.be.exists()
-
-          throw new Error('Test')
         }
       )
     })

@@ -222,9 +222,9 @@ describe('Timeouts', function() {
           topic: 'test',
           cmd: 'A'
         },
-        function(resp) {
+        function(resp, reply) {
           for (let i = 0; i < 10; i++) {
-            this.reply(i)
+            reply(i)
           }
         }
       )

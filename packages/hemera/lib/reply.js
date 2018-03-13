@@ -9,10 +9,13 @@
  *
  */
 
+const Errors = require('./errors')
 const Constants = require('./constants')
+const Errio = require('errio')
+const MessageBuilder = require('./messageBuilder')
 
 /**
- *
+ * @TODO rename hook to onServerSend
  *
  * @class Reply
  */
@@ -22,15 +25,16 @@ class Reply {
    * @param {any} request
    * @param {any} response
    * @param {any} hemera
+   * @param {any} logger
    *
    * @memberof Reply
    */
-  constructor(request, response, logger) {
+  constructor(request, response, hemera, logger) {
     this._request = request
     this._response = response
+    this.hemera = hemera
     this.log = logger
     this.sent = false
-    this._errored = false
   }
 
   /**
@@ -62,12 +66,6 @@ class Reply {
    * @memberof Reply
    */
   set error(value) {
-    if (this._errored) {
-      this.log.warn(new Error(Constants.REPLY_ERROR_ALREADY_SET))
-      return
-    }
-
-    this._errored = true
     this._response.error = value
   }
 
@@ -98,12 +96,56 @@ class Reply {
 
     self.sent = true
 
-    if (msg) {
+    if (msg !== undefined) {
       if (msg instanceof Error) {
         self.error = msg
       } else {
         self.payload = msg
       }
+    }
+
+    self.serverPreResponse()
+  }
+
+  _preResponseIterator(fn, cb) {
+    const ret = fn(this, this._request, this._reply, cb)
+    if (ret && typeof ret.then === 'function') {
+      ret.then(cb).catch(cb)
+    }
+  }
+
+  serverPreResponse() {
+    const self = this
+
+    self.hemera._series(
+      self.hemera,
+      self._preResponseIterator,
+      self.hemera._ext['onServerPreResponse'],
+      err => self._onServerPreResponseCompleted(err)
+    )
+  }
+
+  _onServerPreResponseCompleted(extensionError) {
+    const self = this
+
+    if (extensionError) {
+      self.send(self.hemera._attachHops(extensionError))
+      const internalError = new Errors.HemeraError(
+        Constants.EXTENSION_ERROR,
+        self.hemera.errorDetails
+      ).causedBy(extensionError)
+      self.log.error(internalError)
+      self.hemera.emit('serverResponseError', extensionError)
+    }
+
+    if (self._response.replyTo) {
+      const msgBuilder = new MessageBuilder(self.hemera, self, self.hemera._encoderPipeline)
+      const msg = msgBuilder.build(
+        self.hemera.meta$,
+        self.hemera.trace$,
+        self.hemera.request$)
+
+      self.hemera._transport.send(self._response.replyTo, msg.value)
     }
   }
 }

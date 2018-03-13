@@ -22,7 +22,6 @@ describe('Load policy for server component', function() {
       logLevel: 'silent',
       load: {
         checkPolicy: true,
-        shouldCrash: false,
         process: {
           sampleInterval: 1
         },
@@ -82,7 +81,6 @@ describe('Load policy for server component', function() {
       logLevel: 'silent',
       load: {
         checkPolicy: true,
-        shouldCrash: true,
         process: {
           sampleInterval: 1
         },
