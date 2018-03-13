@@ -829,11 +829,12 @@ class Hemera extends EventEmitter {
   respond(err, resp) {
     const self = this
 
-    if (err) {
-      self._reply.error = self._attachHops(self.getRootError(err))
-    } else if (!self._reply.sent) {
-      // set payload for the first time
-      self._reply.payload = resp
+    if (!self._reply.sent) {
+      if (err) {
+        self._reply.error = self._attachHops(self.getRootError(err))
+      } else {
+        self._reply.payload = resp
+      }
     }
 
     self.serverPreResponse()
@@ -979,12 +980,6 @@ class Hemera extends EventEmitter {
           self.log.error(internalError)
           self.emit('serverResponseError', err)
           self.respond(err)
-          return
-        }
-
-        // the user can cancel the request early
-        if (self._reply.finished) {
-          self.respond()
           return
         }
 

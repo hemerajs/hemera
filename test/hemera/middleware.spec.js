@@ -200,41 +200,6 @@ describe('Middleware', function() {
     })
   })
 
-  it('Should not call action when end() was called middlewares', function(done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats, { logLevel: 'info' })
-
-    hemera.ready(() => {
-      hemera
-        .add({
-          topic: 'math',
-          cmd: 'add'
-        })
-        .use(function(req, reply, next) {
-          reply.end({ a: 1 })
-          next()
-        })
-        .end(function(req) {
-          throw new Error('test')
-        })
-
-      hemera.act(
-        {
-          topic: 'math',
-          cmd: 'add',
-          a: 1,
-          b: 2
-        },
-        function(err, resp) {
-          expect(err).to.be.not.exists()
-          expect(resp.a).to.be.equals(1)
-          hemera.close(done)
-        }
-      )
-    })
-  })
-
   it('Should be able to reply an error in middleware', function(done) {
     const nats = require('nats').connect(authUrl)
 
