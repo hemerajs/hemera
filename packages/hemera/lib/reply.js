@@ -63,7 +63,7 @@ class Reply {
    */
   set error(value) {
     if (this._errored) {
-      this.log.debug(new Error(Constants.REPLY_ERROR_ALREADY_SET))
+      this.log.warn(new Error(Constants.REPLY_ERROR_ALREADY_SET))
       return
     }
 
