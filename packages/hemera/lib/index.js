@@ -956,15 +956,13 @@ class Hemera extends EventEmitter {
 
     // check if any error was set before
     if (extensionError) {
-      self._reply.error = self._attachHops(extensionError)
-
       const internalError = new Errors.HemeraError(
         Constants.EXTENSION_ERROR,
         self.errorDetails
       ).causedBy(extensionError)
       self.log.error(internalError)
-      self.emit('serverResponseError', self._reply.error)
-      self.serverPreResponse()
+      self.emit('serverResponseError', extensionError)
+      self.respond(extensionError)
       return
     }
 
