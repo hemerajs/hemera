@@ -196,30 +196,9 @@ function onServerPreRequestLoadTest(context, req, res, next) {
   next()
 }
 
-/**
- *
- *
- * @param {any} req
- * @param {any} res
- * @param {any} next
- */
-function onServerPreHandler(context, req, res, next) {
-  context.emit('serverPreHandler', context)
-
-  next()
-}
-
-function onServerPreResponse(context, req, res, next) {
-  context.emit('serverPreResponse', context)
-
-  next()
-}
-
 module.exports.onClientPreRequest = [onClientPreRequest]
 module.exports.onClientPostRequest = [onClientPostRequest]
 module.exports.onServerPreRequest = [
   onServerPreRequest,
   onServerPreRequestLoadTest
 ]
-module.exports.onServerPreHandler = [onServerPreHandler]
-module.exports.onServerPreResponse = [onServerPreResponse]

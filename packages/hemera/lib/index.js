@@ -126,8 +126,6 @@ class Hemera extends EventEmitter {
     this._ext.add('onClientPreRequest', DefaultExtensions.onClientPreRequest)
     this._ext.add('onClientPostRequest', DefaultExtensions.onClientPostRequest)
     this._ext.add('onServerPreRequest', DefaultExtensions.onServerPreRequest)
-    this._ext.add('onServerPreHandler', DefaultExtensions.onServerPreHandler)
-    this._ext.add('onServerPreResponse', DefaultExtensions.onServerPreResponse)
 
     this._avvio = Avvio(this, {
       expose: {
@@ -762,12 +760,17 @@ class Hemera extends EventEmitter {
 
     // check if a handler is registered with this pattern
     if (self.matchedAction) {
-      self._series(
-        self,
-        self._serverExtIterator,
-        self._ext['onServerPreHandler'],
-        err => self._onServerPreHandlerCompleted(err)
-      )
+      self.emit('serverPreHandler', self)
+      if (self._ext['onServerPreHandler'].length) {
+        self._series(
+          self,
+          self._serverExtIterator,
+          self._ext['onServerPreHandler'],
+          err => self._onServerPreHandlerCompleted(err)
+        )
+        return
+      }
+      self._onServerPreHandlerCompleted()
     } else {
       const internalError = new Errors.PatternNotFound(
         Constants.PATTERN_NOT_FOUND,

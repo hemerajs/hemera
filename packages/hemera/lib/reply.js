@@ -129,12 +129,18 @@ class Reply {
   serverPreResponse() {
     const self = this
 
-    self.hemera._series(
-      self.hemera,
-      self._preResponseIterator,
-      self.hemera._ext['onServerPreResponse'],
-      err => self._onServerPreResponseCompleted(err)
-    )
+    self.hemera.emit('serverPreResponse', self.hemera)
+
+    if (self.hemera._ext['onServerPreResponse'].length) {
+      self.hemera._series(
+        self.hemera,
+        self._preResponseIterator,
+        self.hemera._ext['onServerPreResponse'],
+        err => self._onServerPreResponseCompleted(err)
+      )
+      return
+    }
+    self._onServerPreResponseCompleted()
   }
   /**
    *
