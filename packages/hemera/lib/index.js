@@ -491,7 +491,7 @@ class Hemera extends EventEmitter {
       if (!this._plugins[dependency]) {
         throw new Error(
           `The dependency '${dependency}' was not registered before plugin '${
-          this.plugin$.name
+            this.plugin$.name
           }'`
         )
       }
@@ -634,7 +634,7 @@ class Hemera extends EventEmitter {
    * @memberof Hemera
    */
   _serverExtIterator(fn, cb) {
-    const ret = fn(this, this._request, this._reply, cb)
+    const ret = fn(this, this._request, this.reply, cb)
 
     if (ret && typeof ret.then === 'function') {
       ret.then(cb).catch(cb)
@@ -671,25 +671,6 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   *
-   *
-   * @param {any} err
-   * @param {any} payload
-   * @returns
-   *
-   * @memberof Hemera
-   */
-  respond(err, payload) {
-    const self = this
-
-    if (err) {
-      self._reply.send(self._attachHops(self.getRootError(err)))
-    } else {
-      self._reply.send(payload)
-    }
-  }
-
-  /**
    *  Attach one handler to the topic subscriber.
    *  With subToMany and maxMessages you control NATS specific behaviour.
    *
@@ -717,7 +698,12 @@ class Hemera extends EventEmitter {
       hemera._topic = topic
       hemera._request = new ServerRequest(request)
       hemera._response = new ServerResponse(replyTo)
-      hemera._reply = new Reply(hemera._request, hemera._response, hemera, hemera.log)
+      hemera.reply = new Reply(
+        hemera._request,
+        hemera._response,
+        hemera,
+        hemera.log
+      )
       hemera._pattern = {}
       hemera._isServer = true
 
@@ -732,7 +718,7 @@ class Hemera extends EventEmitter {
       )
     }
 
-    // standard pubsub with optional max proceed messages
+    // standard pubsub with optional max messages
     if (pubsub) {
       self._topics[topic] = self._transport.subscribe(
         topic,
@@ -763,10 +749,14 @@ class Hemera extends EventEmitter {
   _onServerPreRequestCompleted(extensionError) {
     const self = this
 
-    // check if any error was set before
     if (extensionError) {
+      const internalError = new Errors.HemeraError(
+        Constants.EXTENSION_ERROR,
+        self.errorDetails
+      ).causedBy(extensionError)
+      self.log.error(internalError)
       self.emit('serverResponseError', extensionError)
-      self._reply.send(self._attachHops(extensionError))
+      self.reply.send(extensionError)
       return
     }
 
@@ -784,8 +774,8 @@ class Hemera extends EventEmitter {
         self.errorDetails
       )
       self.log.error(internalError)
-      self.emit('serverResponseError', self._reply.error)
-      self._reply.send(internalError)
+      self.emit('serverResponseError', internalError)
+      self.reply.send(internalError)
     }
   }
 
@@ -798,7 +788,6 @@ class Hemera extends EventEmitter {
   _onServerPreHandlerCompleted(extensionError) {
     const self = this
 
-    // check if any error was set before
     if (extensionError) {
       const internalError = new Errors.HemeraError(
         Constants.EXTENSION_ERROR,
@@ -806,13 +795,14 @@ class Hemera extends EventEmitter {
       ).causedBy(extensionError)
       self.log.error(internalError)
       self.emit('serverResponseError', extensionError)
-      self.respond(extensionError)
+      self.reply.send(extensionError)
       return
     }
 
     let action = self.matchedAction.action.bind(self)
 
-    self.matchedAction.run(self._request, self._reply, err => {
+    // add middleware
+    self.matchedAction.run(self._request, self.reply, err => {
       if (err) {
         const internalError = new Errors.HemeraError(
           Constants.ADD_MIDDLEWARE_ERROR,
@@ -820,7 +810,7 @@ class Hemera extends EventEmitter {
         ).causedBy(err)
         self.log.error(internalError)
         self.emit('serverResponseError', err)
-        self.respond(err)
+        self.reply.send(err)
         return
       }
 
@@ -829,20 +819,19 @@ class Hemera extends EventEmitter {
         self._request.payload.request.type === Constants.REQUEST_TYPE_PUBSUB
       ) {
         action(self._request.payload.pattern)
-        self.respond()
+        self.reply.send()
         return
       }
 
       const result = action(self._request.payload.pattern, (err, result) =>
-        self.respond(err, result)
+        self.reply.send(err || result)
       )
 
       const isPromise = result && typeof result.then === 'function'
       if (isPromise) {
-        result.then(x => self.respond(null, x)).catch(e => self.respond(e))
+        result.then(x => self.reply.send(x)).catch(e => self.reply.send(e))
       }
     })
-
   }
 
   /**
@@ -1304,7 +1293,7 @@ class Hemera extends EventEmitter {
       )
 
       // create timeout handler only with a combination of expected msg
-      // the default timeout handler is created by NATS
+      // the default timeout handler is created by NATS client
       if (self._pattern.expectedMessages$ > 0) {
         self._handleTimeout()
       }

@@ -119,8 +119,8 @@
           <hr>
 
           <p class="section-content">
-            <p>Fatal errors will crash your server. You should implement a gracefully shutdown and use a process watcher like
-              <a href="https://github.com/Unitech/pm2">PM2</a> to come back in a clear state. Optional you can disable this behavior by <code>crashOnFatal: false</code></p>
+            <p>Fatal errors will crash your server. You should implement a gracefully shutdown procedure and use a process watcher like
+              <a href="https://github.com/Unitech/pm2">PM2</a> to come back in a clear state.</p>
           </p>
           <h4 class="section-h4">Example</h4>
           <pre>
@@ -130,8 +130,8 @@ hemera.add({ topic: "math", cmd: "add" }, function (resp, cb) {
 })
 
 hemera.act({ topic: "math", cmd: "add", a: 1, b: 1 }, function (err, resp) {
-  err instanceOf Error // true
-})
+  err instanceOf TimeoutError // true
+ })
 </code>
                     </pre>
         </div>
@@ -160,7 +160,7 @@ hemera.act({ topic: "math", cmd: "add", a: 1, b: 1 }, function (err, resp) {
   <!-- Highlights JS -->
   <script src="scripts/prism.min.js"></script>
   <script>
-    
+
   </script>
 
 </body>

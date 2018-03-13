@@ -2,22 +2,22 @@
 
 const HemeraJoi = require('../../packages/hemera-joi')
 
-describe('Hemera-joi', function () {
+describe('Hemera-joi', function() {
   const PORT = 6243
   var authUrl = 'nats://localhost:' + PORT
   var server
 
   // Start up our own nats-server
-  before(function (done) {
+  before(function(done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
   // Shutdown our server after we are done
-  after(function () {
+  after(function() {
     server.kill()
   })
 
-  it('Should be able to use joi as payload validator', function (done) {
+  it('Should be able to use joi as payload validator', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -56,7 +56,7 @@ describe('Hemera-joi', function () {
     })
   })
 
-  it('Should be able modify payload by custom payload validator', function (done) {
+  it('Should be able modify payload by custom payload validator', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -95,7 +95,7 @@ describe('Hemera-joi', function () {
     })
   })
 
-  it('Should be able to pass the full joi schema to the action', function (done) {
+  it('Should be able to pass the full joi schema to the action', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -138,23 +138,23 @@ describe('Hemera-joi', function () {
   })
 })
 
-describe('Hemera-joi pre/post', function () {
+describe('Hemera-joi pre/post', function() {
   const PORT = 6243
   const flags = ['--user', 'derek', '--pass', 'foobar']
   const authUrl = 'nats://derek:foobar@localhost:' + PORT
   let server
 
   // Start up our own nats-server
-  before(function (done) {
+  before(function(done) {
     server = HemeraTestsuite.start_server(PORT, flags, done)
   })
 
   // Shutdown our server after we are done
-  after(function () {
+  after(function() {
     server.kill()
   })
 
-  it('Should validate request payload', function (done) {
+  it('Should validate request payload', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -200,7 +200,7 @@ describe('Hemera-joi pre/post', function () {
     })
   })
 
-  it('Should validate and manipulate request payload', function (done) {
+  it('Should validate and manipulate request payload', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

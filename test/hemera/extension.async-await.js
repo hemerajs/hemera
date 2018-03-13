@@ -196,6 +196,7 @@ describe('Extension Async / Await', function() {
           cmd: 'send'
         },
         (err, resp) => {
+          expect(err).to.be.not.exists()
           expect(ext1.called).to.be.equals(true)
           hemera.close(done)
         }

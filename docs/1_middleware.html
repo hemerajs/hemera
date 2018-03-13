@@ -307,23 +307,6 @@ hemera.add({
 })
 </code>
           </pre>
-          <h4 class="section-h4">Skip the server action</h4>
-          <p>Sometimes it useful to cancel the server action early. This can be achieved by using the <code>reply.end</code> method. Optionally you can pass the final payload.</p>
-<pre>
-<code class="language-javascript">
-hemera.add({
-  topic: "test",
-  cmd: "add"
-})
-.use(async function(req, reply) {
-  reply.end({ a: 1 })
-})
-.end(async function(req) {
- // this is never called
-})
-</code>
-</pre>
-
         </div>
         <!-- END CONTENT -->
 

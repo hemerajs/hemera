@@ -28,9 +28,9 @@ describe('Streaming', function() {
           topic: 'math',
           cmd: 'add'
         },
-        function(resp, reply) {
+        function(resp) {
           for (let i = 0; i < 10; i++) {
-            reply(i)
+            this.reply.next(i)
           }
         }
       )
@@ -65,9 +65,9 @@ describe('Streaming', function() {
           topic: 'math',
           cmd: 'add'
         },
-        function(resp, reply) {
+        function(resp) {
           for (let i = 0; i < 10; i++) {
-            reply(new Error('test'))
+            this.reply.next(new Error('test'))
           }
         }
       )
@@ -107,9 +107,9 @@ describe('Streaming', function() {
           topic: 'math',
           cmd: 'add'
         },
-        function(resp, reply) {
+        function(resp) {
           for (let i = 0; i < 5; i++) {
-            reply(i)
+            this.reply.next(i)
           }
         }
       )
@@ -124,7 +124,7 @@ describe('Streaming', function() {
           expect(err).to.be.not.exists()
           results.push(resp)
           if (results.length === 5) {
-            expect(results).to.be.equals(['a', 1, 2, 3, 4])
+            expect(results).to.be.equals(['a', 0, 1, 2, 3])
             hemera.close(done)
           }
         }
@@ -149,9 +149,9 @@ describe('Streaming', function() {
           reply.send('a')
           next()
         })
-        .end(function(resp, reply) {
+        .end(function(resp) {
           for (let i = 0; i < 5; i++) {
-            reply(i)
+            this.reply.next(i)
           }
         })
 
@@ -165,7 +165,7 @@ describe('Streaming', function() {
           expect(err).to.be.not.exists()
           results.push(resp)
           if (results.length === 5) {
-            expect(results).to.be.equals(['a', 1, 2, 3, 4])
+            expect(results).to.be.equals(['a', 0, 1, 2, 3])
             hemera.close(done)
           }
         }

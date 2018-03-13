@@ -270,8 +270,8 @@
           <p class="section-content">
           </p>
           <h4 class="section-h4">Synchronous errors</h4>
-          <p>By default, Hemera will catch any exception thrown within the initial synchronous execution of a request and pass
-            it along to the next error-handling middleware or gracefully exit the process:</p>
+          <p>Hemera won't catch any thrown error expect you are using async/await. It's up to the developer to handle business
+            specific issues. Ensure that your process is restarted e.g with a process-manager like PM2.</p>
           <pre>
 <code class="language-javascript">
 hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
@@ -280,19 +280,25 @@ hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
 </code>
                     </pre>
           <h4 class="section-h4">Asynchronous errors</h4>
-          <p>In asynchronous code, Hemera cannot catch exceptions as you’ve lost your stack once you have entered a callback:</p>
+          <p>In asynchronous code, the application cannot catch exceptions as you’ve lost your stack once you have entered a
+            callback:
+          </p>
           <pre>
 <code class="language-javascript">
 hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
-  process.nextTick(() => {
-      throw new Error()
-  })
+  try {
+    process.nextTick(() => {
+        throw new Error()
+    })
+  } catch(err) {
+
+  }
 })
 </code>
                     </pre>
-          <p>"How can I deal with them in a proper way?" Read this
-            <a href="https://strongloop.com/strongblog/async-error-handling-expressjs-es7-promises-generators/">article</a> about async error handling in express its very useful.</p>
-          <h4 class="section-h4">For these cases, use the callback function to propagate errors:</h4>
+          <p>"How can I deal with it?" Read this
+            <a href="https://strongloop.com/strongblog/async-error-handling-expressjs-es7-promises-generators/">article</a> about async error handling in express it's very useful.</p>
+          <h4 class="section-h4">Use callback function to propagate errors:</h4>
           <pre>
 <code class="language-javascript">
 hemera.add({ topic: "math", cmd: "add" }, function (req, cb) {
@@ -307,6 +313,15 @@ hemera.act({ topic: "math", cmd: "add", a: 1, b: 1 }, function (err, resp) {
  err instanceOf CustomError // true
 })
 </code>
+</pre>
+          <h4 class="section-h4">Use promises to propagate errors:</h4>
+          <pre>
+<code class="language-javascript">
+hemera.add({ topic: "math", cmd: "add" }, async function (req) {
+  await operation()
+  await operation2()
+})
+          </code>
                     </pre>
           <h4 class="section-h4">Create custom errors</h4>
           <pre>

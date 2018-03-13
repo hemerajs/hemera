@@ -19,8 +19,16 @@ describe('Server Extension error', function() {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
+    const spy = Sinon.spy()
 
     let plugin = function(hemera, options, done) {
+      hemera.on('serverResponseError', async function(err) {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('Unauthorized')
+        expect(err.message).to.be.equals('test')
+        spy()
+      })
+
       hemera.ext('onServerPreRequest', function(ctx, req, res, next) {
         next(new UnauthorizedError('test'))
       })
@@ -56,6 +64,7 @@ describe('Server Extension error', function() {
           expect(err.hops.length).to.be.equals(1)
           expect(err.hops[0].service).to.be.equals('math')
           expect(err.hops[0].method).to.be.equals('a:1,b:2,cmd:add,topic:math')
+          expect(spy.calledOnce).to.be.equals(true)
           hemera.close(done)
         }
       )
@@ -66,8 +75,15 @@ describe('Server Extension error', function() {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
+    const spy = Sinon.spy()
 
     let plugin = function(hemera, options, done) {
+      hemera.on('serverResponseError', async function(err) {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
+        spy()
+      })
       hemera.ext('onServerPreRequest', function(ctx, req, res, next) {
         next(new Error('test'))
       })
@@ -103,6 +119,7 @@ describe('Server Extension error', function() {
           expect(err.hops.length).to.be.equals(1)
           expect(err.hops[0].service).to.be.equals('math')
           expect(err.hops[0].method).to.be.equals('a:1,b:2,cmd:add,topic:math')
+          expect(spy.calledOnce).to.be.equals(true)
           hemera.close(done)
         }
       )
@@ -113,8 +130,15 @@ describe('Server Extension error', function() {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
+    const spy = Sinon.spy()
 
     let plugin = function(hemera, options, done) {
+      hemera.on('serverResponseError', async function(err) {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
+        spy()
+      })
       hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
         next(new Error('test'))
       })
@@ -150,6 +174,7 @@ describe('Server Extension error', function() {
           expect(err.hops.length).to.be.equals(1)
           expect(err.hops[0].service).to.be.equals('math')
           expect(err.hops[0].method).to.be.equals('a:1,b:2,cmd:add,topic:math')
+          expect(spy.calledOnce).to.be.equals(true)
           hemera.close(done)
         }
       )
@@ -161,7 +186,13 @@ describe('Server Extension error', function() {
 
     const hemera = new Hemera(nats)
 
-    let plugin = function(hemera, options, done) {
+    let plugin = function(hemera, options, next) {
+      hemera.on('serverResponseError', async function(err) {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('Unauthorized')
+        expect(err.message).to.be.equals('test')
+        hemera.close(done)
+      })
       hemera.ext('onServerPreResponse', function(ctx, req, res, next) {
         next(new UnauthorizedError('test'))
       })
@@ -176,30 +207,18 @@ describe('Server Extension error', function() {
         }
       )
 
-      done()
+      next()
     }
 
     hemera.use(plugin)
 
     hemera.ready(() => {
-      hemera.act(
-        {
-          topic: 'math',
-          cmd: 'add',
-          a: 1,
-          b: 2
-        },
-        (err, resp) => {
-          expect(err).to.be.exists()
-          expect(err.name).to.be.equals('Unauthorized')
-          expect(err.message).to.be.equals('test')
-          expect(err.hops).to.be.exists()
-          expect(err.hops.length).to.be.equals(1)
-          expect(err.hops[0].service).to.be.equals('math')
-          expect(err.hops[0].method).to.be.equals('a:1,b:2,cmd:add,topic:math')
-          hemera.close(done)
-        }
-      )
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      })
     })
   })
 
@@ -208,7 +227,13 @@ describe('Server Extension error', function() {
 
     const hemera = new Hemera(nats)
 
-    let plugin = function(hemera, options, done) {
+    let plugin = function(hemera, options, next) {
+      hemera.on('serverResponseError', async function(err) {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
+        hemera.close(done)
+      })
       hemera.ext('onServerPreResponse', function(ctx, req, res, next) {
         next(new Error('test'))
       })
@@ -223,30 +248,18 @@ describe('Server Extension error', function() {
         }
       )
 
-      done()
+      next()
     }
 
     hemera.use(plugin)
 
     hemera.ready(() => {
-      hemera.act(
-        {
-          topic: 'math',
-          cmd: 'add',
-          a: 1,
-          b: 2
-        },
-        (err, resp) => {
-          expect(err).to.be.exists()
-          expect(err.name).to.be.equals('Error')
-          expect(err.message).to.be.equals('test')
-          expect(err.hops).to.be.exists()
-          expect(err.hops.length).to.be.equals(1)
-          expect(err.hops[0].service).to.be.equals('math')
-          expect(err.hops[0].method).to.be.equals('a:1,b:2,cmd:add,topic:math')
-          hemera.close(done)
-        }
-      )
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      })
     })
   })
 })

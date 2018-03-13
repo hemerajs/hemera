@@ -1,21 +1,21 @@
 'use strict'
 
-describe('Error handling', function () {
+describe('Error handling', function() {
   var PORT = 6242
   var authUrl = 'nats://localhost:' + PORT
   var server
 
   // Start up our own nats-server
-  before(function (done) {
+  before(function(done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
   // Shutdown our server after we are done
-  after(function () {
+  after(function() {
     server.kill()
   })
 
-  it('Should return all hemera error objects', function (done) {
+  it('Should return all hemera error objects', function(done) {
     expect(Hemera.errors.HemeraError).to.be.exists()
     expect(Hemera.errors.ParseError).to.be.exists()
     expect(Hemera.errors.TimeoutError).to.be.exists()
@@ -27,7 +27,7 @@ describe('Error handling', function () {
     done()
   })
 
-  it('Should be able pass a custom super error', function (done) {
+  it('Should be able pass a custom super error', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -64,7 +64,7 @@ describe('Error handling', function () {
     })
   })
 
-  it('Should be able to compare hemera errors with instanceof', function (done) {
+  it('Should be able to compare hemera errors with instanceof', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -98,7 +98,7 @@ describe('Error handling', function () {
     })
   })
 
-  it('Should be able to compare custom hemera errors with instanceof', function (done) {
+  it('Should be able to compare custom hemera errors with instanceof', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -134,7 +134,7 @@ describe('Error handling', function () {
     })
   })
 
-  it('Should be able to serialize and deserialize an error back to the callee', function (done) {
+  it('Should be able to serialize and deserialize an error back to the callee', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -167,7 +167,7 @@ describe('Error handling', function () {
     })
   })
 
-  it('Should be able to transfer the error code', function (done) {
+  it('Should be able to transfer the error code', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -204,7 +204,7 @@ describe('Error handling', function () {
     })
   })
 
-  it('Should be able to transfer additional error data', function (done) {
+  it('Should be able to transfer additional error data', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -242,7 +242,7 @@ describe('Error handling', function () {
     })
   })
 
-  it('Should be able to handle decoding errors', function (done) {
+  it('Should be able to handle decoding errors', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -285,7 +285,7 @@ describe('Error handling', function () {
     })
   })
 
-  it('Should be able to handle response decoding error', function (done) {
+  it('Should be able to handle response decoding error', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -330,7 +330,7 @@ describe('Error handling', function () {
     })
   })
 
-  it('Should be able to handle response encoding error', function (done) {
+  it('Should be able to handle response encoding error', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -374,7 +374,7 @@ describe('Error handling', function () {
     })
   })
 
-  it('Should be able to handle business errors', function (done) {
+  it('Should be able to handle business errors', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -385,7 +385,7 @@ describe('Error handling', function () {
           topic: 'email',
           cmd: 'send'
         },
-        (resp) => {
+        resp => {
           return Promise.reject(new Error('Shit!'))
         }
       )
@@ -407,7 +407,7 @@ describe('Error handling', function () {
     })
   })
 
-  it('Should be able to handle business errors with super errors', function (done) {
+  it('Should be able to handle business errors with super errors', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -418,7 +418,7 @@ describe('Error handling', function () {
           topic: 'email',
           cmd: 'send'
         },
-        (resp) => {
+        resp => {
           return Promise.reject(new UnauthorizedError('Shit!'))
         }
       )
@@ -440,7 +440,7 @@ describe('Error handling', function () {
     })
   })
 
-  it('Pattern not found', function (done) {
+  it('Pattern not found', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
