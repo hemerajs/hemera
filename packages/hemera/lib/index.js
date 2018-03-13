@@ -316,6 +316,16 @@ class Hemera extends EventEmitter {
   }
 
   /**
+   *
+   *
+   * @readonly
+   * @memberof Hemera
+   */
+  get plugins() {
+    return this._plugins
+  }
+
+  /**
    * Return all hemera errors
    *
    * @readonly
@@ -374,16 +384,6 @@ class Hemera extends EventEmitter {
     } else {
       this._ext.add(type, handler)
     }
-  }
-
-  /**
-   *
-   *
-   * @readonly
-   * @memberof Hemera
-   */
-  get plugins() {
-    return this._plugins
   }
 
   /**
