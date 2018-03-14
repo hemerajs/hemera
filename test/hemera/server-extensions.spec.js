@@ -1,6 +1,6 @@
 'use strict'
 
-describe.only('Server Extensions', function() {
+describe('Server Extensions', function() {
   var PORT = 6242
   var authUrl = 'nats://localhost:' + PORT
   var server
