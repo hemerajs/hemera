@@ -150,13 +150,13 @@ class Reply {
     const self = this
 
     if (extensionError) {
-      self.send(extensionError)
       const internalError = new Errors.HemeraError(
         Constants.EXTENSION_ERROR,
         self.hemera.errorDetails
       ).causedBy(extensionError)
       self.log.error(internalError)
       self.hemera.emit('serverResponseError', extensionError)
+      self.send(extensionError)
     }
 
     if (self._response.replyTo) {
