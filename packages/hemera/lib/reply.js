@@ -192,7 +192,9 @@ class Reply {
       let internalError = new Errors.ParseError(
         Constants.PAYLOAD_PARSING_ERROR
       ).causedBy(msg.error)
-      message.error = Errio.toObject(internalError)
+      self.log.error(internalError)
+      self.hemera.emit('serverResponseError', msg.error)
+      message.error = Errio.toObject(msg.error)
       message.result = null
       msg = self.hemera._encoderPipeline.run(message, self)
     }

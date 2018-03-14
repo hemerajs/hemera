@@ -241,53 +241,18 @@ describe('Error handling', function() {
     })
   })
 
-  it('Should be able to handle decoding errors', function(done) {
+  it('Should be able to handle client decoding error', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
+    const spy = Sinon.spy()
 
-    var stub = Sinon.stub(hemera.decoder, 'run')
-
-    stub.returns({
-      error: new Error('TEST')
+    hemera.on('clientResponseError', function(err) {
+      expect(err).to.be.exists()
+      expect(err.name).to.be.equals('Error')
+      expect(err.message).to.be.equals('TEST')
+      spy()
     })
-
-    hemera.ready(() => {
-      hemera.add(
-        {
-          topic: 'email',
-          cmd: 'send'
-        },
-        (resp, cb) => {
-          cb()
-        }
-      )
-
-      hemera.act(
-        {
-          topic: 'email',
-          cmd: 'send',
-          email: 'foobar@gmail.com',
-          msg: 'Hi!'
-        },
-        (err, resp) => {
-          expect(err).to.be.exists()
-          expect(err.name).to.be.equals('HemeraParseError')
-          expect(err.message).to.be.equals('Invalid payload')
-          expect(err.cause.name).to.be.equals('Error')
-          expect(err.cause.message).to.be.equals('TEST')
-
-          stub.restore()
-          hemera.close(done)
-        }
-      )
-    })
-  })
-
-  it('Should be able to handle response decoding error', function(done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
 
     hemera.ready(() => {
       hemera.add(
@@ -301,12 +266,11 @@ describe('Error handling', function() {
       )
 
       var stub = Sinon.stub(hemera.decoder, 'run')
-
-      stub.onCall(1)
-
-      stub.returns({
-        error: new Error('TEST')
-      })
+        .onSecondCall()
+        .returns({
+          error: new Error('TEST')
+        })
+        .callThrough()
 
       hemera.act(
         {
@@ -317,11 +281,9 @@ describe('Error handling', function() {
         },
         (err, resp) => {
           expect(err).to.be.exists()
-          expect(err.name).to.be.equals('HemeraParseError')
-          expect(err.message).to.be.equals('Invalid payload')
-          expect(err.cause.name).to.be.equals('Error')
-          expect(err.cause.message).to.be.equals('TEST')
-
+          expect(err.name).to.be.equals('Error')
+          expect(err.message).to.be.equals('TEST')
+          expect(spy.calledOnce).to.be.equals(true)
           stub.restore()
           hemera.close(done)
         }
@@ -329,18 +291,75 @@ describe('Error handling', function() {
     })
   })
 
-  it('Should be able to handle response encoding error', function(done) {
+  it('Should be able to handle server decoding error', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
+    const spy = Sinon.spy()
+
+    hemera.on('serverResponseError', function(err) {
+      expect(err).to.be.exists()
+      expect(err.name).to.be.equals('Error')
+      expect(err.message).to.be.equals('TEST')
+      spy()
+    })
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'email',
+          cmd: 'send'
+        },
+        (resp, cb) => {
+          cb()
+        }
+      )
+
+      var stub = Sinon.stub(hemera.decoder, 'run')
+        .onFirstCall()
+        .returns({
+          error: new Error('TEST')
+        })
+        .callThrough()
+
+      hemera.act(
+        {
+          topic: 'email',
+          cmd: 'send',
+          email: 'foobar@gmail.com',
+          msg: 'Hi!'
+        },
+        (err, resp) => {
+          expect(err).to.be.exists()
+          expect(err.name).to.be.equals('Error')
+          expect(err.message).to.be.equals('TEST')
+          expect(spy.calledOnce).to.be.equals(true)
+          stub.restore()
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should be able to handle server encoding error', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    const spy = Sinon.spy()
+
+    hemera.on('serverResponseError', function(err) {
+      expect(err).to.be.exists()
+      expect(err.name).to.be.equals('Error')
+      expect(err.message).to.be.equals('TEST')
+      spy()
+    })
 
     var stub = Sinon.stub(hemera.encoder, 'run')
       .onSecondCall()
       .returns({
         error: new Error('TEST')
       })
-
-    stub.callThrough()
+      .callThrough()
 
     hemera.ready(() => {
       hemera.add(
@@ -362,10 +381,59 @@ describe('Error handling', function() {
         },
         (err, resp) => {
           expect(err).to.be.exists()
-          expect(err.name).to.be.equals('HemeraParseError')
-          expect(err.message).to.be.equals('Invalid payload')
-          expect(err.cause.name).to.be.equals('Error')
-          expect(err.cause.message).to.be.equals('TEST')
+          expect(err.name).to.be.equals('Error')
+          expect(err.message).to.be.equals('TEST')
+          expect(spy.calledOnce).to.be.equals(true)
+          stub.restore()
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should be able to handle client encoding error', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    const spy = Sinon.spy()
+
+    hemera.on('clientResponseError', function(err) {
+      expect(err).to.be.exists()
+      expect(err.name).to.be.equals('Error')
+      expect(err.message).to.be.equals('TEST')
+      spy()
+    })
+
+    var stub = Sinon.stub(hemera.encoder, 'run')
+      .onFirstCall()
+      .returns({
+        error: new Error('TEST')
+      })
+      .callThrough()
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'email',
+          cmd: 'send'
+        },
+        (resp, cb) => {
+          cb()
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'email',
+          cmd: 'send',
+          email: 'foobar@gmail.com',
+          msg: 'Hi!'
+        },
+        (err, resp) => {
+          expect(err).to.be.exists()
+          expect(err.name).to.be.equals('Error')
+          expect(err.message).to.be.equals('TEST')
+          expect(spy.calledOnce).to.be.equals(true)
           stub.restore()
           hemera.close(done)
         }

@@ -22,7 +22,7 @@ describe('Server Extension errors', function() {
     const spy = Sinon.spy()
 
     let plugin = function(hemera, options, done) {
-      hemera.on('serverResponseError', async function(err) {
+      hemera.on('serverResponseError', function(err) {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Unauthorized')
         expect(err.message).to.be.equals('test')
@@ -78,7 +78,7 @@ describe('Server Extension errors', function() {
     const spy = Sinon.spy()
 
     let plugin = function(hemera, options, done) {
-      hemera.on('serverResponseError', async function(err) {
+      hemera.on('serverResponseError', function(err) {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Error')
         expect(err.message).to.be.equals('test')
@@ -133,7 +133,7 @@ describe('Server Extension errors', function() {
     const spy = Sinon.spy()
 
     let plugin = function(hemera, options, done) {
-      hemera.on('serverResponseError', async function(err) {
+      hemera.on('serverResponseError', function(err) {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Error')
         expect(err.message).to.be.equals('test')
@@ -187,7 +187,7 @@ describe('Server Extension errors', function() {
     const hemera = new Hemera(nats)
 
     let plugin = function(hemera, options, next) {
-      hemera.on('serverResponseError', async function(err) {
+      hemera.on('serverResponseError', function(err) {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Unauthorized')
         expect(err.message).to.be.equals('test')
@@ -228,7 +228,7 @@ describe('Server Extension errors', function() {
     const hemera = new Hemera(nats)
 
     let plugin = function(hemera, options, next) {
-      hemera.on('serverResponseError', async function(err) {
+      hemera.on('serverResponseError', function(err) {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Error')
         expect(err.message).to.be.equals('test')

@@ -364,13 +364,6 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   _addOnAddHandler(handler) {
-    if (!_.isFunction(handler)) {
-      let error = new Errors.HemeraError(Constants.INVALID_EXTENSION_TYPE, {
-        type: 'onAdd',
-        handler
-      })
-      throw error
-    }
     this._onAddHandlers.push(handler)
   }
 
@@ -383,6 +376,14 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   ext(type, handler) {
+    if (!_.isFunction(handler)) {
+      let error = new Errors.HemeraError(Constants.INVALID_EXTENSION_HANDLER, {
+        type,
+        handler
+      })
+      throw error
+    }
+
     if (type === 'onAdd') {
       this._addOnAddHandler(handler)
     } else if (type === 'onClose') {
@@ -493,7 +494,9 @@ class Hemera extends EventEmitter {
    */
   checkPluginDependencies(plugin) {
     const deps = plugin[Symbol.for('dependencies')]
-    if (!deps) return
+    if (!deps) {
+      return
+    }
     if (!Array.isArray(deps)) {
       throw new Error(Constants.PLUGIN_DEP_STRINGS)
     }
@@ -1093,13 +1096,13 @@ class Hemera extends EventEmitter {
 
     // decoding error
     if (self._response.error) {
-      let error = new Errors.ParseError(
+      let internalError = new Errors.ParseError(
         Constants.PAYLOAD_PARSING_ERROR,
         self.errorDetails
       ).causedBy(self._response.error)
-      self.log.error(error)
+      self.log.error(internalError)
       self.emit('clientResponseError', self._response.error)
-      self._execute(error)
+      self._execute(self._response.error)
       return
     }
 
@@ -1259,8 +1262,8 @@ class Hemera extends EventEmitter {
         Constants.PAYLOAD_PARSING_ERROR
       ).causedBy(m.error)
       self.log.error(error)
-      self.emit('clientResponseError', error)
-      self._execute(error)
+      self.emit('clientResponseError', m.error)
+      self._execute(m.error)
       return
     }
 

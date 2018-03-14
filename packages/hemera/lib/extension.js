@@ -50,14 +50,6 @@ class Extension {
       throw error
     }
 
-    if (!_.isFunction(handler)) {
-      let error = new Errors.HemeraError(Constants.INVALID_EXTENSION_TYPE, {
-        type,
-        handler
-      })
-      throw error
-    }
-
     this[type].push(handler)
   }
 

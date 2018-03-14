@@ -49,7 +49,7 @@ module.exports = {
   FATAL_ERROR: 'Fatal error',
   EXTENSION_ERROR: 'Extension error',
   INVALID_EXTENSION: 'Invalid extension type',
-  INVALID_EXTENSION_TYPE: 'Extension must be from type "function"',
+  INVALID_EXTENSION_HANDLER: 'Extension must be from type "function"',
   MISSING_DECORATE_DEPENDENCY: 'Missing decorate dependency',
   DECORATION_ALREADY_DEFINED: 'Decoration has been already added',
   GRACEFULLY_SHUTDOWN: 'Gracefully shutdown',
