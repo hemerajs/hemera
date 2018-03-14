@@ -287,6 +287,10 @@ describe('Plugin interface', function() {
 
     hemera.use(function(hemera, options, done) {
       expect(hemera.test).to.be.exists()
+      hemera.use(function(hemera, options, done) {
+        expect(hemera.test).to.be.exists()
+        done()
+      })
       done()
     })
 
@@ -294,7 +298,11 @@ describe('Plugin interface', function() {
       expect(err).to.be.not.exists()
       expect(hemera.test).to.be.exists()
 
-      expect(Object.keys(hemera.plugins)).to.be.equals(['core', 'anonymous-2'])
+      expect(Object.keys(hemera.plugins)).to.be.equals([
+        'core',
+        'anonymous-2',
+        'anonymous-3'
+      ])
       hemera.close(done)
     })
   })
