@@ -161,7 +161,7 @@ class Hemera extends EventEmitter {
         dependencies: pluginDeps
       }
 
-      // extend prototype so that each nested plugin have access
+      // overwrite decorate function to extend the prototype
       res.decorate = function decorate(prop, value, deps) {
         if (prop in this) {
           throw new Errors.HemeraError(Constants.DECORATION_ALREADY_DEFINED)
@@ -171,7 +171,7 @@ class Hemera extends EventEmitter {
           res._checkDecoraterDependencies(deps)
         }
 
-        // extend prototype
+        // extend prototype so that each nested plugin have access
         proto[prop] = value
       }
 
@@ -461,7 +461,7 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   decorate(prop, value, deps) {
-    if (this[prop]) {
+    if (prop in this) {
       throw new Errors.HemeraError(Constants.DECORATION_ALREADY_DEFINED)
     }
 

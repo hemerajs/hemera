@@ -144,6 +144,25 @@ hemera.act({ topic: "math", cmd: "add", a: "1" }, function (err, resp) {
 })
 </code>
                     </pre>
+                    <h4 class="section-h4">Define validator function</h4>
+                    <p>In that case the function returned by schemaCompiler returns an object like:
+                      <ul>
+                        <li>error: filled with an instance of Error that describes the validation error</li>
+                        <li>value: the coerced value that passed the validation</li>
+                      </ul>
+                    </p>
+                    <pre>
+<code class="language-javascript">
+hemera.setSchemaCompiler(schema => {
+  return pattern => {
+    return {
+      value: ...,
+      error: ...
+    }
+  }
+})
+</code>
+                    </pre>
 
                 </div>
                 <!-- END CONTENT -->
