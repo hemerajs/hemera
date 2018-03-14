@@ -49,7 +49,6 @@ const plugin = Hp(hemeraEmail, {
   name: require('./package.json').name,
   depdendencies: ['hemera-joi'],
   options: {
-    payloadValidator: 'hemera-joi',
     transport: {
       jsonTransport: true // for debugging
     }

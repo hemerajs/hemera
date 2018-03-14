@@ -6,6 +6,7 @@
 This is a plugin to use [Joi](https://github.com/hapijs/joi) with Hemera.
 
 #### Example
+
 ```js
 const Hemera = require('./../')
 const nats = require('nats').connect()
@@ -17,54 +18,59 @@ const hemera = new Hemera(nats, {
 hemera.use(require('hemera-joi'))
 
 hemera.ready(() => {
-
-  // Use Joi as payload validator
-  hemera.setOption('payloadValidator', 'hemera-joi')
-
   let Joi = hemera.joi
   /**
    * Your Implementations
    */
-  hemera.add({
-    topic: 'math',
-    cmd: 'add',
-    a: Joi.number().required()
-  }, (req, cb) => {
+  hemera.add(
+    {
+      topic: 'math',
+      cmd: 'add',
+      a: Joi.number().required()
+    },
+    (req, cb) => {
+      cb(null, req.a + req.b)
+    }
+  )
 
-    cb(null, req.a + req.b)
-  })
-
-  hemera.act({
-    topic: 'math',
-    cmd: 'add',
-    a: 'dwed3',
-    b: 20
-  }, function (err, resp) {
-
-    this.log.info('Error', err.cause.message) //Error child "a" fails because ["a" must be a number]
-  })
+  hemera.act(
+    {
+      topic: 'math',
+      cmd: 'add',
+      a: 'dwed3',
+      b: 20
+    },
+    function(err, resp) {
+      this.log.info('Error', err.cause.message) //Error child "a" fails because ["a" must be a number]
+    }
+  )
 })
 ```
 
 ### Pass the full schema
+
 ```js
-  let Joi = hemera.joi
-  
-  hemera.add({
+let Joi = hemera.joi
+
+hemera.add(
+  {
     topic: 'math',
     cmd: 'add',
     joi$: Joi.object().keys({ a: Joi.number().required() })
-  }, (req, cb) => {
-
+  },
+  (req, cb) => {
     cb(null, req.a + req.b)
-  })
+  }
+)
 ```
 
 ### Pre and Post validation
+
 ```js
-  let Joi = hemera.joi
-  
-  hemera.add({
+let Joi = hemera.joi
+
+hemera.add(
+  {
     topic: 'math',
     cmd: 'add',
     joi$: {
@@ -75,12 +81,11 @@ hemera.ready(() => {
         foo: Joi.number().default(500)
       }
     }
-  }, (req, cb) => {
-
+  },
+  (req, cb) => {
     cb(null, { result: req.a + req.b })
-  })
+  }
+)
 
-  // response will be { result: <number>, foo: 500 }
+// response will be { result: <number>, foo: 500 }
 ```
-
-
