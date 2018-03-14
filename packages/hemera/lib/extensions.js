@@ -164,7 +164,7 @@ function onServerPreRequest(context, req, res, next) {
   }
 
   context._request.payload = m.value
-  context._request.error = m.error
+  context._request.error = null
 
   // incoming pattern
   context._pattern = context._request.payload.pattern
@@ -173,6 +173,23 @@ function onServerPreRequest(context, req, res, next) {
 
   context.emit('serverPreRequest', context)
 
+  next()
+}
+
+function onServerPreRequestSchemaValidation(context, req, res, next) {
+  if (context.matchedAction && context._schemaCompiler) {
+    const schema = context.matchedAction.schema
+    const ret = context._schemaCompiler(schema)(req.payload.pattern)
+    if (ret) {
+      if (ret.error) {
+        next(ret.error)
+      } else if (ret.value) {
+        req.payload.pattern = ret.value
+        next()
+      }
+      return
+    }
+  }
   next()
 }
 
@@ -200,5 +217,6 @@ module.exports.onClientPreRequest = [onClientPreRequest]
 module.exports.onClientPostRequest = [onClientPostRequest]
 module.exports.onServerPreRequest = [
   onServerPreRequest,
+  onServerPreRequestSchemaValidation,
   onServerPreRequestLoadTest
 ]

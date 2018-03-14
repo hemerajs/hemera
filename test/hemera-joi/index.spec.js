@@ -22,7 +22,6 @@ describe('Hemera-joi', function() {
 
     const hemera = new Hemera(nats)
     hemera.use(HemeraJoi)
-    hemera.setOption('payloadValidator', 'hemera-joi')
 
     hemera.ready(() => {
       let Joi = hemera.joi
@@ -45,7 +44,7 @@ describe('Hemera-joi', function() {
         },
         (err, resp) => {
           expect(err).to.be.exists()
-          expect(err.name).to.be.equals('PayloadValidationError')
+          expect(err.name).to.be.equals('ValidationError')
           expect(err.details).to.be.exists()
           expect(err.message).to.be.equals(
             'child "a" fails because ["a" must be a number]'
@@ -62,7 +61,6 @@ describe('Hemera-joi', function() {
     const hemera = new Hemera(nats)
 
     hemera.use(HemeraJoi)
-    hemera.setOption('payloadValidator', 'hemera-joi')
 
     hemera.ready(() => {
       let Joi = hemera.joi
@@ -101,7 +99,6 @@ describe('Hemera-joi', function() {
     const hemera = new Hemera(nats)
 
     hemera.use(HemeraJoi)
-    hemera.setOption('payloadValidator', 'hemera-joi')
 
     hemera.ready(() => {
       let Joi = hemera.joi
@@ -126,7 +123,7 @@ describe('Hemera-joi', function() {
         },
         (err, resp) => {
           expect(err).to.be.exists()
-          expect(err.name).to.be.equals('PayloadValidationError')
+          expect(err.name).to.be.equals('ValidationError')
           expect(err.details).to.be.exists()
           expect(err.message).to.be.equals(
             'child "a" fails because ["a" must be a number]'
@@ -145,7 +142,6 @@ describe('Hemera-joi', function() {
     })
 
     hemera.use(HemeraJoi)
-    hemera.setOption('payloadValidator', 'hemera-joi')
 
     hemera.ready(() => {
       let Joi = hemera.joi
@@ -172,7 +168,7 @@ describe('Hemera-joi', function() {
         },
         (err, resp) => {
           expect(err).to.be.exists()
-          expect(err.name).to.be.equals('PayloadValidationError')
+          expect(err.name).to.be.equals('ValidationError')
           expect(err.details).to.be.exists()
           expect(err.message).to.be.equals(
             'child "c" fails because ["c" is required]'
@@ -189,7 +185,6 @@ describe('Hemera-joi', function() {
     const hemera = new Hemera(nats)
 
     hemera.use(HemeraJoi)
-    hemera.setOption('payloadValidator', 'hemera-joi')
 
     hemera.ready(() => {
       let Joi = hemera.joi
@@ -223,7 +218,7 @@ describe('Hemera-joi', function() {
     })
   })
 
-  it('Should expose joi library and errors', function(done) {
+  it('Should expose joi library', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -233,7 +228,6 @@ describe('Hemera-joi', function() {
 
     hemera.ready(() => {
       expect(hemera.joi).to.be.exists()
-      expect(hemera.joiErrors.PayloadValidationError).to.be.exists()
       hemera.close(done)
     })
   })

@@ -77,6 +77,7 @@ describe('Hemera plugin', function() {
       {
         hemera: '>=0',
         name: 'myPlugin',
+        skipOverride: true,
         dependencies: ['foo'],
         options: { a: 1 }
       }
@@ -84,6 +85,7 @@ describe('Hemera plugin', function() {
 
     expect(plugin[Symbol.for('name')]).to.be.equals('myPlugin')
     expect(plugin[Symbol.for('dependencies')]).to.be.equals(['foo'])
+    expect(plugin[Symbol.for('skip-override')]).to.be.equals(true)
     expect(plugin[Symbol.for('options')]).to.be.equals({ a: 1 })
     done()
   })

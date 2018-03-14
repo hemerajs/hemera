@@ -69,14 +69,10 @@ const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
-// set payload validator of your choice
 hemera.use(HemeraJoi)
-hemera.setOption('payloadValidator', 'hemera-joi')
 
-// use exposed lib from plugin
 let Joi = hemera.joi
 
-// define your first server action
 hemera.add(
   {
     topic: 'math',

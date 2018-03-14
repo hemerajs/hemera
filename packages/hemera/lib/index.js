@@ -107,6 +107,7 @@ class Hemera extends EventEmitter {
 
     this._encoderPipeline = new CodecPipeline().add(DefaultEncoder.encode)
     this._decoderPipeline = new CodecPipeline().add(DefaultDecoder.decode)
+    this._schemaCompiler = null
 
     // errio settings
     Errio.setDefaults(this._config.errio)
@@ -137,17 +138,22 @@ class Hemera extends EventEmitter {
     })
 
     this._avvio.override = (hemera, plugin, opts) => {
-      const res = Object.create(hemera)
-      const proto = Object.getPrototypeOf(res)
       const pluginCount = Object.keys(this._plugins).length + 1
+      const skipOverride = plugin[Symbol.for('skip-override')]
       const pluginName =
         plugin[Symbol.for('name')] || 'anonymous-' + pluginCount
       const pluginDeps = plugin[Symbol.for('dependencies')] || []
 
+      if (skipOverride) {
+        return hemera
+      }
+
+      const res = Object.create(hemera)
+      const proto = Object.getPrototypeOf(res)
+
       if (hemera._config.childLogger) {
         res.log = hemera.log.child({ plugin: pluginName })
       }
-
       // plugin seperated prototype propertys
       res.plugin$ = {
         options: opts,
@@ -406,6 +412,13 @@ class Hemera extends EventEmitter {
    */
   setConfig(key, value) {
     this._config[key] = value
+  }
+  /**
+   *
+   * @param {*} fn
+   */
+  setSchemaCompiler(fn) {
+    this._schemaCompiler = fn
   }
 
   /**

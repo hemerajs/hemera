@@ -270,6 +270,35 @@ describe('Plugin interface', function() {
     })
   })
 
+  it('Plugin is not encapsulated when use skip-override', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let parent = function(hemera, options, done) {
+      hemera.decorate('test', true)
+      done()
+    }
+
+    parent[Symbol.for('skip-override')] = true
+    parent[Symbol.for('name')] = 'parent'
+
+    hemera.use(parent)
+
+    hemera.use(function(hemera, options, done) {
+      expect(hemera.test).to.be.exists()
+      done()
+    })
+
+    hemera.ready(err => {
+      expect(err).to.be.not.exists()
+      expect(hemera.test).to.be.exists()
+
+      expect(Object.keys(hemera.plugins)).to.be.equals(['core', 'anonymous-2'])
+      hemera.close(done)
+    })
+  })
+
   it('Should be able to pass a callback after plugins was initialized', function(done) {
     const nats = require('nats').connect(authUrl)
 

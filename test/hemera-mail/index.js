@@ -82,7 +82,7 @@ describe('Hemera-mail', function() {
         },
         (err, resp) => {
           expect(err).to.be.exists()
-          expect(err.name).to.be.equals('PayloadValidationError')
+          expect(err.name).to.be.equals('ValidationError')
           hemera.close(done)
         }
       )
