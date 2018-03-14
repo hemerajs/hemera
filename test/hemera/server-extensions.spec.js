@@ -1,6 +1,6 @@
 'use strict'
 
-describe('Server Extensions', function() {
+describe.only('Server Extensions', function() {
   var PORT = 6242
   var authUrl = 'nats://localhost:' + PORT
   var server
@@ -333,7 +333,7 @@ describe('Server Extensions', function() {
     })
   })
 
-  it('Should not ne able to send the payload in onServerPreResponse', function(done) {
+  it('Should not be able to send the payload in onServerPreResponse because payload was already set', function(done) {
     let ext = Sinon.spy()
 
     const nats = require('nats').connect(authUrl)
@@ -347,6 +347,46 @@ describe('Server Extensions', function() {
           msg: 'authorized'
         })
         next()
+      })
+
+      hemera.add(
+        {
+          topic: 'email',
+          cmd: 'send'
+        },
+        (resp, cb) => {
+          cb(null, true)
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'email',
+          cmd: 'send',
+          email: 'foobar@gmail.com',
+          msg: 'Hi!'
+        },
+        (err, resp) => {
+          expect(err).to.be.not.exists()
+          expect(resp).to.be.equals(true)
+          expect(ext.called).to.be.equals(true)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should not be able send the extension error in onServerPreResponse because payload was already set', function(done) {
+    let ext = Sinon.spy()
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.ext('onServerPreResponse', function(ctx, req, res, next) {
+        ext()
+        next(new Error('test'))
       })
 
       hemera.add(
