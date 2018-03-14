@@ -18,8 +18,6 @@ hemera.use(hemeraJaeger, {
 hemera.use(HemeraJoi)
 
 hemera.ready(() => {
-  hemera.setOption('payloadValidator', 'hemera-joi')
-
   const Joi = hemera.joi
 
   hemera.add(

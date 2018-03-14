@@ -13,8 +13,6 @@ const hemera = new Hemera(nats, {
 hemera.use(HemeraJoi)
 
 hemera.ready(() => {
-  hemera.setOption('payloadValidator', 'hemera-joi')
-
   let Joi = hemera.joi
 
   hemera.add(
