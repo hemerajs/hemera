@@ -534,7 +534,7 @@ class Hemera extends EventEmitter {
    */
   createError(name) {
     const ctor = SuperError.subclass(name)
-    // Register the class with Errio.
+    // Register the class with Errio
     Errio.register(ctor)
     return ctor
   }

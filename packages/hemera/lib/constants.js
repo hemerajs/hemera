@@ -8,16 +8,17 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
+const NATS = require('nats')
 
 module.exports = {
   // General
   NATS_QUEUEGROUP_PREFIX: 'queue',
   // NATS conn error codes
   NATS_CONN_ERROR_CODES: [
-    'CONN_ERR',
-    'SECURE_CONN_REQ_MSG',
-    'NON_SECURE_CONN_REQ_MSG',
-    'CLIENT_CERT_REQ_MSG'
+    NATS.CONN_ERR,
+    NATS.SECURE_CONN_REQ,
+    NATS.NON_SECURE_CONN_REQ,
+    NATS.CLIENT_CERT_REQ
   ],
   // NATS errors
   NATS_TRANSPORT_ERROR: 'Could not connect to NATS!',
