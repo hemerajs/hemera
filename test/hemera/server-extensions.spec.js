@@ -321,12 +321,55 @@ describe('Server Extensions', function() {
           msg: 'Hi!'
         },
         (err, resp) => {
+          expect(err).to.be.not.exists()
           expect(resp).to.be.equals({
             msg: 'authorized'
           })
           expect(ext1.called).to.be.equals(true)
           expect(ext2.called).to.be.equals(true)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should not ne able to send the payload in onServerPreResponse', function(done) {
+    let ext = Sinon.spy()
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.ext('onServerPreResponse', function(ctx, req, res, next) {
+        ext()
+        res.send({
+          msg: 'authorized'
+        })
+        next()
+      })
+
+      hemera.add(
+        {
+          topic: 'email',
+          cmd: 'send'
+        },
+        (resp, cb) => {
+          cb(null, true)
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'email',
+          cmd: 'send',
+          email: 'foobar@gmail.com',
+          msg: 'Hi!'
+        },
+        (err, resp) => {
           expect(err).to.be.not.exists()
+          expect(resp).to.be.equals(true)
+          expect(ext.called).to.be.equals(true)
           hemera.close(done)
         }
       )
