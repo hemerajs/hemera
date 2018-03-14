@@ -1,6 +1,6 @@
 'use strict'
 
-describe('Client Extension error', function() {
+describe('Client Extension errors', function() {
   var PORT = 6242
   var authUrl = 'nats://localhost:' + PORT
   var server

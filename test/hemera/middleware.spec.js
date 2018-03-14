@@ -307,11 +307,12 @@ describe('Middleware', function() {
     })
   })
 
-  it('A middleware error should abort the response with the error', function(done) {
+  it('Should abort the middleware pipeline and return the error', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
-    let callback = Sinon.spy()
+    let middlewareCb = Sinon.spy()
+    let actionCb = Sinon.spy()
 
     hemera.ready(() => {
       hemera
@@ -323,11 +324,11 @@ describe('Middleware', function() {
           next(new Error('test'))
         })
         .use(function(req, resp, next) {
-          callback()
+          middlewareCb()
           next()
         })
         .end(function(req, cb) {
-          callback()
+          actionCb()
           cb(null, req.a + req.b)
         })
 
@@ -342,7 +343,8 @@ describe('Middleware', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('Error')
           expect(err.message).to.be.equals('test')
-          expect(callback.calledOnce).to.be.equals(false)
+          expect(middlewareCb.called).to.be.equals(false)
+          expect(actionCb.called).to.be.equals(false)
           hemera.close(done)
         }
       )

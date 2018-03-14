@@ -36,7 +36,7 @@ hemera.ready(() => {
       a: 'ddd'
     },
     function(err, resp) {
-      this.log.debug(err instanceof joiErrors.PreValidationError)
+      this.log.debug(err instanceof joiErrors.PayloadValidationError)
     }
   )
 })

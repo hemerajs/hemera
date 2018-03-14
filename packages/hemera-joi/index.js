@@ -4,19 +4,19 @@ const Hp = require('hemera-plugin')
 const Joi = require('joi')
 
 function hemeraJoi(hemera, opts, done) {
-  const PreValidationError = hemera.createError('PreValidationError')
+  const PayloadValidationError = hemera.createError('PayloadValidationError')
   const pluginName = hemera.plugin$.name
 
   hemera.decorate('joi', Joi)
   hemera.decorate('joiErrors', {
-    PreValidationError
+    PayloadValidationError
   })
 
   hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
-    let plugin = ctx.matchedAction.plugin
-    let schema = ctx.matchedAction.schema
-    let pattern = req.payload.pattern
-    let currentPayloadValidator = plugin.options.payloadValidator
+    const plugin = ctx.matchedAction.plugin
+    const schema = ctx.matchedAction.schema
+    const pattern = req.payload.pattern
+    const currentPayloadValidator = plugin.options.payloadValidator
 
     if (currentPayloadValidator !== pluginName) {
       return next()
@@ -25,11 +25,7 @@ function hemeraJoi(hemera, opts, done) {
     let joiSchema = schema
 
     if (schema.joi$) {
-      if (schema.joi$.pre) {
-        joiSchema = schema.joi$.pre
-      } else {
-        joiSchema = schema.joi$
-      }
+      joiSchema = schema.joi$
     }
 
     Joi.validate(
@@ -42,7 +38,7 @@ function hemeraJoi(hemera, opts, done) {
         req.payload.pattern = value
         if (err) {
           next(
-            new PreValidationError({
+            new PayloadValidationError({
               message: err.message,
               details: err.details
             })
@@ -57,9 +53,7 @@ function hemeraJoi(hemera, opts, done) {
   done()
 }
 
-const plugin = Hp(hemeraJoi, {
+module.exports = Hp(hemeraJoi, {
   hemera: '^4.0.0',
   name: require('./package.json').name
 })
-
-module.exports = plugin

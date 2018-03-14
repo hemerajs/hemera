@@ -45,7 +45,7 @@ describe('Hemera-joi', function() {
         },
         (err, resp) => {
           expect(err).to.be.exists()
-          expect(err.name).to.be.equals('PreValidationError')
+          expect(err.name).to.be.equals('PayloadValidationError')
           expect(err.details).to.be.exists()
           expect(err.message).to.be.equals(
             'child "a" fails because ["a" must be a number]'
@@ -126,7 +126,7 @@ describe('Hemera-joi', function() {
         },
         (err, resp) => {
           expect(err).to.be.exists()
-          expect(err.name).to.be.equals('PreValidationError')
+          expect(err.name).to.be.equals('PayloadValidationError')
           expect(err.details).to.be.exists()
           expect(err.message).to.be.equals(
             'child "a" fails because ["a" must be a number]'
@@ -135,23 +135,6 @@ describe('Hemera-joi', function() {
         }
       )
     })
-  })
-})
-
-describe('Hemera-joi pre/post', function() {
-  const PORT = 6243
-  const flags = ['--user', 'derek', '--pass', 'foobar']
-  const authUrl = 'nats://derek:foobar@localhost:' + PORT
-  let server
-
-  // Start up our own nats-server
-  before(function(done) {
-    server = HemeraTestsuite.start_server(PORT, flags, done)
-  })
-
-  // Shutdown our server after we are done
-  after(function() {
-    server.kill()
   })
 
   it('Should validate request payload', function(done) {
@@ -189,7 +172,7 @@ describe('Hemera-joi pre/post', function() {
         },
         (err, resp) => {
           expect(err).to.be.exists()
-          expect(err.name).to.be.equals('PreValidationError')
+          expect(err.name).to.be.equals('PayloadValidationError')
           expect(err.details).to.be.exists()
           expect(err.message).to.be.equals(
             'child "c" fails because ["c" is required]'
@@ -237,6 +220,21 @@ describe('Hemera-joi pre/post', function() {
           hemera.close(done)
         }
       )
+    })
+  })
+
+  it('Should expose joi library and errors', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.use(HemeraJoi)
+    hemera.setOption('payloadValidator', 'hemera-joi')
+
+    hemera.ready(() => {
+      expect(hemera.joi).to.be.exists()
+      expect(hemera.joiErrors.PayloadValidationError).to.be.exists()
+      hemera.close(done)
     })
   })
 })

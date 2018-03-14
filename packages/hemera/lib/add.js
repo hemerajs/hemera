@@ -10,7 +10,7 @@
  */
 
 const _ = require('lodash')
-const Util = require('./util')
+const Series = require('fastseries')
 
 /**
  *
@@ -29,6 +29,7 @@ class Add {
     this.actMeta = addDef
     this.options = options
     this.actMeta.middleware = addDef.middleware || []
+    this.series = Series()
   }
 
   /**
@@ -80,18 +81,15 @@ class Add {
    * @memberof Add
    */
   run(request, response, cb) {
-    Util.eachSeries(
-      this.middleware,
-      (item, next) => {
-        const result = item(request, response, next)
+    this.series(
+      {},
+      (fn, next) => {
+        const result = fn(request, response, next)
         if (result && typeof result.then === 'function') {
-          result.then(x => next(null)).catch(err => next(err))
-        } else if (result instanceof Error) {
-          next(result)
-        } else {
-          next(null, result)
+          result.then(x => next()).catch(err => next(err))
         }
       },
+      this.middleware,
       cb
     )
   }
