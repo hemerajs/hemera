@@ -224,7 +224,6 @@ describe('Hemera-joi', function() {
     const hemera = new Hemera(nats)
 
     hemera.use(HemeraJoi)
-    hemera.setOption('payloadValidator', 'hemera-joi')
 
     hemera.ready(() => {
       expect(hemera.joi).to.be.exists()

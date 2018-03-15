@@ -261,20 +261,6 @@ describe('Hemera', function() {
     })
   })
 
-  it('Should be able to set specific config', function(done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    hemera.ready(() => {
-      hemera.setConfig('a', 1)
-
-      expect(hemera.config.a).to.be.equals(1)
-
-      hemera.close(done)
-    })
-  })
-
   it('Should be able to access root instance', function(done) {
     const nats = require('nats').connect(authUrl)
 

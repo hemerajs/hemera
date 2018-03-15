@@ -26,11 +26,10 @@ describe('Extension onAdd', function() {
           topic: 'email',
           cmd: 'send'
         })
-        expect(addDefinition.plugin).to.be.equals({
-          name: 'core',
-          options: {}
-        })
         expect(addDefinition.action).to.be.function()
+        expect(addDefinition.transport).to.be.exists()
+        expect(addDefinition.pattern).to.be.exists()
+        expect(addDefinition.schema).to.be.exists()
         hemera.close(done)
       })
 
@@ -54,10 +53,6 @@ describe('Extension onAdd', function() {
 
     hemera.ready(() => {
       hemera.ext('onAdd', function(addDefinition) {
-        expect(addDefinition.plugin).to.be.equals({
-          name: 'core',
-          options: {}
-        })
         expect(addDefinition.action).to.be.function()
         ext1()
       })
@@ -104,11 +99,6 @@ describe('Extension onAdd', function() {
         topic: 'email',
         cmd: 'send'
       })
-      expect(addDefinition.plugin).to.be.equals({
-        name: 'myPlugin',
-        options: {},
-        dependencies: []
-      })
       expect(addDefinition.action).to.be.function()
       ext1()
     })
@@ -148,11 +138,6 @@ describe('Extension onAdd', function() {
         expect(addDefinition.pattern).to.be.equals({
           topic: 'email',
           cmd: 'send'
-        })
-        expect(addDefinition.plugin).to.be.equals({
-          name: 'myPlugin',
-          options: {},
-          dependencies: []
         })
         expect(addDefinition.action).to.be.function()
         ext1()

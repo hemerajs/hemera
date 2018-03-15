@@ -61,8 +61,7 @@ function hemeraStats(hemera, opts, done) {
 
         return {
           pattern: a.pattern,
-          schema: schema,
-          plugin: a.plugin.name
+          schema: schema
         }
       })
 

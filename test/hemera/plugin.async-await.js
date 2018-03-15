@@ -65,19 +65,20 @@ describe('Async await Plugin interface', function() {
     async function plugin1(hemera, options) {
       return Promise.resolve()
     }
+    plugin1[Symbol.for('name')] = 'myPlugin'
 
     async function plugin2(hemera, options) {
       return Promise.resolve()
     }
+    plugin2[Symbol.for('name')] = 'myPlugin2'
 
     hemera.use([plugin1, plugin2])
 
     hemera.ready(err => {
       expect(err).to.be.not.exists()
-      expect(Object.keys(hemera.plugins)).to.be.equals([
-        'core',
-        'anonymous-2',
-        'anonymous-3'
+      expect(hemera[HemeraSymbols.registeredPlugins]).to.be.equals([
+        'myPlugin',
+        'myPlugin2'
       ])
       hemera.close(done)
     })

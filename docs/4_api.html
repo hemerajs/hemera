@@ -126,8 +126,6 @@
                     <h4 class="section-header"><i class="special-var">special</i> delegate$</h4>
                     <p>Will be shared across nested actions but the called service don't pass it to the next. <b>Data will be transfered.</b></p>
                     <h4 class="section-header"><i class="special-var">special</i> auth$</h4>
-                    <p>Will be used to store sensitive data e.g plugins which provide authentication or authorization mechanism.</p>
-                    <h4 class="section-header"><i class="special-var">special</i> plugin$</h4>
                     <p>Returns the current plugin instance.</p>
                     <ul>
                         <li><code>name</code> <i>String</i></li>
@@ -152,8 +150,6 @@
                         <li><code>method</code> <i>String</i></li>
                         <li><code>duration</code> <i>Number</i></li>
                     </ul>
-                    <h4 class="section-header"><i class="accessor">get</i> plugins</h4>
-                    <p>Returns the list of all registered plugins.</p>
                     <h4 class="section-header"><i class="accessor">get</i> router</h4>
                     <p>Returns the bloomrun instance.</p>
                     <h4 class="section-header"><i class="accessor">get</i> load</h4>
@@ -188,10 +184,6 @@
                     <p>Expose data which can be accessed from all plugins.</p>
                     <h4 class="section-header">hasDecorator(key: String)</h4>
                     <p>Dheck the presence of a decorator</p>
-                    <h4 class="section-header">setOption(key: String, value: Any)</h4>
-                    <p>Updates the plugin option value.</p>
-                    <h4 class="section-header">setConfig(key: String, value: Any)</h4>
-                    <p>Updates the config value.</p>
                     <h4 class="section-header">close()</h4>
                     <p>Gracefully shutdown of all plugins, NATS and hemera.</p>
                     <h4 class="section-h4">Reply interface</h4>

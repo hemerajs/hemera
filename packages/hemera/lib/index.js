@@ -27,6 +27,7 @@ const Series = require('fastseries')
 
 const Errors = require('./errors')
 const Constants = require('./constants')
+const Symbols = require('./symbols')
 const Util = require('./util')
 const NatsTransport = require('./transport')
 const DefaultExtensions = require('./extensions')
@@ -71,10 +72,6 @@ class Hemera extends EventEmitter {
       transport
     })
     this._topics = {}
-    this.plugin$ = {
-      name: 'core',
-      options: {}
-    }
 
     // special variables for the new execution context
     this.context$ = {}
@@ -96,9 +93,6 @@ class Hemera extends EventEmitter {
     this._actCallback = null
     this._execute = null
     this._cleanPattern = ''
-    this._plugins = {
-      core: this
-    }
 
     this.matchedAction = null
 
@@ -137,47 +131,54 @@ class Hemera extends EventEmitter {
       }
     })
 
+    this[Symbols.childrenKey] = []
+    this[Symbols.registeredPlugins] = []
+
     this._avvio.override = (hemera, plugin, opts) => {
-      const pluginCount = Object.keys(this._plugins).length + 1
-      const skipOverride = plugin[Symbol.for('skip-override')]
-      const pluginName =
-        plugin[Symbol.for('name')] || 'anonymous-' + pluginCount
-      const pluginDeps = plugin[Symbol.for('dependencies')] || []
+      const skipOverride = plugin[Symbols.pluginSkipOverride]
+      const pluginName = plugin[Symbols.pluginName]
 
       if (skipOverride) {
+        // register with name
+        if (pluginName) {
+          hemera[Symbols.registeredPlugins].push(pluginName)
+        }
         return hemera
       }
 
-      const res = Object.create(hemera)
-      const proto = Object.getPrototypeOf(res)
+      const instance = Object.create(hemera)
+      const proto = Object.getPrototypeOf(instance)
 
-      if (hemera._config.childLogger) {
-        res.log = hemera.log.child({ plugin: pluginName })
+      hemera[Symbols.childrenKey].push(instance)
+      instance[Symbols.childrenKey] = []
+
+      if (pluginName) {
+        instance[Symbols.registeredPlugins].push(pluginName)
+        if (hemera._config.childLogger) {
+          instance.log = hemera.log.child({ plugin: pluginName })
+        }
       }
-      // plugin seperated prototype propertys
-      res.plugin$ = {
-        options: opts,
-        name: pluginName,
-        dependencies: pluginDeps
-      }
+
+      instance[Symbols.registeredPlugins] = Object.create(
+        hemera[Symbols.registeredPlugins]
+      )
 
       // overwrite decorate function to extend the prototype
-      res.decorate = function decorate(prop, value, deps) {
+      instance.decorate = function decorate(prop, value, deps) {
         if (prop in this) {
           throw new Errors.HemeraError(Constants.DECORATION_ALREADY_DEFINED)
         }
 
         if (deps) {
-          res._checkDecoraterDependencies(deps)
+          instance._checkDecoraterDependencies(deps)
         }
 
-        // extend prototype so that each nested plugin have access
+        // due to the fact that each plugin has his own scope, we have to
+        // extend the prototype
         proto[prop] = value
       }
 
-      this._plugins[pluginName] = res
-
-      return res
+      return instance
     }
 
     this._series = Series()
@@ -322,16 +323,6 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   *
-   *
-   * @readonly
-   * @memberof Hemera
-   */
-  get plugins() {
-    return this._plugins
-  }
-
-  /**
    * Return all hemera errors
    *
    * @readonly
@@ -393,27 +384,6 @@ class Hemera extends EventEmitter {
     }
   }
 
-  /**
-   * Change the current plugin configuration
-   * e.g to set the payload validator
-   *
-   * @param {any} options
-   *
-   * @memberOf Hemera
-   */
-  setOption(key, value) {
-    this.plugin$.options[key] = value
-  }
-
-  /**
-   * Change the base configuration.
-   *
-   *
-   * @memberOf Hemera
-   */
-  setConfig(key, value) {
-    this._config[key] = value
-  }
   /**
    *
    * @param {*} fn
@@ -493,21 +463,17 @@ class Hemera extends EventEmitter {
    * @memberof Hemera
    */
   checkPluginDependencies(plugin) {
-    const deps = plugin[Symbol.for('dependencies')]
-    if (!deps) {
+    const dependencies = plugin[Symbols.pluginDependencies]
+    if (!dependencies) {
       return
     }
-    if (!Array.isArray(deps)) {
+    if (!Array.isArray(dependencies)) {
       throw new Error(Constants.PLUGIN_DEP_STRINGS)
     }
 
-    deps.forEach(dependency => {
-      if (!this._plugins[dependency]) {
-        throw new Error(
-          `The dependency '${dependency}' was not registered before plugin '${
-            this.plugin$.name
-          }'`
-        )
+    dependencies.forEach(dependency => {
+      if (this[Symbols.registeredPlugins].indexOf(dependency) === -1) {
+        throw new Error(`The dependency '${dependency}' is not registered`)
       }
     })
   }
@@ -520,7 +486,7 @@ class Hemera extends EventEmitter {
    * @memberof Hemera
    */
   _use(plugin, opts) {
-    let pluginOpts = Hoek.clone(plugin[Symbol.for('options')] || {})
+    let pluginOpts = Hoek.clone(plugin[Symbols.pluginOptions] || {})
     pluginOpts = Object.assign(pluginOpts, opts)
     this.register(plugin, pluginOpts)
   }
@@ -946,7 +912,6 @@ class Hemera extends EventEmitter {
     const addDef = {
       schema: schema,
       pattern: patternOnly,
-      plugin: this.plugin$,
       transport: {
         topic: definition.topic,
         pubsub: definition.pubsub$,
