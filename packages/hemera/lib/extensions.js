@@ -181,13 +181,22 @@ function onServerPreRequestSchemaValidation(context, req, res, next) {
     const schema = context.matchedAction.schema
     const ret = context._schemaCompiler(schema)(req.payload.pattern)
     if (ret) {
-      if (ret.error) {
-        next(ret.error)
+      if (typeof ret.then === 'function') {
+        ret
+          .then(modifiedPattern => {
+            if (modifiedPattern) {
+              req.payload.pattern = modifiedPattern
+            }
+            next()
+          })
+          .catch(err => next(err))
+        return
+      } else if (ret.error) {
+        return next(ret.error)
       } else if (ret.value) {
         req.payload.pattern = ret.value
-        next()
+        return next()
       }
-      return
     }
   }
   next()
