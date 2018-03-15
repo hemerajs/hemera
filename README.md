@@ -15,6 +15,7 @@
 
 <p align="center">
 A <a href="http://nodejs.org/">Node.js</a> microservices toolkit for the <a href="https://nats.io">NATS messaging system</a>
+<br>Run on <a href="https://runkit.com/starptech/hemera-example">runkit.com</a>
 </p>
 
 - __Node:__ v6+
@@ -63,32 +64,35 @@ The key features of NATS in combination with Hemera are:
 ```js
 const Hemera = require('nats-hemera')
 const HemeraJoi = require('hemera-joi')
-const nats = require('nats').connect()
+const nats = require('nats').connect('nats://demo.nats.io:4222')
 
 const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
+// set payload validator of your choice
 hemera.use(HemeraJoi)
-
-let Joi = hemera.joi
-
-hemera.add(
-  {
-    topic: 'math',
-    cmd: 'add',
-    a: Joi.number().required(),
-    b: Joi.number().required()
-  },
-  async function(req) {
-    return req.a + req.b
-  }
-)
+hemera.setOption('payloadValidator', 'hemera-joi')
 
 const start = async () => {
   try {
     // establish connection and bootstrap hemera
     await hemera.ready()
+    // use exposed lib from plugin
+    let Joi = hemera.joi
+
+    // define your first server action
+    hemera.add(
+      {
+        topic: 'math',
+        cmd: 'add',
+        a: Joi.number().required(),
+        b: Joi.number().required()
+      },
+      async function(req) {
+        return req.a + req.b
+      }
+    )
     hemera.log.info(`service listening`)
     // start first request
     let response = await hemera.act({
