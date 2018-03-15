@@ -35,7 +35,7 @@ function plugin(fn, options) {
   fn[Symbol.for('dependencies')] = options.dependencies
   fn[Symbol.for('options')] = options.options
   fn[Symbol.for('name')] = options.name
-  fn[Symbol.for('skip-override')] = !!options.skipOverride
+  fn[Symbol.for('skip-override')] = options.scoped === false
 
   return fn
 }

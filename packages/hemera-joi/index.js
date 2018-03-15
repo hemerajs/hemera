@@ -17,6 +17,6 @@ function hemeraJoi(hemera, opts, done) {
 
 module.exports = Hp(hemeraJoi, {
   hemera: '^4.0.0',
-  skipOverride: true,
+  scoped: false,
   name: require('./package.json').name
 })
