@@ -27,6 +27,27 @@ describe('Root Decorator', function() {
     })
   })
 
+  it('Should be able to access decorator inside plugins', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    hemera.decorate('test', 1)
+
+    let plugin = function(hemera, options, next) {
+      expect(hemera.test).to.be.equals(1)
+      next()
+    }
+
+    plugin[Symbol.for('name')] = 'myPlugin'
+
+    hemera.use(plugin)
+
+    hemera.ready(err => {
+      expect(err).to.not.exists()
+      hemera.close(done)
+    })
+  })
+
   it('Should throw error because could not resolve all decorate deps', function(done) {
     const nats = require('nats').connect(authUrl)
 

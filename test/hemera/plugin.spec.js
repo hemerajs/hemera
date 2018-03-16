@@ -559,6 +559,36 @@ describe('Plugin interface', function() {
     hemera.ready()
   })
 
+  it('Should throw an error when we trying to overwrite an existing prototype property / 2', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let plugin = function(hemera, options, next) {
+      hemera.decorate('test', 1)
+
+      let plugin2 = function(hemera, options, next) {
+        try {
+          hemera.decorate('test', 1)
+        } catch (err) {
+          expect(err).to.exists()
+          hemera.close(done)
+        }
+        next()
+      }
+
+      plugin2[Symbol.for('name')] = 'myPlugin2'
+      hemera.use(plugin2)
+      next()
+    }
+
+    plugin[Symbol.for('name')] = 'myPlugin'
+
+    hemera.use(plugin)
+
+    hemera.ready()
+  })
+
   it('Should be able to decorate the prototype chain', function(done) {
     const nats = require('nats').connect(authUrl)
 
@@ -576,6 +606,32 @@ describe('Plugin interface', function() {
     hemera.ready(err => {
       expect(err).to.not.exists()
       expect(hemera.test).to.be.equals(1)
+      hemera.close(done)
+    })
+  })
+
+  it('Should not be able to decorate root instance / 2', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let plugin = function(hemera, options, next) {
+      let plugin2 = function(hemera, options, next) {
+        hemera.decorate('test', 1)
+        next()
+      }
+      plugin2[Symbol.for('name')] = 'myPlugin2'
+      hemera.use(plugin2)
+      next()
+    }
+
+    plugin[Symbol.for('name')] = 'myPlugin'
+
+    hemera.use(plugin)
+
+    hemera.ready(err => {
+      expect(err).to.not.exists()
+      expect(hemera.test).to.be.not.exists()
       hemera.close(done)
     })
   })
