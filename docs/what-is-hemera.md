@@ -8,16 +8,16 @@ sidebar_label: What is Hemera?
 
 - It's a RPC Framework for Node.js
 - It's chooses simplicity and reliability over guaranteed delivery
-- It's use [NATS](#what-s-nats) as transport system
 - It's pattern driven
 - It's very lightweight
 - It's extendible via plugins
 - It's scalable and fault tolerant
 - It's very well tested
 - It's built with mature packages
+- It uses [NATS](#what-s-nats) as transport system
+- It is 100% compatible with yarn, npm and pnpm
 - We support Callback, Promise and Async/Await style
 - We offer Docker support
-- It is 100% compatible with yarn, npm and pnpm
 - Hemera means **in Greek mythology the personification of day** so it must be run on daily basis
 
 ## What's NATS
