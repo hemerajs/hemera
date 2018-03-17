@@ -17,38 +17,57 @@ hemera.add(
   }
 )
 ```
-
-## Asynchronous errors
-
-In asynchronous code, the application cannot catch exceptions as you’ve lost your stack once you have entered a callback:
-
-```js
-hemera.add({ topic: 'math', cmd: 'add' }, function(req, cb) {
-  process.nextTick(() => {
-    throw new Error()
-  })
-})
-```
-
-## Request error
-
-The first argument of your act handler is the request error.
-
-```js
-hemera.act(
-  {
-    topic: 'math',
-    cmd: 'add',
-    a: 1,
-    b: 1
-  },
-  function(err, resp) {}
-)
-```
-
-## Server error
+## Style
 
 We support error-first-callback style as well as promise and async / await. Use one style but be consistent.
+
+## Handle a request error
+
+
+* Error-first-callback
+
+  ```js
+  hemera.act(
+    {
+      topic: 'math',
+      cmd: 'add',
+      a: 1,
+      b: 1
+    },
+    function(err, resp) {}
+  )
+  ```
+
+* Promise
+
+  ```js
+  hemera
+    .act({
+      topic: 'math',
+      cmd: 'add',
+      a: 1,
+      b: 1
+    })
+    .catch(err => {})
+  ```
+
+* Async / Await
+
+  ```js
+  try {
+    await hemera
+      .act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 1
+      })
+  } catch (err) {
+
+  }
+  ```
+
+## Respond an error
 
 * Error-first-callback
   ```js
