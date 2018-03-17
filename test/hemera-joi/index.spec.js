@@ -2,7 +2,7 @@
 
 const HemeraJoi = require('../../packages/hemera-joi')
 
-describe('Hemera-joi', function() {
+describe.only('Hemera-joi', function() {
   const PORT = 6243
   var authUrl = 'nats://localhost:' + PORT
   var server
@@ -40,7 +40,7 @@ describe('Hemera-joi', function() {
         {
           topic: 'email',
           cmd: 'send',
-          a: 'dwedwed'
+          a: 'string'
         },
         (err, resp) => {
           expect(err).to.be.exists()

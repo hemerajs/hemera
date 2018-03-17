@@ -138,11 +138,11 @@ class Hemera extends EventEmitter {
       const skipOverride = plugin[Symbols.pluginSkipOverride]
       const pluginName = plugin[Symbols.pluginName]
 
+      if (pluginName) {
+        hemera[Symbols.registeredPlugins].push(pluginName)
+      }
+
       if (skipOverride) {
-        // register with name
-        if (pluginName) {
-          hemera[Symbols.registeredPlugins].push(pluginName)
-        }
         return hemera
       }
 
@@ -152,11 +152,8 @@ class Hemera extends EventEmitter {
       hemera[Symbols.childrenKey].push(instance)
       instance[Symbols.childrenKey] = []
 
-      if (pluginName) {
-        instance[Symbols.registeredPlugins].push(pluginName)
-        if (hemera._config.childLogger) {
-          instance.log = hemera.log.child({ plugin: pluginName })
-        }
+      if (hemera._config.childLogger && pluginName) {
+        instance.log = hemera.log.child({ plugin: pluginName })
       }
 
       instance[Symbols.registeredPlugins] = Object.create(

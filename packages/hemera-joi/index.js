@@ -17,6 +17,6 @@ function hemeraJoi(hemera, opts, done) {
 
 module.exports = Hp(hemeraJoi, {
   hemera: '^4.0.0',
-  scoped: false,
+  scoped: false, // set schema globally
   name: require('./package.json').name
 })
