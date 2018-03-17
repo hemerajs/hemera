@@ -4,7 +4,7 @@ title: Error-handling
 sidebar_label: Introduction
 ---
 
-Hemera won't catch any thrown error expect you are using async/await. It's up to the developer to handle business specific issues. Ensure that your process is restarted e.g with a process-manager like PM2.
+Hemera won't catch any thrown error expect you are using async/await. It's up to the developer to handle business specific issues. Ensure that your process is restarted e.g with a process-manager like [PM2](http://pm2.keymetrics.io/).
 
 ```js
 hemera.add(

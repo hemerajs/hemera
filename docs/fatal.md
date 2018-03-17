@@ -4,7 +4,7 @@ title: Fatal
 sidebar_label: Fatal
 ---
 
-Fatal errors will crash your server. You should implement a gracefully shutdown and use a process watcher like PM2 to come back in a clear state.
+Fatal errors will crash your server. You should implement a gracefully shutdown and use a process watcher like [PM2](http://pm2.keymetrics.io/) to come back in a clear state.
 
 ```js
 hemera.add(
