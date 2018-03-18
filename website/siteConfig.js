@@ -6,22 +6,29 @@
  */
 
 /* List of projects/orgs using your project for the users page */
+
+const baseUrl = '/hemera/'
+
+function imgUrl(img) {
+  return baseUrl + 'img/' + img
+}
+
 const users = [
   {
     caption: 'appcom interactive',
-    image: 'company/appcom.svg',
+    image: imgUrl('company/appcom.svg'),
     infoLink: 'http://www.appcom-interactive.de/',
     pinned: true
   },
   {
     caption: 'amerbank',
-    image: 'company/amerbank.png',
+    image: imgUrl('company/amerbank.png'),
     infoLink: 'https://amerbank.com/',
     pinned: true
   },
   {
     caption: 'savicontrols',
-    image: 'company/savi.png',
+    image: imgUrl('company/savi.png'),
     infoLink: 'https://www.savicontrols.com/',
     pinned: true
   }
