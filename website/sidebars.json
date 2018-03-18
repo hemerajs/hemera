@@ -29,10 +29,12 @@
     "Tooling": ["monitoring", "cli"],
     "Advanced": [
       "docker",
+      "graphql",
       "bridge",
       "clustering",
       "api-versioning",
       "nats-limit",
+      "framework-integrations",
       "hemera-vs-seneca"
     ],
     "Api": ["api"]
