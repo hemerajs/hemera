@@ -15,7 +15,7 @@ describe('Connect', function() {
     server.kill()
   })
 
-  it('Should be ready even when nats connection was already established', function(done) {
+  it('Should also be ready even when nats connection was already established', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

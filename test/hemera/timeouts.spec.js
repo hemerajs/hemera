@@ -222,9 +222,9 @@ describe('Timeouts', function() {
           topic: 'test',
           cmd: 'A'
         },
-        function(resp) {
+        function(resp, reply) {
           for (let i = 0; i < 10; i++) {
-            this.reply(i)
+            this.reply.next(i)
           }
         }
       )
@@ -346,64 +346,6 @@ describe('Timeouts', function() {
           expect(err.name).to.be.equals('TimeoutError')
           expect(err.message).to.be.equals('Timeout')
           hemera.close(done)
-        }
-      )
-    })
-  })
-
-  it('Should crash when an unexpected error thrown during timeout issue', function(done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats, {
-      timeout: 20
-    })
-
-    hemera.on('error', err => {
-      expect(err).to.be.exists()
-      hemera.close(done)
-    })
-
-    hemera.ready(() => {
-      hemera.act(
-        {
-          topic: 'email',
-          cmd: 'send',
-          email: 'foobar@gmail.com',
-          msg: 'Hi!'
-        },
-        (err, resp) => {
-          expect(err).to.be.exists()
-
-          throw new Error('Test')
-        }
-      )
-    })
-  })
-
-  it('Should crash when an unexpected super error thrown during timeout issue', function(done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats, {
-      timeout: 20
-    })
-
-    hemera.on('error', err => {
-      expect(err).to.be.exists()
-      hemera.close(done)
-    })
-
-    hemera.ready(() => {
-      hemera.act(
-        {
-          topic: 'email',
-          cmd: 'send',
-          email: 'foobar@gmail.com',
-          msg: 'Hi!'
-        },
-        (err, resp) => {
-          expect(err).to.be.exists()
-
-          throw new UnauthorizedError('test')
         }
       )
     })

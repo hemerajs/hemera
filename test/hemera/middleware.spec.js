@@ -63,7 +63,7 @@ describe('Middleware', function() {
         .use(function(req, resp) {
           return Promise.resolve('test')
         })
-        .end(req => req.a + req.b)
+        .end(req => Promise.resolve(req.a + req.b))
 
       hemera.act(
         {
@@ -200,41 +200,6 @@ describe('Middleware', function() {
     })
   })
 
-  it('Should not call action when end() was called middlewares', function(done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats, { logLevel: 'info' })
-
-    hemera.ready(() => {
-      hemera
-        .add({
-          topic: 'math',
-          cmd: 'add'
-        })
-        .use(function(req, reply, next) {
-          reply.end({ a: 1 })
-          next()
-        })
-        .end(function(req) {
-          throw new Error('test')
-        })
-
-      hemera.act(
-        {
-          topic: 'math',
-          cmd: 'add',
-          a: 1,
-          b: 2
-        },
-        function(err, resp) {
-          expect(err).to.be.not.exists()
-          expect(resp.a).to.be.equals(1)
-          hemera.close(done)
-        }
-      )
-    })
-  })
-
   it('Should be able to reply an error in middleware', function(done) {
     const nats = require('nats').connect(authUrl)
 
@@ -342,11 +307,12 @@ describe('Middleware', function() {
     })
   })
 
-  it('A middleware error should abort the response with the error', function(done) {
+  it('Should abort the middleware pipeline and return the error', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
-    let callback = Sinon.spy()
+    let middlewareCb = Sinon.spy()
+    let actionCb = Sinon.spy()
 
     hemera.ready(() => {
       hemera
@@ -358,11 +324,11 @@ describe('Middleware', function() {
           next(new Error('test'))
         })
         .use(function(req, resp, next) {
-          callback()
+          middlewareCb()
           next()
         })
         .end(function(req, cb) {
-          callback()
+          actionCb()
           cb(null, req.a + req.b)
         })
 
@@ -377,7 +343,8 @@ describe('Middleware', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('Error')
           expect(err.message).to.be.equals('test')
-          expect(callback.calledOnce).to.be.equals(false)
+          expect(middlewareCb.called).to.be.equals(false)
+          expect(actionCb.called).to.be.equals(false)
           hemera.close(done)
         }
       )

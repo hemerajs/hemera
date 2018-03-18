@@ -1,0 +1,42 @@
+{
+  "docs": {
+    "Introduction": ["what-is-hemera", "installation"],
+    "Basics": [
+      "request-reply",
+      "pattern-matching",
+      "publish-susbcribe",
+      "payload-validation",
+      "middleware",
+      "extension",
+      "logging",
+      "decorator",
+      "metadata",
+      "context",
+      "delegate",
+      "event",
+      "codec"
+    ],
+    "Plugins": ["ecosystem", "plugin"],
+    "Error handling": [
+      "error-handling",
+      "timeout",
+      "fatal",
+      "propagation",
+      "error-event",
+      "protection"
+    ],
+    "Testing": ["integration", "unit"],
+    "Tooling": ["monitoring", "cli"],
+    "Advanced": [
+      "docker",
+      "graphql",
+      "bridge",
+      "clustering",
+      "api-versioning",
+      "nats-limit",
+      "framework-integrations",
+      "hemera-vs-seneca"
+    ],
+    "Api": ["api"]
+  }
+}

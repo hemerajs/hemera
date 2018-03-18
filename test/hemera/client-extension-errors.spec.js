@@ -1,6 +1,6 @@
 'use strict'
 
-describe('Client Extension error', function() {
+describe('Client Extension errors', function() {
   var PORT = 6242
   var authUrl = 'nats://localhost:' + PORT
   var server
@@ -20,11 +20,10 @@ describe('Client Extension error', function() {
 
     const hemera = new Hemera(nats)
 
-    let plugin = function(hemera, options, done) {
+    hemera.ready(() => {
       hemera.ext('onClientPostRequest', function(ctx, next) {
         next(new UnauthorizedError('test'))
       })
-
       hemera.add(
         {
           cmd: 'add',
@@ -34,13 +33,6 @@ describe('Client Extension error', function() {
           cb(null, resp.a + resp.b)
         }
       )
-
-      done()
-    }
-
-    hemera.use(plugin)
-
-    hemera.ready(() => {
       hemera.act(
         {
           topic: 'math',
@@ -63,7 +55,7 @@ describe('Client Extension error', function() {
 
     const hemera = new Hemera(nats)
 
-    let plugin = function(hemera, options, done) {
+    hemera.ready(() => {
       hemera.ext('onClientPostRequest', function(ctx, next) {
         next(new Error('test'))
       })
@@ -78,12 +70,6 @@ describe('Client Extension error', function() {
         }
       )
 
-      done()
-    }
-
-    hemera.use(plugin)
-
-    hemera.ready(() => {
       hemera.act(
         {
           topic: 'math',
@@ -106,7 +92,7 @@ describe('Client Extension error', function() {
 
     const hemera = new Hemera(nats)
 
-    let plugin = function(hemera, options, done) {
+    hemera.ready(() => {
       hemera.ext('onClientPreRequest', function(ctx, next) {
         next(new UnauthorizedError('test'))
       })
@@ -120,13 +106,6 @@ describe('Client Extension error', function() {
           cb(null, resp.a + resp.b)
         }
       )
-
-      done()
-    }
-
-    hemera.use(plugin)
-
-    hemera.ready(() => {
       hemera.act(
         {
           topic: 'math',
@@ -149,7 +128,7 @@ describe('Client Extension error', function() {
 
     const hemera = new Hemera(nats)
 
-    let plugin = function(hemera, options, done) {
+    hemera.ready(() => {
       hemera.ext('onClientPreRequest', function(ctx, next) {
         next(new Error('test'))
       })
@@ -163,13 +142,6 @@ describe('Client Extension error', function() {
           cb(null, resp.a + resp.b)
         }
       )
-
-      done()
-    }
-
-    hemera.use(plugin)
-
-    hemera.ready(() => {
       hemera.act(
         {
           topic: 'math',

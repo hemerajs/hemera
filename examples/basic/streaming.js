@@ -17,7 +17,7 @@ hemera.ready(() => {
     },
     function(resp) {
       for (let i = 0; i < 10; i++) {
-        this.reply(i)
+        this.reply.next(i)
       }
     }
   )

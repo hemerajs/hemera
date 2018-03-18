@@ -15,5 +15,8 @@
   "dependencies": {
     "hemera-plugin": "^1.0.0",
     "nodemailer": "4.0.x"
+  },
+  "peerDependencies": {
+    "hemera-joi": "^4.0.0"
   }
 }

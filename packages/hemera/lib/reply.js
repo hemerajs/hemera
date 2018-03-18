@@ -9,10 +9,12 @@
  *
  */
 
+const Errors = require('./errors')
 const Constants = require('./constants')
+const Errio = require('errio')
 
 /**
- *
+ * @TODO rename hook to onServerSend
  *
  * @class Reply
  */
@@ -22,16 +24,16 @@ class Reply {
    * @param {any} request
    * @param {any} response
    * @param {any} hemera
+   * @param {any} logger
    *
    * @memberof Reply
    */
-  constructor(request, response, logger) {
+  constructor(request, response, hemera, logger) {
     this._request = request
     this._response = response
+    this.hemera = hemera
     this.log = logger
     this.sent = false
-    this.finished = false
-    this._errored = false
   }
 
   /**
@@ -63,12 +65,6 @@ class Reply {
    * @memberof Reply
    */
   set error(value) {
-    if (this._errored) {
-      this.log.debug(new Error(Constants.REPLY_ERROR_ALREADY_SET))
-      return
-    }
-
-    this._errored = true
     this._response.error = value
   }
 
@@ -84,19 +80,14 @@ class Reply {
   }
   /**
    *
-   *
-   * @memberof Reply
    */
-  end(msg) {
-    this.finished = true
-
-    if (msg) {
-      this.send(msg)
-    }
+  next(msg) {
+    this.sent = false
+    this.send(msg)
   }
 
   /**
-   * Set the response error
+   * Set the response payload or error
    *
    * @param {any} msg
    * @memberof Reply
@@ -111,13 +102,104 @@ class Reply {
 
     self.sent = true
 
-    if (msg) {
+    if (msg !== undefined) {
       if (msg instanceof Error) {
-        self.error = msg
+        self.error = self.hemera._attachHops(self.hemera.getRootError(msg))
       } else {
         self.payload = msg
       }
     }
+
+    self.serverPreResponse()
+  }
+  /**
+   *
+   * @param {*} fn
+   * @param {*} cb
+   */
+  _preResponseIterator(fn, cb) {
+    const ret = fn(this, this._request, this.reply, cb)
+    if (ret && typeof ret.then === 'function') {
+      ret.then(cb).catch(cb)
+    }
+  }
+  /**
+   *
+   */
+  serverPreResponse() {
+    const self = this
+
+    self.hemera.emit('serverPreResponse', self.hemera)
+
+    if (self.hemera._extensionManager['onServerPreResponse'].length) {
+      self.hemera._series(
+        self.hemera,
+        self._preResponseIterator,
+        self.hemera._extensionManager['onServerPreResponse'],
+        err => self._onServerPreResponseCompleted(err)
+      )
+      return
+    }
+    self._onServerPreResponseCompleted()
+  }
+  /**
+   *
+   * @param {*} extensionError
+   */
+  _onServerPreResponseCompleted(extensionError) {
+    const self = this
+
+    if (extensionError) {
+      const internalError = new Errors.HemeraError(
+        Constants.EXTENSION_ERROR,
+        self.hemera.errorDetails
+      ).causedBy(extensionError)
+      self.log.error(internalError)
+      self.hemera.emit('serverResponseError', extensionError)
+      self.send(extensionError)
+    }
+
+    if (self._response.replyTo) {
+      const msg = self.build(
+        self.hemera.meta$,
+        self.hemera.trace$,
+        self.hemera.request$
+      )
+
+      self.hemera._transport.send(self._response.replyTo, msg.value)
+    }
+  }
+  /**
+   *
+   * @param {*} meta$
+   * @param {*} trace$
+   * @param {*} request$
+   */
+  build(meta$, trace$, request$) {
+    const self = this
+
+    let message = {
+      meta: meta$ || {},
+      trace: trace$ || {},
+      request: request$,
+      result: self.error ? null : self.payload,
+      error: self.error ? Errio.toObject(self.error) : null
+    }
+
+    let msg = self.hemera._serverEncoder(message)
+
+    if (msg.error) {
+      let internalError = new Errors.ParseError(
+        Constants.PAYLOAD_PARSING_ERROR
+      ).causedBy(msg.error)
+      self.log.error(internalError)
+      self.hemera.emit('serverResponseError', msg.error)
+      message.error = Errio.toObject(msg.error)
+      message.result = null
+      msg = self.hemera._serverEncoder(message)
+    }
+
+    return msg
   }
 }
 

@@ -22,8 +22,9 @@ class ServerResponse {
    *
    * @memberOf ServerResponse
    */
-  constructor() {
+  constructor(replyTo) {
     this._response = {}
+    this.replyTo = replyTo
   }
 
   /**

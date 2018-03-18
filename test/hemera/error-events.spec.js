@@ -28,7 +28,7 @@ describe('Response error events', function() {
         hemera.close(done)
       })
 
-      hemera.ext('onServerPreResponse', function(ctx, resp, req, next) {
+      hemera.ext('onServerPreResponse', function(ctx, resp, reply, next) {
         next(new Error('test'))
       })
 
@@ -42,17 +42,12 @@ describe('Response error events', function() {
         }
       )
 
-      hemera.act(
-        {
-          topic: 'math',
-          cmd: 'add',
-          a: 1,
-          b: 2
-        },
-        err => {
-          expect(err).to.be.exists()
-        }
-      )
+      hemera.act({
+        topic: 'math',
+        cmd: 'add',
+        a: 1,
+        b: 2
+      })
     })
   })
 
@@ -92,6 +87,8 @@ describe('Response error events', function() {
         },
         err => {
           expect(err).to.be.exists()
+          expect(err.name).to.be.equals('Error')
+          expect(err.message).to.be.equals('test')
         }
       )
     })
@@ -133,6 +130,8 @@ describe('Response error events', function() {
         },
         err => {
           expect(err).to.be.exists()
+          expect(err.name).to.be.equals('Error')
+          expect(err.message).to.be.equals('test')
         }
       )
     })
@@ -174,6 +173,8 @@ describe('Response error events', function() {
         },
         err => {
           expect(err).to.be.exists()
+          expect(err.name).to.be.equals('Error')
+          expect(err.message).to.be.equals('test')
         }
       )
     })
@@ -215,6 +216,8 @@ describe('Response error events', function() {
         },
         err => {
           expect(err).to.be.exists()
+          expect(err.name).to.be.equals('Error')
+          expect(err.message).to.be.equals('test')
         }
       )
     })

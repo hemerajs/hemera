@@ -22,7 +22,51 @@ describe('Plugin interface', function() {
 
     // Plugin
     let myPlugin = function(hemera, options, done) {
-      expect(options.a).to.be.equals(1)
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        (resp, cb) => {
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        }
+      )
+
+      done()
+    }
+
+    myPlugin[Symbol.for('name')] = 'myPlugin'
+    myPlugin[Symbol.for('options')] = { a: 1 }
+
+    hemera.use(myPlugin)
+
+    hemera.ready(() => {
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        (err, resp) => {
+          expect(err).to.be.not.exists()
+          expect(resp).not.to.be.equals(3)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should pass plugin options', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    // Plugin
+    let myPlugin = function(hemera, options, done) {
+      expect(options).to.be.equals({ a: 1 })
 
       hemera.add(
         {
@@ -61,73 +105,285 @@ describe('Plugin interface', function() {
     })
   })
 
-  it('Should be able to register an array of plugins', function(done) {
+  it('Should load plugins only on ready', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
+    const pluginCb = Sinon.spy()
 
     // Plugin
-    let plugin = function(hemera, options, done) {
+    let myPlugin = function(hemera, options, done) {
+      pluginCb()
       done()
     }
 
-    plugin[Symbol.for('name')] = 'myPlugin'
-    plugin[Symbol.for('options')] = { a: 1 }
+    myPlugin[Symbol.for('name')] = 'myPlugin'
 
-    let plugin2 = function(hemera, options, done) {
+    hemera.use(myPlugin)
+
+    setTimeout(() => {
+      expect(pluginCb.called).to.be.equals(false)
+      hemera.ready(() => {
+        expect(pluginCb.calledOnce).to.be.equals(true)
+        hemera.close(done)
+      })
+    }, 100)
+  })
+
+  it('Should be able to register extensions globally inside plugin when scoped is skipped', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    let ext1 = Sinon.spy()
+    let ext2 = Sinon.spy()
+
+    function plugin(hemera, options, done) {
+      hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+        ext1()
+        next()
+      })
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        (resp, cb) => {
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        }
+      )
+
       done()
     }
+    plugin[Symbol.for('skip-override')] = true
+    hemera.use(plugin)
 
-    plugin2[Symbol.for('name')] = 'myPlugin2'
-    plugin2[Symbol.for('options')] = { a: 2 }
-
-    hemera.use([plugin, plugin2])
-
-    hemera.ready(err => {
-      expect(err).to.be.not.exists()
-      expect(hemera.plugins.myPlugin.plugin$.options).to.be.equals({
-        a: 1
+    function plugin2(hemera, options, done) {
+      hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+        ext2()
+        next()
       })
-      expect(hemera.plugins.myPlugin2.plugin$.options).to.be.equals({
-        a: 2
-      })
-      hemera.close(done)
+
+      done()
+    }
+    plugin2[Symbol.for('skip-override')] = true
+    hemera.use(plugin2)
+
+    hemera.ready(() => {
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        (err, resp) => {
+          expect(err).to.be.not.exists()
+          expect(resp).not.to.be.equals(3)
+          expect(ext1.calledOnce).to.be.equals(true)
+          expect(ext2.calledOnce).to.be.equals(true)
+          hemera.close(done)
+        }
+      )
     })
   })
 
-  it('Should be able to register a callback after an array of plugins was registered', function(done) {
+  it('Should not be able to add extensions for upper scope inside plugins', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
-    const spy = Sinon.spy()
+    let ext1 = Sinon.spy()
+    let ext2 = Sinon.spy()
 
-    // Plugin
-    let plugin = function(hemera, options, done) {
+    hemera.add(
+      {
+        topic: 'math',
+        cmd: 'add'
+      },
+      (resp, cb) => {
+        cb(null, {
+          result: resp.a + resp.b
+        })
+      }
+    )
+
+    function plugin(hemera, options, done) {
+      hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+        ext1()
+        next()
+      })
       done()
     }
+    hemera.use(plugin)
 
-    plugin[Symbol.for('name')] = 'myPlugin'
-    plugin[Symbol.for('options')] = { a: 1 }
+    function plugin2(hemera, options, done) {
+      hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+        ext2()
+        next()
+      })
 
-    let plugin2 = function(hemera, options, done) {
       done()
     }
+    hemera.use(plugin2)
 
-    plugin2[Symbol.for('name')] = 'myPlugin2'
-    plugin2[Symbol.for('options')] = { a: 2 }
+    hemera.ready(() => {
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        (err, resp) => {
+          expect(err).to.be.not.exists()
+          expect(resp).not.to.be.equals(3)
+          expect(ext1.calledOnce).to.be.equals(false)
+          expect(ext2.calledOnce).to.be.equals(false)
+          hemera.close(done)
+        }
+      )
+    })
+  })
 
-    hemera.use([plugin, plugin2]).after(err => {
-      expect(err).to.be.not.exists()
-      spy()
+  it('Should not be able to add extensions and influence other independent scopes', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    let ext1 = Sinon.spy()
+    let ext2 = Sinon.spy()
+    let ext3 = Sinon.spy()
+
+    function plugin(hemera, options, done) {
+      hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+        ext1()
+        next()
+      })
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        (resp, cb) => {
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        }
+      )
+      hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+        ext2()
+        next()
+      })
+
+      done()
+    }
+    hemera.use(plugin)
+
+    function plugin2(hemera, options, done) {
+      hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+        ext3()
+        next()
+      })
+
+      done()
+    }
+    hemera.use(plugin2)
+
+    hemera.ready(() => {
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        (err, resp) => {
+          expect(err).to.be.not.exists()
+          expect(resp).not.to.be.equals(3)
+          expect(ext1.calledOnce).to.be.equals(true)
+          expect(ext2.calledOnce).to.be.equals(true)
+          expect(ext3.calledOnce).to.be.equals(false)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should be able to pass extensions from upper scope to lower scope', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    let ext1 = Sinon.spy()
+    let ext2 = Sinon.spy()
+    let ext3 = Sinon.spy()
+    let ext4 = Sinon.spy()
+
+    hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+      ext1()
+      next()
     })
 
-    hemera.ready(err => {
-      expect(err).to.be.not.exists()
-      expect(spy.calledOnce).to.be.equals(true)
-      expect(hemera.plugins.myPlugin.plugin$.options.a).to.be.equals(1)
-      expect(hemera.plugins.myPlugin2.plugin$.options.a).to.be.equals(2)
-      expect(hemera.plugins['anonymous-4']).to.be.exists()
-      hemera.close(done)
+    function plugin(hemera, options, done) {
+      hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+        ext2()
+        next()
+      })
+
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        (resp, cb) => {
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        }
+      )
+
+      function plugin2(hemera, options, done) {
+        hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+          ext3()
+          next()
+        })
+
+        done()
+      }
+
+      hemera.use(plugin2)
+
+      done()
+    }
+    hemera.use(plugin)
+
+    function plugin3(hemera, options, done) {
+      hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+        ext4()
+        next()
+      })
+
+      done()
+    }
+    hemera.use(plugin3)
+
+    hemera.ready(() => {
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        (err, resp) => {
+          expect(err).to.be.not.exists()
+          expect(resp).not.to.be.equals(3)
+          expect(ext1.calledOnce).to.be.equals(true)
+          expect(ext2.calledOnce).to.be.equals(true)
+          expect(ext3.calledOnce).to.be.equals(false)
+          expect(ext4.calledOnce).to.be.equals(false)
+          hemera.close(done)
+        }
+      )
     })
   })
 
@@ -187,8 +443,16 @@ describe('Plugin interface', function() {
     // Plugin
     let plugin = function(hemera, options, done) {
       let plugin2 = function(hemera, options, done) {
+        expect(hemera[HemeraSymbols.registeredPlugins].slice()).to.be.equals([
+          'myPlugin',
+          'myPlugin2'
+        ])
         done()
       }
+
+      expect(hemera[HemeraSymbols.registeredPlugins].slice()).to.be.equals([
+        'myPlugin'
+      ])
 
       plugin2[Symbol.for('name')] = 'myPlugin2'
       plugin2[Symbol.for('options')] = { a: 2 }
@@ -205,17 +469,7 @@ describe('Plugin interface', function() {
 
     hemera.ready(err => {
       expect(err).to.be.not.exists()
-      expect(Object.keys(hemera.plugins)).to.be.equals([
-        'core',
-        'myPlugin',
-        'myPlugin2'
-      ])
-      expect(hemera.plugins.myPlugin.plugin$.options).to.be.equals({
-        a: 1
-      })
-      expect(hemera.plugins.myPlugin2.plugin$.options).to.be.equals({
-        a: 2
-      })
+      expect(hemera[HemeraSymbols.registeredPlugins]).to.be.equals(['myPlugin'])
       hemera.close(done)
     })
   })
@@ -229,6 +483,10 @@ describe('Plugin interface', function() {
       let plugin = function(hemera, options, done) {
         hemera.decorate('test', true)
         expect(hemera.test).to.be.exists()
+        expect(hemera[HemeraSymbols.registeredPlugins].slice()).to.be.equals([
+          'parent',
+          'myPlugin'
+        ])
         done()
       }
 
@@ -236,12 +494,18 @@ describe('Plugin interface', function() {
 
       let plugin2 = function(hemera, options, done) {
         expect(hemera.test).to.be.exists()
+        expect(hemera[HemeraSymbols.registeredPlugins].slice()).to.be.equals([
+          'parent',
+          'myPlugin',
+          'myPlugin2'
+        ])
         done()
       }
 
       plugin2[Symbol.for('name')] = 'myPlugin2'
 
-      hemera.use([plugin, plugin2])
+      hemera.use(plugin)
+      hemera.use(plugin2)
 
       done()
     }
@@ -252,6 +516,9 @@ describe('Plugin interface', function() {
 
     hemera.use(function(hemera, options, done) {
       expect(hemera.test).to.be.not.exists()
+      expect(hemera[HemeraSymbols.registeredPlugins].slice()).to.be.equals([
+        'parent'
+      ])
       done()
     })
 
@@ -259,12 +526,70 @@ describe('Plugin interface', function() {
       expect(err).to.be.not.exists()
       expect(hemera.test).to.be.not.exists()
 
-      expect(Object.keys(hemera.plugins)).to.be.equals([
-        'core',
-        'parent',
-        'myPlugin',
-        'myPlugin2',
-        'anonymous-5'
+      expect(hemera[HemeraSymbols.registeredPlugins].slice()).to.be.equals([
+        'parent'
+      ])
+      hemera.close(done)
+    })
+  })
+
+  it('Plugin which is not encapsulated should be registered with name as well', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let parent = function(hemera, options, done) {
+      done()
+    }
+
+    parent[Symbol.for('skip-override')] = true
+    parent[Symbol.for('name')] = 'parent'
+
+    hemera.use(parent)
+
+    hemera.ready(err => {
+      expect(err).to.be.not.exists()
+      expect(hemera[HemeraSymbols.registeredPlugins].slice()).to.be.equals([
+        'parent'
+      ])
+      hemera.close(done)
+    })
+  })
+
+  it('Plugin is not encapsulated when use skip-override', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let parent = function(hemera, options, done) {
+      expect(hemera[HemeraSymbols.registeredPlugins].slice()).to.be.equals([
+        'parent'
+      ])
+      done()
+    }
+
+    parent[Symbol.for('skip-override')] = true
+    parent[Symbol.for('name')] = 'parent'
+
+    hemera.use(parent)
+
+    hemera.use(function(hemera, options, done) {
+      expect(hemera[HemeraSymbols.registeredPlugins].slice()).to.be.equals([
+        'parent'
+      ])
+      hemera.use(function(hemera, options, done) {
+        expect(hemera[HemeraSymbols.registeredPlugins].slice()).to.be.equals([
+          'parent'
+        ])
+        done()
+      })
+      done()
+    })
+
+    hemera.ready(err => {
+      expect(err).to.be.not.exists()
+      expect(hemera[HemeraSymbols.registeredPlugins].slice()).to.be.equals([
+        'parent'
       ])
       hemera.close(done)
     })
@@ -305,11 +630,9 @@ describe('Plugin interface', function() {
     hemera.use(plugin)
 
     hemera.ready(() => {
-      expect(hemera.plugins).to.be.an.object()
-      expect(Object.keys(hemera.plugins)).to.be.equals(['core', 'myPlugin'])
-      expect(hemera.plugins.core).to.be.exists()
-      expect(hemera.plugins.myPlugin).to.be.exists()
-      expect(hemera.plugins.myPlugin instanceof Hemera).to.be.equals(true)
+      expect(hemera[HemeraSymbols.registeredPlugins].slice()).to.be.equals([
+        'myPlugin'
+      ])
       hemera.close(done)
     })
   })
@@ -350,12 +673,14 @@ describe('Plugin interface', function() {
     plugin[Symbol.for('name')] = 'myPlugin'
     plugin[Symbol.for('dependencies')] = ['test']
 
-    try {
-      hemera.checkPluginDependencies(plugin)
-    } catch (err) {
-      expect(err).to.be.exists()
-      done()
-    }
+    hemera.ready(() => {
+      try {
+        hemera.checkPluginDependencies(plugin)
+      } catch (err) {
+        expect(err).to.be.exists()
+        done()
+      }
+    })
   })
 
   it('Should satisfy all decorate deps', function(done) {
@@ -450,6 +775,36 @@ describe('Plugin interface', function() {
     hemera.ready()
   })
 
+  it('Should throw an error when we trying to overwrite an existing prototype property / 2', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    let plugin = function(hemera, options, next) {
+      hemera.decorate('test', 1)
+
+      let plugin2 = function(hemera, options, next) {
+        try {
+          hemera.decorate('test', 1)
+        } catch (err) {
+          expect(err).to.exists()
+          hemera.close(done)
+        }
+        next()
+      }
+
+      plugin2[Symbol.for('name')] = 'myPlugin2'
+      hemera.use(plugin2)
+      next()
+    }
+
+    plugin[Symbol.for('name')] = 'myPlugin'
+
+    hemera.use(plugin)
+
+    hemera.ready()
+  })
+
   it('Should be able to decorate the prototype chain', function(done) {
     const nats = require('nats').connect(authUrl)
 
@@ -467,30 +822,32 @@ describe('Plugin interface', function() {
     hemera.ready(err => {
       expect(err).to.not.exists()
       expect(hemera.test).to.be.equals(1)
-      expect(hemera.plugins.myPlugin.test).to.be.equals(1)
       hemera.close(done)
     })
   })
 
-  it('Should be able to pass plugin options', function(done) {
+  it('Should not be able to decorate root instance / 2', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
-    const pluginOpts = { test: 5, a: 33 }
 
     let plugin = function(hemera, options, next) {
-      expect(options).to.be.equals(pluginOpts)
+      let plugin2 = function(hemera, options, next) {
+        hemera.decorate('test', 1)
+        next()
+      }
+      plugin2[Symbol.for('name')] = 'myPlugin2'
+      hemera.use(plugin2)
       next()
     }
 
     plugin[Symbol.for('name')] = 'myPlugin'
-    plugin[Symbol.for('options')] = { a: 1 }
 
-    hemera.use(plugin, pluginOpts)
+    hemera.use(plugin)
 
     hemera.ready(err => {
       expect(err).to.not.exists()
-      expect(hemera.plugins.myPlugin.plugin$.options).to.be.equals(pluginOpts)
+      expect(hemera.test).to.be.not.exists()
       hemera.close(done)
     })
   })
@@ -524,7 +881,6 @@ describe('Plugin interface', function() {
     hemera.ready(err => {
       expect(err).to.not.exists()
       expect(hemera.test).to.be.equals(1)
-      expect(hemera.plugins.myPlugin.test).to.be.equals(1)
       hemera.close(done)
     })
   })
@@ -584,7 +940,6 @@ describe('Plugin interface', function() {
     hemera.ready(err => {
       expect(err).to.not.exists()
       expect(hemera.test).to.be.equals(1)
-      expect(hemera.plugins.myPlugin.test).to.be.equals(1)
 
       let hemera2 = new Hemera(nats)
       expect(hemera2.test).to.not.exists()

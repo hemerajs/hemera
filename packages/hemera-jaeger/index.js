@@ -65,7 +65,7 @@ function hemeraOpentracing(hemera, opts, done) {
     tracer
   })
 
-  hemera.on('serverPreRequest', function(hemera) {
+  hemera.on('serverPreRequest', hemera => {
     let wireCtx = tracer.extract(
       Opentracing.FORMAT_TEXT_MAP,
       hemera.trace$.opentracing
@@ -97,7 +97,7 @@ function hemeraOpentracing(hemera, opts, done) {
     span.finish()
   })
 
-  hemera.on('clientPreRequest', function(hemera) {
+  hemera.on('clientPreRequest', hemera => {
     let span
 
     if (hemera.opentracing) {
@@ -135,7 +135,7 @@ function hemeraOpentracing(hemera, opts, done) {
     hemera.opentracing = span
   })
 
-  hemera.on('clientPostRequest', function(hemera) {
+  hemera.on('clientPostRequest', hemera => {
     hemera.opentracing.finish()
   })
 

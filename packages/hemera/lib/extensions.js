@@ -146,7 +146,7 @@ function onClientPostRequest(context, next) {
  * @returns
  */
 function onServerPreRequest(context, req, res, next) {
-  let m = context._decoderPipeline.run(context._request.payload, context)
+  let m = context._serverDecoder(context._request.payload)
 
   if (m.error) {
     next(m.error)
@@ -164,7 +164,7 @@ function onServerPreRequest(context, req, res, next) {
   }
 
   context._request.payload = m.value
-  context._request.error = m.error
+  context._request.error = null
 
   // incoming pattern
   context._pattern = context._request.payload.pattern
@@ -173,6 +173,32 @@ function onServerPreRequest(context, req, res, next) {
 
   context.emit('serverPreRequest', context)
 
+  next()
+}
+
+function onServerPreRequestSchemaValidation(context, req, res, next) {
+  if (context.matchedAction && context._schemaCompiler) {
+    const schema = context.matchedAction.schema
+    const ret = context._schemaCompiler(schema)(req.payload.pattern)
+    if (ret) {
+      if (typeof ret.then === 'function') {
+        ret
+          .then(modifiedPattern => {
+            if (modifiedPattern) {
+              req.payload.pattern = modifiedPattern
+            }
+            next()
+          })
+          .catch(err => next(err))
+        return
+      } else if (ret.error) {
+        return next(ret.error)
+      } else if (ret.value) {
+        req.payload.pattern = ret.value
+        return next()
+      }
+    }
+  }
   next()
 }
 
@@ -196,30 +222,10 @@ function onServerPreRequestLoadTest(context, req, res, next) {
   next()
 }
 
-/**
- *
- *
- * @param {any} req
- * @param {any} res
- * @param {any} next
- */
-function onServerPreHandler(context, req, res, next) {
-  context.emit('serverPreHandler', context)
-
-  next()
-}
-
-function onServerPreResponse(context, req, res, next) {
-  context.emit('serverPreResponse', context)
-
-  next()
-}
-
 module.exports.onClientPreRequest = [onClientPreRequest]
 module.exports.onClientPostRequest = [onClientPostRequest]
 module.exports.onServerPreRequest = [
   onServerPreRequest,
+  onServerPreRequestSchemaValidation,
   onServerPreRequestLoadTest
 ]
-module.exports.onServerPreHandler = [onServerPreHandler]
-module.exports.onServerPreResponse = [onServerPreResponse]

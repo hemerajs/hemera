@@ -55,31 +55,4 @@ describe('Async await Plugin interface', function() {
       )
     })
   })
-
-  it('Should be able to register an array of plugins', function(done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    // Plugin
-    async function plugin1(hemera, options) {
-      return Promise.resolve()
-    }
-
-    async function plugin2(hemera, options) {
-      return Promise.resolve()
-    }
-
-    hemera.use([plugin1, plugin2])
-
-    hemera.ready(err => {
-      expect(err).to.be.not.exists()
-      expect(Object.keys(hemera.plugins)).to.be.equals([
-        'core',
-        'anonymous-2',
-        'anonymous-3'
-      ])
-      hemera.close(done)
-    })
-  })
 })

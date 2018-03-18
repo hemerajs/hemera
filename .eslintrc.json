@@ -4,6 +4,7 @@
     "Hemera": true,
     "HemeraConstants": true,
     "HemeraUtil": true,
+    "HemeraSymbols": true,
     "expect": true,
     "UnauthorizedError": true,
     "HemeraTestsuite": true,

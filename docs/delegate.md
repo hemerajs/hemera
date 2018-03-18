@@ -1,0 +1,45 @@
+---
+id: delegate
+title: Delegate
+sidebar_label: Delegate
+---
+
+If you want to pass data only to the next `add` you can use `delegate$` property. This feature is used to transfer contextual data to tracing systems.
+
+### Caveats
+
+* Delegate is transfered
+* Delegate is **not** transfered in childs calls of your `add`
+
+```js
+hemera.act({
+  topic: 'math',
+  cmd: 'add',
+  delegate$: { foo: 'bar' }
+})
+
+hemera.add(
+  {
+    topic: 'math',
+    cmd: 'add'
+  },
+  function(req, cb) {
+    this.delegate$.foo
+  }
+)
+```
+
+## Attach it outside of the pattern
+
+```js
+hemera.delegate$.a = 'foobar'
+hemera.act(
+  {
+    topic: 'math',
+    cmd: 'add',
+    a: 1,
+    b: 1
+  },
+  function(err, resp) {}
+)
+```

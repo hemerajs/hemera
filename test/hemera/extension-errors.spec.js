@@ -38,10 +38,10 @@ describe('Extension error', function() {
 
     hemera.ready(() => {
       try {
-        hemera.ext('test', 'foo')
+        hemera.ext('onServerPreHandler', 'foo')
       } catch (e) {
         expect(e.name).to.be.equals('HemeraError')
-        expect(e.message).to.be.equals('Invalid extension type')
+        expect(e.message).to.be.equals('Extension must be from type "function"')
         hemera.close(done)
       }
     })

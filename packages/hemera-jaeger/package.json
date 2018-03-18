@@ -16,5 +16,8 @@
     "hemera-plugin": "^1.0.0",
     "jaeger-client": "^3.10.0",
     "opentracing": "^0.14.1"
+  },
+  "peerDependencies": {
+    "hemera-joi": "^4.0.0"
   }
 }

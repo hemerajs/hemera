@@ -39,6 +39,13 @@ describe('Util', function() {
     done()
   })
 
+  it('Should return RegExp as it is', function(done) {
+    const reg = /^a\.[a-zA-Z0-9-]+\.b$/i
+    const regex1 = HemeraUtil.natsWildcardToRegex(reg)
+    expect(reg).to.be.equals(regex1)
+    done()
+  })
+
   it('Extract schema', function(done) {
     let schema = HemeraUtil.extractSchema({
       topic: 'foo',

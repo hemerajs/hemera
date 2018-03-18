@@ -22,7 +22,6 @@ describe('Load policy for server component', function() {
       logLevel: 'silent',
       load: {
         checkPolicy: true,
-        shouldCrash: false,
         process: {
           sampleInterval: 1
         },
@@ -70,60 +69,6 @@ describe('Load policy for server component', function() {
             expect(stub.called).to.be.equals(false)
             hemera.close(done)
           })
-        }
-      )
-    })
-  })
-
-  it('Should exit the process after ProcessLoadError', function(done) {
-    const nats = require('nats').connect(authUrl)
-    let respondedSpy = Sinon.spy()
-    const hemera = new Hemera(nats, {
-      logLevel: 'silent',
-      load: {
-        checkPolicy: true,
-        shouldCrash: true,
-        process: {
-          sampleInterval: 1
-        },
-        policy: {
-          maxRssBytes: 5
-        }
-      }
-    })
-
-    hemera.on('error', err => {
-      expect(err).to.be.exists()
-      hemera.close(done)
-    })
-
-    hemera.ready(() => {
-      hemera.add(
-        {
-          topic: 'a',
-          cmd: 'a'
-        },
-        function(resp, cb) {
-          cb()
-          respondedSpy()
-        }
-      )
-
-      hemera.act(
-        {
-          topic: 'a',
-          cmd: 'a'
-        },
-        (err, resp) => {
-          // receive error message
-          expect(respondedSpy.called).to.be.equals(false)
-          expect(err instanceof Hemera.errors.ProcessLoadError).to.be.equals(
-            true
-          )
-          expect(err.heapUsed).to.be.exists()
-          expect(err.rss).to.be.least(5)
-          expect(err.heapUsed).to.be.exists()
-          expect(err.message).to.be.equals('Server under heavy load (rss)')
         }
       )
     })

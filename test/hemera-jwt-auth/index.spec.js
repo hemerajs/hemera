@@ -29,9 +29,7 @@ describe('Hemera-jwt-auth', function() {
   it('Should be able to pass the metadata (token) to nested acts', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraJwt)
 
@@ -93,9 +91,7 @@ describe('Hemera-jwt-auth', function() {
   it('Should be able to authorize with scope as array', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraJwt)
 
@@ -135,9 +131,7 @@ describe('Hemera-jwt-auth', function() {
   it('Should be able to authorize with scope as string', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraJwt)
 
@@ -177,9 +171,7 @@ describe('Hemera-jwt-auth', function() {
   it('Should return an error when scope is invalid', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraJwt)
 
@@ -220,9 +212,7 @@ describe('Hemera-jwt-auth', function() {
   it('Should return an error when auth object is no object', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraJwt)
 
@@ -261,9 +251,7 @@ describe('Hemera-jwt-auth', function() {
   it('Should return an error when token is invalid', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraJwt)
 
@@ -302,9 +290,7 @@ describe('Hemera-jwt-auth', function() {
   it('Should return an error when token is empty', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraJwt)
 
@@ -343,9 +329,7 @@ describe('Hemera-jwt-auth', function() {
   it('Should ignore authentication when auth is disabled', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraJwt)
 
@@ -409,9 +393,7 @@ describe('Hemera-jwt-auth', function() {
   it('Should return an error because requestor has not full rights', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraJwt)
 
@@ -452,9 +434,7 @@ describe('Hemera-jwt-auth', function() {
   it('Should be able to access decoded token in server method', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraJwt)
 
@@ -495,9 +475,7 @@ describe('Hemera-jwt-auth', function() {
   it('Should not enfore authentication', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraJwt, {
       enforceAuth: false
@@ -533,9 +511,7 @@ describe('Hemera-jwt-auth', function() {
   it('Should not enfore authentication but allows to enable it selectively', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraJwt, {
       enforceAuth: false

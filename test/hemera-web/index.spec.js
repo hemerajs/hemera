@@ -23,9 +23,7 @@ describe('Hemera-web', function() {
   it('Should be able to pass pattern with query parameters in GET request', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraWeb)
 
@@ -52,9 +50,7 @@ describe('Hemera-web', function() {
   it('Should be able to pass pattern with query parameters in POST request', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraWeb)
 
@@ -81,9 +77,7 @@ describe('Hemera-web', function() {
   it('Should be able to do GET request with topic as url parameter', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraWeb)
 
@@ -110,9 +104,7 @@ describe('Hemera-web', function() {
   it('Should be able to do GET request with topic and cmd as url parameters', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraWeb)
 
@@ -139,9 +131,7 @@ describe('Hemera-web', function() {
   it('Should be able to do POST request with topic and cmd as url parameters', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraWeb)
 
@@ -171,9 +161,7 @@ describe('Hemera-web', function() {
   it('Should be able to do POST request with topic as url parameters', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraWeb)
 
@@ -202,9 +190,7 @@ describe('Hemera-web', function() {
   it('Should support blacklist for error propertys', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraWeb, {
       errors: {
@@ -238,9 +224,7 @@ describe('Hemera-web', function() {
   it('Should not transfer the error stack', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraWeb)
 
@@ -270,9 +254,7 @@ describe('Hemera-web', function() {
   it('Should respond with the correct statusCode', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraWeb)
 
@@ -301,9 +283,7 @@ describe('Hemera-web', function() {
   it('Should respond with 500 when no statusCode was given', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraWeb)
 
@@ -330,9 +310,7 @@ describe('Hemera-web', function() {
   it('Should be able to pass pattern with post payload', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraWeb)
 
@@ -364,9 +342,7 @@ describe('Hemera-web', function() {
   it('Should be able to define default pattern', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraWeb, {
       pattern: {
@@ -397,9 +373,7 @@ describe('Hemera-web', function() {
   it('Should be able to define default pattern with function and request context', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraWeb, {
       pattern: request => {
@@ -431,9 +405,7 @@ describe('Hemera-web', function() {
   it('Should be able to transfer small text with pattern', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraWeb)
 
@@ -471,9 +443,7 @@ describe('Hemera-web', function() {
   it('Should be able to transfer small binary files with pattern', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraWeb)
 
@@ -514,9 +484,7 @@ describe('Hemera-web', function() {
   it('Should be able to get correct tracing informations from http headers', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats, {
-      crashOnFatal: false
-    })
+    const hemera = new Hemera(nats)
 
     hemera.use(HemeraWeb)
 

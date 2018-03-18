@@ -26,15 +26,4 @@ describe('Public interface', function() {
 
     hemera.close(done)
   })
-
-  it('public set options', function(done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    expect(hemera.setOption).to.be.exists()
-    expect(hemera.setConfig).to.be.exists()
-
-    hemera.close(done)
-  })
 })

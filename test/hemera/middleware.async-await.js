@@ -29,7 +29,7 @@ describe('Middleware Async / Await', function() {
         .use(async function(req, resp) {
           await Promise.resolve('test')
         })
-        .end(req => req.a + req.b)
+        .end(async req => req.a + req.b)
 
       hemera.act(
         {
