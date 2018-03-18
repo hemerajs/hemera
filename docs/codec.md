@@ -5,15 +5,18 @@ sidebar_label: Codec
 ---
 
 You can define custom payload `Encoder` and `Decoder` to support other formats like [MessagePack](https://msgpack.org/index.html).
-This will reset the server and client codecs.
+This will reset the default `JSON` codec.
 
 ```js
-function encode(msg, isServerEncoding) {
+function encode(msg) {
   return ''
 }
-function decode(msg, isServerDecoding) {
+function decode(msg) {
   return ''
 }
-hemera.setEncoder(encode)
-hemera.setDecoder(encode)
+hemera.setClientEncoder(encode)
+hemera.setClientDecoder(encode)
+
+hemera.setServerEncoder(encode)
+hemera.setServerDecoder(encode)
 ```

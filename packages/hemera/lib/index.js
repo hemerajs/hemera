@@ -98,8 +98,10 @@ class Hemera extends EventEmitter {
     // keep reference to root hemera instance
     this._root = this
 
-    this._encoder = DefaultEncoder.encode
-    this._decoder = DefaultDecoder.decode
+    this._clientEncoder = DefaultEncoder.encode
+    this._clientDecoder = DefaultDecoder.decode
+    this._serverEncoder = DefaultEncoder.encode
+    this._serverDecoder = DefaultDecoder.decode
     this._schemaCompiler = null
 
     // errio settings
@@ -239,16 +241,31 @@ class Hemera extends EventEmitter {
    *
    * @param {*} fn
    */
-  setDecoder(fn) {
-    this._decoder = fn
+  setServerDecoder(fn) {
+    this._serverDecoder = fn
   }
 
   /**
    *
    * @param {*} fn
    */
-  setEncoder(fn) {
-    this._encoder = fn
+  setServerEncoder(fn) {
+    this._serverEncoder = fn
+  }
+  /**
+   *
+   * @param {*} fn
+   */
+  setClientDecoder(fn) {
+    this._clientDecoder = fn
+  }
+
+  /**
+   *
+   * @param {*} fn
+   */
+  setClientEncoder(fn) {
+    this._clientEncoder = fn
   }
 
   /**
@@ -1048,7 +1065,7 @@ class Hemera extends EventEmitter {
       return
     }
 
-    const res = self._decoder(response, self._isServer)
+    const res = self._clientDecoder(response)
     self._response.payload = res.value
     self._response.error = res.error
 
@@ -1212,7 +1229,7 @@ class Hemera extends EventEmitter {
    */
   _onPreRequestCompleted(err) {
     const self = this
-    let m = self._encoder(self._message, self._isServer)
+    let m = self._clientEncoder(self._message)
 
     // encoding issue
     if (m.error) {

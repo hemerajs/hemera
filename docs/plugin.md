@@ -7,7 +7,7 @@ sidebar_label: Create a plugin
 Hemera's plugin system based on the powerful [Avvio](https://github.com/mcollina/avvio) package. Avvio is fully reentrant and graph-based. You can load components/plugins within plugins, and be still sure that things will happen in the right order.
 
 ## Plugin helper library
-Before we get into the plugin system of hemera, you have to install a package called [`hemera-plugin`](https://github.com/hemerajs/hemera/tree/master/packages/hemera-plugin). This package can do some things for you:
+Before we get into the plugin system of hemera you have to install a package called [`hemera-plugin`](https://github.com/hemerajs/hemera/tree/master/packages/hemera-plugin). This package can do some things for you:
 
 - Check the bare-minimum version of Hemera
 - Provide consistent interface to register plugins even when the api is changed

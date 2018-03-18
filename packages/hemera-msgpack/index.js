@@ -28,8 +28,10 @@ function hemeraMsgpack(hemera, opts, done) {
     }
   }
 
-  hemera.setDecoder(decode)
-  hemera.setEncoder(encode)
+  hemera.setClientDecoder(decode)
+  hemera.setClientEncoder(encode)
+  hemera.setServerDecoder(decode)
+  hemera.setServerEncoder(encode)
 
   done()
 }

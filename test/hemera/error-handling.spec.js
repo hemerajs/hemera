@@ -265,14 +265,9 @@ describe('Error handling', function() {
         }
       )
 
-      hemera.setDecoder((msg, isServer) => {
-        if (!isServer) {
-          return {
-            error: new Error('TEST')
-          }
-        }
+      hemera.setClientDecoder(msg => {
         return {
-          value: JSON.parse(msg)
+          error: new Error('TEST')
         }
       })
 
@@ -318,14 +313,9 @@ describe('Error handling', function() {
         }
       )
 
-      hemera.setDecoder((msg, isServer) => {
-        if (isServer) {
-          return {
-            error: new Error('TEST')
-          }
-        }
+      hemera.setServerDecoder(msg => {
         return {
-          value: JSON.parse(msg)
+          error: new Error('TEST')
         }
       })
 
@@ -361,9 +351,10 @@ describe('Error handling', function() {
       spy()
     })
 
-    hemera.setEncoder((msg, isServer) => {
+    hemera.setServerEncoder(msg => {
       call++
-      if (isServer && call === 2) {
+      if (call === 1) {
+        // because the second call is needed to respond it back
         return {
           error: new Error('TEST')
         }
@@ -415,14 +406,9 @@ describe('Error handling', function() {
       spy()
     })
 
-    hemera.setEncoder((msg, isServer) => {
-      if (!isServer) {
-        return {
-          error: new Error('TEST')
-        }
-      }
+    hemera.setClientEncoder(msg => {
       return {
-        value: JSON.stringify(msg)
+        error: new Error('TEST')
       }
     })
 
