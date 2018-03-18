@@ -9,19 +9,19 @@
 const users = [
   {
     caption: 'appcom interactive',
-    image: '/img/company/appcom.svg',
+    image: 'company/appcom.svg',
     infoLink: 'http://www.appcom-interactive.de/',
     pinned: true
   },
   {
     caption: 'amerbank',
-    image: '/img/company/amerbank.png',
+    image: 'company/amerbank.png',
     infoLink: 'https://amerbank.com/',
     pinned: true
   },
   {
     caption: 'savicontrols',
-    image: '/img/company/savi.png',
+    image: 'company/savi.png',
     infoLink: 'https://www.savicontrols.com/',
     pinned: true
   }
@@ -31,7 +31,7 @@ const siteConfig = {
   title: 'Hemera' /* title for your website */,
   tagline: 'Writing reliable & fault-tolerant microservices in Node.js',
   url: 'https://hemerajs.github.io/hemera/' /* your website url */,
-  baseUrl: '/' /* base url for your project */,
+  baseUrl: '/hemera/' /* base url for your project */,
   noIndex: false,
   headerLinks: [
     { doc: 'what-is-hemera', label: 'Docs' },
