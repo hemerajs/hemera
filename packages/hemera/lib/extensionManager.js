@@ -14,7 +14,7 @@ const Constants = require('./constants')
 const Errors = require('./errors')
 
 /**
- * @class Extensions
+ * @class ExtensionManager
  */
 class ExtensionManager {
   constructor() {
