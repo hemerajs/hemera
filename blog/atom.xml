@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://hemerajs.github.io/hemera//blog</id>
+    <id>https://hemerajs.github.io/hemera//hemera/blog</id>
     <title>Hemera Blog</title>
     <updated>2017-03-18T06:00:00Z</updated>
     <generator>Feed for Node.js</generator>
-    <link rel="alternate" href="https://hemerajs.github.io/hemera//blog"/>
+    <link rel="alternate" href="https://hemerajs.github.io/hemera//hemera/blog"/>
     <subtitle>The best place to stay up-to-date with the latest Hemera news and events.</subtitle>
-    <logo>https://hemerajs.github.io/hemera//img/hemera-tiny.png</logo>
+    <logo>https://hemerajs.github.io/hemera//hemera/img/hemera-tiny.png</logo>
     <rights>Copyright © 2018 Dustin Deus</rights>
     <entry>
         <title type="html"><![CDATA[New Version 5.0.0]]></title>
-        <id>https://hemerajs.github.io/hemera//blog/2017/03/18/new-version-5.0.0.html</id>
-        <link href="https://hemerajs.github.io/hemera//blog/2017/03/18/new-version-5.0.0.html">
+        <id>https://hemerajs.github.io/hemera//hemera/blog/2017/03/18/new-version-5.0.0.html</id>
+        <link href="https://hemerajs.github.io/hemera//hemera/blog/2017/03/18/new-version-5.0.0.html">
         </link>
         <updated>2017-03-18T06:00:00Z</updated>
         <summary type="html"><![CDATA[<p>I'm really happy to announce the new Hemera 5 release!</p>

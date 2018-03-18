@@ -2,21 +2,21 @@
 <rss version="2.0">
     <channel>
         <title>Hemera Blog</title>
-        <link>https://hemerajs.github.io/hemera//blog</link>
+        <link>https://hemerajs.github.io/hemera//hemera/blog</link>
         <description>The best place to stay up-to-date with the latest Hemera news and events.</description>
         <lastBuildDate>Sat, 18 Mar 2017 06:00:00 GMT</lastBuildDate>
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
         <generator>Feed for Node.js</generator>
         <image>
             <title>Hemera Blog</title>
-            <url>https://hemerajs.github.io/hemera//img/hemera-tiny.png</url>
-            <link>https://hemerajs.github.io/hemera//blog</link>
+            <url>https://hemerajs.github.io/hemera//hemera/img/hemera-tiny.png</url>
+            <link>https://hemerajs.github.io/hemera//hemera/blog</link>
         </image>
         <copyright>Copyright © 2018 Dustin Deus</copyright>
         <item>
             <title><![CDATA[New Version 5.0.0]]></title>
-            <link>https://hemerajs.github.io/hemera//blog/2017/03/18/new-version-5.0.0.html</link>
-            <guid>https://hemerajs.github.io/hemera//blog/2017/03/18/new-version-5.0.0.html</guid>
+            <link>https://hemerajs.github.io/hemera//hemera/blog/2017/03/18/new-version-5.0.0.html</link>
+            <guid>https://hemerajs.github.io/hemera//hemera/blog/2017/03/18/new-version-5.0.0.html</guid>
             <pubDate>Sat, 18 Mar 2017 06:00:00 GMT</pubDate>
             <description><![CDATA[<p>I'm really happy to announce the new Hemera 5 release!</p>
 <p>This release is a ground-breaking refactoring of the core. The goal was to simplify but also make the lifecycle of extensions and middlwares more predictable.</p>
