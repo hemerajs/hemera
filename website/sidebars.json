@@ -13,7 +13,8 @@
       "metadata",
       "context",
       "delegate",
-      "event"
+      "event",
+      "codec"
     ],
     "Plugins": ["ecosystem", "plugin"],
     "Error handling": [

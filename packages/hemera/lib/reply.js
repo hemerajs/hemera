@@ -186,7 +186,7 @@ class Reply {
       error: self.error ? Errio.toObject(self.error) : null
     }
 
-    let msg = self.hemera._encoderPipeline.run(message, self)
+    let msg = self.hemera._encoder(message, self.hemera._isServer)
 
     if (msg.error) {
       let internalError = new Errors.ParseError(
@@ -196,7 +196,7 @@ class Reply {
       self.hemera.emit('serverResponseError', msg.error)
       message.error = Errio.toObject(msg.error)
       message.result = null
-      msg = self.hemera._encoderPipeline.run(message, self)
+      msg = self.hemera._encoder(message, self.hemera._isServer)
     }
 
     return msg

@@ -36,3 +36,15 @@ hemera.act(
   function(err, resp) {}
 )
 ```
+
+## Use your custom validator
+
+We provide a method `setSchemaCompiler` which accepts a validation function. If you working with async validators you can return a promise as well.
+
+```js
+  hemera.setSchemaCompiler(schema => pattern =>
+    Joi.validate(pattern, schema.joi$ || schema, {
+      allowUnknown: true
+    })
+  )
+```

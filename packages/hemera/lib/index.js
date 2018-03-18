@@ -39,7 +39,6 @@ const ClientRequest = require('./clientRequest')
 const ClientResponse = require('./clientResponse')
 const Serializers = require('./serializer')
 const ConfigScheme = require('./configScheme')
-const CodecPipeline = require('./codecPipeline')
 const Reply = require('./reply')
 const Add = require('./add')
 const ExtensionManager = require('./extensionManager')
@@ -99,8 +98,8 @@ class Hemera extends EventEmitter {
     // keep reference to root hemera instance
     this._root = this
 
-    this._encoderPipeline = new CodecPipeline().add(DefaultEncoder.encode)
-    this._decoderPipeline = new CodecPipeline().add(DefaultDecoder.decode)
+    this._encoder = DefaultEncoder.encode
+    this._decoder = DefaultDecoder.decode
     this._schemaCompiler = null
 
     // errio settings
@@ -238,22 +237,18 @@ class Hemera extends EventEmitter {
   }
   /**
    *
-   *
-   * @readonly
-   * @memberof Hemera
+   * @param {*} fn
    */
-  get decoder() {
-    return this._decoderPipeline
+  setDecoder(fn) {
+    this._decoder = fn
   }
 
   /**
    *
-   *
-   * @readonly
-   * @memberof Hemera
+   * @param {*} fn
    */
-  get encoder() {
-    return this._encoderPipeline
+  setEncoder(fn) {
+    this._encoder = fn
   }
 
   /**
@@ -1053,7 +1048,7 @@ class Hemera extends EventEmitter {
       return
     }
 
-    const res = self._decoderPipeline.run(response, self)
+    const res = self._decoder(response, self._isServer)
     self._response.payload = res.value
     self._response.error = res.error
 
@@ -1217,7 +1212,7 @@ class Hemera extends EventEmitter {
    */
   _onPreRequestCompleted(err) {
     const self = this
-    let m = self._encoderPipeline.run(self._message, self)
+    let m = self._encoder(self._message, self._isServer)
 
     // encoding issue
     if (m.error) {

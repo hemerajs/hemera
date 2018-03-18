@@ -4,7 +4,15 @@ title: Plugin
 sidebar_label: Create a plugin
 ---
 
-Hemera's plugin system based on the powerful [Avvio](https://github.com/mcollina/avvio) package. Avvio is fully reentrant and graph-based. You can load components/plugins within plugins, and be still sure that things will happen in the right order. You can create a plugin in two different ways:
+Hemera's plugin system based on the powerful [Avvio](https://github.com/mcollina/avvio) package. Avvio is fully reentrant and graph-based. You can load components/plugins within plugins, and be still sure that things will happen in the right order.
+
+## Plugin helper library
+Before we get into the plugin system of hemera, you have to install a package called [`hemera-plugin`](https://github.com/hemerajs/hemera/tree/master/packages/hemera-plugin). This package can do some things for you:
+
+- Check the bare-minimum version of Hemera
+- Provide consistent interface to register plugins even when the api is changed
+- Pass metadata to intialize your plugin with correct dependencies, default options and name
+- Skip the creation of a seperate plugins scope
 
 ```js
 const hp = require('hemera-plugin')
@@ -28,6 +36,77 @@ const myPlugin = hp((hemera, opts, done) => {
 
 module.exports = myPlugin
 ```
+
+## Encapsulation
+
+Plugins will create its own scope by default. This means that a child plugin can never manipulate its upper scope but child plugins. If you register an extension inside a plugin only child plugins will be effected.
+
+```js
+const hp = require('hemera-plugin')
+const myPlugin = hp((hemera, opts, done) => {
+  const topic = 'math'
+
+  hemera.ext('onClientPostRequest', function(ctx, next) {
+    // some code
+    next()
+  })
+
+  done()
+})
+
+hemera.use(myPlugin)
+```
+
+### Decorators
+
+Decorators are something special. Even if you create a plugin scope you can decorate the parent scope as well as child plugins. Decorators are primarly used to expose data to other plugins.
+
+```js
+const hp = require('hemera-plugin')
+const myPlugin = hp((hemera, opts, done) => {
+  const topic = 'math'
+
+  hemera.decorate('test', 1)
+
+  done()
+})
+
+hemera.use(myPlugin)
+hemera.ready(() => console.log(hemera.test))
+```
+
+### Global registration
+
+Sometimes it is still useful to write a plugin which effects the whole application with all scopes included. You can disable the creation of an plugin scope with `scoped: false` property.
+This approach is used for payload validators like `hemera-joi` or authentication `hemera-jwt`.
+
+```js
+const hp = require('hemera-plugin')
+const myPlugin = hp(
+  (hemera, opts, done) => {
+    const topic = 'math'
+
+    hemera.ext('onServerPreRequest', function(ctx, next) {
+      // some code
+      next()
+    })
+
+    done()
+  },
+  {
+    scoped: false
+  }
+)
+
+hemera.use(myPlugin)
+```
+
+### Scoped sensitive settings
+
+- [Request/Response Extensions](extension.md#server-client-lifecycle)
+- [Decorators](decorator.md)
+- [Schema Compilers](payload-validation.md#use-your-custom-validator)
+- [Codecs](codec.md)
 
 ## Add plugin metadata
 
@@ -97,7 +176,7 @@ hemera.use(plugin, { a: 1 })
 
 ## After
 
-Calls a function after all plugins are loaded, including all their dependencies.
+Calls a function after all previous registrations are loaded, including all their dependencies.
 
 ```js
 hemera.use(plugin).after(cb)

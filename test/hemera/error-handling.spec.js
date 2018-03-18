@@ -265,12 +265,16 @@ describe('Error handling', function() {
         }
       )
 
-      var stub = Sinon.stub(hemera.decoder, 'run')
-        .onSecondCall()
-        .returns({
-          error: new Error('TEST')
-        })
-        .callThrough()
+      hemera.setDecoder((msg, isServer) => {
+        if (!isServer) {
+          return {
+            error: new Error('TEST')
+          }
+        }
+        return {
+          value: JSON.parse(msg)
+        }
+      })
 
       hemera.act(
         {
@@ -284,7 +288,6 @@ describe('Error handling', function() {
           expect(err.name).to.be.equals('Error')
           expect(err.message).to.be.equals('TEST')
           expect(spy.calledOnce).to.be.equals(true)
-          stub.restore()
           hemera.close(done)
         }
       )
@@ -315,12 +318,16 @@ describe('Error handling', function() {
         }
       )
 
-      var stub = Sinon.stub(hemera.decoder, 'run')
-        .onFirstCall()
-        .returns({
-          error: new Error('TEST')
-        })
-        .callThrough()
+      hemera.setDecoder((msg, isServer) => {
+        if (isServer) {
+          return {
+            error: new Error('TEST')
+          }
+        }
+        return {
+          value: JSON.parse(msg)
+        }
+      })
 
       hemera.act(
         {
@@ -334,7 +341,6 @@ describe('Error handling', function() {
           expect(err.name).to.be.equals('Error')
           expect(err.message).to.be.equals('TEST')
           expect(spy.calledOnce).to.be.equals(true)
-          stub.restore()
           hemera.close(done)
         }
       )
@@ -346,6 +352,7 @@ describe('Error handling', function() {
 
     const hemera = new Hemera(nats)
     const spy = Sinon.spy()
+    let call = 0
 
     hemera.on('serverResponseError', function(err) {
       expect(err).to.be.exists()
@@ -354,12 +361,17 @@ describe('Error handling', function() {
       spy()
     })
 
-    var stub = Sinon.stub(hemera.encoder, 'run')
-      .onSecondCall()
-      .returns({
-        error: new Error('TEST')
-      })
-      .callThrough()
+    hemera.setEncoder((msg, isServer) => {
+      call++
+      if (isServer && call === 2) {
+        return {
+          error: new Error('TEST')
+        }
+      }
+      return {
+        value: JSON.stringify(msg)
+      }
+    })
 
     hemera.ready(() => {
       hemera.add(
@@ -384,7 +396,6 @@ describe('Error handling', function() {
           expect(err.name).to.be.equals('Error')
           expect(err.message).to.be.equals('TEST')
           expect(spy.calledOnce).to.be.equals(true)
-          stub.restore()
           hemera.close(done)
         }
       )
@@ -404,12 +415,16 @@ describe('Error handling', function() {
       spy()
     })
 
-    var stub = Sinon.stub(hemera.encoder, 'run')
-      .onFirstCall()
-      .returns({
-        error: new Error('TEST')
-      })
-      .callThrough()
+    hemera.setEncoder((msg, isServer) => {
+      if (!isServer) {
+        return {
+          error: new Error('TEST')
+        }
+      }
+      return {
+        value: JSON.stringify(msg)
+      }
+    })
 
     hemera.ready(() => {
       hemera.add(
@@ -434,7 +449,6 @@ describe('Error handling', function() {
           expect(err.name).to.be.equals('Error')
           expect(err.message).to.be.equals('TEST')
           expect(spy.calledOnce).to.be.equals(true)
-          stub.restore()
           hemera.close(done)
         }
       )

@@ -28,15 +28,15 @@ function hemeraMsgpack(hemera, opts, done) {
     }
   }
 
-  // Will replace default encoder/decoder
-  hemera.decoder.reset(decode)
-  hemera.encoder.reset(encode)
+  hemera.setDecoder(decode)
+  hemera.setEncoder(encode)
 
   done()
 }
 
 const plugin = Hp(hemeraMsgpack, {
   hemera: '^4.0.0',
+  scoped: false,
   name: require('./package.json').name
 })
 

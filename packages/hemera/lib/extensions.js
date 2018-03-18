@@ -146,7 +146,7 @@ function onClientPostRequest(context, next) {
  * @returns
  */
 function onServerPreRequest(context, req, res, next) {
-  let m = context._decoderPipeline.run(context._request.payload, context)
+  let m = context._decoder(context._request.payload, context._isServer)
 
   if (m.error) {
     next(m.error)
