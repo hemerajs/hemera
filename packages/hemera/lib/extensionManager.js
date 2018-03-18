@@ -14,9 +14,9 @@ const Constants = require('./constants')
 const Errors = require('./errors')
 
 /**
- * @class Extension
+ * @class Extensions
  */
-class Extension {
+class ExtensionManager {
   constructor() {
     this._stack = []
     this._types = [
@@ -67,6 +67,21 @@ class Extension {
       this._add(type, handler)
     }
   }
+  /**
+   *
+   * @param {*} e
+   */
+  static build(e) {
+    const extensions = new ExtensionManager()
+    extensions.onClientPreRequest = e.onClientPreRequest.slice()
+    extensions.onClientPostRequest = e.onClientPostRequest.slice()
+
+    extensions.onServerPreHandler = e.onServerPreHandler.slice()
+    extensions.onServerPreRequest = e.onServerPreRequest.slice()
+    extensions.onServerPreResponse = e.onServerPreResponse.slice()
+
+    return extensions
+  }
 }
 
-module.exports = Extension
+module.exports = ExtensionManager

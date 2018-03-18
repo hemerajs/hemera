@@ -93,7 +93,6 @@ A plugin must be registered before the `ready` function is called. The ready fun
 
 ```js
 hemera.use(plugin, { a: 1 })
-hemera.use([plugin, ...], { a: 1 })
 ```
 
 ## After

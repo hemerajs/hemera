@@ -2,7 +2,7 @@
 
 const HemeraJoi = require('../../packages/hemera-joi')
 
-describe.only('Hemera-joi', function() {
+describe('Hemera-joi', function() {
   const PORT = 6243
   var authUrl = 'nats://localhost:' + PORT
   var server

@@ -42,7 +42,7 @@ const ConfigScheme = require('./configScheme')
 const CodecPipeline = require('./codecPipeline')
 const Reply = require('./reply')
 const Add = require('./add')
-const Extension = require('./extension')
+const ExtensionManager = require('./extensionManager')
 
 /**
  * @class Hemera
@@ -117,12 +117,22 @@ class Hemera extends EventEmitter {
 
     this._onAddHandlers = []
 
-    this._ext = new Extension()
-    this._ext.add('onClientPreRequest', DefaultExtensions.onClientPreRequest)
-    this._ext.add('onClientPostRequest', DefaultExtensions.onClientPostRequest)
-    this._ext.add('onServerPreRequest', DefaultExtensions.onServerPreRequest)
+    this._extensionManager = new ExtensionManager()
+    this._extensionManager.add(
+      'onClientPreRequest',
+      DefaultExtensions.onClientPreRequest
+    )
+    this._extensionManager.add(
+      'onClientPostRequest',
+      DefaultExtensions.onClientPostRequest
+    )
+    this._extensionManager.add(
+      'onServerPreRequest',
+      DefaultExtensions.onServerPreRequest
+    )
 
     this._avvio = Avvio(this, {
+      autostart: false,
       expose: {
         use: 'register',
         close: 'shutdown',
@@ -158,6 +168,11 @@ class Hemera extends EventEmitter {
 
       instance[Symbols.registeredPlugins] = Object.create(
         hemera[Symbols.registeredPlugins]
+      )
+
+      // inherit all extensions
+      instance._extensionManager = ExtensionManager.build(
+        hemera._extensionManager
       )
 
       // overwrite decorate function to extend the prototype
@@ -377,7 +392,7 @@ class Hemera extends EventEmitter {
     } else if (type === 'onClose') {
       this.onShutdown(handler)
     } else {
-      this._ext.add(type, handler)
+      this._extensionManager.add(type, handler)
     }
   }
 
@@ -479,27 +494,13 @@ class Hemera extends EventEmitter {
    *
    *
    * @param {any} plugin
-   * @param {any} opts
-   * @memberof Hemera
-   */
-  _use(plugin, opts) {
-    let pluginOpts = Hoek.clone(plugin[Symbols.pluginOptions] || {})
-    pluginOpts = Object.assign(pluginOpts, opts)
-    this.register(plugin, pluginOpts)
-  }
-
-  /**
-   *
-   *
-   * @param {any} plugin
    * @returns
    * @memberof Hemera
    */
-  use(plugins, opts) {
-    const p = _.isArray(plugins) ? plugins : [plugins]
-    p.forEach(plugin => {
-      this._use(plugin, opts)
-    })
+  use(plugin, opts) {
+    let pluginOpts = Hoek.clone(plugin[Symbols.pluginOptions] || {})
+    pluginOpts = Object.assign(pluginOpts, opts)
+    this.register(plugin, pluginOpts)
     return this._avvio
   }
 
@@ -690,7 +691,7 @@ class Hemera extends EventEmitter {
       hemera._series(
         hemera,
         hemera._serverExtIterator,
-        hemera._ext['onServerPreRequest'],
+        hemera._extensionManager['onServerPreRequest'],
         err => hemera._onServerPreRequestCompleted(err)
       )
     }
@@ -740,11 +741,11 @@ class Hemera extends EventEmitter {
     // check if a handler is registered with this pattern
     if (self.matchedAction) {
       self.emit('serverPreHandler', self)
-      if (self._ext['onServerPreHandler'].length) {
+      if (self._extensionManager['onServerPreHandler'].length) {
         self._series(
           self,
           self._serverExtIterator,
-          self._ext['onServerPreHandler'],
+          self._extensionManager['onServerPreHandler'],
           err => self._onServerPreHandlerCompleted(err)
         )
         return
@@ -1071,7 +1072,7 @@ class Hemera extends EventEmitter {
     self._series(
       self,
       self._clientExtIterator,
-      self._ext['onClientPostRequest'],
+      self._extensionManager['onClientPostRequest'],
       err => self._onClientPostRequestCompleted(err)
     )
   }
@@ -1161,7 +1162,7 @@ class Hemera extends EventEmitter {
       hemera._series(
         hemera,
         hemera._clientExtIterator,
-        hemera._ext['onClientPreRequest'],
+        hemera._extensionManager['onClientPreRequest'],
         err => hemera._onPreRequestCompleted(err)
       )
     } else {
@@ -1178,7 +1179,7 @@ class Hemera extends EventEmitter {
       hemera._series(
         hemera,
         hemera._clientExtIterator,
-        hemera._ext['onClientPreRequest'],
+        hemera._extensionManager['onClientPreRequest'],
         err => hemera._onPreRequestCompleted(err)
       )
 
@@ -1317,7 +1318,7 @@ class Hemera extends EventEmitter {
     self._series(
       self,
       self._clientExtIterator,
-      self._ext['onClientPostRequest'],
+      self._extensionManager['onClientPostRequest'],
       err => self._onClientTimeoutPostRequestCompleted(err)
     )
   }

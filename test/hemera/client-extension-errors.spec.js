@@ -20,11 +20,10 @@ describe('Client Extension errors', function() {
 
     const hemera = new Hemera(nats)
 
-    let plugin = function(hemera, options, done) {
+    hemera.ready(() => {
       hemera.ext('onClientPostRequest', function(ctx, next) {
         next(new UnauthorizedError('test'))
       })
-
       hemera.add(
         {
           cmd: 'add',
@@ -34,13 +33,6 @@ describe('Client Extension errors', function() {
           cb(null, resp.a + resp.b)
         }
       )
-
-      done()
-    }
-
-    hemera.use(plugin)
-
-    hemera.ready(() => {
       hemera.act(
         {
           topic: 'math',
@@ -63,7 +55,7 @@ describe('Client Extension errors', function() {
 
     const hemera = new Hemera(nats)
 
-    let plugin = function(hemera, options, done) {
+    hemera.ready(() => {
       hemera.ext('onClientPostRequest', function(ctx, next) {
         next(new Error('test'))
       })
@@ -78,12 +70,6 @@ describe('Client Extension errors', function() {
         }
       )
 
-      done()
-    }
-
-    hemera.use(plugin)
-
-    hemera.ready(() => {
       hemera.act(
         {
           topic: 'math',
@@ -106,7 +92,7 @@ describe('Client Extension errors', function() {
 
     const hemera = new Hemera(nats)
 
-    let plugin = function(hemera, options, done) {
+    hemera.ready(() => {
       hemera.ext('onClientPreRequest', function(ctx, next) {
         next(new UnauthorizedError('test'))
       })
@@ -120,13 +106,6 @@ describe('Client Extension errors', function() {
           cb(null, resp.a + resp.b)
         }
       )
-
-      done()
-    }
-
-    hemera.use(plugin)
-
-    hemera.ready(() => {
       hemera.act(
         {
           topic: 'math',
@@ -149,7 +128,7 @@ describe('Client Extension errors', function() {
 
     const hemera = new Hemera(nats)
 
-    let plugin = function(hemera, options, done) {
+    hemera.ready(() => {
       hemera.ext('onClientPreRequest', function(ctx, next) {
         next(new Error('test'))
       })
@@ -163,13 +142,6 @@ describe('Client Extension errors', function() {
           cb(null, resp.a + resp.b)
         }
       )
-
-      done()
-    }
-
-    hemera.use(plugin)
-
-    hemera.ready(() => {
       hemera.act(
         {
           topic: 'math',

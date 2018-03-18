@@ -131,11 +131,11 @@ class Reply {
 
     self.hemera.emit('serverPreResponse', self.hemera)
 
-    if (self.hemera._ext['onServerPreResponse'].length) {
+    if (self.hemera._extensionManager['onServerPreResponse'].length) {
       self.hemera._series(
         self.hemera,
         self._preResponseIterator,
-        self.hemera._ext['onServerPreResponse'],
+        self.hemera._extensionManager['onServerPreResponse'],
         err => self._onServerPreResponseCompleted(err)
       )
       return
