@@ -36,7 +36,7 @@ hemera.ready(() => {
 
 ## Hops error property
 
-In addition to default error properties the `hops` property is added to understand which services are involved.
+In addition to default error properties the `hops` property is added to understand which services were involved in the operation.
 
 ```json
 {

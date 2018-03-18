@@ -24,13 +24,13 @@ hemera.act(
 )
 ```
 
-## Global custom timeout
+## Change global timeout
 
 ```js
 const hemera = new Hemera(nats, { timeout: 3000 })
 ```
 
-## Custom timeout per call
+## Change timeout per call
 
 ```js
 hemera.act(

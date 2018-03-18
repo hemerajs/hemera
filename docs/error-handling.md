@@ -6,6 +6,7 @@ sidebar_label: Introduction
 
 Hemera won't catch any thrown error expect you are using async/await. It's up to the developer to handle business specific issues. Ensure that your process is restarted e.g with a process-manager like [PM2](http://pm2.keymetrics.io/).
 
+This will crash your application:
 ```js
 hemera.add(
   {
@@ -17,12 +18,12 @@ hemera.add(
   }
 )
 ```
+
 ## Style
 
 We support error-first-callback style as well as promise and async / await. Use one style but be consistent.
 
 ## Handle a request error
-
 
 * Error-first-callback
 
@@ -34,7 +35,11 @@ We support error-first-callback style as well as promise and async / await. Use 
       a: 1,
       b: 1
     },
-    function(err, resp) {}
+    function(err, resp) {
+      if (err) {
+        // some code
+      }
+    }
   )
   ```
 
@@ -48,7 +53,9 @@ We support error-first-callback style as well as promise and async / await. Use 
       a: 1,
       b: 1
     })
-    .catch(err => {})
+    .catch(err => {
+      // some code
+    })
   ```
 
 * Async / Await
@@ -63,13 +70,14 @@ We support error-first-callback style as well as promise and async / await. Use 
         b: 1
       })
   } catch (err) {
-
+  // some code
   }
   ```
 
 ## Respond an error
 
 * Error-first-callback
+
   ```js
   hemera.add(
     {
@@ -81,7 +89,9 @@ We support error-first-callback style as well as promise and async / await. Use 
     }
   )
   ```
+
 * Promise
+
   ```js
   hemera.add(
     {
@@ -93,6 +103,7 @@ We support error-first-callback style as well as promise and async / await. Use 
     }
   )
   ```
+
 * Async / Await
   ```js
   hemera.add(
