@@ -22,7 +22,7 @@ class Help extends React.Component {
         title: 'Browse Docs'
       },
       {
-        content: 'Ask questions about the documentation and project on [Gitter](https://gitter.im/hemerajs/hemera) and [Gitter](https://twitter.com/hemerajs).',
+        content: 'Ask questions about the documentation and project on [Gitter](https://gitter.im/hemerajs/hemera) and [Twitter](https://twitter.com/hemerajs).',
         title: 'Join the community'
       },
       {
