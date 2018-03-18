@@ -4,7 +4,7 @@ title: Installation
 sidebar_label: Installation
 ---
 
-## Install NATS client and Hemera
+## 1. Install NATS client and Hemera
 
 ```bash
 npm install nats nats-hemera
@@ -16,7 +16,7 @@ npm install nats nats-hemera
 2.  npm `>=3.x` or yarn
 3.  NATS
 
-## Installing NATS
+## 2. Installing NATS
 
 1.  [Download](https://nats.io/download/) NATS
 2.  Install the path to the executeable in your user path
