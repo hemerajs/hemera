@@ -36,6 +36,7 @@ describe('Basic', function() {
   it('Should send and receive', function(done) {
     const nats = require('nats').connect(natsUrl)
     const hemera = new Hemera(nats)
+    
     hemera.ready(() => {
       hemera.add(
         {
@@ -56,6 +57,7 @@ describe('Basic', function() {
         (err, resp) => {
           expect(err).not.to.be.exists()
           expect(resp).to.be.equals(3)
+          hemera.close(done)
         }
       )
     })
