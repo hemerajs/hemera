@@ -1,6 +1,6 @@
 {
   "name": "hemera-stats",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "Provide informations about the current hemera instance",
   "main": "index.js",
   "repository": {
@@ -13,6 +13,6 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-plugin": "^1.0.0"
+    "hemera-plugin": "^1.1.0"
   }
 }
