@@ -18,7 +18,7 @@ sidebar_label: What is Hemera?
 - It is 100% compatible with yarn, npm and pnpm
 - We support Callback, Promise and Async/Await style
 - We offer Docker support
-- Hemera means **in Greek mythology the personification of day** so it must be run on daily basis ;)
+- Hemera means **in Greek mythology the personification of day** so it must run on daily basis ;)
 
 ## What's NATS
 
