@@ -31,11 +31,21 @@ hemera.ready(<span class="hljs-function"><span class="hljs-keyword">function</sp
       <span class="hljs-attr">topic</span>: <span class="hljs-string">'math'</span>,
       <span class="hljs-attr">cmd</span>: <span class="hljs-string">'add'</span>
     },
-    req =&gt; req.a + req.b
+    (req, cb) =&gt; {
+      cb(<span class="hljs-literal">null</span>, req.a + req.b)
+    }
   )
-  hemera.act(<span class="hljs-string">`topic:math,cmd:add,a:1,b:2`</span>, (err, resp) =&gt; {
-    <span class="hljs-built_in">console</span>.log(err, resp)
-  })
+  hemera.act(
+    {
+      <span class="hljs-attr">topic</span>: math,
+      <span class="hljs-attr">cmd</span>: add,
+      <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>,
+      <span class="hljs-attr">b</span>: <span class="hljs-number">2</span>
+    },
+    (err, resp) =&gt; {
+      <span class="hljs-built_in">console</span>.log(err, resp)
+    }
+  )
 })
 </code></pre>
 </span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="integration.html">← Integration-test</a><a class="docs-next button" href="monitoring.html">Monitoring →</a></div></div></div></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/hemera/" class="nav-home"><img src="/hemera/img/hemera-blackwhite.png" alt="Hemera" width="66" height="58"/></a><div><h5>Docs</h5><a href="/hemera/docs/installation.html">Getting Started</a><a href="/hemera/docs/plugin.html">Create a plugin</a><a href="/hemera/docs/api.html">API Reference</a></div><div><h5>Community</h5><a href="/hemera/en/users.html">User Showcase</a><a href="http://stackoverflow.com/questions/tagged/" target="_blank">Stack Overflow</a><a href="https://gitter.im/hemerajs/hemera">Gitter Chat</a><a href="https://twitter.com/hemerajs" target="_blank">Twitter</a></div><div><h5>More</h5><a href="/hemera/blog">Blog</a><a href="https://github.com/hemerajs/hemera">GitHub</a><a class="github-button" href="https://github.com/hemerajs/hemera/" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">Copyright © 2018 Hemera.</section></footer></div><script>
