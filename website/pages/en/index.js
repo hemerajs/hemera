@@ -177,8 +177,10 @@ const FeatureCallout = props => (
       <MarkdownBlock>{bash`npm install nats nats-hemera`}</MarkdownBlock>
       <h3>Install NATS Server</h3>
       <MarkdownBlock>{bash`
-# Download NATS & start
+# Download NATS
 https://nats.io/download/
+# Start
+./gnatsd
       `}</MarkdownBlock>
       <h3>Example</h3>
     </div>
