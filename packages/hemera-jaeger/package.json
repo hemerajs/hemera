@@ -18,6 +18,6 @@
     "opentracing": "^0.14.1"
   },
   "peerDependencies": {
-    "hemera-joi": "^4.0.0"
+    "hemera-joi": "^5.0.0"
   }
 }

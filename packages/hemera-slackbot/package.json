@@ -15,7 +15,7 @@
     "slackbots": "1.1.x"
   },
   "peerDependencies": {
-    "hemera-joi": "^4.0.0"
+    "hemera-joi": "^5.0.0"
   },
   "engines": {
     "node": ">=6"

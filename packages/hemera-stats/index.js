@@ -73,7 +73,7 @@ function hemeraStats(hemera, opts, done) {
 }
 
 const plugin = Hp(hemeraStats, {
-  hemera: '^4.0.0',
+  hemera: '>=5.0.0-rc.1',
   name: require('./package.json').name
 })
 

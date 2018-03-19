@@ -46,7 +46,7 @@ function hemeraPrometheus(hemera, opts, done) {
 }
 
 const plugin = Hp(hemeraPrometheus, {
-  hemera: '^4.0.0',
+  hemera: '>=5.0.0-rc.1',
   name: require('./package.json').name,
   options: {
     collectDefaultMetrics: true,

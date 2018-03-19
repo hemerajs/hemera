@@ -37,7 +37,7 @@ function hemeraMsgpack(hemera, opts, done) {
 }
 
 const plugin = Hp(hemeraMsgpack, {
-  hemera: '^4.0.0',
+  hemera: '>=5.0.0-rc.1',
   scoped: false,
   name: require('./package.json').name
 })
