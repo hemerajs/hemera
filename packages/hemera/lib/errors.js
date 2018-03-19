@@ -16,7 +16,6 @@ const ParseError = HemeraError.subclass('HemeraParseError')
 const TimeoutError = HemeraError.subclass('TimeoutError')
 const ImplementationError = HemeraError.subclass('ImplementationError')
 const BusinessError = HemeraError.subclass('BusinessError')
-const FatalError = HemeraError.subclass('FatalError')
 const PatternNotFound = HemeraError.subclass('PatternNotFound')
 const MaxRecursionError = HemeraError.subclass('MaxRecursionError')
 const ProcessLoadError = HemeraError.subclass('ProcessLoadError')
@@ -29,7 +28,6 @@ module.exports = {
   TimeoutError,
   ImplementationError,
   BusinessError,
-  FatalError,
   PatternNotFound,
   ProcessLoadError,
   CircuitBreakerError
