@@ -170,21 +170,17 @@ const Features = props => (
 )
 
 const FeatureCallout = props => (
-  <div className="productShowcaseSection paddingBottom">
+  <div className="productShowcaseSection paddingBottom codeExampleContainer">
     <h2>Give it a try</h2>
     <div style={{ textAlign: 'center' }}>
       <h3 style={{ marginTop: '25px' }}>Install NATS Client and Hemera</h3>
       <MarkdownBlock>{bash`npm install nats nats-hemera`}</MarkdownBlock>
       <h3>Install NATS Server</h3>
       <MarkdownBlock>{bash`
-      # Download
-      wget https://github.com/nats-io/gnatsd/releases/download/v1.0.4/gnatsd-v1.0.4-linux-amd64.zip -qO tmp.zip
-      # Unzip
-      unzip tmp.zip
-      # Start
-      gnatsd-v1.0.4-linux-amd64
+# Download NATS & start
+https://nats.io/download/
       `}</MarkdownBlock>
-      <h3>and</h3>
+      <h3>Example</h3>
     </div>
     <div className="exampleContainer">
       <MarkdownBlock>

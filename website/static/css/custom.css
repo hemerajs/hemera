@@ -24,10 +24,16 @@
 
 .exampleContainer {
     text-align: initial;
+    flex: 1;
 }
 
 .iconLicenseContainer {
     text-align: center;
     margin: 25px;
     color: #808080;
+}
+.codeExampleContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
