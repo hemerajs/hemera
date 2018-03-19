@@ -13,7 +13,6 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages. S
 | [hemera-testsuite](https://github.com/hemerajs/hemera-testsuite) | [![npm](https://img.shields.io/npm/v/hemera-testsuite.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-testsuite)
 | [hemera-store](https://github.com/hemerajs/hemera/tree/master/packages/hemera-store) | [![npm](https://img.shields.io/npm/v/hemera-store.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-store)
 | [hemera-stats](https://github.com/hemerajs/hemera/tree/master/packages/hemera-stats) | [![npm](https://img.shields.io/npm/v/hemera-stats.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-stats)
-| [hemera-controlplane](https://github.com/hemerajs/hemera/tree/master/packages/hemera-controlplane) | [![npm](https://img.shields.io/npm/v/hemera-controlplane.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-controlplane)
 | [hemera-cli](https://github.com/hemerajs/hemera-cli) | [![npm](https://img.shields.io/npm/v/hemera-cli.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-cli)
 | [hemera-mail](https://github.com/hemerajs/hemera/tree/master/packages/hemera-mail) | [![npm](https://img.shields.io/npm/v/hemera-mail.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-mail)
 | [hemera-slackbot](https://github.com/hemerajs/hemera/tree/master/packages/hemera-slackbot) | [![npm](https://img.shields.io/npm/v/hemera-slackbot.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-slackbot)
