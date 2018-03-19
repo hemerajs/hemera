@@ -28,7 +28,7 @@ const users = [
   },
   {
     caption: 'savicontrols',
-    image: imgUrl('company/savi.png'),
+    image: imgUrl('company/savicontrols.png'),
     infoLink: 'https://www.savicontrols.com/',
     pinned: true
   }

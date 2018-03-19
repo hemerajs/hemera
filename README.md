@@ -1,5 +1,5 @@
 <p align="center">
-<img src="media/hemera-logo.png" alt="Hemera" style="max-width:100%;">
+<img src="https://hemerajs.github.io/hemera/img/hemera.png" alt="Hemera" style="max-width:100%;">
 </p>
 
 <p align="center">
@@ -56,7 +56,7 @@ The key features of NATS in combination with Hemera are:
 
 ## Who's using Hemera?
 
-| [![appcom-interactive](http://www.appcom-interactive.de/images/appcom-logo.svg)](http://www.appcom-interactive.de/) | [![amerbank](https://github.com/hemerajs/hemera/blob/master/media/companies/amerbank.png?raw=true)](https://amerbank.com/) | [![amerbank](https://github.com/hemerajs/hemera/blob/master/media/companies/savi.png?raw=true)](https://www.savicontrols.com/) |
+| [![appcom-interactive](https://hemerajs.github.io/hemera/img/company/appcom.svg)](http://www.appcom-interactive.de/) | [![amerbank](https://hemerajs.github.io/hemera/img/company/amerbank.png)](https://amerbank.com/) | [![savicontrols](https://hemerajs.github.io/hemera/img/company/savicontrols.png)](https://www.savicontrols.com/) |
 | -------------| --- | --- |
 | appcom interactive | amerbank | savicontrols |
 
