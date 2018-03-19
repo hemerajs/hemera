@@ -18,16 +18,17 @@ This release is a ground-breaking refactoring of the core. The goal was to simpl
 
 ### Breaking changes:
 
-* Removed `Reply.end`
+* Removed `Reply.end()`
 * Removed `hemera.root` property
-* Removed `Hemera.reply` in favor of `hemera.reply.next` to send multiple responses in a row
+* Removed `hemera.fatal()`
+* Removed `Hemera.reply()` in favor of `hemera.reply.next()` to send multiple responses in a row
 * Removed configuration properties `crashOnFatal`, `shouldCrash`. The developer is responsible to catch these errors
 * Removed `CodecPipeline`
 * Removed `encoder`, `decoder`. We provide setter functions for client and server encoding
 * Remove support to register multiple plugins at once with `hemera.use`
-* Remove `plugin$`, plugins property, remove `setOption`, `setConfig` methods
+* Remove `plugin$`, plugins property, remove `hemera.setOption()`, `hemera.setConfig()` methods
 * Remove functionality to to send a response inside `serverPreResponse`. This was confusing because the payload is already set at this point
-* Load plugins only on `hemera.ready` not when `hemera.use` is called
+* Load plugins only on `hemera.ready()` not when `hemera.use()` is called
 * We break the support of simple return values in `add` or `middlewares` without the use of callback or promises
 
 ### New features:
