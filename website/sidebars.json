@@ -37,6 +37,6 @@
       "framework-integrations",
       "hemera-vs-seneca"
     ],
-    "Api": ["api"]
+    "Api": ["reference"]
   }
 }
