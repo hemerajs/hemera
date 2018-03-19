@@ -75,7 +75,7 @@ describe('Hemera plugin', function() {
         next()
       },
       {
-        hemera: '>=0',
+        hemera: '>=5.0.0-rc.1',
         name: 'myPlugin',
         scoped: false,
         dependencies: ['foo'],

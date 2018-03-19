@@ -3,8 +3,6 @@
 const Hp = require('hemera-plugin')
 const GracefulShutdown = require('./gracefulShutdown')
 
-exports.plugin = Hp(hemeraGracefulShutdown, '>=2.0.0')
-
 function hemeraGracefulShutdown(hemera, opts, done) {
   const gs = new GracefulShutdown()
   gs.process = process
