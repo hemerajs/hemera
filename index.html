@@ -14,18 +14,14 @@
 </span></div></h2><div><span><p>Transfer metadata across services or attach contextual data to tracing systems.</p>
 </span></div></div></div><div class="blockElement alignCenter fourByGridBlock imageAlignTop"><div class="blockImage"><img src="/hemera/img/income.svg"/></div><div class="blockContent"><h2><div><span><p>Serialization</p>
 </span></div></h2><div><span><p>Use custom serializer e.g MessagePack.</p>
-</span></div></div></div></div></div></div><div class="productShowcaseSection paddingBottom"><h2>Give it a try</h2><div style="text-align:center;"><h3 style="margin-top:25px;">Install NATS Client and Hemera</h3><div><span><pre><code class="hljs css bash">npm install nats nats-hemera
+</span></div></div></div></div></div></div><div class="productShowcaseSection paddingBottom codeExampleContainer"><h2>Give it a try</h2><div style="text-align:center;"><h3 style="margin-top:25px;">Install NATS Client and Hemera</h3><div><span><pre><code class="hljs css bash">npm install nats nats-hemera
 </code></pre>
 </span></div><h3>Install NATS Server</h3><div><span><pre><code class="hljs css bash">
-      <span class="hljs-comment"># Download</span>
-      wget https://github.com/nats-io/gnatsd/releases/download/v1.0.4/gnatsd-v1.0.4-linux-amd64.zip -qO tmp.zip
-      <span class="hljs-comment"># Unzip</span>
-      unzip tmp.zip
-      <span class="hljs-comment"># Start</span>
-      gnatsd-v1.0.4-linux-amd64
+<span class="hljs-comment"># Download NATS &amp; start</span>
+https://nats.io/download/
       
 </code></pre>
-</span></div><h3>and</h3></div><div class="exampleContainer"><div><span><pre><code class="hljs css javascript">
+</span></div><h3>Example</h3></div><div class="exampleContainer"><div><span><pre><code class="hljs css javascript">
   <span class="hljs-keyword">const</span> Hemera = <span class="hljs-built_in">require</span>(<span class="hljs-string">'nats-hemera'</span>)
   <span class="hljs-keyword">const</span> HemeraJoi = <span class="hljs-built_in">require</span>(<span class="hljs-string">'hemera-joi'</span>)
   <span class="hljs-keyword">const</span> nats = <span class="hljs-built_in">require</span>(<span class="hljs-string">'nats'</span>).connect()
