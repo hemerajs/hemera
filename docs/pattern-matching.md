@@ -88,6 +88,38 @@ hemera.act({
 
 Any javascript object with the combination of properties from type `boolean`, `string`, `regex` and `numbers`. Any other type like e.g `object` will be handled as payload. For more informations look in the [Bloomrun](https://github.com/mcollina/bloomrun) package.
 
+## Pattern definition
+
+You can define a pattern in two different ways:
+
+* As JSON Object
+
+  ```js
+  hemera.add(
+    {
+      topic: 'math',
+      cmd: 'add'
+    },
+    (req, cb) => {
+      cb(null, req.a + req.b)
+    }
+  )
+  hemera.act({
+    topic: math,
+    cmd: add,
+    a: 1,
+    b: 2
+  })
+  ```
+
+* As quick syntax JSON Object provided by [tinysonic](https://github.com/mcollina/tinysonic) package.
+  ```js
+  hemera.add('topic:math,cmd:add', (req, cb) => {
+    cb(null, req.a + req.b)
+  })
+  hemera.act('topic:math,cmd:add,a:1,b:2')
+  ```
+
 ## Hemera $ properties
 
 In Hemera we use special `$` suffixed properties to configure additional transport options in NATS. Please consider that those properties are not part of the pattern and will be ingored at pattern matching.

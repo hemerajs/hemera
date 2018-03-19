@@ -8,19 +8,19 @@ We provide a simple package called [hemera-testsuite](https://github.com/hemeraj
 
 ### Features
 
-- Support of wildcard `*` and `>` subjects
-- Support for `maxMessages$`, `expectedMessages$` options
-- Support for request & publish
-- Support for timeouts
+* Support of wildcard `*` and `>` subjects
+* Support for `maxMessages$`, `expectedMessages$` options
+* Support for request & publish
+* Support for timeouts
 
-### Not supported*
+### Not supported\*
 
-- Custom queue groups
-- Special one-to-one publish
-- Load balancing
-- Connection related states
+* Custom queue groups
+* Special one-to-one publish
+* Load balancing
+* Connection related states
 
-\**In this case we recommend to start a real NATS Server.*
+\*_In this case we recommend to start a real NATS Server._
 
 ```js
 const Hemera = require('nats-hemera')
@@ -34,10 +34,20 @@ hemera.ready(function() {
       topic: 'math',
       cmd: 'add'
     },
-    req => req.a + req.b
+    (req, cb) => {
+      cb(null, req.a + req.b)
+    }
   )
-  hemera.act(`topic:math,cmd:add,a:1,b:2`, (err, resp) => {
-    console.log(err, resp)
-  })
+  hemera.act(
+    {
+      topic: math,
+      cmd: add,
+      a: 1,
+      b: 2
+    },
+    (err, resp) => {
+      console.log(err, resp)
+    }
+  )
 })
 ```
