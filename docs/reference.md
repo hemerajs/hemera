@@ -20,11 +20,15 @@ Hemera.errors
 hemera.ext(type, fn)
 ```
 
+Register a new extension handler.
+
 ### Hemera.setSchemaCompiler()
 
 ```js
 hemera.setSchemaCompiler(fn)
 ```
+
+Update the current schema compiler.
 
 ### Hemera.setServerDecoder()
 
@@ -32,11 +36,15 @@ hemera.setSchemaCompiler(fn)
 hemera.setServerDecoder(fn)
 ```
 
+Update the server decoder.
+
 ### Hemera.setServerEncoder()
 
 ```js
 hemera.setServerEncoder(fn)
 ```
+
+Update the server encoder.
 
 ### Hemera.setClientDecoder()
 
@@ -44,11 +52,15 @@ hemera.setServerEncoder(fn)
 hemera.setClientDecoder(fn)
 ```
 
+Update the client decoder.
+
 ### Hemera.setClientEncoder()
 
 ```js
 hemera.setClientEncoder(fn)
 ```
+
+Update the client encoder.
 
 ### Hemera.checkPluginDependencies()
 
@@ -56,11 +68,15 @@ hemera.setClientEncoder(fn)
 hemera.checkPluginDependencies()
 ```
 
+Verifies the plugin dependecies are installed.
+
 ### Hemera.hasDecorator()
 
 ```js
 hemera.hasDecorator(string)
 ```
+
+Return a boolean whether the decorator is available.
 
 ### Hemera.decorate()
 
@@ -68,11 +84,15 @@ hemera.hasDecorator(string)
 hemera.decorate(name, value)
 ```
 
+Decorate the current instance with the value.
+
 ### Hemera.use()
 
 ```js
 hemera.use(plugin, options)
 ```
+
+Register a plugin.
 
 ### Hemera.createError()
 
@@ -80,17 +100,23 @@ hemera.use(plugin, options)
 hemera.createError(name)
 ```
 
+Create a new native error which can be serialized and deserialized across processe.
+
 ### Hemera.fatal()
 
 ```js
 hemera.fatal()
 ```
 
+Gracefully shutdown hemera and exit the process with `1`
+
 ### Hemera.ready()
 
 ```js
 hemera.ready(cb)
 ```
+
+Bootstrap hemera and all plugins.
 
 ### Hemera.subscribe()
 
@@ -110,11 +136,15 @@ hemera.act(pattern, cb)
 hemera.remove(topic)
 ```
 
+Removes a single subscription by id or a whole service by topic name.
+
 ### Hemera.list()
 
 ```js
 hemera.list()
 ```
+
+Returns all registered server actions.
 
 ### Hemera.close()
 
@@ -122,11 +152,15 @@ hemera.list()
 hemera.close()
 ```
 
+Gracefully shutdown hemera.
+
 ### Hemera.router
 
 ```js
 hemera.router
 ```
+
+Returns the `bloomrun` instance.
 
 ### Hemera.load
 
@@ -134,11 +168,15 @@ hemera.router
 hemera.load
 ```
 
+Returns the `load` instance.
+
 ### Hemera.transport
 
 ```js
 hemera.transport
 ```
+
+Returns the abstract transport implementation for NATS.
 
 ### Hemera.topics
 
@@ -146,8 +184,12 @@ hemera.transport
 hemera.topics
 ```
 
+Returns all registered topcis.
+
 ### Hemera.config
 
 ```js
 hemera.config
 ```
+
+Returns the hemera configuration.
