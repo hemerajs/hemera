@@ -19,6 +19,7 @@ This release is a ground-breaking refactoring of the core. The goal was to simpl
 ### Breaking changes:
 
 - Removed `Reply.end`
+- Removed `hemera.root` property
 - Removed `Hemera.reply` in favor of `hemera.reply.next` to send multiple responses in a row
 - Removed configuration properties `crashOnFatal`, `shouldCrash`. The developer is responsible to catch these errors
 - Removed `CodecPipeline`

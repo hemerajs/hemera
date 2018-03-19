@@ -95,9 +95,6 @@ class Hemera extends EventEmitter {
 
     this.matchedAction = null
 
-    // keep reference to root hemera instance
-    this._root = this
-
     this._clientEncoder = DefaultEncoder.encode
     this._clientDecoder = DefaultDecoder.decode
     this._serverEncoder = DefaultEncoder.encode
@@ -414,16 +411,6 @@ class Hemera extends EventEmitter {
    */
   setSchemaCompiler(fn) {
     this._schemaCompiler = fn
-  }
-
-  /**
-   * Return the root instance
-   *
-   * @returns
-   * @memberof Hemera
-   */
-  root() {
-    return this._root
   }
 
   /**
