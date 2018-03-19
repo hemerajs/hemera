@@ -14,7 +14,7 @@
   "license": "MIT",
   "dependencies": {
     "hemera-plugin": "^1.0.0",
-    "nodemailer": "4.0.x"
+    "nodemailer": "4.6.x"
   },
   "peerDependencies": {
     "hemera-joi": "^4.0.0"

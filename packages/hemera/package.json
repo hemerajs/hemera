@@ -34,7 +34,6 @@
     "distributed",
     "queueing"
   ],
-  "scripts": {},
   "engines": {
     "node": ">=6"
   },
