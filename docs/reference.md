@@ -38,10 +38,10 @@ hemera.setServerDecoder(fn)
 hemera.setServerEncoder(fn)
 ```
 
-### Hemera.setServerDecoder()
+### Hemera.setClientDecoder()
 
 ```js
-hemera.setServerDecoder(fn)
+hemera.setClientDecoder(fn)
 ```
 
 ### Hemera.setClientEncoder()
