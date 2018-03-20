@@ -39,7 +39,7 @@ class Versions extends React.Component {
                     <a href={docUrl('request-reply.html')}>Documentation</a>
                   </td>
                   <td>
-                    <a href="https://github.com/hemerajs/hemera/releases/tag/nats-hemera%405.0.0-rc.1">
+                    <a href="https://github.com/hemerajs/hemera/releases/tag/nats-hemera%405.0.0-rc.2">
                       Release Notes
                     </a>
                   </td>
