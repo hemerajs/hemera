@@ -19,7 +19,6 @@ describe('Error handling', function() {
     expect(Hemera.errors.HemeraError).to.be.exists()
     expect(Hemera.errors.ParseError).to.be.exists()
     expect(Hemera.errors.TimeoutError).to.be.exists()
-    expect(Hemera.errors.ImplementationError).to.be.exists()
     expect(Hemera.errors.BusinessError).to.be.exists()
     expect(Hemera.errors.PatternNotFound).to.be.exists()
     done()

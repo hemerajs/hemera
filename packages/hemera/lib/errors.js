@@ -14,21 +14,17 @@ const SuperError = require('super-error')
 const HemeraError = SuperError.subclass('HemeraError')
 const ParseError = HemeraError.subclass('HemeraParseError')
 const TimeoutError = HemeraError.subclass('TimeoutError')
-const ImplementationError = HemeraError.subclass('ImplementationError')
 const BusinessError = HemeraError.subclass('BusinessError')
 const PatternNotFound = HemeraError.subclass('PatternNotFound')
 const MaxRecursionError = HemeraError.subclass('MaxRecursionError')
 const ProcessLoadError = HemeraError.subclass('ProcessLoadError')
-const CircuitBreakerError = HemeraError.subclass('CircuitBreakerError')
 
 module.exports = {
   HemeraError,
   MaxRecursionError,
   ParseError,
   TimeoutError,
-  ImplementationError,
   BusinessError,
   PatternNotFound,
-  ProcessLoadError,
-  CircuitBreakerError
+  ProcessLoadError
 }
