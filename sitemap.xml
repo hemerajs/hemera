@@ -4,7 +4,7 @@
 <url> <loc>https://hemerajs.github.io/hemera/index.html</loc> <changefreq>weekly</changefreq> <priority>0.5</priority> <xhtml:link rel="alternate" hreflang="en" href="https://hemerajs.github.io/hemera/en/index.html" /> </url>
 <url> <loc>https://hemerajs.github.io/hemera/users.html</loc> <changefreq>weekly</changefreq> <priority>0.5</priority> <xhtml:link rel="alternate" hreflang="en" href="https://hemerajs.github.io/hemera/en/users.html" /> </url>
 <url> <loc>https://hemerajs.github.io/hemera/versions.html</loc> <changefreq>weekly</changefreq> <priority>0.5</priority> <xhtml:link rel="alternate" hreflang="en" href="https://hemerajs.github.io/hemera/en/versions.html" /> </url>
-<url> <loc>https://hemerajs.github.io/hemera/blog/2017/03/19/new-version-5.0.0-rc.1.html</loc> <changefreq>weekly</changefreq> <priority>0.3</priority> </url>
+<url> <loc>https://hemerajs.github.io/hemera/blog/2018/03/19/new-version-5.0.0-rc.1.html</loc> <changefreq>weekly</changefreq> <priority>0.3</priority> </url>
 <url> <loc>https://hemerajs.github.io/hemera/docs/next/api-versioning.html</loc> <changefreq>hourly</changefreq> <priority>1.0</priority> <xhtml:link rel="alternate" hreflang="en" href="https://hemerajs.github.io/hemera/docs/next/api-versioning.html" /> </url>
 <url> <loc>https://hemerajs.github.io/hemera/docs/next/bridge.html</loc> <changefreq>hourly</changefreq> <priority>1.0</priority> <xhtml:link rel="alternate" hreflang="en" href="https://hemerajs.github.io/hemera/docs/next/bridge.html" /> </url>
 <url> <loc>https://hemerajs.github.io/hemera/docs/next/cli.html</loc> <changefreq>hourly</changefreq> <priority>1.0</priority> <xhtml:link rel="alternate" hreflang="en" href="https://hemerajs.github.io/hemera/docs/next/cli.html" /> </url>
