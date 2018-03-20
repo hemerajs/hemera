@@ -56,17 +56,6 @@ const siteConfig = {
     primaryColor: '#000000',
     secondaryColor: '#665d79'
   },
-  /* custom fonts for website */
-  /*fonts: {
-    myFont: [
-      "Times New Roman",
-      "Serif"
-    ],
-    myOtherFont: [
-      "-apple-system",
-      "system-ui"
-    ]
-  },*/
   // This copyright info is used in /core/Footer.js and blog rss/atom feeds.
   copyright: 'Copyright © ' + new Date().getFullYear() + ' Dustin Deus',
   organizationName: 'hemerajs', // or set an env variable ORGANIZATION_NAME
@@ -80,7 +69,11 @@ const siteConfig = {
   repoUrl: 'https://github.com/hemerajs/hemera/',
   /* On page navigation for the current documentation page */
   // onPageNav: 'separate'
-  gaTrackingId: 'UA-115960465-1'
+  gaTrackingId: 'UA-115960465-1',
+  algolia: {
+    apiKey: '5620e631e688fee9d15ed89f7d258f1a',
+    indexName: 'hemerajs'
+  }
 }
 
 module.exports = siteConfig
