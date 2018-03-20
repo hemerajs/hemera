@@ -296,7 +296,7 @@ describe('Timeouts', function() {
             expect(err).to.be.exists()
             expect(resp).not.to.be.exists()
             expect(err.name).to.be.equals('TimeoutError')
-            expect(err.message).to.be.equals('Timeout')
+            expect(err.message).to.be.equals('Client timeout')
             hemera.close(done)
           }, 200)
         }
@@ -319,7 +319,7 @@ describe('Timeouts', function() {
 
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('TimeoutError')
-        expect(err.message).to.be.equals('Timeout')
+        expect(err.message).to.be.equals('Client timeout')
 
         event()
       })
@@ -344,7 +344,7 @@ describe('Timeouts', function() {
           expect(event.called).to.be.equals(true)
           expect(resp).not.to.be.exists()
           expect(err.name).to.be.equals('TimeoutError')
-          expect(err.message).to.be.equals('Timeout')
+          expect(err.message).to.be.equals('Client timeout')
           hemera.close(done)
         }
       )
@@ -444,7 +444,7 @@ describe('Timeouts', function() {
           expect(err).to.be.exists()
           expect(resp).not.to.be.exists()
           expect(err.name).to.be.equals('TimeoutError')
-          expect(err.message).to.be.equals('Timeout')
+          expect(err.message).to.be.equals('Client timeout')
           hemera.close(done)
         }
       )

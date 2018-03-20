@@ -46,7 +46,7 @@ describe('Transport options', function() {
         expect(err.name).to.be.equals('HemeraError')
         expect(hemera.list().length).to.be.equals(1)
         expect(err.message).to.be.equals(
-          'Transport options differ from the first registration to this topic'
+          'Transport options differs from the first registration of this topic'
         )
         hemera.close(done)
       }
@@ -84,7 +84,7 @@ describe('Transport options', function() {
         expect(err.name).to.be.equals('HemeraError')
         expect(hemera.list().length).to.be.equals(1)
         expect(err.message).to.be.equals(
-          'Transport options differ from the first registration to this topic'
+          'Transport options differs from the first registration of this topic'
         )
         hemera.close(done)
       }
@@ -122,7 +122,7 @@ describe('Transport options', function() {
         expect(err.name).to.be.equals('HemeraError')
         expect(hemera.list().length).to.be.equals(1)
         expect(err.message).to.be.equals(
-          'Transport options differ from the first registration to this topic'
+          'Transport options differs from the first registration of this topic'
         )
         hemera.close(done)
       }
@@ -160,7 +160,7 @@ describe('Transport options', function() {
         expect(err.name).to.be.equals('HemeraError')
         expect(hemera.list().length).to.be.equals(1)
         expect(err.message).to.be.equals(
-          'Transport options differ from the first registration to this topic'
+          'Transport options differs from the first registration of this topic'
         )
         hemera.close(done)
       }
@@ -198,7 +198,7 @@ describe('Transport options', function() {
         expect(err.name).to.be.equals('HemeraError')
         expect(hemera.list().length).to.be.equals(1)
         expect(err.message).to.be.equals(
-          'Transport options differ from the first registration to this topic'
+          'Transport options differs from the first registration of this topic'
         )
         hemera.close(done)
       }
@@ -236,7 +236,7 @@ describe('Transport options', function() {
         expect(err.name).to.be.equals('HemeraError')
         expect(hemera.list().length).to.be.equals(1)
         expect(err.message).to.be.equals(
-          'Transport options differ from the first registration to this topic'
+          'Transport options differs from the first registration of this topic'
         )
         hemera.close(done)
       }

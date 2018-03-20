@@ -22,6 +22,15 @@ hemera.ext(type, fn)
 
 Register a new extension handler.
 
+### Hemera.setIdGenerator()
+
+Updates the id generator. The generator is a synchronous function that will be used to generate identifiers for tracing.
+The default function generates random identifiers with a length of 16 characters.
+
+```js
+hemera.setIdGenerator(fn)
+```
+
 ### Hemera.setSchemaCompiler()
 
 ```js

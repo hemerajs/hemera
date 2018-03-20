@@ -10,7 +10,6 @@
  */
 
 const Util = require('./util')
-const Constants = require('./constants')
 const Errors = require('./errors')
 
 /**
@@ -37,15 +36,15 @@ function onClientPreRequest(context, next) {
   // tracing
   if (pattern.trace$) {
     context.trace$ = {
-      spanId: pattern.trace$.spanId || Util.randomId(),
-      traceId: pattern.trace$.traceId || Util.randomId()
+      spanId: pattern.trace$.spanId || context._idGenerator(),
+      traceId: pattern.trace$.traceId || context._idGenerator()
     }
     context.trace$.parentSpanId =
       pattern.trace$.parentSpanId || parentContext.trace$.spanId
   } else {
     context.trace$ = {
-      spanId: parentContext.trace$.spanId || Util.randomId(),
-      traceId: parentContext.trace$.traceId || Util.randomId()
+      spanId: parentContext.trace$.spanId || context._idGenerator(),
+      traceId: parentContext.trace$.traceId || context._idGenerator()
     }
     context.trace$.parentSpanId = parentContext.trace$.spanId
   }
@@ -77,12 +76,9 @@ function onClientPreRequest(context, next) {
 
   // request
   let request = {
-    id: pattern.requestId$ || Util.randomId(),
+    id: pattern.requestId$ || context._idGenerator(),
     parentId: context.request$.id || pattern.requestParentId$,
-    type:
-      pattern.pubsub$ === true
-        ? Constants.REQUEST_TYPE_PUBSUB
-        : Constants.REQUEST_TYPE_REQUEST
+    type: pattern.pubsub$ === true ? 'pubsub' : 'request'
   }
 
   context.emit('clientPreRequest', context)

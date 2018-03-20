@@ -82,7 +82,7 @@ describe('Extension onAdd', function() {
       try {
         hemera.ext('onAdd', '')
       } catch (e) {
-        expect(e.message).to.be.equals('Extension must be from type "function"')
+        expect(e.message).to.be.equals('Extension handler must be a function')
         done()
       }
     })

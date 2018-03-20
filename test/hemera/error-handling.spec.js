@@ -533,7 +533,7 @@ describe('Error handling', function() {
           expect(err.pattern).to.be.equals('test:senddedede,topic:email')
           expect(err.app).to.be.exists()
           expect(err.isServer).to.be.equals(true)
-          expect(err.message).to.be.equals('No handler found for this pattern')
+          expect(err.message).to.be.equals('No action found for this pattern')
           hemera.close(done)
         }
       )

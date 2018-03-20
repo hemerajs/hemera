@@ -710,9 +710,7 @@ describe('Plugin interface', function() {
       try {
         hemera.decorate('b', 1, ['a'])
       } catch (err) {
-        expect(err.message).to.exists(
-          HemeraConstants.MISSING_DECORATE_DEPENDENCY
-        )
+        expect(err.message).to.exists(`Missing decorate dependency 'a'`)
         hemera.close(done)
       }
       next()

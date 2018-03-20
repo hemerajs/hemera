@@ -25,7 +25,7 @@ describe('Extension error', function() {
         hemera.ext('test', function(ctx, next) {})
       } catch (e) {
         expect(e.name).to.be.equals('HemeraError')
-        expect(e.message).to.be.equals('Invalid extension type')
+        expect(e.message).to.be.equals('Extension type is unknown')
         hemera.close(done)
       }
     })
@@ -41,7 +41,7 @@ describe('Extension error', function() {
         hemera.ext('onServerPreHandler', 'foo')
       } catch (e) {
         expect(e.name).to.be.equals('HemeraError')
-        expect(e.message).to.be.equals('Extension must be from type "function"')
+        expect(e.message).to.be.equals('Extension handler must be a function')
         hemera.close(done)
       }
     })
