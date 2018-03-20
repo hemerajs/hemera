@@ -105,6 +105,70 @@ describe('Plugin interface', function() {
     })
   })
 
+  it('Should merge default plugin options', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    // Plugin
+    let myPlugin = function(hemera, options, done) {
+      expect(options).to.be.equals({
+        port: 3000,
+        host: '127.0.0.1',
+        errors: {
+          propBlacklist: []
+        },
+        pattern: {}
+      })
+
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        (resp, cb) => {
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        }
+      )
+
+      done()
+    }
+
+    myPlugin[Symbol.for('name')] = 'myPlugin'
+    myPlugin[Symbol.for('options')] = {
+      port: 3000,
+      host: '127.0.0.1',
+      errors: {
+        propBlacklist: ['stack']
+      },
+      pattern: {}
+    }
+
+    hemera.use(myPlugin, {
+      errors: {
+        propBlacklist: []
+      }
+    })
+
+    hemera.ready(() => {
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        (err, resp) => {
+          expect(err).to.be.not.exists()
+          expect(resp).not.to.be.equals(3)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
   it('Should load plugins only on ready', function(done) {
     const nats = require('nats').connect(authUrl)
 

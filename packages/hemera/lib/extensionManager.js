@@ -9,7 +9,6 @@
  *
  */
 
-const _ = require('lodash')
 const Constants = require('./constants')
 const Errors = require('./errors')
 
@@ -61,7 +60,7 @@ class ExtensionManager {
    * @memberOf Extension
    */
   add(type, handler) {
-    if (_.isArray(handler)) {
+    if (Array.isArray(handler)) {
       handler.forEach(h => this._add(type, h))
     } else {
       this._add(type, handler)

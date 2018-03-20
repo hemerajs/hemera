@@ -16,13 +16,11 @@ const EventEmitter = require('events')
 const Bloomrun = require('bloomrun')
 const Errio = require('errio')
 const Heavy = require('heavy')
-const _ = require('lodash')
 const Pino = require('pino')
 const TinySonic = require('tinysonic')
 const SuperError = require('super-error')
 const Joi = require('joi')
 const Avvio = require('avvio')
-const Hoek = require('hoek')
 const Series = require('fastseries')
 
 const Errors = require('./errors')
@@ -388,7 +386,7 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   ext(type, handler) {
-    if (!_.isFunction(handler)) {
+    if (typeof handler !== 'function') {
       let error = new Errors.HemeraError(Constants.INVALID_EXTENSION_HANDLER, {
         type,
         handler
@@ -497,8 +495,7 @@ class Hemera extends EventEmitter {
    * @memberof Hemera
    */
   use(plugin, opts) {
-    let pluginOpts = Hoek.clone(plugin[Symbols.pluginOptions] || {})
-    pluginOpts = Object.assign(pluginOpts, opts)
+    let pluginOpts = Object.assign({}, plugin[Symbols.pluginOptions], opts)
     this.register(plugin, pluginOpts)
     return this._avvio
   }
@@ -577,7 +574,7 @@ class Hemera extends EventEmitter {
     }
 
     // callback style
-    if (_.isFunction(cb)) {
+    if (typeof cb === 'function') {
       ready(err => {
         if (err) {
           this.log.error(err)
@@ -837,10 +834,7 @@ class Hemera extends EventEmitter {
     }
 
     // when sid was passed
-    if (_.isNumber(topic)) {
-      self._transport.unsubscribe(topic, maxMessages)
-      return true
-    } else {
+    if (typeof topic === 'string') {
       // when topic name was passed
       const subId = self._topics[topic]
 
@@ -850,6 +844,9 @@ class Hemera extends EventEmitter {
         this.cleanTopic(topic)
         return true
       }
+    } else {
+      self._transport.unsubscribe(topic, maxMessages)
+      return true
     }
 
     return false
@@ -865,7 +862,7 @@ class Hemera extends EventEmitter {
     // release topic so we can add it again
     delete this._topics[topic]
     // remove pattern which belongs to the topic
-    _.each(this.list(), add => {
+    this.list().forEach(add => {
       if (add.pattern.topic === topic) {
         this.router.remove(add.pattern)
       }
@@ -881,15 +878,15 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   add(definition, cb) {
-    // check for use quick syntax for JSON objects
-    if (_.isString(definition)) {
-      definition = TinySonic(definition)
-    }
-
-    if (!_.isObject(definition)) {
+    if (!definition) {
       let error = new Errors.HemeraError(Constants.ADD_PATTERN_REQUIRED)
       this.log.error(error)
       throw error
+    }
+
+    // check for use quick syntax for JSON objects
+    if (typeof definition === 'string') {
+      definition = TinySonic(definition)
     }
 
     // topic is needed to subscribe on a subject in NATS
@@ -1122,15 +1119,15 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   act(pattern, cb) {
-    // check for use quick syntax for JSON objects
-    if (_.isString(pattern)) {
-      pattern = TinySonic(pattern)
-    }
-
-    if (!_.isObject(pattern)) {
+    if (!pattern) {
       let error = new Errors.HemeraError(Constants.ACT_PATTERN_REQUIRED)
       this.log.error(error)
       throw error
+    }
+
+    // check for use quick syntax for JSON objects
+    if (typeof pattern === 'string') {
+      pattern = TinySonic(pattern)
     }
 
     // create new execution context
@@ -1375,7 +1372,9 @@ class Hemera extends EventEmitter {
    * @memberof Hemera
    */
   removeAll() {
-    _.each(this._topics, (val, key) => this.remove(key))
+    for (const key in this._topics) {
+      this.remove(key)
+    }
   }
 
   /**
@@ -1387,16 +1386,14 @@ class Hemera extends EventEmitter {
     const self = this
 
     // callback style
-    if (_.isFunction(cb)) {
+    if (typeof cb === 'function') {
       self.shutdown((err, instance, done) => {
         instance._onClose(() => {
-          if (_.isFunction(cb)) {
-            if (err) {
-              self.log.error(err)
-              cb(err)
-            } else {
-              cb()
-            }
+          if (err) {
+            self.log.error(err)
+            cb(err)
+          } else {
+            cb()
           }
           done(err)
         })
@@ -1436,7 +1433,7 @@ class Hemera extends EventEmitter {
       self._heavy.stop()
       // Does not throw an issue when connection is not available
       self._transport.close()
-      if (_.isFunction(cb)) {
+      if (typeof cb === 'function') {
         cb()
       }
     })
