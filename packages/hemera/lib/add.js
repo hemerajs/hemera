@@ -9,7 +9,6 @@
  *
  */
 
-const _ = require('lodash')
 const Series = require('fastseries')
 
 /**
@@ -52,7 +51,7 @@ class Add {
    * @memberOf Add
    */
   use(handler) {
-    if (_.isArray(handler)) {
+    if (Array.isArray(handler)) {
       handler.forEach(h => this._use(h))
     } else {
       this._use(handler)
