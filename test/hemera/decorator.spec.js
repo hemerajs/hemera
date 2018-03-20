@@ -57,7 +57,7 @@ describe('Root Decorator', function() {
       try {
         hemera.decorate('b', 1, ['a'])
       } catch (err) {
-        expect(err.message).to.be.equals("Missing decorate dependency 'a'")
+        expect(err.message).to.be.equals("Missing decorator dependency 'a'")
         hemera.close(done)
       }
     })

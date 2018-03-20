@@ -701,7 +701,7 @@ describe('Plugin interface', function() {
     })
   })
 
-  it('Should throw error because could not resolve all decorate deps', function(done) {
+  it('Should throw error because could not resolve all decorator deps', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -710,7 +710,7 @@ describe('Plugin interface', function() {
       try {
         hemera.decorate('b', 1, ['a'])
       } catch (err) {
-        expect(err.message).to.exists(`Missing decorate dependency 'a'`)
+        expect(err.message).to.exists(`Missing decorator dependency 'a'`)
         hemera.close(done)
       }
       next()

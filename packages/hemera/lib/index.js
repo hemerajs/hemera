@@ -493,7 +493,9 @@ class Hemera extends EventEmitter {
   _checkDecoraterDependencies(deps) {
     for (var i = 0; i < deps.length; i++) {
       if (!(deps[i] in this)) {
-        throw new Errors.HemeraError(`Missing decorate dependency '${deps[i]}'`)
+        throw new Errors.HemeraError(
+          `Missing decorator dependency '${deps[i]}'`
+        )
       }
     }
   }
@@ -820,7 +822,7 @@ class Hemera extends EventEmitter {
     self.matchedAction.run(self._request, self.reply, err => {
       if (err) {
         const internalError = new Errors.HemeraError(
-          'Action Middleware',
+          'Action middleware',
           self.errorDetails
         ).causedBy(err)
         self.log.error(internalError)
