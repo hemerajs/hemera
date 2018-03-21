@@ -12,17 +12,22 @@ const Container = CompLibrary.Container
 const GridBlock = CompLibrary.GridBlock
 
 const siteConfig = require(process.cwd() + '/siteConfig.js')
+function docUrl(doc, language) {
+  return siteConfig.baseUrl + 'docs/' + (language ? language + '/' : '') + doc
+}
 
 class Help extends React.Component {
   render() {
     const supportLinks = [
       {
-        content:
-          'Learn more using the [documentation on this site.](/test-site/docs/en/doc1.html)',
+        content: `Learn more using the [documentation on this site.](${docUrl(
+          'installation.html'
+        )})`,
         title: 'Browse Docs'
       },
       {
-        content: 'Ask questions about the documentation and project on [Gitter](https://gitter.im/hemerajs/hemera) and [Twitter](https://twitter.com/hemerajs).',
+        content:
+          'Ask questions about the documentation and project on [Gitter](https://gitter.im/hemerajs/hemera) and [Twitter](https://twitter.com/hemerajs).',
         title: 'Join the community'
       },
       {
