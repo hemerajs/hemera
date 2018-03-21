@@ -74,7 +74,7 @@ class Hemera extends EventEmitter {
     this._transport = new NatsTransport({
       transport
     })
-    this._topics = {}
+    this._topics = new Map()
 
     // special variables for the new execution context
     this.context$ = {}
@@ -88,7 +88,8 @@ class Hemera extends EventEmitter {
       id: ''
     }
 
-    // client and server locales
+    this.matchedAction = null
+
     this._topic = ''
     this._request = null
     this._response = null
@@ -96,8 +97,6 @@ class Hemera extends EventEmitter {
     this._actCallback = null
     this._execute = null
     this._cleanPattern = ''
-
-    this.matchedAction = null
 
     this._clientEncoder = DefaultEncoder.encode
     this._clientDecoder = DefaultDecoder.decode
@@ -700,7 +699,7 @@ class Hemera extends EventEmitter {
 
     // avoid duplicate subscribers of the emit stream
     // we use one subscriber per topic
-    if (self._topics[topic]) {
+    if (self._topics.has(topic)) {
       return
     }
 
@@ -732,22 +731,28 @@ class Hemera extends EventEmitter {
 
     // standard pubsub with optional max messages
     if (pubsub) {
-      self._topics[topic] = self._transport.subscribe(
+      self._topics.set(
         topic,
-        {
-          max: maxMessages
-        },
-        handler
+        self._transport.subscribe(
+          topic,
+          {
+            max: maxMessages
+          },
+          handler
+        )
       )
     } else {
       // queue group names allow load balancing of services
-      self._topics[topic] = self._transport.subscribe(
+      self._topics.set(
         topic,
-        {
-          queue: queueGroup,
-          max: maxMessages
-        },
-        handler
+        self._transport.subscribe(
+          topic,
+          {
+            queue: queueGroup,
+            max: maxMessages
+          },
+          handler
+        )
       )
     }
   }
@@ -870,7 +875,7 @@ class Hemera extends EventEmitter {
     // when sid was passed
     if (typeof topic === 'string') {
       // when topic name was passed
-      const subId = self._topics[topic]
+      const subId = self._topics.get(topic)
 
       if (subId) {
         self._transport.unsubscribe(subId, maxMessages)
@@ -894,7 +899,7 @@ class Hemera extends EventEmitter {
    */
   cleanTopic(topic) {
     // release topic so we can add it again
-    delete this._topics[topic]
+    delete this._topics.delete(topic)
     // remove pattern which belongs to the topic
     this.list().forEach(add => {
       if (add.pattern.topic === topic) {
@@ -1408,8 +1413,8 @@ class Hemera extends EventEmitter {
    * @memberof Hemera
    */
   removeAll() {
-    for (const key in this._topics) {
-      this.remove(key)
+    for (var topic of this._topics.keys()) {
+      this.remove(topic)
     }
   }
 

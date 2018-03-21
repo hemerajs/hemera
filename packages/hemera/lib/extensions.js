@@ -210,7 +210,6 @@ function onServerPreRequestLoadTest(context, req, res, next) {
   if (context._config.load.checkPolicy) {
     const error = context._loadPolicy.check()
     if (error) {
-      context._shouldCrash = context._config.load.shouldCrash
       return next(new Errors.ProcessLoadError(error.message, error.data))
     }
   }
