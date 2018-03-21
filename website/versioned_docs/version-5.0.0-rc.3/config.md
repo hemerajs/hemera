@@ -1,7 +1,8 @@
 ---
-id: config
+id: version-5.0.0-rc.3-config
 title: Hemera config
 sidebar_label: Config
+original_id: config
 ---
 
 ```js
