@@ -1,6 +1,6 @@
 {
   "name": "hemera-slackbot",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "Send Slack Messages over Hemera",
   "main": "index.js",
   "repository": {
@@ -11,9 +11,9 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
+    "hemera-joi": "^5.0.0",
     "hemera-plugin": "^1.1.1",
-    "slackbots": "1.1.x",
-    "hemera-joi": "^5.0.0"
+    "slackbots": "1.1.x"
   },
   "engines": {
     "node": ">=6"

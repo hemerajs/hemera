@@ -1,6 +1,6 @@
 {
   "name": "hemera-mail",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "This is a plugin to mail with Hemera",
   "main": "index.js",
   "repository": {
