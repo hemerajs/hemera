@@ -94,7 +94,6 @@ class Hemera extends EventEmitter {
     this._request = null
     this._response = null
     this._pattern = null
-    this._actCallback = null
     this._execute = null
     this._cleanPattern = ''
 
@@ -1183,7 +1182,6 @@ class Hemera extends EventEmitter {
     hemera._request = new ClientRequest()
     hemera._isServer = false
     hemera._execute = null
-    hemera._actCallback = null
     hemera.sid = 0
 
     // topic is needed to subscribe on a subject in NATS
@@ -1197,8 +1195,7 @@ class Hemera extends EventEmitter {
     }
 
     if (cb) {
-      hemera._actCallback = cb.bind(hemera)
-      hemera._execute = hemera._actCallback
+      hemera._execute = cb.bind(hemera)
       hemera._series(
         hemera,
         hemera._clientExtIterator,
