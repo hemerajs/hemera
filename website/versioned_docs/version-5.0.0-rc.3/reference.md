@@ -1,7 +1,8 @@
 ---
-id: reference
+id: version-5.0.0-rc.3-reference
 title: Reference
 sidebar_label: Reference
+original_id: reference
 ---
 
 ## Static

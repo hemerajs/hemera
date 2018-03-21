@@ -9,7 +9,6 @@
  *
  */
 
-const Constants = require('./constants')
 const Errors = require('./errors')
 
 /**
@@ -42,7 +41,7 @@ class ExtensionManager {
    */
   _add(type, handler) {
     if (this._types.indexOf(type) === -1) {
-      let error = new Errors.HemeraError(Constants.INVALID_EXTENSION, {
+      let error = new Errors.HemeraError('Extension type is unknown', {
         type,
         handler
       })

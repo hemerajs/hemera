@@ -118,9 +118,7 @@ describe('Unsubscribe NATS topic', function() {
         hemera.remove('')
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals(
-          'Topic or sid is required for deletion'
-        )
+        expect(err.message).to.be.equals('The sid or topic name is required')
         hemera.close(done)
       }
     })

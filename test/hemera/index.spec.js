@@ -295,7 +295,7 @@ describe('Hemera', function() {
         })
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Pattern is required to define an add')
+        expect(err.message).to.be.equals('Pattern is required')
         hemera.close(done)
       }
     })
@@ -318,7 +318,9 @@ describe('Hemera', function() {
         )
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('No topic to subscribe')
+        expect(err.message).to.be.equals(
+          'Topic must not be empty and from type string'
+        )
         hemera.close(done)
       }
     })
@@ -372,9 +374,7 @@ describe('Hemera', function() {
         hemera.act(null, (resp, cb) => {})
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals(
-          'Pattern is required to start an act call'
-        )
+        expect(err.message).to.be.equals('Pattern is required')
         hemera.close(done)
       }
     })
@@ -395,7 +395,9 @@ describe('Hemera', function() {
         )
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('No topic to request')
+        expect(err.message).to.be.equals(
+          'Topic must not be empty and from type string'
+        )
         hemera.close(done)
       }
     })
@@ -535,6 +537,44 @@ describe('Hemera', function() {
         function(err, resp) {
           expect(err).to.be.not.exists()
           expect(resp).to.be.equals(true)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should be able to set a different id generator', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.setIdGenerator(() => 100)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'email',
+          cmd: 'send'
+        },
+        function(resp, cb) {
+          expect(this.trace$.spanId).to.be.equals(100)
+          expect(this.trace$.traceId).to.be.equals(100)
+          expect(this.request$.id).to.be.equals(100)
+          cb()
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'email',
+          cmd: 'send',
+          email: 'foobar@gmail.com',
+          msg: 'Hi!'
+        },
+        function() {
+          expect(this.trace$.spanId).to.be.equals(100)
+          expect(this.trace$.traceId).to.be.equals(100)
+          expect(this.request$.id).to.be.equals(100)
           hemera.close(done)
         }
       )

@@ -19,7 +19,6 @@ describe('Error handling', function() {
     expect(Hemera.errors.HemeraError).to.be.exists()
     expect(Hemera.errors.ParseError).to.be.exists()
     expect(Hemera.errors.TimeoutError).to.be.exists()
-    expect(Hemera.errors.ImplementationError).to.be.exists()
     expect(Hemera.errors.BusinessError).to.be.exists()
     expect(Hemera.errors.PatternNotFound).to.be.exists()
     done()
@@ -533,7 +532,7 @@ describe('Error handling', function() {
           expect(err.pattern).to.be.equals('test:senddedede,topic:email')
           expect(err.app).to.be.exists()
           expect(err.isServer).to.be.equals(true)
-          expect(err.message).to.be.equals('No handler found for this pattern')
+          expect(err.message).to.be.equals('No action found for this pattern')
           hemera.close(done)
         }
       )

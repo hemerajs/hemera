@@ -14,7 +14,8 @@
       "context",
       "delegate",
       "event",
-      "codec"
+      "codec",
+      "config"
     ],
     "Plugins": ["ecosystem", "plugin"],
     "Error handling": [

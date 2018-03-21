@@ -10,7 +10,6 @@
  */
 
 const Errors = require('./errors')
-const Constants = require('./constants')
 const Errio = require('errio')
 
 /**
@@ -96,7 +95,7 @@ class Reply {
     const self = this
 
     if (self.sent) {
-      self.log.warn(new Error(Constants.REPLY_ALREADY_SENT))
+      self.log.warn(new Errors.HemeraError('Reply already sent'))
       return
     }
 
@@ -151,7 +150,7 @@ class Reply {
 
     if (extensionError) {
       const internalError = new Errors.HemeraError(
-        Constants.EXTENSION_ERROR,
+        'onServerPreResponse extension',
         self.hemera.errorDetails
       ).causedBy(extensionError)
       self.log.error(internalError)
@@ -190,7 +189,7 @@ class Reply {
 
     if (msg.error) {
       let internalError = new Errors.ParseError(
-        Constants.PAYLOAD_PARSING_ERROR
+        'Server payload encoding'
       ).causedBy(msg.error)
       self.log.error(internalError)
       self.hemera.emit('serverResponseError', msg.error)

@@ -1,8 +1,17 @@
-const Joi = require('joi')
-const Os = require('os')
-const Util = require('./util')
+---
+id: config
+title: Hemera config
+sidebar_label: Config
+---
 
-module.exports = Joi.object().keys({
+```js
+new Hemera(nats, config)
+```
+
+## Reference
+
+```js
+Joi.object().keys({
   // Max execution time of a request
   timeout: Joi.number()
     .integer()
@@ -85,3 +94,5 @@ module.exports = Joi.object().keys({
     })
     .default()
 })
+```
+

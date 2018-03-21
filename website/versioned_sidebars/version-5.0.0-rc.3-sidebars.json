@@ -1,0 +1,57 @@
+{
+  "version-5.0.0-rc.3-docs": {
+    "Introduction": [
+      "version-5.0.0-rc.3-what-is-hemera",
+      "version-5.0.0-rc.3-installation"
+    ],
+    "Basics": [
+      "version-5.0.0-rc.3-request-reply",
+      "version-5.0.0-rc.3-pattern-matching",
+      "version-5.0.0-rc.3-publish-susbcribe",
+      "version-5.0.0-rc.3-payload-validation",
+      "version-5.0.0-rc.3-middleware",
+      "version-5.0.0-rc.3-extension",
+      "version-5.0.0-rc.3-logging",
+      "version-5.0.0-rc.3-decorator",
+      "version-5.0.0-rc.3-metadata",
+      "version-5.0.0-rc.3-context",
+      "version-5.0.0-rc.3-delegate",
+      "version-5.0.0-rc.3-event",
+      "version-5.0.0-rc.3-codec",
+      "version-5.0.0-rc.3-config"
+    ],
+    "Plugins": [
+      "version-5.0.0-rc.3-ecosystem",
+      "version-5.0.0-rc.3-plugin"
+    ],
+    "Error handling": [
+      "version-5.0.0-rc.3-error-handling",
+      "version-5.0.0-rc.3-timeout",
+      "version-5.0.0-rc.3-fatal",
+      "version-5.0.0-rc.3-propagation",
+      "version-5.0.0-rc.3-error-event",
+      "version-5.0.0-rc.3-protection"
+    ],
+    "Testing": [
+      "version-5.0.0-rc.3-integration",
+      "version-5.0.0-rc.3-unit"
+    ],
+    "Tooling": [
+      "version-5.0.0-rc.3-monitoring",
+      "version-5.0.0-rc.3-cli"
+    ],
+    "Advanced": [
+      "version-5.0.0-rc.3-docker",
+      "version-5.0.0-rc.3-graphql",
+      "version-5.0.0-rc.3-bridge",
+      "version-5.0.0-rc.3-clustering",
+      "version-5.0.0-rc.3-api-versioning",
+      "version-5.0.0-rc.3-nats-limit",
+      "version-5.0.0-rc.3-framework-integrations",
+      "version-5.0.0-rc.3-hemera-vs-seneca"
+    ],
+    "Api": [
+      "version-5.0.0-rc.3-reference"
+    ]
+  }
+}
