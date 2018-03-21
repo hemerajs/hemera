@@ -12,9 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "hemera-plugin": "^1.1.1",
-    "slackbots": "1.1.x"
-  },
-  "peerDependencies": {
+    "slackbots": "1.1.x",
     "hemera-joi": "^5.0.0"
   },
   "engines": {

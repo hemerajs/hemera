@@ -1,7 +1,8 @@
 {
   "name": "hemera-jaeger",
   "version": "4.0.1",
-  "description": "This is a plugin to use the Jaeger Opentracing tracer with Hemera",
+  "description":
+    "This is a plugin to use the Jaeger Opentracing tracer with Hemera",
   "main": "index.js",
   "repository": {
     "url": "git@github.com:hemerajs/hemera.git",
@@ -13,11 +14,9 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
+    "hemera-joi": "^5.0.0",
     "hemera-plugin": "^1.1.1",
     "jaeger-client": "^3.10.0",
     "opentracing": "^0.14.1"
-  },
-  "peerDependencies": {
-    "hemera-joi": "^5.0.0"
   }
 }
