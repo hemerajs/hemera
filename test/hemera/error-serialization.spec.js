@@ -20,10 +20,10 @@ describe('Error comparison', function() {
     const nats2 = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
-    const UnauthorizedError = Hemera.createError('Unauthorized')
+    const UnauthorizedError1 = Hemera.createError('CustomUnauthorized')
 
     const hemera2 = new Hemera(nats2)
-    const UnauthorizedError2 = Hemera.createError('Unauthorized')
+    const UnauthorizedError2 = Hemera.createError('CustomUnauthorized')
 
     return hemera
       .ready()
@@ -35,7 +35,7 @@ describe('Error comparison', function() {
             cmd: 'a'
           },
           function(resp, cb) {
-            cb(new UnauthorizedError('test'))
+            cb(new UnauthorizedError1('test'))
           }
         )
 
