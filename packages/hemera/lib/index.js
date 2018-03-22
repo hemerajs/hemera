@@ -898,7 +898,7 @@ class Hemera extends EventEmitter {
    */
   cleanTopic(topic) {
     // release topic so we can add it again
-    delete this._topics.delete(topic)
+    this._topics.delete(topic)
     // remove pattern which belongs to the topic
     this.list().forEach(add => {
       if (add.pattern.topic === topic) {
