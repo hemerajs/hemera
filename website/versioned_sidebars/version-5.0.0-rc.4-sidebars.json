@@ -1,0 +1,58 @@
+{
+  "version-5.0.0-rc.4-docs": {
+    "Introduction": [
+      "version-5.0.0-rc.4-what-is-hemera",
+      "version-5.0.0-rc.4-installation"
+    ],
+    "Basics": [
+      "version-5.0.0-rc.4-request-reply",
+      "version-5.0.0-rc.4-pattern-matching",
+      "version-5.0.0-rc.4-publish-susbcribe",
+      "version-5.0.0-rc.4-payload-validation",
+      "version-5.0.0-rc.4-middleware",
+      "version-5.0.0-rc.4-extension",
+      "version-5.0.0-rc.4-logging",
+      "version-5.0.0-rc.4-decorator",
+      "version-5.0.0-rc.4-metadata",
+      "version-5.0.0-rc.4-context",
+      "version-5.0.0-rc.4-delegate",
+      "version-5.0.0-rc.4-event",
+      "version-5.0.0-rc.4-codec",
+      "version-5.0.0-rc.4-config"
+    ],
+    "Plugins": [
+      "version-5.0.0-rc.4-ecosystem",
+      "version-5.0.0-rc.4-plugin"
+    ],
+    "Error handling": [
+      "version-5.0.0-rc.4-error-handling",
+      "version-5.0.0-rc.4-error-serialization",
+      "version-5.0.0-rc.4-timeout",
+      "version-5.0.0-rc.4-fatal",
+      "version-5.0.0-rc.4-propagation",
+      "version-5.0.0-rc.4-error-event",
+      "version-5.0.0-rc.4-protection"
+    ],
+    "Testing": [
+      "version-5.0.0-rc.4-integration",
+      "version-5.0.0-rc.4-unit"
+    ],
+    "Tooling": [
+      "version-5.0.0-rc.4-monitoring",
+      "version-5.0.0-rc.4-cli"
+    ],
+    "Advanced": [
+      "version-5.0.0-rc.4-docker",
+      "version-5.0.0-rc.4-graphql",
+      "version-5.0.0-rc.4-bridge",
+      "version-5.0.0-rc.4-clustering",
+      "version-5.0.0-rc.4-api-versioning",
+      "version-5.0.0-rc.4-nats-limit",
+      "version-5.0.0-rc.4-framework-integrations",
+      "version-5.0.0-rc.4-hemera-vs-seneca"
+    ],
+    "Api": [
+      "version-5.0.0-rc.4-reference"
+    ]
+  }
+}
