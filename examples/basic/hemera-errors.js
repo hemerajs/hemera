@@ -16,7 +16,7 @@ hemera.ready(() => {
       cmd: 'add'
     },
     (req, cb) => {
-      cb(new Hemera.errors.BusinessError('test'))
+      cb(new Hemera.errors.ResponseError('test'))
     }
   )
 
@@ -27,7 +27,7 @@ hemera.ready(() => {
       a: 'ddd'
     },
     function(err, resp) {
-      this.log.debug(err instanceof Hemera.errors.BusinessError)
+      this.log.debug(err instanceof Hemera.errors.ResponseError)
     }
   )
 })

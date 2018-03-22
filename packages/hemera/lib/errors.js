@@ -14,7 +14,7 @@ const SuperError = require('super-error')
 const HemeraError = SuperError.subclass('HemeraError')
 const ParseError = HemeraError.subclass('HemeraParseError')
 const TimeoutError = HemeraError.subclass('TimeoutError')
-const BusinessError = HemeraError.subclass('BusinessError')
+const ResponseError = HemeraError.subclass('ResponseError')
 const PatternNotFound = HemeraError.subclass('PatternNotFound')
 const MaxRecursionError = HemeraError.subclass('MaxRecursionError')
 const ProcessLoadError = HemeraError.subclass('ProcessLoadError')
@@ -24,7 +24,7 @@ module.exports = {
   MaxRecursionError,
   ParseError,
   TimeoutError,
-  BusinessError,
+  ResponseError,
   PatternNotFound,
   ProcessLoadError
 }

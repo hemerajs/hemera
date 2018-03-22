@@ -19,7 +19,7 @@ describe('Error handling', function() {
     expect(Hemera.errors.HemeraError).to.be.exists()
     expect(Hemera.errors.ParseError).to.be.exists()
     expect(Hemera.errors.TimeoutError).to.be.exists()
-    expect(Hemera.errors.BusinessError).to.be.exists()
+    expect(Hemera.errors.ResponseError).to.be.exists()
     expect(Hemera.errors.PatternNotFound).to.be.exists()
     done()
   })
@@ -73,7 +73,7 @@ describe('Error handling', function() {
           cmd: 'send'
         },
         (resp, cb) => {
-          cb(new Hemera.errors.BusinessError('test'))
+          cb(new Hemera.errors.ResponseError('test'))
         }
       )
 
@@ -86,9 +86,9 @@ describe('Error handling', function() {
         },
         (err, resp) => {
           expect(err).to.be.exists()
-          expect(err.name).to.be.equals('BusinessError')
+          expect(err.name).to.be.equals('ResponseError')
           expect(err.message).to.be.equals('test')
-          expect(err instanceof Hemera.errors.BusinessError).to.be.equals(true)
+          expect(err instanceof Hemera.errors.ResponseError).to.be.equals(true)
           hemera.close(done)
         }
       )
