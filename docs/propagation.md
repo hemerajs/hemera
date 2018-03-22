@@ -29,7 +29,9 @@ hemera.ready(() => {
       topic: 'a',
       cmd: 'a'
     },
-    function(err, resp) {}
+    function(err, resp) {
+      // err instanceof UnauthorizedError
+    }
   )
 })
 ```

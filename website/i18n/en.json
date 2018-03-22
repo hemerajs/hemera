@@ -30,6 +30,8 @@
     "Events": "Events",
     "error-handling": "Error-handling",
     "Introduction": "Introduction",
+    "error-serialization": "Error serialization",
+    "Serialization": "Serialization",
     "event": "Events",
     "extension": "Extension",
     "Extension": "Extension",

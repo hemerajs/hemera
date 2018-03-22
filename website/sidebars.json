@@ -20,6 +20,7 @@
     "Plugins": ["ecosystem", "plugin"],
     "Error handling": [
       "error-handling",
+      "error-serialization",
       "timeout",
       "fatal",
       "propagation",
