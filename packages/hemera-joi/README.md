@@ -49,6 +49,7 @@ hemera.add(
 You can validate the response payload as well if you use the `postJoi$` property.
 
 ### Missing fields
+
 If a field is present in the schema (and is not required) but it is not present in the object to validate, joi will not write it in the final payload.
 
 ```js
@@ -68,5 +69,19 @@ hemera.add(
   (req, cb) => {
     cb(null, { foo: req.a + req.b })
   }
+)
+```
+
+### Change Joi settings
+
+You can modify the joi valdiation with the `post` and `pre` plugin option.
+
+```js
+const hemera = new Hemera(nats)
+hemera.use(
+  require('hemera-joi', {
+    pre: { allowUnknown: true },
+    post: { stripUnknown: true }
+  })
 )
 ```

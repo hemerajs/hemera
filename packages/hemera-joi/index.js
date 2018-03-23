@@ -13,9 +13,7 @@ function hemeraJoi(hemera, opts, done) {
       : schema.joi$ || schema.preJoi$ || schema
 
     if (preSchema) {
-      return Joi.validate(pattern, preSchema, {
-        allowUnknown: true
-      })
+      return Joi.validate(pattern, preSchema, opts.pre)
     }
   })
 
@@ -23,20 +21,15 @@ function hemeraJoi(hemera, opts, done) {
   hemera.ext('onServerPreResponse', (hemera, request, reply, next) => {
     const schema = hemera.matchedAction.schema.postJoi$
     if (schema) {
-      Joi.validate(
-        reply.payload,
-        schema,
-        { stripUnknown: true },
-        (err, value) => {
-          if (err) {
-            reply.error = err
-            next(err)
-          } else {
-            reply.payload = value
-            next()
-          }
+      Joi.validate(reply.payload, schema, opts.post, (err, value) => {
+        if (err) {
+          reply.error = err
+          next(err)
+        } else {
+          reply.payload = value
+          next()
         }
-      )
+      })
       return
     }
     next()
@@ -48,5 +41,9 @@ function hemeraJoi(hemera, opts, done) {
 module.exports = Hp(hemeraJoi, {
   hemera: '>=5.0.0-rc.1',
   scoped: false, // set schema globally
-  name: require('./package.json').name
+  name: require('./package.json').name,
+  options: {
+    pre: { allowUnknown: true },
+    post: { stripUnknown: true }
+  }
 })
