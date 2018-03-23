@@ -19,7 +19,10 @@ function hemeraJoi(hemera, opts, done) {
 
   // Response validation
   hemera.ext('onServerPreResponse', (hemera, request, reply, next) => {
-    const schema = hemera.matchedAction.schema.postJoi$
+    const schema = hemera.matchedAction
+      ? hemera.matchedAction.schema.postJoi$
+      : false
+
     if (schema) {
       Joi.validate(reply.payload, schema, opts.post, (err, value) => {
         if (err) {
