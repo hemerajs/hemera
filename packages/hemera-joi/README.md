@@ -74,7 +74,7 @@ hemera.add(
 
 ### Change Joi settings
 
-You can modify the joi valdiation with the `post` and `pre` plugin option.
+You can modify the joi validation settings with the `pre` and `post` plugin options.
 
 ```js
 const hemera = new Hemera(nats)
