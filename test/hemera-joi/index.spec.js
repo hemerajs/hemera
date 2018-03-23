@@ -2,7 +2,7 @@
 
 const HemeraJoi = require('../../packages/hemera-joi')
 
-describe('Hemera-joi', function() {
+describe('Hemera-joi request validation', function() {
   const PORT = 6243
   var authUrl = 'nats://localhost:' + PORT
   var server
@@ -49,6 +49,78 @@ describe('Hemera-joi', function() {
           expect(err.message).to.be.equals(
             'child "a" fails because ["a" must be a number]'
           )
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should be able to use preJoi$ to define validator', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    hemera.use(HemeraJoi)
+
+    hemera.ready(() => {
+      let Joi = hemera.joi
+      hemera.add(
+        {
+          topic: 'email',
+          cmd: 'send',
+          preJoi$: {
+            a: Joi.number().required()
+          }
+        },
+        (resp, cb) => {
+          cb()
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'email',
+          cmd: 'send',
+          a: 'string'
+        },
+        (err, resp) => {
+          expect(err).to.be.exists()
+          expect(err.name).to.be.equals('ValidationError')
+          expect(err.details).to.be.exists()
+          expect(err.message).to.be.equals(
+            'child "a" fails because ["a" must be a number]'
+          )
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should ignore actions without schema', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    hemera.use(HemeraJoi)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'email',
+          cmd: 'send'
+        },
+        (resp, cb) => {
+          cb(null, true)
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'email',
+          cmd: 'send',
+          a: 'string'
+        },
+        (err, resp) => {
+          expect(err).to.be.not.exists()
+          expect(resp).to.be.equals(true)
           hemera.close(done)
         }
       )
@@ -228,6 +300,171 @@ describe('Hemera-joi', function() {
     hemera.ready(() => {
       expect(hemera.joi).to.be.exists()
       hemera.close(done)
+    })
+  })
+})
+
+describe('Hemera-joi response validation', function() {
+  const PORT = 6243
+  var authUrl = 'nats://localhost:' + PORT
+  var server
+
+  // Start up our own nats-server
+  before(function(done) {
+    server = HemeraTestsuite.start_server(PORT, done)
+  })
+
+  // Shutdown our server after we are done
+  after(function() {
+    server.kill()
+  })
+
+  it('Should be able to use joi as response validator', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    hemera.use(HemeraJoi)
+
+    hemera.ready(() => {
+      let Joi = hemera.joi
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add',
+          postJoi$: Joi.number().required()
+        },
+        (req, cb) => {
+          cb(null, req.a + req.b)
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        (err, resp) => {
+          expect(err).to.be.not.exists()
+          expect(resp).to.be.equals(3)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should return validation error', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    hemera.use(HemeraJoi)
+
+    hemera.ready(() => {
+      let Joi = hemera.joi
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add',
+          preJoi$: {}, // otherwise the whole schema is used for validation
+          postJoi$: Joi.number().required()
+        },
+        (req, cb) => {
+          cb(null, 'string')
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        (err, resp) => {
+          expect(err).to.be.exists()
+          expect(err.name).to.be.equals('ValidationError')
+          expect(err.message).to.be.equals('"value" must be a number')
+          expect(err.details).to.be.exists()
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should strip unknown properties', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    hemera.use(HemeraJoi)
+
+    hemera.ready(() => {
+      let Joi = hemera.joi
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add',
+          postJoi$: Joi.object().keys({
+            result: Joi.number().required()
+          })
+        },
+        (req, cb) => {
+          cb(null, {
+            result: req.a + req.b,
+            test: 1
+          })
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        (err, resp) => {
+          expect(err).to.be.not.exists()
+          expect(resp.result).to.be.equals(3)
+          expect(resp.test).to.be.not.exists()
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should manipulate response payload', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    hemera.use(HemeraJoi)
+
+    hemera.ready(() => {
+      let Joi = hemera.joi
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add',
+          postJoi$: Joi.number().required()
+        },
+        (req, cb) => {
+          cb(null, '11')
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        (err, resp) => {
+          expect(err).to.be.not.exists()
+          expect(resp).to.be.equals(11)
+          hemera.close(done)
+        }
+      )
     })
   })
 })

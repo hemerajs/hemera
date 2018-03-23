@@ -8,50 +8,30 @@ This is a plugin to use [Joi](https://github.com/hapijs/joi) with Hemera.
 #### Example
 
 ```js
-const Hemera = require('./../')
-const nats = require('nats').connect()
-
-const hemera = new Hemera(nats, {
-  logLevel: 'info'
-})
-
+const hemera = new Hemera(nats)
 hemera.use(require('hemera-joi'))
-
-hemera.ready(() => {
-  let Joi = hemera.joi
-  /**
-   * Your Implementations
-   */
-  hemera.add(
-    {
-      topic: 'math',
-      cmd: 'add',
-      a: Joi.number().required()
-    },
-    (req, cb) => {
-      cb(null, req.a + req.b)
-    }
-  )
-
-  hemera.act(
-    {
-      topic: 'math',
-      cmd: 'add',
-      a: 'dwed3',
-      b: 20
-    },
-    function(err, resp) {
-      this.log.info('Error', err.cause.message) //Error child "a" fails because ["a" must be a number]
-    }
-  )
-})
 ```
 
-### Pass the full schema
+## Request validation
+
+The primary purpose of joi is to validate the incoming request. You can define your validation schema with the `joi$` property or inline.
 
 ```js
 let Joi = hemera.joi
 
+// inline
+hemera.add(
+  {
+    topic: 'math',
+    cmd: 'add',
+    a: Joi.number().required()
+  },
+  (req, cb) => {
+    cb(null, req.a + req.b)
+  }
+)
+
+// with `joi$` property
 hemera.add(
   {
     topic: 'math',
@@ -64,7 +44,12 @@ hemera.add(
 )
 ```
 
-### Pre and Post validation
+## Response validation
+
+You can validate the response payload as well if you use the `postJoi$` property.
+
+### Missing fields
+If a field is present in the schema (and is not required) but it is not present in the object to validate, joi will not write it in the final payload.
 
 ```js
 let Joi = hemera.joi
@@ -73,19 +58,15 @@ hemera.add(
   {
     topic: 'math',
     cmd: 'add',
-    joi$: {
-      pre: {
-        a: Joi.number().required()
-      },
-      post: {
-        foo: Joi.number().default(500)
-      }
+    preJoi$: {
+      a: Joi.number().required()
+    },
+    postJoi$: {
+      foo: Joi.number().default(500)
     }
   },
   (req, cb) => {
-    cb(null, { result: req.a + req.b })
+    cb(null, { foo: req.a + req.b })
   }
 )
-
-// response will be { result: <number>, foo: 500 }
 ```

@@ -5,7 +5,7 @@ const nats = require('nats').connect()
 const HemeraJoi = require('./../../packages/hemera-joi')
 
 const hemera = new Hemera(nats, {
-  logLevel: 'error'
+  logLevel: 'info'
 })
 
 hemera.use(HemeraJoi)
@@ -17,11 +17,20 @@ hemera.ready(() => {
     {
       topic: 'math',
       cmd: 'add',
-      a: Joi.number().required(),
-      b: Joi.number().required()
+      preJoi$: {
+        a: Joi.number().required(),
+        b: Joi.number().required()
+      },
+      postJoi$: {
+        a: Joi.number().required(),
+        b: Joi.number().required()
+      }
     },
     (req, cb) => {
-      cb(null, req.a + req.b)
+      cb(null, {
+        a: req.a + req.b,
+        b: '33'
+      })
     }
   )
 
@@ -30,10 +39,10 @@ hemera.ready(() => {
       topic: 'math',
       cmd: 'add',
       a: 1,
-      b: 'a'
+      b: 2
     },
     function(err, resp) {
-      this.log.error(err)
+      this.log.info(err, resp)
     }
   )
 })

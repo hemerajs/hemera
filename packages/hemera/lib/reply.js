@@ -64,7 +64,9 @@ class Reply {
    * @memberof Reply
    */
   set error(value) {
-    this._response.error = value
+    this._response.error = this.hemera._attachHops(
+      this.hemera.getRootError(value)
+    )
   }
 
   /**
@@ -103,7 +105,7 @@ class Reply {
 
     if (msg !== undefined) {
       if (msg instanceof Error) {
-        self.error = self.hemera._attachHops(self.hemera.getRootError(msg))
+        self.error = msg
       } else {
         self.payload = msg
       }
@@ -130,7 +132,7 @@ class Reply {
 
     self.hemera.emit('serverPreResponse', self.hemera)
 
-    if (self.hemera._extensionManager['onServerPreResponse'].length) {
+    if (self.hemera._extensionManager.onServerPreResponse.length) {
       self.hemera._series(
         self.hemera,
         self._preResponseIterator,

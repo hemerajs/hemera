@@ -6,11 +6,41 @@ const Joi = require('joi')
 function hemeraJoi(hemera, opts, done) {
   hemera.decorate('joi', Joi)
 
-  hemera.setSchemaCompiler(schema => pattern =>
-    Joi.validate(pattern, schema.joi$ || schema, {
-      allowUnknown: true
-    })
-  )
+  // Request validation
+  hemera.setSchemaCompiler(schema => pattern => {
+    const preSchema = schema.postJoi$
+      ? schema.preJoi$ || schema.joi$
+      : schema.joi$ || schema.preJoi$ || schema
+
+    if (preSchema) {
+      return Joi.validate(pattern, preSchema, {
+        allowUnknown: true
+      })
+    }
+  })
+
+  // Response validation
+  hemera.ext('onServerPreResponse', (hemera, request, reply, next) => {
+    const schema = hemera.matchedAction.schema.postJoi$
+    if (schema) {
+      Joi.validate(
+        reply.payload,
+        schema,
+        { stripUnknown: true },
+        (err, value) => {
+          if (err) {
+            reply.error = err
+            next(err)
+          } else {
+            reply.payload = value
+            next()
+          }
+        }
+      )
+      return
+    }
+    next()
+  })
 
   done()
 }

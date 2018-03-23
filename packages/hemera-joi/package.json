@@ -17,6 +17,6 @@
   "license": "MIT",
   "dependencies": {
     "hemera-plugin": "^1.1.1",
-    "joi": "10.6.x"
+    "joi": "12.0.x"
   }
 }
