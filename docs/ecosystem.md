@@ -47,6 +47,7 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages. S
 | Payload validation | Version |
 |--------|-------|
 | [hemera-joi](https://github.com/hemerajs/hemera/tree/master/packages/hemera-joi) | [![npm](https://img.shields.io/npm/v/hemera-joi.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-joi)
+| [hemera-ajv (JSON-Schema)](https://github.com/hemerajs/hemera/tree/master/packages/hemera-ajv) | [![npm](https://img.shields.io/npm/v/hemera-ajv.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-ajv)
 
 | Data serialization | Version |
 |--------|-------|
