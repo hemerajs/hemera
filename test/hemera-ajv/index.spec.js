@@ -51,7 +51,7 @@ describe('Hemera-ajv request validation', function() {
         (err, resp) => {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('Error')
-          expect(err.message).to.be.equals('data.a should be number')
+          expect(err.message).to.be.equals('pattern.a should be number')
           hemera.close(done)
         }
       )

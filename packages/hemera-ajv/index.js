@@ -25,7 +25,9 @@ function hemeraAjv(hemera, opts, done) {
   // Request validation
   hemera.setSchemaCompiler(schema => pattern => {
     if (schema[schemaKey](pattern) === false) {
-      const error = new Error(ajv.errorsText(schema[schemaKey].errors))
+      const error = new Error(
+        ajv.errorsText(schema[schemaKey].errors, { dataVar: 'pattern' })
+      )
       error.validation = schema[schemaKey].errors
       return {
         error: error,
