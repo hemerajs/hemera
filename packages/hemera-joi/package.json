@@ -1,6 +1,6 @@
 {
   "name": "hemera-joi",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "description": "This is a plugin to use Joi with Hemera",
   "main": "index.js",
   "repository": {
@@ -10,7 +10,12 @@
   "engines": {
     "node": ">=6"
   },
-  "keywords": ["joi", "ajv", "hemera", "validation"],
+  "keywords": [
+    "joi",
+    "ajv",
+    "hemera",
+    "validation"
+  ],
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
