@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/hemera-joi.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-joi)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
-This is a plugin to use [Joi](https://github.com/hapijs/joi) with Hemera.
+This is a plugin to use [Joi](https://github.com/hapijs/joi) for request/response validation.
 
 #### Example
 
