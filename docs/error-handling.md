@@ -121,4 +121,4 @@ We support error-first-callback style as well as promise and async / await. Use 
 
   ## Response error
 
-  An response error must be derivated from type `Error` otherwise it will be send as successful payload. An `error` log message is logged when the interface is used incorrectly.
+  A response error must be derivated from type `Error` otherwise it will be send as successful payload. An `error` log message is logged when the interface is used incorrectly.
