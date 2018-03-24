@@ -37,7 +37,6 @@ hemera.add(
 You can also validate your response payload by using the `schema` property where you can define `request` and `response` schemas.
 
 ```js
-// inline
 hemera.add(
   {
     topic: 'math',
