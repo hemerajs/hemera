@@ -72,7 +72,7 @@ hemera.add(
 )
 ```
 
-### Change Joi settings
+## Change Joi settings
 
 You can modify the joi validation settings with the `pre` and `post` plugin options.
 
@@ -80,8 +80,18 @@ You can modify the joi validation settings with the `pre` and `post` plugin opti
 const hemera = new Hemera(nats)
 hemera.use(
   require('hemera-joi', {
+    patternKeys: {
+      default: 'joi$',
+      pre: 'preJoi$',
+      post: 'postJoi$'
+    },
+    // joi settings
     pre: { allowUnknown: true },
     post: { stripUnknown: true }
   })
 )
 ```
+
+## Plugin decorators
+
+* .joi

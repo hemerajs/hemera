@@ -1,39 +1,79 @@
 'use strict'
 
 const Hp = require('hemera-plugin')
+const SchemaStore = require('./schemaStore')
 const Ajv = require('ajv')
 
 function hemeraAjv(hemera, opts, done) {
-  const ajv = new Ajv(opts.ajv)
-  const schemaKey = Symbol('ajv')
+  let ajv = new Ajv(opts.ajv)
+  const requestSchemaKey = Symbol('ajv.request-schema')
+  const responseSchemaKey = Symbol('ajv.response-schema')
+  const store = new SchemaStore()
 
-  const patternKeys = {}
-  for (const key in opts.patternKeys) {
-    patternKeys[key] = opts.patternKeys[key] + '$'
-  }
+  hemera.decorate('addSchema', schema => store.add(schema))
 
   // compile schemas
   hemera.ext('onAdd', addDefinition => {
-    if (addDefinition.schema[patternKeys.default]) {
-      // save compiled schema on server action
-      addDefinition.schema[schemaKey] = ajv.compile(
-        addDefinition.schema[patternKeys.default]
-      )
+    if (addDefinition.schema.properties) {
+      addDefinition.schema[requestSchemaKey] = ajv.compile({
+        type: 'object',
+        properties: addDefinition.schema.properties
+      })
+    } else if (addDefinition.schema.schema) {
+      store.traverse(addDefinition.schema.schema)
+
+      if (addDefinition.schema.schema.request) {
+        addDefinition.schema[requestSchemaKey] = ajv.compile(
+          addDefinition.schema.schema.request
+        )
+      }
+      if (addDefinition.schema.schema.response) {
+        addDefinition.schema[responseSchemaKey] = ajv.compile(
+          addDefinition.schema.schema.response
+        )
+      }
     }
   })
 
   // Request validation
   hemera.setSchemaCompiler(schema => pattern => {
-    if (schema[schemaKey](pattern) === false) {
+    if (
+      typeof schema[requestSchemaKey] === 'function' &&
+      schema[requestSchemaKey](pattern) === false
+    ) {
       const error = new Error(
-        ajv.errorsText(schema[schemaKey].errors, { dataVar: 'pattern' })
+        ajv.errorsText(schema[requestSchemaKey].errors, { dataVar: 'pattern' })
       )
-      error.validation = schema[schemaKey].errors
+      error.validation = schema[requestSchemaKey].errors
       return {
         error: error,
         value: pattern
       }
     }
+  })
+
+  // Response validation
+  hemera.ext('onServerPreResponse', (hemera, request, reply, next) => {
+    const schema = hemera.matchedAction
+      ? hemera.matchedAction.schema[responseSchemaKey]
+      : false
+
+    if (schema) {
+      if (schema(reply.payload) === false) {
+        const error = new Error(
+          ajv.errorsText(
+            hemera.matchedAction.schema[responseSchemaKey].errors,
+            { dataVar: 'response' }
+          )
+        )
+        reply.error = error
+        next(error)
+      } else {
+        next()
+      }
+      return
+    }
+    next()
   })
 
   done()
@@ -44,9 +84,6 @@ module.exports = Hp(hemeraAjv, {
   scoped: false, // set schema globally
   name: require('./package.json').name,
   options: {
-    patternKeys: {
-      default: 'ajv'
-    },
     ajv: {
       coerceTypes: true,
       useDefaults: true,

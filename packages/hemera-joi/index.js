@@ -6,16 +6,13 @@ const Joi = require('joi')
 function hemeraJoi(hemera, opts, done) {
   hemera.decorate('joi', Joi)
 
-  const patternKeys = {}
-  for (const key in opts.patternKeys) {
-    patternKeys[key] = opts.patternKeys[key] + '$'
-  }
-
   // Request validation
   hemera.setSchemaCompiler(schema => pattern => {
-    const preSchema = schema[patternKeys.post]
-      ? schema[patternKeys.pre] || schema[patternKeys.default]
-      : schema[patternKeys.default] || schema[patternKeys.pre] || schema
+    const preSchema = schema[opts.patternKeys.post]
+      ? schema[opts.patternKeys.pre] || schema[opts.patternKeys.default]
+      : schema[opts.patternKeys.default] ||
+        schema[opts.patternKeys.pre] ||
+        schema
 
     if (preSchema) {
       return Joi.validate(pattern, preSchema, opts.pre)
@@ -25,7 +22,7 @@ function hemeraJoi(hemera, opts, done) {
   // Response validation
   hemera.ext('onServerPreResponse', (hemera, request, reply, next) => {
     const schema = hemera.matchedAction
-      ? hemera.matchedAction.schema[patternKeys.post]
+      ? hemera.matchedAction.schema[opts.patternKeys.post]
       : false
 
     if (schema) {
@@ -52,9 +49,9 @@ module.exports = Hp(hemeraJoi, {
   name: require('./package.json').name,
   options: {
     patternKeys: {
-      default: 'joi',
-      pre: 'preJoi',
-      post: 'postJoi'
+      default: 'joi$',
+      pre: 'preJoi$',
+      post: 'postJoi$'
     },
     // joi settings
     pre: { allowUnknown: true },

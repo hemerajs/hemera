@@ -366,7 +366,6 @@ describe('Hemera-joi response validation', function() {
         {
           topic: 'math',
           cmd: 'add',
-          preJoi$: {}, // otherwise the whole schema is used for validation
           postJoi$: Joi.number().required()
         },
         (req, cb) => {
