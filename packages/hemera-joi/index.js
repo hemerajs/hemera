@@ -21,11 +21,16 @@ function hemeraJoi(hemera, opts, done) {
 
   // Response validation
   hemera.ext('onServerPreResponse', (hemera, request, reply, next) => {
-    const schema = hemera.matchedAction
-      ? hemera.matchedAction.schema[opts.patternKeys.post]
-      : false
+    // pattern could not be found
+    if (!hemera.matchedAction) {
+      next()
+      return
+    }
 
-    if (schema) {
+    const schema = hemera.matchedAction.schema[opts.patternKeys.post]
+
+    // only validate payload when no error was set
+    if (!reply.error && schema) {
       Joi.validate(reply.payload, schema, opts.post, (err, value) => {
         if (err) {
           reply.error = err

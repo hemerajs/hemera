@@ -34,7 +34,7 @@ hemera.add(
 
 ## Response validation
 
-You can also validate your response payload by using the `schema` property where you can define `request` and `response` schemas.
+You can also validate your response payload by using the `schema` property where you can define `request` and `response` schemas. Response error aren't validated but must be from type `Error`.
 
 ```js
 hemera.add(

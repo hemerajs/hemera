@@ -842,9 +842,14 @@ class Hemera extends EventEmitter {
         return
       }
 
-      const result = action(self._request.payload.pattern, (err, result) =>
+      const result = action(self._request.payload.pattern, (err, result) => {
+        if (err && !(err instanceof Error)) {
+          throw new Errors.HemeraError(
+            `Response error must be derivated from type 'Error' but got '${typeof err}'`
+          )
+        }
         self.reply.send(err || result)
-      )
+      })
 
       const isPromise = result && typeof result.then === 'function'
       if (isPromise) {

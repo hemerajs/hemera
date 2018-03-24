@@ -5,9 +5,9 @@ const SchemaStore = require('./schemaStore')
 const Ajv = require('ajv')
 
 function hemeraAjv(hemera, opts, done) {
-  let ajv = new Ajv(opts.ajv)
   const requestSchemaKey = Symbol('ajv.request-schema')
   const responseSchemaKey = Symbol('ajv.response-schema')
+  const ajv = new Ajv(opts.ajv)
   const store = new SchemaStore()
 
   hemera.decorate('addSchema', schema => store.add(schema))
@@ -54,25 +54,29 @@ function hemeraAjv(hemera, opts, done) {
 
   // Response validation
   hemera.ext('onServerPreResponse', (hemera, request, reply, next) => {
-    const schema = hemera.matchedAction
-      ? hemera.matchedAction.schema[responseSchemaKey]
-      : false
+    // pattern could not be found
+    if (!hemera.matchedAction) {
+      next()
+      return
+    }
 
-    if (schema) {
+    const actionSchema = hemera.matchedAction.schema
+    const schema = actionSchema[responseSchemaKey]
+
+    // only validate payload when no error was set
+    if (!reply.error && schema) {
       if (schema(reply.payload) === false) {
         const error = new Error(
-          ajv.errorsText(
-            hemera.matchedAction.schema[responseSchemaKey].errors,
-            { dataVar: 'response' }
-          )
+          ajv.errorsText(schema.errors, {
+            dataVar: 'response'
+          })
         )
         reply.error = error
         next(error)
-      } else {
-        next()
+        return
       }
-      return
     }
+
     next()
   })
 
