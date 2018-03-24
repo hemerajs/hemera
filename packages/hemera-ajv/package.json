@@ -1,6 +1,6 @@
 {
   "name": "hemera-ajv",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "This is a plugin to use Ajv (JSON-Schema) for request validation.",
   "main": "index.js",
   "repository": {
