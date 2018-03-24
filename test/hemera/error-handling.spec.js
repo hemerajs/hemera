@@ -24,46 +24,6 @@ describe('Error handling', function() {
     done()
   })
 
-  it('Should throw when no object from type error was passed', function(done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    hemera.ready(() => {
-      hemera.add(
-        {
-          topic: 'email',
-          cmd: 'send'
-        },
-        (resp, cb) => {
-          try {
-            // eslint-disable-next-line standard/no-callback-literal
-            cb('test')
-          } catch (err) {
-            cb(err)
-          }
-        }
-      )
-
-      hemera.act(
-        {
-          topic: 'email',
-          cmd: 'send',
-          email: 'foobar@gmail.com',
-          msg: 'Hi!'
-        },
-        (err, resp) => {
-          expect(err).to.be.exists()
-          expect(err.name).to.be.equals('HemeraError')
-          expect(err.message).to.be.equals(
-            "Response error must be derivated from type 'Error' but got 'string'"
-          )
-          hemera.close(done)
-        }
-      )
-    })
-  })
-
   it('Should be able pass a custom super error', function(done) {
     const nats = require('nats').connect(authUrl)
 

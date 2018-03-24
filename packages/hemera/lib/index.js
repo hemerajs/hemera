@@ -843,19 +843,36 @@ class Hemera extends EventEmitter {
       }
 
       const result = action(self._request.payload.pattern, (err, result) => {
-        if (err && !(err instanceof Error)) {
-          throw new Errors.HemeraError(
-            `Response error must be derivated from type 'Error' but got '${typeof err}'`
-          )
+        if (err) {
+          self._isValidError(err)
         }
         self.reply.send(err || result)
       })
 
       const isPromise = result && typeof result.then === 'function'
       if (isPromise) {
-        result.then(x => self.reply.send(x)).catch(e => self.reply.send(e))
+        result.then(x => self.reply.send(x)).catch(err => {
+          if (err) {
+            self._isValidError(err)
+          }
+          self.reply.send(err)
+        })
       }
     })
+  }
+
+  /**
+   *
+   * @param {*} err
+   */
+  _isValidError(err) {
+    if (!(err instanceof Error)) {
+      this.log.error(
+        new Errors.HemeraError(
+          `Response error must be derivated from type 'Error' but got '${typeof err}'`
+        )
+      )
+    }
   }
 
   /**

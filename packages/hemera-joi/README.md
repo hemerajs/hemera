@@ -46,7 +46,7 @@ hemera.add(
 
 ## Response validation
 
-You can validate the response payload as well if you use the `postJoi$` property. Response error aren't validated but must be from type `Error`.
+You can validate the response payload as well if you use the `postJoi$` property. Response error isn't validated but must be from type `Error`.
 
 ### Missing fields
 
