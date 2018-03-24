@@ -15,12 +15,9 @@ hemera.ready(() => {
     {
       topic: 'math',
       cmd: 'add',
-      ajv$: {
-        type: 'object',
-        properties: {
-          a: { type: 'number' },
-          b: { type: 'number' }
-        }
+      properties: {
+        a: { type: 'number' },
+        b: { type: 'number' }
       }
     },
     (req, cb) => {
