@@ -6,24 +6,31 @@
 Shutdown Hemera graceful asynchronously. By default the hemera `onClose` hook is called when `SIGINT` or `SIGTERM` was triggered.
 
 ## Install
+
 ```bash
 npm install --save hemera-graceful-shutdown
 ```
 
 ## Register plugin
+
 ```js
 hemera.use(require('hemera-graceful-shutdown'))
 ```
 
 ## Usage
+
 ```js
 hemera.gracefulShutdown((signal, next) => {
   next()
 })
 ```
 
+## Plugin decorators
+
+* .gracefulShutdown(Function handler)
+
 ## Caveats
 
-- Don't register signal handlers otherwise except with this plugin.
-- Use hemera `onClose` hook to release resources in your plugin.
-- The process will be exited after a certain timeout (Default 10 seconds) to protect against stuck process.
+* Don't register signal handlers otherwise except with this plugin.
+* Use hemera `onClose` hook to release resources in your plugin.
+* The process will be exited after a certain timeout (Default 10 seconds) to protect against stuck process.

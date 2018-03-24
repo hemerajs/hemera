@@ -1,4 +1,5 @@
 # Hemera-prometheus
+
 Prometheus collector for Hemera
 
 [![npm](https://img.shields.io/npm/v/hemera-prometheus.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-prometheus)
@@ -31,3 +32,8 @@ hemera.ready(() => {
   setInterval(() => c.inc(), 10000)
 })
 ```
+
+## Plugin decorators
+
+* .prom
+* .express

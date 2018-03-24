@@ -6,6 +6,7 @@ A node.js module to make the use of promises safe. It implements the deprecation
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
 ## Install
+
 ```
 npm i hemera-safe-promises --save
 ```

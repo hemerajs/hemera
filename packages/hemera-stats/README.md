@@ -5,17 +5,17 @@
 
 Provide informations about process stats and registered actions of all hemera instances. This is a broadcast operation.
 
-__Schema extraction only works with the Joi validator__
+**Schema extraction only works with the Joi validator**
 
 Use cases:
 
-- Get a list of all hemera instances and watch the internal behaviour (Memory, V8 internals, Environment, App-Name, Uptime)
-- Get a list of all registered server actions and create an API Documentation
-- Get a list of all registered server actions and create a realtime dashboard
+* Get a list of all hemera instances and watch the internal behaviour (Memory, V8 internals, Environment, App-Name, Uptime)
+* Get a list of all registered server actions and create an API Documentation
+* Get a list of all registered server actions and create a realtime dashboard
 
 If you want to get a list of all active subscriber, connections you can use the [NATS HTTP Interface](http://nats.io/documentation/server/gnatsd-monitoring/) it will respond a JSON object.
 
-#### Example
+## Example
 
 ```js
 'use strict'
@@ -35,43 +35,53 @@ hemera.use(HemeraStats)
 hemera.ready(() => {
   let Joi = hemera.joi
 
-  hemera.add({
-    topic: 'math',
-    cmd: 'add',
-    a: Joi.number().required()
-    .default(33)
-    .description('this key will match anything you give it')
-    .notes(['this is special', 'this is important'])
-    .example(1)
-  }, (req, cb) => {
-    cb(null, req.a + req.b)
-  })
+  hemera.add(
+    {
+      topic: 'math',
+      cmd: 'add',
+      a: Joi.number()
+        .required()
+        .default(33)
+        .description('this key will match anything you give it')
+        .notes(['this is special', 'this is important'])
+        .example(1)
+    },
+    (req, cb) => {
+      cb(null, req.a + req.b)
+    }
+  )
 
-  hemera.act({
-    topic: 'stats',
-    cmd: 'processInfo'
-  }, function (err, resp) {
-    console.log(err, resp)
-  })
-  
-  hemera.act({
-    topic: 'stats',
-    cmd: 'registeredActions'
-  }, function (err, resp) {
-    console.log(err, resp)
-  })
+  hemera.act(
+    {
+      topic: 'stats',
+      cmd: 'processInfo'
+    },
+    function(err, resp) {
+      console.log(err, resp)
+    }
+  )
+
+  hemera.act(
+    {
+      topic: 'stats',
+      cmd: 'registeredActions'
+    },
+    function(err, resp) {
+      console.log(err, resp)
+    }
+  )
 })
 ```
 
-## Monitoring
+# Monitoring
 
 * [Monitoring API](#monitoring-api)
   * [Process Info](#process-info)
   * [Registered actions](#registered-actions)
 
+---
 
--------------------------------------------------------
-### Process Info
+## Process Info
 
 You will reveive informations from all hemera instances which has activated this plugin.
 
@@ -81,13 +91,16 @@ The pattern is:
 * `cmd`: is the command to execute `processInfo`
 
 Example:
+
 ```js
 hemera.act({
   topic: 'stats',
   cmd: 'processInfo'
 }, function(err, resp) ...)
 ```
+
 Result:
+
 ```js
 { app: 'hemera-d1ce3ef6834eeac1',
   eventLoopDelay: 3.487878993153572,
@@ -98,8 +111,9 @@ Result:
   ts: 1488632377418 }
 ```
 
--------------------------------------------------------
-### Registered actions
+---
+
+## Registered actions
 
 You will reveive informations from all hemera instances which has activated this plugin.
 
@@ -109,13 +123,16 @@ The pattern is:
 * `cmd`: is the command to execute `registeredActions`
 
 Example:
+
 ```js
 hemera.act({
   topic: 'stats',
   cmd: 'registeredActions'
 }, function(err, resp) ...)
 ```
+
 Result:
+
 ```js
 {
     "app": "hemera-97b748fab6b5d34b",

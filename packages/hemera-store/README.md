@@ -22,14 +22,14 @@ Simple API to be interoperable with most database interfaces.
 
 Provide a unique pattern set for all common api methods. We had to choose for some conventions across document and table oriented stores.
 
-Table-oriented | Document-oriented | Convention
---- | --- | ---
-Database | Database | **Database**
-Database | Collection | **Collection**
+| Table-oriented | Document-oriented | Convention     |
+| -------------- | ----------------- | -------------- |
+| Database       | Database          | **Database**   |
+| Database       | Collection        | **Collection** |
 
+---
 
--------------------------------------------------------
-### create
+## create
 
 The pattern is:
 
@@ -39,6 +39,7 @@ The pattern is:
 * `data`: the data which represent the entity to create `object` or `Array<object>`
 
 Example:
+
 ```js
 hemera.act({
   topic: 'sql-store',
@@ -50,8 +51,9 @@ hemera.act({
 }, function(err, resp) ...)
 ```
 
--------------------------------------------------------
-### update
+---
+
+## update
 
 The pattern is:
 
@@ -62,6 +64,7 @@ The pattern is:
 * `query`: the search criteria `object`
 
 Example:
+
 ```js
 hemera.act({
   topic: 'sql-store',
@@ -74,8 +77,9 @@ hemera.act({
 }, function(err, resp) ...)
 ```
 
--------------------------------------------------------
-### updateById
+---
+
+## updateById
 
 The pattern is:
 
@@ -86,6 +90,7 @@ The pattern is:
 * `id`: the primary identifier of your entity `string` or `number`
 
 Example:
+
 ```js
 hemera.act({
   topic: 'sql-store',
@@ -98,8 +103,9 @@ hemera.act({
 }, function(err, resp) ...)
 ```
 
--------------------------------------------------------
-### find
+---
+
+## find
 
 The pattern is:
 
@@ -107,13 +113,14 @@ The pattern is:
 * `cmd`: is the command to execute `find`
 * `collection`: the name of the table or collection `string`
 * `query`: the search criteria `object`
-* `options`: the search criteria `object` (*optional*)
+* `options`: the search criteria `object` (_optional_)
   * `limit`: maximum items to fetch `integer`
   * `offset`: the offset `integer`
   * `orderBy`: the offset `array<string>` or `string` or `map<string, int>`
   * `fields`: the projection settings `array<string>` or `map<string, int>`
 
 Example:
+
 ```js
 hemera.act({
   topic: 'sql-store',
@@ -123,8 +130,9 @@ hemera.act({
 }, function(err, resp) ...)
 ```
 
--------------------------------------------------------
-### findById
+---
+
+## findById
 
 The pattern is:
 
@@ -134,6 +142,7 @@ The pattern is:
 * `id`: the primary identifier of your entity `string` or `number`
 
 Example:
+
 ```js
 hemera.act({
   topic: 'sql-store',
@@ -143,8 +152,9 @@ hemera.act({
 }, function(err, resp) ...)
 ```
 
--------------------------------------------------------
-### remove
+---
+
+## remove
 
 The pattern is:
 
@@ -154,6 +164,7 @@ The pattern is:
 * `query`: the search criteria `object`
 
 Example:
+
 ```js
 hemera.act({
   topic: 'sql-store',
@@ -163,8 +174,9 @@ hemera.act({
 }, function(err, resp) ...)
 ```
 
--------------------------------------------------------
-### removeById
+---
+
+## removeById
 
 The pattern is:
 
@@ -174,6 +186,7 @@ The pattern is:
 * `id`: the primary identifier of your entity `string` or `number`
 
 Example:
+
 ```js
 hemera.act({
   topic: 'sql-store',
@@ -183,8 +196,9 @@ hemera.act({
 }, function(err, resp) ...)
 ```
 
--------------------------------------------------------
-### replace
+---
+
+## replace
 
 The pattern is:
 
@@ -195,6 +209,7 @@ The pattern is:
 * `query`: the search criteria `object`
 
 Example:
+
 ```js
 hemera.act({
   topic: 'sql-store',
@@ -207,8 +222,9 @@ hemera.act({
 }, function(err, resp) ...)
 ```
 
--------------------------------------------------------
-### replaceById
+---
+
+## replaceById
 
 The pattern is:
 
@@ -219,6 +235,7 @@ The pattern is:
 * `id`: the primary identifier of your entity `string` or `number`
 
 Example:
+
 ```js
 hemera.act({
   topic: 'sql-store',
@@ -231,8 +248,9 @@ hemera.act({
 }, function(err, resp) ...)
 ```
 
--------------------------------------------------------
-### exists
+---
+
+## exists
 
 The pattern is:
 
@@ -242,6 +260,7 @@ The pattern is:
 * `query`: the search criteria `object`
 
 Example:
+
 ```js
 hemera.act({
   topic: 'sql-store',
@@ -251,8 +270,9 @@ hemera.act({
 }, function(err, resp) ...)
 ```
 
--------------------------------------------------------
-### count
+---
+
+## count
 
 The pattern is:
 
@@ -262,6 +282,7 @@ The pattern is:
 * `query`: the search criteria `object`
 
 Example:
+
 ```js
 hemera.act({
   topic: 'sql-store',
@@ -270,4 +291,3 @@ hemera.act({
   query: {}
 }, function(err, resp) ...)
 ```
-

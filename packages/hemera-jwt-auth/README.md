@@ -6,6 +6,7 @@ Granting and authenticating solution with JWT for Hemera
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
 ## Install
+
 ```
 npm i hemera-jwt-auth --save
 ```
@@ -70,5 +71,8 @@ hemera.ready(() => {
     console.log(resp)
   })
 })
-
 ```
+
+## Plugin decorators
+
+* .jwtErrors

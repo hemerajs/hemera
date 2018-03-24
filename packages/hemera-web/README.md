@@ -1,16 +1,17 @@
 # Hemera-web
+
 Http route mapping for Hemera microservices. Based on [Express 4](https://github.com/expressjs/express)
 
-- Depends on minimalist and new web framework Express 4
-- Respect `Body` and `Query` payload as pattern
-- Provide a REST like interface `/:topic/:cmd` to Hemera
-- Transport small binary or text data in pattern
-- Returns correct Hemera errors without stack traces
+* Depends on minimalist and new web framework Express 4
+* Respect `Body` and `Query` payload as pattern
+* Provide a REST like interface `/:topic/:cmd` to Hemera
+* Transport small binary or text data in pattern
+* Returns correct Hemera errors without stack traces
 
 [![npm](https://img.shields.io/npm/v/hemera-web.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-web)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
-#### Example
+## Example
 
 ```js
 hemera.use(hemeraWeb, {
@@ -20,32 +21,38 @@ hemera.use(hemeraWeb, {
 })
 
 hemera.ready(() => {
-  hemera.add({
-    topic: 'math',
-    cmd: 'add'
-  }, (req, cb) => {
-    cb(null, parseInt(req.a) + parseInt(req.b))
-  })
+  hemera.add(
+    {
+      topic: 'math',
+      cmd: 'add'
+    },
+    (req, cb) => {
+      cb(null, parseInt(req.a) + parseInt(req.b))
+    }
+  )
 })
 ```
 
-### How to execute a server method ?
+## How to execute a server method ?
 
 You can transport the pattern in different ways:
 
-- As Query parameters
-- As Payload from type JSON
-- As Payload from type x-www-form-urlencoded
-- `topic` and `cmd` can be declared in url parameters
+* As Query parameters
+* As Payload from type JSON
+* As Payload from type x-www-form-urlencoded
+* `topic` and `cmd` can be declared in url parameters
 
-### Examples
+## Examples
 
-- GET Request
+* GET Request
+
 ```
 http://localhost:3000?topic=math&cmd=add&a=1&b=2
 http://localhost:3000/math/add?a=1&b=2
 ```
-- POST Request
+
+* POST Request
+
 ```
 http://localhost:3000?topic=math&cmd=add
 http://localhost:3000/math/add
@@ -56,16 +63,20 @@ Body:
   "b": 2
 }
 ```
-- application/x-www-form-urlencoded
+
+* application/x-www-form-urlencoded
+
 ```
 http://localhost:3000?topic=math&cmd=add
 http://localhost:3000/math/add
 
 Payload: a=1&bd=2
 ```
-### Define default pattern
+
+## Define default pattern
 
 In Hemera:
+
 ```js
 const hemera = new Hemera(nats)
 hemera.use(hemeraWeb, {
@@ -79,23 +90,30 @@ hemera.use(hemeraWeb, {
 GET - http://localhost:3000?cmd=add&a=1&b=2
 ```
 
-### Error handling
+## Error handling
 
 In Hemera:
+
 ```js
 const CustomError = hemera.createError('CustomError')
 
-hemera.add({
-  topic: 'math',
-  cmd: 'add'
-}, function (req, cb) {
-  const error = new CustomError()
-  error.statusCode = 404
-  cb(error)
-})
+hemera.add(
+  {
+    topic: 'math',
+    cmd: 'add'
+  },
+  function(req, cb) {
+    const error = new CustomError()
+    error.statusCode = 404
+    cb(error)
+  }
+)
 ```
-#### Results in
-_Status Code_: __404__ - _default (500)_
+
+### Results in
+
+_Status Code_: **404** - _default (500)_
+
 ```json
 {
   "error": {
@@ -113,9 +131,10 @@ _Status Code_: __404__ - _default (500)_
 }
 ```
 
-### Show error stack for debugging
+## Show error stack for debugging
 
 In Hemera:
+
 ```js
 const hemera = new Hemera(nats)
 hemera.use(hemeraWeb, {
@@ -125,7 +144,7 @@ hemera.use(hemeraWeb, {
 })
 ```
 
-### Access to express web framework
+## Access to express web framework
 
 ```js
 const hemera = new Hemera(nats)
@@ -140,3 +159,6 @@ hemera.ready(() => {
 })
 ```
 
+## Plugin decorators
+
+* .express

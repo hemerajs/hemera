@@ -11,8 +11,8 @@ This is a plugin to use [Zipkin](http://zipkin.io/) with Hemera.
 
 ## Tracking level
 
-1. Per subscription: Each topic represents a subscription in NATS and therefore handled as own service. The hemera `tag` indentifiy the server instance.
-2. Per hemera instance: Each hemera instance represents the whole service. The service name can be configured by the `tag` option.
+1.  Per subscription: Each topic represents a subscription in NATS and therefore handled as own service. The hemera `tag` indentifiy the server instance.
+2.  Per hemera instance: Each hemera instance represents the whole service. The service name can be configured by the `tag` option.
 
 ## Install
 
@@ -21,10 +21,13 @@ npm i hemera-zipkin --save
 ```
 
 ## Getting started
+
 Run zipkin in docker
+
 ```bash
 $ docker-compose up
 ```
+
 You can then navigate to http://localhost:9411 to access the Zipkin UI.
 
 ## Usage
@@ -47,18 +50,22 @@ hemera.use(hemeraZipkin, {
 ```
 
 ## Add contextual data
+
 Look in the [documentation](https://hemerajs.github.io/hemera/1_delegate.html) to learn more about delegate in hemera.
 
 ```js
-hemera.add({
-  topic: 'profile',
-  cmd: 'get'
-}, function (req, cb) {
-  this.delegate$.query = 'SELECT FROM User;'
-  cb(null, true)
-})
+hemera.add(
+  {
+    topic: 'profile',
+    cmd: 'get'
+  },
+  function(req, cb) {
+    this.delegate$.query = 'SELECT FROM User;'
+    cb(null, true)
+  }
+)
 ```
 
 ## Advanced example
-[here](/examples/monitoring/zipkin.js)
 
+[here](/examples/monitoring/zipkin.js)
