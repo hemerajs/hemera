@@ -7,6 +7,7 @@ sidebar_label: Introduction
 Hemera won't catch any thrown error expect you are using async/await. It's up to the developer to handle business specific issues. Ensure that your process is restarted e.g with a process-manager like [PM2](http://pm2.keymetrics.io/).
 
 This will crash your application:
+
 ```js
 hemera.add(
   {
@@ -105,6 +106,7 @@ We support error-first-callback style as well as promise and async / await. Use 
   ```
 
 * Async / Await
+
   ```js
   hemera.add(
     {
@@ -116,3 +118,7 @@ We support error-first-callback style as well as promise and async / await. Use 
     }
   )
   ```
+
+  ## Response error
+
+  An response error must be derivated from type `Error` otherwise it will be send as successful payload. An `error` log message is logged when the interface is used incorrectly.
