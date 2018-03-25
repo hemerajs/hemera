@@ -79,11 +79,7 @@ declare namespace Hemera {
 
   type ActHandler = (this: Hemera, error: Error, response: ClientResult) => void
 
-  interface Plugin {
-    instance: Hemera
-    opts: object
-    callback: (err?: Error) => void
-  }
+  type Plugin = Function
 
   interface AddDefinition {
     schema: object
@@ -197,13 +193,24 @@ declare class Hemera {
   add(pattern: string | Hemera.ServerPattern): Hemera.AddDefinition
 
   // plugin
-  use(plugin: Hemera.Plugin, options?: object): void
+  use(
+    plugin: (
+      instance: Hemera,
+      opts: object,
+      callback: (err?: Error) => void
+    ) => void,
+    options?: object
+  ): void
+  use(
+    plugin: (instance: Hemera, opts: object) => Promise<void>,
+    options?: object
+  ): void
 
   remove(topic: string | number, maxMessages: number): boolean
   list(Pattern: any, options: any): Array<Hemera.AddDefinition>
   fatal(): void
 
-  close(closeListener: () => void): void
+  close(closeListener: (error?: Error) => void): void
   close(): Promise<void>
 
   decorate(name: string, decoration: any, dependencies?: Array<string>): Hemera
