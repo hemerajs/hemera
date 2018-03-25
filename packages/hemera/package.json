@@ -38,6 +38,10 @@
     "node": ">=6"
   },
   "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^9.6.0",
+    "@types/pino": "^4.7.1"
+  },
   "dependencies": {
     "avvio": "5.4.x",
     "bloomrun": "4.1.x",
@@ -52,5 +56,6 @@
   },
   "peerDependencies": {
     "nats": "0.8.x"
-  }
+  },
+  "typings": "./index.d.ts"
 }

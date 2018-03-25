@@ -19,7 +19,6 @@ const myPlugin = Hp(
     done()
   },
   {
-    hemera: '>=3',
     name: 'myPlugin',
     options: {},
     dependencies: []
