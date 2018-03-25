@@ -93,8 +93,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Inspiration
 
-[Seneca](https://github.com/senecajs/seneca) - Pattern matching.
-[Fastify](https://github.com/fastify/fastify) - Plugin system.
+* [Seneca](https://github.com/senecajs/seneca) - Pattern matching.
+* [Fastify](https://github.com/fastify/fastify) - Plugin system.
 
 ## Professional services
 Hemera is free for any use (MIT license). If you are in production don't miss the professional support service. For courses and training send me an email to [deusdustin@gmail.com](deusdustin@gmail.com) or contact me private on <a href="https://gitter.im/hemerajs/hemera"><img src="https://camo.githubusercontent.com/e7536e01bc9c129b974e11c26b174f54e50c6d69/68747470733a2f2f696d672e736869656c64732e696f2f6769747465722f726f6f6d2f6e776a732f6e772e6a732e7376673f7374796c653d666c61742d737175617265266d61784167653d33363030" alt="Gitter" data-canonical-src="https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=3600" style="max-width:100%;"></a>
