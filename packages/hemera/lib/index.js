@@ -189,6 +189,8 @@ class Hemera extends EventEmitter {
         // due to the fact that each plugin has his own scope, we have to
         // extend the prototype
         proto[prop] = value
+
+        return this
       }
 
       return instance
@@ -246,6 +248,8 @@ class Hemera extends EventEmitter {
       throw new Errors.HemeraError(`IdGenerator must be a function`)
     }
     this._idGenerator = fn
+
+    return this
   }
   /**
    *
@@ -256,6 +260,8 @@ class Hemera extends EventEmitter {
       throw new Errors.HemeraError(`ServerDecoder must be a function`)
     }
     this._serverDecoder = fn
+
+    return this
   }
 
   /**
@@ -267,6 +273,8 @@ class Hemera extends EventEmitter {
       throw new Errors.HemeraError(`ServerEncoder must be a function`)
     }
     this._serverEncoder = fn
+
+    return this
   }
   /**
    *
@@ -277,6 +285,8 @@ class Hemera extends EventEmitter {
       throw new Errors.HemeraError(`ClientDecoder must be a function`)
     }
     this._clientDecoder = fn
+
+    return this
   }
 
   /**
@@ -288,6 +298,8 @@ class Hemera extends EventEmitter {
       throw new Errors.HemeraError(`ClientEncoder must be a function`)
     }
     this._clientEncoder = fn
+
+    return this
   }
 
   /**
@@ -428,6 +440,8 @@ class Hemera extends EventEmitter {
     } else {
       this._extensionManager.add(type, handler)
     }
+
+    return this
   }
 
   /**
@@ -439,6 +453,8 @@ class Hemera extends EventEmitter {
       throw new Errors.HemeraError('SchemaCompiler handler must be a function')
     }
     this._schemaCompiler = fn
+
+    return this
   }
 
   /**
@@ -480,6 +496,8 @@ class Hemera extends EventEmitter {
     }
 
     this[prop] = value
+
+    return this
   }
 
   /**
