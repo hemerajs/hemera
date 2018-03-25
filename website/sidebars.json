@@ -28,7 +28,7 @@
       "protection"
     ],
     "Testing": ["integration", "unit"],
-    "Tooling": ["monitoring", "cli"],
+    "Tooling": ["monitoring", "cli", "typescript"],
     "Advanced": [
       "docker",
       "graphql",
