@@ -7,23 +7,22 @@ const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
-hemera.ext('onServerPreRequest', async () => {
-  hemera.log.info('onServerPreRequest')
-})
-
-hemera.add(
-  {
-    topic: 'math',
-    cmd: 'add'
-  },
-  async function(req) {
-    return req.a + req.b
-  }
-)
-
 const start = async () => {
   try {
     await hemera.ready()
+    hemera.ext('onServerPreRequest', async () => {
+      hemera.log.info('onServerPreRequest')
+    })
+
+    hemera.add(
+      {
+        topic: 'math',
+        cmd: 'add'
+      },
+      async function(req) {
+        return req.a + req.b
+      }
+    )
     hemera.log.info(`service listening`)
     // start request
     const out = await hemera.act({

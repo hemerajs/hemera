@@ -7,19 +7,18 @@ const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
-hemera.add(
-  {
-    topic: 'math',
-    cmd: 'add'
-  },
-  async function(req) {
-    return req.a + req.b
-  }
-)
-
 const start = async () => {
   try {
     await hemera.ready()
+    hemera.add(
+      {
+        topic: 'math',
+        cmd: 'add'
+      },
+      async function(req) {
+        return req.a + req.b
+      }
+    )
     hemera.log.info(`service listening`)
     // start request
     let out = await hemera.act({
