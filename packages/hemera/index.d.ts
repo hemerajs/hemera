@@ -186,13 +186,13 @@ declare class Hemera {
     pattern: string | Hemera.ServerPattern,
     handler: (
       this: Hemera,
-      request: ServerPattern,
+      request: Hemera.ServerPattern,
       callback: (error?: Error) => void
     ) => void
   ): Hemera.AddDefinition
   add(
     pattern: string | Hemera.ServerPattern,
-    handler: (this: Hemera, request: ServerPattern) => Promise<any>
+    handler: (this: Hemera, request: Hemera.ServerPattern) => Promise<any>
   ): Hemera.AddDefinition
   add(pattern: string | Hemera.ServerPattern): Hemera.AddDefinition
 
@@ -348,7 +348,7 @@ declare class Hemera {
   topics: { [key: string]: number }
   transport: any
 
-  matchedAction: Function
+  matchedAction: Hemera.AddDefinition
 
   context$: any
   meta$: any
