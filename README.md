@@ -15,7 +15,7 @@
 
 <p align="center">
 A <a href="http://nodejs.org/">Node.js</a> microservices toolkit for the <a href="https://nats.io">NATS messaging system</a>
-<br>Run on <a href="https://runkit.com/starptech/hemera-example">runkit.com</a>
+<br>Run on <a href="https://repl.it/@StarpTech/Hemera-5">repl.it</a>
 </p>
 
 - __Node:__ v6+
