@@ -116,6 +116,9 @@ class Hemera extends EventEmitter {
     // start tracking process stats
     this._heavy.start()
 
+    // when a route for a pattern could not be found
+    this._notFoundPattern = null
+
     this._onAddHandlers = []
 
     this._extensionManager = new ExtensionManager()
@@ -303,6 +306,21 @@ class Hemera extends EventEmitter {
   }
 
   /**
+   *
+   * @param {*} fn
+   */
+  setNotFoundPattern(pattern) {
+    // check for use quick syntax for JSON objects
+    if (typeof pattern === 'string') {
+      pattern = TinySonic(pattern)
+    }
+
+    this._notFoundPattern = pattern
+
+    return this
+  }
+
+  /**
    * Return the bloomrun instance
    *
    * @readonly
@@ -344,6 +362,16 @@ class Hemera extends EventEmitter {
    */
   get topics() {
     return this._topics
+  }
+
+  /**
+   *
+   * @readonly
+   *
+   * @memberOf Hemera
+   */
+  get notFoundPattern() {
+    return this._notFoundPattern
   }
 
   /**

@@ -8,22 +8,25 @@ const hemera = new Hemera(nats, {
 })
 
 hemera.ready(() => {
+  hemera.setNotFoundPattern({
+    topic: 'math',
+    cmd: 'notFound'
+  })
+
   hemera.add(
     {
       topic: 'math',
-      cmd: 'add'
+      cmd: 'notFound'
     },
     (req, cb) => {
-      cb(null, req.a + req.b)
+      cb(null, true)
     }
   )
 
   hemera.act(
     {
       topic: 'math',
-      cmd: 'add',
-      a: 1,
-      b: 20
+      cmd: 'dedede'
     },
     function(err, resp) {
       if (err) {

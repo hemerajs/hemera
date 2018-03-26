@@ -1,18 +1,23 @@
 ---
 id: plugin
 title: Plugin
-sidebar_label: Create a plugin
+sidebar_label: Plugin
 ---
 
 Hemera's plugin system based on the powerful [Avvio](https://github.com/mcollina/avvio) package. Avvio is fully reentrant and graph-based. You can load components/plugins within plugins, and be still sure that things will happen in the right order.
 
+> Plugins should encourage you to encapsulate a domain specific context in a reusable piece of software. Great practice is to seperate plugins by a different topic name.
+
 ## Plugin helper library
+
 Before we get into the plugin system of hemera you have to install a package called [`hemera-plugin`](https://github.com/hemerajs/hemera/tree/master/packages/hemera-plugin). This package can do some things for you:
 
-- Check the bare-minimum version of Hemera
-- Provide consistent interface to register plugins even when the api is changed
-- Pass metadata to intialize your plugin with correct dependencies, default options and name
-- Skip the creation of a seperate plugins scope
+* Check the bare-minimum version of Hemera
+* Provide consistent interface to register plugins even when the api is changed
+* Pass metadata to intialize your plugin with correct dependencies, default options and name
+* Skip the creation of a seperate plugins scope
+
+## Create a plugin
 
 ```js
 const hp = require('hemera-plugin')
@@ -59,7 +64,7 @@ hemera.use(myPlugin)
 
 ### Decorators
 
-Decorators are something special. Even if you create a plugin scope you can decorate the parent scope as well as child plugins. Decorators are primarly used to expose data to other plugins.
+Decorators are something special. Even if you create a plugin scope you can decorate the parent scope as well as child plugins. Decorators are primarly used to expose data or functionality to other plugins.
 
 ```js
 const hp = require('hemera-plugin')
@@ -103,10 +108,11 @@ hemera.use(myPlugin)
 
 ### Scoped sensitive settings
 
-- [Request/Response Extensions](extension.md#server-client-lifecycle)
-- [Decorators](decorator.md)
-- [Schema Compilers](payload-validation.md#use-your-custom-validator)
-- [Codecs](codec.md)
+* [Request/Response Extensions](extension.md#server-client-lifecycle)
+* [Decorators](decorator.md)
+* [Schema Compilers](payload-validation.md#use-your-custom-validator)
+* [Codecs](codec.md)
+* [Not found pattern](notfound-pattern.md)
 
 ## Add plugin metadata
 

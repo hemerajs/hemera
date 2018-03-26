@@ -21,6 +21,7 @@
     "Error handling": [
       "error-handling",
       "error-serialization",
+      "notfoundPattern",
       "timeout",
       "fatal",
       "propagation",

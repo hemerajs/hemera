@@ -343,6 +343,8 @@ declare class Hemera {
   setSchemaCompiler(compilerFunction: (schema: Object) => Function): Hemera
   setSchemaCompiler(compilerFunction: (schema: Object) => Promise<any>): Hemera
 
+  setNotFoundPattern(pattern: string | Hemera.ServerPattern | null)
+
   setIdGenerator(generatorFunction: () => string): Hemera
   checkPluginDependencies(plugin: Hemera.Plugin)
 
@@ -354,6 +356,7 @@ declare class Hemera {
   config: Hemera.Config
   topics: { [key: string]: number }
   transport: any
+  notFoundPattern: Hemera.ServerPattern
 
   matchedAction: Hemera.AddDefinition
 

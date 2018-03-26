@@ -57,6 +57,8 @@
     "Monitoring": "Monitoring",
     "nats-limit": "NATS limits",
     "NATS characteristics": "NATS characteristics",
+    "notfoundPattern": "Not found pattern",
+    "Not found pattern": "Not found pattern",
     "pattern-matching": "Pattern matching",
     "Pattern matching": "Pattern matching",
     "payload-validation": "Payload validation",

@@ -166,6 +166,10 @@ function onServerPreRequest(context, req, res, next) {
   context._pattern = context._request.payload.pattern
   // find matched action
   context.matchedAction = context._router.lookup(context._pattern)
+  // fallback to notFound action when defined
+  if (!context.matchedAction && context._notFoundPattern) {
+    context.matchedAction = context._router.lookup(context._notFoundPattern)
+  }
 
   context.emit('serverPreRequest', context)
 
@@ -177,6 +181,7 @@ function onServerPreRequestSchemaValidation(context, req, res, next) {
     const schema = context.matchedAction.schema
     const ret = context._schemaCompiler(schema)(req.payload.pattern)
     if (ret) {
+      // promise
       if (typeof ret.then === 'function') {
         ret
           .then(modifiedPattern => {
