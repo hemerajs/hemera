@@ -1,0 +1,60 @@
+{
+  "version-5.0.0-docs": {
+    "Introduction": [
+      "version-5.0.0-what-is-hemera",
+      "version-5.0.0-installation"
+    ],
+    "Basics": [
+      "version-5.0.0-request-reply",
+      "version-5.0.0-pattern-matching",
+      "version-5.0.0-publish-susbcribe",
+      "version-5.0.0-payload-validation",
+      "version-5.0.0-middleware",
+      "version-5.0.0-extension",
+      "version-5.0.0-logging",
+      "version-5.0.0-decorator",
+      "version-5.0.0-metadata",
+      "version-5.0.0-context",
+      "version-5.0.0-delegate",
+      "version-5.0.0-event",
+      "version-5.0.0-codec",
+      "version-5.0.0-config"
+    ],
+    "Plugins": [
+      "version-5.0.0-ecosystem",
+      "version-5.0.0-plugin"
+    ],
+    "Error handling": [
+      "version-5.0.0-error-handling",
+      "version-5.0.0-error-serialization",
+      "version-5.0.0-notfoundPattern",
+      "version-5.0.0-timeout",
+      "version-5.0.0-fatal",
+      "version-5.0.0-propagation",
+      "version-5.0.0-error-event",
+      "version-5.0.0-protection"
+    ],
+    "Testing": [
+      "version-5.0.0-integration",
+      "version-5.0.0-unit"
+    ],
+    "Tooling": [
+      "version-5.0.0-monitoring",
+      "version-5.0.0-cli",
+      "version-5.0.0-typescript"
+    ],
+    "Advanced": [
+      "version-5.0.0-docker",
+      "version-5.0.0-graphql",
+      "version-5.0.0-bridge",
+      "version-5.0.0-clustering",
+      "version-5.0.0-api-versioning",
+      "version-5.0.0-nats-limit",
+      "version-5.0.0-framework-integrations",
+      "version-5.0.0-hemera-vs-seneca"
+    ],
+    "Api": [
+      "version-5.0.0-reference"
+    ]
+  }
+}
