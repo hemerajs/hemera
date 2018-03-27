@@ -1,3 +1,4 @@
+/* eslint node/no-unsupported-features: 0 */
 'use strict'
 
 describe('Async / Await support', function() {

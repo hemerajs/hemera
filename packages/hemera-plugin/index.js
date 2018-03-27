@@ -49,6 +49,7 @@ function checkVersion(version) {
 
   var hemeraVersion
   try {
+    /* eslint node/no-unpublished-require: 0 */
     hemeraVersion = require('nats-hemera/package.json').version
   } catch (_) {
     console.info('hemera not found, proceeding anyway')

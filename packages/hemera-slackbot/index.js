@@ -53,6 +53,7 @@ function hemeraSlackbot(hemera, opts, done) {
         params: Joi.array().default([])
       },
       function(req, reply) {
+        // eslint-disable-next-line promise/catch-or-return
         bot[method]
           .apply(bot, req.params)
           .then(resp => reply(null, resp))

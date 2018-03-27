@@ -97,6 +97,9 @@ describe('Publish / Subscribe', function() {
           expect(a.data).to.be.undefined()
           hemera.close(done)
         })
+        .catch(err => {
+          expect(err).to.be.not.exists()
+        })
     })
   })
 

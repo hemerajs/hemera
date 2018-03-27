@@ -866,44 +866,67 @@ class Hemera extends EventEmitter {
       return
     }
 
-    let action = self.matchedAction.action.bind(self)
+    // action middleware
+    self.matchedAction.run(self._request, self.reply, err =>
+      self._afterMiddlewareHandler(err)
+    )
+  }
 
-    // add middleware
-    self.matchedAction.run(self._request, self.reply, err => {
-      if (err) {
-        const internalError = new Errors.HemeraError(
-          'Action middleware',
-          self.errorDetails
-        ).causedBy(err)
-        self.log.error(internalError)
-        self.emit('serverResponseError', err)
-        self.reply.send(err)
-        return
-      }
+  /**
+   *
+   *
+   * @param {any} err
+   * @memberof Hemera
+   */
+  _afterMiddlewareHandler(err) {
+    const self = this
 
-      // if request type is 'pubsub' we don't have to reply back
-      if (self._request.payload.request.type === 'pubsub') {
-        action(self._request.payload.pattern)
-        self.reply.send()
-        return
-      }
+    if (err) {
+      const internalError = new Errors.HemeraError(
+        'Action middleware',
+        self.errorDetails
+      ).causedBy(err)
+      self.log.error(internalError)
+      self.emit('serverResponseError', err)
+      self.reply.send(err)
+      return
+    }
 
-      const result = action(self._request.payload.pattern, (err, result) => {
+    const result = self._processServerAction()
+
+    const isPromise = result && typeof result.then === 'function'
+    if (isPromise) {
+      result.then(x => self.reply.send(x)).catch(err => {
         if (err) {
           self._isValidError(err)
         }
-        self.reply.send(err || result)
+        self.reply.send(err)
       })
+    }
+  }
 
-      const isPromise = result && typeof result.then === 'function'
-      if (isPromise) {
-        result.then(x => self.reply.send(x)).catch(err => {
-          if (err) {
-            self._isValidError(err)
-          }
-          self.reply.send(err)
-        })
+  /**
+   *
+   *
+   * @returns
+   * @memberof Hemera
+   */
+  _processServerAction() {
+    const self = this
+    let action = self.matchedAction.action.bind(self)
+
+    // if request type is 'pubsub' we don't have to reply back
+    if (self._request.payload.request.type === 'pubsub') {
+      action(self._request.payload.pattern)
+      self.reply.send()
+      return
+    }
+
+    return action(self._request.payload.pattern, (err, result) => {
+      if (err) {
+        self._isValidError(err)
       }
+      self.reply.send(err || result)
     })
   }
 
