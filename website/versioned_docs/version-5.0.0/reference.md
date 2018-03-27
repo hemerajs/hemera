@@ -34,101 +34,111 @@ hemera.setIdGenerator(fn)
 
 ### Hemera.setSchemaCompiler()
 
+Update the current schema compiler.
+
 ```js
 hemera.setSchemaCompiler(fn)
 ```
 
-Update the current schema compiler.
-
 ### Hemera.setServerDecoder()
+
+Update the server decoder.
 
 ```js
 hemera.setServerDecoder(fn)
 ```
 
-Update the server decoder.
-
 ### Hemera.setServerEncoder()
+
+Update the server encoder.
 
 ```js
 hemera.setServerEncoder(fn)
 ```
 
-Update the server encoder.
-
 ### Hemera.setClientDecoder()
+
+Update the client decoder.
 
 ```js
 hemera.setClientDecoder(fn)
 ```
 
-Update the client decoder.
-
 ### Hemera.setClientEncoder()
+
+Update the client encoder.
 
 ```js
 hemera.setClientEncoder(fn)
 ```
 
-Update the client encoder.
+### Hemera.setNotFoundPattern()
+
+Update the notFound Pattern.
+
+```js
+hemera.setNotFoundPattern(fn)
+```
 
 ### Hemera.checkPluginDependencies()
+
+Verifies the plugin dependecies are installed.
 
 ```js
 hemera.checkPluginDependencies()
 ```
 
-Verifies the plugin dependecies are installed.
-
 ### Hemera.hasDecorator()
+
+Return a boolean whether the decorator is available.
 
 ```js
 hemera.hasDecorator(string)
 ```
 
-Return a boolean whether the decorator is available.
-
 ### Hemera.decorate()
+
+Decorate the current instance with the value.
 
 ```js
 hemera.decorate(name, value)
 ```
 
-Decorate the current instance with the value.
-
 ### Hemera.use()
+
+Register a plugin.
 
 ```js
 hemera.use(plugin, options)
 ```
 
-Register a plugin.
-
 ### Hemera.createError()
+
+Create a new native error which can be serialized and deserialized across processe.
 
 ```js
 hemera.createError(name)
 ```
 
-Create a new native error which can be serialized and deserialized across processe.
-
 ### Hemera.fatal()
+
+Gracefully shutdown hemera and exit the process with `1`
 
 ```js
 hemera.fatal()
 ```
 
-Gracefully shutdown hemera and exit the process with `1`
-
 ### Hemera.ready()
+
+Bootstrap hemera and all plugins.
 
 ```js
 hemera.ready(cb)
 ```
 
-Bootstrap hemera and all plugins.
-
 ### Hemera.subscribe()
+
+Create a new server action.
 
 ```js
 hemera.subscribe(pattern, cb)
@@ -136,70 +146,80 @@ hemera.subscribe(pattern, cb)
 
 ### Hemera.act()
 
+Start a new request.
+
 ```js
 hemera.act(pattern, cb)
 ```
 
 ### Hemera.remove()
 
+Removes a single subscription by id or a whole service by topic name.
+
 ```js
 hemera.remove(topic)
 ```
 
-Removes a single subscription by id or a whole service by topic name.
-
 ### Hemera.list()
+
+Returns all registered server actions.
 
 ```js
 hemera.list()
 ```
 
-Returns all registered server actions.
-
 ### Hemera.close()
+
+Gracefully shutdown hemera.
 
 ```js
 hemera.close()
 ```
 
-Gracefully shutdown hemera.
-
 ### Hemera.router
+
+Returns the `bloomrun` instance.
 
 ```js
 hemera.router
 ```
 
-Returns the `bloomrun` instance.
-
 ### Hemera.load
+
+Returns the `load` instance.
 
 ```js
 hemera.load
 ```
 
-Returns the `load` instance.
-
 ### Hemera.transport
+
+Returns the abstract transport implementation for NATS.
 
 ```js
 hemera.transport
 ```
 
-Returns the abstract transport implementation for NATS.
-
 ### Hemera.topics
+
+Returns all registered topcis.
 
 ```js
 hemera.topics
 ```
 
-Returns all registered topcis.
-
 ### Hemera.config
+
+Returns the hemera configuration.
 
 ```js
 hemera.config
 ```
 
-Returns the hemera configuration.
+### Hemera.notFoundPattern
+
+Returns the notFound Pattern.
+
+```js
+hemera.notFoundPattern
+```

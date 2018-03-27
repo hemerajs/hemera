@@ -44,6 +44,10 @@ const siteConfig = {
     { doc: 'what-is-hemera', label: 'Docs' },
     { page: 'help', label: 'Help' },
     { blog: true, label: 'Blog' },
+    {
+      href: 'https://github.com/hemerajs/hemera',
+      label: 'GitHub'
+    },
     { search: true }
   ],
   users,
