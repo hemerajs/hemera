@@ -5,11 +5,13 @@ sidebar_label: Payload validation
 original_id: payload-validation
 ---
 
-You can use different validators in Hemera. A very popular and easy readable validator is [hemera-joi](https://github.com/hemerajs/hemera/tree/master/packages/hemera-joi).
+You can use different validators in Hemera. A very popular and easy readable validator is [Joi](https://github.com/hapijs/joi).
+Just install the [`hemera-joi`](https://github.com/hemerajs/hemera/tree/master/packages/hemera-joi) package.
 
 ## Joi validator
 
 ```js
+const Joi = hemera.joi
 hemera.add(
   {
     topic: 'math',
@@ -23,18 +25,23 @@ hemera.add(
 )
 ```
 
-## Error handling
+## JSON Schema
 
-We expect a number instead a string.
+You can also use [JSON-Schema](http://json-schema.org/). Just install the [`hemera-ajv`](https://github.com/hemerajs/hemera/tree/master/packages/hemera-ajv) package.
 
 ```js
-hemera.act(
+hemera.add(
   {
     topic: 'math',
     cmd: 'add',
-    a: '1'
+    properties: {
+      a: { type: 'number' },
+      b: { type: 'number' }
+    }
   },
-  function(err, resp) {}
+  (req, cb) => {
+    cb(null, req.a + req.b)
+  }
 )
 ```
 
@@ -43,9 +50,13 @@ hemera.act(
 We provide a method `setSchemaCompiler` which accepts a validation function. If you working with async validators you can return a promise as well.
 
 ```js
-  hemera.setSchemaCompiler(schema => pattern =>
-    Joi.validate(pattern, schema.joi$ || schema, {
-      allowUnknown: true
-    })
-  )
+hemera.setSchemaCompiler(schema => pattern =>
+  Joi.validate(pattern, schema.joi$ || schema, {
+    allowUnknown: true
+  })
+)
 ```
+
+## Response payload validation
+
+With the help of the `onServerPreResponse` extension you can validate or change your response payload. In the packages [`hemera-joi`](https://github.com/hemerajs/hemera/tree/master/packages/hemera-joi) or [`hemera-ajv`](https://github.com/hemerajs/hemera/tree/master/packages/hemera-ajv) you can find useful examples.
