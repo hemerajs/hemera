@@ -769,7 +769,7 @@ class Hemera extends EventEmitter {
       hemera._series(
         hemera,
         hemera._serverExtIterator,
-        hemera._extensionManager['onServerPreRequest'],
+        hemera._extensionManager.onServerPreRequest,
         err => hemera._onServerPreRequestCompleted(err)
       )
     }
@@ -825,16 +825,16 @@ class Hemera extends EventEmitter {
     // check if a handler is registered with this pattern
     if (self.matchedAction) {
       self.emit('serverPreHandler', self)
-      if (self._extensionManager['onServerPreHandler'].length) {
+      if (self._extensionManager.onServerPreHandler.length) {
         self._series(
           self,
           self._serverExtIterator,
-          self._extensionManager['onServerPreHandler'],
+          self._extensionManager.onServerPreHandler,
           err => self._onServerPreHandlerCompleted(err)
         )
-        return
+      } else {
+        self._onServerPreHandlerCompleted()
       }
-      self._onServerPreHandlerCompleted()
     } else {
       const internalError = new Errors.PatternNotFound(
         'No action found for this pattern',
@@ -1179,7 +1179,7 @@ class Hemera extends EventEmitter {
     self._series(
       self,
       self._clientExtIterator,
-      self._extensionManager['onClientPostRequest'],
+      self._extensionManager.onClientPostRequest,
       err => self._onClientPostRequestCompleted(err)
     )
   }
@@ -1267,7 +1267,7 @@ class Hemera extends EventEmitter {
       hemera._series(
         hemera,
         hemera._clientExtIterator,
-        hemera._extensionManager['onClientPreRequest'],
+        hemera._extensionManager.onClientPreRequest,
         err => hemera._onClientPreRequestCompleted(err)
       )
     } else {
@@ -1284,7 +1284,7 @@ class Hemera extends EventEmitter {
       hemera._series(
         hemera,
         hemera._clientExtIterator,
-        hemera._extensionManager['onClientPreRequest'],
+        hemera._extensionManager.onClientPreRequest,
         err => hemera._onClientPreRequestCompleted(err)
       )
 
@@ -1420,7 +1420,7 @@ class Hemera extends EventEmitter {
     self._series(
       self,
       self._clientExtIterator,
-      self._extensionManager['onClientPostRequest'],
+      self._extensionManager.onClientPostRequest,
       err => self._onClientTimeoutPostRequestCompleted(err)
     )
   }
