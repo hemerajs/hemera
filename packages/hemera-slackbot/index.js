@@ -68,17 +68,18 @@ function hemeraSlackbot(hemera, opts, done) {
     },
     function(req, reply) {
       if (subscribed) {
-        return reply(null, true)
+        reply(null, true)
+        return
       }
 
-      bot.on('message', function(data) {
+      bot.on('message', data => {
         // all ingoing events https://api.slack.com/rtm
-        reply(null, data)
+        this.reply.next(data)
       })
 
       subscribed = true
 
-      return reply(null, true)
+      reply(null, true)
     }
   )
 
