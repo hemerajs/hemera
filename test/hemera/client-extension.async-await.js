@@ -16,7 +16,7 @@ describe('Client Extension Async / Await', function() {
     server.kill()
   })
 
-  it('Should be able to reply an error in onClientPreRequest', function(done) {
+  it('Should not handle an error as rejected promise in onClientPreRequest', function(done) {
     let ext1 = Sinon.spy()
 
     const nats = require('nats').connect(authUrl)
@@ -45,16 +45,15 @@ describe('Client Extension Async / Await', function() {
           cmd: 'send'
         },
         (err, resp) => {
+          expect(err).to.be.not.exists()
           expect(ext1.called).to.be.equals(true)
-          expect(err).to.be.exists()
-          expect(err.message).to.be.equals('test')
           hemera.close(done)
         }
       )
     })
   })
 
-  it('Should be able to reject an error in onClientPreRequest', function(done) {
+  it('Should not handle an error as rejected promise in onClientPreRequest', function(done) {
     let ext1 = Sinon.spy()
 
     const nats = require('nats').connect(authUrl)
@@ -83,15 +82,15 @@ describe('Client Extension Async / Await', function() {
           cmd: 'send'
         },
         (err, resp) => {
+          expect(err).to.be.not.exists()
           expect(ext1.called).to.be.equals(true)
-          expect(err).to.be.exists()
           hemera.close(done)
         }
       )
     })
   })
 
-  it('Should be able to reply an error in onClientPostRequest', function(done) {
+  it('Should not handle an error as rejected promise in onClientPostRequest', function(done) {
     let ext1 = Sinon.spy()
 
     const nats = require('nats').connect(authUrl)
@@ -120,16 +119,15 @@ describe('Client Extension Async / Await', function() {
           cmd: 'send'
         },
         (err, resp) => {
+          expect(err).to.be.not.exists()
           expect(ext1.called).to.be.equals(true)
-          expect(err).to.be.exists()
-          expect(err.message).to.be.equals('test')
           hemera.close(done)
         }
       )
     })
   })
 
-  it('Should be able to reject an error in onClientPostRequest', function(done) {
+  it('Should not handle an error as rejected promise in onClientPostRequest', function(done) {
     let ext1 = Sinon.spy()
 
     const nats = require('nats').connect(authUrl)
@@ -158,8 +156,8 @@ describe('Client Extension Async / Await', function() {
           cmd: 'send'
         },
         (err, resp) => {
+          expect(err).to.be.not.exists()
           expect(ext1.called).to.be.equals(true)
-          expect(err).to.be.exists()
           hemera.close(done)
         }
       )

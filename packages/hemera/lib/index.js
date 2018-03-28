@@ -21,8 +21,10 @@ const TinySonic = require('tinysonic')
 const SuperError = require('super-error')
 const Joi = require('joi')
 const Avvio = require('avvio')
-const Series = require('fastseries')
 
+const runExt = require('./extensionRunner').extRunner
+const serverExtIterator = require('./extensionRunner').serverExtIterator
+const clientExtIterator = require('./extensionRunner').clientExtIterator
 const Errors = require('./errors')
 const Symbols = require('./symbols')
 const Util = require('./util')
@@ -198,8 +200,6 @@ class Hemera extends EventEmitter {
 
       return instance
     }
-
-    this._series = Series()
 
     // use own logger
     if (this._config.logger) {
@@ -684,22 +684,6 @@ class Hemera extends EventEmitter {
   /**
    *
    *
-   * @static
-   * @param {any} fn
-   * @param {any} cb
-   * @memberof Hemera
-   */
-  _serverExtIterator(fn, cb) {
-    const ret = fn(this, this._request, this.reply, cb)
-
-    if (ret && typeof ret.then === 'function') {
-      ret.then(() => cb()).catch(cb)
-    }
-  }
-
-  /**
-   *
-   *
    * @param {any} err
    * @returns
    * @memberof Hemera
@@ -766,10 +750,10 @@ class Hemera extends EventEmitter {
       // represent the matched server action "add"
       hemera.matchedAction = {}
 
-      hemera._series(
-        hemera,
-        hemera._serverExtIterator,
+      runExt(
         hemera._extensionManager.onServerPreRequest,
+        serverExtIterator,
+        hemera,
         err => hemera._onServerPreRequestCompleted(err)
       )
     }
@@ -826,10 +810,10 @@ class Hemera extends EventEmitter {
     if (self.matchedAction) {
       self.emit('serverPreHandler', self)
       if (self._extensionManager.onServerPreHandler.length) {
-        self._series(
-          self,
-          self._serverExtIterator,
+        runExt(
           self._extensionManager.onServerPreHandler,
+          serverExtIterator,
+          self,
           err => self._onServerPreHandlerCompleted(err)
         )
       } else {
@@ -1107,13 +1091,14 @@ class Hemera extends EventEmitter {
    * @memberof Hemera
    */
   _runOnAddHandler(addDefinition) {
-    this._series(
-      this,
-      (fn, cb) => {
+    runExt(
+      this._onAddHandlers,
+      (fn, state, next) => {
         fn(addDefinition)
-        cb()
+        next()
       },
-      this._onAddHandlers
+      this,
+      () => {}
     )
   }
   /**
@@ -1155,20 +1140,6 @@ class Hemera extends EventEmitter {
   /**
    *
    *
-   * @param {any} fn
-   * @param {any} cb
-   * @memberof Hemera
-   */
-  _clientExtIterator(fn, cb) {
-    const ret = fn(this, cb)
-    if (ret && typeof ret.then === 'function') {
-      ret.then(cb).catch(cb)
-    }
-  }
-
-  /**
-   *
-   *
    * @param {any} response
    *
    * @memberof Hemera
@@ -1197,10 +1168,10 @@ class Hemera extends EventEmitter {
       return
     }
 
-    self._series(
-      self,
-      self._clientExtIterator,
+    runExt(
       self._extensionManager.onClientPostRequest,
+      clientExtIterator,
+      self,
       err => self._onClientPostRequestCompleted(err)
     )
   }
@@ -1287,10 +1258,10 @@ class Hemera extends EventEmitter {
 
     if (cb) {
       hemera._execute = cb.bind(hemera)
-      hemera._series(
-        hemera,
-        hemera._clientExtIterator,
+      runExt(
         hemera._extensionManager.onClientPreRequest,
+        clientExtIterator,
+        hemera,
         err => hemera._onClientPreRequestCompleted(err)
       )
     } else {
@@ -1304,10 +1275,10 @@ class Hemera extends EventEmitter {
         }
       })
 
-      hemera._series(
-        hemera,
-        hemera._clientExtIterator,
+      runExt(
         hemera._extensionManager.onClientPreRequest,
+        clientExtIterator,
+        hemera,
         err => hemera._onClientPreRequestCompleted(err)
       )
 
@@ -1440,10 +1411,10 @@ class Hemera extends EventEmitter {
     self._response.error = error
     self.emit('clientResponseError', error)
 
-    self._series(
-      self,
-      self._clientExtIterator,
+    runExt(
       self._extensionManager.onClientPostRequest,
+      clientExtIterator,
+      self,
       err => self._onClientTimeoutPostRequestCompleted(err)
     )
   }

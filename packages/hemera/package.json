@@ -47,7 +47,6 @@
     "bloomrun": "4.1.x",
     "errio": "1.2.x",
     "fast-safe-stringify": "2.0.x",
-    "fastseries": "1.7.x",
     "heavy": "4.0.x",
     "joi": "11.1.x",
     "pino": "4.13.0",

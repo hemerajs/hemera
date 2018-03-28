@@ -11,6 +11,8 @@
 
 const Errors = require('./errors')
 const Errio = require('errio')
+const runExt = require('./extensionRunner').extRunner
+const serverExtIterator = require('./extensionRunner').serverExtIterator
 
 /**
  * @TODO rename hook to onServerSend
@@ -115,17 +117,6 @@ class Reply {
   }
   /**
    *
-   * @param {*} fn
-   * @param {*} cb
-   */
-  _preResponseIterator(fn, cb) {
-    const ret = fn(this, this._request, this.reply, cb)
-    if (ret && typeof ret.then === 'function') {
-      ret.then(() => cb()).catch(cb)
-    }
-  }
-  /**
-   *
    */
   serverPreResponse() {
     const self = this
@@ -133,10 +124,10 @@ class Reply {
     self.hemera.emit('serverPreResponse', self.hemera)
 
     if (self.hemera._extensionManager.onServerPreResponse.length) {
-      self.hemera._series(
-        self.hemera,
-        self._preResponseIterator,
+      runExt(
         self.hemera._extensionManager.onServerPreResponse,
+        serverExtIterator,
+        self.hemera,
         err => self._onServerPreResponseCompleted(err)
       )
     } else {
