@@ -65,6 +65,7 @@ class ExtensionManager {
       this._add(type, handler)
     }
   }
+
   /**
    *
    * @param {*} e
