@@ -121,7 +121,7 @@ class Reply {
   _preResponseIterator(fn, cb) {
     const ret = fn(this, this._request, this.reply, cb)
     if (ret && typeof ret.then === 'function') {
-      ret.then(cb).catch(cb)
+      ret.then(() => cb()).catch(cb)
     }
   }
   /**
