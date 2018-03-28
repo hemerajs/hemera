@@ -295,7 +295,9 @@ describe('Hemera', function() {
         })
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Pattern is required')
+        expect(err.message).to.be.equals(
+          'Pattern is required to define a server action'
+        )
         hemera.close(done)
       }
     })
@@ -319,7 +321,7 @@ describe('Hemera', function() {
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
         expect(err.message).to.be.equals(
-          'Topic must not be empty and from type string'
+          'Topic is required and must be from type string'
         )
         hemera.close(done)
       }
@@ -374,7 +376,9 @@ describe('Hemera', function() {
         hemera.act(null, (resp, cb) => {})
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('Pattern is required')
+        expect(err.message).to.be.equals(
+          'Pattern is required to start a request'
+        )
         hemera.close(done)
       }
     })
@@ -396,7 +400,7 @@ describe('Hemera', function() {
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
         expect(err.message).to.be.equals(
-          'Topic must not be empty and from type string'
+          'Topic is required and must be from type string'
         )
         hemera.close(done)
       }

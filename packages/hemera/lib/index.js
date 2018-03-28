@@ -1008,7 +1008,9 @@ class Hemera extends EventEmitter {
    */
   add(definition, cb) {
     if (!definition) {
-      let error = new Errors.HemeraError('Pattern is required')
+      let error = new Errors.HemeraError(
+        'Pattern is required to define a server action'
+      )
       this.log.error(error)
       throw error
     }
@@ -1021,13 +1023,9 @@ class Hemera extends EventEmitter {
     // topic is needed to subscribe on a subject in NATS
     if (!definition.topic) {
       let error = new Errors.HemeraError(
-        'Topic must not be empty and from type string',
-        {
-          definition,
-          app: this._config.name
-        }
+        'Topic is required and must be from type string',
+        this.errorDetails
       )
-
       this.log.error(error)
       throw error
     }
@@ -1254,7 +1252,9 @@ class Hemera extends EventEmitter {
    */
   act(pattern, cb) {
     if (!pattern) {
-      let error = new Errors.HemeraError('Pattern is required')
+      let error = new Errors.HemeraError(
+        'Pattern is required to start a request'
+      )
       this.log.error(error)
       throw error
     }
@@ -1262,6 +1262,16 @@ class Hemera extends EventEmitter {
     // check for use quick syntax for JSON objects
     if (typeof pattern === 'string') {
       pattern = TinySonic(pattern)
+    }
+
+    // topic is needed to subscribe on a subject in NATS
+    if (!pattern.topic) {
+      let error = new Errors.HemeraError(
+        'Topic is required and must be from type string',
+        this.errorDetails
+      )
+      this.log.error(error)
+      throw error
     }
 
     // create new execution context
@@ -1274,16 +1284,6 @@ class Hemera extends EventEmitter {
     hemera._isServer = false
     hemera._execute = null
     hemera.sid = 0
-
-    // topic is needed to subscribe on a subject in NATS
-    if (!pattern.topic) {
-      let error = new Errors.HemeraError(
-        'Topic must not be empty and from type string',
-        hemera.errorDetails
-      )
-      this.log.error(error)
-      throw error
-    }
 
     if (cb) {
       hemera._execute = cb.bind(hemera)
