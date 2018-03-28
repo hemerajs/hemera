@@ -9,7 +9,7 @@
  *
  */
 
-const Series = require('fastseries')
+const runExt = require('./extensionRunner').extRunner
 
 /**
  *
@@ -28,7 +28,6 @@ class Add {
     this.actMeta = addDef
     this.options = options
     this.actMeta.middleware = addDef.middleware || []
-    this.series = Series()
   }
 
   /**
@@ -80,15 +79,10 @@ class Add {
    * @memberof Add
    */
   run(request, response, cb) {
-    this.series(
-      {},
-      (fn, next) => {
-        const result = fn(request, response, next)
-        if (result && typeof result.then === 'function') {
-          result.then(x => next()).catch(err => next(err))
-        }
-      },
+    runExt(
       this.middleware,
+      (fn, state, next) => fn(request, response, next),
+      null,
       cb
     )
   }
