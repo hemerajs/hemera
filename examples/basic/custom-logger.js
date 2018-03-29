@@ -7,6 +7,21 @@ class Logger {
   info(msg) {
     console.log(msg)
   }
+  debug(msg) {
+    console.log(msg)
+  }
+  error(msg) {
+    console.error(msg)
+  }
+  warn(msg) {
+    console.warn(msg)
+  }
+  fatal(msg) {
+    console.error(msg)
+  }
+  trace(msg) {
+    console.log(msg)
+  }
 }
 
 const hemera = new Hemera(nats, {
@@ -15,6 +30,15 @@ const hemera = new Hemera(nats, {
 })
 
 hemera.ready(() => {
+  hemera.add(
+    {
+      topic: 'math',
+      cmd: 'add'
+    },
+    function(req, cb) {
+      cb(null, req.a + req.b)
+    }
+  )
   hemera.act(
     {
       topic: 'math',
@@ -23,7 +47,11 @@ hemera.ready(() => {
       b: 2
     },
     function(err, resp) {
-      this.log.info(resp, 'Result')
+      if (err) {
+        this.log.info(err)
+        return
+      }
+      this.log.info(resp)
     }
   )
 })

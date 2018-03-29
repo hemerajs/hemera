@@ -27,6 +27,20 @@ declare namespace Hemera {
     lookupBeforeAdd: boolean
   }
 
+  interface LogFn {
+    (msg: string, ...args: any[]): void
+    (obj: object, msg?: string, ...args: any[]): void
+  }
+
+  interface Logger {
+    fatal: LogFn
+    error: LogFn
+    warn: LogFn
+    info: LogFn
+    debug: LogFn
+    trace: LogFn
+  }
+
   interface Config {
     timeout?: number | 2000
     pluginTimeout?: number
@@ -36,7 +50,7 @@ declare namespace Hemera {
     logLevel?: LogLevel
     childLogger?: boolean
     maxRecursion?: number
-    logger?: pino.LoggerOptions
+    logger?: Logger
     errio?: ErrioConfig
     bloomrun?: BloomrunConfig
     load?: LoadConfig
@@ -102,16 +116,10 @@ declare namespace Hemera {
     ): AddDefinition
     // promise
     use(
-      handler: (
-        request: Request,
-        response: Response
-      ) => Promise<void>
+      handler: (request: Request, response: Response) => Promise<void>
     ): AddDefinition
     use(
-      handler: ((
-        request: Request,
-        response: Response
-      ) => Promise<void>)[]
+      handler: ((request: Request, response: Response) => Promise<void>)[]
     ): AddDefinition
     end(
       action: (
@@ -142,7 +150,7 @@ declare namespace Hemera {
   }
 
   interface Reply {
-    log: pino.Logger
+    log: pino.Logger | Logger
     payload: any
     error: Error
     sent: boolean
@@ -348,7 +356,7 @@ declare class Hemera {
   setIdGenerator(generatorFunction: () => string): Hemera
   checkPluginDependencies(plugin: Hemera.Plugin)
 
-  log: pino.Logger
+  log: pino.Logger | Hemera.Logger
 
   router: any
   load: any
