@@ -105,7 +105,55 @@ describe('Plugin interface', function() {
     })
   })
 
-  it('Should merge default plugin options', function(done) {
+  it('Should merge plugin options and respect reference values', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    let ref = { b: 2 }
+
+    // Plugin
+    let myPlugin = function(hemera, options, done) {
+      expect(options).to.be.equals({ a: 1, ref })
+      expect(ref).to.be.shallow.equals(ref)
+
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        (resp, cb) => {
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        }
+      )
+
+      done()
+    }
+
+    myPlugin[Symbol.for('name')] = 'myPlugin'
+    myPlugin[Symbol.for('options')] = { a: 1, ref }
+
+    hemera.use(myPlugin)
+
+    hemera.ready(() => {
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        (err, resp) => {
+          expect(err).to.be.not.exists()
+          expect(resp).not.to.be.equals(3)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should merge default plugin options / 2', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
