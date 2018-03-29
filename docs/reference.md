@@ -222,3 +222,27 @@ Returns the notFound Pattern.
 ```js
 hemera.notFoundPattern
 ```
+
+### Hemera.request
+
+Returns the current client/server request object.
+
+```js
+hemera.request
+```
+
+### Hemera.response
+
+Returns the current client/server response object.
+
+```js
+hemera.response
+```
+
+### Hemera.reply
+
+Returns the current server reply object.
+
+```js
+hemera.reply
+```
