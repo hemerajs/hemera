@@ -126,6 +126,57 @@ describe('Server Extension errors', function() {
     })
   })
 
+  it('Should be able to return a rejected promise', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    const spy = Sinon.spy()
+
+    let plugin = function(hemera, options, done) {
+      hemera.on('serverResponseError', function(err) {
+        expect(err).to.be.exists()
+        expect(err.name).to.be.equals('Error')
+        expect(err.message).to.be.equals('test')
+        spy()
+      })
+      hemera.ext('onServerPreRequest', function(ctx, req, res) {
+        return Promise.reject(new Error('test'))
+      })
+
+      hemera.add(
+        {
+          cmd: 'add',
+          topic: 'math'
+        },
+        (resp, cb) => {
+          cb(null, resp.a + resp.b)
+        }
+      )
+
+      done()
+    }
+
+    hemera.use(plugin)
+
+    hemera.ready(() => {
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        (err, resp) => {
+          expect(err).to.be.exists()
+          expect(err.name).to.be.equals('Error')
+          expect(err.message).to.be.equals('test')
+          expect(spy.calledOnce).to.be.equals(true)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
   it('Should be able to pass an error to onServerPreHandler', function(done) {
     const nats = require('nats').connect(authUrl)
 

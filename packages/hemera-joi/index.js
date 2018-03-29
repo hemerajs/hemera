@@ -21,8 +21,8 @@ function hemeraJoi(hemera, opts, done) {
 
   // Response validation
   hemera.ext('onServerPreResponse', (hemera, request, reply, next) => {
-    // pattern could not be found
-    if (!hemera.matchedAction) {
+    // pattern could not be found or error was already set
+    if (!hemera.matchedAction || reply.error) {
       next()
       return
     }

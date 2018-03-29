@@ -149,10 +149,12 @@ describe('Client Extension errors', function() {
           a: 1,
           b: 2
         },
-        (err, resp) => {
+        function(err, resp) {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('Error')
           expect(err.message).to.be.equals('test')
+          expect(this.request.error).to.be.exists()
+          expect(this.request.payload).to.be.not.exists()
           hemera.close(done)
         }
       )

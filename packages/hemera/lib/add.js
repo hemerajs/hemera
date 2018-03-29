@@ -58,6 +58,7 @@ class Add {
 
     return this
   }
+
   /**
    *
    *
@@ -97,6 +98,7 @@ class Add {
   get middleware() {
     return this.actMeta.middleware
   }
+
   /**
    *
    *
@@ -128,6 +130,7 @@ class Add {
   set action(action) {
     this.actMeta.action = action
   }
+
   /**
    *
    *
@@ -138,16 +141,7 @@ class Add {
   get action() {
     return this.actMeta.action
   }
-  /**
-   *
-   *
-   * @readonly
-   *
-   * @memberOf Add
-   */
-  get plugin() {
-    return this.actMeta.plugin
-  }
+
   /**
    *
    *

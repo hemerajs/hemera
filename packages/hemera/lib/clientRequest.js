@@ -31,17 +31,6 @@ class ClientRequest {
    * @type {*}
    * @memberOf ClientRequest
    */
-  get payload() {
-    return this._request.value
-  }
-
-  /**
-   *
-   *
-   * @readonly
-   * @type {*}
-   * @memberOf ClientRequest
-   */
   get error() {
     return this._request.error
   }
@@ -52,8 +41,19 @@ class ClientRequest {
    *
    * @memberOf ClientRequest
    */
-  set payload(value) {
-    this._request.value = value
+  set error(error) {
+    this._request.error = error
+  }
+
+  /**
+   *
+   *
+   * @readonly
+   * @type {*}
+   * @memberOf ClientRequest
+   */
+  get payload() {
+    return this._request.value
   }
 
   /**
@@ -62,8 +62,8 @@ class ClientRequest {
    *
    * @memberOf ClientRequest
    */
-  set error(error) {
-    this._request.error = error
+  set payload(value) {
+    this._request.value = value
   }
 }
 

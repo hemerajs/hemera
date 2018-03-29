@@ -466,4 +466,37 @@ describe('Hemera-joi response validation', function() {
       )
     })
   })
+
+  it('Should skip post validation when pattern could not be found', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    hemera.use(HemeraJoi)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        (req, cb) => {
+          cb(null, req.a + req.b)
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'sub',
+          a: 2,
+          b: 2
+        },
+        (err, resp) => {
+          expect(err).to.be.exists()
+          expect(err.name).to.be.equals('PatternNotFound')
+          hemera.close(done)
+        }
+      )
+    })
+  })
 })

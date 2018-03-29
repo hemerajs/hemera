@@ -88,29 +88,29 @@ declare namespace Hemera {
     // callback
     use(
       handler: (
-        request: ServerRequest,
-        response: ServerResponse,
+        request: Request,
+        response: Response,
         next: (err?: Error) => void
       ) => void
     ): AddDefinition
     use(
       handler: ((
-        request: ServerRequest,
-        response: ServerResponse,
+        request: Request,
+        response: Response,
         next: (err?: Error) => void
       ) => void)[]
     ): AddDefinition
     // promise
     use(
       handler: (
-        request: ServerRequest,
-        response: ServerResponse
+        request: Request,
+        response: Response
       ) => Promise<void>
     ): AddDefinition
     use(
       handler: ((
-        request: ServerRequest,
-        response: ServerResponse
+        request: Request,
+        response: Response
       ) => Promise<void>)[]
     ): AddDefinition
     end(
@@ -131,12 +131,12 @@ declare namespace Hemera {
     error: Error
   }
 
-  interface ServerRequest {
+  interface Request {
     payload: any
     error: Error
   }
 
-  interface ServerResponse {
+  interface Response {
     payload: any
     error: Error
   }
@@ -272,7 +272,7 @@ declare class Hemera {
     name: 'onServerPreHandler',
     handler: (
       instance: Hemera,
-      request: Hemera.ServerRequest,
+      request: Hemera.Request,
       reply: Hemera.Reply,
       next: (err?: Error) => void
     ) => void
@@ -281,7 +281,7 @@ declare class Hemera {
     name: 'onServerPreHandler',
     handler: (
       instance: Hemera,
-      request: Hemera.ServerRequest,
+      request: Hemera.Request,
       reply: Hemera.Reply
     ) => Promise<void>
   ): Hemera
@@ -290,7 +290,7 @@ declare class Hemera {
     name: 'onServerPreRequest',
     handler: (
       instance: Hemera,
-      request: Hemera.ServerRequest,
+      request: Hemera.Request,
       reply: Hemera.Reply,
       next: (err?: Error) => void
     ) => void
@@ -299,7 +299,7 @@ declare class Hemera {
     name: 'onServerPreRequest',
     handler: (
       instance: Hemera,
-      request: Hemera.ServerRequest,
+      request: Hemera.Request,
       reply: Hemera.Reply
     ) => Promise<void>
   ): Hemera
@@ -308,7 +308,7 @@ declare class Hemera {
     name: 'onServerPreResponse',
     handler: (
       instance: Hemera,
-      request: Hemera.ServerRequest,
+      request: Hemera.Request,
       reply: Hemera.Reply,
       next: (err?: Error) => void
     ) => void
@@ -317,7 +317,7 @@ declare class Hemera {
     name: 'onServerPreResponse',
     handler: (
       instance: Hemera,
-      request: Hemera.ServerRequest,
+      request: Hemera.Request,
       reply: Hemera.Reply
     ) => Promise<void>
   ): Hemera
@@ -359,6 +359,8 @@ declare class Hemera {
   notFoundPattern: Hemera.ServerPattern
 
   matchedAction: Hemera.AddDefinition
+  request: Hemera.Request
+  response: Hemera.Response
 
   context$: any
   meta$: any

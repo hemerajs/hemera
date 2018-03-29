@@ -1023,8 +1023,13 @@ describe('Plugin interface', function() {
       done()
     }
 
+    plugin[Symbol.for('name')] = 'myPlugin'
+
     hemera.use(plugin)
 
-    hemera.close(done)
+    hemera.ready(err => {
+      expect(err).to.not.exists()
+      hemera.close(done)
+    })
   })
 })

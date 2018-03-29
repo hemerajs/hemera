@@ -27,7 +27,7 @@ function extRunner(functions, runner, state, cb) {
 }
 
 function serverExtIterator(fn, state, next) {
-  return fn(state, state._request, state.reply, next)
+  return fn(state, state.request, state.reply, next)
 }
 
 function clientExtIterator(fn, state, next) {

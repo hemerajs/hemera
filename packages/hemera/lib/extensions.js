@@ -108,7 +108,7 @@ function onClientPreRequest(context, next) {
  */
 function onClientPostRequest(context, next) {
   let pattern = context._pattern
-  let msg = context._response.payload
+  let msg = context.response.payload
 
   // pass to act context
   if (msg) {
@@ -142,7 +142,7 @@ function onClientPostRequest(context, next) {
  * @returns
  */
 function onServerPreRequest(context, req, res, next) {
-  let m = context._serverDecoder(context._request.payload)
+  let m = context._serverDecoder(context.request.payload)
 
   if (m.error) {
     next(m.error)
@@ -159,11 +159,11 @@ function onServerPreRequest(context, req, res, next) {
     context.auth$ = {}
   }
 
-  context._request.payload = m.value
-  context._request.error = null
+  context.request.payload = m.value
+  context.request.error = null
 
   // incoming pattern
-  context._pattern = context._request.payload.pattern
+  context._pattern = context.request.payload.pattern
   // find matched action
   context.matchedAction = context._router.lookup(context._pattern)
   // fallback to notFound action when defined

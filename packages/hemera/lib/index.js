@@ -91,10 +91,10 @@ class Hemera extends EventEmitter {
     }
 
     this.matchedAction = null
+    this.request = null
+    this.response = null
 
     this._topic = ''
-    this._request = null
-    this._response = null
     this._pattern = null
     this._execute = null
     this._cleanPattern = ''
@@ -736,11 +736,11 @@ class Hemera extends EventEmitter {
       // create new execution context
       let hemera = self.createContext()
       hemera._topic = topic
-      hemera._request = new ServerRequest(request)
-      hemera._response = new ServerResponse(replyTo)
+      hemera.request = new ServerRequest(request)
+      hemera.response = new ServerResponse(replyTo)
       hemera.reply = new Reply(
-        hemera._request,
-        hemera._response,
+        hemera.request,
+        hemera.response,
         hemera,
         hemera.log
       )
@@ -851,7 +851,7 @@ class Hemera extends EventEmitter {
     }
 
     // action middleware
-    self.matchedAction.run(self._request, self.reply, err =>
+    self.matchedAction.run(self.request, self.reply, err =>
       self._afterMiddlewareHandler(err)
     )
   }
@@ -900,13 +900,13 @@ class Hemera extends EventEmitter {
     let action = self.matchedAction.action.bind(self)
 
     // if request type is 'pubsub' we don't have to reply back
-    if (self._request.payload.request.type === 'pubsub') {
-      action(self._request.payload.pattern)
+    if (self.request.payload.request.type === 'pubsub') {
+      action(self.request.payload.pattern)
       self.reply.send()
       return
     }
 
-    return action(self._request.payload.pattern, (err, result) => {
+    return action(self.request.payload.pattern, (err, result) => {
       if (err) {
         self._isValidError(err)
       }
@@ -1153,18 +1153,18 @@ class Hemera extends EventEmitter {
     }
 
     const res = self._clientDecoder(response)
-    self._response.payload = res.value
-    self._response.error = res.error
+    self.response.payload = res.value
+    self.response.error = res.error
 
     // decoding error
-    if (self._response.error) {
+    if (self.response.error) {
       let internalError = new Errors.ParseError(
         'Client payload decoding',
         self.errorDetails
-      ).causedBy(self._response.error)
+      ).causedBy(self.response.error)
       self.log.error(internalError)
-      self.emit('clientResponseError', self._response.error)
-      self._execute(self._response.error)
+      self.emit('clientResponseError', self.response.error)
+      self._execute(self.response.error)
       return
     }
 
@@ -1197,8 +1197,8 @@ class Hemera extends EventEmitter {
       return
     }
 
-    if (self._response.payload.error) {
-      let error = Errio.fromObject(self._response.payload.error)
+    if (self.response.payload.error) {
+      let error = Errio.fromObject(self.response.payload.error)
       const internalError = new Errors.ResponseError(
         'Response error received',
         self.errorDetails
@@ -1210,7 +1210,7 @@ class Hemera extends EventEmitter {
       return
     }
 
-    self._execute(null, self._response.payload.result)
+    self._execute(null, self.response.payload.result)
   }
 
   /**
@@ -1250,10 +1250,11 @@ class Hemera extends EventEmitter {
     hemera._pattern = pattern
     hemera._parentContext = this
     hemera._cleanPattern = Util.cleanFromSpecialVars(pattern)
-    hemera._response = new ClientResponse()
-    hemera._request = new ClientRequest()
     hemera._isServer = false
     hemera._execute = null
+
+    hemera.response = new ClientResponse()
+    hemera.request = new ClientRequest()
     hemera.sid = 0
 
     if (cb) {
@@ -1318,8 +1319,12 @@ class Hemera extends EventEmitter {
     const self = this
     let m = self._clientEncoder(self._message)
 
+    self.request.payload = m.value
+
     // encoding issue
     if (m.error) {
+      self.request.payload = null
+      self.request.error = m.error
       let error = new Errors.ParseError('Client payload encoding').causedBy(
         m.error
       )
@@ -1331,6 +1336,8 @@ class Hemera extends EventEmitter {
 
     if (err) {
       let error = self.getRootError(err)
+      self.request.payload = null
+      self.request.error = error
       const internalError = new Errors.HemeraError(
         'onClientPreRequest extension'
       ).causedBy(err)
@@ -1340,12 +1347,9 @@ class Hemera extends EventEmitter {
       return
     }
 
-    self._request.payload = m.value
-    self._request.error = m.error
-
     // use simple publish mechanism instead of request/reply
     if (self._pattern.pubsub$ === true) {
-      self._transport.send(self._pattern.topic, self._request.payload, err =>
+      self._transport.send(self._pattern.topic, self.request.payload, err =>
         self._execute(err)
       )
     } else {
@@ -1368,7 +1372,7 @@ class Hemera extends EventEmitter {
       // send request
       self.sid = self._transport.sendRequest(
         self._pattern.topic,
-        self._request.payload,
+        self.request.payload,
         optOptions,
         resp => self._sendRequestHandler(resp)
       )
@@ -1408,7 +1412,7 @@ class Hemera extends EventEmitter {
 
     const error = new Errors.TimeoutError('Client timeout', self.errorDetails)
     self.log.error(error)
-    self._response.error = error
+    self.response.error = error
     self.emit('clientResponseError', error)
 
     runExt(
@@ -1434,11 +1438,11 @@ class Hemera extends EventEmitter {
         'onClientPostRequest extension'
       ).causedBy(err)
       self.log.error(internalError)
-      self._response.error = error
+      self.response.error = error
       self.emit('clientResponseError', error)
     }
 
-    self._execute(self._response.error)
+    self._execute(self.response.error)
   }
 
   /**

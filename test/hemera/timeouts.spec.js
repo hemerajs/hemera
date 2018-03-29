@@ -315,7 +315,7 @@ describe('Timeouts', function() {
 
     hemera.ready(() => {
       hemera.on('clientPostRequest', function(ctx) {
-        const err = ctx._response.error
+        const err = ctx.response.error
 
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('TimeoutError')

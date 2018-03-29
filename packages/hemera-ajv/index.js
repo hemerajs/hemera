@@ -54,8 +54,8 @@ function hemeraAjv(hemera, opts, done) {
 
   // Response validation
   hemera.ext('onServerPreResponse', (hemera, request, reply, next) => {
-    // pattern could not be found
-    if (!hemera.matchedAction) {
+    // pattern could not be found or error was already set
+    if (!hemera.matchedAction || reply.error) {
       next()
       return
     }
@@ -64,7 +64,7 @@ function hemeraAjv(hemera, opts, done) {
     const schema = actionSchema[responseSchemaKey]
 
     // only validate payload when no error was set
-    if (!reply.error && schema) {
+    if (schema) {
       if (schema(reply.payload) === false) {
         const error = new Error(
           ajv.errorsText(schema.errors, {

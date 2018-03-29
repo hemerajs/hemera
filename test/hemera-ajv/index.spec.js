@@ -438,4 +438,39 @@ describe('Hemera-ajv response validation', function() {
       )
     })
   })
+
+  it('Should skip post validation when pattern could not be found', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    hemera.use(HemeraAjv)
+
+    hemera.add(
+      {
+        timeout$: 100,
+        topic: 'math',
+        cmd: 'add'
+      },
+      (req, cb) => {
+        cb(null, true)
+      }
+    )
+
+    hemera.ready(() => {
+      hemera.act(
+        {
+          timeout$: 100,
+          topic: 'math',
+          cmd: 'sub',
+          a: 2,
+          b: 1
+        },
+        (err, resp) => {
+          expect(err).to.be.exists()
+          expect(err.name).to.be.equals('PatternNotFound')
+          hemera.close(done)
+        }
+      )
+    })
+  })
 })
