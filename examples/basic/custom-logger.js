@@ -48,7 +48,7 @@ hemera.ready(() => {
     },
     function(err, resp) {
       if (err) {
-        this.log.info(err)
+        this.log.error(err)
         return
       }
       this.log.info(resp)
