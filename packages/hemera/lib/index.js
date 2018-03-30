@@ -1486,61 +1486,45 @@ class Hemera extends EventEmitter {
    *
    * @memberof Hemera
    */
-  close(cb) {
-    const self = this
+  close(func) {
+    let promise
 
     // callback style
-    if (typeof cb === 'function') {
-      self.shutdown((err, instance, done) => {
-        instance._onClose(() => {
+    if (func === undefined) {
+      promise = new Promise(function(resolve, reject) {
+        func = function(err) {
           if (err) {
-            self.log.error(err)
-            cb(err)
-          } else {
-            cb()
+            return reject(err)
           }
-          done(err)
-        })
+          resolve()
+        }
       })
-      return
     }
 
-    // promise style
-    return new Promise((resolve, reject) => {
-      self.shutdown((err, instance, done) => {
-        instance._onClose(() => {
-          if (err) {
-            self.log.error(err)
-            reject(err)
-          } else {
-            resolve()
-          }
-          done()
-        })
+    // 2. clean hemera
+    this.onShutdown((instance, done) => {
+      this._heavy.stop()
+      done()
+    })
+
+    // 1. clean nats
+    this.onShutdown((instance, done) => {
+      this.removeAll()
+      this._transport.flush(() => {
+        this._transport.close()
+        done()
       })
     })
-  }
 
-  /**
-   *
-   * @param {any} cb
-   * @memberof Hemera
-   */
-  _onClose(cb) {
-    const self = this
-    // remove all active subscriptions
-    self.removeAll()
-
-    // Waiting before all queued messages was proceed
-    // and then close hemera and nats
-    self._transport.flush(() => {
-      self._heavy.stop()
-      // Does not throw an issue when connection is not available
-      self._transport.close()
-      if (typeof cb === 'function') {
-        cb()
+    // 3. run user function
+    this.shutdown(err => {
+      if (err) {
+        this.log.error(err)
       }
+      func(err)
     })
+
+    return promise
   }
 }
 
