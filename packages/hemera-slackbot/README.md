@@ -38,7 +38,7 @@ hemera.ready(() => {
 })
 ```
 
-# RTM (Real-time-messaging)
+## RTM (Real-time-messaging)
 
 ```js
 hemera.act({
@@ -49,6 +49,10 @@ hemera.act({
       // all ingoing events https://api.slack.com/rtm
   })
 ```
+
+## Plugin dependencies
+
+* hemera-joi
 
 # API
 

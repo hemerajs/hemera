@@ -43,6 +43,10 @@ hemera.ready(() => {
 })
 ```
 
+## Plugin dependencies
+
+* hemera-joi
+
 ## Requirements
 
 * Node.js 6+
