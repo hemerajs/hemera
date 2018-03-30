@@ -7,8 +7,6 @@ original_id: reference
 
 ## Static
 
-### errors
-
 ```js
 Hemera.errors
 ```
@@ -122,7 +120,7 @@ hemera.createError(name)
 
 ### Hemera.fatal()
 
-Gracefully shutdown hemera and exit the process with `1`
+Gracefully shutdown hemera and exit the process with code `1`
 
 ```js
 hemera.fatal()
@@ -170,7 +168,8 @@ hemera.list()
 
 ### Hemera.close()
 
-Gracefully shutdown hemera.
+Gracefully shutdown hemera. Can be called only once. If you are looking for to register multiple handlers look at the
+`onClose` extension.
 
 ```js
 hemera.close()
