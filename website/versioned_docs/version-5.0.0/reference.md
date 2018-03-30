@@ -173,7 +173,7 @@ hemera.list()
 Gracefully shutdown hemera.
 
 ```js
-hemera.close()
+hemera.close(fn)
 ```
 
 ### Hemera.router

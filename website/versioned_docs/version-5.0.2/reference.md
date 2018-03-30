@@ -172,7 +172,7 @@ Gracefully shutdown hemera. Can be called only once. If you are looking for to r
 `onClose` extension.
 
 ```js
-hemera.close()
+hemera.close(fn)
 ```
 
 ### Hemera.router
