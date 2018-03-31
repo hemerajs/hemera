@@ -18,24 +18,31 @@ describe('Logging interface', function() {
   it('Should be able to use custom logger', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    var logSpy = Sinon.spy()
-
-    let logger = {
-      debug: function() {},
-      info: function() {
-        logSpy()
-      },
-      warn: function() {},
-      fatal: function() {}
+    class Logger {
+      info(msg) {
+        console.log(msg)
+      }
+      debug(msg) {
+        console.log(msg)
+      }
+      error(msg) {
+        console.error(msg)
+      }
+      warn(msg) {
+        console.warn(msg)
+      }
+      fatal(msg) {
+        console.error(msg)
+      }
+      trace(msg) {
+        console.log(msg)
+      }
     }
 
     const hemera = new Hemera(nats, {
-      logger
+      logger: new Logger()
     })
 
-    hemera.log.info('test')
-
-    expect(logSpy.called).to.be.equals(true)
     hemera.close(done)
   })
 
@@ -68,5 +75,23 @@ describe('Logging interface', function() {
     expect(logSpy.called).to.be.equals(true)
     logSpy.restore()
     hemera.close(done)
+  })
+
+  it('Should validate custom logger', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    try {
+      // eslint-disable-next-line no-new
+      new Hemera(nats, {
+        logger: {}
+      })
+    } catch (err) {
+      expect(err).to.be.exists()
+      expect(err.message).to.be.equals(
+        'child "logger" fails because [child "info" fails because ["info" is required]]'
+      )
+      nats.close()
+      done()
+    }
   })
 })
