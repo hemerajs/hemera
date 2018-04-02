@@ -37,7 +37,7 @@ hemera.add(
     cmd: 'add'
   },
   function(req) {
-    this.reply(req.a + req.b)
+    this.reply.next(req.a + req.b)
   }
 )
 
@@ -69,7 +69,7 @@ hemera.add(
     cmd: 'add'
   },
   function(req) {
-    this.reply(req.a + req.b)
+    this.reply.next(req.a + req.b)
   }
 )
 
@@ -98,7 +98,7 @@ hemera.add(
     cmd: 'add'
   },
   function(req) {
-    this.reply(req.a + req.b)
+    this.reply.next(req.a + req.b)
   }
 )
 
