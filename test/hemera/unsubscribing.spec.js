@@ -42,7 +42,7 @@ describe('Unsubscribe NATS topic', function() {
 
       const result = hemera.remove('math')
 
-      expect(hemera.topics.math).to.be.not.exists()
+      expect(hemera.topics.get('math')).to.be.not.exists()
       expect(hemera.list().length).to.be.equals(0)
       expect(result).to.be.equals(true)
       expect(callback.called).to.be.equals(true)
@@ -89,7 +89,7 @@ describe('Unsubscribe NATS topic', function() {
 
       const result = hemera.remove('math')
 
-      expect(hemera.topics.math).to.be.not.exists()
+      expect(hemera.topics.get('math')).to.be.not.exists()
       expect(hemera.list().length).to.be.equals(0)
       expect(result).to.be.equals(true)
       hemera.close(done)
@@ -143,7 +143,7 @@ describe('Unsubscribe NATS topic', function() {
       )
 
       const result = hemera.remove('math1')
-      expect(hemera.topics.math1).to.be.not.exists()
+      expect(hemera.topics.get('math')).to.be.exists()
       expect(result).to.be.equals(false)
       hemera.close(done)
     })
@@ -221,9 +221,88 @@ describe('Unsubscribe NATS topic', function() {
           expect(err).to.be.not.exists()
 
           hemera.removeAll()
-          expect(Object.keys(hemera.topics).length).to.be.equals(0)
+          expect(hemera.topics.size).to.be.equals(0)
           expect(hemera.list().length).to.be.equals(0)
           hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should remove pattern and subscription after maxMessages', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, { logLevel: 'debug' })
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add',
+          maxMessages$: 1
+        },
+        function(resp, cb) {
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        function(err, resp) {
+          expect(err).to.be.not.exists()
+          expect(hemera.topics.get('math')).to.be.not.exists()
+          expect(hemera.list().length).to.be.equals(0)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should remove pattern and subscription after 2 maxMessages', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, { logLevel: 'debug' })
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add',
+          maxMessages$: 2
+        },
+        function(resp, cb) {
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        function(err, resp) {
+          expect(err).to.be.not.exists()
+          expect(hemera.topics.get('math')).to.be.number()
+          expect(hemera.list().length).to.be.equals(1)
+          hemera.act(
+            {
+              topic: 'math',
+              cmd: 'add'
+            },
+            function(err, resp) {
+              expect(err).to.be.not.exists()
+              expect(hemera.topics.get('math')).to.be.not.exists()
+              expect(hemera.list().length).to.be.equals(0)
+              hemera.close(done)
+            }
+          )
         }
       )
     })

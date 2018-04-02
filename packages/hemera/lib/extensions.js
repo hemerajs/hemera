@@ -166,11 +166,20 @@ function onServerPreRequest(context, req, res, next) {
   context._pattern = context.request.payload.pattern
   // find matched action
   context.matchedAction = context._router.lookup(context._pattern)
-  // fallback to notFound action when defined
-  if (!context.matchedAction && context._notFoundPattern) {
+  // remove pattern when maxMessages$ was received
+  // only relevant for server actions with custom transport options
+  if (context.matchedAction) {
+    context.matchedAction._receivedMsg++
+    if (
+      context.matchedAction._receivedMsg ===
+      context.matchedAction.transport.maxMessages
+    ) {
+      context.cleanTopic(context._topic)
+    }
+  } else if (context._notFoundPattern) {
+    // fallback to notFound action when defined
     context.matchedAction = context._router.lookup(context._notFoundPattern)
   }
-
   context.emit('serverPreRequest', context)
 
   next()

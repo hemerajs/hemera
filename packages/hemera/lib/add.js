@@ -28,6 +28,8 @@ class Add {
     this.actMeta = addDef
     this.options = options
     this.actMeta.middleware = addDef.middleware || []
+    // only used for maxMessages$ flag
+    this._receivedMsg = 0
   }
 
   /**
