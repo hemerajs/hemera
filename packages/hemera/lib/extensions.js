@@ -174,6 +174,7 @@ function onServerPreRequest(context, req, res, next) {
       context.matchedAction._receivedMsg ===
       context.matchedAction.transport.maxMessages
     ) {
+      // we only need remove pattern the subscription is unsubscribed by nats driver
       context.cleanTopic(context._topic)
     }
   } else if (context._notFoundPattern) {
