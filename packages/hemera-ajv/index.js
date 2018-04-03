@@ -46,7 +46,7 @@ function hemeraAjv(hemera, opts, done) {
       )
       error.validation = schema[requestSchemaKey].errors
       return {
-        error: error
+        error
       }
     }
   })
