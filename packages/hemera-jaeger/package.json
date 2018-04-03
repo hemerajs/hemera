@@ -15,6 +15,6 @@
   "dependencies": {
     "hemera-plugin": "^1.1.1",
     "jaeger-client": "^3.10.0",
-    "opentracing": "^0.14.1"
+    "opentracing": "^0.14.2"
   }
 }
