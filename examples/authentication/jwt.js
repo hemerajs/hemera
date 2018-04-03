@@ -65,7 +65,11 @@ hemera.ready(() => {
       b: 200
     },
     function(err, resp) {
-      console.log(resp)
+      if (err) {
+        this.log.error(err)
+        return
+      }
+      this.log.info(resp)
     }
   )
 })

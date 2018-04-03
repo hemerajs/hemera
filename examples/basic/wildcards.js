@@ -40,7 +40,11 @@ hemera.ready(() => {
       cmd: 'details'
     },
     function(err, resp) {
-      this.log.info(resp, 'Result')
+      if (err) {
+        this.log.error(err)
+        return
+      }
+      this.log.info(resp)
     }
   )
 
@@ -53,7 +57,11 @@ hemera.ready(() => {
       cmd: 'name'
     },
     function(err, resp) {
-      this.log.info(resp, 'Result')
+      if (err) {
+        this.log.error(err)
+        return
+      }
+      this.log.info(resp)
     }
   )
 })

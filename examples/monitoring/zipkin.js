@@ -68,7 +68,7 @@ hemera.ready(() => {
           this.act('topic:account,cmd:delete', cb)
         })
       })
-      this.act('topic:email,cmd:send', function(err, result) {
+      this.act('topic:email,cmd:send', function(_, result) {
         this.act('topic:search,cmd:friends')
       })
     }

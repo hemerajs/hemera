@@ -30,10 +30,10 @@ hemera.ready(() => {
     },
     function(err, resp) {
       if (err) {
-        this.log.error(err, 'Result')
+        this.log.error(err)
         return
       }
-      this.log.info(resp, 'Result')
+      this.log.info(resp)
     }
   )
 })

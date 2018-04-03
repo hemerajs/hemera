@@ -33,7 +33,11 @@ hemera.ready(() => {
       b: 2
     },
     function(err, resp) {
-      this.log.info(err, resp)
+      if (err) {
+        this.log.error(err)
+        return
+      }
+      this.log.info(resp)
     }
   )
 })
