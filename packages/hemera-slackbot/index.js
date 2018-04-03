@@ -2,6 +2,7 @@
 
 const SlackBot = require('slackbots')
 const Hp = require('hemera-plugin')
+const Joi = require('joi')
 
 function hemeraSlackbot(hemera, opts, done) {
   const topic = 'slackbot'
@@ -46,20 +47,20 @@ function hemeraSlackbot(hemera, opts, done) {
   ]
 
   validMethods.forEach(method => {
-    hemera.add(
-      {
+    hemera
+      .add({
         topic,
         cmd: method,
         params: Joi.array().default([])
-      },
-      function(req, reply) {
+      })
+      .use(req => validateParams(req.payload.pattern.params))
+      .end((req, cb) => {
         // eslint-disable-next-line promise/catch-or-return
         bot[method]
           .apply(bot, req.params)
-          .then(resp => reply(null, resp))
-          .fail(err => reply(err))
-      }
-    )
+          .then(resp => cb(null, resp))
+          .fail(err => cb(err))
+      })
   })
 
   hemera.add(
@@ -100,10 +101,13 @@ function hemeraSlackbot(hemera, opts, done) {
   })
 }
 
+function validateParams(payload) {
+  return Joi.validate(payload, Joi.array().default([]))
+}
+
 const plugin = Hp(hemeraSlackbot, {
   hemera: '>=5.0.0-rc.1',
-  name: require('./package.json').name,
-  dependencies: ['hemera-joi']
+  name: require('./package.json').name
 })
 
 module.exports = plugin

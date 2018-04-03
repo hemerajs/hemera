@@ -5,13 +5,10 @@ describe('Hemera-mail', function() {
   var authUrl = 'nats://localhost:' + PORT
   var server
   let HemeraMail
-  let HemeraJoi
 
   // Start up our own nats-server
   before(function(done) {
     HemeraMail = require('../../packages/hemera-mail')
-    HemeraJoi = require('../../packages/hemera-joi')
-
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
@@ -28,8 +25,6 @@ describe('Hemera-mail', function() {
     const hemera = new Hemera(nats, {
       logLevel: 'silent'
     })
-
-    hemera.use(HemeraJoi)
     hemera.use(HemeraMail)
 
     hemera.ready(() => {
@@ -62,8 +57,6 @@ describe('Hemera-mail', function() {
     })
 
     const hemera = new Hemera(nats)
-
-    hemera.use(HemeraJoi)
     hemera.use(HemeraMail)
 
     hemera.ready(() => {
