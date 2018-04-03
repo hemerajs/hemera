@@ -724,12 +724,11 @@ class Hemera extends EventEmitter {
     const maxMessages = addDefinition.transport.maxMessages
     const queue = addDefinition.transport.queue
     const pubsub = addDefinition.transport.pubsub
-    const queueGroup = queue || `queue.${topic}`
 
     // avoid duplicate subscribers of the emit stream
     // we use one subscriber per topic
     if (self._topics.has(topic)) {
-      return
+      return 0
     }
 
     let handler = (request, replyTo) => {
@@ -760,28 +759,22 @@ class Hemera extends EventEmitter {
 
     // standard pubsub with optional max messages
     if (pubsub) {
-      self._topics.set(
+      return self._transport.subscribe(
         topic,
-        self._transport.subscribe(
-          topic,
-          {
-            max: maxMessages
-          },
-          handler
-        )
+        {
+          max: maxMessages
+        },
+        handler
       )
     } else {
       // queue group names allow load balancing of services
-      self._topics.set(
+      return self._transport.subscribe(
         topic,
-        self._transport.subscribe(
-          topic,
-          {
-            queue: queueGroup,
-            max: maxMessages
-          },
-          handler
-        )
+        {
+          queue,
+          max: maxMessages
+        },
+        handler
       )
     }
   }
@@ -1025,7 +1018,7 @@ class Hemera extends EventEmitter {
         pubsub: definition.pubsub$,
         maxMessages: definition.maxMessages$,
         expectedMessages: definition.expectedMessages$,
-        queue: definition.queue$
+        queue: definition.queue$ || `queue.${definition.topic}`
       }
     }
 
@@ -1077,7 +1070,12 @@ class Hemera extends EventEmitter {
 
     this.log.info(patternOnly, 'Server action added')
 
-    this.subscribe(addDefinition)
+    const sid = this.subscribe(addDefinition)
+
+    if (sid > 0) {
+      addDefinition.sid = sid
+      this._topics.set(addDefinition.pattern.topic, sid)
+    }
 
     this._runOnAddHandler(addDefinition)
 

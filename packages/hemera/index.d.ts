@@ -99,6 +99,7 @@ declare namespace Hemera {
     schema: object
     pattern: ServerPattern
     action: Function
+    sid: number
     // callback
     use(
       handler: (

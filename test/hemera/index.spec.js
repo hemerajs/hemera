@@ -613,4 +613,42 @@ describe('Hemera', function() {
       )
     })
   })
+
+  it('Should return Add Object instance with all informations', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      const add = hemera.add(
+        {
+          topic: 'math',
+          cmd: 'info',
+          maxMessages$: 1,
+          payload: {
+            a: 1
+          }
+        },
+        (req, cb) => {
+          cb(null, true)
+        }
+      )
+      expect(add.sid).to.be.number()
+      expect(add.middleware).to.be.equals([])
+      expect(add.transport.maxMessages).to.be.equals(1)
+      expect(add.transport.topic).to.be.equals('math')
+      expect(add.transport.queue).to.be.equals('queue.math')
+      expect(add.action).to.be.function()
+      expect(add.pattern).to.be.equals({
+        topic: 'math',
+        cmd: 'info'
+      })
+      expect(add.schema).to.be.equals({
+        payload: {
+          a: 1
+        }
+      })
+      hemera.close(done)
+    })
+  })
 })

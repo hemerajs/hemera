@@ -27,9 +27,9 @@ describe('Extension onAdd', function() {
           cmd: 'send'
         })
         expect(addDefinition.action).to.be.function()
-        expect(addDefinition.transport).to.be.exists()
-        expect(addDefinition.pattern).to.be.exists()
-        expect(addDefinition.schema).to.be.exists()
+        expect(addDefinition.transport).to.be.object()
+        expect(addDefinition.schema).to.be.object()
+        expect(addDefinition.sid).to.be.number()
         hemera.close(done)
       })
 
@@ -54,6 +54,10 @@ describe('Extension onAdd', function() {
     hemera.ready(() => {
       hemera.ext('onAdd', function(addDefinition) {
         expect(addDefinition.action).to.be.function()
+        expect(addDefinition.transport).to.be.object()
+        expect(addDefinition.pattern).to.be.object()
+        expect(addDefinition.schema).to.be.object()
+        expect(addDefinition.sid).to.be.number()
         ext1()
       })
 

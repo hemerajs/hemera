@@ -24,9 +24,9 @@ class Add {
    *
    * @memberOf Add
    */
-  constructor(addDef, options) {
+  constructor(addDef) {
     this.actMeta = addDef
-    this.options = options
+    this.sid = 0
     this.actMeta.middleware = addDef.middleware || []
     // only used for maxMessages$ flag
     this._receivedMsg = 0
