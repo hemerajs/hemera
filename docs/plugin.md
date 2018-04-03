@@ -44,7 +44,7 @@ module.exports = myPlugin
 
 ## Encapsulation
 
-Plugins will create its own scope by default. This means that a child plugin can never manipulate its parent scope but child plugins. If you register an extension inside a plugin only child plugins will be effected. This behaviour can be changed look at [Global registration](#global-registration).
+Plugins will create its own scope by default. This means that a child plugin can never manipulate its parent scope but child plugins. If you register an extension inside a plugin only child plugins will be effected.
 
 ```js
 const hp = require('hemera-plugin')
@@ -60,6 +60,63 @@ const myPlugin = hp((hemera, opts, done) => {
 })
 
 hemera.use(myPlugin)
+```
+
+## Register child plugins
+
+You can load a plugin in a plugin and all previous changes to the [scope sensitive settings](#scoped-sensitive-settings) are applied.
+
+```js
+const hp = require('hemera-plugin')
+const myPlugin = hp((hemera, opts, done) => {
+  const topic = 'math'
+
+  hemera.ext('onClientPostRequest', function(ctx, next) {
+    // some code
+    next()
+  })
+
+  hemera.use(
+    hp((hemera, opts, done) => {
+      // some code
+      // previous plugin will effect this scope as well
+      // because it modify the instance directly
+      done()
+    })
+  )
+
+  done()
+})
+```
+
+## Based on third-party plugins
+
+Some plugins like `hemera-joi`, `hemera-ajv` or `hemera-jwt` aren't encapsulated. In this way they can provide a set of functionality to other plugins. To specifically use the plugins you can register your own plugin inside `.after()`. As a result of this, you can defer the registration of your plugin at the point where all previous plugins and child plugins are loaded. You can encapsulate your plugin but also extend them at the same time.
+
+```js
+const hp = require('hemera-plugin')
+const myPlugin = hp((hemera, opts, done) => {
+  const topic = 'math'
+
+  hemera
+    .use(
+      hp((hemera, opts, done) => {
+        // some code
+        done()
+      }, { scoped: false })
+    )
+    .after(() => {
+      hemera.use(
+        hp((hemera, opts, done) => {
+          // previous plugin will effect this scope as well
+          // because it's scoped:false and we defer the registration with `.after()`
+          done()
+        })
+      )
+    })
+
+  done()
+})
 ```
 
 ### Decorators
