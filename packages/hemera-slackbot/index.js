@@ -53,8 +53,8 @@ function hemeraSlackbot(hemera, opts, done) {
         cmd: method,
         params: Joi.array().default([])
       })
-      .use(req => validateParams(req.payload.pattern.params))
-      .end((req, cb) => {
+      .use(validationMiddleware)
+      .end(function slackBotAction(req, cb) {
         // eslint-disable-next-line promise/catch-or-return
         bot[method]
           .apply(bot, req.params)
@@ -101,8 +101,8 @@ function hemeraSlackbot(hemera, opts, done) {
   })
 }
 
-function validateParams(payload) {
-  return Joi.validate(payload, Joi.array().default([]))
+function validationMiddleware(req, reply) {
+  return Joi.validate(req.payload.pattern.params, Joi.array().default([]))
 }
 
 const plugin = Hp(hemeraSlackbot, {

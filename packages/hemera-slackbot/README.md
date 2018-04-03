@@ -50,10 +50,6 @@ hemera.act({
   })
 ```
 
-## Plugin dependencies
-
-* hemera-joi
-
 # API
 
 See [slack-bot-api](https://github.com/mishk0/slack-bot-api#methods) for an overview of all available methods. We pass it one to one.

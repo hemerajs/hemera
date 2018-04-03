@@ -13,30 +13,28 @@ function hemeraEmail(hemera, opts, done) {
       topic,
       cmd: 'send'
     })
-    .use(req => validate(req.payload.pattern.message))
-    .end(action)
-
-  function action(req, cb) {
-    transporter.sendMail(req.message, (err, info) => {
-      if (err) {
-        this.log.error(err, 'Email could not be send!')
-        cb(err)
-        return
-      }
-      this.log.debug('Message %s sent %s', info.messageId, info.response)
-      cb(null, {
-        envelope: info.envelope,
-        messageId: info.messageId
+    .use(validationMiddlware)
+    .end(function hemeraMailAction(req, cb) {
+      transporter.sendMail(req.message, (err, info) => {
+        if (err) {
+          this.log.error(err, 'Email could not be send!')
+          cb(err)
+          return
+        }
+        this.log.debug('Message %s sent %s', info.messageId, info.response)
+        cb(null, {
+          envelope: info.envelope,
+          messageId: info.messageId
+        })
       })
     })
-  }
 
   done()
 }
 
-function validate(payload) {
+function validationMiddlware(req, reply) {
   return Joi.validate(
-    payload,
+    req.payload.pattern.message,
     Joi.object()
       .keys({
         from: Joi.string().required(),
