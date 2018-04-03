@@ -44,7 +44,7 @@ module.exports = myPlugin
 
 ## Encapsulation
 
-Plugins will create its own scope by default. This means that a child plugin can never manipulate its upper scope but child plugins. If you register an extension inside a plugin only child plugins will be effected.
+Plugins will create its own scope by default. This means that a child plugin can never manipulate its parent scope but child plugins. If you register an extension inside a plugin only child plugins will be effected. This behaviour can be changed look at [Global registration](#global-registration).
 
 ```js
 const hp = require('hemera-plugin')
