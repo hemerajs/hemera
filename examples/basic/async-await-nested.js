@@ -27,14 +27,14 @@ const start = async () => {
       a: 10,
       b: 10
     })
-    hemera.log.info(`result 1`, out.data)
+    hemera.log.info(out.data, `result 1`)
     out = await out.context.act({
       topic: 'math',
       cmd: 'add',
       a: 10,
       b: 30
     })
-    hemera.log.info(`result 2`, out.data)
+    hemera.log.info(out.data, `result 2`)
   } catch (err) {
     hemera.log.error(err)
     process.exit(1)

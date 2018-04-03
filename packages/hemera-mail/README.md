@@ -13,11 +13,9 @@ configure something.
 
 const Hemera = require('nats-hemera')
 const nats = require('nats')
-const HemeraJoi = require('hemera-joi')
 const HemeraMail = require('hemera-mail')
 const hemera = new Hemera(nats)
 
-hemera.use(HemeraJoi)
 hemera.use(HemeraMail, {
   transport: // use here the nodemailer transport plugin of your choice, default is jsonTransport
 })
@@ -42,10 +40,6 @@ hemera.ready(() => {
   })
 })
 ```
-
-## Plugin dependencies
-
-* hemera-joi
 
 ## Requirements
 

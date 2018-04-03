@@ -37,7 +37,11 @@ hemera.ready(() => {
       }
     ],
     function(err, results) {
-      console.log(err, results)
+      if (err) {
+        hemera.log.error(err)
+        return
+      }
+      hemera.log.info(results)
     }
   )
 
@@ -53,7 +57,11 @@ hemera.ready(() => {
 
   const add1and2 = compose(add1, add2)
   add1and2(10, function(err, result) {
-    console.log(err, result)
+    if (err) {
+      hemera.log.error(err)
+      return
+    }
+    hemera.log.info(result)
   })
 
   /**

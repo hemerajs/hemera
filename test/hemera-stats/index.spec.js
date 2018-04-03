@@ -1,7 +1,7 @@
 'use strict'
 
 const HemeraStats = require('../../packages/hemera-stats')
-const HemeraJoi = require('../../packages/hemera-joi')
+const Joi = require('joi')
 
 process.setMaxListeners(0)
 
@@ -29,7 +29,6 @@ describe('Hemera-stats', function() {
     const hemera = new Hemera(nats)
 
     hemera.use(HemeraStats)
-    hemera.use(HemeraJoi)
 
     hemera.ready(() => {
       hemera.act(
@@ -59,11 +58,7 @@ describe('Hemera-stats', function() {
     })
 
     hemera.use(HemeraStats)
-    hemera.use(HemeraJoi)
-
     hemera.ready(() => {
-      let Joi = hemera.joi
-
       hemera.add(
         {
           topic: 'math',

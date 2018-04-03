@@ -352,6 +352,9 @@ declare class Hemera {
   setSchemaCompiler(compilerFunction: (schema: Object) => Function): Hemera
   setSchemaCompiler(compilerFunction: (schema: Object) => Promise<any>): Hemera
 
+  setResponseSchemaCompiler(compilerFunction: (schema: Object) => Function): Hemera
+  setResponseSchemaCompiler(compilerFunction: (schema: Object) => Promise<any>): Hemera
+
   setNotFoundPattern(pattern: string | Hemera.ServerPattern | null)
 
   setIdGenerator(generatorFunction: () => string): Hemera

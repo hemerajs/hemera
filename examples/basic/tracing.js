@@ -43,7 +43,7 @@ hemera.ready(() => {
           a: 100,
           b: 20
         },
-        function(err, resp) {
+        function(_, resp) {
           this.act(
             {
               topic: 'math',
@@ -51,7 +51,7 @@ hemera.ready(() => {
               a: 100,
               b: 50
             },
-            function(err, resp) {
+            function(_, resp) {
               cb(null, resp)
             }
           )
@@ -80,7 +80,7 @@ hemera.ready(() => {
       a: 1,
       b: 20
     },
-    function(err, resp) {
+    function(_, resp) {
       this.log.info(resp, 'Finished')
     }
   )

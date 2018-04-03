@@ -31,7 +31,15 @@ hemera.setIdGenerator(fn)
 
 ### Hemera.setSchemaCompiler()
 
-Update the current schema compiler.
+Update the current request schema compiler.
+
+```js
+hemera.setSchemaCompiler(fn)
+```
+
+### Hemera.setResponseSchemaCompiler()
+
+Update the current response schema compiler.
 
 ```js
 hemera.setSchemaCompiler(fn)
