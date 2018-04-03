@@ -32,7 +32,7 @@ function hemeraJoi(hemera, opts, done) {
 }
 
 module.exports = Hp(hemeraJoi, {
-  hemera: '>=5.0.0-rc.5',
+  hemera: '>=5.1.0',
   scoped: false, // set schema globally
   name: require('./package.json').name,
   options: {

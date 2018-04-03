@@ -19,7 +19,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "ajv": "6.3.x",
+    "ajv": "6.4.x",
     "fast-json-stringify": "1.2.x",
     "hemera-plugin": "^1.1.1"
   }

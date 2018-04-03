@@ -72,7 +72,7 @@ function hemeraAjv(hemera, opts, done) {
 }
 
 module.exports = Hp(hemeraAjv, {
-  hemera: '>=5.0.0-rc.5',
+  hemera: '>=5.1.0',
   scoped: false, // set schema globally
   name: require('./package.json').name,
   options: {
