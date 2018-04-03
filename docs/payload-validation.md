@@ -46,16 +46,17 @@ hemera.add(
 
 ## Use your custom validator
 
-We provide a method `setSchemaCompiler` which accepts a validation function. If you working with async validators you can return a promise as well.
+We provide two methods `setSchemaCompiler` and `setResponseSchemaCompiler` which accepts a validation function. If you working with async validators you can return a promise as well.
 
 ```js
 hemera.setSchemaCompiler(schema => pattern =>
-  Joi.validate(pattern, schema.joi$ || schema, {
-    allowUnknown: true
-  })
+  return {
+    error: new Error('invalid request payload')
+  }
+)
+hemera.setResponseSchemaCompiler(schema => payload =>
+  return {
+    error: new Error('invalid response payload')
+  }
 )
 ```
-
-## Response payload validation
-
-With the help of the `onServerPreResponse` extension you can validate or change your response payload. In the packages [`hemera-joi`](https://github.com/hemerajs/hemera/tree/master/packages/hemera-joi) or [`hemera-ajv`](https://github.com/hemerajs/hemera/tree/master/packages/hemera-ajv) you can find useful examples.

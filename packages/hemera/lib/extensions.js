@@ -14,9 +14,8 @@ const Errors = require('./errors')
 
 /**
  *
- *
- * @param {any} next
- * @returns
+ * @param {*} context
+ * @param {*} next
  */
 function onClientPreRequest(context, next) {
   let pattern = context._pattern
@@ -103,8 +102,8 @@ function onClientPreRequest(context, next) {
 
 /**
  *
- *
- * @param {any} next
+ * @param {*} context
+ * @param {*} next
  */
 function onClientPostRequest(context, next) {
   let pattern = context._pattern
@@ -186,6 +185,16 @@ function onServerPreRequest(context, req, res, next) {
   next()
 }
 
+/**
+ * Only validate when:
+ * - no error was set before
+ * - pattern could be resolved
+ * - schemaCompiler was found
+ * @param {*} context
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
 function onServerPreRequestSchemaValidation(context, req, res, next) {
   if (context.matchedAction && context._schemaCompiler) {
     const schema = context.matchedAction.schema
@@ -215,6 +224,51 @@ function onServerPreRequestSchemaValidation(context, req, res, next) {
 
 /**
  *
+ * Only validate when:
+ * - no error was set before
+ * - pattern could be resolved
+ * - schemaCompiler was found
+ *
+ * @param {*} context
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+function onServerPreResponseSchemaValidation(context, req, res, next) {
+  if (!res.error && context.matchedAction && context._responseSchemaCompiler) {
+    const schema = context.matchedAction.schema
+    const ret = context._responseSchemaCompiler(schema)(res.payload)
+    if (ret) {
+      // promise
+      if (typeof ret.then === 'function') {
+        ret
+          .then(modifiedPayload => {
+            if (modifiedPayload) {
+              res.payload = modifiedPayload
+            }
+            next()
+          })
+          .catch(err => {
+            res.error = err
+            next(err)
+          })
+        return
+      } else if (ret.error) {
+        res.error = ret.error
+        next(ret.error)
+        return
+      } else if (ret.value) {
+        res.payload = ret.value
+        next()
+        return
+      }
+    }
+  }
+  next()
+}
+
+/**
+ *
  *
  * @param {any} req
  * @param {any} res
@@ -234,6 +288,7 @@ function onServerPreRequestLoadTest(context, req, res, next) {
 
 module.exports.onClientPreRequest = [onClientPreRequest]
 module.exports.onClientPostRequest = [onClientPostRequest]
+module.exports.onServerPreResponse = [onServerPreResponseSchemaValidation]
 module.exports.onServerPreRequest = [
   onServerPreRequest,
   onServerPreRequestSchemaValidation,

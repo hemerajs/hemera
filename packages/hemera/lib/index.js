@@ -104,6 +104,7 @@ class Hemera extends EventEmitter {
     this._serverEncoder = DefaultEncoder.encode
     this._serverDecoder = DefaultDecoder.decode
     this._schemaCompiler = null
+    this._responseSchemaCompiler = null
     this._idGenerator = Util.randomId
 
     // errio settings
@@ -135,6 +136,10 @@ class Hemera extends EventEmitter {
     this._extensionManager.add(
       'onServerPreRequest',
       DefaultExtensions.onServerPreRequest
+    )
+    this._extensionManager.add(
+      'onServerPreResponse',
+      DefaultExtensions.onServerPreResponse
     )
 
     this._avvio = Avvio(this, {
@@ -481,6 +486,21 @@ class Hemera extends EventEmitter {
       throw new Errors.HemeraError('SchemaCompiler handler must be a function')
     }
     this._schemaCompiler = fn
+
+    return this
+  }
+
+  /**
+   *
+   * @param {*} fn
+   */
+  setResponseSchemaCompiler(fn) {
+    if (typeof fn !== 'function') {
+      throw new Errors.HemeraError(
+        'ResponseSchemaCompiler handler must be a function'
+      )
+    }
+    this._responseSchemaCompiler = fn
 
     return this
   }
