@@ -13,6 +13,10 @@ const Util = require('./util')
 const Errors = require('./errors')
 
 /**
+ * - Restore context
+ * - Tracing
+ * - Check for max recusion error
+ * - Build request message
  *
  * @param {*} context
  * @param {*} next
@@ -101,6 +105,8 @@ function onClientPreRequest(context, next) {
 }
 
 /**
+ * - Restore context
+ * - Measure request duration
  *
  * @param {*} context
  * @param {*} next
@@ -133,7 +139,9 @@ function onClientPostRequest(context, next) {
 }
 
 /**
- *
+ * - Restore context
+ * - Resolve pattern
+ * - Clean pattern when maxMessages$ was used
  *
  * @param {any} req
  * @param {any} res
