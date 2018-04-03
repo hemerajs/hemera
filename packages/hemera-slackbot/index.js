@@ -50,8 +50,7 @@ function hemeraSlackbot(hemera, opts, done) {
     hemera
       .add({
         topic,
-        cmd: method,
-        params: Joi.array().default([])
+        cmd: method
       })
       .use(validationMiddleware)
       .end(function slackBotAction(req, cb) {
