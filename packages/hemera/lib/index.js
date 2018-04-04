@@ -1378,8 +1378,9 @@ class Hemera extends EventEmitter {
         max: 1
       }
       // limit on the number of responses the requestor may receive
+      // support maxMessages$ -1
       if (
-        self._pattern.maxMessages$ > 0 ||
+        typeof self._pattern.maxMessages$ === 'number' ||
         self._pattern.expectedMessages$ > 0
       ) {
         // we can't receive more messages than "expected" messages

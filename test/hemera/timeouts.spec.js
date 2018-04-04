@@ -272,7 +272,7 @@ describe('Timeouts', function() {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      timeout: 150
+      timeout: 100
     })
 
     hemera.ready(() => {
@@ -292,13 +292,11 @@ describe('Timeouts', function() {
           msg: 'Hi!'
         },
         (err, resp) => {
-          setTimeout(() => {
-            expect(err).to.be.exists()
-            expect(resp).not.to.be.exists()
-            expect(err.name).to.be.equals('TimeoutError')
-            expect(err.message).to.be.equals('Client timeout')
-            hemera.close(done)
-          }, 200)
+          expect(err).to.be.exists()
+          expect(resp).not.to.be.exists()
+          expect(err.name).to.be.equals('TimeoutError')
+          expect(err.message).to.be.equals('Client timeout')
+          hemera.close(done)
         }
       )
     })

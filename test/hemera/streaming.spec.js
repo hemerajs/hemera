@@ -52,6 +52,44 @@ describe('Streaming', function() {
     })
   })
 
+  it('Should be able to set maxMessages$ to -1 to receive unlimited count of messages', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    const results = []
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        function(resp) {
+          for (let i = 0; i < 10; i++) {
+            this.reply.next(i)
+          }
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          maxMessages$: -1
+        },
+        function(err, resp) {
+          expect(err).to.be.not.exists()
+          results.push(resp)
+          if (results.length === 10) {
+            hemera.remove(this.sid)
+            hemera.close(done)
+          }
+        }
+      )
+    })
+  })
+
   it('Should be able to respond multiple errors with reply', function(done) {
     const nats = require('nats').connect(authUrl)
 
