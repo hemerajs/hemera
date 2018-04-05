@@ -53,7 +53,7 @@ hemera1.ready(() => {
             process.stdout.write('+')
           }
         })
-        .catch(err => console.error)
+        .catch(err => console.error(err))
     }
   })
 })

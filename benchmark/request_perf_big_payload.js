@@ -56,6 +56,9 @@ hemera1.ready(() => {
         data: payloadSmall
       },
       function(err, resp) {
+        if (err) {
+          throw err
+        }
         let stop = new Date()
         let time = parseInt(stop - start)
         console.log('\nRequest: ' + time + ' /ms')

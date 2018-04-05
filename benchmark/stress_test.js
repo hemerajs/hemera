@@ -57,6 +57,9 @@ hemera.ready(() => {
         b: 2
       },
       function(err, resp) {
+        if (err) {
+          throw err
+        }
         i += 1
         act()
       }

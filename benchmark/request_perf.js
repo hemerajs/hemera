@@ -26,7 +26,11 @@ hemera.ready(() => {
         a: 1,
         b: 2
       },
-      function(err, resp) {}
+      function(err, resp) {
+        if (err) {
+          throw err
+        }
+      }
     )
 
     if (i % hash === 0) {

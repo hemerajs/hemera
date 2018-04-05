@@ -4,8 +4,6 @@ const Hemera = require('./../packages/hemera')
 const Nats = require('nats')
 
 const PORT = 4222
-const flags = ['--user', 'derek', '--pass', 'foobar']
-const authUrl = 'nats://derek:foobar@localhost:' + PORT
 const noAuthUrl = 'nats://localhost:' + PORT
 
 let start

@@ -31,6 +31,7 @@ hemera.ready(() => {
           process.stdout.write('+')
         }
       })
+      .catch(err => console.error(err))
   }
 
   hemera.close(function() {
