@@ -18,6 +18,7 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages. S
 | [hemera-slackbot](https://github.com/hemerajs/hemera/tree/master/packages/hemera-slackbot) | [![npm](https://img.shields.io/npm/v/hemera-slackbot.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-slackbot)
 | [hemera-graceful-shutdown](https://github.com/hemerajs/hemera/tree/master/packages/hemera-graceful-shutdown) | [![npm](https://img.shields.io/npm/v/hemera-graceful-shutdown.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-graceful-shutdown)
 | [hemera-safe-promises](https://github.com/hemerajs/hemera/tree/master/packages/hemera-safe-promises) | [![npm](https://img.shields.io/npm/v/hemera-safe-promises.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-safe-promises)
+| [hemera-blipp](https://github.com/hemerajs/hemera/tree/master/packages/hemera-blipp) | [![npm](https://img.shields.io/npm/v/hemera-blipp.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-blipp)
 
 | Tracer | Version |
 |--------|-------|
