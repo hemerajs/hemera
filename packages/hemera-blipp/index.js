@@ -51,17 +51,9 @@ function hemeraBlipp(hemera, opts, done) {
       sb.push(key + ':' + pattern[key])
     }
 
+    sb.sort()
+
     return sb.join(',')
-  }
-
-  function hasDollarProp(pattern) {
-    for (var key in pattern) {
-      if (key.endsWith('$')) {
-        return true
-      }
-    }
-
-    return false
   }
 
   done()
