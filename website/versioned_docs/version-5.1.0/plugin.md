@@ -65,7 +65,7 @@ hemera.use(myPlugin)
 
 ## Register child plugins
 
-You can load a plugin in a plugin and all previous changes to the [scope sensitive settings](#scoped-sensitive-settings) are applied.
+You can load plugins inside other plugins. Be ware that some [settings](#scoped-sensitive-settings) are effected.
 
 ```js
 const hp = require('hemera-plugin')
@@ -92,7 +92,7 @@ const myPlugin = hp((hemera, opts, done) => {
 
 ## Based on third-party plugins
 
-Some plugins like `hemera-joi`, `hemera-ajv` or `hemera-jwt` aren't encapsulated. In this way they can provide a set of functionality to other plugins. To specifically use the plugins you can register your own plugin inside `.after()`. As a result of this, you can defer the registration of your plugin at the point where all previous plugins and child plugins are loaded. You can encapsulate your plugin but also extend them at the same time.
+Some plugins like `hemera-joi`, `hemera-ajv` or `hemera-jwt` aren't encapsulated. In this way they can provide a set of functionality to other plugins. To specifically use the plugins you can register your own plugin inside `.after()`. As a result of this, you can defer the registration of your plugin at the point where all previous plugins and child plugins are loaded. This is great because you can build upon other plugins.
 
 ```js
 const hp = require('hemera-plugin')
@@ -122,7 +122,7 @@ const myPlugin = hp((hemera, opts, done) => {
 
 ### Decorators
 
-Decorators are something special. Even if you create a plugin scope you can decorate the parent scope as well as child plugins. Decorators are primarly used to expose data or functionality to other plugins.
+Decorators are something special. Even if you create a plugin scope you can decorate the parent, sibling and child scopes. Decorators are primarly used to expose data or functionality to other plugins.
 
 ```js
 const hp = require('hemera-plugin')
@@ -140,8 +140,8 @@ hemera.ready(() => console.log(hemera.test))
 
 ### Global registration
 
-Sometimes it is still useful to write a plugin which effects the whole application with all scopes included. You can disable the creation of an plugin scope with `scoped: false` property.
-This approach is used for payload validators like `hemera-joi` or authentication `hemera-jwt`.
+Sometimes it is still useful to write a plugin which effects sibling and child scopes only disable the creation of a plugin scope with `scoped: false` property.
+This approach is used in payload validators `hemera-joi` or authentication `hemera-jwt`.
 
 ```js
 const hp = require('hemera-plugin')
