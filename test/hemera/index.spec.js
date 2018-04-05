@@ -624,6 +624,7 @@ describe('Hemera', function() {
         {
           topic: 'math',
           cmd: 'info',
+          queue$: 'test',
           maxMessages$: 1,
           payload: {
             a: 1
@@ -637,7 +638,7 @@ describe('Hemera', function() {
       expect(add.middleware).to.be.equals([])
       expect(add.transport.maxMessages).to.be.equals(1)
       expect(add.transport.topic).to.be.equals('math')
-      expect(add.transport.queue).to.be.equals('queue.math')
+      expect(add.transport.queue).to.be.equals('test')
       expect(add.action).to.be.function()
       expect(add.pattern).to.be.equals({
         topic: 'math',

@@ -742,7 +742,7 @@ class Hemera extends EventEmitter {
 
     const topic = addDefinition.transport.topic
     const maxMessages = addDefinition.transport.maxMessages
-    const queue = addDefinition.transport.queue
+    const queue = addDefinition.transport.queue || `queue.${topic}`
     const pubsub = addDefinition.transport.pubsub
 
     // avoid duplicate subscribers of the emit stream
@@ -1037,8 +1037,7 @@ class Hemera extends EventEmitter {
         topic: definition.topic,
         pubsub: definition.pubsub$,
         maxMessages: definition.maxMessages$,
-        expectedMessages: definition.expectedMessages$,
-        queue: definition.queue$ || `queue.${definition.topic}`
+        queue: definition.queue$
       }
     }
 

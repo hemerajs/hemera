@@ -140,7 +140,6 @@ hemera.add(
     topic: 'math',
     cmd: 'add',
     maxMessages$: 10,
-    expectedMessages$: 5,
     timeout$: 2000
   },
   function(req, cb) {
