@@ -55,7 +55,7 @@
 hemera.use(myPlugin)
 </code></pre>
 <h2><a class="anchor" aria-hidden="true" id="register-child-plugins"></a><a href="#register-child-plugins" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Register child plugins</h2>
-<p>You can load a plugin in a plugin and all previous changes to the <a href="#scoped-sensitive-settings">scope sensitive settings</a> are applied.</p>
+<p>You can load plugins inside other plugins. Be ware that some <a href="#scoped-sensitive-settings">settings</a> are effected.</p>
 <pre><code class="hljs css js"><span class="hljs-keyword">const</span> hp = <span class="hljs-built_in">require</span>(<span class="hljs-string">'hemera-plugin'</span>)
 <span class="hljs-keyword">const</span> myPlugin = hp(<span class="hljs-function">(<span class="hljs-params">hemera, opts, done</span>) =&gt;</span> {
   <span class="hljs-keyword">const</span> topic = <span class="hljs-string">'math'</span>
@@ -78,7 +78,7 @@ hemera.use(myPlugin)
 })
 </code></pre>
 <h2><a class="anchor" aria-hidden="true" id="based-on-third-party-plugins"></a><a href="#based-on-third-party-plugins" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Based on third-party plugins</h2>
-<p>Some plugins like <code>hemera-joi</code>, <code>hemera-ajv</code> or <code>hemera-jwt</code> aren't encapsulated. In this way they can provide a set of functionality to other plugins. To specifically use the plugins you can register your own plugin inside <code>.after()</code>. As a result of this, you can defer the registration of your plugin at the point where all previous plugins and child plugins are loaded. You can encapsulate your plugin but also extend them at the same time.</p>
+<p>Some plugins like <code>hemera-joi</code>, <code>hemera-ajv</code> or <code>hemera-jwt</code> aren't encapsulated. In this way they can provide a set of functionality to other plugins. To specifically use the plugins you can register your own plugin inside <code>.after()</code>. As a result of this, you can defer the registration of your plugin at the point where all previous plugins and child plugins are loaded. This is great because you can build upon other plugins.</p>
 <pre><code class="hljs css js"><span class="hljs-keyword">const</span> hp = <span class="hljs-built_in">require</span>(<span class="hljs-string">'hemera-plugin'</span>)
 <span class="hljs-keyword">const</span> myPlugin = hp(<span class="hljs-function">(<span class="hljs-params">hemera, opts, done</span>) =&gt;</span> {
   <span class="hljs-keyword">const</span> topic = <span class="hljs-string">'math'</span>
@@ -104,7 +104,7 @@ hemera.use(myPlugin)
 })
 </code></pre>
 <h3><a class="anchor" aria-hidden="true" id="decorators"></a><a href="#decorators" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Decorators</h3>
-<p>Decorators are something special. Even if you create a plugin scope you can decorate the parent scope as well as child plugins. Decorators are primarly used to expose data or functionality to other plugins.</p>
+<p>Decorators are something special. Even if you create a plugin scope you can decorate the parent, sibling and child scopes. Decorators are primarly used to expose data or functionality to other plugins.</p>
 <pre><code class="hljs css js"><span class="hljs-keyword">const</span> hp = <span class="hljs-built_in">require</span>(<span class="hljs-string">'hemera-plugin'</span>)
 <span class="hljs-keyword">const</span> myPlugin = hp(<span class="hljs-function">(<span class="hljs-params">hemera, opts, done</span>) =&gt;</span> {
   <span class="hljs-keyword">const</span> topic = <span class="hljs-string">'math'</span>
@@ -118,8 +118,8 @@ hemera.use(myPlugin)
 hemera.ready(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(hemera.test))
 </code></pre>
 <h3><a class="anchor" aria-hidden="true" id="global-registration"></a><a href="#global-registration" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Global registration</h3>
-<p>Sometimes it is still useful to write a plugin which effects the whole application with all scopes included. You can disable the creation of an plugin scope with <code>scoped: false</code> property.
-This approach is used for payload validators like <code>hemera-joi</code> or authentication <code>hemera-jwt</code>.</p>
+<p>Sometimes it is still useful to write a plugin which effects sibling and child scopes only disable the creation of a plugin scope with <code>scoped: false</code> property.
+This approach is used in payload validators <code>hemera-joi</code> or authentication <code>hemera-jwt</code>.</p>
 <pre><code class="hljs css js"><span class="hljs-keyword">const</span> hp = <span class="hljs-built_in">require</span>(<span class="hljs-string">'hemera-plugin'</span>)
 <span class="hljs-keyword">const</span> myPlugin = hp(
   <span class="hljs-function">(<span class="hljs-params">hemera, opts, done</span>) =&gt;</span> {
