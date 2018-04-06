@@ -22,7 +22,6 @@ function hemeraSlackbot(hemera, opts, done) {
     }
   })
 
-  const Joi = hemera.joi
   let subscribed = false
   let wsConnected = false
 

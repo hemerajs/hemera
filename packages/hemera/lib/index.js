@@ -998,13 +998,13 @@ class Hemera extends EventEmitter {
   /**
    * The topic is subscribed on NATS and can be called from any client.
    *
-   * @param {any} definition
+   * @param {any} pattern
    * @param {any} cb
    *
    * @memberOf Hemera
    */
-  add(definition, cb) {
-    if (!definition) {
+  add(pattern, cb) {
+    if (!pattern) {
       let error = new Errors.HemeraError(
         'Pattern is required to define a server action'
       )
@@ -1013,12 +1013,12 @@ class Hemera extends EventEmitter {
     }
 
     // check for use quick syntax for JSON objects
-    if (typeof definition === 'string') {
-      definition = TinySonic(definition)
+    if (typeof pattern === 'string') {
+      pattern = TinySonic(pattern)
     }
 
     // topic is needed to subscribe on a subject in NATS
-    if (!definition.topic) {
+    if (!pattern.topic) {
       let error = new Errors.HemeraError(
         'Topic is required and must be from type string',
         this.errorDetails
@@ -1027,21 +1027,19 @@ class Hemera extends EventEmitter {
       throw error
     }
 
-    let schema = Util.extractSchema(definition)
-    let patternOnly = Util.cleanPattern(definition)
+    let schema = Util.extractSchema(pattern)
+    let patternOnly = Util.cleanPattern(pattern)
 
-    const addDef = {
+    let addDefinition = new Add({
       schema: schema,
       pattern: patternOnly,
       transport: {
-        topic: definition.topic,
-        pubsub: definition.pubsub$,
-        maxMessages: definition.maxMessages$,
-        queue: definition.queue$
+        topic: pattern.topic,
+        pubsub: pattern.pubsub$,
+        maxMessages: pattern.maxMessages$,
+        queue: pattern.queue$
       }
-    }
-
-    let addDefinition = new Add(addDef)
+    })
 
     if (cb) {
       // set callback
@@ -1070,17 +1068,17 @@ class Hemera extends EventEmitter {
     }
 
     // check for invalid topic subscriptions
-    // it's not possible to register multiple patterns
-    // with different transport options with the same topic
+    // it's not possible to susbcribe to the same topic with different transport options
+    // because we use one subscription for the topic
     const def = this._checkForTransportCollision(addDefinition)
     if (def) {
       this.log.error(
-        'Could not register pattern "%s" because pattern "%s" has different transport configuration but the same topic. Please use a different topic name!',
+        'Topic is already registered with special transport options. Please use a different topic name.',
         Util.pattern(addDefinition.pattern),
         Util.pattern(def.pattern)
       )
       throw new Errors.HemeraError(
-        'Transport options differs from the first registration of this topic'
+        'Topic is already registered with special transport options'
       )
     }
 
@@ -1239,7 +1237,7 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   act(pattern, cb) {
-    if (!pattern) {
+    if (pattern === undefined || pattern === '') {
       let error = new Errors.HemeraError(
         'Pattern is required to start a request'
       )
@@ -1253,7 +1251,7 @@ class Hemera extends EventEmitter {
     }
 
     // topic is needed to subscribe on a subject in NATS
-    if (!pattern.topic) {
+    if (pattern.topic === undefined) {
       let error = new Errors.HemeraError(
         'Topic is required and must be from type string',
         this.errorDetails
