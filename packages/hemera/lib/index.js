@@ -1237,7 +1237,7 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   act(pattern, cb) {
-    if (pattern === undefined || pattern === '') {
+    if (!pattern) {
       let error = new Errors.HemeraError(
         'Pattern is required to start a request'
       )
@@ -1251,7 +1251,7 @@ class Hemera extends EventEmitter {
     }
 
     // topic is needed to subscribe on a subject in NATS
-    if (pattern.topic === undefined) {
+    if (!pattern.topic) {
       let error = new Errors.HemeraError(
         'Topic is required and must be from type string',
         this.errorDetails
