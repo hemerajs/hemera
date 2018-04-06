@@ -1124,21 +1124,12 @@ class Hemera extends EventEmitter {
    * @memberof Hemera
    */
   _checkForTransportCollision(addDefinition) {
-    const definitions = this._router.list()
-
-    definitions.push(addDefinition)
-
-    for (var i = 0; i < definitions.length; i++) {
-      const def = definitions[i]
+    const mT2 = addDefinition.transport
+    for (const def of this._router) {
       const mT1 = def.transport
-      const mT2 = addDefinition.transport
-
       // looking for another pattern with same topic but
       // different transport options
-      if (
-        !Object.is(addDefinition, def) &&
-        addDefinition.pattern.topic === def.pattern.topic
-      ) {
+      if (addDefinition.pattern.topic === def.pattern.topic) {
         if (
           mT1.maxMessages !== mT2.maxMessages ||
           mT1.queue !== mT2.queue ||
@@ -1148,7 +1139,6 @@ class Hemera extends EventEmitter {
         }
       }
     }
-
     return null
   }
 

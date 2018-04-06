@@ -45,6 +45,11 @@ describe('Transport options', function() {
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
         expect(hemera.list().length).to.be.equals(1)
+        expect(hemera.list()[0].transport.pubsub).to.be.equals(true)
+        expect(hemera.list()[0].pattern).to.be.equals({
+          topic: 'math',
+          cmd: 'send'
+        })
         expect(err.message).to.be.equals(
           'Topic is already registered with special transport options'
         )
@@ -83,6 +88,11 @@ describe('Transport options', function() {
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
         expect(hemera.list().length).to.be.equals(1)
+        expect(hemera.list()[0].transport.pubsub).to.be.undefined()
+        expect(hemera.list()[0].pattern).to.be.equals({
+          topic: 'math',
+          cmd: 'send'
+        })
         expect(err.message).to.be.equals(
           'Topic is already registered with special transport options'
         )
@@ -121,6 +131,11 @@ describe('Transport options', function() {
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
         expect(hemera.list().length).to.be.equals(1)
+        expect(hemera.list()[0].transport.queue).to.be.equals('test')
+        expect(hemera.list()[0].pattern).to.be.equals({
+          topic: 'math',
+          cmd: 'send'
+        })
         expect(err.message).to.be.equals(
           'Topic is already registered with special transport options'
         )
@@ -159,6 +174,11 @@ describe('Transport options', function() {
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
         expect(hemera.list().length).to.be.equals(1)
+        expect(hemera.list()[0].transport.queue).to.be.undefined()
+        expect(hemera.list()[0].pattern).to.be.equals({
+          topic: 'math',
+          cmd: 'send'
+        })
         expect(err.message).to.be.equals(
           'Topic is already registered with special transport options'
         )
@@ -197,6 +217,11 @@ describe('Transport options', function() {
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
         expect(hemera.list().length).to.be.equals(1)
+        expect(hemera.list()[0].transport.maxMessages).to.be.equals(10)
+        expect(hemera.list()[0].pattern).to.be.equals({
+          topic: 'math',
+          cmd: 'send'
+        })
         expect(err.message).to.be.equals(
           'Topic is already registered with special transport options'
         )
@@ -235,6 +260,11 @@ describe('Transport options', function() {
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
         expect(hemera.list().length).to.be.equals(1)
+        expect(hemera.list()[0].transport.maxMessages).to.be.undefined()
+        expect(hemera.list()[0].pattern).to.be.equals({
+          topic: 'math',
+          cmd: 'send'
+        })
         expect(err.message).to.be.equals(
           'Topic is already registered with special transport options'
         )
@@ -243,7 +273,7 @@ describe('Transport options', function() {
     })
   })
 
-  it('Should be able to register server method with different transport options', function(done) {
+  it('Should be able to register server methods with exact same transport options', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
