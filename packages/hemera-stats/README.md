@@ -25,8 +25,7 @@ const hemera = new Hemera(nats, {
     }
   }
 })
-
-hemera.use(HemeraStats)
+hemera.use(require('hemera-stats'))
 ```
 
 # Monitoring

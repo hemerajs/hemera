@@ -15,7 +15,7 @@ Http route mapping for Hemera microservices. Based on [Express 4](https://github
 
 ```js
 const hemera = new Hemera(nats)
-hemera.use(hemeraWeb, {
+hemera.use(require('hemera-web'), {
   port: 3000,
   host: '127.0.0.1',
   pattern: {} // fixed pattern or function (request) => { }

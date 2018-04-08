@@ -5,12 +5,6 @@ Granting and authenticating solution with JWT for Hemera
 [![npm](https://img.shields.io/npm/v/hemera-jwt-auth.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-jwt-auth)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
-## Install
-
-```
-npm i hemera-jwt-auth --save
-```
-
 ## Usage
 
 ```js

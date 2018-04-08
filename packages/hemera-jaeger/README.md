@@ -7,10 +7,13 @@ This is a plugin to use [Jaeger](http://jaeger.readthedocs.io/en/latest/) tracer
 
 https://eng.uber.com/distributed-tracing/
 
-## Install
+## Usage
 
-```
-npm i hemera-jaeger --save
+```js
+const hemera = new Hemera(nats)
+hemera.use(require('hemera-jaeger'), {
+  serviceName: 'math'
+})
 ```
 
 ## Getting started
@@ -22,15 +25,6 @@ $ docker run -d -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 -p5775:5775/udp -p6831:6831/u
 ```
 
 You can then navigate to http://localhost:16686 to access the Jaeger UI.
-
-## Usage
-
-```js
-const hemera = new Hemera(nats)
-hemera.use(require('hemera-jaeger'), {
-  serviceName: 'math'
-})
-```
 
 ## Add contextual data
 

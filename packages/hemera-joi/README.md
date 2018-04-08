@@ -5,7 +5,7 @@
 
 This is a plugin to use [Joi](https://github.com/hapijs/joi) for request/response validation.
 
-#### Usage
+## Usage
 
 ```js
 const hemera = new Hemera(nats)

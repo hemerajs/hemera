@@ -11,10 +11,8 @@ Amazon Simple Queue Service (SQS) is a fast, reliable, scalable, fully managed m
 
 ```js
 const hemera = new Hemera(nats)
-
 // Load config by file or environment variables
 const configPath = '..config.json'
-
 hemera.use(require('hemera-sqs'), { configPath })
 ```
 

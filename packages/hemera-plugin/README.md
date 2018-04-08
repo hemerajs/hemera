@@ -13,8 +13,6 @@
 * Provide consistent interface to register plugins even when the api is changed
 * Pass metadata to intialize your plugin with correct dependencies, default options and name.
 
-Example:
-
 ```js
 const hp = require('hemera-plugin')
 
