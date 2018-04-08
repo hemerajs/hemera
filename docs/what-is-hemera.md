@@ -6,19 +6,19 @@ sidebar_label: What is Hemera?
 
 ## In a nutshell
 
-- It's a RPC Framework for Node.js
-- It's chooses simplicity and reliability over guaranteed delivery
-- It's pattern driven by defining your RPC's as JSON objects
-- It's very lightweight
-- It's extendible via plugins (extensions, middlewares)
-- It's horizontal scalable and fault tolerant
-- It's very well tested
-- It's built with mature packages e.g for the plugin system [Avvio](https://github.com/mcollina/avvio), logging [Pino](https://github.com/pinojs/pino) or Pattern matching [Bloomrun](https://github.com/mcollina/bloomrun)
-- It uses [NATS](#what-s-nats) as transport system
-- It is 100% compatible with yarn, npm and pnpm
-- We support Callback, Promise and Async/Await style
-- We offer Docker support
-- Hemera means **in Greek mythology the personification of day** so it must run on daily basis ;)
+* It's a RPC Framework for Node.js
+* It's chooses simplicity and reliability over guaranteed delivery
+* It's pattern driven by defining your RPC's as JSON objects
+* It's very lightweight
+* It's extendible via plugins (extensions, middlewares)
+* It's horizontal scalable and fault tolerant
+* It's very well tested
+* It's built with mature packages e.g for the plugin system [Avvio](https://github.com/mcollina/avvio), logging [Pino](https://github.com/pinojs/pino) or Pattern matching [Bloomrun](https://github.com/mcollina/bloomrun)
+* It uses [NATS](#what-s-nats) as transport system
+* It is 100% compatible with yarn, npm and pnpm
+* We support Callback, Promise and Async/Await style
+* We offer Docker support
+* Hemera means **in Greek mythology the personification of day** so it must run on daily basis ;)
 
 ## What's NATS
 

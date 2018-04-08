@@ -7,7 +7,7 @@ sidebar_label: Decorators
 Sometimes it is useful to share data across plugins. This data can be accessed from parent and all child plugins. You can also declare other decorators as dependencies.
 
 ```js
-hemera.decorate("magicNumber", fn)
+hemera.decorate('magicNumber', fn)
 hemera.magicNumber
 ```
 
@@ -16,6 +16,6 @@ hemera.magicNumber
 You can also pass an async function.
 
 ```js
-hemera.decorate("magicNumber", fn, ['dep1', 'dep2'])
+hemera.decorate('magicNumber', fn, ['dep1', 'dep2'])
 hemera.magicNumber
 ```

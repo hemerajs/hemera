@@ -8,7 +8,7 @@ We provide a simple package called [hemera-testsuite](https://github.com/hemeraj
 
 ### Prerequisites
 
-- Installed NATS Server, included in the user `PATH` environment variable.
+* Installed NATS Server, included in the user `PATH` environment variable.
 
 ```js
 const server = HemeraTestsuite.start_server(PORT, done)
@@ -36,7 +36,7 @@ describe('Basic', function() {
   it('Should send and receive', function(done) {
     const nats = require('nats').connect(natsUrl)
     const hemera = new Hemera(nats)
-    
+
     hemera.ready(() => {
       hemera.add(
         {

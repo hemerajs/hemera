@@ -100,10 +100,13 @@ const myPlugin = hp((hemera, opts, done) => {
 
   hemera
     .use(
-      hp((hemera, opts, done) => {
-        // some code
-        done()
-      }, { scoped: false })
+      hp(
+        (hemera, opts, done) => {
+          // some code
+          done()
+        },
+        { scoped: false }
+      )
     )
     .after(() => {
       hemera.use(

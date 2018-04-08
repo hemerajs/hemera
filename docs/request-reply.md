@@ -122,12 +122,15 @@ hemera.act(
 You can reply any value even primitive values like `true`, `1`, `5.0`. The first argument expect an error object.
 
 ```js
-hemera.add({
-  topic: "math",
-  cmd: "add",
-}, function (req, cb) {
-  cb(null, req.a + req.b)
-})
+hemera.add(
+  {
+    topic: 'math',
+    cmd: 'add'
+  },
+  function(req, cb) {
+    cb(null, req.a + req.b)
+  }
+)
 ```
 
 ## Auto-unsubscribe
