@@ -11,25 +11,14 @@ Http route mapping for Hemera microservices. Based on [Express 4](https://github
 [![npm](https://img.shields.io/npm/v/hemera-web.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-web)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
-## Example
+## Usage
 
 ```js
+const hemera = new Hemera(nats)
 hemera.use(hemeraWeb, {
   port: 3000,
   host: '127.0.0.1',
   pattern: {} // fixed pattern or function (request) => { }
-})
-
-hemera.ready(() => {
-  hemera.add(
-    {
-      topic: 'math',
-      cmd: 'add'
-    },
-    (req, cb) => {
-      cb(null, parseInt(req.a) + parseInt(req.b))
-    }
-  )
 })
 ```
 

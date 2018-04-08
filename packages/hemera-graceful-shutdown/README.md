@@ -5,21 +5,11 @@
 
 Shutdown Hemera graceful asynchronously. By default the hemera `onClose` hook is called when `SIGINT` or `SIGTERM` was triggered.
 
-## Install
-
-```bash
-npm install --save hemera-graceful-shutdown
-```
-
-## Register plugin
-
-```js
-hemera.use(require('hemera-graceful-shutdown'))
-```
-
 ## Usage
 
 ```js
+const hemera = new Hemera(nats)
+hemera.use(require('hemera-graceful-shutdown'))
 hemera.gracefulShutdown((signal, next) => {
   next()
 })

@@ -15,14 +15,9 @@ Use cases:
 
 If you want to get a list of all active subscriber, connections you can use the [NATS HTTP Interface](http://nats.io/documentation/server/gnatsd-monitoring/) it will respond a JSON object.
 
-## Example
+## Usage
 
 ```js
-'use strict'
-const Hemera = require('nats-hemera')
-const HemeraStats = require('hemera-stats')
-const nats = require('nats').connect()
-
 const hemera = new Hemera(nats, {
   load: {
     process: {
@@ -32,45 +27,6 @@ const hemera = new Hemera(nats, {
 })
 
 hemera.use(HemeraStats)
-hemera.ready(() => {
-  let Joi = hemera.joi
-
-  hemera.add(
-    {
-      topic: 'math',
-      cmd: 'add',
-      a: Joi.number()
-        .required()
-        .default(33)
-        .description('this key will match anything you give it')
-        .notes(['this is special', 'this is important'])
-        .example(1)
-    },
-    (req, cb) => {
-      cb(null, req.a + req.b)
-    }
-  )
-
-  hemera.act(
-    {
-      topic: 'stats',
-      cmd: 'processInfo'
-    },
-    function(err, resp) {
-      console.log(err, resp)
-    }
-  )
-
-  hemera.act(
-    {
-      topic: 'stats',
-      cmd: 'registeredActions'
-    },
-    function(err, resp) {
-      console.log(err, resp)
-    }
-  )
-})
 ```
 
 # Monitoring
@@ -93,10 +49,13 @@ The pattern is:
 Example:
 
 ```js
-hemera.act({
-  topic: 'stats',
-  cmd: 'processInfo'
-}, function(err, resp) ...)
+hemera.act(
+  {
+    topic: 'stats',
+    cmd: 'processInfo'
+  },
+  function(err, resp) {}
+)
 ```
 
 Result:
@@ -125,10 +84,13 @@ The pattern is:
 Example:
 
 ```js
-hemera.act({
-  topic: 'stats',
-  cmd: 'registeredActions'
-}, function(err, resp) ...)
+hemera.act(
+  {
+    topic: 'stats',
+    cmd: 'registeredActions'
+  },
+  function(err, resp) {}
+)
 ```
 
 Result:

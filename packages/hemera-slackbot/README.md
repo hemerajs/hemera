@@ -5,36 +5,13 @@ Simple wrapper around [slack-bot-api](https://github.com/mishk0/slack-bot-api) a
 [![npm](https://img.shields.io/npm/v/hemera-slackbot.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-slackbot)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
-## Example
+## Usage
 
 ```js
-const Hemera = require('nats-hemera')
-const nats = require('nats').connect()
-const hemeraSlackbot = require('hemera-slackbot')
-
 const hemera = new Hemera(nats)
 hemera.use(hemeraSlackbot, {
   token: '<your-token>', // Add a bot https://my.slack.com/services/new/bot and put the token
   name: 'myBot'
-})
-
-hemera.ready(() => {
-  hemera.act(
-    {
-      topic: 'slackbot',
-      cmd: 'postMessageToChannel',
-      params: [
-        'general', // Channel
-        'Hello bob!', // Message
-        {
-          icon_emoji: ':cat:'
-        }
-      ]
-    },
-    (req, cb) => {
-      cb(null, req.a + req.b)
-    }
-  )
 })
 ```
 

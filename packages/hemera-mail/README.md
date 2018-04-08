@@ -6,38 +6,12 @@
 This is a plugin to mail via SMTP in Hemera. It's use [Nodemailer](https://nodemailer.com) as client library. The parameters are passed one-to-one so look in the nodemailer documentation if you want to
 configure something.
 
-## Example
+## Usage
 
 ```js
-'use strict'
-
-const Hemera = require('nats-hemera')
-const nats = require('nats')
-const HemeraMail = require('hemera-mail')
 const hemera = new Hemera(nats)
-
-hemera.use(HemeraMail, {
+hemera.use(require('hemera-mail'), {
   transport: // use here the nodemailer transport plugin of your choice, default is jsonTransport
-})
-
-hemera.ready(() => {
-
-  const message = {
-    from: 'sender@server.com',
-    to: 'receiver@sender.com',
-    subject: 'Message title',
-    text: 'Plaintext version of the message',
-    html: '<p>HTML version of the message</p>'
-  }
-
-  hemera.act({
-    topic: 'mail',
-    cmd: 'send',
-    message
-  }, function (err, resp) {
-
-    this.log.info('Result', resp)
-  })
 })
 ```
 

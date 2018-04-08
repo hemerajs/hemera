@@ -26,7 +26,8 @@ You can then navigate to http://localhost:16686 to access the Jaeger UI.
 ## Usage
 
 ```js
-hemera.use(hemeraJaeger, {
+const hemera = new Hemera(nats)
+hemera.use(require('hemera-jaeger'), {
   serviceName: 'math'
 })
 ```

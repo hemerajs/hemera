@@ -7,34 +7,15 @@ This is a plugin to use [sqs](https://aws.amazon.com/sqs/) with Hemera.
 
 Amazon Simple Queue Service (SQS) is a fast, reliable, scalable, fully managed message queuing service. Amazon SQS lets you decouple the components of a cloud application. Amazon SQS includes standard queues with high throughput and at-least-once processing, and FIFO queues that provide FIFO (first-in, first-out) delivery and exactly-once processing.
 
-## Example
+## Usage
 
 ```js
-'use strict'
-
-const Hemera = require('nats-hemera')
-const nats = require('nats').connect()
-const HemeraSQS = require('hemera-sqs')
-
-const hemera = new Hemera(nats, {
-  logLevel: 'info'
-})
+const hemera = new Hemera(nats)
 
 // Load config by file or environment variables
 const configPath = '..config.json'
 
-hemera.use(HemeraSQS, { configPath })
-
-hemera.ready(() => {
-
-  hemera.act({
-    topic: 'sqs',
-    cmd: 'sendMessage',
-    params: { ... } // See AWS documentation
-  }, function (err, resp) {
-    this.log.info(resp || err)
-  })
-})
+hemera.use(require('hemera-sqs'), { configPath })
 ```
 
 # Interface

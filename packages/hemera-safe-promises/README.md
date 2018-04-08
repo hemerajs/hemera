@@ -5,15 +5,10 @@ A node.js module to make the use of promises safe. It implements the deprecation
 [![npm](https://img.shields.io/npm/v/hemera-safe-promises.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-safe-promises)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
-## Install
-
-```
-npm i hemera-safe-promises --save
-```
-
 ## Usage
 
 ```js
+const hemera = new Hemera(nats)
 hemera.use(require('hemera-safe-promises'))
 ```
 

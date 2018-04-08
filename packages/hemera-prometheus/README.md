@@ -7,17 +7,11 @@ Prometheus collector for Hemera
 
 This client will expose a public metric endpoint on `localhost:3000/metrics`. You can expose more `Counter`, `Gauge` as http endpoint with one command `hemera.exposeMetric('metricName')`. For more informations about the prometheus client look in the driver [documentation](https://github.com/siimon/prom-client).
 
-## Install
-
-```
-npm i hemera-prometheus --save
-```
-
-## Example
+## Usage
 
 ```js
+const hemera = new Hemera(nats)
 hemera.use(require('hemera-prometheus'))
-
 hemera.ready(() => {
   const c = new hemera.prom.Counter({
     name: 'test_counter',

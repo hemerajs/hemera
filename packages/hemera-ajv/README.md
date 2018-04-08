@@ -5,7 +5,7 @@
 
 This is a plugin to use [Ajv](https://github.com/epoberezkin/ajv) (JSON-Schema) for request/response validation.
 
-#### Example
+#### Usage
 
 ```js
 const hemera = new Hemera(nats)

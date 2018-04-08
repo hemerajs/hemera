@@ -5,7 +5,7 @@
 
 Prints your server actions to the console. So each time hemera starts, you know which actions are available.
 
-## Example
+## Usage
 
 ```js
 const hemera = new Hemera(nats)
