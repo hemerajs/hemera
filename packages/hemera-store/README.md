@@ -25,7 +25,7 @@ Provide a unique pattern set for all common api methods. We had to choose for so
 | Table-oriented | Document-oriented | Convention     |
 | -------------- | ----------------- | -------------- |
 | Database       | Database          | **Database**   |
-| Database       | Collection        | **Collection** |
+| Collection     | Collection        | **Collection** |
 
 ---
 
