@@ -41,14 +41,17 @@ The pattern is:
 Example:
 
 ```js
-hemera.act({
-  topic: 'sql-store',
-  cmd: 'create',
-  collection: 'product',
-  data: {
-    name: 'tomato'
-  }
-}, function(err, resp) ...)
+hemera.act(
+  {
+    topic: 'sql-store',
+    cmd: 'create',
+    collection: 'product',
+    data: {
+      name: 'tomato'
+    }
+  },
+  function(err, resp) {}
+)
 ```
 
 ---
@@ -66,15 +69,18 @@ The pattern is:
 Example:
 
 ```js
-hemera.act({
-  topic: 'sql-store',
-  cmd: 'update',
-  collection: 'product',
-  query: {},
-  data: {
-    name: 'tomato'
-  }
-}, function(err, resp) ...)
+hemera.act(
+  {
+    topic: 'sql-store',
+    cmd: 'update',
+    collection: 'product',
+    query: {},
+    data: {
+      name: 'tomato'
+    }
+  },
+  function(err, resp) {}
+)
 ```
 
 ---
@@ -92,15 +98,18 @@ The pattern is:
 Example:
 
 ```js
-hemera.act({
-  topic: 'sql-store',
-  cmd: 'updateById',
-  id: 1,
-  collection: 'product',
-  data: {
-    name: 'tomato'
-  }
-}, function(err, resp) ...)
+hemera.act(
+  {
+    topic: 'sql-store',
+    cmd: 'updateById',
+    id: 1,
+    collection: 'product',
+    data: {
+      name: 'tomato'
+    }
+  },
+  function(err, resp) {}
+)
 ```
 
 ---
@@ -122,12 +131,15 @@ The pattern is:
 Example:
 
 ```js
-hemera.act({
-  topic: 'sql-store',
-  cmd: 'find',
-  collection: 'product',
-  query: {}
-}, function(err, resp) ...)
+hemera.act(
+  {
+    topic: 'sql-store',
+    cmd: 'find',
+    collection: 'product',
+    query: {}
+  },
+  function(err, resp) {}
+)
 ```
 
 ---
@@ -144,12 +156,15 @@ The pattern is:
 Example:
 
 ```js
-hemera.act({
-  topic: 'sql-store',
-  cmd: 'findById',
-  id: 1,
-  collection: 'product'
-}, function(err, resp) ...)
+hemera.act(
+  {
+    topic: 'sql-store',
+    cmd: 'findById',
+    id: 1,
+    collection: 'product'
+  },
+  function(err, resp) {}
+)
 ```
 
 ---
@@ -166,12 +181,15 @@ The pattern is:
 Example:
 
 ```js
-hemera.act({
-  topic: 'sql-store',
-  cmd: 'remove',
-  collection: 'product',
-  query: {}
-}, function(err, resp) ...)
+hemera.act(
+  {
+    topic: 'sql-store',
+    cmd: 'remove',
+    collection: 'product',
+    query: {}
+  },
+  function(err, resp) {}
+)
 ```
 
 ---
@@ -188,12 +206,15 @@ The pattern is:
 Example:
 
 ```js
-hemera.act({
-  topic: 'sql-store',
-  cmd: 'removeById',
-  id: 1,
-  collection: 'product'
-}, function(err, resp) ...)
+hemera.act(
+  {
+    topic: 'sql-store',
+    cmd: 'removeById',
+    id: 1,
+    collection: 'product'
+  },
+  function(err, resp) {}
+)
 ```
 
 ---
@@ -211,15 +232,18 @@ The pattern is:
 Example:
 
 ```js
-hemera.act({
-  topic: 'sql-store',
-  cmd: 'replace',
-  collection: 'product',
-  query: {},
-  data: {
-    name: 'tomato'
-  }
-}, function(err, resp) ...)
+hemera.act(
+  {
+    topic: 'sql-store',
+    cmd: 'replace',
+    collection: 'product',
+    query: {},
+    data: {
+      name: 'tomato'
+    }
+  },
+  function(err, resp) {}
+)
 ```
 
 ---
@@ -237,15 +261,18 @@ The pattern is:
 Example:
 
 ```js
-hemera.act({
-  topic: 'sql-store',
-  cmd: 'replaceById',
-  id: 1,
-  collection: 'product',
-  data: {
-    name: 'tomato'
-  }
-}, function(err, resp) ...)
+hemera.act(
+  {
+    topic: 'sql-store',
+    cmd: 'replaceById',
+    id: 1,
+    collection: 'product',
+    data: {
+      name: 'tomato'
+    }
+  },
+  function(err, resp) {}
+)
 ```
 
 ---
@@ -262,12 +289,15 @@ The pattern is:
 Example:
 
 ```js
-hemera.act({
-  topic: 'sql-store',
-  cmd: 'exists',
-  collection: 'product',
-  query: {}
-}, function(err, resp) ...)
+hemera.act(
+  {
+    topic: 'sql-store',
+    cmd: 'exists',
+    collection: 'product',
+    query: {}
+  },
+  function(err, resp) {}
+)
 ```
 
 ---
@@ -284,10 +314,13 @@ The pattern is:
 Example:
 
 ```js
-hemera.act({
-  topic: 'sql-store',
-  cmd: 'count',
-  collection: 'product',
-  query: {}
-}, function(err, resp) ...)
+hemera.act(
+  {
+    topic: 'sql-store',
+    cmd: 'count',
+    collection: 'product',
+    query: {}
+  },
+  function(err, resp) {}
+)
 ```
