@@ -186,7 +186,6 @@ class Hemera extends EventEmitter {
         hemera._extensionManager
       )
 
-      // overwrite decorate function to extend the prototype
       instance.decorate = function decorate(prop, value, deps) {
         if (prop in this) {
           throw new Errors.HemeraError(`Decorator '${prop}' is already defined`)
@@ -196,8 +195,7 @@ class Hemera extends EventEmitter {
           instance._checkDecoraterDependencies(deps)
         }
 
-        // due to the fact that each plugin has his own scope, we have to
-        // extend the prototype
+        // extend the object prototype
         proto[prop] = value
 
         return this
