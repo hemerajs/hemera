@@ -52,7 +52,7 @@ The key features of NATS in combination with Hemera are:
 ## Built in protection
 * **Process policy**: Will exit the process when the policy (memory, event loop) could not be fullfilled (Option: `heavy`).
 * **Message loop detection**: Will return an error if you call a route recursively (Option: `maxRecursion`). 
-* **Safe default JSON serializer**:Provides a deterministic version and will also gracefully handle circular structures.
+* **Safe default JSON serializer**: Provides a deterministic version and will also gracefully handle circular structures.
 
 ## Who's using Hemera?
 
