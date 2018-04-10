@@ -10,6 +10,12 @@ function plugin(fn, options) {
     )
   }
 
+  fn[Symbol.for('plugin-scoped')] = true
+
+  if (options && typeof options.scoped === 'boolean') {
+    fn[Symbol.for('plugin-scoped')] = options.scoped
+  }
+
   if (options === undefined) {
     return fn
   }
@@ -32,10 +38,7 @@ function plugin(fn, options) {
     delete options.hemera
   }
 
-  fn[Symbol.for('dependencies')] = options.dependencies
-  fn[Symbol.for('options')] = options.options
-  fn[Symbol.for('name')] = options.name
-  fn[Symbol.for('skip-override')] = options.scoped === false
+  fn[Symbol.for('plugin-meta')] = options
 
   return fn
 }

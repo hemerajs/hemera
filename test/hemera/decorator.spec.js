@@ -33,12 +33,15 @@ describe('Root Decorator', function() {
     const hemera = new Hemera(nats)
     hemera.decorate('test', 1)
 
-    let plugin = function(hemera, options, next) {
-      expect(hemera.test).to.be.equals(1)
-      next()
-    }
-
-    plugin[Symbol.for('name')] = 'myPlugin'
+    let plugin = Hp(
+      function(hemera, options, next) {
+        expect(hemera.test).to.be.equals(1)
+        next()
+      },
+      {
+        name: 'myPlugin'
+      }
+    )
 
     hemera.use(plugin)
 

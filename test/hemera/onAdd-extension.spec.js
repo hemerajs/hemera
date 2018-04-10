@@ -107,20 +107,23 @@ describe('Extension onAdd', function() {
       ext1()
     })
 
-    let plugin = function(hemera, options, done) {
-      hemera.add(
-        {
-          topic: 'email',
-          cmd: 'send'
-        },
-        (resp, cb) => {
-          cb()
-        }
-      )
-      done()
-    }
-
-    plugin[Symbol.for('name')] = 'myPlugin'
+    let plugin = Hp(
+      function(hemera, options, done) {
+        hemera.add(
+          {
+            topic: 'email',
+            cmd: 'send'
+          },
+          (resp, cb) => {
+            cb()
+          }
+        )
+        done()
+      },
+      {
+        name: 'myPlugin'
+      }
+    )
 
     hemera.use(plugin)
 
@@ -137,29 +140,32 @@ describe('Extension onAdd', function() {
     let ext1 = Sinon.spy()
     const hemera = new Hemera(nats)
 
-    let plugin = function(hemera, options, done) {
-      hemera.ext('onAdd', function(addDefinition) {
-        expect(addDefinition.pattern).to.be.equals({
-          topic: 'email',
-          cmd: 'send'
+    let plugin = Hp(
+      function(hemera, options, done) {
+        hemera.ext('onAdd', function(addDefinition) {
+          expect(addDefinition.pattern).to.be.equals({
+            topic: 'email',
+            cmd: 'send'
+          })
+          expect(addDefinition.action).to.be.function()
+          ext1()
         })
-        expect(addDefinition.action).to.be.function()
-        ext1()
-      })
 
-      hemera.add(
-        {
-          topic: 'email',
-          cmd: 'send'
-        },
-        (resp, cb) => {
-          cb()
-        }
-      )
-      done()
-    }
-
-    plugin[Symbol.for('name')] = 'myPlugin'
+        hemera.add(
+          {
+            topic: 'email',
+            cmd: 'send'
+          },
+          (resp, cb) => {
+            cb()
+          }
+        )
+        done()
+      },
+      {
+        name: 'myPlugin'
+      }
+    )
 
     hemera.use(plugin)
 

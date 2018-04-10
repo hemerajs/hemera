@@ -85,14 +85,6 @@ Update the notFound Pattern.
 hemera.setNotFoundPattern(fn)
 ```
 
-### Hemera.checkPluginDependencies()
-
-Verifies the plugin dependecies are installed.
-
-```js
-hemera.checkPluginDependencies()
-```
-
 ### Hemera.hasDecorator()
 
 Return a boolean whether the decorator is available.

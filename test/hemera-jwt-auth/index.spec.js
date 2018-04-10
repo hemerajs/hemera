@@ -1,9 +1,6 @@
 'use strict'
 
 const HemeraJwt = require('../../packages/hemera-jwt-auth')
-HemeraJwt[Symbol.for('options')].jwt.secret = 'test'
-
-process.setMaxListeners(0)
 
 describe('Hemera-jwt-auth', function() {
   const PORT = 6244
@@ -31,7 +28,11 @@ describe('Hemera-jwt-auth', function() {
 
     const hemera = new Hemera(nats)
 
-    hemera.use(HemeraJwt)
+    hemera.use(HemeraJwt, {
+      jwt: {
+        secret: 'test'
+      }
+    })
 
     hemera.ready(() => {
       hemera.add(
@@ -93,7 +94,11 @@ describe('Hemera-jwt-auth', function() {
 
     const hemera = new Hemera(nats)
 
-    hemera.use(HemeraJwt)
+    hemera.use(HemeraJwt, {
+      jwt: {
+        secret: 'test'
+      }
+    })
 
     hemera.ready(() => {
       hemera.add(
@@ -133,7 +138,11 @@ describe('Hemera-jwt-auth', function() {
 
     const hemera = new Hemera(nats)
 
-    hemera.use(HemeraJwt)
+    hemera.use(HemeraJwt, {
+      jwt: {
+        secret: 'test'
+      }
+    })
 
     hemera.ready(() => {
       hemera.add(
@@ -173,7 +182,11 @@ describe('Hemera-jwt-auth', function() {
 
     const hemera = new Hemera(nats)
 
-    hemera.use(HemeraJwt)
+    hemera.use(HemeraJwt, {
+      jwt: {
+        secret: 'test'
+      }
+    })
 
     hemera.ready(() => {
       hemera.add(
@@ -214,7 +227,11 @@ describe('Hemera-jwt-auth', function() {
 
     const hemera = new Hemera(nats)
 
-    hemera.use(HemeraJwt)
+    hemera.use(HemeraJwt, {
+      jwt: {
+        secret: 'test'
+      }
+    })
 
     hemera.ready(() => {
       hemera.add(
@@ -253,7 +270,11 @@ describe('Hemera-jwt-auth', function() {
 
     const hemera = new Hemera(nats)
 
-    hemera.use(HemeraJwt)
+    hemera.use(HemeraJwt, {
+      jwt: {
+        secret: 'test'
+      }
+    })
 
     hemera.ready(() => {
       hemera.add(
@@ -292,7 +313,11 @@ describe('Hemera-jwt-auth', function() {
 
     const hemera = new Hemera(nats)
 
-    hemera.use(HemeraJwt)
+    hemera.use(HemeraJwt, {
+      jwt: {
+        secret: 'test'
+      }
+    })
 
     hemera.ready(() => {
       hemera.add(
@@ -331,7 +356,11 @@ describe('Hemera-jwt-auth', function() {
 
     const hemera = new Hemera(nats)
 
-    hemera.use(HemeraJwt)
+    hemera.use(HemeraJwt, {
+      jwt: {
+        secret: 'test'
+      }
+    })
 
     hemera.ready(() => {
       hemera.add(
@@ -395,7 +424,11 @@ describe('Hemera-jwt-auth', function() {
 
     const hemera = new Hemera(nats)
 
-    hemera.use(HemeraJwt)
+    hemera.use(HemeraJwt, {
+      jwt: {
+        secret: 'test'
+      }
+    })
 
     hemera.ready(() => {
       hemera.add(
@@ -436,7 +469,11 @@ describe('Hemera-jwt-auth', function() {
 
     const hemera = new Hemera(nats)
 
-    hemera.use(HemeraJwt)
+    hemera.use(HemeraJwt, {
+      jwt: {
+        secret: 'test'
+      }
+    })
 
     hemera.ready(() => {
       hemera.add(
@@ -478,7 +515,10 @@ describe('Hemera-jwt-auth', function() {
     const hemera = new Hemera(nats)
 
     hemera.use(HemeraJwt, {
-      enforceAuth: false
+      enforceAuth: false,
+      jwt: {
+        secret: 'test'
+      }
     })
 
     hemera.ready(() => {
@@ -514,7 +554,10 @@ describe('Hemera-jwt-auth', function() {
     const hemera = new Hemera(nats)
 
     hemera.use(HemeraJwt, {
-      enforceAuth: false
+      enforceAuth: false,
+      jwt: {
+        secret: 'test'
+      }
     })
 
     hemera.ready(() => {

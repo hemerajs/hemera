@@ -2,6 +2,7 @@
   "extends": "hemera",
   "globals": {
     "Hemera": true,
+    "Hp": true,
     "HemeraUtil": true,
     "HemeraSymbols": true,
     "expect": true,

@@ -189,12 +189,37 @@ const myPlugin = hp(
   {
     hemera: '0.x', // bare-minimum version of Hemera
     name: 'my-plugin', // name of your plugin, will be used e.g for logging purposes
-    dependencies: ['plugin2'], // won't be checked until you use `hemera.checkPluginDependencies(plugin)`
-    options: { host: 'localhost', port: 8003 } // default options for your plugin
+    options: { host: 'localhost', port: 8003 }, // default options for your plugin
+    dependencies: ['plugin2'],
+    decorators: ['joi']
   }
 )
 
 hemera.use(myPlugin)
+```
+
+## Plugin depdendencies
+
+You can declare plugin and decorators as dependencies. The constrain is checked when all plugins are registered.
+
+```js
+const hp = require('hemera-plugin')
+const myPlugin = hp(
+  (hemera, opts, done) => {
+    const Joi = hemera.joi
+
+    done()
+  },
+  {
+    dependencies: ['plugin2'],
+    decorators: ['joi']
+  }
+)
+
+hemera.use(myPlugin)
+hemera.ready(err => {
+  // The dependency 'hemera-joi' is not registered
+})
 ```
 
 ## Async / Await

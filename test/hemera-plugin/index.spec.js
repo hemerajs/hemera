@@ -5,7 +5,6 @@ const Proxyquire = require('proxyquire')
 
 describe('Hemera plugin', function() {
   it('Should register a plugin', function(done) {
-    // Plugin
     HemeraPlugin(function(hemera, opts, done) {
       done()
     })
@@ -33,7 +32,6 @@ describe('Hemera plugin', function() {
 
   it('Should throw an error because semver version does not match', function(done) {
     const throws = function() {
-      // Plugin
       HemeraPlugin(function(hemera, opts, done) {
         done()
       }, '500.400.300')
@@ -45,7 +43,6 @@ describe('Hemera plugin', function() {
 
   it('Should throw an error because plugin function is not a function', function(done) {
     const throws = function() {
-      // Plugin
       HemeraPlugin(true, '1')
     }
 
@@ -69,24 +66,41 @@ describe('Hemera plugin', function() {
   })
 
   it('Should accept plugin opts', function(done) {
-    // Plugin
     let plugin = HemeraPlugin(
       (hemera, opts, next) => {
         next()
       },
       {
-        hemera: '>=5.0.0-rc.1',
+        hemera: '>=5.0.0',
         name: 'myPlugin',
         scoped: false,
         dependencies: ['foo'],
         options: { a: 1 }
       }
     )
+    expect(plugin[Symbol.for('plugin-meta')]).to.be.equals({
+      name: 'myPlugin',
+      scoped: false,
+      dependencies: ['foo'],
+      options: { a: 1 }
+    })
+    expect(plugin[Symbol.for('plugin-scoped')]).to.be.equals(false)
+    done()
+  })
 
-    expect(plugin[Symbol.for('name')]).to.be.equals('myPlugin')
-    expect(plugin[Symbol.for('dependencies')]).to.be.equals(['foo'])
-    expect(plugin[Symbol.for('skip-override')]).to.be.equals(true)
-    expect(plugin[Symbol.for('options')]).to.be.equals({ a: 1 })
+  it('Should scoped by default', function(done) {
+    let plugin = HemeraPlugin((hemera, opts, next) => {
+      next()
+    })
+    expect(plugin[Symbol.for('plugin-scoped')]).to.be.equals(true)
+    done()
+  })
+
+  it('Should scoped by default / 2', function(done) {
+    let plugin = HemeraPlugin((hemera, opts, next) => {
+      next()
+    }, {})
+    expect(plugin[Symbol.for('plugin-scoped')]).to.be.equals(true)
     done()
   })
 })
