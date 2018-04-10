@@ -33,12 +33,15 @@ describe('Expose', function() {
     const hemera = new Hemera(nats)
     hemera.expose('test', 1)
 
-    let plugin = function(hemera, options, next) {
-      expect(hemera.test).to.be.equals(1)
-      next()
-    }
-
-    plugin[Symbol.for('name')] = 'myPlugin'
+    let plugin = Hp(
+      function(hemera, options, next) {
+        expect(hemera.test).to.be.equals(1)
+        next()
+      },
+      {
+        name: 'myPlugin'
+      }
+    )
 
     hemera.use(plugin)
 
@@ -53,22 +56,28 @@ describe('Expose', function() {
 
     const hemera = new Hemera(nats)
 
-    let plugin = function(hemera, options, next) {
-      hemera.expose('test', 1)
-      hemera.use(plugin2)
-      next()
-    }
-
-    plugin[Symbol.for('name')] = 'myPlugin'
+    let plugin = Hp(
+      function(hemera, options, next) {
+        hemera.expose('test', 1)
+        hemera.use(plugin2)
+        next()
+      },
+      {
+        name: 'myPlugin'
+      }
+    )
 
     hemera.use(plugin)
 
-    let plugin2 = function(hemera, options, next) {
-      expect(hemera.test).to.be.to.exists()
-      next()
-    }
-
-    plugin2[Symbol.for('name')] = 'myPlugin2'
+    let plugin2 = Hp(
+      function(hemera, options, next) {
+        expect(hemera.test).to.be.to.exists()
+        next()
+      },
+      {
+        name: 'myPlugin2'
+      }
+    )
 
     hemera.ready(err => {
       expect(err).to.not.exists()

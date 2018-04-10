@@ -11,10 +11,5 @@
 
 module.exports = {
   childrenKey: Symbol('hemera.children'),
-  registeredPlugins: Symbol('hemera.registered-plugin'),
-  // Plugin
-  pluginSkipOverride: Symbol.for('skip-override'),
-  pluginName: Symbol.for('name'),
-  pluginDependencies: Symbol.for('dependencies'),
-  pluginOptions: Symbol.for('options')
+  registeredPlugins: Symbol('hemera.registered-plugin')
 }

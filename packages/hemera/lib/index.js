@@ -157,14 +157,17 @@ class Hemera extends EventEmitter {
     this[Symbols.registeredPlugins] = []
 
     this._avvio.override = (hemera, plugin, opts) => {
-      const skipOverride = plugin[Symbols.pluginSkipOverride]
-      const pluginName = plugin[Symbols.pluginName]
+      const pluginMeta = this.getPluginMeta(plugin)
 
-      if (pluginName) {
-        hemera[Symbols.registeredPlugins].push(pluginName)
+      if (pluginMeta) {
+        if (pluginMeta.name) {
+          hemera[Symbols.registeredPlugins].push(pluginMeta.name)
+        }
+        hemera.checkPluginDependencies(plugin)
+        hemera.checkPluginDecorators(plugin)
       }
 
-      if (skipOverride) {
+      if (plugin[Symbol.for('plugin-scoped')] === false) {
         return hemera
       }
 
@@ -173,8 +176,8 @@ class Hemera extends EventEmitter {
       hemera[Symbols.childrenKey].push(instance)
       instance[Symbols.childrenKey] = []
 
-      if (hemera._config.childLogger && pluginName) {
-        instance.log = hemera.log.child({ plugin: pluginName })
+      if (pluginMeta && pluginMeta.name && hemera._config.childLogger) {
+        instance.log = hemera.log.child({ plugin: pluginMeta.name })
       }
 
       instance[Symbols.registeredPlugins] = Object.create(
@@ -571,6 +574,15 @@ class Hemera extends EventEmitter {
       }
     }
   }
+
+  /**
+   *
+   * @param {*} plugin
+   */
+  getPluginMeta(plugin) {
+    return plugin[Symbol.for('plugin-meta')]
+  }
+
   /**
    *
    *
@@ -578,7 +590,11 @@ class Hemera extends EventEmitter {
    * @memberof Hemera
    */
   checkPluginDependencies(plugin) {
-    const dependencies = plugin[Symbols.pluginDependencies]
+    const pluginMeta = this.getPluginMeta(plugin)
+    if (!pluginMeta) {
+      return
+    }
+    const dependencies = pluginMeta.dependencies
     if (!dependencies) {
       return
     }
@@ -587,7 +603,6 @@ class Hemera extends EventEmitter {
         'Plugin dependencies must be an array of strings'
       )
     }
-
     dependencies.forEach(dependency => {
       if (this[Symbols.registeredPlugins].indexOf(dependency) === -1) {
         throw new Errors.HemeraError(
@@ -600,12 +615,43 @@ class Hemera extends EventEmitter {
   /**
    *
    *
+   * @param {any} deps
+   * @memberof Hemera
+   */
+  checkPluginDecorators(plugin) {
+    const pluginMeta = this.getPluginMeta(plugin)
+    if (!pluginMeta) {
+      return
+    }
+    const decorators = pluginMeta.decorators
+    if (!decorators) {
+      return
+    }
+    if (!Array.isArray(decorators)) {
+      throw new Errors.HemeraError(
+        'Plugin decorators must be an array of strings'
+      )
+    }
+    for (var i = 0; i < decorators.length; i++) {
+      if (!(decorators[i] in this)) {
+        throw new Errors.HemeraError(
+          `The decorator dependency '${decorators[i]}' is not registered`
+        )
+      }
+    }
+  }
+
+  /**
+   *
+   *
    * @param {any} plugin
    * @returns
    * @memberof Hemera
    */
   use(plugin, opts) {
-    let pluginOpts = Object.assign({}, plugin[Symbols.pluginOptions], opts)
+    const pluginMeta = this.getPluginMeta(plugin)
+    let pluginOpts = pluginMeta ? pluginMeta.options : {}
+    pluginOpts = Object.assign({}, pluginOpts, opts)
     this.register(plugin, pluginOpts)
     return this._avvio
   }

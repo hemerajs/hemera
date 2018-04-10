@@ -56,9 +56,11 @@ function plugin(hemera, opts, next) {
 module.exports = hp(plugin, {
   hemera: '0.x', // bare-minimum version of Hemera
   name: 'my-plugin', // name of your plugin, will be used e.g for logging purposes
-  dependencies: ['plugin2'], // won't be checked until you use `hemera.checkPluginDependencies(plugin)`
   scoped: false, // when false no hemera plugin is created. This is useful if you want to extend the core but don't need a seperate plugin scope.
-  options: { host: 'localhost', port: 8003 } // default options for your plugin
+  options: { host: 'localhost', port: 8003 }, // default options for your plugin
+  // Plugin dependencies
+  decorators: ['joi'],
+  dependencies: ['plugin2']
 })
 ```
 

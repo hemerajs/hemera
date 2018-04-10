@@ -1,7 +1,8 @@
 ---
-id: reference
+id: version-5.2.0-reference
 title: Reference
 sidebar_label: Reference
+original_id: reference
 ---
 
 ## Static
@@ -83,6 +84,14 @@ Update the notFound Pattern.
 
 ```js
 hemera.setNotFoundPattern(fn)
+```
+
+### Hemera.checkPluginDependencies()
+
+Verifies the plugin dependecies are installed.
+
+```js
+hemera.checkPluginDependencies()
 ```
 
 ### Hemera.hasDecorator()
