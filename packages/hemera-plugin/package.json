@@ -15,6 +15,9 @@
   "dependencies": {
     "semver": "5.5.x"
   },
+  "peerDependencies": {
+    "nats-hemera": ">=5.3.0"
+  },
   "devDependencies": {
     "nats-hemera": ">=5.0.0-rc.1"
   }
