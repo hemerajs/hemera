@@ -162,12 +162,33 @@ hemera.use(myPlugin)
   {
     <span class="hljs-attr">hemera</span>: <span class="hljs-string">'0.x'</span>, <span class="hljs-comment">// bare-minimum version of Hemera</span>
     name: <span class="hljs-string">'my-plugin'</span>, <span class="hljs-comment">// name of your plugin, will be used e.g for logging purposes</span>
-    dependencies: [<span class="hljs-string">'plugin2'</span>], <span class="hljs-comment">// won't be checked until you use `hemera.checkPluginDependencies(plugin)`</span>
-    options: { <span class="hljs-attr">host</span>: <span class="hljs-string">'localhost'</span>, <span class="hljs-attr">port</span>: <span class="hljs-number">8003</span> } <span class="hljs-comment">// default options for your plugin</span>
+    options: { <span class="hljs-attr">host</span>: <span class="hljs-string">'localhost'</span>, <span class="hljs-attr">port</span>: <span class="hljs-number">8003</span> }, <span class="hljs-comment">// default options for your plugin</span>
+    dependencies: [<span class="hljs-string">'plugin2'</span>],
+    <span class="hljs-attr">decorators</span>: [<span class="hljs-string">'joi'</span>]
   }
 )
 
 hemera.use(myPlugin)
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="plugin-depdendencies"></a><a href="#plugin-depdendencies" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Plugin depdendencies</h2>
+<p>You can declare plugin and decorators as dependencies. The constrain is checked when all plugins are registered.</p>
+<pre><code class="hljs css js"><span class="hljs-keyword">const</span> hp = <span class="hljs-built_in">require</span>(<span class="hljs-string">'hemera-plugin'</span>)
+<span class="hljs-keyword">const</span> myPlugin = hp(
+  <span class="hljs-function">(<span class="hljs-params">hemera, opts, done</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> Joi = hemera.joi
+
+    done()
+  },
+  {
+    <span class="hljs-attr">dependencies</span>: [<span class="hljs-string">'plugin2'</span>],
+    <span class="hljs-attr">decorators</span>: [<span class="hljs-string">'joi'</span>]
+  }
+)
+
+hemera.use(myPlugin)
+hemera.ready(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> {
+  <span class="hljs-comment">// The dependency 'hemera-joi' is not registered</span>
+})
 </code></pre>
 <h2><a class="anchor" aria-hidden="true" id="async-await"></a><a href="#async-await" aria-hidden="true" class="hash-link" ><svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Async / Await</h2>
 <p>You can also pass an async function.</p>
