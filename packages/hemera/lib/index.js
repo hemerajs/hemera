@@ -69,6 +69,7 @@ class Hemera extends EventEmitter {
       throw config.error
     }
 
+    this._root = this
     this._isReady = false
     this._config = config.value
     this._router = Bloomrun(this._config.bloomrun)
@@ -168,7 +169,6 @@ class Hemera extends EventEmitter {
       }
 
       const instance = Object.create(hemera)
-      const proto = Object.getPrototypeOf(instance)
 
       hemera[Symbols.childrenKey].push(instance)
       instance[Symbols.childrenKey] = []
@@ -186,19 +186,9 @@ class Hemera extends EventEmitter {
         hemera._extensionManager
       )
 
-      instance.decorate = function decorate(prop, value, deps) {
-        if (prop in this) {
-          throw new Errors.HemeraError(`Decorator '${prop}' is already defined`)
-        }
-
-        if (deps) {
-          instance._checkDecoraterDependencies(deps)
-        }
-
-        // extend the object prototype
-        proto[prop] = value
-
-        return this
+      instance.decorate = function() {
+        hemera.decorate.apply(this._root, arguments)
+        return instance
       }
 
       return instance
@@ -538,7 +528,29 @@ class Hemera extends EventEmitter {
     }
 
     if (deps) {
-      this._checkDecoraterDependencies(deps)
+      this._checkMemberDependencies(deps)
+    }
+
+    this[prop] = value
+
+    return this
+  }
+
+  /**
+   * Expose a value to the current instance
+   *
+   * @param {any} prop
+   * @param {any} value
+   *
+   * @memberOf Hemera
+   */
+  expose(prop, value, deps) {
+    if (prop in this) {
+      throw new Errors.HemeraError('Exposition has been already added')
+    }
+
+    if (deps) {
+      this._checkMemberDependencies(deps)
     }
 
     this[prop] = value
@@ -552,12 +564,10 @@ class Hemera extends EventEmitter {
    * @param {any} deps
    * @memberof Hemera
    */
-  _checkDecoraterDependencies(deps) {
+  _checkMemberDependencies(deps) {
     for (var i = 0; i < deps.length; i++) {
       if (!(deps[i] in this)) {
-        throw new Errors.HemeraError(
-          `Missing decorator dependency '${deps[i]}'`
-        )
+        throw new Errors.HemeraError(`Missing member dependency '${deps[i]}'`)
       }
     }
   }

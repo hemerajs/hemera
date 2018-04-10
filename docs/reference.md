@@ -103,10 +103,18 @@ hemera.hasDecorator(string)
 
 ### Hemera.decorate()
 
-Decorate the current instance with the value.
+Decorate the core hemera instance with the value.
 
 ```js
 hemera.decorate(name, value)
+```
+
+### Hemera.expose()
+
+Expose a value to the current hemera instance.
+
+```js
+hemera.expose(name, value)
 ```
 
 ### Hemera.use()

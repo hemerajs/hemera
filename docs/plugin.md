@@ -15,7 +15,7 @@ Before we get into the plugin system of hemera you have to install a package cal
 * Check the bare-minimum version of Hemera
 * Provide consistent interface to register plugins even when the api is changed
 * Pass metadata to intialize your plugin with correct dependencies, default options and name
-* Skip the creation of a seperate plugins scope
+* Skip plugin encapsulation
 
 ## Create a plugin
 
@@ -37,14 +37,14 @@ const myPlugin = hp((hemera, opts, done) => {
   )
 
   done()
-})
+}, '>=5.0.0')
 
 module.exports = myPlugin
 ```
 
-## Encapsulation
+## Break encapsulation
 
-Plugins will create its own scope by default. This means that a child plugin can never manipulate its parent scope but child plugins. If you register an extension inside a plugin only child plugins will be effected.
+Sometimes it is still useful to write a plugin which effects child as well as sibling scopes. You can archive this with plugin option `scoped: false` property. This approach is used in payload validators `hemera-joi` or authentication `hemera-jwt`.
 
 ```js
 const hp = require('hemera-plugin')
@@ -64,7 +64,7 @@ hemera.use(myPlugin)
 
 ## Register child plugins
 
-You can load plugins inside other plugins. Be ware that some [settings](#scoped-sensitive-settings) are effected.
+You can load plugins inside other plugins. Be ware that [**Scoped sensitive settings**](#scoped-sensitive-settings) are effected.
 
 ```js
 const hp = require('hemera-plugin')
@@ -79,8 +79,8 @@ const myPlugin = hp((hemera, opts, done) => {
   hemera.use(
     hp((hemera, opts, done) => {
       // some code
-      // previous plugin will effect this scope as well
-      // because it modify the instance directly
+      // this plugin will be effected
+      // because it inherit the prototype
       done()
     })
   )
@@ -89,42 +89,9 @@ const myPlugin = hp((hemera, opts, done) => {
 })
 ```
 
-## Based on third-party plugins
-
-Some plugins like `hemera-joi`, `hemera-ajv` or `hemera-jwt` aren't encapsulated. In this way they can provide a set of functionality to other plugins. To specifically use the plugins you can register your own plugin inside `.after()`. As a result of this, you can defer the registration of your plugin at the point where all previous plugins and child plugins are loaded. This is great because you can build upon other plugins.
-
-```js
-const hp = require('hemera-plugin')
-const myPlugin = hp((hemera, opts, done) => {
-  const topic = 'math'
-
-  hemera
-    .use(
-      hp(
-        (hemera, opts, done) => {
-          // some code
-          done()
-        },
-        { scoped: false }
-      )
-    )
-    .after(() => {
-      hemera.use(
-        hp((hemera, opts, done) => {
-          // previous plugin will effect this scope as well
-          // because it's scoped:false and we defer the registration with `.after()`
-          done()
-        })
-      )
-    })
-
-  done()
-})
-```
-
 ### Decorators
 
-Decorators are something special. Even if you create a plugin scope you can decorate the parent, sibling and child scopes. Decorators are primarly used to expose data or functionality to other plugins.
+Decorators are something special. Even if you create a plugin scope you can decorate the root hemera instance. Decorators are primarly used to expose data or functionality to other plugins.
 
 ```js
 const hp = require('hemera-plugin')
@@ -138,6 +105,27 @@ const myPlugin = hp((hemera, opts, done) => {
 
 hemera.use(myPlugin)
 hemera.ready(() => console.log(hemera.test))
+```
+
+### Expose
+
+If you want to share data inside a plugin you can use `expose()` it will effects all sibling and child scopes. Expose should be used to control the inner workings of the plugin.
+
+```js
+const hp = require('hemera-plugin')
+const myPlugin = hp((hemera, opts, done) => {
+  const topic = 'math'
+
+  hemera.expose('cache', new Map())
+  hemera.cache.set('key', 'value')
+
+  hemera.use(myPlugin2) // cache is available in this plugin too
+
+  done()
+})
+
+hemera.use(myPlugin)
+hemera.ready()
 ```
 
 ### Global registration
@@ -242,7 +230,7 @@ hemera.use(plugin, { a: 1 })
 
 ## After
 
-Calls a function after all previous registrations are loaded, including all their dependencies.
+Calls a function after all previous registrations are loaded, including all their dependencies. This can be used defer the registration of a plugin.
 
 ```js
 hemera.use(plugin).after(cb)
