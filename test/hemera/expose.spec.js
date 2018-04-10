@@ -1,6 +1,6 @@
 'use strict'
 
-describe('Root Decorator', function() {
+describe('Expose', function() {
   var PORT = 6242
   var authUrl = 'nats://localhost:' + PORT
   var server
@@ -15,23 +15,23 @@ describe('Root Decorator', function() {
     server.kill()
   })
 
-  it('Should be able add a decorator', function(done) {
+  it('Should be able add a exposition', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.decorate('d', () => true)
+      hemera.expose('d', () => true)
       expect(hemera.d).to.be.function()
       hemera.close(done)
     })
   })
 
-  it('Should be able to access decorator inside plugins', function(done) {
+  it('Should be able to access expositions inside plugins', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
-    hemera.decorate('test', 1)
+    hemera.expose('test', 1)
 
     let plugin = function(hemera, options, next) {
       expect(hemera.test).to.be.equals(1)
@@ -48,42 +48,56 @@ describe('Root Decorator', function() {
     })
   })
 
-  it('Should throw error because could not resolve all decorate deps', function(done) {
+  it('Expositions are encapsulated inside plugins', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
-    hemera.ready(() => {
-      try {
-        hemera.decorate('b', 1, ['a'])
-      } catch (err) {
-        expect(err.message).to.be.equals("Missing member dependency 'a'")
-        hemera.close(done)
-      }
-    })
-  })
+    let plugin = function(hemera, options, next) {
+      hemera.expose('test', 1)
+      hemera.use(plugin2)
+      next()
+    }
 
-  it('Should satisfy all decorate deps', function(done) {
-    const nats = require('nats').connect(authUrl)
+    plugin[Symbol.for('name')] = 'myPlugin'
 
-    const hemera = new Hemera(nats)
+    hemera.use(plugin)
 
-    hemera.ready(() => {
-      hemera.decorate('a', 2)
-      hemera.decorate('b', 1, ['a'])
+    let plugin2 = function(hemera, options, next) {
+      expect(hemera.test).to.be.to.exists()
+      next()
+    }
+
+    plugin2[Symbol.for('name')] = 'myPlugin2'
+
+    hemera.ready(err => {
+      expect(err).to.not.exists()
+      expect(hemera.test).to.be.not.exists()
       hemera.close(done)
     })
   })
 
-  it('Should not be possible to override an decoration', function(done) {
+  it('Should satisfy all expose deps', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.expose('a', 2)
+      hemera.expose('b', 1, ['a'])
+      hemera.close(done)
+    })
+  })
+
+  it('Should not be possible to override an exposition', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
       try {
-        hemera.decorate('d', 1)
-        hemera.decorate('d', 1)
+        hemera.expose('d', 1)
+        hemera.expose('d', 1)
       } catch (err) {
         expect(err).to.exists()
         hemera.close(done)
@@ -91,27 +105,18 @@ describe('Root Decorator', function() {
     })
   })
 
-  it('Should be able add to check if a decorator exists', function(done) {
+  it('Should throw error because could not resolve all expose deps', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.decorate('d', () => true)
-      expect(hemera.hasDecorator('d')).to.be.equals(true)
-      hemera.close(done)
-    })
-  })
-
-  it('Should not extend the prototype', function(done) {
-    const nats = require('nats').connect(authUrl)
-
-    let hemera1 = new Hemera(nats)
-    hemera1.decorate('fooBar', 1)
-    let hemera2 = new Hemera(nats)
-    expect(hemera2.hasDecorator('fooBar')).to.be.equals(false)
-    hemera1.close(() => {
-      hemera2.close(done)
+      try {
+        hemera.expose('b', 1, ['a'])
+      } catch (err) {
+        expect(err.message).to.be.equals("Missing member dependency 'a'")
+        hemera.close(done)
+      }
     })
   })
 })

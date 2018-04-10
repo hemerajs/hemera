@@ -225,6 +225,8 @@ declare class Hemera {
   decorate(name: string, decoration: any, dependencies?: Array<string>): Hemera
   hasDecorator(name: string): Boolean
 
+  expose(name: string, exposition: any, dependencies?: Array<string>): Hemera
+
   createError(name: string): any
 
   // application extensions

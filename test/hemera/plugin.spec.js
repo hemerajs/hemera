@@ -627,7 +627,7 @@ describe('Plugin interface', function() {
     hemera.use(parent)
 
     hemera.use(function(hemera, options, done) {
-      expect(hemera.test).to.be.not.exists()
+      expect(hemera.test).to.be.exists()
       expect(hemera[HemeraSymbols.registeredPlugins].slice()).to.be.equals([
         'parent'
       ])
@@ -636,7 +636,7 @@ describe('Plugin interface', function() {
 
     hemera.ready(err => {
       expect(err).to.be.not.exists()
-      expect(hemera.test).to.be.not.exists()
+      expect(hemera.test).to.be.exists()
 
       expect(hemera[HemeraSymbols.registeredPlugins].slice()).to.be.equals([
         'parent'
@@ -758,7 +758,7 @@ describe('Plugin interface', function() {
       try {
         hemera.decorate('b', 1, ['a'])
       } catch (err) {
-        expect(err.message).to.exists(`Missing decorator dependency 'a'`)
+        expect(err.message).to.exists(`Missing member dependency 'a'`)
         hemera.close(done)
       }
       next()
@@ -915,7 +915,7 @@ describe('Plugin interface', function() {
     hemera.ready()
   })
 
-  it('Should be able to decorate the prototype chain', function(done) {
+  it('Should be able to decorate the root instance', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -936,7 +936,7 @@ describe('Plugin interface', function() {
     })
   })
 
-  it('Should not be able to decorate root instance / 2', function(done) {
+  it('Should be able to decorate root instance / 2', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -957,7 +957,7 @@ describe('Plugin interface', function() {
 
     hemera.ready(err => {
       expect(err).to.not.exists()
-      expect(hemera.test).to.be.not.exists()
+      expect(hemera.test).to.be.exists()
       hemera.close(done)
     })
   })
