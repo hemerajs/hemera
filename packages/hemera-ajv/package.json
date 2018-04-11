@@ -21,6 +21,6 @@
   "dependencies": {
     "ajv": "6.4.x",
     "fast-json-stringify": "1.2.x",
-    "hemera-plugin": "^1.1.1"
+    "hemera-plugin": "^1.3.0"
   }
 }
