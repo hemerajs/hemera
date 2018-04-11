@@ -1,6 +1,6 @@
 {
   "name": "hemera-blipp",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Prints your server actions to the console",
   "main": "index.js",
   "repository": {

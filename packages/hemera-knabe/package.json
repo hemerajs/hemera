@@ -1,6 +1,6 @@
 {
   "name": "hemera-knabe",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Send a report about your service dependencies",
   "main": "index.js",
   "repository": {
