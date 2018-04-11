@@ -18,12 +18,12 @@ hemera.ready(() => {
 
 ## Report
 
-```json
+```js
 {
   "dependencies": ["math", "knabe"], // array of topics
   "node": {
-    "name": "hemera-starptech-40ec88eebf6848009db7597ed0309512",
-    "tag": ""
+    "name": "hemera-starptech-40ec88eebf6848009db7597ed0309512", // config.name
+    "tag": "" // config.tag
   }
 }
 ```
