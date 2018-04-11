@@ -130,7 +130,7 @@ hemera.ready()
 
 ### Global registration
 
-Sometimes it is still useful to write a plugin which effects sibling and child scopes only disable the creation of a plugin scope with `scoped: false` property.
+Sometimes it is still useful to write a plugin which effects sibling and child scopes. You can disable the creation of a plugin scope with the `scoped: false` property.
 This approach is used in payload validators `hemera-joi` or authentication `hemera-jwt`.
 
 ```js
@@ -200,7 +200,7 @@ hemera.use(myPlugin)
 
 ## Plugin depdendencies
 
-You can declare plugin and decorators as dependencies. The constrain is checked when all plugins are registered.
+You can declare plugin and decorators as dependencies. The constrains are checked when all plugins are registered.
 
 ```js
 const hp = require('hemera-plugin')
@@ -255,7 +255,7 @@ hemera.use(plugin, { a: 1 })
 
 ## After
 
-Calls a function after all previous registrations are loaded, including all their dependencies. This can be used defer the registration of a plugin.
+Calls a function after all previous registrations are loaded, including all their dependencies. This can be used to defer the registration of a plugin.
 
 ```js
 hemera.use(plugin).after(cb)
