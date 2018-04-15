@@ -947,12 +947,16 @@ class Hemera extends EventEmitter {
 
     const isPromise = result && typeof result.then === 'function'
     if (isPromise) {
-      result.then(x => self.reply.send(x)).catch(err => {
-        if (err) {
-          self._isValidError(err)
-        }
-        self.reply.send(err)
-      })
+      result
+        .then(payload => {
+          self.reply.send(payload)
+        })
+        .catch(err => {
+          if (err) {
+            self._isValidError(err)
+          }
+          self.reply.send(err)
+        })
     }
   }
 

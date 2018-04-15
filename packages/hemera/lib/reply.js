@@ -97,7 +97,6 @@ class Reply {
    */
   send(msg) {
     const self = this
-
     if (self.sent) {
       self.log.warn(new Errors.HemeraError('Reply already sent'))
       return

@@ -309,6 +309,40 @@ describe('Async / Await support', function() {
     return hemera.close()
   })
 
+  it('Should not be able to use callback after promise chain was fullfilled', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, { logLevel: 'warn' })
+
+    hemera.ready().then(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        async function(resp, cb) {
+          setTimeout(() => cb(null, 'test'), 20)
+          return Promise.resolve()
+        }
+      )
+
+      hemera
+        .act({
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        })
+        .then(result => {
+          setTimeout(() => {
+            expect(result.data).to.be.equals()
+            expect(result.context).to.be.exists()
+            hemera.close(done)
+          }, 50)
+        })
+    })
+  })
+
   it('Should be able to await inside ready callback', async function() {
     const nats = require('nats').connect(authUrl)
 
