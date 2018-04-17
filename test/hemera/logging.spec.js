@@ -1,5 +1,7 @@
 'use strict'
 
+const split = require('split2')
+
 describe('Logging interface', function() {
   var PORT = 6242
   var authUrl = 'nats://localhost:' + PORT
@@ -48,17 +50,18 @@ describe('Logging interface', function() {
 
   it('Should be able to log with default logger', function(done) {
     const nats = require('nats').connect(authUrl)
+    const stream = split(JSON.parse)
     const hemera = new Hemera(nats, {
-      logLevel: 'silent'
+      logLevel: 'info',
+      logger: stream
     })
 
-    var logSpy = Sinon.spy(hemera.log, 'info')
+    stream.once('data', line => {
+      expect(line.msg).to.be.equals('Connected!')
+      hemera.close(done)
+    })
 
-    hemera.log.info('test')
-
-    expect(logSpy.called).to.be.equals(true)
-    logSpy.restore()
-    hemera.close(done)
+    hemera.ready()
   })
 
   it('Should be able to log with none pretty logger', function(done) {
@@ -88,7 +91,7 @@ describe('Logging interface', function() {
     } catch (err) {
       expect(err).to.be.exists()
       expect(err.message).to.be.equals(
-        'child "logger" fails because [child "info" fails because ["info" is required]]'
+        'child "logger" fails because [child "info" fails because ["info" is required], "logger" must be an instance of "Stream"]'
       )
       nats.close()
       done()
