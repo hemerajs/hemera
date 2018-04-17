@@ -21,6 +21,7 @@ const TinySonic = require('tinysonic')
 const SuperError = require('super-error')
 const Joi = require('joi')
 const Avvio = require('avvio')
+const Stream = require('stream').Stream
 
 const runExt = require('./extensionRunner').extRunner
 const serverExtIterator = require('./extensionRunner').serverExtIterator
@@ -143,6 +144,8 @@ class Hemera extends EventEmitter {
       DefaultExtensions.onServerPreResponse
     )
 
+    this._configureLogger()
+
     this._avvio = Avvio(this, {
       autostart: false,
       expose: {
@@ -196,34 +199,30 @@ class Hemera extends EventEmitter {
 
       return instance
     }
+  }
 
-    // use own logger
-    if (this._config.logger) {
+  /**
+   *
+   *
+   * @memberof Hemera
+   */
+  _configureLogger() {
+    const loggerOpts = {
+      name: this._config.name,
+      safe: true, // handle circular refs
+      level: this._config.logLevel,
+      serializers: Serializers
+    }
+    if (this._config.logger instanceof Stream) {
+      this.log = Pino(loggerOpts, this._config.logger)
+    } else if (this._config.logger) {
       this.log = this._config.logger
     } else {
-      if (this._config.prettyLog) {
-        let pretty = Pino.pretty()
-        this.log = Pino(
-          {
-            name: this._config.name,
-            safe: true, // avoid error caused by circular references
-            level: this._config.logLevel,
-            serializers: Serializers
-          },
-          pretty
-        )
-
-        // Leads to too much listeners in tests
-        if (this._config.logLevel !== 'silent') {
-          pretty.pipe(process.stdout)
-        }
-      } else {
-        this.log = Pino({
-          name: this._config.name,
-          safe: true,
-          level: this._config.logLevel,
-          serializers: Serializers
-        })
+      const pretty = this._config.prettyLog ? Pino.pretty() : undefined
+      this.log = Pino(loggerOpts, pretty)
+      // Leads to too much listeners in tests
+      if (this._config.logLevel !== 'silent') {
+        pretty.pipe(process.stdout)
       }
     }
   }

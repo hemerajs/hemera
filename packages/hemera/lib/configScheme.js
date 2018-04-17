@@ -1,5 +1,6 @@
 const Joi = require('joi')
 const Os = require('os')
+const Stream = require('stream').Stream
 const Util = require('./util')
 
 module.exports = Joi.object().keys({
@@ -22,17 +23,20 @@ module.exports = Joi.object().keys({
     .integer()
     .default(0),
   // Custom logger
-  logger: Joi.object()
-    .keys({
-      info: Joi.func().minArity(1),
-      error: Joi.func().minArity(1),
-      debug: Joi.func().minArity(1),
-      fatal: Joi.func().minArity(1),
-      warn: Joi.func().minArity(1),
-      trace: Joi.func().minArity(1),
-      child: Joi.func().minArity(1)
-    })
-    .requiredKeys('info', 'error', 'debug', 'fatal', 'warn', 'trace'),
+  logger: Joi.alternatives().try(
+    Joi.object()
+      .keys({
+        info: Joi.func().minArity(1),
+        error: Joi.func().minArity(1),
+        debug: Joi.func().minArity(1),
+        fatal: Joi.func().minArity(1),
+        warn: Joi.func().minArity(1),
+        trace: Joi.func().minArity(1),
+        child: Joi.func().minArity(1)
+      })
+      .requiredKeys('info', 'error', 'debug', 'fatal', 'warn', 'trace'),
+    Joi.object().type(Stream)
+  ),
   // The error serialization options
   errio: Joi.object()
     .keys({
