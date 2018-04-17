@@ -51,6 +51,14 @@ const hemera = new Hemera(nats, {
 * error
 * fatal
 
+## Child logger
+
+The default logger provide a function to create child loggers. This is used inside Hemera to create a logger context inside plugins.
+
+```js
+hemera.log.child({ plugin: 'foo' }).info('test')
+```
+
 ## Pass custom stream
 
 This is useful for debugging and to implement your own serializer.
@@ -70,14 +78,17 @@ hemera.log.info('test')
 
 ## Use you own logger
 
-You can pass your own logger but it must implement all [log levels](#log-levels).
+You can pass your own logger but it must implement all [log levels](#log-levels) and the [child logger](#child-logger) function.
 
 ```js
 const split = require('split2')
 const stream = split(JSON.parse)
 const hemera = new Hemera(nats, {
   logger: {
-    info: () => {}
+    info: function() {},
+    child: function() {
+      return this
+    }
   }
 })
 hemera.log.info('test')
