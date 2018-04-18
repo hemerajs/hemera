@@ -75,9 +75,11 @@ describe('Logging interface', function() {
 
     hemera.log.info('test')
 
-    expect(logSpy.called).to.be.equals(true)
-    logSpy.restore()
-    hemera.close(done)
+    hemera.ready(() => {
+      expect(logSpy.called).to.be.equals(true)
+      logSpy.restore()
+      hemera.close(done)
+    })
   })
 
   it('Should validate custom logger', function(done) {
