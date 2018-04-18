@@ -34,7 +34,7 @@ const users = [
   },
   {
     caption: 'mercado unico',
-    image: imgUrl('company/mercado-unico.svg'),
+    image: imgUrl('company/mercado-unico.png'),
     infoLink: 'https://www.mercado-unico.com/',
     pinned: true
   }
