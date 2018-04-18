@@ -31,6 +31,12 @@ const users = [
     image: imgUrl('company/savicontrols.png'),
     infoLink: 'https://www.savicontrols.com/',
     pinned: true
+  },
+  {
+    caption: 'mercado unico',
+    image: imgUrl('company/mercado-unico.svg'),
+    infoLink: 'https://www.mercado-unico.com/',
+    pinned: true
   }
 ]
 

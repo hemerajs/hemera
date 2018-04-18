@@ -56,9 +56,9 @@ The key features of NATS in combination with Hemera are:
 
 ## Who's using Hemera?
 
-| [![appcom-interactive](https://hemerajs.github.io/hemera/img/company/appcom.svg)](http://www.appcom-interactive.de/) | [![amerbank](https://hemerajs.github.io/hemera/img/company/amerbank.png)](https://amerbank.com/) | [![savicontrols](https://hemerajs.github.io/hemera/img/company/savicontrols.png)](https://www.savicontrols.com/) |
-| -------------| --- | --- |
-| appcom interactive | amerbank | savicontrols |
+| [![appcom-interactive](https://hemerajs.github.io/hemera/img/company/appcom.svg)](http://www.appcom-interactive.de/) | [![amerbank](https://hemerajs.github.io/hemera/img/company/amerbank.png)](https://amerbank.com/) | [![savicontrols](https://hemerajs.github.io/hemera/img/company/savicontrols.png)](https://www.savicontrols.com/) | [![mercado unico](https://hemerajs.github.io/hemera/img/company/mercado-unico.svg)](https://www.mercado-unico.com/) |
+| -------------| --- | --- | --- |
+| appcom interactive | amerbank | savicontrols | mercado unico |
 
 ## Get Involved
 
