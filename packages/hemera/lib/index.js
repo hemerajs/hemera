@@ -221,7 +221,7 @@ class Hemera extends EventEmitter {
       const pretty = this._config.prettyLog ? Pino.pretty() : undefined
       this.log = Pino(loggerOpts, pretty)
       // Leads to too much listeners in tests
-      if (this._config.logLevel !== 'silent') {
+      if (pretty && this._config.logLevel !== 'silent') {
         pretty.pipe(process.stdout)
       }
     }
