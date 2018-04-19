@@ -6,7 +6,7 @@ sidebar_label: Monitoring
 
 ## natsboard
 
-[natsboard](https://github.com/devfacet/natsboard) is an easy and beautiful dasboard for monitoring NATS.
+[`natsboard`](https://github.com/devfacet/natsboard) is an easy and beautiful dasboard for monitoring NATS.
 
 ## nats-top
 
@@ -14,4 +14,4 @@ sidebar_label: Monitoring
 
 ## hemera-cli
 
-[hemera-cli](https://github.com/hemerajs/hemera-cli) you can talk to hemera services or aggregate information. 
+[`hemera-cli`](https://github.com/hemerajs/hemera-cli) you can talk to hemera services or aggregate information.
