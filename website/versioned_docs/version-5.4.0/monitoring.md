@@ -5,8 +5,14 @@ sidebar_label: Monitoring
 original_id: monitoring
 ---
 
-Easy and beautiful tool to monitor you app [hemera-board](https://github.com/hemerajs/hemera-board).
+## natsboard
 
-## Observe in console
+[natsboard](https://github.com/devfacet/natsboard) is an easy and beautiful dasboard for monitoring NATS.
 
-Use the [hemera-cli](https://github.com/hemerajs/hemera-cli) in combination with the [hemera-stats](https://github.com/hemerajs/hemera/tree/master/packages/hemera-stats) plugin to observe your services.
+## nats-top
+
+[`nats-top`](https://github.com/nats-io/nats-top) is a top-like tool for monitoring NATS servers.
+
+## hemera-cli
+
+[hemera-cli](https://github.com/hemerajs/hemera-cli) you can talk to hemera services or aggregate information.
