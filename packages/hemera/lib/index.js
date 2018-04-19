@@ -1261,13 +1261,7 @@ class Hemera extends EventEmitter {
 
     if (self.response.payload.error) {
       let error = Errio.fromObject(self.response.payload.error)
-      const internalError = new Errors.ResponseError(
-        'Response error received',
-        self.errorDetails
-      ).causedBy(error)
-      self.log.error(internalError)
       self.emit('clientResponseError', error)
-
       self._execute(error)
       return
     }
