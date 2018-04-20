@@ -4,8 +4,8 @@ title: Api versioning
 sidebar_label: Api versioning
 ---
 
-At first I recommend you to get more familiar with NATS it is a simple pub/sub system. In hemera every service is located by his topic name.
-If you want provide a service with different versions you can represent it in the topic name.
+At first I recommend you to get more familiar with NATS because it's just a simple pub/sub system. In hemera every service is located by his topic name and a topic in NATS is a subscriber.
+If you want to version your service you can represent it in the topic name.
 
 ## On service level
 
@@ -25,7 +25,7 @@ hemera.add({
 
 ## On application level
 
-You can also express you different version with a different pattern so that your service is always accessible via the same topic. I prefer this solution because you have the most flexbility and less effort but this orientates on the complexity of both versions.
+You can version your service by a different pattern so that your service is always accessible with the same topic. In this way you have the most flexbility because both services can co-exist.
 
 ```js
 hemera.add({
@@ -47,4 +47,4 @@ hemera.add({
 
 ## On server level
 
-Imagine a region `eu-west` should only have access to a specific api version. You can connect those clients with a different NATS server which exposed a restricted set of services. After a certain period of time you can also combine both server to a cluster. This use case is very special but possible. You have three options how to deal with versioning.
+Imagine a region `eu-west` should only have access to a specific api version. You can connect the clients with a different NATS server which exposed a restricted set of services. After a certain period of time you can combine both server to a cluster. This use case is very special but possible. You have three options.
