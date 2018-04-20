@@ -4,7 +4,7 @@ title: Api versioning
 sidebar_label: Api versioning
 ---
 
-At first I recommend you to get more familiar with NATS because it's just a simple pub/sub system. In hemera every service is located by his topic name and a topic in NATS is a subscriber.
+At first I recommend you to get more familiar with NATS because it's just a simple pub/sub system. In hemera every service is located by his topic name and the topic in NATS is the subject of the subscriber.
 If you want to version your service you can represent it in the topic name.
 
 ## On service level
