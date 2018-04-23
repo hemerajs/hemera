@@ -37,3 +37,7 @@
     flex-direction: column;
     align-items: center;
 }
+
+pre code {
+    font-size: 15px;
+}
