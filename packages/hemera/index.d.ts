@@ -346,10 +346,10 @@ declare class Hemera {
   removeAll(): any
 
   // serialization
-  setClientEncoder(encoder: (message) => Hemera.EncoderResult): Hemera
-  setClientDecoder(encoder: (message) => Hemera.DecoderResult): Hemera
-  setServerEncoder(encoder: (message) => Hemera.EncoderResult): Hemera
-  setServerDecoder(encoder: (message) => Hemera.DecoderResult): Hemera
+  setClientEncoder(encoder: (message: Object | Buffer) => Hemera.EncoderResult): Hemera
+  setClientDecoder(encoder: (message: String | Buffer) => Hemera.DecoderResult): Hemera
+  setServerEncoder(encoder: (message: Object | Buffer) => Hemera.EncoderResult): Hemera
+  setServerDecoder(encoder: (message: String | Buffer) => Hemera.DecoderResult): Hemera
 
   setSchemaCompiler(compilerFunction: (schema: Object) => Function): Hemera
   setSchemaCompiler(compilerFunction: (schema: Object) => Promise<any>): Hemera
