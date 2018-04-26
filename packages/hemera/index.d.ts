@@ -2,6 +2,7 @@
 /// <reference types="pino" />
 
 import * as pino from 'pino'
+import { Stream } from 'stream';
 
 declare namespace Hemera {
   type LogLevel =
@@ -50,7 +51,7 @@ declare namespace Hemera {
     logLevel?: LogLevel
     childLogger?: boolean
     maxRecursion?: number
-    logger?: Logger
+    logger?: Logger | Stream
     errio?: ErrioConfig
     bloomrun?: BloomrunConfig
     load?: LoadConfig
