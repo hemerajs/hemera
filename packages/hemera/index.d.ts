@@ -358,10 +358,10 @@ declare class Hemera {
   setResponseSchemaCompiler(compilerFunction: (schema: Object) => Function): Hemera
   setResponseSchemaCompiler(compilerFunction: (schema: Object) => Promise<any>): Hemera
 
-  setNotFoundPattern(pattern: string | Hemera.ServerPattern | null)
+  setNotFoundPattern(pattern: string | Hemera.ServerPattern | null): void
 
   setIdGenerator(generatorFunction: () => string): Hemera
-  checkPluginDependencies(plugin: Hemera.Plugin)
+  checkPluginDependencies(plugin: Hemera.Plugin): void
 
   log: pino.Logger | Hemera.Logger
 
@@ -385,5 +385,4 @@ declare class Hemera {
   request$: Hemera.Request
 }
 
-export = Hemera
-export as namespace Hemera
+export default Hemera
