@@ -1,6 +1,5 @@
 'use strict'
 
-const _ = require('lodash')
 const Express = require('express')
 const BodyParser = require('body-parser')
 const Hp = require('hemera-plugin')
@@ -82,7 +81,7 @@ function hemeraWeb(hemera, opts, done) {
       if (err) {
         res.statusCode = err.statusCode || 500
         res.send({
-          error: _.omit(err, opts.errors.propBlacklist)
+          error: omit(err, opts.errors.propBlacklist)
         })
       } else {
         res.send(result)
@@ -103,6 +102,15 @@ function hemeraWeb(hemera, opts, done) {
     hemera.log.debug('Http server closed!')
     done()
   })
+}
+
+function omit(obj, fields) {
+  const shallowCopy = Object.assign({}, obj)
+  for (let i = 0; i < fields.length; i++) {
+    const key = fields[i]
+    delete shallowCopy[key]
+  }
+  return shallowCopy
 }
 
 const plugin = Hp(hemeraWeb, {
