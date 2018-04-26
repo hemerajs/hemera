@@ -1,6 +1,5 @@
 'use strict'
 
-const Hoek = require('hoek')
 const _ = require('lodash')
 const Express = require('express')
 const BodyParser = require('body-parser')
@@ -42,7 +41,7 @@ function hemeraWeb(hemera, opts, done) {
 
     let pattern = getBasePattern(req, opts.pattern)
     if (req.query) {
-      pattern = Hoek.applyToDefaults(pattern, req.query)
+      pattern = Object.assign(pattern, req.query)
     }
     // for tracing
     if (xRequestTraceId) {
@@ -65,12 +64,12 @@ function hemeraWeb(hemera, opts, done) {
     if (req.is(contentTypeJson)) {
       const body = req.body
       if (body) {
-        pattern = Hoek.applyToDefaults(pattern, body)
+        pattern = Object.assign(pattern, body)
       }
     } else if (req.is(contentForm)) {
       // include form data to pattern
       const body = req.body
-      pattern = Hoek.applyToDefaults(pattern, body)
+      pattern = Object.assign(pattern, body)
     } else if (req.is(contentBinaryStream)) {
       // handle as raw binary data
       pattern.binaryData = req.body
