@@ -13,6 +13,7 @@
       "metadata",
       "context",
       "delegate",
+      "trace",
       "event",
       "codec",
       "config"

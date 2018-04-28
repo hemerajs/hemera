@@ -1,7 +1,8 @@
 ---
-id: delegate
+id: version-5.4.1-delegate
 title: Delegate
 sidebar_label: Delegate
+original_id: delegate
 ---
 
 If you want to pass data only to the next `add` you can use `delegate$` property. This feature is used to transfer contextual data to tracing systems.

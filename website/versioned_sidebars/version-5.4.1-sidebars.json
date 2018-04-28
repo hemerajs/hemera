@@ -1,0 +1,61 @@
+{
+  "version-5.4.1-docs": {
+    "Introduction": [
+      "version-5.4.1-what-is-hemera",
+      "version-5.4.1-installation"
+    ],
+    "Basics": [
+      "version-5.4.1-request-reply",
+      "version-5.4.1-pattern-matching",
+      "version-5.4.1-publish-susbcribe",
+      "version-5.4.1-payload-validation",
+      "version-5.4.1-middleware",
+      "version-5.4.1-extension",
+      "version-5.4.1-logging",
+      "version-5.4.1-decorator",
+      "version-5.4.1-metadata",
+      "version-5.4.1-context",
+      "version-5.4.1-delegate",
+      "version-5.4.1-trace",
+      "version-5.4.1-event",
+      "version-5.4.1-codec",
+      "version-5.4.1-config"
+    ],
+    "Plugins": [
+      "version-5.4.1-ecosystem",
+      "version-5.4.1-plugin"
+    ],
+    "Error handling": [
+      "version-5.4.1-error-handling",
+      "version-5.4.1-error-serialization",
+      "version-5.4.1-notfoundPattern",
+      "version-5.4.1-timeout",
+      "version-5.4.1-fatal",
+      "version-5.4.1-propagation",
+      "version-5.4.1-error-event",
+      "version-5.4.1-protection"
+    ],
+    "Testing": [
+      "version-5.4.1-integration",
+      "version-5.4.1-unit"
+    ],
+    "Tooling": [
+      "version-5.4.1-monitoring",
+      "version-5.4.1-cli",
+      "version-5.4.1-typescript"
+    ],
+    "Advanced": [
+      "version-5.4.1-docker",
+      "version-5.4.1-graphql",
+      "version-5.4.1-bridge",
+      "version-5.4.1-clustering",
+      "version-5.4.1-api-versioning",
+      "version-5.4.1-nats-limit",
+      "version-5.4.1-framework-integrations",
+      "version-5.4.1-hemera-vs-seneca"
+    ],
+    "Api": [
+      "version-5.4.1-reference"
+    ]
+  }
+}

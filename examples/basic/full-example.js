@@ -13,7 +13,8 @@ hemera.ready(() => {
       topic: 'math',
       cmd: 'add'
     },
-    (req, cb) => {
+    function (req, cb) {
+      console.log(this.trace$)
       cb(null, req.a + req.b)
     }
   )

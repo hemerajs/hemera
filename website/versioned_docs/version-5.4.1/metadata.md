@@ -1,7 +1,8 @@
 ---
-id: metadata
+id: version-5.4.1-metadata
 title: Metadata
 sidebar_label: Metadata
+original_id: metadata
 ---
 
 If you want to transfer metadata to a service you can use the `meta$` property in your pattern. It will be passed in all nested calls. A common use case is to add a JWT token.
