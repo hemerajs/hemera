@@ -9,13 +9,13 @@ This will reset the default <code>JSON</code> codec.</p>
 <pre><code class="hljs css js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">encode</span>(<span class="hljs-params">msg</span>) </span>{
   <span class="hljs-keyword">return</span> {
     <span class="hljs-attr">value</span>: <span class="hljs-built_in">JSON</span>.stringify(msg),
-    <span class="hljs-attr">eror</span>: <span class="hljs-literal">null</span>
+    <span class="hljs-attr">error</span>: <span class="hljs-literal">null</span>
   }
 }
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">decode</span>(<span class="hljs-params">msg</span>) </span>{
   <span class="hljs-keyword">return</span> {
     <span class="hljs-attr">value</span>: <span class="hljs-built_in">JSON</span>.parse(msg),
-    <span class="hljs-attr">eror</span>: <span class="hljs-literal">null</span>
+    <span class="hljs-attr">error</span>: <span class="hljs-literal">null</span>
   }
 }
 hemera.setClientEncoder(encode)
