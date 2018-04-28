@@ -83,5 +83,5 @@ hemera.act(
 ## Use different ID generator
 
 ```js
-hemera.setIdGenerator(x => Date.now().toString())
+hemera.setIdGenerator(() => Date.now().toString())
 ```
