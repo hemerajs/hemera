@@ -4,7 +4,7 @@ title: Trace
 sidebar_label: Trace
 ---
 
-Hemera comes already with good tracing capablities.
+Hemera comes already with good tracing capabilities.
 If you want to transfer additional trace data to a service you can use the `trace$` property in your pattern. It will be passed in all nested calls. A common use case is to add additional data to preserve the context across process communication.
 
 ### Caveats
@@ -82,5 +82,5 @@ hemera.act(
 ## Use different ID generator
 
 ```js
-hemera.setIdGenerator(x => Date.now().toString())
+hemera.setIdGenerator(() => Date.now().toString())
 ```

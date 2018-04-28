@@ -12,13 +12,13 @@ This will reset the default `JSON` codec.
 function encode(msg) {
   return {
     value: JSON.stringify(msg),
-    eror: null
+    error: null
   }
 }
 function decode(msg) {
   return {
     value: JSON.parse(msg),
-    eror: null
+    error: null
   }
 }
 hemera.setClientEncoder(encode)
