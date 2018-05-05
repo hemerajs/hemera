@@ -1,3 +1,5 @@
+'use strict'
+
 /**
  * Copyright 2016-present, Dustin Deus (deusdustin@gmail.com)
  * All rights reserved.
