@@ -11,7 +11,9 @@ function extRunner(functions, runner, state, cb) {
 
     const result = runner(functions[i++], state, next)
     if (result && typeof result.then === 'function') {
-      result.then(handleResolve).catch(handleReject)
+      // avoid to create a seperate promise
+      // eslint-disable-next-line promise/catch-or-return
+      result.then(handleResolve, handleReject)
     }
   }
 

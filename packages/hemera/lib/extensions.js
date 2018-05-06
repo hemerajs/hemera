@@ -210,14 +210,14 @@ function onServerPreRequestSchemaValidation(context, req, res, next) {
     if (ret) {
       // promise
       if (typeof ret.then === 'function') {
-        ret
-          .then(modifiedPattern => {
-            if (modifiedPattern) {
-              req.payload.pattern = modifiedPattern
-            }
-            next()
-          })
-          .catch(err => next(err))
+        // avoid to create a seperate promise
+        // eslint-disable-next-line promise/catch-or-return
+        ret.then(modifiedPattern => {
+          if (modifiedPattern) {
+            req.payload.pattern = modifiedPattern
+          }
+          next()
+        }, next)
         return
       } else if (ret.error) {
         return next(ret.error)
@@ -249,17 +249,20 @@ function onServerPreResponseSchemaValidation(context, req, res, next) {
     if (ret) {
       // promise
       if (typeof ret.then === 'function') {
-        ret
-          .then(modifiedPayload => {
+        // avoid to create a seperate promise
+        // eslint-disable-next-line promise/catch-or-return
+        ret.then(
+          modifiedPayload => {
             if (modifiedPayload) {
               res.payload = modifiedPayload
             }
             next()
-          })
-          .catch(err => {
+          },
+          err => {
             res.error = err
             next(err)
-          })
+          }
+        )
         return
       } else if (ret.error) {
         res.error = ret.error

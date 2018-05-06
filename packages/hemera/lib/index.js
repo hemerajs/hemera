@@ -948,16 +948,19 @@ class Hemera extends EventEmitter {
 
     const isPromise = result && typeof result.then === 'function'
     if (isPromise) {
-      result
-        .then(payload => {
+      // avoid to create a seperate promise
+      // eslint-disable-next-line promise/catch-or-return
+      result.then(
+        payload => {
           self.reply.send(payload)
-        })
-        .catch(err => {
+        },
+        err => {
           if (err) {
             self._isValidError(err)
           }
           self.reply.send(err)
-        })
+        }
+      )
     }
   }
 
