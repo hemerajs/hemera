@@ -26,15 +26,16 @@ module.exports = Joi.object().keys({
   logger: Joi.alternatives().try(
     Joi.object()
       .keys({
-        info: Joi.func().minArity(1),
-        error: Joi.func().minArity(1),
-        debug: Joi.func().minArity(1),
-        fatal: Joi.func().minArity(1),
-        warn: Joi.func().minArity(1),
-        trace: Joi.func().minArity(1),
-        child: Joi.func().minArity(1)
+        info: Joi.func(),
+        error: Joi.func(),
+        debug: Joi.func(),
+        fatal: Joi.func(),
+        warn: Joi.func(),
+        trace: Joi.func(),
+        child: Joi.func()
       })
-      .requiredKeys('info', 'error', 'debug', 'fatal', 'warn', 'trace'),
+      .requiredKeys('info', 'error', 'debug', 'fatal', 'warn', 'trace')
+      .unknown(),
     Joi.object().type(Stream)
   ),
   // The error serialization options
