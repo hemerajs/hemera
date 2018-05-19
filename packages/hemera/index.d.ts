@@ -1,8 +1,11 @@
 /// <reference types="node" />
-/// <reference types="pino" />
 
 import * as pino from 'pino'
 import { Stream } from 'stream';
+
+// tslint:disable-next-line:export-just-namespace
+export = Hemera;
+export as namespace Hemera;
 
 declare namespace Hemera {
   type LogLevel =
@@ -384,5 +387,3 @@ declare class Hemera {
   trace$: Hemera.Trace
   request$: Hemera.Request
 }
-
-export default Hemera
