@@ -78,7 +78,7 @@ describe('Root Decorator', function() {
     })
   })
 
-  it('Should not be possible to override an decoration', function(done) {
+  it('Should not be possible to override a decoration', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -94,7 +94,7 @@ describe('Root Decorator', function() {
     })
   })
 
-  it('Should be able add to check if a decorator exists', function(done) {
+  it('Should be able to check if a decorator exists', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

@@ -7,7 +7,7 @@ authorFBID: 100003591443302
 
 I'm really happy to announce the new Hemera 5 release!
 
-This release is a ground-breaking refactoring of the core. The goal was to simplify but also make the lifecycle of extensions and middlwares more predictable.
+This release is a ground-breaking refactoring of the core. The goal was to simplify but also to make the lifecycle of extensions and middlwares more predictable.
 
 ## In summary:
 
@@ -21,14 +21,14 @@ This release is a ground-breaking refactoring of the core. The goal was to simpl
 * Removed `Reply.end()`
 * Removed `hemera.root` property
 * Removed `Hemera.reply()` in favor of `hemera.reply.next()` to send multiple responses in a row
-* Removed configuration properties `crashOnFatal`, `shouldCrash`. The developer is responsible to catch these errors
+* Removed configuration properties `crashOnFatal`, `shouldCrash`. The developer is responsible to catch fatal errors
 * Removed `CodecPipeline`
 * Removed `encoder`, `decoder`. We provide setter functions for client and server encoding
-* Remove support to register multiple plugins at once with `hemera.use`
-* Remove `plugin$`, plugins property, remove `hemera.setOption()`, `hemera.setConfig()` methods
-* Remove functionality to to send a response inside `serverPreResponse`. This was confusing because the payload is already set at this point
+* Removed support to register multiple plugins at once with `hemera.use`
+* Removed `plugin$`, plugins property, remove `hemera.setOption()`, `hemera.setConfig()` methods
+* Removed functionality to to send a response inside `serverPreResponse`. This was confusing because the payload is already set at this point
 * Load plugins only on `hemera.ready()` not when `hemera.use()` is called
-* We break the support of simple return values in `add` or `middlewares` without the use of callback or promises
+* We break the support of returning values in `add` or `middlewares` without the use of callback or resolved promises
 
 ### New features:
 
