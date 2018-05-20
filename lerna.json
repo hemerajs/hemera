@@ -1,11 +1,12 @@
 {
   "lerna": "2.11.0",
   "version": "independent",
-  "npmClient": "yarn",
   "packages": ["packages/*"],
   "commands": {
     "publish": {
-      "ignore": ["ignored-file", "*.md"]
+      "ignore": ["*.md", "test/**", "codemods/**"]
     }
-  }
+  },
+  "npmClient": "yarn",
+  "npmClientArgs": ["--no-lockfile"]
 }
