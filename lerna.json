@@ -4,7 +4,7 @@
   "packages": ["packages/*"],
   "commands": {
     "publish": {
-      "ignore": ["*.md", "test/**", "codemods/**"]
+      "ignore": ["*.md", "test/**"]
     }
   },
   "npmClient": "yarn",
