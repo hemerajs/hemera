@@ -80,7 +80,6 @@ function onClientPreRequest(context, next) {
   // request
   let request = {
     id: pattern.requestId$ || context._idGenerator(),
-    parentId: context.request$.id || pattern.requestParentId$,
     type: pattern.pubsub$ === true ? 'pubsub' : 'request'
   }
 

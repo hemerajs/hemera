@@ -49,6 +49,7 @@ hemera.act(
 ```js
 { spanId: '6a39893471dd4e4d846ac85ab2e1f520',
   traceId: 'b5431cade9b0443f8cb7b4aefe11db6f',
+  parentSpanId: 'b5431cade9b0443f8cb7b4aefe11db6d',
   timestamp: 1436028778860940,
   service: 'math',
   method: 'a:1,b:20,cmd:add,topic:math' }
@@ -67,7 +68,7 @@ hemera.act(
   },
   function(err, resp) {
     //or
-    hemera.trace$.parentSpanId = 'ABC1234'
+    this.trace$.parentSpanId = 'ABC1234'
 
     this.act({
       topic: 'math',

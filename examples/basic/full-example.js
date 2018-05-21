@@ -14,7 +14,6 @@ hemera.ready(() => {
       cmd: 'add'
     },
     function(req, cb) {
-      console.log(this.trace$)
       cb(null, req.a + req.b)
     }
   )

@@ -15,7 +15,7 @@ describe('Tracing', function() {
     server.kill()
   })
 
-  it('Should set correct request parentId$, span and request$ context', function(done) {
+  it('Should set correct trace$ context', function(done) {
     /**
      * math:add-->math:sub
      *            math:add
@@ -28,8 +28,6 @@ describe('Tracing', function() {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      expect(this.parentId$).to.be.not.exists()
-
       let traceId = '' // Is unique in a request
 
       hemera.add(
@@ -40,7 +38,6 @@ describe('Tracing', function() {
         function(resp, cb) {
           expect(this.trace$.traceId).to.be.string()
           expect(this.trace$.spanId).to.be.string()
-
           cb(null, resp.a + resp.b)
         }
       )
@@ -51,11 +48,10 @@ describe('Tracing', function() {
           cmd: 'sub'
         },
         function(resp, cb) {
-          let r1 = this.request$.id
+          let r1 = this.trace$.spanId
 
           expect(this.trace$.traceId).to.be.string()
           expect(this.trace$.spanId).to.be.string()
-          expect(this.request$.parentId).to.be.exists()
           expect(this.trace$.parentSpanId).to.be.string()
 
           this.act({
@@ -74,11 +70,10 @@ describe('Tracing', function() {
                 b: 2
               },
               function(err, resp2) {
-                let r2 = this.request$.id
+                let r2 = this.trace$.spanId
 
                 expect(err).to.be.not.exists()
-                expect(this.request$.parentId).to.be.equals(r1)
-
+                expect(this.trace$.parentSpanId).to.be.equals(r1)
                 expect(this.trace$.traceId).to.be.equals(traceId)
                 expect(this.trace$.spanId).to.be.string()
                 expect(this.trace$.timestamp).to.be.number()
@@ -92,7 +87,7 @@ describe('Tracing', function() {
                   },
                   function(err, resp2) {
                     expect(err).to.be.not.exists()
-                    expect(this.request$.parentId).to.be.equals(r2)
+                    expect(this.trace$.parentSpanId).to.be.equals(r2)
                     expect(this.trace$.parentSpanId).to.be.string()
                     expect(this.trace$.traceId).to.be.equals(traceId)
                     expect(this.trace$.spanId).to.be.string()
@@ -115,12 +110,13 @@ describe('Tracing', function() {
           b: 2
         },
         function(err, resp) {
-          let r1 = this.request$.id
           expect(err).to.be.not.exists()
+
+          let r1 = this.trace$.spanId
+
           expect(this.trace$.traceId).to.be.exists()
           expect(this.trace$.spanId).to.be.string()
           expect(this.trace$.timestamp).to.be.number()
-          expect(this.request$.id).to.be.string()
 
           traceId = this.trace$.traceId
 
@@ -133,14 +129,10 @@ describe('Tracing', function() {
             },
             function(err, resp) {
               expect(err).to.be.not.exists()
-              expect(this.request$.parentId).to.be.equals(r1)
-
+              expect(this.trace$.parentSpanId).to.be.equals(r1)
               expect(this.trace$.traceId).to.be.equals(traceId)
               expect(this.trace$.spanId).to.be.string()
-              expect(this.trace$.parentSpanId).to.be.string()
               expect(this.trace$.timestamp).to.be.number()
-              expect(this.request$.id).to.be.string()
-              expect(this.request$.parentId).to.be.a.string()
 
               hemera.close(done)
             }
@@ -150,7 +142,7 @@ describe('Tracing', function() {
     })
   })
 
-  it('Should get correct tracing informations', function(done) {
+  it('Should be able to get correct tracing informations', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -246,7 +238,7 @@ describe('Tracing', function() {
     })
   })
 
-  it('Should extract trace method from pattern', function(done) {
+  it('Should be able to extract trace method from pattern', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -278,7 +270,77 @@ describe('Tracing', function() {
     })
   })
 
-  it('Should overwrite trace$ informations with pattern', function(done) {
+  it('Should be able to get duration from trace$', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'TOPIC',
+          cmd: 'CMD'
+        },
+        function(req, next) {
+          next()
+        }
+      )
+      hemera.act(
+        {
+          topic: 'TOPIC',
+          cmd: 'CMD',
+          a: {
+            b: 1
+          }
+        },
+        function(err, resp) {
+          expect(err).to.be.not.exists()
+          expect(this.trace$.duration).to.be.a.number()
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should be able to pass requestId$ from pattern in multiple calls', function() {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    return hemera.ready().then(() => {
+      hemera.add(
+        {
+          topic: 'TOPIC',
+          cmd: 'CMD'
+        },
+        function(req, next) {
+          next()
+        }
+      )
+      const a = hemera
+        .act({
+          topic: 'TOPIC',
+          cmd: 'CMD',
+          requestId$: '123456789'
+        })
+        .then(function(hemera) {
+          expect(hemera.context.request$.id).to.be.equals('123456789')
+        })
+      const b = hemera
+        .act({
+          topic: 'TOPIC',
+          cmd: 'CMD',
+          requestId$: '123456'
+        })
+        .then(function(hemera) {
+          expect(hemera.context.request$.id).to.be.equals('123456')
+        })
+
+      return Promise.all([a, b]).then(x => hemera.close())
+    })
+  })
+
+  it('Should be able to overwrite trace$ informations with pattern', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -387,6 +449,66 @@ describe('Tracing', function() {
               hemera.close(done)
             }
           )
+        }
+      )
+    })
+  })
+
+  it('Should get correct tracing information inside add', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'TOPIC',
+          cmd: 'CMD2'
+        },
+        function(req, next) {
+          const parentTrace = this.trace$
+          expect(parentTrace.service).to.be.equals('TOPIC')
+          expect(parentTrace.method).to.be.equals('cmd:CMD2,topic:TOPIC')
+          this.act(
+            {
+              topic: 'TOPIC',
+              cmd: 'CMD'
+            },
+            function(err, resp) {
+              expect(err).to.be.not.exists()
+              expect(this.trace$.service).to.be.equals('TOPIC')
+              expect(this.trace$.method).to.be.equals('cmd:CMD,topic:TOPIC')
+              expect(this.trace$.spanId).to.be.equals(parentTrace.spanId)
+              expect(this.trace$.traceId).to.be.equals(parentTrace.traceId)
+              expect(this.trace$.parentSpanId).to.be.equals(parentTrace.spanId)
+              next(null, this.trace$)
+            }
+          )
+        }
+      )
+      hemera.add(
+        {
+          topic: 'TOPIC',
+          cmd: 'CMD'
+        },
+        function(req, next) {
+          next()
+        }
+      )
+      hemera.act(
+        {
+          topic: 'TOPIC',
+          cmd: 'CMD2'
+        },
+        function(err, resp) {
+          expect(err).to.be.not.exists()
+          expect(this.trace$.service).to.be.equals('TOPIC')
+          expect(this.trace$.method).to.be.equals('cmd:CMD2,topic:TOPIC')
+          expect(this.trace$.spanId).to.be.equals(resp.spanId)
+          expect(this.trace$.traceId).to.be.equals(resp.traceId)
+          expect(this.trace$.parentSpanId).to.not.exists()
+          expect(this.trace$.duration).to.be.a.number()
+          hemera.close(done)
         }
       )
     })

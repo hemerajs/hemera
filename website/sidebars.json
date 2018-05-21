@@ -10,13 +10,16 @@
       "extension",
       "logging",
       "decorator",
+      "event",
+      "codec",
+      "config"
+    ],
+    "Context": [
       "metadata",
       "context",
       "delegate",
       "trace",
-      "event",
-      "codec",
-      "config"
+      "request"
     ],
     "Plugins": ["ecosystem", "plugin"],
     "Error handling": [

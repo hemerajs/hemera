@@ -89,7 +89,6 @@ class Hemera extends EventEmitter {
     this.auth$ = {}
     this.trace$ = {}
     this.request$ = {
-      parentId: '',
       type: 'request',
       id: ''
     }

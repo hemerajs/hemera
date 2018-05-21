@@ -75,6 +75,8 @@
     "Reference": "Reference",
     "request-reply": "Request and Reply",
     "Request & Reply": "Request & Reply",
+    "request": "Request",
+    "Request": "Request",
     "timeout": "Timeout",
     "Timeouts": "Timeouts",
     "trace": "Trace",
