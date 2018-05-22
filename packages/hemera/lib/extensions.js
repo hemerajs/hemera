@@ -83,6 +83,23 @@ function onClientPreRequest(context, next) {
     type: pattern.pubsub$ === true ? 'pubsub' : 'request'
   }
 
+  if (context._config.logTraceDetails) {
+    context.log = context.log.child({
+      context: 'request',
+      requestId: request.id,
+      service: context.trace$.service,
+      method: context.trace$.method,
+      traceId: context.trace$.traceId,
+      spanId: context.trace$.spanId,
+      timestamp: context.trace$.timestamp
+    })
+    context.log.debug()
+  } else {
+    context.log.debug({
+      outbound: context
+    })
+  }
+
   context.emit('clientPreRequest', context)
 
   // build msg
@@ -95,10 +112,6 @@ function onClientPreRequest(context, next) {
   }
 
   context._message = message
-
-  context.log.debug({
-    outbound: context
-  })
 
   next()
 }
@@ -122,15 +135,30 @@ function onClientPostRequest(context, next) {
   }
 
   // calculate request duration
-  let diff = Util.nowHrTime() - context.trace$.timestamp
+  const now = Util.nowHrTime()
+  const diff = now - context.trace$.timestamp
   context.trace$.duration = diff
 
   context.request$.service = pattern.topic
   context.request$.method = context.trace$.method
 
-  context.log.debug({
-    inbound: context
-  })
+  if (context._config.logTraceDetails) {
+    context.log = context.log.child({
+      context: 'response',
+      requestId: context.request$.id,
+      service: context.trace$.service,
+      method: context.trace$.method,
+      traceId: context.trace$.traceId,
+      spanId: context.trace$.spanId,
+      duration: Util.nanoToMsString(context.trace$.duration),
+      timestamp: now
+    })
+    context.log.debug()
+  } else {
+    context.log.debug({
+      inbound: context
+    })
+  }
 
   context.emit('clientPostRequest', context)
 

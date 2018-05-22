@@ -38,6 +38,8 @@ module.exports = Joi.object().keys({
       .unknown(),
     Joi.object().type(Stream)
   ),
+  // Attach trace and request informations to the logs. It costs ~10% perf
+  logTraceDetails: Joi.boolean().default(false),
   // The error serialization options
   errio: Joi.object()
     .keys({

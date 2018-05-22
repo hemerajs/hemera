@@ -1,5 +1,7 @@
 'use strict'
 
+const Util = require('./util')
+
 /**
  * Copyright 2016-present, Dustin Deus (deusdustin@gmail.com)
  * All rights reserved.
@@ -9,21 +11,17 @@
  *
  */
 
-function nanoToMsString(val) {
-  return (val / 1e6).toFixed(2) + 'ms'
-}
-
 function inbound(ctx) {
   return {
-    id: ctx.request$.id,
-    duration: nanoToMsString(ctx.trace$.duration),
+    traceId: ctx.trace$.traceId,
+    duration: Util.nanoToMsString(ctx.trace$.duration),
     pattern: ctx.request$.method
   }
 }
 
 function outbound(ctx) {
   return {
-    id: ctx._message.request.id,
+    traceId: ctx.trace$.traceId,
     pattern: ctx.trace$.method
   }
 }
