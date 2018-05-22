@@ -38,14 +38,8 @@ module.exports = Joi.object().keys({
       .unknown(),
     Joi.object().type(Stream)
   ),
-  // A function which returns an object to extend the informations of each log. It costs ~10% perf.
-  logBaseFunc: Joi.func().default(context => {
-    return {
-      parentSpanId: context.trace$.parentSpanId,
-      traceId: context.trace$.traceId,
-      spanId: context.trace$.spanId
-    }
-  }),
+  // Attach trace and request informations to the logs. It costs ~10% perf
+  logTraceDetails: Joi.boolean().default(false),
   // The error serialization options
   errio: Joi.object()
     .keys({
