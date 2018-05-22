@@ -55,10 +55,6 @@ class Util {
     return subject
   }
 
-  static nanoToMsString(val) {
-    return (val / 1e6).toFixed(2) + 'ms'
-  }
-
   /**
    * @returns
    * Fast ID generator: e7 https://jsperf.com/uuid-generator-opt/18

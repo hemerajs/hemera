@@ -39,7 +39,6 @@ const ServerResponse = require('./serverResponse')
 const ServerRequest = require('./serverRequest')
 const ClientRequest = require('./clientRequest')
 const ClientResponse = require('./clientResponse')
-const Serializers = require('./serializer')
 const ConfigScheme = require('./configScheme')
 const Reply = require('./reply')
 const Add = require('./add')
@@ -211,8 +210,7 @@ class Hemera extends EventEmitter {
     const loggerOpts = {
       name: this._config.name,
       safe: true, // handle circular refs
-      level: this._config.logLevel,
-      serializers: Serializers
+      level: this._config.logLevel
     }
     if (this._config.logger instanceof Stream) {
       this.log = Pino(loggerOpts, this._config.logger)

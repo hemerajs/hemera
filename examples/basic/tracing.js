@@ -82,6 +82,11 @@ hemera.ready(() => {
     },
     function(_, resp) {
       this.log.info(resp, 'Finished')
+      this.log.info('Took: ' + nanoToMsString(this.trace$.duration))
     }
   )
 })
+
+function nanoToMsString(val) {
+  return (val / 1e6).toFixed(2) + 'ms'
+}

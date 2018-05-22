@@ -85,18 +85,10 @@ function onClientPreRequest(context, next) {
 
   if (context._config.logTraceDetails) {
     context.log = context.log.child({
-      context: 'request',
       requestId: request.id,
-      service: context.trace$.service,
-      method: context.trace$.method,
+      parentSpanId: context.trace$.parentSpanId,
       traceId: context.trace$.traceId,
-      spanId: context.trace$.spanId,
-      timestamp: context.trace$.timestamp
-    })
-    context.log.debug()
-  } else {
-    context.log.debug({
-      outbound: context
+      spanId: context.trace$.spanId
     })
   }
 
@@ -144,19 +136,10 @@ function onClientPostRequest(context, next) {
 
   if (context._config.logTraceDetails) {
     context.log = context.log.child({
-      context: 'response',
       requestId: context.request$.id,
-      service: context.trace$.service,
-      method: context.trace$.method,
+      parentSpanId: context.trace$.parentSpanId,
       traceId: context.trace$.traceId,
-      spanId: context.trace$.spanId,
-      duration: Util.nanoToMsString(context.trace$.duration),
-      timestamp: now
-    })
-    context.log.debug()
-  } else {
-    context.log.debug({
-      inbound: context
+      spanId: context.trace$.spanId
     })
   }
 
