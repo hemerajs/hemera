@@ -83,13 +83,8 @@ function onClientPreRequest(context, next) {
     type: pattern.pubsub$ === true ? 'pubsub' : 'request'
   }
 
-  if (context._config.logTraceDetails) {
-    context.log = context.log.child({
-      requestId: request.id,
-      parentSpanId: context.trace$.parentSpanId,
-      traceId: context.trace$.traceId,
-      spanId: context.trace$.spanId
-    })
+  if (context._config.logBaseFunc) {
+    context.log = context.log.child(context._config.logBaseFunc(context))
   }
 
   context.emit('clientPreRequest', context)
@@ -134,13 +129,8 @@ function onClientPostRequest(context, next) {
   context.request$.service = pattern.topic
   context.request$.method = context.trace$.method
 
-  if (context._config.logTraceDetails) {
-    context.log = context.log.child({
-      requestId: context.request$.id,
-      parentSpanId: context.trace$.parentSpanId,
-      traceId: context.trace$.traceId,
-      spanId: context.trace$.spanId
-    })
+  if (context._config.logBaseFunc) {
+    context.log = context.log.child(context._config.logBaseFunc(context))
   }
 
   context.emit('clientPostRequest', context)
