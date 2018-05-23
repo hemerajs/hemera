@@ -1,11 +1,11 @@
 /// <reference types="node" />
 
 import * as pino from 'pino'
-import { Stream } from 'stream';
+import { Stream } from 'stream'
 
 // tslint:disable-next-line:export-just-namespace
-export = Hemera;
-export as namespace Hemera;
+export = Hemera
+export as namespace Hemera
 
 declare namespace Hemera {
   type LogLevel =
@@ -58,6 +58,7 @@ declare namespace Hemera {
     errio?: ErrioConfig
     bloomrun?: BloomrunConfig
     load?: LoadConfig
+    logTraceDetails?: boolean
   }
 
   interface LoadConfig {
@@ -350,16 +351,28 @@ declare class Hemera {
   removeAll(): any
 
   // serialization
-  setClientEncoder(encoder: (message: Object | Buffer) => Hemera.EncoderResult): Hemera
-  setClientDecoder(encoder: (message: String | Buffer) => Hemera.DecoderResult): Hemera
-  setServerEncoder(encoder: (message: Object | Buffer) => Hemera.EncoderResult): Hemera
-  setServerDecoder(encoder: (message: String | Buffer) => Hemera.DecoderResult): Hemera
+  setClientEncoder(
+    encoder: (message: Object | Buffer) => Hemera.EncoderResult
+  ): Hemera
+  setClientDecoder(
+    encoder: (message: String | Buffer) => Hemera.DecoderResult
+  ): Hemera
+  setServerEncoder(
+    encoder: (message: Object | Buffer) => Hemera.EncoderResult
+  ): Hemera
+  setServerDecoder(
+    encoder: (message: String | Buffer) => Hemera.DecoderResult
+  ): Hemera
 
   setSchemaCompiler(compilerFunction: (schema: Object) => Function): Hemera
   setSchemaCompiler(compilerFunction: (schema: Object) => Promise<any>): Hemera
 
-  setResponseSchemaCompiler(compilerFunction: (schema: Object) => Function): Hemera
-  setResponseSchemaCompiler(compilerFunction: (schema: Object) => Promise<any>): Hemera
+  setResponseSchemaCompiler(
+    compilerFunction: (schema: Object) => Function
+  ): Hemera
+  setResponseSchemaCompiler(
+    compilerFunction: (schema: Object) => Promise<any>
+  ): Hemera
 
   setNotFoundPattern(pattern: string | Hemera.ServerPattern | null): void
 
