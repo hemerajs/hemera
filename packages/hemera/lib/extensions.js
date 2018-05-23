@@ -90,9 +90,21 @@ function onClientPreRequest(context, next) {
       traceId: context.trace$.traceId,
       spanId: context.trace$.spanId
     })
+    context.log.info(
+      {
+        pattern: context.trace$.method
+      },
+      'incoming request'
+    )
+  } else {
+    context.log.info(
+      {
+        requestId: request.id,
+        pattern: context.trace$.method
+      },
+      'incoming request'
+    )
   }
-
-  context.emit('clientPreRequest', context)
 
   // build msg
   let message = {
@@ -100,10 +112,12 @@ function onClientPreRequest(context, next) {
     meta: context.meta$,
     delegate: context.delegate$,
     trace: context.trace$,
-    request: request
+    request
   }
 
   context._message = message
+
+  context.emit('clientPreRequest', context)
 
   next()
 }
@@ -141,6 +155,22 @@ function onClientPostRequest(context, next) {
       traceId: context.trace$.traceId,
       spanId: context.trace$.spanId
     })
+    context.log.info(
+      {
+        pattern: context.trace$.method,
+        responseTime: context.trace$.duration
+      },
+      'request completed'
+    )
+  } else {
+    context.log.info(
+      {
+        requestId: context.request$.id,
+        pattern: context.trace$.method,
+        responseTime: context.trace$.duration
+      },
+      'request completed'
+    )
   }
 
   context.emit('clientPostRequest', context)
