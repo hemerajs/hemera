@@ -83,7 +83,28 @@ function onClientPreRequest(context, next) {
     type: pattern.pubsub$ === true ? 'pubsub' : 'request'
   }
 
-  context.emit('clientPreRequest', context)
+  if (context._config.traceLog) {
+    context.log = context.log.child({
+      requestId: request.id,
+      parentSpanId: context.trace$.parentSpanId,
+      traceId: context.trace$.traceId,
+      spanId: context.trace$.spanId
+    })
+    context.log.info(
+      {
+        pattern: context.trace$.method
+      },
+      'Incoming request'
+    )
+  } else {
+    context.log.info(
+      {
+        requestId: request.id,
+        pattern: context.trace$.method
+      },
+      'Incoming request'
+    )
+  }
 
   // build msg
   let message = {
@@ -91,14 +112,12 @@ function onClientPreRequest(context, next) {
     meta: context.meta$,
     delegate: context.delegate$,
     trace: context.trace$,
-    request: request
+    request
   }
 
   context._message = message
 
-  context.log.debug({
-    outbound: context
-  })
+  context.emit('clientPreRequest', context)
 
   next()
 }
@@ -122,15 +141,37 @@ function onClientPostRequest(context, next) {
   }
 
   // calculate request duration
-  let diff = Util.nowHrTime() - context.trace$.timestamp
+  const now = Util.nowHrTime()
+  const diff = now - context.trace$.timestamp
   context.trace$.duration = diff
 
   context.request$.service = pattern.topic
   context.request$.method = context.trace$.method
 
-  context.log.debug({
-    inbound: context
-  })
+  if (context._config.traceLog) {
+    context.log = context.log.child({
+      requestId: context.request$.id,
+      parentSpanId: context.trace$.parentSpanId,
+      traceId: context.trace$.traceId,
+      spanId: context.trace$.spanId
+    })
+    context.log.info(
+      {
+        pattern: context.trace$.method,
+        responseTime: context.trace$.duration / 1e6
+      },
+      'Request completed'
+    )
+  } else {
+    context.log.info(
+      {
+        requestId: context.request$.id,
+        pattern: context.trace$.method,
+        responseTime: context.trace$.duration / 1e6
+      },
+      'Request completed'
+    )
+  }
 
   context.emit('clientPostRequest', context)
 

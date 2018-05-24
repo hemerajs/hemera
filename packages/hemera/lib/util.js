@@ -14,6 +14,8 @@ for (let i = 0; i < 256; i++) {
   lut[i] = (i < 16 ? '0' : '') + i.toString(16)
 }
 
+const NS_PER_SEC = 1e9
+
 /**
  * @class Util
  */
@@ -94,7 +96,7 @@ class Util {
    */
   static nowHrTime() {
     const hrtime = process.hrtime()
-    return +hrtime[0] * 1e9 + +hrtime[1]
+    return +hrtime[0] * NS_PER_SEC + +hrtime[1]
   }
   /**
    *
