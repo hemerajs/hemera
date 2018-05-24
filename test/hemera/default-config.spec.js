@@ -34,7 +34,7 @@ describe('Hemera default config', function() {
         exclude: [], // Property names to exclude (low priority)
         include: [] // Property names to include (high priority)
       },
-      logTraceDetails: false,
+      traceLog: false,
       bloomrun: {
         indexing: 'insertion', // Pattern indexing method "insertion" or "depth"
         lookupBeforeAdd: false // Checks if the pattern is no duplicate based on to the indexing strategy

@@ -83,7 +83,7 @@ function onClientPreRequest(context, next) {
     type: pattern.pubsub$ === true ? 'pubsub' : 'request'
   }
 
-  if (context._config.logTraceDetails) {
+  if (context._config.traceLog) {
     context.log = context.log.child({
       requestId: request.id,
       parentSpanId: context.trace$.parentSpanId,
@@ -94,7 +94,7 @@ function onClientPreRequest(context, next) {
       {
         pattern: context.trace$.method
       },
-      'incoming request'
+      'Incoming request'
     )
   } else {
     context.log.info(
@@ -102,7 +102,7 @@ function onClientPreRequest(context, next) {
         requestId: request.id,
         pattern: context.trace$.method
       },
-      'incoming request'
+      'Incoming request'
     )
   }
 
@@ -148,7 +148,7 @@ function onClientPostRequest(context, next) {
   context.request$.service = pattern.topic
   context.request$.method = context.trace$.method
 
-  if (context._config.logTraceDetails) {
+  if (context._config.traceLog) {
     context.log = context.log.child({
       requestId: context.request$.id,
       parentSpanId: context.trace$.parentSpanId,
@@ -160,7 +160,7 @@ function onClientPostRequest(context, next) {
         pattern: context.trace$.method,
         responseTime: context.trace$.duration / 1e6
       },
-      'request completed'
+      'Request completed'
     )
   } else {
     context.log.info(
@@ -169,7 +169,7 @@ function onClientPostRequest(context, next) {
         pattern: context.trace$.method,
         responseTime: context.trace$.duration / 1e6
       },
-      'request completed'
+      'Request completed'
     )
   }
 
