@@ -58,7 +58,7 @@ declare namespace Hemera {
     errio?: ErrioConfig
     bloomrun?: BloomrunConfig
     load?: LoadConfig
-    logTraceDetails?: boolean
+    traceLog?: boolean
   }
 
   interface LoadConfig {
