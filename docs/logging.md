@@ -34,6 +34,17 @@ const hemera = new Hemera(nats, {
 })
 ```
 
+## Attach tracing information to each log
+
+This will add tracing and request informations to each log.
+
+```js
+const hemera = new Hemera(nats, {
+  logLevel: 'info',
+  traceLog: true
+})
+```
+
 ## Configure log level
 
 ```js
