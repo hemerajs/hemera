@@ -134,12 +134,12 @@ describe('Logging interface', function() {
         function(err, resp) {
           expect(err).to.be.not.exists()
           this.log.info({ foo: 'bar' }, 'test')
-          expect(logs.length).to.be.equals(5)
-          expect(logs[4].msg).to.be.equals('test')
-          expect(logs[4].requestId).to.be.exists()
-          expect(logs[4].traceId).to.be.exists()
-          expect(logs[4].spanId).to.be.exists()
-          expect(logs[4].foo).to.be.equals('bar')
+          expect(logs.length).to.be.equals(7)
+          expect(logs[6].msg).to.be.equals('test')
+          expect(logs[6].requestId).to.be.exists()
+          expect(logs[6].traceId).to.be.exists()
+          expect(logs[6].spanId).to.be.exists()
+          expect(logs[6].foo).to.be.equals('bar')
           hemera.close(done)
         }
       )

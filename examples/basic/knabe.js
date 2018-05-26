@@ -30,6 +30,6 @@ hemera.use(
 )
 
 hemera.ready(() => {
-  hemera.add(`topic:knabe`, req => console.log(req))
+  hemera.add(`topic:knabe`, req => hemera.log.info(req, 'Result'))
   hemera.sendKnabeReport()
 })

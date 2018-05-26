@@ -5,7 +5,7 @@ const nats = require('nats').connect()
 
 const hemera = new Hemera(nats, {
   logLevel: 'info',
-  prettyLog: true,
+  prettyLog: false,
   traceLog: true
 })
 

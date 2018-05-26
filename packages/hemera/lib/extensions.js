@@ -78,14 +78,16 @@ function onClientPreRequest(context, next) {
   }
 
   // request
-  let request = {
+  context.request$ = {
     id: pattern.requestId$ || context._idGenerator(),
-    type: pattern.pubsub$ === true ? 'pubsub' : 'request'
+    type: pattern.pubsub$ === true ? 'pubsub' : 'request',
+    service: pattern.topic,
+    method: context.trace$.method
   }
 
   if (context._config.traceLog) {
     context.log = context.log.child({
-      requestId: request.id,
+      requestId: context.request$.id,
       parentSpanId: context.trace$.parentSpanId,
       traceId: context.trace$.traceId,
       spanId: context.trace$.spanId
@@ -94,15 +96,15 @@ function onClientPreRequest(context, next) {
       {
         pattern: context.trace$.method
       },
-      'Incoming request'
+      'Request started'
     )
   } else {
     context.log.info(
       {
-        requestId: request.id,
+        requestId: context.request$.id,
         pattern: context.trace$.method
       },
-      'Incoming request'
+      'Request started'
     )
   }
 
@@ -112,7 +114,7 @@ function onClientPreRequest(context, next) {
     meta: context.meta$,
     delegate: context.delegate$,
     trace: context.trace$,
-    request
+    request: context.request$
   }
 
   context._message = message
@@ -130,7 +132,6 @@ function onClientPreRequest(context, next) {
  * @param {*} next
  */
 function onClientPostRequest(context, next) {
-  let pattern = context._pattern
   let msg = context.response.payload
 
   // pass to act context
@@ -144,9 +145,6 @@ function onClientPostRequest(context, next) {
   const now = Util.nowHrTime()
   const diff = now - context.trace$.timestamp
   context.trace$.duration = diff
-
-  context.request$.service = pattern.topic
-  context.request$.method = context.trace$.method
 
   if (context._config.traceLog) {
     context.log = context.log.child({
@@ -230,6 +228,55 @@ function onServerPreRequest(context, req, res, next) {
   }
   context.emit('serverPreRequest', context)
 
+  if (context._config.traceLog) {
+    context.log = context.log.child({
+      requestId: context.request$.id,
+      parentSpanId: context.trace$.parentSpanId,
+      traceId: context.trace$.traceId,
+      spanId: context.trace$.spanId
+    })
+    context.log.info(
+      {
+        pattern: context.trace$.method
+      },
+      'Request received'
+    )
+  } else {
+    context.log.info(
+      {
+        requestId: context.request$.id,
+        pattern: context.trace$.method
+      },
+      'Request received'
+    )
+  }
+
+  next()
+}
+
+function onServerPreResponse(context, req, res, next) {
+  if (context._config.traceLog) {
+    context.log = context.log.child({
+      requestId: context.request$.id,
+      parentSpanId: context.trace$.parentSpanId,
+      traceId: context.trace$.traceId,
+      spanId: context.trace$.spanId
+    })
+    context.log.info(
+      {
+        pattern: context.trace$.method
+      },
+      'Request responded'
+    )
+  } else {
+    context.log.info(
+      {
+        requestId: context.request$.id,
+        pattern: context.trace$.method
+      },
+      'Request responded'
+    )
+  }
   next()
 }
 
@@ -339,7 +386,10 @@ function onServerPreRequestLoadTest(context, req, res, next) {
 
 module.exports.onClientPreRequest = [onClientPreRequest]
 module.exports.onClientPostRequest = [onClientPostRequest]
-module.exports.onServerPreResponse = [onServerPreResponseSchemaValidation]
+module.exports.onServerPreResponse = [
+  onServerPreResponseSchemaValidation,
+  onServerPreResponse
+]
 module.exports.onServerPreRequest = [
   onServerPreRequest,
   onServerPreRequestSchemaValidation,
