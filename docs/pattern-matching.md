@@ -122,4 +122,4 @@ You can define a pattern in two different ways:
 
 ## Hemera $ properties
 
-In Hemera we use special `$` suffixed properties to configure additional transport options in NATS. Please consider that those properties are not part of the pattern and will be ingored at pattern matching.
+In Hemera we use special `$` suffixed properties to configure additional transport options in NATS or to pass informations to configure plugins. Please consider that those properties are not part of the pattern and will be ingored at pattern matching. They won't be send.

@@ -211,15 +211,16 @@ function onServerPreRequest(context, req, res, next) {
   context._pattern = context.request.payload.pattern
   // find matched action
   context.matchedAction = context._router.lookup(context._pattern)
-  // remove pattern when maxMessages$ was received
-  // only relevant for server actions with custom transport options
+  // We have to remove the pattern manually when maxMessages$ was received.
+  // This is required because NATS unsubscribe events is fired to early.
+  // Only relevant for server actions with custom transport options.
   if (context.matchedAction) {
     context.matchedAction._receivedMsg++
     if (
       context.matchedAction._receivedMsg ===
       context.matchedAction.transport.maxMessages
     ) {
-      // we only need remove pattern the subscription is unsubscribed by nats driver
+      // we only need to remove the pattern because the subscription is unsubscribed by nats driver automatically
       context.cleanTopic(context._topic)
     }
   } else if (context._notFoundPattern) {
