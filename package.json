@@ -32,19 +32,19 @@
     "queueing"
   ],
   "scripts": {
-    "precommit": "npm run lint && npm run format",
+    "precommit": "pretty-quick --staged && npm run lint",
     "lint": "eslint \"./packages/**/*.js\" \"./test/**/*.js\"",
     "lint:fix": "eslint --fix  \"./packages/**/*.js\" \"./test/**/*.js\"",
-    "format": "prettier --list-different \"./packages/**/*.js\" \"./examples/**/*.js\" \"./test/**/*.js\" \"./packages/**/*.md\"",
-    "format:fix": "prettier \"./packages/**/*.js\" \"./examples/**/*.js\" \"./test/**/*.js\" \"./packages/**/*.md\" \"./docs/*.md\" --write",
     "setup": "npm i && lerna bootstrap",
     "ci:setup": "npm i && lerna bootstrap --npm-client=npm",
     "clean": "lerna clean",
     "release": "lerna publish -i",
     "lerna": "lerna",
-    "test": "nyc mocha -b -r \"./test/hemera/bootstrap\" -t 5000 --exit \"./test/**/*.spec.js\" \"./packages/hemera-zipkin/test/**/*.js\"",
+    "test":
+      "nyc mocha -b -r \"./test/hemera/bootstrap\" -t 5000 --exit \"./test/**/*.spec.js\" \"./packages/hemera-zipkin/test/**/*.js\"",
     "coverage": "npm run test && nyc report --reporter=html",
-    "ci": "nyc mocha -r \"./test/hemera/bootstrap\" -t 5000 --exit \"./test/**/*.spec.js\" \"./packages/hemera-zipkin/test/**/*.js\" && nyc report --reporter=text-lcov | coveralls"
+    "ci":
+      "nyc mocha -r \"./test/hemera/bootstrap\" -t 5000 --exit \"./test/**/*.spec.js\" \"./packages/hemera-zipkin/test/**/*.js\" && nyc report --reporter=text-lcov | coveralls"
   },
   "engines": {
     "node": ">=6"
@@ -68,6 +68,7 @@
     "nats": "^0.8.10",
     "nyc": "^11.8.0",
     "prettier": "^1.12.1",
+    "pretty-quick": "^1.6.0",
     "promise-retry": "^1.1.1",
     "proxyquire": "^2.0.1",
     "sinon": "^5.0.7",
