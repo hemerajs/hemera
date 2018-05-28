@@ -33,6 +33,7 @@
   ],
   "scripts": {
     "precommit": "pretty-quick --staged && npm run lint && npm run test",
+    "format": "pretty-quick",
     "lint": "eslint \"./packages/**/*.js\" \"./test/**/*.js\"",
     "lint:fix": "eslint --fix  \"./packages/**/*.js\" \"./test/**/*.js\"",
     "setup": "npm i && lerna bootstrap",
