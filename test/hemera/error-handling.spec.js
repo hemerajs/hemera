@@ -95,6 +95,41 @@ describe('Error handling', function() {
     })
   })
 
+  it('Should respond with success payload instead error when no native error is passed in callback', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'email',
+          cmd: 'send'
+        },
+        (resp, cb) => {
+          // an error is logged that the interface was used incorrrectly
+          // in next version an error is thrown
+          // eslint-disable-next-line standard/no-callback-literal
+          cb('test')
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'email',
+          cmd: 'send',
+          email: 'foobar@gmail.com',
+          msg: 'Hi!'
+        },
+        (err, resp) => {
+          expect(err).to.be.not.exists()
+          expect(resp).to.be.equals('test')
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
   it('Should be able to compare custom hemera errors with instanceof', function(done) {
     const nats = require('nats').connect(authUrl)
 
