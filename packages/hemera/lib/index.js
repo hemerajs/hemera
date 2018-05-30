@@ -948,13 +948,9 @@ class Hemera extends EventEmitter {
       // avoid to create a seperate promise
       // eslint-disable-next-line promise/catch-or-return
       result.then(
-        payload => {
-          self.reply.send(payload)
-        },
+        payload => self.reply.send(payload),
         err => {
-          if (err) {
-            self._isValidError(err)
-          }
+          self._isValidError(err)
           self.reply.send(err)
         }
       )
@@ -981,8 +977,10 @@ class Hemera extends EventEmitter {
     return action(self.request.payload.pattern, (err, result) => {
       if (err) {
         self._isValidError(err)
+        self.reply.send(err)
+        return
       }
-      self.reply.send(err || result)
+      self.reply.send(result)
     })
   }
 
