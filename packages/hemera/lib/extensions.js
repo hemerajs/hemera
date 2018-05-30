@@ -87,6 +87,7 @@ function onClientPreRequest(context, next) {
 
   if (context._config.traceLog) {
     context.log = context.log.child({
+      tag: context._config.tag,
       requestId: context.request$.id,
       parentSpanId: context.trace$.parentSpanId,
       traceId: context.trace$.traceId,
@@ -148,6 +149,7 @@ function onClientPostRequest(context, next) {
 
   if (context._config.traceLog) {
     context.log = context.log.child({
+      tag: context._config.tag,
       requestId: context.request$.id,
       parentSpanId: context.trace$.parentSpanId,
       traceId: context.trace$.traceId,
@@ -231,6 +233,7 @@ function onServerPreRequest(context, req, res, next) {
 
   if (context._config.traceLog) {
     context.log = context.log.child({
+      tag: context._config.tag,
       requestId: context.request$.id,
       parentSpanId: context.trace$.parentSpanId,
       traceId: context.trace$.traceId,
@@ -258,6 +261,7 @@ function onServerPreRequest(context, req, res, next) {
 function onServerPreResponse(context, req, res, next) {
   if (context._config.traceLog) {
     context.log = context.log.child({
+      tag: context._config.tag,
       requestId: context.request$.id,
       parentSpanId: context.trace$.parentSpanId,
       traceId: context.trace$.traceId,
