@@ -18,12 +18,15 @@ function hemeraZipkin(hemera, opts, done) {
   const config = Hoek.applyToDefaults(defaultConfig, opts || {})
   const Tracer = new Zipkin(config)
 
+  const zipkinContextKey = Symbol('zipkin.context')
+  hemera.decorate(zipkinContextKey, null)
+
   /**
    * Server send
    */
   hemera.on('serverPreResponse', function(ctx) {
     let meta = {
-      service: ctx._topic,
+      service: ctx.trace$.service,
       name: ctx.trace$.method
     }
 
@@ -32,25 +35,34 @@ function hemeraZipkin(hemera, opts, done) {
     }
 
     Tracer.addBinary(meta, ctx.delegate$)
-    Tracer.addBinary(meta, {
-      'server.topic': ctx._topic,
-      'server.maxMessages': ctx.matchedAction
-        ? ctx.matchedAction.pattern.maxMessages$ || 0
-        : 0,
-      'server.pubsub': ctx.matchedAction
-        ? ctx.matchedAction.pattern.pubsub$ || false
-        : false
-    })
+
+    const addBinaryData = {
+      'server.topic': ctx.trace$.service
+    }
+
+    if (ctx.matchedAction) {
+      if (ctx.matchedAction.pattern.maxMessages$ > 0) {
+        addBinaryData['server.maxMessages'] =
+          ctx.matchedAction.pattern.maxMessages$
+      }
+      if (ctx.matchedAction.pattern.pubsub$ === true) {
+        addBinaryData['server.pubsub'] = true
+      }
+    }
+
+    Tracer.addBinary(meta, addBinaryData)
+
+    const zkTrace = ctx[zipkinContextKey]
 
     hemera.log.debug(
       {
-        traceData: ctx._zkTrace,
-        meta: meta
+        zkTrace,
+        meta
       },
       'sendServerSend'
     )
 
-    Tracer.sendServerSend(ctx._zkTrace, meta)
+    Tracer.sendServerSend(zkTrace, meta)
   })
 
   /**
@@ -68,15 +80,19 @@ function hemeraZipkin(hemera, opts, done) {
 
     Tracer.addBinary(meta, ctx.delegate$)
 
-    Tracer.addBinary(meta, {
-      'server.topic': ctx._topic,
-      'server.maxMessages': ctx.matchedAction
-        ? ctx.matchedAction.pattern.maxMessages$ || 0
-        : 0,
-      'server.pubsub': ctx.matchedAction
-        ? ctx.matchedAction.pattern.pubsub$ || false
-        : false
-    })
+    const addBinaryData = {
+      'server.topic': ctx.trace$.service
+    }
+    if (ctx.matchedAction) {
+      if (ctx.matchedAction.pattern.maxMessages$ > 0) {
+        addBinaryData['server.maxMessages'] =
+          ctx.matchedAction.pattern.maxMessages$
+      }
+      if (ctx.matchedAction.pattern.pubsub$ === true) {
+        addBinaryData['server.pubsub'] = true
+      }
+    }
+    Tracer.addBinary(meta, addBinaryData)
 
     let traceData = {
       traceId: ctx.trace$.traceId,
@@ -88,13 +104,13 @@ function hemeraZipkin(hemera, opts, done) {
 
     hemera.log.debug(
       {
-        traceData: traceData,
-        meta: meta
+        traceData,
+        meta
       },
       'sendServerRecv'
     )
 
-    ctx._zkTrace = Tracer.sendServerRecv(traceData, meta)
+    ctx[zipkinContextKey] = Tracer.sendServerRecv(traceData, meta)
   })
 
   /**
@@ -111,13 +127,19 @@ function hemeraZipkin(hemera, opts, done) {
     }
 
     Tracer.addBinary(meta, ctx.delegate$)
-    Tracer.addBinary(meta, {
+
+    const addBinaryData = {
       'rpc.topic': ctx.trace$.service,
       'rpc.method': ctx.trace$.method,
-      'rpc.timeout': ctx._pattern.timeout$ || ctx.config.timeout,
-      'rpc.maxMessages': ctx._pattern.maxMessages$ || 0,
-      'rpc.pubsub': ctx._pattern.pubsub$ || false
-    })
+      'rpc.timeout': ctx._pattern.timeout$ || ctx.config.timeout
+    }
+    if (ctx._pattern.maxMessages$ > 0) {
+      addBinaryData['rpc.maxMessages'] = ctx._pattern.maxMessages$
+    }
+    if (ctx._pattern.pubsub$ === true) {
+      addBinaryData['rpc.pubsub'] = true
+    }
+    Tracer.addBinary(meta, addBinaryData)
 
     ctx.trace$.sampled = Tracer.shouldSample()
 
@@ -130,13 +152,13 @@ function hemeraZipkin(hemera, opts, done) {
 
     hemera.log.debug(
       {
-        traceData: traceData,
-        meta: meta
+        traceData,
+        meta
       },
       'sendClientSend'
     )
 
-    ctx._zkTrace = Tracer.sendClientSend(traceData, meta)
+    ctx[zipkinContextKey] = Tracer.sendClientSend(traceData, meta)
   })
 
   /**
@@ -154,22 +176,25 @@ function hemeraZipkin(hemera, opts, done) {
 
     Tracer.addBinary(meta, ctx.delegate$)
 
+    const zkTrace = ctx[zipkinContextKey]
+
     hemera.log.debug(
       {
-        traceData: ctx._zkTrace,
-        meta: meta
+        zkTrace,
+        meta
       },
       'sendClientRecv'
     )
 
-    Tracer.sendClientRecv(ctx._zkTrace, meta)
+    Tracer.sendClientRecv(zkTrace, meta)
   })
 
   done()
 }
 
 const plugin = Hp(hemeraZipkin, {
-  hemera: '>=5.0.0-rc.1',
+  hemera: '>=5.0.0',
+  scope: false,
   name: require('./package.json').name
 })
 
