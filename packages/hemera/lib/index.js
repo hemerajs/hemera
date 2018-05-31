@@ -1416,7 +1416,7 @@ class Hemera extends EventEmitter {
       const optOptions = {
         timeout: self._pattern.timeout$ || self.config.timeout,
         // default is request-reply semantic but we can assign -1 (no limit)
-        // but the user has to unsubscribe it
+        // but the user has to unsubscribe it manually
         max: 1
       }
       // limit on the number of responses the requestor may receive
