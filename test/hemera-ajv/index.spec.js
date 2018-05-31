@@ -343,9 +343,7 @@ describe('Hemera-ajv response validation', function() {
       hemera.act(
         {
           topic: 'math',
-          cmd: 'add',
-          a: 'dd',
-          b: 2
+          cmd: 'add'
         },
         (err, resp) => {
           expect(err).to.be.exists()

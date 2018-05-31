@@ -1270,6 +1270,7 @@ class Hemera extends EventEmitter {
       return
     }
 
+    // call act handler
     self._execute(null, self.response.payload.result)
   }
 
@@ -1314,7 +1315,7 @@ class Hemera extends EventEmitter {
     hemera._execute = null
 
     hemera.response = new ClientResponse()
-    hemera.request = new ClientRequest()
+    hemera.request = new ClientRequest(pattern)
     hemera.sid = 0
 
     if (cb) {

@@ -9,61 +9,16 @@
  *
  */
 
-/**
- * @class ClientRequest
- */
 class ClientRequest {
-  /**
-   * Creates an instance of ClientRequest.
-   *
-   * @param {Hemera} ctx
-   *
-   * @memberOf ClientRequest
-   */
-  constructor() {
-    this._request = {}
-  }
-
-  /**
-   *
-   *
-   * @readonly
-   * @type {*}
-   * @memberOf ClientRequest
-   */
-  get error() {
-    return this._request.error
-  }
-
-  /**
-   *
-   *
-   *
-   * @memberOf ClientRequest
-   */
-  set error(error) {
-    this._request.error = error
-  }
-
-  /**
-   *
-   *
-   * @readonly
-   * @type {*}
-   * @memberOf ClientRequest
-   */
-  get payload() {
-    return this._request.value
-  }
-
-  /**
-   *
-   *
-   *
-   * @memberOf ClientRequest
-   */
-  set payload(value) {
-    this._request.value = value
+  constructor(pattern) {
+    this.error = undefined
+    this.payload = undefined
+    this.pattern = pattern
+    this.transport = {
+      topic: pattern.topic,
+      pubsub: pattern.pubsub$,
+      maxMessages: pattern.maxMessages$
+    }
   }
 }
 
