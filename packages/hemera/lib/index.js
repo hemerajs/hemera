@@ -1040,7 +1040,7 @@ class Hemera extends EventEmitter {
   }
 
   /**
-   * Remove topic from list and clean pattern index of topic
+   * Remove topic from list and remove all patterns from index
    *
    * @param {any} topic
    * @memberof Hemera

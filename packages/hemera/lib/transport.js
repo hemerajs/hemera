@@ -39,24 +39,24 @@ class NatsTransport {
 
   /**
    *
-   *
-   * @returns
-   *
-   * @memberOf NatsTransport
+   * @param {*} sid
+   * @param {*} timeout
+   * @param {*} expected
+   * @param {*} callback
    */
-  timeout() {
-    return this.nc.timeout.apply(this.nc, arguments)
+  timeout(sid, timeout, expected, callback) {
+    return this.nc.timeout(sid, timeout, expected, callback)
   }
 
   /**
    *
-   *
-   * @returns
-   *
-   * @memberOf NatsTransport
+   * @param {*} subject
+   * @param {*} msg
+   * @param {*} optReply
+   * @param {*} optCallback
    */
-  send() {
-    return this.nc.publish.apply(this.nc, arguments)
+  send(subject, msg, optReply, optCallback) {
+    return this.nc.publish(subject, msg, optReply, optCallback)
   }
 
   /**
@@ -67,50 +67,45 @@ class NatsTransport {
    * @memberOf NatsTransport
    */
   close() {
-    return this.nc.close.apply(this.nc, arguments)
+    return this.nc.close()
   }
 
   /**
    *
-   *
-   * @returns
-   * @memberof NatsTransport
+   * @param {*} optCallback
    */
-  flush() {
-    return this.nc.flush.apply(this.nc, arguments)
+  flush(optCallback) {
+    return this.nc.flush(optCallback)
   }
 
   /**
    *
-   *
-   * @returns
-   *
-   * @memberOf NatsTransport
+   * @param {*} subject
+   * @param {*} opts
+   * @param {*} callback
    */
-  subscribe() {
-    return this.nc.subscribe.apply(this.nc, arguments)
+  subscribe(subject, opts, callback) {
+    return this.nc.subscribe(subject, opts, callback)
   }
 
   /**
    *
-   *
-   * @returns
-   *
-   * @memberOf NatsTransport
+   * @param {*} sid
+   * @param {*} optMax
    */
-  unsubscribe() {
-    return this.nc.unsubscribe.apply(this.nc, arguments)
+  unsubscribe(sid, optMax) {
+    return this.nc.unsubscribe(sid, optMax)
   }
 
   /**
    *
-   *
-   * @returns
-   *
-   * @memberOf NatsTransport
+   * @param {*} subject
+   * @param {*} optMsg
+   * @param {*} optOptions
+   * @param {*} callback
    */
-  sendRequest() {
-    return this.nc.request.apply(this.nc, arguments)
+  sendRequest(subject, optMsg, optOptions, callback) {
+    return this.nc.request(subject, optMsg, optOptions, callback)
   }
 }
 
