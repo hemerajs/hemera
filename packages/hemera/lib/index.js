@@ -711,8 +711,12 @@ class Hemera extends EventEmitter {
       this.log.warn('NATS disconnected!')
     })
 
+    // when nats was not able to reconnect or connection was closed due to other reasons
+    // the process should die and restarted
     this._transport.driver.on('close', () => {
-      this.log.warn('NATS connection closed!')
+      const error = new Errors.HemeraError('NATS connection closed!')
+      this.log.error(error)
+      this.emit('error', error)
     })
 
     const ready = cb => {
