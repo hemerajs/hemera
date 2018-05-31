@@ -104,6 +104,7 @@ class Reply {
 
     self.sent = true
 
+    // 0, null, '' can be send
     if (msg !== undefined) {
       if (msg instanceof Error) {
         self.error = msg
