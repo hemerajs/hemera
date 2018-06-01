@@ -2,7 +2,6 @@
 
 import * as pino from 'pino'
 import { Stream } from 'stream'
-import { ServerRequest, ServerResponse } from 'http'
 
 declare namespace Hemera {
   type LogLevel =
