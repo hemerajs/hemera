@@ -172,7 +172,7 @@ function hemeraOpentracing(hemera, opts, done) {
 }
 
 module.exports = Hp(hemeraOpentracing, {
-  hemera: '>=5.0.0',
+  hemera: '>=5.8.0',
   scope: false,
   name: require('./package.json').name,
   options: {

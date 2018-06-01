@@ -193,7 +193,7 @@ function hemeraZipkin(hemera, opts, done) {
 }
 
 const plugin = Hp(hemeraZipkin, {
-  hemera: '>=5.0.0',
+  hemera: '>=5.8.0',
   scope: false,
   name: require('./package.json').name
 })
