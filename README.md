@@ -95,8 +95,8 @@ Hemera is free for any use (MIT license). If you are in production don't miss th
 
 ## Support / Donate
 
-Maintaining an open-source project is hard. Our mission is to provide great support and improve the software in regular update.
-If you use hemera it would be great to receive something back in any form, a donation, a Pull-Request, you decide. Thank you!
+Maintaining an open-source project is hard and very time-consuming. Our mission is to provide great support and improve the software in regular updates.
+If you use hemera it would be great to receive something back in any form, a donation or with a Pull-Request, you decide. Thank you!
 
 <p>
   <a href="https://www.patreon.com/starptech">
