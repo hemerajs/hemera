@@ -6,12 +6,12 @@ const Nats = require('nats')
 const PORT = 4222
 const noAuthUrl = 'nats://localhost:' + PORT
 
-const payloadSmall = require('./payloads/example_payload_small.json') // ~100KB
-const payloadMedium = require('./payloads/example_payload_medium.json') // ~ 500KB
-const payloadBig = require('./payloads/example_payload_big.json') // 990KB
+let payload = require('./payloads/example_payload_small.json') // ~100KB
+// payload = require('./payloads/example_payload_medium.json') // ~ 500KB
+// payload = require('./payloads/example_payload_big.json') // 990KB
 
 // Don't forget to set gnats config to max_payload: 3145728 # 3MB to process file larger than 1 MB
-const payloadExtraBig = require('./payloads/example_payload_extra_big.json') // 2.3MB
+// payload = require('./payloads/example_payload_extra_big.json') // 2.3MB
 
 const nats1 = Nats.connect(noAuthUrl)
 
@@ -53,7 +53,7 @@ hemera1.ready(() => {
         cmd: 'add',
         a: 1,
         b: 2,
-        data: payloadSmall
+        data: payload
       },
       function(err, resp) {
         if (err) {
