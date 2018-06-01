@@ -18,56 +18,58 @@ A <a href="http://nodejs.org/">Node.js</a> microservices toolkit for the <a href
 <br>Run on <a href="https://repl.it/@StarpTech/Hemera-5">repl.it</a>
 </p>
 
-- __Node:__ v6+
-- __Documentation:__ https://hemerajs.github.io/hemera/
-- __Lead Maintainer:__ [Dustin Deus](https://github.com/StarpTech)
+* **Node:** v6+
+* **Documentation:** https://hemerajs.github.io/hemera/
+* **Lead Maintainer:** [Dustin Deus](https://github.com/StarpTech)
 
 ## 📓 Getting Started
 
-Hemera (/ˈhɛmərə/; Ancient Greek: Ἡμέρα [hɛːméra] "day") is a small wrapper around the NATS driver. NATS is a simple, fast and reliable solution for the internal communication of a distributed system. It chooses simplicity and reliability over guaranteed delivery. We want to provide a toolkit to develop micro services in an easy and powerful way. We provide a pattern matching RPC style. You don't have to worry about the transport. NATS is powerful.
+Hemera (/ˈhɛmərə/; Ancient Greek: Ἡμέρα [hɛːméra] "day") is a small wrapper around the official NATS driver. NATS is a simple, fast and reliable solution for the internal communication of a distributed system. It chooses simplicity and reliability over guaranteed delivery. We want to provide a toolkit to develop micro services in an easy and powerful way. We provide a pattern matching RPC style. You don't have to worry about the transport. NATS is powerful.
 
-With Hemera you have the best of both worlds. Efficient pattern matching to have the most flexibility in defining your RPC's. It doesn't matter where your server or client lives. You can add the same `add` as many as you want on different hosts to ensure maximal availability. The only dependency you have is a single binary of 7MB. Mind your own business NATS will do the rest for you:
+With Hemera you have the best of both worlds. Efficient pattern matching to have the most flexibility in defining your RPC's. It doesn't matter where your server or client lives. You can start as many services you want on different hosts to ensure maximal availability. The only dependency you have is a single binary of \~10MB. Mind your own business NATS will do the rest for you:
 
 The key features of NATS in combination with Hemera are:
-* **Lightweight**: The Hemera core is small as possible and can be extended by extensions or plugins.
+
+* **Lightweight**: The Hemera core is small as possible and provide an extensive [plugin system](https://hemerajs.github.io/hemera/docs/plugin.html).
 * **Location transparency**: A service may be instantiated in different locations at different times. An application interacting with an service and does not know the service physical location.
 * **Service Discovery**: You don't need a service discovery all subscriptions are managed by NATS.
 * **Load Balancing**: Requests are load balanced (random) by NATS mechanism of "queue groups".
-* **Packages**: Providing reliable and modern plugins to the community.
+* **Packages**: We provide reliable and modern plugins to the community.
 * **High performant**: NATS is able to handle million of requests per second.
-* **Scalability**: Filtering on the subject name enables services to divide work (perhaps with locality) e.g. `topic:auth:germany`. Queue group name allow load balancing of services.
+* **Scalability**: Filtering on the subject name enables services to divide work (perhaps with locality).
 * **Fault tolerance**: Auto-heals when new services are added. Configure cluster mode to be more reliable.
 * **Auto-pruning**: NATS automatically handles a slow consumer and cut it off.
-* **Pattern driven**: Define the signatures of your RPC's in JSON and use the flexibility of pattern-matching.
+* **Pattern driven**: Define RPC's in JSON and use the flexibility of pattern-matching.
 * **Request & Reply**: By default point-to-point involves the fastest or first to respond.
 * **Publish & Subscribe**: Hemera supports all features of NATS. This includes wildcards in subjects and normal publish and fanout mechanism.
-* **Tracing**: Any distributed system need good tracing capabilities. We provide support for Zipkin or Jaeger tracing systems which manages both the collection and lookup of this data.
-* **Monitoring**: Your NATS server can be monitored by cli or a dashboard.
-* **Payload validation**: Create your own validator or use existing plugins e.g Hemera-Joi.
-* **Serialization**: Use custom serializer e.g MessagePack.
+* **Tracing**: Builtin tracing capabilities but we also provide plugins for [Zipkin](https://zipkin.io/) or [Jaeger](https://github.com/jaegertracing/jaeger).
+* **Monitoring**: NATS server can be monitored by cli or a dashboard.
+* **Payload validation**: Create your own validator or use existing plugins e.g [hemera-joi](https://github.com/hemerajs/hemera/tree/master/packages/hemera-joi) or [hemera-ajv](https://github.com/hemerajs/hemera/tree/master/packages/hemera-ajv).
+* **Serialization**: Use custom serializer e.g [hemera-mgspack](https://github.com/hemerajs/hemera/tree/master/packages/hemera-msgpack).
 * **Metadata**: Transfer metadata across services or attach contextual data to tracing systems.
-* **Dependencies**: NATS is a single binary of 7MB and can be deployed in seconds.
-* **Typescript**: We provide a definition file to support auto-intellisense. 
+* **Dependencies**: NATS is a single binary of \~10MB and can be deployed in seconds.
+* **Typescript**: We provide typings.
 
 ## Built in protection
+
 * **Process policy**: Will exit the process when the policy (memory, event loop) could not be fullfilled (Option: `heavy`).
-* **Message loop detection**: Will return an error if you call a route recursively (Option: `maxRecursion`). 
+* **Message loop detection**: Will return an error if you call a route recursively (Option: `maxRecursion`).
 * **Safe default JSON serializer**: Provides a deterministic version and will also gracefully handle circular structures.
 
 ## Who's using Hemera?
 
 | [![appcom-interactive](https://hemerajs.github.io/hemera/img/company/appcom.svg)](http://www.appcom-interactive.de/) | [![amerbank](https://hemerajs.github.io/hemera/img/company/amerbank.png)](https://amerbank.com/) | [![savicontrols](https://hemerajs.github.io/hemera/img/company/savicontrols.png)](https://www.savicontrols.com/) | [![mercado unico](https://hemerajs.github.io/hemera/img/company/mercado-unico.png)](https://www.mercado-unico.com/) |
-| -------------| --- | --- | --- |
-| appcom interactive | amerbank | savicontrols | mercado unico |
+| -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| appcom interactive                                                                                                   | amerbank                                                                                         | savicontrols                                                                                                     | mercado unico                                                                                                       |
 
 ## Get Involved
 
-- **Contributing**: Pull requests are welcome!
-    - Read [`CONTRIBUTING.md`](https://github.com/hemerajs/hemera/blob/master/CONTRIBUTING.md) and check out our [help-wanted](https://github.com/hemerajs/hemera/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) issues
-    - Submit github issues for any feature enhancements, bugs or documentation problems
-- **Support**: Join our [gitter chat](https://gitter.im/hemerajs/hemera) to ask questions to get support from the maintainers and other Hemera developers
-    - Questions/comments can also be posted as [github issues](https://github.com/hemerajs/hemera/issues)
-- **Discuss**: Tweet using the `#HemeraJs` hashtag
+* **Contributing**: Pull requests are welcome!
+  * Read [`CONTRIBUTING.md`](https://github.com/hemerajs/hemera/blob/master/CONTRIBUTING.md) and check out our [help-wanted](https://github.com/hemerajs/hemera/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) issues
+  * Submit github issues for any feature enhancements, bugs or documentation problems
+* **Support**: Join our [gitter chat](https://gitter.im/hemerajs/hemera) to ask questions to get support from the maintainers and other Hemera developers
+  * Questions/comments can also be posted as [github issues](https://github.com/hemerajs/hemera/issues)
+* **Discuss**: Tweet using the `#HemeraJs` hashtag
 
 ## Changelog
 
@@ -79,7 +81,7 @@ Please read [CONTRIBUTING.md](https://github.com/hemerajs/hemera/blob/master/CON
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. Available versions [tags on this repository](https://github.com/hemerajs/hemera/tags). 
+We use [SemVer](http://semver.org/) for versioning. Available versions [tags on this repository](https://github.com/hemerajs/hemera/tags).
 
 ## Authors
 
@@ -87,21 +89,28 @@ We use [SemVer](http://semver.org/) for versioning. Available versions [tags on 
 
 See also the list of [contributors](https://github.com/StarpTech/hemera/contributors) who participated in this project.
 
-## License
+## Professional services
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+Hemera is free for any use (MIT license). If you are in production don't miss the professional support service. For courses and training send me an email to [deusdustin@gmail.com](deusdustin@gmail.com) or contact me private on <a href="https://gitter.im/hemerajs/hemera"><img src="https://camo.githubusercontent.com/e7536e01bc9c129b974e11c26b174f54e50c6d69/68747470733a2f2f696d672e736869656c64732e696f2f6769747465722f726f6f6d2f6e776a732f6e772e6a732e7376673f7374796c653d666c61742d737175617265266d61784167653d33363030" alt="Gitter" data-canonical-src="https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=3600" style="max-width:100%;"></a>
+
+## Support / Donate
+
+Maintaining an open-source project is hard. Our mission is to provide great support and improve the software in regular update.
+If you use hemera it would be great to receive something back in any form, a donation, a Pull-Request, you decide. Thank you!
+
+<p>
+  <a href="https://www.patreon.com/starptech">
+    <img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" height="40px" />
+  </a>
+</p>
+
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/payinstant/25)
 
 ## Inspiration
 
 * [Seneca](https://github.com/senecajs/seneca) - Pattern matching.
 * [Fastify](https://github.com/fastify/fastify) - Plugin system.
 
-## Professional services
-Hemera is free for any use (MIT license). If you are in production don't miss the professional support service. For courses and training send me an email to [deusdustin@gmail.com](deusdustin@gmail.com) or contact me private on <a href="https://gitter.im/hemerajs/hemera"><img src="https://camo.githubusercontent.com/e7536e01bc9c129b974e11c26b174f54e50c6d69/68747470733a2f2f696d672e736869656c64732e696f2f6769747465722f726f6f6d2f6e776a732f6e772e6a732e7376673f7374796c653d666c61742d737175617265266d61784167653d33363030" alt="Gitter" data-canonical-src="https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=3600" style="max-width:100%;"></a>
+## License
 
-## Support / Donate
-<p>
-  <a href="https://www.patreon.com/starptech">
-    <img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" height="40px" />
-  </a>
-</p>
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
