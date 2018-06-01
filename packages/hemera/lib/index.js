@@ -92,12 +92,14 @@ class Hemera extends EventEmitter {
       id: ''
     }
 
+    // represent the 'Add' instance
     this.matchedAction = null
     this.request = null
     this.response = null
 
     this._topic = ''
     this._pattern = null
+    // represent the 'act' handler
     this._execute = null
     this._cleanPattern = ''
 
