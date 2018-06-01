@@ -4,7 +4,8 @@
           toggler.onclick = function() {
             nav.classList.toggle('docsSliderActive');
           };
-        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1>Not found pattern</h1></header><article><div><span><p>You can define a pattern which is used as fallback as soon a pattern could not be found on client side. This is very useful for debugging and logging purposes.</p>
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1>Not found pattern</h1></header><article><div><span><p>You can define a pattern which is used as fallback as soon a pattern could not be found on client side. This is very useful for debugging and logging purposes.
+The pattern must be accesible in the same process.</p>
 <pre><code class="hljs css js">hemera.setNotFoundPattern({
   <span class="hljs-attr">topic</span>: <span class="hljs-string">'math'</span>,
   <span class="hljs-attr">cmd</span>: <span class="hljs-string">'notFound'</span>
