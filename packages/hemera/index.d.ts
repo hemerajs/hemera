@@ -508,4 +508,4 @@ declare class Hemera<Request, Response> {
   request$: Hemera.Request$
 }
 
-export default Hemera
+export = Hemera
