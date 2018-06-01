@@ -103,7 +103,7 @@ hemera.decorate(name, value)
 
 ### Hemera.expose()
 
-Expose a value to the current hemera instance.
+Expose a value to the current hemera instance. It will effects all sibling and child scopes.
 
 ```js
 hemera.expose(name, value)

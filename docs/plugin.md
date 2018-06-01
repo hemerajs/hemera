@@ -57,7 +57,7 @@ const myPlugin = hp((hemera, opts, done) => {
   })
 
   done()
-})
+}, { scope: false })
 
 hemera.use(myPlugin)
 ```
@@ -79,8 +79,7 @@ const myPlugin = hp((hemera, opts, done) => {
   hemera.use(
     hp((hemera, opts, done) => {
       // some code
-      // this plugin will be effected
-      // because it inherit the prototype
+      // this plugin will be effected by the 'onClientPostRequest' extension
       done()
     })
   )
@@ -130,8 +129,8 @@ hemera.ready()
 
 ### Global registration
 
-Sometimes it is still useful to write a plugin which effects sibling and child scopes. You can disable the creation of a plugin scope with the `scoped: false` property.
-This approach is used in payload validators `hemera-joi` or authentication `hemera-jwt`.
+Sometimes it's still useful to write a plugin which effects sibling and child scopes. You can disable the creation of a plugin scope with the `scoped: false` property.
+This approach is used in payload validators `hemera-joi` or authentication plugins like `hemera-jwt`.
 
 ```js
 const hp = require('hemera-plugin')
@@ -164,12 +163,10 @@ hemera.use(myPlugin)
 
 ## Add plugin metadata
 
-You can also pass an async function.
-
 ```js
 const hp = require('hemera-plugin')
 const myPlugin = hp(
-  (hemera, opts, done) => {
+  async (hemera, opts) => {
     const topic = 'math'
 
     hemera.add(
@@ -183,8 +180,6 @@ const myPlugin = hp(
         })
       }
     )
-
-    done()
   },
   {
     hemera: '0.x', // bare-minimum version of Hemera
@@ -200,7 +195,7 @@ hemera.use(myPlugin)
 
 ## Plugin depdendencies
 
-You can declare plugin and decorators as dependencies. The constrains are checked when all plugins are registered.
+You can declare plugins and decorators as dependencies. The constrains are checked when all plugins are registered.
 
 ```js
 const hp = require('hemera-plugin')
@@ -224,7 +219,7 @@ hemera.ready(err => {
 
 ## Async / Await
 
-You can also pass an async function.
+You can also pass an async function and omit the `done` callback.
 
 ```js
 const hp = require('hemera-plugin')
