@@ -184,11 +184,11 @@ function onClientPostRequest(context, next) {
  * - Clean pattern when maxMessages$ was used
  *
  * @param {any} req
- * @param {any} res
+ * @param {any} reply
  * @param {any} next
  * @returns
  */
-function onServerPreRequest(context, req, res, next) {
+function onServerPreRequest(context, req, reply, next) {
   let m = context._serverDecoder(context.request.payload)
 
   if (m.error) {
@@ -258,7 +258,7 @@ function onServerPreRequest(context, req, res, next) {
   next()
 }
 
-function onServerPreResponse(context, req, res, next) {
+function onServerPreResponse(context, req, reply, next) {
   if (context._config.traceLog) {
     context.log = context.log.child({
       tag: context._config.tag,
@@ -292,10 +292,10 @@ function onServerPreResponse(context, req, res, next) {
  * - schemaCompiler was found
  * @param {*} context
  * @param {*} req
- * @param {*} res
+ * @param {*} reply
  * @param {*} next
  */
-function onServerPreRequestSchemaValidation(context, req, res, next) {
+function onServerPreRequestSchemaValidation(context, req, reply, next) {
   if (context.matchedAction && context._schemaCompiler) {
     const schema = context.matchedAction.schema
     const ret = context._schemaCompiler(schema)(req.payload.pattern)
@@ -331,13 +331,17 @@ function onServerPreRequestSchemaValidation(context, req, res, next) {
  *
  * @param {*} context
  * @param {*} req
- * @param {*} res
+ * @param {*} reply
  * @param {*} next
  */
-function onServerPreResponseSchemaValidation(context, req, res, next) {
-  if (!res.error && context.matchedAction && context._responseSchemaCompiler) {
+function onServerPreResponseSchemaValidation(context, req, reply, next) {
+  if (
+    !reply.error &&
+    context.matchedAction &&
+    context._responseSchemaCompiler
+  ) {
     const schema = context.matchedAction.schema
-    const ret = context._responseSchemaCompiler(schema)(res.payload)
+    const ret = context._responseSchemaCompiler(schema)(reply.payload)
     if (ret) {
       // promise
       if (typeof ret.then === 'function') {
@@ -346,22 +350,22 @@ function onServerPreResponseSchemaValidation(context, req, res, next) {
         ret.then(
           modifiedPayload => {
             if (modifiedPayload) {
-              res.payload = modifiedPayload
+              reply.payload = modifiedPayload
             }
             next()
           },
           err => {
-            res.error = err
+            reply.error = err
             next(err)
           }
         )
         return
       } else if (ret.error) {
-        res.error = ret.error
+        reply.error = ret.error
         next(ret.error)
         return
       } else if (ret.value) {
-        res.payload = ret.value
+        reply.payload = ret.value
         next()
         return
       }
@@ -374,11 +378,11 @@ function onServerPreResponseSchemaValidation(context, req, res, next) {
  *
  *
  * @param {any} req
- * @param {any} res
+ * @param {any} reply
  * @param {any} next
  * @returns
  */
-function onServerPreRequestLoadTest(context, req, res, next) {
+function onServerPreRequestLoadTest(context, req, reply, next) {
   if (context._config.load.checkPolicy) {
     const error = context._loadPolicy.check()
     if (error) {

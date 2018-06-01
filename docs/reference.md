@@ -103,7 +103,7 @@ hemera.decorate(name, value)
 
 ### Hemera.expose()
 
-Expose a value to the current hemera instance.
+Expose a value to the current hemera instance. It will effects all sibling and child scopes.
 
 ```js
 hemera.expose(name, value)
@@ -230,9 +230,29 @@ Returns the notFound Pattern.
 hemera.notFoundPattern
 ```
 
+### Server action context
+
+These properties are only accessible inside an `Add` handler.
+
+#### Hemera.matchedAction
+
+Returns the current `Add` instance of the server action.
+
+```js
+hemera.response
+```
+
+#### Hemera.reply
+
+Returns the current server reply object.
+
+```js
+hemera.reply
+```
+
 ### Hemera.request
 
-Returns the current client/server request object.
+Returns the current server request object.
 
 ```js
 hemera.request
@@ -240,16 +260,28 @@ hemera.request
 
 ### Hemera.response
 
-Returns the current client/server response object.
+Returns the current server response object.
 
 ```js
 hemera.response
 ```
 
-### Hemera.reply
+### Client action context
 
-Returns the current server reply object.
+These properties are only accessible inside an `Act` handler.
+
+### Hemera.request
+
+Returns the current client request object.
 
 ```js
-hemera.reply
+hemera.request
+```
+
+### Hemera.response
+
+Returns the current client response object.
+
+```js
+hemera.response
 ```

@@ -18,16 +18,13 @@ const runExt = require('./extensionRunner').extRunner
  * @class Add
  */
 class Add {
-  /**
-   * Creates an instance of Add.
-   * @param {any} addDef
-   *
-   * @memberOf Add
-   */
   constructor(addDef) {
-    this.actMeta = addDef
     this.sid = 0
-    this.actMeta.middleware = addDef.middleware || []
+    this.middleware = addDef.middleware || []
+    this.pattern = addDef.pattern
+    this.schema = addDef.schema
+    this.transport = addDef.transport
+    this.action = null
     // only used for maxMessages$ flag
     this._receivedMsg = 0
   }
@@ -40,7 +37,7 @@ class Add {
    * @memberof Add
    */
   _use(handler) {
-    this.actMeta.middleware.push(handler)
+    this.middleware.push(handler)
   }
 
   /**
@@ -88,71 +85,6 @@ class Add {
       null,
       cb
     )
-  }
-
-  /**
-   *
-   *
-   * @readonly
-   *
-   * @memberOf Add
-   */
-  get middleware() {
-    return this.actMeta.middleware
-  }
-
-  /**
-   *
-   *
-   * @readonly
-   *
-   * @memberOf Add
-   */
-  get schema() {
-    return this.actMeta.schema
-  }
-
-  /**
-   *
-   *
-   * @readonly
-   *
-   * @memberOf Add
-   */
-  get pattern() {
-    return this.actMeta.pattern
-  }
-
-  /**
-   *
-   *
-   *
-   * @memberOf Add
-   */
-  set action(action) {
-    this.actMeta.action = action
-  }
-
-  /**
-   *
-   *
-   * @readonly
-   *
-   * @memberOf Add
-   */
-  get action() {
-    return this.actMeta.action
-  }
-
-  /**
-   *
-   *
-   * @readonly
-   *
-   * @memberOf Add
-   */
-  get transport() {
-    return this.actMeta.transport
   }
 }
 

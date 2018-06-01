@@ -328,7 +328,7 @@ describe('Hemera', function() {
     })
   })
 
-  it('Should throw an error by duplicate patterns', function(done) {
+  it('Should throw an error by duplicated patterns', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -366,6 +366,100 @@ describe('Hemera', function() {
     })
   })
 
+  it('Should be able to access request, response context inside act', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'send'
+        },
+        (resp, cb) => {
+          cb()
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'send'
+        },
+        function(err, resp) {
+          expect(err).to.be.not.exists()
+          expect(this.request).to.be.object()
+          expect(this.request.pattern).to.be.equals({
+            topic: 'math',
+            cmd: 'send'
+          })
+          expect(this.request.transport.maxMessages).to.be.undefined()
+          expect(this.request.transport.pubsub).to.be.undefined()
+          expect(this.request.transport.topic).to.be.equals('math')
+
+          expect(this.response).to.be.object()
+          expect(this.response.payload).to.be.object()
+          expect(this.response.error).to.be.null()
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should be able to access request, response, matchedAction context inside add', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'send',
+          schema: { foo: 'bar' }
+        },
+        function(resp, cb) {
+          expect(this.matchedAction).to.be.an.object()
+          expect(this.matchedAction.transport.pubsub).to.be.undefined()
+          expect(this.matchedAction.transport.maxMessages).to.be.undefined()
+          expect(this.matchedAction.transport.queue).to.be.undefined()
+          expect(this.matchedAction.transport.topic).to.be.equals('math')
+          expect(this.matchedAction.sid).to.be.number()
+          expect(this.matchedAction.action).to.be.function()
+          expect(this.matchedAction.pattern).to.be.equals({
+            topic: 'math',
+            cmd: 'send'
+          })
+          expect(this.matchedAction.schema).to.be.equals({
+            schema: { foo: 'bar' }
+          })
+
+          expect(this.response.payload).to.be.undefined()
+          expect(this.response.error).to.be.undefined()
+          expect(this.response.replyTo).to.be.string()
+
+          expect(this.request).to.be.object()
+          expect(this.request.payload).to.be.object()
+          expect(this.request.error).to.be.null()
+
+          cb()
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'send'
+        },
+        function(err, resp) {
+          expect(err).to.be.not.exists()
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
   it('Topic must be set in act', function(done) {
     const nats = require('nats').connect(authUrl)
 
@@ -373,7 +467,7 @@ describe('Hemera', function() {
 
     hemera.ready(() => {
       try {
-        hemera.act(null, (resp, cb) => {})
+        hemera.act(null, resp => {})
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
         expect(err.message).to.be.equals(
@@ -395,7 +489,7 @@ describe('Hemera', function() {
           {
             cmd: 'send'
           },
-          (resp, cb) => {}
+          resp => {}
         )
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')

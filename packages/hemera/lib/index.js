@@ -92,12 +92,14 @@ class Hemera extends EventEmitter {
       id: ''
     }
 
+    // represent the 'Add' instance
     this.matchedAction = null
     this.request = null
     this.response = null
 
     this._topic = ''
     this._pattern = null
+    // represent the 'act' handler
     this._execute = null
     this._cleanPattern = ''
 
@@ -1270,6 +1272,7 @@ class Hemera extends EventEmitter {
       return
     }
 
+    // call act handler
     self._execute(null, self.response.payload.result)
   }
 
@@ -1314,7 +1317,7 @@ class Hemera extends EventEmitter {
     hemera._execute = null
 
     hemera.response = new ClientResponse()
-    hemera.request = new ClientRequest()
+    hemera.request = new ClientRequest(pattern)
     hemera.sid = 0
 
     if (cb) {
