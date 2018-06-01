@@ -17,7 +17,8 @@ class ClientRequest {
     this.transport = {
       topic: pattern.topic,
       pubsub: pattern.pubsub$,
-      maxMessages: pattern.maxMessages$
+      maxMessages: pattern.maxMessages$,
+      expectedMessages: pattern.expectedMessages$
     }
   }
 }

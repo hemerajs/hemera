@@ -78,6 +78,6 @@ hemera.ready(() => {
       })
     }
   )
-  hemera.act('topic:auth,cmd:login')
+  hemera.act('topic:auth,cmd:login,maxMessages$:1')
   hemera.act('topic:search,cmd:friends')
 })

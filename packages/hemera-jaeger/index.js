@@ -129,18 +129,18 @@ function hemeraOpentracing(hemera, opts, done) {
     span.setTag(tags.HEMERA_SERVICE, hemera.trace$.service)
     span.setTag(tags.HEMERA_PATTERN, hemera.trace$.method)
 
-    if (hemera._pattern.maxMessages$ > 0) {
-      span.setTag(tags.HEMERA_ACT_MAXMSG, hemera._pattern.maxMessages$)
+    if (hemera.request.transport.maxMessages > 0) {
+      span.setTag(tags.HEMERA_ACT_MAXMSG, hemera.request.transport.maxMessages)
     }
-    if (hemera._pattern.exptectedMessages$ > 0) {
+    if (hemera.request.transport.expectedMessages$ > 0) {
       span.setTag(
         tags.HEMERA_ACT_EXPECTEDMSG,
-        hemera._pattern.exptectedMessages$
+        hemera.request.transport.expectedMessages$
       )
     }
     span.setTag(
       tags.HEMERA_ACT_TIMEOUT,
-      hemera._pattern.timeout$ || hemera.config.timeout
+      hemera.request.pattern.timeout$ || hemera.config.timeout
     )
 
     hemera[jaegerContextKey] = span

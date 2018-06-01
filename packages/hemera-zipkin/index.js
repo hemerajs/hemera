@@ -131,13 +131,13 @@ function hemeraZipkin(hemera, opts, done) {
     const addBinaryData = {
       'rpc.topic': ctx.trace$.service,
       'rpc.method': ctx.trace$.method,
-      'rpc.timeout': ctx._pattern.timeout$ || ctx.config.timeout
+      'rpc.timeout': ctx.request.pattern.timeout$ || ctx.config.timeout
     }
-    if (ctx._pattern.maxMessages$ > 0) {
-      addBinaryData['rpc.maxMessages'] = ctx._pattern.maxMessages$
+    if (ctx.request.transport.maxMessages > 0) {
+      addBinaryData['rpc.maxMessages'] = ctx.request.transport.maxMessages
     }
-    if (ctx._pattern.pubsub$ === true) {
-      addBinaryData['rpc.pubsub'] = true
+    if (ctx.request.transport.pubsub === true) {
+      addBinaryData['rpc.pubsub'] = ctx.request.transport.pubsub
     }
     Tracer.addBinary(meta, addBinaryData)
 

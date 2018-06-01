@@ -385,18 +385,23 @@ describe('Hemera', function() {
       hemera.act(
         {
           topic: 'math',
-          cmd: 'send'
+          cmd: 'send',
+          maxMessages$: 1,
+          expectedMessages$: 1
         },
         function(err, resp) {
           expect(err).to.be.not.exists()
           expect(this.request).to.be.object()
           expect(this.request.pattern).to.be.equals({
             topic: 'math',
-            cmd: 'send'
+            cmd: 'send',
+            maxMessages$: 1,
+            expectedMessages$: 1
           })
-          expect(this.request.transport.maxMessages).to.be.undefined()
+          expect(this.request.transport.maxMessages).to.be.equals(1)
           expect(this.request.transport.pubsub).to.be.undefined()
           expect(this.request.transport.topic).to.be.equals('math')
+          expect(this.request.transport.expectedMessages).to.be.equals(1)
 
           expect(this.response).to.be.object()
           expect(this.response.payload).to.be.object()
@@ -417,12 +422,13 @@ describe('Hemera', function() {
         {
           topic: 'math',
           cmd: 'send',
-          schema: { foo: 'bar' }
+          schema: { foo: 'bar' },
+          maxMessages$: 1
         },
         function(resp, cb) {
           expect(this.matchedAction).to.be.an.object()
           expect(this.matchedAction.transport.pubsub).to.be.undefined()
-          expect(this.matchedAction.transport.maxMessages).to.be.undefined()
+          expect(this.matchedAction.transport.maxMessages).to.be.equals(1)
           expect(this.matchedAction.transport.queue).to.be.undefined()
           expect(this.matchedAction.transport.topic).to.be.equals('math')
           expect(this.matchedAction.sid).to.be.number()
