@@ -112,7 +112,8 @@ hemera.act({
 
 ## Caveats
 
-* This plugin will use the property `hemera.trace$.opentracing` to transfer data across processes.
+* The jaeger tracer generates it's own tracing data.
+* This plugin transfers the tracing context in `trace$.opentracing` property.
 * Client and Server response errors are logged as `error` events.
 
 ## Advanced example
