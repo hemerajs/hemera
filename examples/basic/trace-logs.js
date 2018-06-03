@@ -13,6 +13,15 @@ hemera.ready(() => {
   hemera.add(
     {
       topic: 'math',
+      cmd: 'sub'
+    },
+    function(req, cb) {
+      cb(null, req.a - req.b)
+    }
+  )
+  hemera.add(
+    {
+      topic: 'math',
       cmd: 'add'
     },
     function(req, cb) {
@@ -33,6 +42,12 @@ hemera.ready(() => {
         return
       }
       this.log.info(resp)
+      this.act({
+        topic: 'math',
+        cmd: 'sub',
+        a: 100,
+        b: 20
+      })
     }
   )
 })
