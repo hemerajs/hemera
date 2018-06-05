@@ -651,7 +651,7 @@ class Hemera extends EventEmitter {
   use(plugin, opts) {
     const pluginMeta = this.getPluginMeta(plugin)
     let pluginOpts = pluginMeta ? pluginMeta.options : {}
-    pluginOpts = { ...pluginOpts, ...opts }
+    pluginOpts = Object.assign({}, pluginOpts, opts)
     this.register(plugin, pluginOpts)
     return this._avvio
   }
