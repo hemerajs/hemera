@@ -112,7 +112,7 @@ class Util {
 
     const o = {}
 
-    for (var key in obj) {
+    for (let key in obj) {
       if (typeof obj[key] === 'object') {
         o[key] = obj[key]
       }
@@ -132,7 +132,7 @@ class Util {
 
     const o = {}
 
-    for (var key in obj) {
+    for (let key in obj) {
       if (
         !key.endsWith('$') &&
         (typeof obj[key] !== 'object' || obj[key] instanceof RegExp) &&
@@ -157,7 +157,7 @@ class Util {
 
     const o = {}
 
-    for (var key in obj) {
+    for (let key in obj) {
       if (!key.endsWith('$')) {
         o[key] = obj[key]
       }
@@ -179,7 +179,7 @@ class Util {
     const obj = Util.cleanPattern(args)
     let sb = []
 
-    for (var key in obj) {
+    for (let key in obj) {
       sb.push(key + ':' + obj[key])
     }
 
