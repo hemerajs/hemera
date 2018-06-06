@@ -173,7 +173,7 @@ function hemeraOpentracing(hemera, opts, done) {
 
 module.exports = Hp(hemeraOpentracing, {
   hemera: '>=5.8.0',
-  scope: false,
+  scoped: false,
   name: require('./package.json').name,
   options: {
     delegateTags: [

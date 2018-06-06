@@ -57,7 +57,7 @@ const myPlugin = hp((hemera, opts, done) => {
   })
 
   done()
-}, { scope: false })
+}, { scoped: false })
 
 hemera.use(myPlugin)
 ```
