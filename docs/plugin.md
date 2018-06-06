@@ -42,6 +42,8 @@ const myPlugin = hp((hemera, opts, done) => {
 module.exports = myPlugin
 ```
 
+> Plugins are __encapsulated__ "_scoped_" by default. If you define an extension inside it will only effects the actions in your plugin. You can disable it if you set the hemera plugin option `scoped:false`.
+
 ## Break encapsulation
 
 Sometimes it is still useful to write a plugin which effects child as well as sibling scopes. You can archive this with plugin option `scoped: false` property. This approach is used in payload validators `hemera-joi` or authentication `hemera-jwt`.
