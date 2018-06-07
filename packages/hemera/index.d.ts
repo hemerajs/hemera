@@ -444,6 +444,18 @@ declare class Hemera<Request, Response> {
       instance: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>
     ) => void
   ): Hemera<Request, Response>
+  on(
+    event: 'serverResponseError',
+    handler: (
+      error: Error
+    ) => void
+  ): void
+  on(
+    event: 'clientResponseError',
+    handler: (
+      error: Error
+    ) => void
+  ): void
 
   ready(): Promise<void>
   ready(readyListener: (err: Error) => void): void
