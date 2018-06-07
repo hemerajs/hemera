@@ -417,42 +417,49 @@ declare class Hemera<Request, Response> {
   on(
     event: 'clientPreRequest',
     handler: (
+      this: Hemera<Hemera.ClientRequest, Hemera.ClientResponse>,
       instance: Hemera<Hemera.ClientRequest, Hemera.ClientResponse>
     ) => void
   ): Hemera<Request, Response>
   on(
     event: 'clientPostRequest',
     handler: (
+      this: Hemera<Hemera.ClientRequest, Hemera.ClientResponse>,
       instance: Hemera<Hemera.ClientRequest, Hemera.ClientResponse>
     ) => void
   ): Hemera<Request, Response>
   on(
     event: 'serverPreHandler',
     handler: (
+      this: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>,
       instance: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>
     ) => void
   ): Hemera<Request, Response>
   on(
     event: 'serverPreRequest',
     handler: (
+      this: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>,
       instance: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>
     ) => void
   ): Hemera<Request, Response>
   on(
     event: 'serverPreResponse',
     handler: (
+      this: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>,
       instance: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>
     ) => void
   ): Hemera<Request, Response>
   on(
     event: 'serverResponseError',
     handler: (
+      this: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>,,
       error: Error
     ) => void
   ): void
   on(
     event: 'clientResponseError',
     handler: (
+      this: Hemera<Hemera.ClientRequest, Hemera.ClientResponse>,
       error: Error
     ) => void
   ): void
