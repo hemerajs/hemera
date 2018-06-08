@@ -46,10 +46,10 @@ declare namespace Hemera {
   }
 
   interface HemeraMessagePayload {
-    request: Request$,
-    meta: any,
-    trace: Trace$,
-    result: any,
+    request: Request$
+    meta: any
+    trace: Trace$
+    result: any
     error: Error | null
   }
 
@@ -145,12 +145,7 @@ declare namespace Hemera {
     use(
       handler: ((request: Request, response: Response) => Promise<void>)[]
     ): AddDefinition
-    end(
-      action: (
-        request: ServerPattern,
-        cb: NodeCallback
-      ) => void
-    ): void
+    end(action: (request: ServerPattern, cb: NodeCallback) => void): void
     end(action: (request: ServerPattern) => Promise<any>): void
   }
 
@@ -206,6 +201,8 @@ declare namespace Hemera {
     data: any
     context: Hemera<ClientRequest, ClientResponse>
   }
+
+  type NoContext = null
 
   interface Request$ {
     id: string
@@ -295,10 +292,10 @@ declare class Hemera<Request, Response> {
   ext(
     name: 'onClose',
     handler: (
-      instance: Hemera<Hemera.Request, Hemera.Response>,
+      instance: Hemera<Hemera.NoContext, Hemera.NoContext>,
       next: Hemera.NodeCallback
     ) => void
-  ): Hemera<Hemera.Request, Hemera.Response>
+  ): Hemera<null, null>
   ext(name: 'onClose'): Promise<void>
 
   // client extensions
@@ -452,7 +449,7 @@ declare class Hemera<Request, Response> {
   on(
     event: 'serverResponseError',
     handler: (
-      this: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>,,
+      this: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>,
       error: Error
     ) => void
   ): void

@@ -42,7 +42,8 @@
     "release": "lerna publish -i",
     "lerna": "lerna",
     "test":
-      "nyc mocha -b -r \"./test/hemera/bootstrap\" -t 5000 --exit \"./test/**/*.spec.js\" \"./packages/hemera-zipkin/test/**/*.js\"",
+      "nyc mocha -b -r \"./test/hemera/bootstrap\" -t 5000 --exit \"./test/**/*.spec.js\" \"./packages/hemera-zipkin/test/**/*.js\" && npm run typescript",
+    "typescript": "tsc --project ./test/hemera/types/tsconfig.json",
     "coverage": "npm run test && nyc report --reporter=html",
     "ci":
       "nyc mocha -r \"./test/hemera/bootstrap\" -t 5000 --exit \"./test/**/*.spec.js\" \"./packages/hemera-zipkin/test/**/*.js\" && nyc report --reporter=text-lcov | coveralls"
@@ -73,6 +74,7 @@
     "promise-retry": "^1.1.1",
     "proxyquire": "^2.0.1",
     "sinon": "^5.0.7",
-    "split2": "^2.2.0"
+    "split2": "^2.2.0",
+    "typescript": "^2.9.1"
   }
 }
