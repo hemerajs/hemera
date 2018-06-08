@@ -1,6 +1,7 @@
 /// <reference types="node" />
 
 import * as pino from 'pino'
+import * as nats from 'nats'
 import { Stream } from 'stream'
 
 declare namespace Hemera {
@@ -51,6 +52,36 @@ declare namespace Hemera {
     trace: Trace$
     result: any
     error: Error | null
+  }
+
+  interface NatsTransport {
+    driver(): any
+    timeout(
+      sid: number,
+      timeout: number,
+      expected: number,
+      callback: (sid: number) => void
+    ): void
+    send(
+      subject: string,
+      msg?: string | Buffer,
+      reply?: string,
+      callback?: Function
+    ): void
+    close(): void
+    flush(callback?: Function): void
+    subscribe(
+      subject: string,
+      opts: nats.SubscribeOptions,
+      callback: Function
+    ): number
+    unsubscribe(sid: number, max?: number): void
+    request(
+      subject: string,
+      msg?: string,
+      options?: nats.SubscribeOptions,
+      callback?: Function
+    ): number
   }
 
   interface Config {
@@ -247,7 +278,7 @@ declare class Hemera<Request, Response> {
   // plugin
   use(
     plugin: (
-      instance: Hemera<Hemera.Request, Hemera.Response>,
+      instance: Hemera<Hemera.NoContext, Hemera.NoContext>,
       opts: object,
       callback: Hemera.NodeCallback
     ) => void,
@@ -255,7 +286,7 @@ declare class Hemera<Request, Response> {
   ): void
   use(
     plugin: (
-      instance: Hemera<Hemera.Request, Hemera.Response>,
+      instance: Hemera<Hemera.NoContext, Hemera.NoContext>,
       opts: object
     ) => Promise<void>,
     options?: object
@@ -272,14 +303,14 @@ declare class Hemera<Request, Response> {
     name: string,
     decoration: any,
     dependencies?: Array<string>
-  ): Hemera<Hemera.Request, Hemera.Response>
+  ): Hemera<Hemera.NoContext, Hemera.NoContext>
   hasDecorator(name: string): Boolean
 
   expose(
     name: string,
     exposition: any,
     dependencies?: Array<string>
-  ): Hemera<Hemera.Request, Hemera.Response>
+  ): Hemera<Hemera.NoContext, Hemera.NoContext>
 
   createError(name: string): any
 
@@ -287,7 +318,7 @@ declare class Hemera<Request, Response> {
   ext(
     name: 'onAdd',
     handler: (addDefinition: Hemera.AddDefinition) => void
-  ): Hemera<Hemera.Request, Hemera.Response>
+  ): Hemera<Hemera.NoContext, Hemera.NoContext>
 
   ext(
     name: 'onClose',
@@ -295,7 +326,7 @@ declare class Hemera<Request, Response> {
       instance: Hemera<Hemera.NoContext, Hemera.NoContext>,
       next: Hemera.NodeCallback
     ) => void
-  ): Hemera<null, null>
+  ): Hemera<Hemera.NoContext, Hemera.NoContext>
   ext(name: 'onClose'): Promise<void>
 
   // client extensions
@@ -464,51 +495,65 @@ declare class Hemera<Request, Response> {
   ready(): Promise<void>
   ready(readyListener: (err: Error) => void): void
 
-  removeAll(): any
+  removeAll(): void
 
   // serialization
   setClientEncoder(
     encoder: (message: Object | Buffer) => Hemera.EncoderResult
-  ): Hemera<Request, Response>
+  ): Hemera<Hemera.NoContext, Hemera.NoContext>
   setClientDecoder(
     encoder: (message: String | Buffer) => Hemera.DecoderResult
-  ): Hemera<Request, Response>
+  ): Hemera<Hemera.NoContext, Hemera.NoContext>
   setServerEncoder(
     encoder: (message: Object | Buffer) => Hemera.EncoderResult
-  ): Hemera<Request, Response>
+  ): Hemera<Hemera.NoContext, Hemera.NoContext>
   setServerDecoder(
     encoder: (message: String | Buffer) => Hemera.DecoderResult
-  ): Hemera<Request, Response>
+  ): Hemera<Hemera.NoContext, Hemera.NoContext>
 
   setSchemaCompiler(
     compilerFunction: (schema: Object) => Function
-  ): Hemera<Request, Response>
+  ): Hemera<Hemera.NoContext, Hemera.NoContext>
   setSchemaCompiler(
     compilerFunction: (schema: Object) => Promise<any>
-  ): Hemera<Request, Response>
+  ): Hemera<Hemera.NoContext, Hemera.NoContext>
 
   setResponseSchemaCompiler(
     compilerFunction: (schema: Object) => Function
-  ): Hemera<Request, Response>
+  ): Hemera<Hemera.NoContext, Hemera.NoContext>
   setResponseSchemaCompiler(
     compilerFunction: (schema: Object) => Promise<any>
-  ): Hemera<Request, Response>
+  ): Hemera<Hemera.NoContext, Hemera.NoContext>
 
   setNotFoundPattern(pattern: string | Hemera.ServerPattern | null): void
 
   setIdGenerator(
     generatorFunction: () => string
-  ): Hemera<Hemera.Request, Hemera.Response>
+  ): Hemera<Hemera.NoContext, Hemera.NoContext>
   checkPluginDependencies(plugin: Hemera.Plugin): void
 
   log: pino.Logger | Hemera.Logger
 
+  /**
+   * Returns the Bloomrun instance
+   * https://github.com/mcollina/bloomrun
+   *
+   * @type {*}
+   * @memberof Hemera
+   */
   router: any
+  /**
+   * Returns the load propert from heavy instance
+   * https://github.com/hapijs/heavy
+   *
+   * @type {*}
+   * @memberof Hemera
+   */
   load: any
   errors: { [key: string]: Error }
   config: Hemera.Config
   topics: { [key: string]: number }
-  transport: any
+  transport: Hemera.NatsTransport
   notFoundPattern: Hemera.ServerPattern
 
   matchedAction: Hemera.AddDefinition
