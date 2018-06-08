@@ -449,13 +449,13 @@ declare class Hemera<Request, Response> {
     handler: (
       error: Error
     ) => void
-  ): void
+  ): Hemera<Request, Response>
   on(
     event: 'clientResponseError',
     handler: (
       error: Error
     ) => void
-  ): void
+  ): Hemera<Request, Response>
 
   ready(): Promise<void>
   ready(readyListener: (err: Error) => void): void
