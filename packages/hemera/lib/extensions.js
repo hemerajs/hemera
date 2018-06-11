@@ -85,7 +85,7 @@ function onClientPreRequest(context, next) {
     method: context.trace$.method
   }
 
-  if (context._config.traceLog) {
+  if (context._config.traceLog === true) {
     context.log = context.log.child({
       tag: context._config.tag,
       requestId: context.request$.id,
@@ -214,9 +214,9 @@ function onServerPreRequest(context, req, reply, next) {
   // find matched action
   context.matchedAction = context._router.lookup(context._pattern)
   // We have to remove the pattern manually when maxMessages$ was received.
-  // This is required because NATS unsubscribe events is fired to early.
+  // This is required because NATS unsubscribe events is fired too early.
   // Only relevant for server actions with custom transport options.
-  if (context.matchedAction) {
+  if (context.matchedAction !== null) {
     context.matchedAction._receivedMsg++
     if (
       context.matchedAction._receivedMsg ===
@@ -225,13 +225,13 @@ function onServerPreRequest(context, req, reply, next) {
       // we only need to remove the pattern because the subscription is unsubscribed by nats driver automatically
       context.cleanTopic(context._topic)
     }
-  } else if (context._notFoundPattern) {
+  } else if (context._notFoundPattern !== null) {
     // fallback to notFound action when defined
     context.matchedAction = context._router.lookup(context._notFoundPattern)
   }
   context.emit('serverPreRequest', context)
 
-  if (context._config.traceLog) {
+  if (context._config.traceLog === true) {
     context.log = context.log.child({
       tag: context._config.tag,
       requestId: context.request$.id,
@@ -259,7 +259,7 @@ function onServerPreRequest(context, req, reply, next) {
 }
 
 function onServerPreResponse(context, req, reply, next) {
-  if (context._config.traceLog) {
+  if (context._config.traceLog === true) {
     context.log = context.log.child({
       tag: context._config.tag,
       requestId: context.request$.id,
@@ -383,7 +383,7 @@ function onServerPreResponseSchemaValidation(context, req, reply, next) {
  * @returns
  */
 function onServerPreRequestLoadTest(context, req, reply, next) {
-  if (context._config.load.checkPolicy) {
+  if (context._config.load.checkPolicy === true) {
     const error = context._loadPolicy.check()
     if (error) {
       return next(new Errors.ProcessLoadError(error.message, error.data))

@@ -555,6 +555,7 @@ declare class Hemera<Request, Response> {
   topics: { [key: string]: number }
   transport: Hemera.NatsTransport
   notFoundPattern: Hemera.ServerPattern
+  sid: number
 
   matchedAction: Hemera.AddDefinition
   request: Request

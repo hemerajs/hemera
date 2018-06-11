@@ -91,6 +91,7 @@ class Hemera extends EventEmitter {
       type: 'request',
       id: ''
     }
+    this.sid = 0
 
     // represent the 'Add' instance
     this.matchedAction = null
@@ -568,7 +569,7 @@ class Hemera extends EventEmitter {
    * @memberof Hemera
    */
   _checkMemberDependencies(deps) {
-    for (var i = 0; i < deps.length; i++) {
+    for (let i = 0; i < deps.length; i++) {
       if (!(deps[i] in this)) {
         throw new Errors.HemeraError(`Missing member dependency '${deps[i]}'`)
       }
@@ -632,7 +633,7 @@ class Hemera extends EventEmitter {
         'Plugin decorators must be an array of strings'
       )
     }
-    for (var i = 0; i < decorators.length; i++) {
+    for (let i = 0; i < decorators.length; i++) {
       if (!(decorators[i] in this)) {
         throw new Errors.HemeraError(
           `The decorator dependency '${decorators[i]}' is not registered`
@@ -821,11 +822,11 @@ class Hemera extends EventEmitter {
         hemera,
         hemera.log
       )
-      hemera._pattern = {}
+      hemera._pattern = null
       hemera._isServer = true
 
       // represent the matched server action "add"
-      hemera.matchedAction = {}
+      hemera.matchedAction = null
 
       runExt(
         hemera._extensionManager.onServerPreRequest,
