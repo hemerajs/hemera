@@ -15,7 +15,11 @@ function hemeraJoi(hemera, opts, done) {
         schema
 
     if (preSchema) {
-      return Joi.validate(pattern, preSchema, opts.pre)
+      return Joi.validate(
+        pattern,
+        Object.assign(preSchema, opts.basePreSchema),
+        opts.pre
+      )
     }
   })
 
@@ -24,7 +28,13 @@ function hemeraJoi(hemera, opts, done) {
     const postSchema = schema[opts.patternKeys.post]
 
     if (postSchema) {
-      return Joi.validate(payload, postSchema, opts.post)
+      return Joi.validate(
+        payload,
+        Object.assign(postSchema, opts.basePostSchema),
+        opts.post
+      )
+    } else if (opts.basePostSchema) {
+      return Joi.validate(payload, opts.basePostSchema)
     }
   })
 
@@ -36,6 +46,8 @@ module.exports = Hp(hemeraJoi, {
   scoped: false, // set schema globally
   name: require('./package.json').name,
   options: {
+    basePreSchema: null,
+    basePostSchema: null,
     patternKeys: {
       default: 'joi$',
       pre: 'preJoi$',
