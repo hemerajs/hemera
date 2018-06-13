@@ -1,7 +1,8 @@
 ---
-id: installation
+id: version-5.8.3-installation
 title: Installation
 sidebar_label: Installation
+original_id: installation
 ---
 
 ## 1. Install NATS client and Hemera
