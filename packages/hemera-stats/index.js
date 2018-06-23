@@ -12,29 +12,10 @@ function hemeraStats(hemera, opts, done) {
 
     const list = hemera.list()
     info.ts = Date.now()
-    info.actions = list.map(a => {
-      const schema = {}
-
-      // only for joi schemas
-      for (var key in a.schema) {
-        if (a.schema.hasOwnProperty(key)) {
-          var element = a.schema[key]
-          if (element.isJoi) {
-            schema[key] = {
-              description: element._description,
-              notes: element._notes,
-              tags: element._tags,
-              default: element._flags.default,
-              required: element._flags.presence === 'required',
-              examples: element._examples
-            }
-          }
-        }
-      }
-
+    info.actions = list.map(action => {
       return {
-        pattern: a.pattern,
-        schema: schema
+        pattern: action.pattern,
+        schema: extractJoiSchema(action)
       }
     })
 
@@ -101,6 +82,26 @@ function hemeraStats(hemera, opts, done) {
   )
 
   done()
+}
+
+function extractJoiSchema(action) {
+  const schema = {}
+  for (var key in action.schema) {
+    if (action.schema.hasOwnProperty(key)) {
+      var element = action.schema[key]
+      if (element.isJoi) {
+        schema[key] = {
+          description: element._description,
+          notes: element._notes,
+          tags: element._tags,
+          default: element._flags.default,
+          required: element._flags.presence === 'required',
+          examples: element._examples
+        }
+      }
+    }
+  }
+  return schema
 }
 
 const plugin = Hp(hemeraStats, {
