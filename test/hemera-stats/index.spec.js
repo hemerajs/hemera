@@ -101,7 +101,7 @@ describe('Hemera-stats', function() {
     })
   })
 
-  it('Should be able send process info stats to custom pattern', function(done) {
+  it('Should be able to send process stats to custom pattern', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -126,7 +126,7 @@ describe('Hemera-stats', function() {
     })
   })
 
-  it('Should be able send action stats to custom pattern', function(done) {
+  it('Should be able to send action stats to custom pattern', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
