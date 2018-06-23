@@ -82,7 +82,7 @@ Result:
 
 ## Registered actions
 
-Returns all registerd server actions.
+Returns all registered server actions.
 
 The pattern is:
 
@@ -129,7 +129,7 @@ Result:
 
 # Push
 
-Reqeust for informations.
+Request for informations.
 
 ### sendProcStats
 
