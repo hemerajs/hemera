@@ -100,4 +100,54 @@ describe('Hemera-stats', function() {
       )
     })
   })
+
+  it('Should be able send process info stats to custom pattern', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.use(HemeraStats)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'test'
+        },
+        function(req) {
+          expect(req.stats).to.be.exists()
+          expect(req.stats.uptime).to.be.exists()
+          hemera.close(done)
+        }
+      )
+      const success = hemera.sendProcStats({
+        topic: 'test'
+      })
+      expect(success instanceof Promise).to.be.equals(true)
+    })
+  })
+
+  it('Should be able send action stats to custom pattern', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.use(HemeraStats)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'test'
+        },
+        function(req) {
+          expect(req.stats).to.be.exists()
+          expect(req.stats.actions).to.be.exists()
+          hemera.close(done)
+        }
+      )
+      const success = hemera.sendActionStats({
+        topic: 'test'
+      })
+      expect(success instanceof Promise).to.be.equals(true)
+    })
+  })
 })
