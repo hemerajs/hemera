@@ -101,7 +101,7 @@ describe('Hemera-stats', function() {
     })
   })
 
-  it('Should be able to send process stats to custom pattern', function(done) {
+  it('Should be able to broadcast process stats to custom pattern', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -116,6 +116,7 @@ describe('Hemera-stats', function() {
         function(req) {
           expect(req.stats).to.be.exists()
           expect(req.stats.uptime).to.be.exists()
+          expect(this.request$.type).to.be.equals('pubsub')
           hemera.close(done)
         }
       )
@@ -126,7 +127,7 @@ describe('Hemera-stats', function() {
     })
   })
 
-  it('Should be able to send action stats to custom pattern', function(done) {
+  it('Should be able to broadcast action stats to custom pattern', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -141,6 +142,7 @@ describe('Hemera-stats', function() {
         function(req) {
           expect(req.stats).to.be.exists()
           expect(req.stats.actions).to.be.exists()
+          expect(this.request$.type).to.be.equals('pubsub')
           hemera.close(done)
         }
       )
