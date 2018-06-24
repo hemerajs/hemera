@@ -133,7 +133,7 @@ Request for informations.
 
 ### sendProcStats
 
-Send the process informations to the specific pattern.
+Broadcast the process informations to the specific pattern.
 
 Example:
 
@@ -145,7 +145,7 @@ hemera.sendProcStats({
 
 ### sendActionStats
 
-Send the action informations to the specific pattern.
+Broadcast the action informations to the specific pattern.
 
 Example:
 
