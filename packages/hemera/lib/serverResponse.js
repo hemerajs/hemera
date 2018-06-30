@@ -12,7 +12,7 @@
 class ServerResponse {
   constructor(replyTo) {
     this.payload = undefined
-    this.error = undefined
+    this.error = null
     this.replyTo = replyTo
   }
 }

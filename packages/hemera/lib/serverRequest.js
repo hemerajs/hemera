@@ -12,7 +12,7 @@
 class ServerRequest {
   constructor(payload) {
     this.payload = payload
-    this.error = undefined
+    this.error = null
   }
 }
 

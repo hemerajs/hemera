@@ -442,7 +442,7 @@ describe('Hemera', function() {
           })
 
           expect(this.response.payload).to.be.undefined()
-          expect(this.response.error).to.be.undefined()
+          expect(this.response.error).to.be.null()
           expect(this.response.replyTo).to.be.string()
 
           expect(this.request).to.be.object()

@@ -15,10 +15,12 @@ class Encoder {
   static encode(msg) {
     try {
       return {
-        value: SafeStringify(msg)
+        value: SafeStringify(msg),
+        error: null
       }
     } catch (error) {
       return {
+        value: '',
         error
       }
     }

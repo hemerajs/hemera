@@ -11,7 +11,8 @@
 
 class ClientRequest {
   constructor(pattern) {
-    this.error = undefined
+    this.error = null
+    // almost any falsy value like 0, '', null can be send except undefined
     this.payload = undefined
     this.pattern = pattern
     this.transport = {

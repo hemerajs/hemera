@@ -11,8 +11,8 @@
 
 class ClientResponse {
   constructor() {
-    this.payload = undefined
-    this.error = undefined
+    this.payload = null
+    this.error = null
   }
 }
 
