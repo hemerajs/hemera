@@ -35,6 +35,7 @@
     "Testing": ["integration", "unit"],
     "Tooling": ["monitoring", "cli", "typescript"],
     "Advanced": [
+      "message-format",
       "docker",
       "graphql",
       "bridge",
@@ -44,6 +45,6 @@
       "framework-integrations",
       "hemera-vs-seneca"
     ],
-    "Api": ["reference"]
+    "API": ["reference"]
   }
 }

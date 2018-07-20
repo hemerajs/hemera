@@ -49,6 +49,8 @@
     "Integration": "Integration",
     "logging": "Logging",
     "Logging": "Logging",
+    "message-format": "Message format",
+    "Message format": "Message format",
     "metadata": "Metadata",
     "Metadata": "Metadata",
     "middleware": "Middleware",
@@ -97,6 +99,7 @@
     "Testing": "Testing",
     "Tooling": "Tooling",
     "Advanced": "Advanced",
+    "API": "API",
     "Api": "Api"
   },
   "pages-strings": {
