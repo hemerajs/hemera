@@ -195,6 +195,7 @@ class Hemera extends EventEmitter {
         hemera._extensionManager
       )
 
+      // decorate root instance. All instances will have access
       instance.decorate = function() {
         hemera.decorate.apply(this._root, arguments)
         return instance
@@ -719,6 +720,8 @@ class Hemera extends EventEmitter {
     this._transport.driver.on('close', () => {
       const error = new Errors.HemeraError('NATS connection closed!')
       this.log.error(error)
+      // when an 'error' handler was registered no error is thrown
+      // but you have to handle it by yourself
       this.emit('error', error)
     })
 
@@ -1138,7 +1141,6 @@ class Hemera extends EventEmitter {
     if (def) {
       this.log.error(
         'Topic is already registered with special transport options. Please use a different topic name.',
-        Util.pattern(addDefinition.pattern),
         Util.pattern(def.pattern)
       )
       throw new Errors.HemeraError(
