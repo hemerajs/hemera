@@ -98,7 +98,7 @@ describe('Metadata', function() {
     })
   })
 
-  it('Should be able to update metadata', function(done) {
+  it('Should set metadata context correctly when subsequent calls use different values for the same metadata properties', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
