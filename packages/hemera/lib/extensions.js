@@ -32,7 +32,7 @@ function onClientPreRequest(context, next) {
   context.context$ = pattern.context$ || parentContext.context$
 
   // set metadata by passed pattern or current message context
-  context.meta$ = Object.assign(pattern.meta$ || {}, context.meta$)
+  Object.assign(context.meta$, pattern.meta$)
   // is only passed by msg
   context.delegate$ = pattern.delegate$ || {}
 
