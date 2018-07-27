@@ -55,7 +55,8 @@ hemera.add(
 
 ### Reuse schemas
 
-You can reuse schemas across server actions.
+You can reuse schemas across server actions. This functionality is provided by a custom schema store.
+If you reference a schema with `schema#` it will be replaced by the JSON schema at startup time.
 
 ```js
 hemera.addSchema({
@@ -102,4 +103,4 @@ hemera.use(
 
 ## Plugin decorators
 
-* .addSchema(Object schema)
+- .addSchema(Object schema)
