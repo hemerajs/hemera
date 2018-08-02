@@ -14,7 +14,7 @@ const hemera = new Hemera(nats, {
  */
 
 hemera.ready(() => {
-  // Receive in NodeJs client
+  // Pubsub semantic
   hemera.add(
     {
       topic: 'math'
@@ -24,11 +24,33 @@ hemera.ready(() => {
     }
   )
   // Publish from Golang client
-  hemera.transport.publish(
+  nats.publish(
     'math',
     JSON.stringify({
       request: { type: 'pubsub' },
       pattern: { topic: 'math', a: 1, b: 2 }
     })
+  )
+
+  // Request semantic
+  hemera.add(
+    {
+      topic: 'math.add'
+    },
+    function(req) {
+      hemera.log.info(req)
+      return Promise.resolve(req.a + req.b)
+    }
+  )
+  // Publish from Golang client
+  nats.request(
+    'math.add',
+    JSON.stringify({
+      request: { type: 'request' },
+      pattern: { topic: 'math.add', a: 1, b: 2 }
+    }),
+    response => {
+      console.log(response)
+    }
   )
 })
