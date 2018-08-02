@@ -30,30 +30,18 @@
               }
             });
         </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">Message format</h1></header><article><div><span><p>This is the hemera message format described in <a href="https://www.typescriptlang.org/index.html">typescript</a>. You can use it to implement new hemera clients in other languages but you don't have to implement the NATS driver because there are already many <a href="https://github.com/nats-io/">clients</a> for different languages available.</p>
-<pre><code class="hljs css languages- ts"><span class="hljs-keyword">type</span> Pattern = <span class="hljs-built_in">Object</span>
-<span class="hljs-keyword">type</span> Result = Any
-<span class="hljs-keyword">type</span> Delegate = <span class="hljs-built_in">Object</span>
-<span class="hljs-keyword">type</span> Meta = <span class="hljs-built_in">Object</span>
-
-<span class="hljs-keyword">interface</span> Message {
+<pre><code class="hljs css languages- ts"><span class="hljs-keyword">interface</span> Message {
+  pattern: Pattern
   trace: Trace
   request: Request
-  result: Result
+  result: Any
   error: HError | <span class="hljs-literal">null</span>
-  meta: Meta
-  delegate?: Delegate
+  meta: <span class="hljs-built_in">Object</span>
+  delegate?: <span class="hljs-built_in">Object</span>
 }
 
-<span class="hljs-keyword">interface</span> HError <span class="hljs-keyword">extends</span> Error {
-  code?: <span class="hljs-built_in">string</span>
-  [key: <span class="hljs-built_in">string</span>]: Any
-}
-
-<span class="hljs-keyword">interface</span> Request {
-  id: <span class="hljs-built_in">string</span>
-  <span class="hljs-keyword">type</span>: RequestType
-  service: <span class="hljs-built_in">string</span>
-  method: <span class="hljs-built_in">string</span>
+<span class="hljs-keyword">interface</span> Pattern {
+  topic: Trace
 }
 
 <span class="hljs-keyword">interface</span> Trace {
@@ -64,6 +52,18 @@
   method: <span class="hljs-built_in">string</span>
   parentSpanId?: <span class="hljs-built_in">string</span>
   duration?: <span class="hljs-built_in">number</span>
+}
+
+<span class="hljs-keyword">interface</span> Request {
+  id: <span class="hljs-built_in">string</span>
+  <span class="hljs-keyword">type</span>: RequestType
+  service: <span class="hljs-built_in">string</span>
+  method: <span class="hljs-built_in">string</span>
+}
+
+<span class="hljs-keyword">interface</span> HError <span class="hljs-keyword">extends</span> Error {
+  code?: <span class="hljs-built_in">string</span>
+  [key: <span class="hljs-built_in">string</span>]: Any
 }
 
 <span class="hljs-keyword">enum</span> RequestType {
