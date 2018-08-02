@@ -27,7 +27,7 @@ hemera.ready(() => {
   hemera.transport.publish(
     'math',
     JSON.stringify({
-      request: { type: 'request' },
+      request: { type: 'pubsub' },
       pattern: { topic: 'math', a: 1, b: 2 }
     })
   )
