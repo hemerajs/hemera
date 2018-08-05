@@ -1554,20 +1554,6 @@ class Hemera extends EventEmitter {
    * @memberof Hemera
    */
   close(func) {
-    let promise
-
-    // callback style
-    if (func === undefined) {
-      promise = new Promise(function(resolve, reject) {
-        func = function(err) {
-          if (err) {
-            return reject(err)
-          }
-          resolve()
-        }
-      })
-    }
-
     // 2. clean hemera
     this.onShutdown((instance, done) => {
       this._heavy.stop()
@@ -1583,15 +1569,7 @@ class Hemera extends EventEmitter {
       })
     })
 
-    // 3. run user function
-    this.shutdown(err => {
-      if (err) {
-        this.log.error(err)
-      }
-      func(err)
-    })
-
-    return promise
+    return this.shutdown(func)
   }
 }
 
