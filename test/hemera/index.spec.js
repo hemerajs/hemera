@@ -283,6 +283,86 @@ describe('Hemera', function() {
     })
   })
 
+  it('IdGenerator must be from type function', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      try {
+        hemera.setIdGenerator(null)
+      } catch (err) {
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals('IdGenerator must be a function')
+        hemera.close(done)
+      }
+    })
+  })
+
+  it('ServerDecoder must be from type function', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      try {
+        hemera.setServerDecoder(null)
+      } catch (err) {
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals('ServerDecoder must be a function')
+        hemera.close(done)
+      }
+    })
+  })
+
+  it('ServerEncoder must be from type function', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      try {
+        hemera.setServerEncoder(null)
+      } catch (err) {
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals('ServerEncoder must be a function')
+        hemera.close(done)
+      }
+    })
+  })
+
+  it('ClientDecoder must be from type function', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      try {
+        hemera.setClientDecoder(null)
+      } catch (err) {
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals('ClientDecoder must be a function')
+        hemera.close(done)
+      }
+    })
+  })
+
+  it('ClientEncoder must be from type function', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      try {
+        hemera.setClientEncoder(null)
+      } catch (err) {
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals('ClientEncoder must be a function')
+        hemera.close(done)
+      }
+    })
+  })
+
   it('Pattern is required to define an add', function(done) {
     const nats = require('nats').connect(authUrl)
 

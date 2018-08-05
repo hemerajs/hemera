@@ -117,4 +117,40 @@ describe('Schema Compiler', function() {
       )
     })
   })
+
+  it('SchemaCompiler must be from type function', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      try {
+        hemera.setSchemaCompiler(null)
+      } catch (err) {
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals(
+          'SchemaCompiler handler must be a function'
+        )
+        hemera.close(done)
+      }
+    })
+  })
+
+  it('ResponseSchemaCompiler must be from type function', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      try {
+        hemera.setResponseSchemaCompiler(null)
+      } catch (err) {
+        expect(err.name).to.be.equals('HemeraError')
+        expect(err.message).to.be.equals(
+          'ResponseSchemaCompiler handler must be a function'
+        )
+        hemera.close(done)
+      }
+    })
+  })
 })
