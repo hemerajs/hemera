@@ -333,7 +333,7 @@ describe('Server Extensions', function() {
     })
   })
 
-  it('Should not be able to send the payload in onServerPreResponse because payload was already set', function(done) {
+  it('Should not be able to send the payload in onServerPreResponse because success payload was already set', function(done) {
     let ext = Sinon.spy()
 
     const nats = require('nats').connect(authUrl)
@@ -376,7 +376,103 @@ describe('Server Extensions', function() {
     })
   })
 
-  it('Should not be able send the extension error in onServerPreResponse because payload was already set', function(done) {
+  it('Should send the onServerPreRequest error instead the last extension error payload', function(done) {
+    let onServerPreRequestSpy = Sinon.spy()
+    let onServerPreHandlerSpy = Sinon.spy()
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.ext('onServerPreRequest', function(ctx, req, res, next) {
+        onServerPreRequestSpy()
+        next(new Error('test1'))
+      })
+      hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+        onServerPreHandlerSpy()
+        next(new Error('test2'))
+      })
+
+      hemera.add(
+        {
+          topic: 'email',
+          cmd: 'send'
+        },
+        (resp, cb) => {
+          cb(null, true)
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'email',
+          cmd: 'send',
+          email: 'foobar@gmail.com',
+          msg: 'Hi!'
+        },
+        (err, resp) => {
+          expect(err).to.be.exists()
+          expect(err.name).to.be.equals('Error')
+          expect(err.message).to.be.equals('test1')
+          expect(resp).to.be.undefined()
+          expect(onServerPreRequestSpy.called).to.be.equals(true)
+          expect(onServerPreHandlerSpy.called).to.be.equals(false)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should send the extension error in onServerPreResponse instead previous extensions errors', function(done) {
+    let onServerPreHandlerSpy = Sinon.spy()
+    let onServerPreResponse = Sinon.spy()
+
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+        onServerPreHandlerSpy()
+        next(new Error('test1'))
+      })
+      hemera.ext('onServerPreResponse', function(ctx, req, res, next) {
+        onServerPreResponse()
+        next(new Error('test2'))
+      })
+
+      hemera.add(
+        {
+          topic: 'email',
+          cmd: 'send'
+        },
+        (resp, cb) => {
+          cb(null, true)
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'email',
+          cmd: 'send',
+          email: 'foobar@gmail.com',
+          msg: 'Hi!'
+        },
+        (err, resp) => {
+          expect(err).to.be.exists()
+          expect(err.name).to.be.equals('Error')
+          expect(err.message).to.be.equals('test2')
+          expect(resp).to.be.undefined()
+          expect(onServerPreHandlerSpy.called).to.be.equals(true)
+          expect(onServerPreResponse.called).to.be.equals(true)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should send the extension error in onServerPreResponse instead the success payload', function(done) {
     let ext = Sinon.spy()
 
     const nats = require('nats').connect(authUrl)
@@ -407,8 +503,10 @@ describe('Server Extensions', function() {
           msg: 'Hi!'
         },
         (err, resp) => {
-          expect(err).to.be.not.exists()
-          expect(resp).to.be.equals(true)
+          expect(err).to.be.exists()
+          expect(err.name).to.be.equals('Error')
+          expect(err.message).to.be.equals('test')
+          expect(resp).to.be.undefined()
           expect(ext.called).to.be.equals(true)
           hemera.close(done)
         }

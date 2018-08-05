@@ -154,7 +154,11 @@ describe('Async Schema Compiler', function() {
         (err, resp) => {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('TimeoutError')
-          hemera.close(done)
+          // give the promise the chance to respond within active nats connection
+          // otherwise we will run into a connection error
+          setTimeout(() => {
+            hemera.close(done)
+          }, 200)
         }
       )
     })

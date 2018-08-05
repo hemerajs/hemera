@@ -236,7 +236,7 @@ class Hemera extends EventEmitter {
    * @memberof Hemera
    */
   _registerErrors() {
-    for (var error in Hemera.errors) {
+    for (let error in Hemera.errors) {
       Errio.register(Hemera.errors[error])
     }
   }

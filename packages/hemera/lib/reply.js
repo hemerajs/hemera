@@ -148,7 +148,9 @@ class Reply {
       ).causedBy(extensionError)
       self.log.error(internalError)
       self.hemera.emit('serverResponseError', extensionError)
-      self.send(extensionError)
+      // don't use send() here in order to avoid rexecution of serverPreResponse
+      // and to send the "send-error" as final response
+      self.error = extensionError
     }
 
     if (self._response.replyTo) {
