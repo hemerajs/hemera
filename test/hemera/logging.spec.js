@@ -88,12 +88,12 @@ describe('Logging interface', function() {
     try {
       // eslint-disable-next-line no-new
       new Hemera(nats, {
-        logger: {}
+        logger: null
       })
     } catch (err) {
       expect(err).to.be.exists()
       expect(err.message).to.be.equals(
-        'child "logger" fails because [child "info" fails because ["info" is required], "logger" must be an instance of "Stream"]'
+        'child "logger" fails because ["logger" must be an object, "logger" must be an object]'
       )
       nats.close()
       done()

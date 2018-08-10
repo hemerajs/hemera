@@ -213,7 +213,7 @@ class Hemera extends EventEmitter {
   _configureLogger() {
     const loggerOpts = {
       name: this._config.name,
-      safe: true, // handle circular refs
+      prettyPrint: this._config.prettyLog,
       level: this._config.logLevel
     }
     if (this._config.logger instanceof Stream) {
@@ -221,12 +221,7 @@ class Hemera extends EventEmitter {
     } else if (this._config.logger) {
       this.log = this._config.logger
     } else {
-      const pretty = this._config.prettyLog ? Pino.pretty() : undefined
-      this.log = Pino(loggerOpts, pretty)
-      // Leads to too much listeners in tests
-      if (pretty && this._config.logLevel !== 'silent') {
-        pretty.pipe(process.stdout)
-      }
+      this.log = Pino(loggerOpts)
     }
   }
 
