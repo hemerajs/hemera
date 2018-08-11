@@ -213,7 +213,7 @@ class Hemera extends EventEmitter {
   _configureLogger() {
     const loggerOpts = {
       name: this._config.name,
-      safe: true, // handle circular refs
+      prettyPrint: this._config.prettyLog,
       level: this._config.logLevel
     }
     if (this._config.logger instanceof Stream) {
@@ -221,12 +221,7 @@ class Hemera extends EventEmitter {
     } else if (this._config.logger) {
       this.log = this._config.logger
     } else {
-      const pretty = this._config.prettyLog ? Pino.pretty() : undefined
-      this.log = Pino(loggerOpts, pretty)
-      // Leads to too much listeners in tests
-      if (pretty && this._config.logLevel !== 'silent') {
-        pretty.pipe(process.stdout)
-      }
+      this.log = Pino(loggerOpts)
     }
   }
 
@@ -877,6 +872,7 @@ class Hemera extends EventEmitter {
       ).causedBy(extensionError)
       self.log.error(internalError)
       self.emit('serverResponseError', extensionError)
+      self.reply.isError = true
       self.reply.send(extensionError)
       return
     }
@@ -901,6 +897,7 @@ class Hemera extends EventEmitter {
       )
       self.log.error(internalError)
       self.emit('serverResponseError', internalError)
+      self.reply.isError = true
       self.reply.send(internalError)
     }
   }
@@ -921,6 +918,7 @@ class Hemera extends EventEmitter {
       ).causedBy(extensionError)
       self.log.error(internalError)
       self.emit('serverResponseError', extensionError)
+      self.reply.isError = true
       self.reply.send(extensionError)
       return
     }
@@ -947,6 +945,7 @@ class Hemera extends EventEmitter {
       ).causedBy(err)
       self.log.error(internalError)
       self.emit('serverResponseError', err)
+      self.reply.isError = true
       self.reply.send(err)
       return
     }
@@ -960,7 +959,7 @@ class Hemera extends EventEmitter {
       result.then(
         payload => self.reply.send(payload),
         err => {
-          self._isValidError(err)
+          self.reply.isError = true
           self.reply.send(err)
         }
       )
@@ -986,26 +985,12 @@ class Hemera extends EventEmitter {
 
     return action(self.request.payload.pattern, (err, result) => {
       if (err) {
-        self._isValidError(err)
+        self.reply.isError = true
         self.reply.send(err)
         return
       }
       self.reply.send(result)
     })
-  }
-
-  /**
-   *
-   * @param {*} err
-   */
-  _isValidError(err) {
-    if (!(err instanceof Error)) {
-      this.log.error(
-        new Errors.HemeraError(
-          `Response error must be derivated from type 'Error' but got '${typeof err}'`
-        )
-      )
-    }
   }
 
   /**

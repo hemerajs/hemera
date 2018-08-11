@@ -17,12 +17,13 @@ describe('Error logs', function() {
     server.kill()
   })
 
-  it('Should log an error when no error object was passed', function(done) {
+  it('Should log an error when no native error object was passed in server action', function(done) {
     const nats = require('nats').connect(authUrl)
     const stream = split(JSON.parse)
     const hemera = new Hemera(nats, {
       logLevel: 'error',
-      logger: stream
+      logger: stream,
+      timeout: 25
     })
     const logs = []
 
@@ -47,7 +48,9 @@ describe('Error logs', function() {
           b: 2
         },
         (err, resp) => {
-          expect(err).to.be.not.exists()
+          expect(err).to.be.exists()
+          expect(err.name).to.be.equals('TimeoutError')
+          expect(resp).to.be.undefined()
           expect(logs[0].msg).to.be.equals(
             `Response error must be derivated from type 'Error' but got 'string'`
           )

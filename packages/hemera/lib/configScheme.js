@@ -10,7 +10,9 @@ module.exports = Joi.object().keys({
     .default(2000),
   tag: Joi.string().default(''),
   // Enables pretty log formatter in Pino default logger
-  prettyLog: Joi.boolean().default(true),
+  prettyLog: Joi.alternatives()
+    .try(Joi.boolean(), Joi.object())
+    .default(false),
   // The name of the instance
   name: Joi.string().default(`hemera-${Os.hostname()}-${Util.randomId()}`),
   logLevel: Joi.any()
@@ -23,21 +25,7 @@ module.exports = Joi.object().keys({
     .integer()
     .default(0),
   // Custom logger
-  logger: Joi.alternatives().try(
-    Joi.object()
-      .keys({
-        info: Joi.func(),
-        error: Joi.func(),
-        debug: Joi.func(),
-        fatal: Joi.func(),
-        warn: Joi.func(),
-        trace: Joi.func(),
-        child: Joi.func()
-      })
-      .requiredKeys('info', 'error', 'debug', 'fatal', 'warn', 'trace')
-      .unknown(),
-    Joi.object().type(Stream)
-  ),
+  logger: Joi.alternatives().try(Joi.object(), Joi.object().type(Stream)),
   // Attach trace and request informations to the logs. It costs ~10% perf
   traceLog: Joi.boolean().default(false),
   // The error serialization options

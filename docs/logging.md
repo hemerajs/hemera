@@ -25,12 +25,21 @@ hemera.act(
 
 ## Pretty logs
 
-Pretty logging is enabled by default you can disable it with `prettyLog` option.
+Pretty logging is disabled by default but you can enable it with `prettyLog` option. Before you can use it you have install the [`pino-pretty`](https://github.com/pinojs/pino-pretty) package.
+
+```
+npm install --save-dev pino-pretty
+```
 
 ```js
 const hemera = new Hemera(nats, {
   logLevel: 'info',
-  prettyLog: false
+  prettyLog: true
+})
+// or
+const hemera = new Hemera(nats, {
+  logLevel: 'info',
+  prettyLog: {} // pino-pretty options
 })
 ```
 
@@ -55,12 +64,12 @@ const hemera = new Hemera(nats, {
 
 ## Log levels
 
-* info
-* warn
-* debug
-* trace
-* error
-* fatal
+- info
+- warn
+- debug
+- trace
+- error
+- fatal
 
 ## Child logger
 

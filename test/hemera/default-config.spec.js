@@ -21,7 +21,7 @@ describe('Hemera default config', function() {
     var defaultConfig = {
       timeout: 2000, // Max execution time of a request
       tag: '',
-      prettyLog: true,
+      prettyLog: false,
       name: 'test', // node name
       logLevel: 'silent', // 'fatal', 'error', 'warn', 'info', 'debug', 'trace'; also 'silent'
       childLogger: false, // Create a child logger per section / plugin. Only possible with default logger Pino.
