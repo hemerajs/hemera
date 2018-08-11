@@ -95,10 +95,12 @@ describe('Error handling', function() {
     })
   })
 
-  it('Should respond with success payload instead error when no native error is passed in callback', function(done) {
+  it('Should respond with error when no native error object was passed in server action callback', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats)
+    const hemera = new Hemera(nats, {
+      timeout: 25
+    })
 
     hemera.ready(() => {
       hemera.add(
@@ -108,7 +110,7 @@ describe('Error handling', function() {
         },
         (resp, cb) => {
           // an error is logged that the interface was used incorrrectly
-          // in next version an error is thrown
+          // the request will timeout because the server could not indentify if it's success or error payload
           // eslint-disable-next-line standard/no-callback-literal
           cb('test')
         }
@@ -122,8 +124,9 @@ describe('Error handling', function() {
           msg: 'Hi!'
         },
         (err, resp) => {
-          expect(err).to.be.not.exists()
-          expect(resp).to.be.equals('test')
+          expect(err).to.be.exists()
+          expect(err.name).to.be.equals('TimeoutError')
+          expect(resp).to.be.undefined()
           hemera.close(done)
         }
       )

@@ -35,6 +35,7 @@ class Reply {
     this.hemera = hemera
     this.log = logger
     this.sent = false
+    this.isError = false
   }
 
   /**
@@ -102,13 +103,23 @@ class Reply {
       return
     }
 
+    if (!(msg instanceof Error) && self.isError === true) {
+      const internalError = new Errors.HemeraError(
+        `Response error must be derivated from type 'Error' but got '${typeof msg}'`
+      )
+      self.log.error(internalError)
+      return
+    }
+
     self.sent = true
 
     // 0, null, '' can be send
     if (msg !== undefined) {
       if (msg instanceof Error) {
         self.error = msg
+        self.payload = null
       } else {
+        self.error = null
         self.payload = msg
       }
     }

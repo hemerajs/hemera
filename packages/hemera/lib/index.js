@@ -872,6 +872,7 @@ class Hemera extends EventEmitter {
       ).causedBy(extensionError)
       self.log.error(internalError)
       self.emit('serverResponseError', extensionError)
+      self.reply.isError = true
       self.reply.send(extensionError)
       return
     }
@@ -896,6 +897,7 @@ class Hemera extends EventEmitter {
       )
       self.log.error(internalError)
       self.emit('serverResponseError', internalError)
+      self.reply.isError = true
       self.reply.send(internalError)
     }
   }
@@ -916,6 +918,7 @@ class Hemera extends EventEmitter {
       ).causedBy(extensionError)
       self.log.error(internalError)
       self.emit('serverResponseError', extensionError)
+      self.reply.isError = true
       self.reply.send(extensionError)
       return
     }
@@ -942,6 +945,7 @@ class Hemera extends EventEmitter {
       ).causedBy(err)
       self.log.error(internalError)
       self.emit('serverResponseError', err)
+      self.reply.isError = true
       self.reply.send(err)
       return
     }
@@ -955,7 +959,7 @@ class Hemera extends EventEmitter {
       result.then(
         payload => self.reply.send(payload),
         err => {
-          self._isValidError(err)
+          self.reply.isError = true
           self.reply.send(err)
         }
       )
@@ -981,26 +985,12 @@ class Hemera extends EventEmitter {
 
     return action(self.request.payload.pattern, (err, result) => {
       if (err) {
-        self._isValidError(err)
+        self.reply.isError = true
         self.reply.send(err)
         return
       }
       self.reply.send(result)
     })
-  }
-
-  /**
-   *
-   * @param {*} err
-   */
-  _isValidError(err) {
-    if (!(err instanceof Error)) {
-      this.log.error(
-        new Errors.HemeraError(
-          `Response error must be derivated from type 'Error' but got '${typeof err}'`
-        )
-      )
-    }
   }
 
   /**

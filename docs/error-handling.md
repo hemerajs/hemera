@@ -26,7 +26,7 @@ We support error-first-callback style as well as promise and async / await. Use 
 
 ## Handle a request error
 
-* Error-first-callback
+- Error-first-callback
 
   ```js
   hemera.act(
@@ -44,7 +44,7 @@ We support error-first-callback style as well as promise and async / await. Use 
   )
   ```
 
-* Promise
+- Promise
 
   ```js
   hemera
@@ -59,7 +59,7 @@ We support error-first-callback style as well as promise and async / await. Use 
     })
   ```
 
-* Async / Await
+- Async / Await
 
   ```js
   try {
@@ -77,7 +77,7 @@ We support error-first-callback style as well as promise and async / await. Use 
 
 ## Respond an error
 
-* Error-first-callback
+- Error-first-callback
 
   ```js
   hemera.add(
@@ -91,7 +91,7 @@ We support error-first-callback style as well as promise and async / await. Use 
   )
   ```
 
-* Promise
+- Promise
 
   ```js
   hemera.add(
@@ -105,7 +105,7 @@ We support error-first-callback style as well as promise and async / await. Use 
   )
   ```
 
-* Async / Await
+- Async / Await
 
   ```js
   hemera.add(
@@ -121,4 +121,4 @@ We support error-first-callback style as well as promise and async / await. Use 
 
 ## Response error
 
-A response error must be derivated from type `Error` otherwise it will be send as successful payload. An `error` message is logged when the interface has been used incorrectly.
+A response error must be derivated from type `Error` otherwise an error is logged and the client will timeout.
