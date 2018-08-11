@@ -32,9 +32,6 @@ describe('Error logs', function() {
     })
 
     hemera.ready(() => {
-      // to prevent uncaught error
-      hemera.on('error', () => {})
-
       hemera.add(
         {
           topic: 'math',
