@@ -25,7 +25,7 @@ hemera.act(
 
 ## Pretty logs
 
-Pretty logging is disabled by default you can enable it with `prettyLog` option. Before you can use it you have install the [`pino-pretty`](https://github.com/pinojs/pino-pretty) package.
+Pretty logging is disabled by default but you can enable it with `prettyLog` option. Before you can use it you have install the [`pino-pretty`](https://github.com/pinojs/pino-pretty) package.
 
 ```
 npm install --save-dev pino-pretty
