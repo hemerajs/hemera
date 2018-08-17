@@ -32,7 +32,3 @@ jspm_packages
 .vscode
 
 *heapsnapshot
-
-# npm lock
-package-lock.json
-yarn.lock
