@@ -2,11 +2,9 @@
   "lerna": "3.0.6",
   "version": "independent",
   "packages": ["packages/*"],
-  "commands": {
+  "command": {
     "publish": {
-      "ignore": ["*.md", "test/**"]
+      "ignoreChanges": ["*.md", "test/**"]
     }
-  },
-  "npmClient": "yarn",
-  "npmClientArgs": ["--no-lockfile"]
+  }
 }
