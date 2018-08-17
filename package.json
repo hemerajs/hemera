@@ -37,7 +37,7 @@
     "lint": "eslint \"./packages/**/*.js\" \"./test/**/*.js\"",
     "lint:fix": "eslint --fix  \"./packages/**/*.js\" \"./test/**/*.js\"",
     "setup": "npm i && lerna bootstrap",
-    "ci:setup": "npm i && lerna bootstrap --npm-client=npm",
+    "ci:setup": "npm i && lerna bootstrap",
     "clean": "lerna clean",
     "release": "lerna publish -i",
     "lerna": "lerna",
