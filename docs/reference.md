@@ -149,6 +149,14 @@ Create a new server action.
 hemera.subscribe(pattern, cb)
 ```
 
+### Hemera.add()
+
+Registers a new server action which can be called from any client.
+
+```js
+hemera.add(pattern, cb)
+```
+
 ### Hemera.act()
 
 Start a new request.
