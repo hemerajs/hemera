@@ -83,6 +83,13 @@ Please read [CONTRIBUTING.md](https://github.com/hemerajs/hemera/blob/master/CON
 
 We use [SemVer](http://semver.org/) for versioning. Available versions [tags on this repository](https://github.com/hemerajs/hemera/tags).
 
+## Supported Node Versions    
+
+Support policy for Nodejs versions follows 
+[Nodejs release support]( https://github.com/nodejs/Release).
+We will support and build hemera on even Nodejs versions that are current 
+or in maintenance.
+
 ## Authors
 
 * **Dustin Deus** - [StarpTech](https://github.com/StarpTech)
