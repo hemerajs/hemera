@@ -39,7 +39,7 @@
     "bootstrap": "npm i && lerna bootstrap",
     "ci:setup": "npm i && lerna bootstrap",
     "clean": "lerna clean",
-    "release": "lerna publish -i",
+    "publish": "lerna publish",
     "lerna": "lerna",
     "test": "nyc mocha -b -r \"./test/hemera/bootstrap\" -t 5000 --exit \"./test/**/*.spec.js\" \"./packages/hemera-zipkin/test/**/*.js\" && npm run typescript",
     "typescript": "tsc --project ./test/hemera/types/tsconfig.json",
