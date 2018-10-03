@@ -59,7 +59,7 @@ install:
   - 7z e gnatsd-v1.0.4-windows-386.zip gnatsd.exe -r -oc:\projects\hemera\build
   - cmd: set PATH=%PATH%;C:\projects\hemera\build
 
-  - npm run setup
+  - npm run bootstrap
   - npm run test
 
 build: off
