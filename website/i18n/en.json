@@ -4,103 +4,2442 @@
     "next": "Next",
     "previous": "Previous",
     "tagline": "Writing reliable & fault-tolerant microservices in Node.js",
-    "api-versioning": "Api versioning",
-    "Api versioning": "Api versioning",
-    "bridge": "Transport bridge",
-    "Bridge": "Bridge",
-    "cli": "Hemera cli",
-    "Cli": "Cli",
-    "clustering": "Clustering",
-    "Clustering": "Clustering",
-    "codec": "Codec",
-    "Codec": "Codec",
-    "config": "Hemera config",
-    "Config": "Config",
-    "context": "Context",
-    "Context": "Context",
-    "decorator": "Decorators",
-    "Decorators": "Decorators",
-    "delegate": "Delegate",
-    "Delegate": "Delegate",
-    "docker": "Docker",
-    "Docker": "Docker",
-    "ecosystem": "Ecosystem",
-    "Ecosystem": "Ecosystem",
-    "error-event": "Response error events",
-    "Events": "Events",
-    "error-handling": "Error-handling",
-    "Introduction": "Introduction",
-    "error-serialization": "Error serialization",
-    "Serialization": "Serialization",
-    "event": "Events",
-    "extension": "Extension",
-    "Extension": "Extension",
-    "fatal": "Fatal",
-    "Fatal": "Fatal",
-    "framework-integrations": "Framework integrations",
-    "Framework integrations": "Framework integrations",
-    "graphql": "GraphQL",
-    "GraphQL": "GraphQL",
-    "hemera-vs-seneca": "Hemera Vs Seneca",
-    "Hemera Vs Seneca": "Hemera Vs Seneca",
-    "installation": "Installation",
-    "Installation": "Installation",
-    "integration": "Integration-test",
-    "Integration": "Integration",
-    "logging": "Logging",
-    "Logging": "Logging",
-    "message-format": "Message format",
-    "Message format": "Message format",
-    "metadata": "Metadata",
-    "Metadata": "Metadata",
-    "middleware": "Middleware",
-    "Middleware": "Middleware",
-    "monitoring": "Monitoring",
-    "Monitoring": "Monitoring",
-    "nats-limit": "NATS limits",
-    "NATS characteristics": "NATS characteristics",
-    "notfoundPattern": "Not found pattern",
-    "Not found pattern": "Not found pattern",
-    "pattern-matching": "Pattern matching",
-    "Pattern matching": "Pattern matching",
-    "payload-validation": "Payload validation",
-    "Payload validation": "Payload validation",
-    "plugin": "Plugin",
-    "Plugin": "Plugin",
-    "propagation": "Propagation",
-    "Propagation": "Propagation",
-    "protection": "Built in protection",
-    "Protection": "Protection",
-    "publish-susbcribe": "Publish and Subscribe",
-    "Publish & Subscribe": "Publish & Subscribe",
-    "reference": "Reference",
-    "Reference": "Reference",
-    "request-reply": "Request and Reply",
-    "Request & Reply": "Request & Reply",
-    "request": "Request",
-    "Request": "Request",
-    "timeout": "Timeout",
-    "Timeouts": "Timeouts",
-    "trace": "Trace",
-    "Trace": "Trace",
-    "typescript": "Typescript",
-    "Typescript": "Typescript",
-    "unit": "Unit-test",
-    "Unit": "Unit",
-    "what-is-hemera": "What is Hemera?",
-    "What is Hemera?": "What is Hemera?",
-    "Docs": "Docs",
-    "Help": "Help",
-    "Blog": "Blog",
-    "GitHub": "GitHub",
-    "Basics": "Basics",
-    "Plugins": "Plugins",
-    "Error handling": "Error handling",
-    "Testing": "Testing",
-    "Tooling": "Tooling",
-    "Advanced": "Advanced",
-    "API": "API",
-    "Api": "Api"
+    "docs": {
+      "api-versioning": {
+        "title": "Api versioning",
+        "sidebar_label": "Api versioning"
+      },
+      "bridge": {
+        "title": "Transport bridge",
+        "sidebar_label": "Bridge"
+      },
+      "cli": {
+        "title": "Hemera cli",
+        "sidebar_label": "Cli"
+      },
+      "clustering": {
+        "title": "Clustering",
+        "sidebar_label": "Clustering"
+      },
+      "codec": {
+        "title": "Codec",
+        "sidebar_label": "Codec"
+      },
+      "config": {
+        "title": "Hemera config",
+        "sidebar_label": "Config"
+      },
+      "context": {
+        "title": "Context",
+        "sidebar_label": "Context"
+      },
+      "decorator": {
+        "title": "Decorators",
+        "sidebar_label": "Decorators"
+      },
+      "delegate": {
+        "title": "Delegate",
+        "sidebar_label": "Delegate"
+      },
+      "docker": {
+        "title": "Docker",
+        "sidebar_label": "Docker"
+      },
+      "ecosystem": {
+        "title": "Ecosystem",
+        "sidebar_label": "Ecosystem"
+      },
+      "error-event": {
+        "title": "Response error events",
+        "sidebar_label": "Events"
+      },
+      "error-handling": {
+        "title": "Error-handling",
+        "sidebar_label": "Introduction"
+      },
+      "error-serialization": {
+        "title": "Error serialization",
+        "sidebar_label": "Serialization"
+      },
+      "event": {
+        "title": "Events",
+        "sidebar_label": "Events"
+      },
+      "extension": {
+        "title": "Extension",
+        "sidebar_label": "Extension"
+      },
+      "fatal": {
+        "title": "Fatal",
+        "sidebar_label": "Fatal"
+      },
+      "framework-integrations": {
+        "title": "Framework integrations",
+        "sidebar_label": "Framework integrations"
+      },
+      "graphql": {
+        "title": "GraphQL",
+        "sidebar_label": "GraphQL"
+      },
+      "hemera-vs-seneca": {
+        "title": "Hemera Vs Seneca",
+        "sidebar_label": "Hemera Vs Seneca"
+      },
+      "installation": {
+        "title": "Installation",
+        "sidebar_label": "Installation"
+      },
+      "integration": {
+        "title": "Integration-test",
+        "sidebar_label": "Integration"
+      },
+      "logging": {
+        "title": "Logging",
+        "sidebar_label": "Logging"
+      },
+      "message-format": {
+        "title": "Message format",
+        "sidebar_label": "Message format"
+      },
+      "metadata": {
+        "title": "Metadata",
+        "sidebar_label": "Metadata"
+      },
+      "middleware": {
+        "title": "Middleware",
+        "sidebar_label": "Middleware"
+      },
+      "monitoring": {
+        "title": "Monitoring",
+        "sidebar_label": "Monitoring"
+      },
+      "nats-limit": {
+        "title": "NATS limits",
+        "sidebar_label": "NATS characteristics"
+      },
+      "notfoundPattern": {
+        "title": "Not found pattern",
+        "sidebar_label": "Not found pattern"
+      },
+      "pattern-matching": {
+        "title": "Pattern matching",
+        "sidebar_label": "Pattern matching"
+      },
+      "payload-validation": {
+        "title": "Payload validation",
+        "sidebar_label": "Payload validation"
+      },
+      "plugin": {
+        "title": "Plugin",
+        "sidebar_label": "Plugin"
+      },
+      "propagation": {
+        "title": "Propagation",
+        "sidebar_label": "Propagation"
+      },
+      "protection": {
+        "title": "Built in protection",
+        "sidebar_label": "Protection"
+      },
+      "publish-susbcribe": {
+        "title": "Publish and Subscribe",
+        "sidebar_label": "Publish & Subscribe"
+      },
+      "reference": {
+        "title": "Reference",
+        "sidebar_label": "Reference"
+      },
+      "request-reply": {
+        "title": "Request and Reply",
+        "sidebar_label": "Request & Reply"
+      },
+      "request": {
+        "title": "Request",
+        "sidebar_label": "Request"
+      },
+      "timeout": {
+        "title": "Timeout",
+        "sidebar_label": "Timeouts"
+      },
+      "trace": {
+        "title": "Trace",
+        "sidebar_label": "Trace"
+      },
+      "typescript": {
+        "title": "Typescript",
+        "sidebar_label": "Typescript"
+      },
+      "unit": {
+        "title": "Unit-test",
+        "sidebar_label": "Unit"
+      },
+      "what-is-hemera": {
+        "title": "What is Hemera?",
+        "sidebar_label": "What is Hemera?"
+      },
+      "version-5.0.0-rc.1-api-versioning": {
+        "title": "Api versioning",
+        "sidebar_label": "Api versioning"
+      },
+      "version-5.0.0-rc.1-bridge": {
+        "title": "Transport bridge",
+        "sidebar_label": "Bridge"
+      },
+      "version-5.0.0-rc.1-cli": {
+        "title": "Hemera cli",
+        "sidebar_label": "Cli"
+      },
+      "version-5.0.0-rc.1-clustering": {
+        "title": "Clustering",
+        "sidebar_label": "Clustering"
+      },
+      "version-5.0.0-rc.1-codec": {
+        "title": "Codec",
+        "sidebar_label": "Codec"
+      },
+      "version-5.0.0-rc.1-context": {
+        "title": "Context",
+        "sidebar_label": "Context"
+      },
+      "version-5.0.0-rc.1-decorator": {
+        "title": "Decorators",
+        "sidebar_label": "Decorators"
+      },
+      "version-5.0.0-rc.1-delegate": {
+        "title": "Delegate",
+        "sidebar_label": "Delegate"
+      },
+      "version-5.0.0-rc.1-docker": {
+        "title": "Docker",
+        "sidebar_label": "Docker"
+      },
+      "version-5.0.0-rc.1-ecosystem": {
+        "title": "Ecosystem",
+        "sidebar_label": "Ecosystem"
+      },
+      "version-5.0.0-rc.1-error-event": {
+        "title": "Response error events",
+        "sidebar_label": "Events"
+      },
+      "version-5.0.0-rc.1-error-handling": {
+        "title": "Error-handling",
+        "sidebar_label": "Introduction"
+      },
+      "version-5.0.0-rc.1-event": {
+        "title": "Events",
+        "sidebar_label": "Events"
+      },
+      "version-5.0.0-rc.1-extension": {
+        "title": "Extension",
+        "sidebar_label": "Extension"
+      },
+      "version-5.0.0-rc.1-fatal": {
+        "title": "Fatal",
+        "sidebar_label": "Fatal"
+      },
+      "version-5.0.0-rc.1-framework-integrations": {
+        "title": "Framework integrations",
+        "sidebar_label": "Framework integrations"
+      },
+      "version-5.0.0-rc.1-graphql": {
+        "title": "GraphQL",
+        "sidebar_label": "GraphQL"
+      },
+      "version-5.0.0-rc.1-hemera-vs-seneca": {
+        "title": "Hemera Vs Seneca",
+        "sidebar_label": "Hemera Vs Seneca"
+      },
+      "version-5.0.0-rc.1-installation": {
+        "title": "Installation",
+        "sidebar_label": "Installation"
+      },
+      "version-5.0.0-rc.1-integration": {
+        "title": "Integration-test",
+        "sidebar_label": "Integration"
+      },
+      "version-5.0.0-rc.1-logging": {
+        "title": "Logging",
+        "sidebar_label": "Logging"
+      },
+      "version-5.0.0-rc.1-metadata": {
+        "title": "Metadata",
+        "sidebar_label": "Metadata"
+      },
+      "version-5.0.0-rc.1-middleware": {
+        "title": "Middleware",
+        "sidebar_label": "Middleware"
+      },
+      "version-5.0.0-rc.1-monitoring": {
+        "title": "Monitoring",
+        "sidebar_label": "Monitoring"
+      },
+      "version-5.0.0-rc.1-nats-limit": {
+        "title": "NATS limits",
+        "sidebar_label": "NATS characteristics"
+      },
+      "version-5.0.0-rc.1-pattern-matching": {
+        "title": "Pattern matching",
+        "sidebar_label": "Pattern matching"
+      },
+      "version-5.0.0-rc.1-payload-validation": {
+        "title": "Payload validation",
+        "sidebar_label": "Payload validation"
+      },
+      "version-5.0.0-rc.1-plugin": {
+        "title": "Plugin",
+        "sidebar_label": "Create a plugin"
+      },
+      "version-5.0.0-rc.1-propagation": {
+        "title": "Propagation",
+        "sidebar_label": "Propagation"
+      },
+      "version-5.0.0-rc.1-protection": {
+        "title": "Built in protection",
+        "sidebar_label": "Protection"
+      },
+      "version-5.0.0-rc.1-publish-susbcribe": {
+        "title": "Publish and Subscribe",
+        "sidebar_label": "Publish & Subscribe"
+      },
+      "version-5.0.0-rc.1-reference": {
+        "title": "Reference",
+        "sidebar_label": "Reference"
+      },
+      "version-5.0.0-rc.1-request-reply": {
+        "title": "Request and Reply",
+        "sidebar_label": "Request & Reply"
+      },
+      "version-5.0.0-rc.1-timeout": {
+        "title": "Timeout",
+        "sidebar_label": "Timeouts"
+      },
+      "version-5.0.0-rc.1-unit": {
+        "title": "Unit-test",
+        "sidebar_label": "Unit"
+      },
+      "version-5.0.0-rc.1-what-is-hemera": {
+        "title": "What is Hemera?",
+        "sidebar_label": "What is Hemera?"
+      },
+      "version-5.0.0-rc.2-api-versioning": {
+        "title": "Api versioning",
+        "sidebar_label": "Api versioning"
+      },
+      "version-5.0.0-rc.2-bridge": {
+        "title": "Transport bridge",
+        "sidebar_label": "Bridge"
+      },
+      "version-5.0.0-rc.2-cli": {
+        "title": "Hemera cli",
+        "sidebar_label": "Cli"
+      },
+      "version-5.0.0-rc.2-clustering": {
+        "title": "Clustering",
+        "sidebar_label": "Clustering"
+      },
+      "version-5.0.0-rc.2-codec": {
+        "title": "Codec",
+        "sidebar_label": "Codec"
+      },
+      "version-5.0.0-rc.2-context": {
+        "title": "Context",
+        "sidebar_label": "Context"
+      },
+      "version-5.0.0-rc.2-decorator": {
+        "title": "Decorators",
+        "sidebar_label": "Decorators"
+      },
+      "version-5.0.0-rc.2-delegate": {
+        "title": "Delegate",
+        "sidebar_label": "Delegate"
+      },
+      "version-5.0.0-rc.2-docker": {
+        "title": "Docker",
+        "sidebar_label": "Docker"
+      },
+      "version-5.0.0-rc.2-ecosystem": {
+        "title": "Ecosystem",
+        "sidebar_label": "Ecosystem"
+      },
+      "version-5.0.0-rc.2-error-event": {
+        "title": "Response error events",
+        "sidebar_label": "Events"
+      },
+      "version-5.0.0-rc.2-error-handling": {
+        "title": "Error-handling",
+        "sidebar_label": "Introduction"
+      },
+      "version-5.0.0-rc.2-event": {
+        "title": "Events",
+        "sidebar_label": "Events"
+      },
+      "version-5.0.0-rc.2-extension": {
+        "title": "Extension",
+        "sidebar_label": "Extension"
+      },
+      "version-5.0.0-rc.2-fatal": {
+        "title": "Fatal",
+        "sidebar_label": "Fatal"
+      },
+      "version-5.0.0-rc.2-framework-integrations": {
+        "title": "Framework integrations",
+        "sidebar_label": "Framework integrations"
+      },
+      "version-5.0.0-rc.2-graphql": {
+        "title": "GraphQL",
+        "sidebar_label": "GraphQL"
+      },
+      "version-5.0.0-rc.2-hemera-vs-seneca": {
+        "title": "Hemera Vs Seneca",
+        "sidebar_label": "Hemera Vs Seneca"
+      },
+      "version-5.0.0-rc.2-installation": {
+        "title": "Installation",
+        "sidebar_label": "Installation"
+      },
+      "version-5.0.0-rc.2-integration": {
+        "title": "Integration-test",
+        "sidebar_label": "Integration"
+      },
+      "version-5.0.0-rc.2-logging": {
+        "title": "Logging",
+        "sidebar_label": "Logging"
+      },
+      "version-5.0.0-rc.2-metadata": {
+        "title": "Metadata",
+        "sidebar_label": "Metadata"
+      },
+      "version-5.0.0-rc.2-middleware": {
+        "title": "Middleware",
+        "sidebar_label": "Middleware"
+      },
+      "version-5.0.0-rc.2-monitoring": {
+        "title": "Monitoring",
+        "sidebar_label": "Monitoring"
+      },
+      "version-5.0.0-rc.2-nats-limit": {
+        "title": "NATS limits",
+        "sidebar_label": "NATS characteristics"
+      },
+      "version-5.0.0-rc.2-pattern-matching": {
+        "title": "Pattern matching",
+        "sidebar_label": "Pattern matching"
+      },
+      "version-5.0.0-rc.2-payload-validation": {
+        "title": "Payload validation",
+        "sidebar_label": "Payload validation"
+      },
+      "version-5.0.0-rc.2-plugin": {
+        "title": "Plugin",
+        "sidebar_label": "Create a plugin"
+      },
+      "version-5.0.0-rc.2-propagation": {
+        "title": "Propagation",
+        "sidebar_label": "Propagation"
+      },
+      "version-5.0.0-rc.2-protection": {
+        "title": "Built in protection",
+        "sidebar_label": "Protection"
+      },
+      "version-5.0.0-rc.2-publish-susbcribe": {
+        "title": "Publish and Subscribe",
+        "sidebar_label": "Publish & Subscribe"
+      },
+      "version-5.0.0-rc.2-reference": {
+        "title": "Reference",
+        "sidebar_label": "Reference"
+      },
+      "version-5.0.0-rc.2-request-reply": {
+        "title": "Request and Reply",
+        "sidebar_label": "Request & Reply"
+      },
+      "version-5.0.0-rc.2-timeout": {
+        "title": "Timeout",
+        "sidebar_label": "Timeouts"
+      },
+      "version-5.0.0-rc.2-unit": {
+        "title": "Unit-test",
+        "sidebar_label": "Unit"
+      },
+      "version-5.0.0-rc.2-what-is-hemera": {
+        "title": "What is Hemera?",
+        "sidebar_label": "What is Hemera?"
+      },
+      "version-5.0.0-rc.3-api-versioning": {
+        "title": "Api versioning",
+        "sidebar_label": "Api versioning"
+      },
+      "version-5.0.0-rc.3-bridge": {
+        "title": "Transport bridge",
+        "sidebar_label": "Bridge"
+      },
+      "version-5.0.0-rc.3-cli": {
+        "title": "Hemera cli",
+        "sidebar_label": "Cli"
+      },
+      "version-5.0.0-rc.3-clustering": {
+        "title": "Clustering",
+        "sidebar_label": "Clustering"
+      },
+      "version-5.0.0-rc.3-codec": {
+        "title": "Codec",
+        "sidebar_label": "Codec"
+      },
+      "version-5.0.0-rc.3-config": {
+        "title": "Hemera config",
+        "sidebar_label": "Config"
+      },
+      "version-5.0.0-rc.3-context": {
+        "title": "Context",
+        "sidebar_label": "Context"
+      },
+      "version-5.0.0-rc.3-decorator": {
+        "title": "Decorators",
+        "sidebar_label": "Decorators"
+      },
+      "version-5.0.0-rc.3-delegate": {
+        "title": "Delegate",
+        "sidebar_label": "Delegate"
+      },
+      "version-5.0.0-rc.3-docker": {
+        "title": "Docker",
+        "sidebar_label": "Docker"
+      },
+      "version-5.0.0-rc.3-ecosystem": {
+        "title": "Ecosystem",
+        "sidebar_label": "Ecosystem"
+      },
+      "version-5.0.0-rc.3-error-event": {
+        "title": "Response error events",
+        "sidebar_label": "Events"
+      },
+      "version-5.0.0-rc.3-error-handling": {
+        "title": "Error-handling",
+        "sidebar_label": "Introduction"
+      },
+      "version-5.0.0-rc.3-event": {
+        "title": "Events",
+        "sidebar_label": "Events"
+      },
+      "version-5.0.0-rc.3-extension": {
+        "title": "Extension",
+        "sidebar_label": "Extension"
+      },
+      "version-5.0.0-rc.3-fatal": {
+        "title": "Fatal",
+        "sidebar_label": "Fatal"
+      },
+      "version-5.0.0-rc.3-framework-integrations": {
+        "title": "Framework integrations",
+        "sidebar_label": "Framework integrations"
+      },
+      "version-5.0.0-rc.3-graphql": {
+        "title": "GraphQL",
+        "sidebar_label": "GraphQL"
+      },
+      "version-5.0.0-rc.3-hemera-vs-seneca": {
+        "title": "Hemera Vs Seneca",
+        "sidebar_label": "Hemera Vs Seneca"
+      },
+      "version-5.0.0-rc.3-installation": {
+        "title": "Installation",
+        "sidebar_label": "Installation"
+      },
+      "version-5.0.0-rc.3-integration": {
+        "title": "Integration-test",
+        "sidebar_label": "Integration"
+      },
+      "version-5.0.0-rc.3-logging": {
+        "title": "Logging",
+        "sidebar_label": "Logging"
+      },
+      "version-5.0.0-rc.3-metadata": {
+        "title": "Metadata",
+        "sidebar_label": "Metadata"
+      },
+      "version-5.0.0-rc.3-middleware": {
+        "title": "Middleware",
+        "sidebar_label": "Middleware"
+      },
+      "version-5.0.0-rc.3-monitoring": {
+        "title": "Monitoring",
+        "sidebar_label": "Monitoring"
+      },
+      "version-5.0.0-rc.3-nats-limit": {
+        "title": "NATS limits",
+        "sidebar_label": "NATS characteristics"
+      },
+      "version-5.0.0-rc.3-pattern-matching": {
+        "title": "Pattern matching",
+        "sidebar_label": "Pattern matching"
+      },
+      "version-5.0.0-rc.3-payload-validation": {
+        "title": "Payload validation",
+        "sidebar_label": "Payload validation"
+      },
+      "version-5.0.0-rc.3-plugin": {
+        "title": "Plugin",
+        "sidebar_label": "Create a plugin"
+      },
+      "version-5.0.0-rc.3-propagation": {
+        "title": "Propagation",
+        "sidebar_label": "Propagation"
+      },
+      "version-5.0.0-rc.3-protection": {
+        "title": "Built in protection",
+        "sidebar_label": "Protection"
+      },
+      "version-5.0.0-rc.3-publish-susbcribe": {
+        "title": "Publish and Subscribe",
+        "sidebar_label": "Publish & Subscribe"
+      },
+      "version-5.0.0-rc.3-reference": {
+        "title": "Reference",
+        "sidebar_label": "Reference"
+      },
+      "version-5.0.0-rc.3-request-reply": {
+        "title": "Request and Reply",
+        "sidebar_label": "Request & Reply"
+      },
+      "version-5.0.0-rc.3-timeout": {
+        "title": "Timeout",
+        "sidebar_label": "Timeouts"
+      },
+      "version-5.0.0-rc.3-unit": {
+        "title": "Unit-test",
+        "sidebar_label": "Unit"
+      },
+      "version-5.0.0-rc.3-what-is-hemera": {
+        "title": "What is Hemera?",
+        "sidebar_label": "What is Hemera?"
+      },
+      "version-5.0.0-rc.4-api-versioning": {
+        "title": "Api versioning",
+        "sidebar_label": "Api versioning"
+      },
+      "version-5.0.0-rc.4-bridge": {
+        "title": "Transport bridge",
+        "sidebar_label": "Bridge"
+      },
+      "version-5.0.0-rc.4-cli": {
+        "title": "Hemera cli",
+        "sidebar_label": "Cli"
+      },
+      "version-5.0.0-rc.4-clustering": {
+        "title": "Clustering",
+        "sidebar_label": "Clustering"
+      },
+      "version-5.0.0-rc.4-codec": {
+        "title": "Codec",
+        "sidebar_label": "Codec"
+      },
+      "version-5.0.0-rc.4-config": {
+        "title": "Hemera config",
+        "sidebar_label": "Config"
+      },
+      "version-5.0.0-rc.4-context": {
+        "title": "Context",
+        "sidebar_label": "Context"
+      },
+      "version-5.0.0-rc.4-decorator": {
+        "title": "Decorators",
+        "sidebar_label": "Decorators"
+      },
+      "version-5.0.0-rc.4-delegate": {
+        "title": "Delegate",
+        "sidebar_label": "Delegate"
+      },
+      "version-5.0.0-rc.4-docker": {
+        "title": "Docker",
+        "sidebar_label": "Docker"
+      },
+      "version-5.0.0-rc.4-error-event": {
+        "title": "Response error events",
+        "sidebar_label": "Events"
+      },
+      "version-5.0.0-rc.4-error-handling": {
+        "title": "Error-handling",
+        "sidebar_label": "Introduction"
+      },
+      "version-5.0.0-rc.4-error-serialization": {
+        "title": "Error serialization",
+        "sidebar_label": "Serialization"
+      },
+      "version-5.0.0-rc.4-event": {
+        "title": "Events",
+        "sidebar_label": "Events"
+      },
+      "version-5.0.0-rc.4-extension": {
+        "title": "Extension",
+        "sidebar_label": "Extension"
+      },
+      "version-5.0.0-rc.4-fatal": {
+        "title": "Fatal",
+        "sidebar_label": "Fatal"
+      },
+      "version-5.0.0-rc.4-framework-integrations": {
+        "title": "Framework integrations",
+        "sidebar_label": "Framework integrations"
+      },
+      "version-5.0.0-rc.4-graphql": {
+        "title": "GraphQL",
+        "sidebar_label": "GraphQL"
+      },
+      "version-5.0.0-rc.4-hemera-vs-seneca": {
+        "title": "Hemera Vs Seneca",
+        "sidebar_label": "Hemera Vs Seneca"
+      },
+      "version-5.0.0-rc.4-installation": {
+        "title": "Installation",
+        "sidebar_label": "Installation"
+      },
+      "version-5.0.0-rc.4-integration": {
+        "title": "Integration-test",
+        "sidebar_label": "Integration"
+      },
+      "version-5.0.0-rc.4-logging": {
+        "title": "Logging",
+        "sidebar_label": "Logging"
+      },
+      "version-5.0.0-rc.4-metadata": {
+        "title": "Metadata",
+        "sidebar_label": "Metadata"
+      },
+      "version-5.0.0-rc.4-middleware": {
+        "title": "Middleware",
+        "sidebar_label": "Middleware"
+      },
+      "version-5.0.0-rc.4-monitoring": {
+        "title": "Monitoring",
+        "sidebar_label": "Monitoring"
+      },
+      "version-5.0.0-rc.4-nats-limit": {
+        "title": "NATS limits",
+        "sidebar_label": "NATS characteristics"
+      },
+      "version-5.0.0-rc.4-pattern-matching": {
+        "title": "Pattern matching",
+        "sidebar_label": "Pattern matching"
+      },
+      "version-5.0.0-rc.4-payload-validation": {
+        "title": "Payload validation",
+        "sidebar_label": "Payload validation"
+      },
+      "version-5.0.0-rc.4-plugin": {
+        "title": "Plugin",
+        "sidebar_label": "Create a plugin"
+      },
+      "version-5.0.0-rc.4-propagation": {
+        "title": "Propagation",
+        "sidebar_label": "Propagation"
+      },
+      "version-5.0.0-rc.4-protection": {
+        "title": "Built in protection",
+        "sidebar_label": "Protection"
+      },
+      "version-5.0.0-rc.4-publish-susbcribe": {
+        "title": "Publish and Subscribe",
+        "sidebar_label": "Publish & Subscribe"
+      },
+      "version-5.0.0-rc.4-reference": {
+        "title": "Reference",
+        "sidebar_label": "Reference"
+      },
+      "version-5.0.0-rc.4-request-reply": {
+        "title": "Request and Reply",
+        "sidebar_label": "Request & Reply"
+      },
+      "version-5.0.0-rc.4-timeout": {
+        "title": "Timeout",
+        "sidebar_label": "Timeouts"
+      },
+      "version-5.0.0-rc.4-unit": {
+        "title": "Unit-test",
+        "sidebar_label": "Unit"
+      },
+      "version-5.0.0-rc.4-what-is-hemera": {
+        "title": "What is Hemera?",
+        "sidebar_label": "What is Hemera?"
+      },
+      "version-5.0.0-rc.5-api-versioning": {
+        "title": "Api versioning",
+        "sidebar_label": "Api versioning"
+      },
+      "version-5.0.0-rc.5-bridge": {
+        "title": "Transport bridge",
+        "sidebar_label": "Bridge"
+      },
+      "version-5.0.0-rc.5-cli": {
+        "title": "Hemera cli",
+        "sidebar_label": "Cli"
+      },
+      "version-5.0.0-rc.5-clustering": {
+        "title": "Clustering",
+        "sidebar_label": "Clustering"
+      },
+      "version-5.0.0-rc.5-codec": {
+        "title": "Codec",
+        "sidebar_label": "Codec"
+      },
+      "version-5.0.0-rc.5-config": {
+        "title": "Hemera config",
+        "sidebar_label": "Config"
+      },
+      "version-5.0.0-rc.5-context": {
+        "title": "Context",
+        "sidebar_label": "Context"
+      },
+      "version-5.0.0-rc.5-decorator": {
+        "title": "Decorators",
+        "sidebar_label": "Decorators"
+      },
+      "version-5.0.0-rc.5-delegate": {
+        "title": "Delegate",
+        "sidebar_label": "Delegate"
+      },
+      "version-5.0.0-rc.5-docker": {
+        "title": "Docker",
+        "sidebar_label": "Docker"
+      },
+      "version-5.0.0-rc.5-error-event": {
+        "title": "Response error events",
+        "sidebar_label": "Events"
+      },
+      "version-5.0.0-rc.5-error-handling": {
+        "title": "Error-handling",
+        "sidebar_label": "Introduction"
+      },
+      "version-5.0.0-rc.5-event": {
+        "title": "Events",
+        "sidebar_label": "Events"
+      },
+      "version-5.0.0-rc.5-extension": {
+        "title": "Extension",
+        "sidebar_label": "Extension"
+      },
+      "version-5.0.0-rc.5-fatal": {
+        "title": "Fatal",
+        "sidebar_label": "Fatal"
+      },
+      "version-5.0.0-rc.5-framework-integrations": {
+        "title": "Framework integrations",
+        "sidebar_label": "Framework integrations"
+      },
+      "version-5.0.0-rc.5-graphql": {
+        "title": "GraphQL",
+        "sidebar_label": "GraphQL"
+      },
+      "version-5.0.0-rc.5-hemera-vs-seneca": {
+        "title": "Hemera Vs Seneca",
+        "sidebar_label": "Hemera Vs Seneca"
+      },
+      "version-5.0.0-rc.5-installation": {
+        "title": "Installation",
+        "sidebar_label": "Installation"
+      },
+      "version-5.0.0-rc.5-integration": {
+        "title": "Integration-test",
+        "sidebar_label": "Integration"
+      },
+      "version-5.0.0-rc.5-logging": {
+        "title": "Logging",
+        "sidebar_label": "Logging"
+      },
+      "version-5.0.0-rc.5-metadata": {
+        "title": "Metadata",
+        "sidebar_label": "Metadata"
+      },
+      "version-5.0.0-rc.5-middleware": {
+        "title": "Middleware",
+        "sidebar_label": "Middleware"
+      },
+      "version-5.0.0-rc.5-monitoring": {
+        "title": "Monitoring",
+        "sidebar_label": "Monitoring"
+      },
+      "version-5.0.0-rc.5-nats-limit": {
+        "title": "NATS limits",
+        "sidebar_label": "NATS characteristics"
+      },
+      "version-5.0.0-rc.5-pattern-matching": {
+        "title": "Pattern matching",
+        "sidebar_label": "Pattern matching"
+      },
+      "version-5.0.0-rc.5-payload-validation": {
+        "title": "Payload validation",
+        "sidebar_label": "Payload validation"
+      },
+      "version-5.0.0-rc.5-plugin": {
+        "title": "Plugin",
+        "sidebar_label": "Create a plugin"
+      },
+      "version-5.0.0-rc.5-protection": {
+        "title": "Built in protection",
+        "sidebar_label": "Protection"
+      },
+      "version-5.0.0-rc.5-publish-susbcribe": {
+        "title": "Publish and Subscribe",
+        "sidebar_label": "Publish & Subscribe"
+      },
+      "version-5.0.0-rc.5-reference": {
+        "title": "Reference",
+        "sidebar_label": "Reference"
+      },
+      "version-5.0.0-rc.5-request-reply": {
+        "title": "Request and Reply",
+        "sidebar_label": "Request & Reply"
+      },
+      "version-5.0.0-rc.5-timeout": {
+        "title": "Timeout",
+        "sidebar_label": "Timeouts"
+      },
+      "version-5.0.0-rc.5-unit": {
+        "title": "Unit-test",
+        "sidebar_label": "Unit"
+      },
+      "version-5.0.0-rc.5-what-is-hemera": {
+        "title": "What is Hemera?",
+        "sidebar_label": "What is Hemera?"
+      },
+      "version-5.0.0-rc.6-api-versioning": {
+        "title": "Api versioning",
+        "sidebar_label": "Api versioning"
+      },
+      "version-5.0.0-rc.6-bridge": {
+        "title": "Transport bridge",
+        "sidebar_label": "Bridge"
+      },
+      "version-5.0.0-rc.6-cli": {
+        "title": "Hemera cli",
+        "sidebar_label": "Cli"
+      },
+      "version-5.0.0-rc.6-clustering": {
+        "title": "Clustering",
+        "sidebar_label": "Clustering"
+      },
+      "version-5.0.0-rc.6-codec": {
+        "title": "Codec",
+        "sidebar_label": "Codec"
+      },
+      "version-5.0.0-rc.6-config": {
+        "title": "Hemera config",
+        "sidebar_label": "Config"
+      },
+      "version-5.0.0-rc.6-context": {
+        "title": "Context",
+        "sidebar_label": "Context"
+      },
+      "version-5.0.0-rc.6-decorator": {
+        "title": "Decorators",
+        "sidebar_label": "Decorators"
+      },
+      "version-5.0.0-rc.6-delegate": {
+        "title": "Delegate",
+        "sidebar_label": "Delegate"
+      },
+      "version-5.0.0-rc.6-docker": {
+        "title": "Docker",
+        "sidebar_label": "Docker"
+      },
+      "version-5.0.0-rc.6-ecosystem": {
+        "title": "Ecosystem",
+        "sidebar_label": "Ecosystem"
+      },
+      "version-5.0.0-rc.6-error-event": {
+        "title": "Response error events",
+        "sidebar_label": "Events"
+      },
+      "version-5.0.0-rc.6-error-handling": {
+        "title": "Error-handling",
+        "sidebar_label": "Introduction"
+      },
+      "version-5.0.0-rc.6-event": {
+        "title": "Events",
+        "sidebar_label": "Events"
+      },
+      "version-5.0.0-rc.6-extension": {
+        "title": "Extension",
+        "sidebar_label": "Extension"
+      },
+      "version-5.0.0-rc.6-fatal": {
+        "title": "Fatal",
+        "sidebar_label": "Fatal"
+      },
+      "version-5.0.0-rc.6-framework-integrations": {
+        "title": "Framework integrations",
+        "sidebar_label": "Framework integrations"
+      },
+      "version-5.0.0-rc.6-graphql": {
+        "title": "GraphQL",
+        "sidebar_label": "GraphQL"
+      },
+      "version-5.0.0-rc.6-hemera-vs-seneca": {
+        "title": "Hemera Vs Seneca",
+        "sidebar_label": "Hemera Vs Seneca"
+      },
+      "version-5.0.0-rc.6-installation": {
+        "title": "Installation",
+        "sidebar_label": "Installation"
+      },
+      "version-5.0.0-rc.6-integration": {
+        "title": "Integration-test",
+        "sidebar_label": "Integration"
+      },
+      "version-5.0.0-rc.6-logging": {
+        "title": "Logging",
+        "sidebar_label": "Logging"
+      },
+      "version-5.0.0-rc.6-metadata": {
+        "title": "Metadata",
+        "sidebar_label": "Metadata"
+      },
+      "version-5.0.0-rc.6-middleware": {
+        "title": "Middleware",
+        "sidebar_label": "Middleware"
+      },
+      "version-5.0.0-rc.6-monitoring": {
+        "title": "Monitoring",
+        "sidebar_label": "Monitoring"
+      },
+      "version-5.0.0-rc.6-nats-limit": {
+        "title": "NATS limits",
+        "sidebar_label": "NATS characteristics"
+      },
+      "version-5.0.0-rc.6-pattern-matching": {
+        "title": "Pattern matching",
+        "sidebar_label": "Pattern matching"
+      },
+      "version-5.0.0-rc.6-payload-validation": {
+        "title": "Payload validation",
+        "sidebar_label": "Payload validation"
+      },
+      "version-5.0.0-rc.6-plugin": {
+        "title": "Plugin",
+        "sidebar_label": "Create a plugin"
+      },
+      "version-5.0.0-rc.6-protection": {
+        "title": "Built in protection",
+        "sidebar_label": "Protection"
+      },
+      "version-5.0.0-rc.6-publish-susbcribe": {
+        "title": "Publish and Subscribe",
+        "sidebar_label": "Publish & Subscribe"
+      },
+      "version-5.0.0-rc.6-reference": {
+        "title": "Reference",
+        "sidebar_label": "Reference"
+      },
+      "version-5.0.0-rc.6-request-reply": {
+        "title": "Request and Reply",
+        "sidebar_label": "Request & Reply"
+      },
+      "version-5.0.0-rc.6-timeout": {
+        "title": "Timeout",
+        "sidebar_label": "Timeouts"
+      },
+      "version-5.0.0-rc.6-unit": {
+        "title": "Unit-test",
+        "sidebar_label": "Unit"
+      },
+      "version-5.0.0-rc.6-what-is-hemera": {
+        "title": "What is Hemera?",
+        "sidebar_label": "What is Hemera?"
+      },
+      "version-5.0.0-rc.7-api-versioning": {
+        "title": "Api versioning",
+        "sidebar_label": "Api versioning"
+      },
+      "version-5.0.0-rc.7-bridge": {
+        "title": "Transport bridge",
+        "sidebar_label": "Bridge"
+      },
+      "version-5.0.0-rc.7-cli": {
+        "title": "Hemera cli",
+        "sidebar_label": "Cli"
+      },
+      "version-5.0.0-rc.7-clustering": {
+        "title": "Clustering",
+        "sidebar_label": "Clustering"
+      },
+      "version-5.0.0-rc.7-codec": {
+        "title": "Codec",
+        "sidebar_label": "Codec"
+      },
+      "version-5.0.0-rc.7-config": {
+        "title": "Hemera config",
+        "sidebar_label": "Config"
+      },
+      "version-5.0.0-rc.7-context": {
+        "title": "Context",
+        "sidebar_label": "Context"
+      },
+      "version-5.0.0-rc.7-decorator": {
+        "title": "Decorators",
+        "sidebar_label": "Decorators"
+      },
+      "version-5.0.0-rc.7-delegate": {
+        "title": "Delegate",
+        "sidebar_label": "Delegate"
+      },
+      "version-5.0.0-rc.7-docker": {
+        "title": "Docker",
+        "sidebar_label": "Docker"
+      },
+      "version-5.0.0-rc.7-error-event": {
+        "title": "Response error events",
+        "sidebar_label": "Events"
+      },
+      "version-5.0.0-rc.7-event": {
+        "title": "Events",
+        "sidebar_label": "Events"
+      },
+      "version-5.0.0-rc.7-extension": {
+        "title": "Extension",
+        "sidebar_label": "Extension"
+      },
+      "version-5.0.0-rc.7-fatal": {
+        "title": "Fatal",
+        "sidebar_label": "Fatal"
+      },
+      "version-5.0.0-rc.7-framework-integrations": {
+        "title": "Framework integrations",
+        "sidebar_label": "Framework integrations"
+      },
+      "version-5.0.0-rc.7-graphql": {
+        "title": "GraphQL",
+        "sidebar_label": "GraphQL"
+      },
+      "version-5.0.0-rc.7-hemera-vs-seneca": {
+        "title": "Hemera Vs Seneca",
+        "sidebar_label": "Hemera Vs Seneca"
+      },
+      "version-5.0.0-rc.7-installation": {
+        "title": "Installation",
+        "sidebar_label": "Installation"
+      },
+      "version-5.0.0-rc.7-integration": {
+        "title": "Integration-test",
+        "sidebar_label": "Integration"
+      },
+      "version-5.0.0-rc.7-logging": {
+        "title": "Logging",
+        "sidebar_label": "Logging"
+      },
+      "version-5.0.0-rc.7-metadata": {
+        "title": "Metadata",
+        "sidebar_label": "Metadata"
+      },
+      "version-5.0.0-rc.7-middleware": {
+        "title": "Middleware",
+        "sidebar_label": "Middleware"
+      },
+      "version-5.0.0-rc.7-monitoring": {
+        "title": "Monitoring",
+        "sidebar_label": "Monitoring"
+      },
+      "version-5.0.0-rc.7-nats-limit": {
+        "title": "NATS limits",
+        "sidebar_label": "NATS characteristics"
+      },
+      "version-5.0.0-rc.7-pattern-matching": {
+        "title": "Pattern matching",
+        "sidebar_label": "Pattern matching"
+      },
+      "version-5.0.0-rc.7-payload-validation": {
+        "title": "Payload validation",
+        "sidebar_label": "Payload validation"
+      },
+      "version-5.0.0-rc.7-plugin": {
+        "title": "Plugin",
+        "sidebar_label": "Create a plugin"
+      },
+      "version-5.0.0-rc.7-protection": {
+        "title": "Built in protection",
+        "sidebar_label": "Protection"
+      },
+      "version-5.0.0-rc.7-publish-susbcribe": {
+        "title": "Publish and Subscribe",
+        "sidebar_label": "Publish & Subscribe"
+      },
+      "version-5.0.0-rc.7-reference": {
+        "title": "Reference",
+        "sidebar_label": "Reference"
+      },
+      "version-5.0.0-rc.7-request-reply": {
+        "title": "Request and Reply",
+        "sidebar_label": "Request & Reply"
+      },
+      "version-5.0.0-rc.7-timeout": {
+        "title": "Timeout",
+        "sidebar_label": "Timeouts"
+      },
+      "version-5.0.0-rc.7-typescript": {
+        "title": "Typescript",
+        "sidebar_label": "Typescript"
+      },
+      "version-5.0.0-rc.7-unit": {
+        "title": "Unit-test",
+        "sidebar_label": "Unit"
+      },
+      "version-5.0.0-rc.7-what-is-hemera": {
+        "title": "What is Hemera?",
+        "sidebar_label": "What is Hemera?"
+      },
+      "version-5.0.0-api-versioning": {
+        "title": "Api versioning",
+        "sidebar_label": "Api versioning"
+      },
+      "version-5.0.0-bridge": {
+        "title": "Transport bridge",
+        "sidebar_label": "Bridge"
+      },
+      "version-5.0.0-cli": {
+        "title": "Hemera cli",
+        "sidebar_label": "Cli"
+      },
+      "version-5.0.0-clustering": {
+        "title": "Clustering",
+        "sidebar_label": "Clustering"
+      },
+      "version-5.0.0-codec": {
+        "title": "Codec",
+        "sidebar_label": "Codec"
+      },
+      "version-5.0.0-config": {
+        "title": "Hemera config",
+        "sidebar_label": "Config"
+      },
+      "version-5.0.0-context": {
+        "title": "Context",
+        "sidebar_label": "Context"
+      },
+      "version-5.0.0-decorator": {
+        "title": "Decorators",
+        "sidebar_label": "Decorators"
+      },
+      "version-5.0.0-delegate": {
+        "title": "Delegate",
+        "sidebar_label": "Delegate"
+      },
+      "version-5.0.0-docker": {
+        "title": "Docker",
+        "sidebar_label": "Docker"
+      },
+      "version-5.0.0-error-event": {
+        "title": "Response error events",
+        "sidebar_label": "Events"
+      },
+      "version-5.0.0-event": {
+        "title": "Events",
+        "sidebar_label": "Events"
+      },
+      "version-5.0.0-extension": {
+        "title": "Extension",
+        "sidebar_label": "Extension"
+      },
+      "version-5.0.0-fatal": {
+        "title": "Fatal",
+        "sidebar_label": "Fatal"
+      },
+      "version-5.0.0-framework-integrations": {
+        "title": "Framework integrations",
+        "sidebar_label": "Framework integrations"
+      },
+      "version-5.0.0-graphql": {
+        "title": "GraphQL",
+        "sidebar_label": "GraphQL"
+      },
+      "version-5.0.0-hemera-vs-seneca": {
+        "title": "Hemera Vs Seneca",
+        "sidebar_label": "Hemera Vs Seneca"
+      },
+      "version-5.0.0-installation": {
+        "title": "Installation",
+        "sidebar_label": "Installation"
+      },
+      "version-5.0.0-integration": {
+        "title": "Integration-test",
+        "sidebar_label": "Integration"
+      },
+      "version-5.0.0-logging": {
+        "title": "Logging",
+        "sidebar_label": "Logging"
+      },
+      "version-5.0.0-metadata": {
+        "title": "Metadata",
+        "sidebar_label": "Metadata"
+      },
+      "version-5.0.0-middleware": {
+        "title": "Middleware",
+        "sidebar_label": "Middleware"
+      },
+      "version-5.0.0-monitoring": {
+        "title": "Monitoring",
+        "sidebar_label": "Monitoring"
+      },
+      "version-5.0.0-nats-limit": {
+        "title": "NATS limits",
+        "sidebar_label": "NATS characteristics"
+      },
+      "version-5.0.0-notfoundPattern": {
+        "title": "Not found pattern",
+        "sidebar_label": "Not found pattern"
+      },
+      "version-5.0.0-pattern-matching": {
+        "title": "Pattern matching",
+        "sidebar_label": "Pattern matching"
+      },
+      "version-5.0.0-payload-validation": {
+        "title": "Payload validation",
+        "sidebar_label": "Payload validation"
+      },
+      "version-5.0.0-plugin": {
+        "title": "Plugin",
+        "sidebar_label": "Plugin"
+      },
+      "version-5.0.0-protection": {
+        "title": "Built in protection",
+        "sidebar_label": "Protection"
+      },
+      "version-5.0.0-publish-susbcribe": {
+        "title": "Publish and Subscribe",
+        "sidebar_label": "Publish & Subscribe"
+      },
+      "version-5.0.0-reference": {
+        "title": "Reference",
+        "sidebar_label": "Reference"
+      },
+      "version-5.0.0-request-reply": {
+        "title": "Request and Reply",
+        "sidebar_label": "Request & Reply"
+      },
+      "version-5.0.0-timeout": {
+        "title": "Timeout",
+        "sidebar_label": "Timeouts"
+      },
+      "version-5.0.0-unit": {
+        "title": "Unit-test",
+        "sidebar_label": "Unit"
+      },
+      "version-5.0.0-what-is-hemera": {
+        "title": "What is Hemera?",
+        "sidebar_label": "What is Hemera?"
+      },
+      "version-5.0.2-api-versioning": {
+        "title": "Api versioning",
+        "sidebar_label": "Api versioning"
+      },
+      "version-5.0.2-bridge": {
+        "title": "Transport bridge",
+        "sidebar_label": "Bridge"
+      },
+      "version-5.0.2-cli": {
+        "title": "Hemera cli",
+        "sidebar_label": "Cli"
+      },
+      "version-5.0.2-clustering": {
+        "title": "Clustering",
+        "sidebar_label": "Clustering"
+      },
+      "version-5.0.2-codec": {
+        "title": "Codec",
+        "sidebar_label": "Codec"
+      },
+      "version-5.0.2-config": {
+        "title": "Hemera config",
+        "sidebar_label": "Config"
+      },
+      "version-5.0.2-context": {
+        "title": "Context",
+        "sidebar_label": "Context"
+      },
+      "version-5.0.2-decorator": {
+        "title": "Decorators",
+        "sidebar_label": "Decorators"
+      },
+      "version-5.0.2-delegate": {
+        "title": "Delegate",
+        "sidebar_label": "Delegate"
+      },
+      "version-5.0.2-docker": {
+        "title": "Docker",
+        "sidebar_label": "Docker"
+      },
+      "version-5.0.2-error-event": {
+        "title": "Response error events",
+        "sidebar_label": "Events"
+      },
+      "version-5.0.2-event": {
+        "title": "Events",
+        "sidebar_label": "Events"
+      },
+      "version-5.0.2-extension": {
+        "title": "Extension",
+        "sidebar_label": "Extension"
+      },
+      "version-5.0.2-fatal": {
+        "title": "Fatal",
+        "sidebar_label": "Fatal"
+      },
+      "version-5.0.2-framework-integrations": {
+        "title": "Framework integrations",
+        "sidebar_label": "Framework integrations"
+      },
+      "version-5.0.2-graphql": {
+        "title": "GraphQL",
+        "sidebar_label": "GraphQL"
+      },
+      "version-5.0.2-hemera-vs-seneca": {
+        "title": "Hemera Vs Seneca",
+        "sidebar_label": "Hemera Vs Seneca"
+      },
+      "version-5.0.2-installation": {
+        "title": "Installation",
+        "sidebar_label": "Installation"
+      },
+      "version-5.0.2-integration": {
+        "title": "Integration-test",
+        "sidebar_label": "Integration"
+      },
+      "version-5.0.2-logging": {
+        "title": "Logging",
+        "sidebar_label": "Logging"
+      },
+      "version-5.0.2-metadata": {
+        "title": "Metadata",
+        "sidebar_label": "Metadata"
+      },
+      "version-5.0.2-middleware": {
+        "title": "Middleware",
+        "sidebar_label": "Middleware"
+      },
+      "version-5.0.2-monitoring": {
+        "title": "Monitoring",
+        "sidebar_label": "Monitoring"
+      },
+      "version-5.0.2-nats-limit": {
+        "title": "NATS limits",
+        "sidebar_label": "NATS characteristics"
+      },
+      "version-5.0.2-pattern-matching": {
+        "title": "Pattern matching",
+        "sidebar_label": "Pattern matching"
+      },
+      "version-5.0.2-publish-susbcribe": {
+        "title": "Publish and Subscribe",
+        "sidebar_label": "Publish & Subscribe"
+      },
+      "version-5.0.2-reference": {
+        "title": "Reference",
+        "sidebar_label": "Reference"
+      },
+      "version-5.0.2-request-reply": {
+        "title": "Request and Reply",
+        "sidebar_label": "Request & Reply"
+      },
+      "version-5.0.2-timeout": {
+        "title": "Timeout",
+        "sidebar_label": "Timeouts"
+      },
+      "version-5.0.2-unit": {
+        "title": "Unit-test",
+        "sidebar_label": "Unit"
+      },
+      "version-5.0.2-what-is-hemera": {
+        "title": "What is Hemera?",
+        "sidebar_label": "What is Hemera?"
+      },
+      "version-5.1.0-api-versioning": {
+        "title": "Api versioning",
+        "sidebar_label": "Api versioning"
+      },
+      "version-5.1.0-bridge": {
+        "title": "Transport bridge",
+        "sidebar_label": "Bridge"
+      },
+      "version-5.1.0-cli": {
+        "title": "Hemera cli",
+        "sidebar_label": "Cli"
+      },
+      "version-5.1.0-clustering": {
+        "title": "Clustering",
+        "sidebar_label": "Clustering"
+      },
+      "version-5.1.0-codec": {
+        "title": "Codec",
+        "sidebar_label": "Codec"
+      },
+      "version-5.1.0-config": {
+        "title": "Hemera config",
+        "sidebar_label": "Config"
+      },
+      "version-5.1.0-context": {
+        "title": "Context",
+        "sidebar_label": "Context"
+      },
+      "version-5.1.0-decorator": {
+        "title": "Decorators",
+        "sidebar_label": "Decorators"
+      },
+      "version-5.1.0-delegate": {
+        "title": "Delegate",
+        "sidebar_label": "Delegate"
+      },
+      "version-5.1.0-docker": {
+        "title": "Docker",
+        "sidebar_label": "Docker"
+      },
+      "version-5.1.0-error-event": {
+        "title": "Response error events",
+        "sidebar_label": "Events"
+      },
+      "version-5.1.0-event": {
+        "title": "Events",
+        "sidebar_label": "Events"
+      },
+      "version-5.1.0-extension": {
+        "title": "Extension",
+        "sidebar_label": "Extension"
+      },
+      "version-5.1.0-fatal": {
+        "title": "Fatal",
+        "sidebar_label": "Fatal"
+      },
+      "version-5.1.0-framework-integrations": {
+        "title": "Framework integrations",
+        "sidebar_label": "Framework integrations"
+      },
+      "version-5.1.0-graphql": {
+        "title": "GraphQL",
+        "sidebar_label": "GraphQL"
+      },
+      "version-5.1.0-hemera-vs-seneca": {
+        "title": "Hemera Vs Seneca",
+        "sidebar_label": "Hemera Vs Seneca"
+      },
+      "version-5.1.0-installation": {
+        "title": "Installation",
+        "sidebar_label": "Installation"
+      },
+      "version-5.1.0-integration": {
+        "title": "Integration-test",
+        "sidebar_label": "Integration"
+      },
+      "version-5.1.0-logging": {
+        "title": "Logging",
+        "sidebar_label": "Logging"
+      },
+      "version-5.1.0-metadata": {
+        "title": "Metadata",
+        "sidebar_label": "Metadata"
+      },
+      "version-5.1.0-middleware": {
+        "title": "Middleware",
+        "sidebar_label": "Middleware"
+      },
+      "version-5.1.0-monitoring": {
+        "title": "Monitoring",
+        "sidebar_label": "Monitoring"
+      },
+      "version-5.1.0-nats-limit": {
+        "title": "NATS limits",
+        "sidebar_label": "NATS characteristics"
+      },
+      "version-5.1.0-pattern-matching": {
+        "title": "Pattern matching",
+        "sidebar_label": "Pattern matching"
+      },
+      "version-5.1.0-payload-validation": {
+        "title": "Payload validation",
+        "sidebar_label": "Payload validation"
+      },
+      "version-5.1.0-plugin": {
+        "title": "Plugin",
+        "sidebar_label": "Plugin"
+      },
+      "version-5.1.0-publish-susbcribe": {
+        "title": "Publish and Subscribe",
+        "sidebar_label": "Publish & Subscribe"
+      },
+      "version-5.1.0-reference": {
+        "title": "Reference",
+        "sidebar_label": "Reference"
+      },
+      "version-5.1.0-timeout": {
+        "title": "Timeout",
+        "sidebar_label": "Timeouts"
+      },
+      "version-5.1.0-unit": {
+        "title": "Unit-test",
+        "sidebar_label": "Unit"
+      },
+      "version-5.1.0-what-is-hemera": {
+        "title": "What is Hemera?",
+        "sidebar_label": "What is Hemera?"
+      },
+      "version-5.1.2-api-versioning": {
+        "title": "Api versioning",
+        "sidebar_label": "Api versioning"
+      },
+      "version-5.1.2-bridge": {
+        "title": "Transport bridge",
+        "sidebar_label": "Bridge"
+      },
+      "version-5.1.2-cli": {
+        "title": "Hemera cli",
+        "sidebar_label": "Cli"
+      },
+      "version-5.1.2-clustering": {
+        "title": "Clustering",
+        "sidebar_label": "Clustering"
+      },
+      "version-5.1.2-codec": {
+        "title": "Codec",
+        "sidebar_label": "Codec"
+      },
+      "version-5.1.2-context": {
+        "title": "Context",
+        "sidebar_label": "Context"
+      },
+      "version-5.1.2-decorator": {
+        "title": "Decorators",
+        "sidebar_label": "Decorators"
+      },
+      "version-5.1.2-delegate": {
+        "title": "Delegate",
+        "sidebar_label": "Delegate"
+      },
+      "version-5.1.2-docker": {
+        "title": "Docker",
+        "sidebar_label": "Docker"
+      },
+      "version-5.1.2-ecosystem": {
+        "title": "Ecosystem",
+        "sidebar_label": "Ecosystem"
+      },
+      "version-5.1.2-error-event": {
+        "title": "Response error events",
+        "sidebar_label": "Events"
+      },
+      "version-5.1.2-event": {
+        "title": "Events",
+        "sidebar_label": "Events"
+      },
+      "version-5.1.2-extension": {
+        "title": "Extension",
+        "sidebar_label": "Extension"
+      },
+      "version-5.1.2-fatal": {
+        "title": "Fatal",
+        "sidebar_label": "Fatal"
+      },
+      "version-5.1.2-framework-integrations": {
+        "title": "Framework integrations",
+        "sidebar_label": "Framework integrations"
+      },
+      "version-5.1.2-graphql": {
+        "title": "GraphQL",
+        "sidebar_label": "GraphQL"
+      },
+      "version-5.1.2-hemera-vs-seneca": {
+        "title": "Hemera Vs Seneca",
+        "sidebar_label": "Hemera Vs Seneca"
+      },
+      "version-5.1.2-installation": {
+        "title": "Installation",
+        "sidebar_label": "Installation"
+      },
+      "version-5.1.2-integration": {
+        "title": "Integration-test",
+        "sidebar_label": "Integration"
+      },
+      "version-5.1.2-logging": {
+        "title": "Logging",
+        "sidebar_label": "Logging"
+      },
+      "version-5.1.2-metadata": {
+        "title": "Metadata",
+        "sidebar_label": "Metadata"
+      },
+      "version-5.1.2-middleware": {
+        "title": "Middleware",
+        "sidebar_label": "Middleware"
+      },
+      "version-5.1.2-monitoring": {
+        "title": "Monitoring",
+        "sidebar_label": "Monitoring"
+      },
+      "version-5.1.2-nats-limit": {
+        "title": "NATS limits",
+        "sidebar_label": "NATS characteristics"
+      },
+      "version-5.1.2-pattern-matching": {
+        "title": "Pattern matching",
+        "sidebar_label": "Pattern matching"
+      },
+      "version-5.1.2-publish-susbcribe": {
+        "title": "Publish and Subscribe",
+        "sidebar_label": "Publish & Subscribe"
+      },
+      "version-5.1.2-request-reply": {
+        "title": "Request and Reply",
+        "sidebar_label": "Request & Reply"
+      },
+      "version-5.1.2-timeout": {
+        "title": "Timeout",
+        "sidebar_label": "Timeouts"
+      },
+      "version-5.1.2-unit": {
+        "title": "Unit-test",
+        "sidebar_label": "Unit"
+      },
+      "version-5.1.2-what-is-hemera": {
+        "title": "What is Hemera?",
+        "sidebar_label": "What is Hemera?"
+      },
+      "version-5.2.0-api-versioning": {
+        "title": "Api versioning",
+        "sidebar_label": "Api versioning"
+      },
+      "version-5.2.0-bridge": {
+        "title": "Transport bridge",
+        "sidebar_label": "Bridge"
+      },
+      "version-5.2.0-cli": {
+        "title": "Hemera cli",
+        "sidebar_label": "Cli"
+      },
+      "version-5.2.0-clustering": {
+        "title": "Clustering",
+        "sidebar_label": "Clustering"
+      },
+      "version-5.2.0-codec": {
+        "title": "Codec",
+        "sidebar_label": "Codec"
+      },
+      "version-5.2.0-context": {
+        "title": "Context",
+        "sidebar_label": "Context"
+      },
+      "version-5.2.0-decorator": {
+        "title": "Decorators",
+        "sidebar_label": "Decorators"
+      },
+      "version-5.2.0-delegate": {
+        "title": "Delegate",
+        "sidebar_label": "Delegate"
+      },
+      "version-5.2.0-docker": {
+        "title": "Docker",
+        "sidebar_label": "Docker"
+      },
+      "version-5.2.0-ecosystem": {
+        "title": "Ecosystem",
+        "sidebar_label": "Ecosystem"
+      },
+      "version-5.2.0-error-event": {
+        "title": "Response error events",
+        "sidebar_label": "Events"
+      },
+      "version-5.2.0-event": {
+        "title": "Events",
+        "sidebar_label": "Events"
+      },
+      "version-5.2.0-extension": {
+        "title": "Extension",
+        "sidebar_label": "Extension"
+      },
+      "version-5.2.0-fatal": {
+        "title": "Fatal",
+        "sidebar_label": "Fatal"
+      },
+      "version-5.2.0-framework-integrations": {
+        "title": "Framework integrations",
+        "sidebar_label": "Framework integrations"
+      },
+      "version-5.2.0-graphql": {
+        "title": "GraphQL",
+        "sidebar_label": "GraphQL"
+      },
+      "version-5.2.0-hemera-vs-seneca": {
+        "title": "Hemera Vs Seneca",
+        "sidebar_label": "Hemera Vs Seneca"
+      },
+      "version-5.2.0-installation": {
+        "title": "Installation",
+        "sidebar_label": "Installation"
+      },
+      "version-5.2.0-integration": {
+        "title": "Integration-test",
+        "sidebar_label": "Integration"
+      },
+      "version-5.2.0-logging": {
+        "title": "Logging",
+        "sidebar_label": "Logging"
+      },
+      "version-5.2.0-metadata": {
+        "title": "Metadata",
+        "sidebar_label": "Metadata"
+      },
+      "version-5.2.0-middleware": {
+        "title": "Middleware",
+        "sidebar_label": "Middleware"
+      },
+      "version-5.2.0-monitoring": {
+        "title": "Monitoring",
+        "sidebar_label": "Monitoring"
+      },
+      "version-5.2.0-nats-limit": {
+        "title": "NATS limits",
+        "sidebar_label": "NATS characteristics"
+      },
+      "version-5.2.0-pattern-matching": {
+        "title": "Pattern matching",
+        "sidebar_label": "Pattern matching"
+      },
+      "version-5.2.0-plugin": {
+        "title": "Plugin",
+        "sidebar_label": "Plugin"
+      },
+      "version-5.2.0-publish-susbcribe": {
+        "title": "Publish and Subscribe",
+        "sidebar_label": "Publish & Subscribe"
+      },
+      "version-5.2.0-reference": {
+        "title": "Reference",
+        "sidebar_label": "Reference"
+      },
+      "version-5.2.0-request-reply": {
+        "title": "Request and Reply",
+        "sidebar_label": "Request & Reply"
+      },
+      "version-5.2.0-timeout": {
+        "title": "Timeout",
+        "sidebar_label": "Timeouts"
+      },
+      "version-5.2.0-unit": {
+        "title": "Unit-test",
+        "sidebar_label": "Unit"
+      },
+      "version-5.2.0-what-is-hemera": {
+        "title": "What is Hemera?",
+        "sidebar_label": "What is Hemera?"
+      },
+      "version-5.3.0-api-versioning": {
+        "title": "Api versioning",
+        "sidebar_label": "Api versioning"
+      },
+      "version-5.3.0-bridge": {
+        "title": "Transport bridge",
+        "sidebar_label": "Bridge"
+      },
+      "version-5.3.0-cli": {
+        "title": "Hemera cli",
+        "sidebar_label": "Cli"
+      },
+      "version-5.3.0-clustering": {
+        "title": "Clustering",
+        "sidebar_label": "Clustering"
+      },
+      "version-5.3.0-codec": {
+        "title": "Codec",
+        "sidebar_label": "Codec"
+      },
+      "version-5.3.0-context": {
+        "title": "Context",
+        "sidebar_label": "Context"
+      },
+      "version-5.3.0-delegate": {
+        "title": "Delegate",
+        "sidebar_label": "Delegate"
+      },
+      "version-5.3.0-docker": {
+        "title": "Docker",
+        "sidebar_label": "Docker"
+      },
+      "version-5.3.0-error-event": {
+        "title": "Response error events",
+        "sidebar_label": "Events"
+      },
+      "version-5.3.0-event": {
+        "title": "Events",
+        "sidebar_label": "Events"
+      },
+      "version-5.3.0-extension": {
+        "title": "Extension",
+        "sidebar_label": "Extension"
+      },
+      "version-5.3.0-fatal": {
+        "title": "Fatal",
+        "sidebar_label": "Fatal"
+      },
+      "version-5.3.0-graphql": {
+        "title": "GraphQL",
+        "sidebar_label": "GraphQL"
+      },
+      "version-5.3.0-hemera-vs-seneca": {
+        "title": "Hemera Vs Seneca",
+        "sidebar_label": "Hemera Vs Seneca"
+      },
+      "version-5.3.0-installation": {
+        "title": "Installation",
+        "sidebar_label": "Installation"
+      },
+      "version-5.3.0-logging": {
+        "title": "Logging",
+        "sidebar_label": "Logging"
+      },
+      "version-5.3.0-metadata": {
+        "title": "Metadata",
+        "sidebar_label": "Metadata"
+      },
+      "version-5.3.0-middleware": {
+        "title": "Middleware",
+        "sidebar_label": "Middleware"
+      },
+      "version-5.3.0-monitoring": {
+        "title": "Monitoring",
+        "sidebar_label": "Monitoring"
+      },
+      "version-5.3.0-nats-limit": {
+        "title": "NATS limits",
+        "sidebar_label": "NATS characteristics"
+      },
+      "version-5.3.0-pattern-matching": {
+        "title": "Pattern matching",
+        "sidebar_label": "Pattern matching"
+      },
+      "version-5.3.0-plugin": {
+        "title": "Plugin",
+        "sidebar_label": "Plugin"
+      },
+      "version-5.3.0-publish-susbcribe": {
+        "title": "Publish and Subscribe",
+        "sidebar_label": "Publish & Subscribe"
+      },
+      "version-5.3.0-reference": {
+        "title": "Reference",
+        "sidebar_label": "Reference"
+      },
+      "version-5.3.0-timeout": {
+        "title": "Timeout",
+        "sidebar_label": "Timeouts"
+      },
+      "version-5.3.0-unit": {
+        "title": "Unit-test",
+        "sidebar_label": "Unit"
+      },
+      "version-5.4.0-api-versioning": {
+        "title": "Api versioning",
+        "sidebar_label": "Api versioning"
+      },
+      "version-5.4.0-bridge": {
+        "title": "Transport bridge",
+        "sidebar_label": "Bridge"
+      },
+      "version-5.4.0-cli": {
+        "title": "Hemera cli",
+        "sidebar_label": "Cli"
+      },
+      "version-5.4.0-clustering": {
+        "title": "Clustering",
+        "sidebar_label": "Clustering"
+      },
+      "version-5.4.0-codec": {
+        "title": "Codec",
+        "sidebar_label": "Codec"
+      },
+      "version-5.4.0-context": {
+        "title": "Context",
+        "sidebar_label": "Context"
+      },
+      "version-5.4.0-delegate": {
+        "title": "Delegate",
+        "sidebar_label": "Delegate"
+      },
+      "version-5.4.0-docker": {
+        "title": "Docker",
+        "sidebar_label": "Docker"
+      },
+      "version-5.4.0-error-event": {
+        "title": "Response error events",
+        "sidebar_label": "Events"
+      },
+      "version-5.4.0-event": {
+        "title": "Events",
+        "sidebar_label": "Events"
+      },
+      "version-5.4.0-extension": {
+        "title": "Extension",
+        "sidebar_label": "Extension"
+      },
+      "version-5.4.0-fatal": {
+        "title": "Fatal",
+        "sidebar_label": "Fatal"
+      },
+      "version-5.4.0-graphql": {
+        "title": "GraphQL",
+        "sidebar_label": "GraphQL"
+      },
+      "version-5.4.0-hemera-vs-seneca": {
+        "title": "Hemera Vs Seneca",
+        "sidebar_label": "Hemera Vs Seneca"
+      },
+      "version-5.4.0-installation": {
+        "title": "Installation",
+        "sidebar_label": "Installation"
+      },
+      "version-5.4.0-logging": {
+        "title": "Logging",
+        "sidebar_label": "Logging"
+      },
+      "version-5.4.0-metadata": {
+        "title": "Metadata",
+        "sidebar_label": "Metadata"
+      },
+      "version-5.4.0-middleware": {
+        "title": "Middleware",
+        "sidebar_label": "Middleware"
+      },
+      "version-5.4.0-monitoring": {
+        "title": "Monitoring",
+        "sidebar_label": "Monitoring"
+      },
+      "version-5.4.0-nats-limit": {
+        "title": "NATS limits",
+        "sidebar_label": "NATS characteristics"
+      },
+      "version-5.4.0-pattern-matching": {
+        "title": "Pattern matching",
+        "sidebar_label": "Pattern matching"
+      },
+      "version-5.4.0-publish-susbcribe": {
+        "title": "Publish and Subscribe",
+        "sidebar_label": "Publish & Subscribe"
+      },
+      "version-5.4.0-timeout": {
+        "title": "Timeout",
+        "sidebar_label": "Timeouts"
+      },
+      "version-5.4.0-unit": {
+        "title": "Unit-test",
+        "sidebar_label": "Unit"
+      },
+      "version-5.4.1-bridge": {
+        "title": "Transport bridge",
+        "sidebar_label": "Bridge"
+      },
+      "version-5.4.1-cli": {
+        "title": "Hemera cli",
+        "sidebar_label": "Cli"
+      },
+      "version-5.4.1-clustering": {
+        "title": "Clustering",
+        "sidebar_label": "Clustering"
+      },
+      "version-5.4.1-codec": {
+        "title": "Codec",
+        "sidebar_label": "Codec"
+      },
+      "version-5.4.1-config": {
+        "title": "Hemera config",
+        "sidebar_label": "Config"
+      },
+      "version-5.4.1-context": {
+        "title": "Context",
+        "sidebar_label": "Context"
+      },
+      "version-5.4.1-delegate": {
+        "title": "Delegate",
+        "sidebar_label": "Delegate"
+      },
+      "version-5.4.1-docker": {
+        "title": "Docker",
+        "sidebar_label": "Docker"
+      },
+      "version-5.4.1-error-event": {
+        "title": "Response error events",
+        "sidebar_label": "Events"
+      },
+      "version-5.4.1-event": {
+        "title": "Events",
+        "sidebar_label": "Events"
+      },
+      "version-5.4.1-extension": {
+        "title": "Extension",
+        "sidebar_label": "Extension"
+      },
+      "version-5.4.1-fatal": {
+        "title": "Fatal",
+        "sidebar_label": "Fatal"
+      },
+      "version-5.4.1-framework-integrations": {
+        "title": "Framework integrations",
+        "sidebar_label": "Framework integrations"
+      },
+      "version-5.4.1-graphql": {
+        "title": "GraphQL",
+        "sidebar_label": "GraphQL"
+      },
+      "version-5.4.1-hemera-vs-seneca": {
+        "title": "Hemera Vs Seneca",
+        "sidebar_label": "Hemera Vs Seneca"
+      },
+      "version-5.4.1-installation": {
+        "title": "Installation",
+        "sidebar_label": "Installation"
+      },
+      "version-5.4.1-integration": {
+        "title": "Integration-test",
+        "sidebar_label": "Integration"
+      },
+      "version-5.4.1-metadata": {
+        "title": "Metadata",
+        "sidebar_label": "Metadata"
+      },
+      "version-5.4.1-middleware": {
+        "title": "Middleware",
+        "sidebar_label": "Middleware"
+      },
+      "version-5.4.1-nats-limit": {
+        "title": "NATS limits",
+        "sidebar_label": "NATS characteristics"
+      },
+      "version-5.4.1-pattern-matching": {
+        "title": "Pattern matching",
+        "sidebar_label": "Pattern matching"
+      },
+      "version-5.4.1-publish-susbcribe": {
+        "title": "Publish and Subscribe",
+        "sidebar_label": "Publish & Subscribe"
+      },
+      "version-5.4.1-timeout": {
+        "title": "Timeout",
+        "sidebar_label": "Timeouts"
+      },
+      "version-5.4.1-trace": {
+        "title": "Trace",
+        "sidebar_label": "Trace"
+      },
+      "version-5.4.1-unit": {
+        "title": "Unit-test",
+        "sidebar_label": "Unit"
+      },
+      "version-5.4.1-what-is-hemera": {
+        "title": "What is Hemera?",
+        "sidebar_label": "What is Hemera?"
+      },
+      "version-5.4.2-bridge": {
+        "title": "Transport bridge",
+        "sidebar_label": "Bridge"
+      },
+      "version-5.4.2-cli": {
+        "title": "Hemera cli",
+        "sidebar_label": "Cli"
+      },
+      "version-5.4.2-clustering": {
+        "title": "Clustering",
+        "sidebar_label": "Clustering"
+      },
+      "version-5.4.2-docker": {
+        "title": "Docker",
+        "sidebar_label": "Docker"
+      },
+      "version-5.4.2-error-event": {
+        "title": "Response error events",
+        "sidebar_label": "Events"
+      },
+      "version-5.4.2-event": {
+        "title": "Events",
+        "sidebar_label": "Events"
+      },
+      "version-5.4.2-extension": {
+        "title": "Extension",
+        "sidebar_label": "Extension"
+      },
+      "version-5.4.2-fatal": {
+        "title": "Fatal",
+        "sidebar_label": "Fatal"
+      },
+      "version-5.4.2-framework-integrations": {
+        "title": "Framework integrations",
+        "sidebar_label": "Framework integrations"
+      },
+      "version-5.4.2-graphql": {
+        "title": "GraphQL",
+        "sidebar_label": "GraphQL"
+      },
+      "version-5.4.2-hemera-vs-seneca": {
+        "title": "Hemera Vs Seneca",
+        "sidebar_label": "Hemera Vs Seneca"
+      },
+      "version-5.4.2-installation": {
+        "title": "Installation",
+        "sidebar_label": "Installation"
+      },
+      "version-5.4.2-integration": {
+        "title": "Integration-test",
+        "sidebar_label": "Integration"
+      },
+      "version-5.4.2-middleware": {
+        "title": "Middleware",
+        "sidebar_label": "Middleware"
+      },
+      "version-5.4.2-nats-limit": {
+        "title": "NATS limits",
+        "sidebar_label": "NATS characteristics"
+      },
+      "version-5.4.2-pattern-matching": {
+        "title": "Pattern matching",
+        "sidebar_label": "Pattern matching"
+      },
+      "version-5.4.2-publish-susbcribe": {
+        "title": "Publish and Subscribe",
+        "sidebar_label": "Publish & Subscribe"
+      },
+      "version-5.4.2-request": {
+        "title": "Request",
+        "sidebar_label": "Request"
+      },
+      "version-5.4.2-timeout": {
+        "title": "Timeout",
+        "sidebar_label": "Timeouts"
+      },
+      "version-5.4.2-trace": {
+        "title": "Trace",
+        "sidebar_label": "Trace"
+      },
+      "version-5.4.2-unit": {
+        "title": "Unit-test",
+        "sidebar_label": "Unit"
+      },
+      "version-5.4.2-what-is-hemera": {
+        "title": "What is Hemera?",
+        "sidebar_label": "What is Hemera?"
+      },
+      "version-5.5.0-bridge": {
+        "title": "Transport bridge",
+        "sidebar_label": "Bridge"
+      },
+      "version-5.5.0-cli": {
+        "title": "Hemera cli",
+        "sidebar_label": "Cli"
+      },
+      "version-5.5.0-clustering": {
+        "title": "Clustering",
+        "sidebar_label": "Clustering"
+      },
+      "version-5.5.0-docker": {
+        "title": "Docker",
+        "sidebar_label": "Docker"
+      },
+      "version-5.5.0-error-event": {
+        "title": "Response error events",
+        "sidebar_label": "Events"
+      },
+      "version-5.5.0-event": {
+        "title": "Events",
+        "sidebar_label": "Events"
+      },
+      "version-5.5.0-extension": {
+        "title": "Extension",
+        "sidebar_label": "Extension"
+      },
+      "version-5.5.0-fatal": {
+        "title": "Fatal",
+        "sidebar_label": "Fatal"
+      },
+      "version-5.5.0-framework-integrations": {
+        "title": "Framework integrations",
+        "sidebar_label": "Framework integrations"
+      },
+      "version-5.5.0-graphql": {
+        "title": "GraphQL",
+        "sidebar_label": "GraphQL"
+      },
+      "version-5.5.0-hemera-vs-seneca": {
+        "title": "Hemera Vs Seneca",
+        "sidebar_label": "Hemera Vs Seneca"
+      },
+      "version-5.5.0-installation": {
+        "title": "Installation",
+        "sidebar_label": "Installation"
+      },
+      "version-5.5.0-integration": {
+        "title": "Integration-test",
+        "sidebar_label": "Integration"
+      },
+      "version-5.5.0-logging": {
+        "title": "Logging",
+        "sidebar_label": "Logging"
+      },
+      "version-5.5.0-middleware": {
+        "title": "Middleware",
+        "sidebar_label": "Middleware"
+      },
+      "version-5.5.0-nats-limit": {
+        "title": "NATS limits",
+        "sidebar_label": "NATS characteristics"
+      },
+      "version-5.5.0-pattern-matching": {
+        "title": "Pattern matching",
+        "sidebar_label": "Pattern matching"
+      },
+      "version-5.5.0-publish-susbcribe": {
+        "title": "Publish and Subscribe",
+        "sidebar_label": "Publish & Subscribe"
+      },
+      "version-5.5.0-timeout": {
+        "title": "Timeout",
+        "sidebar_label": "Timeouts"
+      },
+      "version-5.5.0-unit": {
+        "title": "Unit-test",
+        "sidebar_label": "Unit"
+      },
+      "version-5.5.0-what-is-hemera": {
+        "title": "What is Hemera?",
+        "sidebar_label": "What is Hemera?"
+      },
+      "version-5.8.0-bridge": {
+        "title": "Transport bridge",
+        "sidebar_label": "Bridge"
+      },
+      "version-5.8.0-cli": {
+        "title": "Hemera cli",
+        "sidebar_label": "Cli"
+      },
+      "version-5.8.0-clustering": {
+        "title": "Clustering",
+        "sidebar_label": "Clustering"
+      },
+      "version-5.8.0-docker": {
+        "title": "Docker",
+        "sidebar_label": "Docker"
+      },
+      "version-5.8.0-error-event": {
+        "title": "Response error events",
+        "sidebar_label": "Events"
+      },
+      "version-5.8.0-event": {
+        "title": "Events",
+        "sidebar_label": "Events"
+      },
+      "version-5.8.0-extension": {
+        "title": "Extension",
+        "sidebar_label": "Extension"
+      },
+      "version-5.8.0-fatal": {
+        "title": "Fatal",
+        "sidebar_label": "Fatal"
+      },
+      "version-5.8.0-framework-integrations": {
+        "title": "Framework integrations",
+        "sidebar_label": "Framework integrations"
+      },
+      "version-5.8.0-graphql": {
+        "title": "GraphQL",
+        "sidebar_label": "GraphQL"
+      },
+      "version-5.8.0-hemera-vs-seneca": {
+        "title": "Hemera Vs Seneca",
+        "sidebar_label": "Hemera Vs Seneca"
+      },
+      "version-5.8.0-installation": {
+        "title": "Installation",
+        "sidebar_label": "Installation"
+      },
+      "version-5.8.0-integration": {
+        "title": "Integration-test",
+        "sidebar_label": "Integration"
+      },
+      "version-5.8.0-middleware": {
+        "title": "Middleware",
+        "sidebar_label": "Middleware"
+      },
+      "version-5.8.0-nats-limit": {
+        "title": "NATS limits",
+        "sidebar_label": "NATS characteristics"
+      },
+      "version-5.8.0-notfoundPattern": {
+        "title": "Not found pattern",
+        "sidebar_label": "Not found pattern"
+      },
+      "version-5.8.0-pattern-matching": {
+        "title": "Pattern matching",
+        "sidebar_label": "Pattern matching"
+      },
+      "version-5.8.0-plugin": {
+        "title": "Plugin",
+        "sidebar_label": "Plugin"
+      },
+      "version-5.8.0-publish-susbcribe": {
+        "title": "Publish and Subscribe",
+        "sidebar_label": "Publish & Subscribe"
+      },
+      "version-5.8.0-reference": {
+        "title": "Reference",
+        "sidebar_label": "Reference"
+      },
+      "version-5.8.0-timeout": {
+        "title": "Timeout",
+        "sidebar_label": "Timeouts"
+      },
+      "version-5.8.0-unit": {
+        "title": "Unit-test",
+        "sidebar_label": "Unit"
+      },
+      "version-5.8.0-what-is-hemera": {
+        "title": "What is Hemera?",
+        "sidebar_label": "What is Hemera?"
+      },
+      "version-5.8.3-installation": {
+        "title": "Installation",
+        "sidebar_label": "Installation"
+      },
+      "version-5.8.5-message-format": {
+        "title": "Message format",
+        "sidebar_label": "Message format"
+      },
+      "version-5.8.6-message-format": {
+        "title": "Message format",
+        "sidebar_label": "Message format"
+      },
+      "version-6.0.0-error-event": {
+        "title": "Response error events",
+        "sidebar_label": "Events"
+      },
+      "version-6.0.0-error-handling": {
+        "title": "Error-handling",
+        "sidebar_label": "Introduction"
+      },
+      "version-6.0.0-logging": {
+        "title": "Logging",
+        "sidebar_label": "Logging"
+      },
+      "version-6.0.1-reference": {
+        "title": "Reference",
+        "sidebar_label": "Reference"
+      }
+    },
+    "links": {
+      "Docs": "Docs",
+      "Help": "Help",
+      "Blog": "Blog",
+      "GitHub": "GitHub"
+    },
+    "categories": {
+      "Introduction": "Introduction",
+      "Basics": "Basics",
+      "Context": "Context",
+      "Plugins": "Plugins",
+      "Error handling": "Error handling",
+      "Testing": "Testing",
+      "Tooling": "Tooling",
+      "Advanced": "Advanced",
+      "API": "API",
+      "Api": "Api"
+    }
   },
   "pages-strings": {
     "Help Translate|recruit community translators for your project": "Help Translate",

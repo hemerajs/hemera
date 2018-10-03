@@ -13,7 +13,7 @@
   "dependencies": {
     "express": "4.16.x",
     "hemera-plugin": "^1.3.0",
-    "prom-client": "11.0.x"
+    "prom-client": "11.1.x"
   },
   "engines": {
     "node": ">=6"

@@ -40,6 +40,7 @@ init:
 install:
   - ps: Install-Product node $env:nodejs_version $env:Platform
   - ps: Set-ExecutionPolicy Unrestricted -Scope CurrentUser -Force
+  - ps: npm set audit false
   #- npm config get
   # upgrade node-gyp to dodge https://github.com/mapbox/node-pre-gyp/issues/209#issuecomment-307641388
   # and allow make node 4.x x86 builds work
