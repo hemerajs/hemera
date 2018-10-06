@@ -20,6 +20,7 @@ describe('Hemera default config', function() {
 
     var defaultConfig = {
       timeout: 2000, // Max execution time of a request
+      pluginTimeout: 0, // The number of millis to wait a plugin to load after which it will error
       tag: '',
       prettyLog: false,
       name: 'test', // node name

@@ -12,10 +12,10 @@ Hemera's plugin system based on the powerful [Avvio](https://github.com/mcollina
 
 Before we get into the plugin system of hemera you have to install a package called [`hemera-plugin`](https://github.com/hemerajs/hemera/tree/master/packages/hemera-plugin). This package can do some things for you:
 
-* Check the bare-minimum version of Hemera
-* Provide consistent interface to register plugins even when the api is changed
-* Pass metadata to intialize your plugin with correct dependencies, default options and name
-* Skip plugin encapsulation
+- Check the bare-minimum version of Hemera
+- Provide consistent interface to register plugins even when the api is changed
+- Pass metadata to intialize your plugin with correct dependencies, default options and name
+- Skip plugin encapsulation
 
 ## Create a plugin
 
@@ -42,7 +42,7 @@ const myPlugin = hp((hemera, opts, done) => {
 module.exports = myPlugin
 ```
 
-> Plugins are __encapsulated__ "_scoped_" by default. If you define an extension inside it will only effects the actions in your plugin. You can disable it if you set the hemera plugin option `scoped:false`.
+> Plugins are **encapsulated** "_scoped_" by default. If you define an extension inside it will only effects the actions in your plugin. You can disable it if you set the hemera plugin option `scoped:false`.
 
 ## Break encapsulation
 
@@ -50,16 +50,19 @@ Sometimes it is still useful to write a plugin which effects child as well as si
 
 ```js
 const hp = require('hemera-plugin')
-const myPlugin = hp((hemera, opts, done) => {
-  const topic = 'math'
+const myPlugin = hp(
+  (hemera, opts, done) => {
+    const topic = 'math'
 
-  hemera.ext('onClientPostRequest', function(ctx, next) {
-    // some code
-    next()
-  })
+    hemera.ext('onClientPostRequest', function(ctx, next) {
+      // some code
+      next()
+    })
 
-  done()
-}, { scoped: false })
+    done()
+  },
+  { scoped: false }
+)
 
 hemera.use(myPlugin)
 ```
@@ -157,11 +160,11 @@ hemera.use(myPlugin)
 
 ### Scoped sensitive settings
 
-* [Request/Response Extensions](extension.md#server-client-lifecycle)
-* [Decorators](decorator.md)
-* [Schema Compilers](payload-validation.md#use-your-custom-validator)
-* [Codecs](codec.md)
-* [Not found pattern](notfound-pattern.md)
+- [Request/Response Extensions](extension.md#server-client-lifecycle)
+- [Decorators](decorator.md)
+- [Schema Compilers](payload-validation.md#use-your-custom-validator)
+- [Codecs](codec.md)
+- [Not found pattern](notfound-pattern.md)
 
 ## Add plugin metadata
 
@@ -259,4 +262,18 @@ hemera.use(plugin).after(cb)
 // or
 hemera.use(plugin)
 hemera.after(cb)
+```
+
+## Plugin timeout
+
+If you need to handle a lot of plugins you could run into timeout issues e.g if your forgot to call the callback or when no promise was resolved. These errors are hard to track. In order to find out which plugin caused it you can specify a `pluginTimeout`.
+The error contains a property `fn` which contains your plugin functions all associated informations about your plugin.
+
+```js
+new Hemera(nats, { pluginTimeout: 100 })
+hemera.use(plugin)
+hemera.use(err => {
+  err.fn.name // the name of the plugin function
+  err.fn[Symbol.for('plugin-meta')] // all plugin informations like name or options
+})
 ```
