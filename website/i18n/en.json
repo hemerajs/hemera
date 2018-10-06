@@ -2420,6 +2420,10 @@
       "version-6.0.1-reference": {
         "title": "Reference",
         "sidebar_label": "Reference"
+      },
+      "version-6.1.0-plugin": {
+        "title": "Plugin",
+        "sidebar_label": "Plugin"
       }
     },
     "links": {
