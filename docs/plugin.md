@@ -266,8 +266,9 @@ hemera.after(cb)
 
 ## Plugin timeout
 
-If you need to handle a lot of plugins you could run into timeout issues e.g if your forgot to call the callback or when no promise was resolved. These errors are hard to track. In order to find out which plugin caused it you can specify a `pluginTimeout`.
-The error contains a property `fn` which contains your plugin functions all associated informations about your plugin.
+If you need to handle a lot of plugins you could run into timeout issues e.g if you forgot to call the callback of a plugin or when no promise was resolved. These errors are hard to track. In order to find out the cause you can specify a `pluginTimeout`.
+`pluginTimeout` is the number of millis to wait before a plugin is marked as "frozen".
+The error object has a property `fn` which contains your plugin function and all associated informations about your plugin.
 
 ```js
 new Hemera(nats, { pluginTimeout: 100 })
