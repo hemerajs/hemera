@@ -2424,6 +2424,10 @@
       "version-6.1.0-plugin": {
         "title": "Plugin",
         "sidebar_label": "Plugin"
+      },
+      "version-6.1.1-plugin": {
+        "title": "Plugin",
+        "sidebar_label": "Plugin"
       }
     },
     "links": {
