@@ -1,6 +1,6 @@
 {
   "name": "hemera-plugin",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "This is a plugin helper for hemera",
   "main": "index.js",
   "repository": {
@@ -19,6 +19,6 @@
     "nats-hemera": ">=5.3.0"
   },
   "devDependencies": {
-    "nats-hemera": "^6.0.1"
+    "nats-hemera": "^6.1.0"
   }
 }

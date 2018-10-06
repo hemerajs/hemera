@@ -1,6 +1,6 @@
 {
   "name": "hemera-knabe",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Send a report about your service dependencies",
   "main": "index.js",
   "repository": {
@@ -18,6 +18,6 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-plugin": "^1.3.1"
+    "hemera-plugin": "^1.3.2"
   }
 }
