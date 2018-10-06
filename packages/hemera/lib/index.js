@@ -156,7 +156,8 @@ class Hemera extends EventEmitter {
         close: 'shutdown',
         onClose: 'onShutdown',
         ready: 'bootstrap'
-      }
+      },
+      timeout: this._config.pluginTimeout
     })
 
     this[Symbols.childrenKey] = []
