@@ -1,7 +1,7 @@
 'use strict'
 
 function extRunner(functions, runner, state, cb) {
-  var i = 0
+  let i = 0
 
   function next(err) {
     if (err || i === functions.length) {
