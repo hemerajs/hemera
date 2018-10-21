@@ -88,4 +88,4 @@ Hemera is free for any use (MIT license). If you are in production don't miss th
 
 # Sponsorship
 
-Development of the hemera core module generously supported by contributions from individuals and corporations. If you are benefiting from hemera and would like to help keep the project financially sustainable, please visit [Dustin Deus](https://www.patreon.com/starptech) Patreon page, his [Paypal ME](https://www.paypal.me/payinstant/25) or contact him via [email](mailto:deusdustin@gmail.com).
+Development of the hemera core module generously supported by contributions from individuals and corporations. If you are benefiting from hemera and would like to help keep the project financially sustainable, please visit [Dustin Deus](https://www.patreon.com/starptech) Patreon page, his [Paypal Me](https://www.paypal.me/payinstant/25) or contact him via [email](mailto:deusdustin@gmail.com).
