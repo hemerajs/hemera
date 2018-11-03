@@ -32,7 +32,6 @@
     "queueing"
   ],
   "scripts": {
-    "precommit": "pretty-quick --staged && npm run lint && npm run test",
     "format": "pretty-quick",
     "lint": "eslint \"./packages/**/*.js\" \"./test/**/*.js\"",
     "lint:fix": "eslint --fix  \"./packages/**/*.js\" \"./test/**/*.js\"",
@@ -46,6 +45,11 @@
     "coverage": "npm run test && nyc report --reporter=html",
     "ci": "nyc mocha -r \"./test/hemera/bootstrap\" -t 5000 --exit \"./test/**/*.spec.js\" \"./packages/hemera-zipkin/test/**/*.js\" && nyc report --reporter=text-lcov | coveralls",
     "lock": "lerna exec -- npm i --package-lock-only"
+  },
+  "husky": {
+    "hooks": {
+      "precommit": "pretty-quick --staged && npm run lint && npm run test"
+    }
   },
   "engines": {
     "node": ">=6"
