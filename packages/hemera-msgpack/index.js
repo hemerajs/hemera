@@ -1,9 +1,11 @@
 'use strict'
 
 const Hp = require('hemera-plugin')
-const msgpack = require('msgpack-lite')
+const msgpack5 = require('msgpack5')
 
 function hemeraMsgpack(hemera, opts, done) {
+  const msgpack = msgpack5(opts)
+
   function decode(msg) {
     try {
       return {
