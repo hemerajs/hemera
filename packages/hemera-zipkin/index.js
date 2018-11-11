@@ -164,7 +164,7 @@ function hemeraZipkin(hemera, opts, done) {
   /**
    * Client received
    */
-  hemera.on('clientPostRequest', function(ctx) {
+  hemera.ext('onActFinished', function(ctx, next) {
     let meta = {
       service: ctx.trace$.service,
       name: ctx.trace$.method
@@ -187,6 +187,8 @@ function hemeraZipkin(hemera, opts, done) {
     )
 
     Tracer.sendClientRecv(zkTrace, meta)
+
+    next()
   })
 
   done()

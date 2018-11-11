@@ -12,7 +12,11 @@
 const Errors = require('./errors')
 const Errio = require('errio')
 const runExt = require('./extensionRunner').extRunner
-const serverExtIterator = require('./extensionRunner').serverExtIterator
+const {
+  responseExtIterator,
+  serverExtIterator,
+  errorExtIterator
+} = require('./extensionRunner')
 
 /**
  * @TODO rename hook to onServerSend
@@ -127,39 +131,39 @@ class Reply {
     if (msg instanceof Error) {
       runExt(
         self.hemera._extensionManager.onError,
-        serverExtIterator,
+        errorExtIterator,
         self.hemera,
-        _ => self.serverPreResponse()
+        _ => self.serverSend()
       )
     } else {
-      self.serverPreResponse()
+      self.serverSend()
     }
   }
   /**
    *
    */
-  serverPreResponse() {
+  serverSend() {
     const self = this
 
     self.hemera.emit('serverPreResponse', self.hemera)
 
     runExt(
-      self.hemera._extensionManager.onServerPreResponse,
+      self.hemera._extensionManager.onSend,
       serverExtIterator,
       self.hemera,
-      err => self._onServerPreResponseCompleted(err)
+      err => self._onSendCallback(err)
     )
   }
   /**
    *
    * @param {*} extensionError
    */
-  _onServerPreResponseCompleted(extensionError) {
+  _onSendCallback(extensionError) {
     const self = this
 
     if (extensionError) {
       const internalError = new Errors.HemeraError(
-        'onServerPreResponse extension',
+        'onSend extension',
         self.hemera.errorDetails
       ).causedBy(extensionError)
       self.log.error(internalError)
@@ -176,7 +180,14 @@ class Reply {
         self.hemera.request$
       )
 
-      self.hemera._transport.send(self._response.replyTo, msg.value)
+      self.hemera._transport.send(self._response.replyTo, msg.value, () => {
+        runExt(
+          self.hemera._extensionManager.onResponse,
+          responseExtIterator,
+          self.hemera,
+          err => self.log.error(err)
+        )
+      })
     }
   }
   /**

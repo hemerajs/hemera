@@ -54,7 +54,7 @@ const myPlugin = hp(
   (hemera, opts, done) => {
     const topic = 'math'
 
-    hemera.ext('onClientPostRequest', function(ctx, next) {
+    hemera.ext('onActFinished', function(ctx, next) {
       // some code
       next()
     })
@@ -76,7 +76,7 @@ const hp = require('hemera-plugin')
 const myPlugin = hp((hemera, opts, done) => {
   const topic = 'math'
 
-  hemera.ext('onClientPostRequest', function(ctx, next) {
+  hemera.ext('onActFinished', function(ctx, next) {
     // some code
     next()
   })
@@ -84,7 +84,7 @@ const myPlugin = hp((hemera, opts, done) => {
   hemera.use(
     hp((hemera, opts, done) => {
       // some code
-      // this plugin will be effected by the 'onClientPostRequest' extension
+      // this plugin will be effected by the 'onActFinished' extension
       done()
     })
   )
@@ -143,7 +143,7 @@ const myPlugin = hp(
   (hemera, opts, done) => {
     const topic = 'math'
 
-    hemera.ext('onServerPreRequest', function(ctx, next) {
+    hemera.ext('onRequest', function(ctx, next) {
       // some code
       next()
     })

@@ -18,19 +18,21 @@ class ExtensionManager {
   constructor() {
     this._stack = []
     this._types = [
-      'onClientPreRequest',
-      'onClientPostRequest',
-      'onServerPreHandler',
-      'onServerPreRequest',
-      'onServerPreResponse',
+      'onAct',
+      'onActFinished',
+      'preHandler',
+      'onRequest',
+      'onResponse',
+      'onSend',
       'onError'
     ]
-    this.onClientPreRequest = []
-    this.onClientPostRequest = []
+    this.onAct = []
+    this.onActFinished = []
 
-    this.onServerPreHandler = []
-    this.onServerPreRequest = []
-    this.onServerPreResponse = []
+    this.preHandler = []
+    this.onRequest = []
+    this.onResponse = []
+    this.onSend = []
     this.onError = []
   }
 
@@ -74,13 +76,13 @@ class ExtensionManager {
    */
   static build(e) {
     const extensions = new ExtensionManager()
-    extensions.onClientPreRequest = e.onClientPreRequest.slice()
-    extensions.onClientPostRequest = e.onClientPostRequest.slice()
+    extensions.onAct = e.onAct.slice()
+    extensions.onActFinished = e.onActFinished.slice()
 
-    extensions.onServerPreHandler = e.onServerPreHandler.slice()
-    extensions.onServerPreRequest = e.onServerPreRequest.slice()
-    extensions.onServerPreResponse = e.onServerPreResponse.slice()
-
+    extensions.preHandler = e.preHandler.slice()
+    extensions.onRequest = e.onRequest.slice()
+    extensions.onSend = e.onSend.slice()
+    extensions.onResponse = e.onResponse.slice()
     extensions.onError = e.onError.slice()
 
     return extensions

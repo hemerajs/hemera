@@ -17,7 +17,7 @@ hemera.ready((err: Error) => {
     const trace = this.trace$
   })
 
-  hemera.ext('onServerPreResponse', function(hemera, request, reply, next) {
+  hemera.ext('onSend', function(hemera, request, reply, next) {
     next()
   })
 

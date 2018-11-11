@@ -11,7 +11,7 @@ function hemeraJwtAuth(hemera, opts, done) {
     JwtError
   })
 
-  hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+  hemera.ext('preHandler', function(ctx, req, res, next) {
     // Get auth from server method
     const auth = ctx.matchedAction.schema.auth$
 

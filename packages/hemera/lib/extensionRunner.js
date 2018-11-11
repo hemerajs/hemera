@@ -28,6 +28,14 @@ function extRunner(functions, runner, state, cb) {
   next()
 }
 
+function responseExtIterator(fn, state, next) {
+  return fn(state, state.reply, next)
+}
+
+function errorExtIterator(fn, state, next) {
+  return fn(state, state.request, state.reply, state.reply.error, next)
+}
+
 function serverExtIterator(fn, state, next) {
   return fn(state, state.request, state.reply, next)
 }
@@ -36,4 +44,10 @@ function clientExtIterator(fn, state, next) {
   return fn(state, next)
 }
 
-module.exports = { extRunner, serverExtIterator, clientExtIterator }
+module.exports = {
+  extRunner,
+  serverExtIterator,
+  clientExtIterator,
+  responseExtIterator,
+  errorExtIterator
+}

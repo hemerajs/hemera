@@ -13,7 +13,7 @@ function hemeraKnabe(hemera, opts, done) {
   })
 
   // add all consumers
-  hemera.ext('onClientPreRequest', (hemera, next) => {
+  hemera.ext('onAct', (hemera, next) => {
     if (dependencies.indexOf(hemera.trace$.service) === -1) {
       dependencies.push(hemera.trace$.service)
       if (opts.updates) {

@@ -21,7 +21,7 @@ const Errors = require('./errors')
  * @param {*} context
  * @param {*} next
  */
-function onClientPreRequest(context, next) {
+function onAct(context, next) {
   let pattern = context._pattern
 
   let parentContext = context._parentContext
@@ -132,7 +132,7 @@ function onClientPreRequest(context, next) {
  * @param {*} context
  * @param {*} next
  */
-function onClientPostRequest(context, next) {
+function onActFinished(context, next) {
   let msg = context.response.payload
 
   // pass to act context
@@ -173,8 +173,6 @@ function onClientPostRequest(context, next) {
     )
   }
 
-  context.emit('clientPostRequest', context)
-
   next()
 }
 
@@ -188,7 +186,7 @@ function onClientPostRequest(context, next) {
  * @param {any} next
  * @returns
  */
-function onServerPreRequest(context, req, reply, next) {
+function onRequest(context, req, reply, next) {
   let m = context._serverDecoder(context.request.payload)
 
   if (m.error) {
@@ -258,7 +256,7 @@ function onServerPreRequest(context, req, reply, next) {
   next()
 }
 
-function onServerPreResponse(context, req, reply, next) {
+function onSend(context, req, reply, next) {
   if (context._config.traceLog === true) {
     context.log = context.log.child({
       tag: context._config.tag,
@@ -295,7 +293,7 @@ function onServerPreResponse(context, req, reply, next) {
  * @param {*} reply
  * @param {*} next
  */
-function onServerPreRequestSchemaValidation(context, req, reply, next) {
+function onRequestSchemaValidation(context, req, reply, next) {
   if (context.matchedAction && context._schemaCompiler) {
     const schema = context.matchedAction.schema
     const ret = context._schemaCompiler(schema)(req.payload.pattern)
@@ -334,7 +332,7 @@ function onServerPreRequestSchemaValidation(context, req, reply, next) {
  * @param {*} reply
  * @param {*} next
  */
-function onServerPreResponseSchemaValidation(context, req, reply, next) {
+function onSendSchemaValidation(context, req, reply, next) {
   if (
     !reply.error &&
     context.matchedAction &&
@@ -382,7 +380,7 @@ function onServerPreResponseSchemaValidation(context, req, reply, next) {
  * @param {any} next
  * @returns
  */
-function onServerPreRequestLoadTest(context, req, reply, next) {
+function onRequestLoadTest(context, req, reply, next) {
   if (context._config.load.checkPolicy === true) {
     const error = context._loadPolicy.check()
     if (error) {
@@ -393,14 +391,11 @@ function onServerPreRequestLoadTest(context, req, reply, next) {
   next()
 }
 
-module.exports.onClientPreRequest = [onClientPreRequest]
-module.exports.onClientPostRequest = [onClientPostRequest]
-module.exports.onServerPreResponse = [
-  onServerPreResponseSchemaValidation,
-  onServerPreResponse
-]
-module.exports.onServerPreRequest = [
-  onServerPreRequest,
-  onServerPreRequestSchemaValidation,
-  onServerPreRequestLoadTest
+module.exports.onAct = [onAct]
+module.exports.onActFinished = [onActFinished]
+module.exports.onSend = [onSendSchemaValidation, onSend]
+module.exports.onRequest = [
+  onRequest,
+  onRequestSchemaValidation,
+  onRequestLoadTest
 ]

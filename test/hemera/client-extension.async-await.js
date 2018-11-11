@@ -16,7 +16,7 @@ describe('Client Extension Async / Await', function() {
     server.kill()
   })
 
-  it('Should not handle an error as rejected promise in onClientPreRequest', function(done) {
+  it('Should not handle an error as rejected promise in onAct', function(done) {
     let ext1 = Sinon.spy()
 
     const nats = require('nats').connect(authUrl)
@@ -24,7 +24,7 @@ describe('Client Extension Async / Await', function() {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onClientPreRequest', async function(ctx) {
+      hemera.ext('onAct', async function(ctx) {
         ext1()
         return new Error('test')
       })
@@ -53,7 +53,7 @@ describe('Client Extension Async / Await', function() {
     })
   })
 
-  it('Should not handle an error as rejected promise in onClientPreRequest', function(done) {
+  it('Should not handle an error as rejected promise in onAct', function(done) {
     let ext1 = Sinon.spy()
 
     const nats = require('nats').connect(authUrl)
@@ -61,7 +61,7 @@ describe('Client Extension Async / Await', function() {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onClientPreRequest', async function(ctx) {
+      hemera.ext('onAct', async function(ctx) {
         ext1()
         return new Error('test')
       })
@@ -90,7 +90,7 @@ describe('Client Extension Async / Await', function() {
     })
   })
 
-  it('Should not handle an error as rejected promise in onClientPostRequest', function(done) {
+  it('Should not handle an error as rejected promise in onActFinished', function(done) {
     let ext1 = Sinon.spy()
 
     const nats = require('nats').connect(authUrl)
@@ -98,7 +98,7 @@ describe('Client Extension Async / Await', function() {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onClientPostRequest', async function(ctx) {
+      hemera.ext('onActFinished', async function(ctx) {
         ext1()
         return new Error('test')
       })
@@ -127,7 +127,7 @@ describe('Client Extension Async / Await', function() {
     })
   })
 
-  it('Should not handle an error as rejected promise in onClientPostRequest', function(done) {
+  it('Should not handle an error as rejected promise in onActFinished', function(done) {
     let ext1 = Sinon.spy()
 
     const nats = require('nats').connect(authUrl)
@@ -135,7 +135,7 @@ describe('Client Extension Async / Await', function() {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onClientPostRequest', async function(ctx) {
+      hemera.ext('onActFinished', async function(ctx) {
         ext1()
         return new Error('test')
       })

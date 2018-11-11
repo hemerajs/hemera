@@ -134,7 +134,7 @@ describe('Streaming', function() {
 
     const results = []
 
-    hemera.ext('onServerPreRequest', (hemera, request, reply, next) => {
+    hemera.ext('onRequest', (hemera, request, reply, next) => {
       reply.send('a')
       next()
     })

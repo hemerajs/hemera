@@ -16,7 +16,7 @@ describe('Server Extension Async / Await', function() {
     server.kill()
   })
 
-  it('Should be able to reply an error in onServerPreHandler', function(done) {
+  it('Should be able to reply an error in preHandler', function(done) {
     let ext1 = Sinon.spy()
 
     const nats = require('nats').connect(authUrl)
@@ -24,7 +24,7 @@ describe('Server Extension Async / Await', function() {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreHandler', async function(ctx, req, res) {
+      hemera.ext('preHandler', async function(ctx, req, res) {
         ext1()
         res.send(new Error('test'))
       })
@@ -53,7 +53,7 @@ describe('Server Extension Async / Await', function() {
     })
   })
 
-  it('Should not handle an error as rejected promise in onServerPreHandler', function(done) {
+  it('Should not handle an error as rejected promise in preHandler', function(done) {
     let ext1 = Sinon.spy()
 
     const nats = require('nats').connect(authUrl)
@@ -61,7 +61,7 @@ describe('Server Extension Async / Await', function() {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreHandler', async function(ctx, req, res) {
+      hemera.ext('preHandler', async function(ctx, req, res) {
         ext1()
         return new Error('test')
       })
@@ -91,7 +91,7 @@ describe('Server Extension Async / Await', function() {
     })
   })
 
-  it('Should be able to reply an error in onServerPreRequest', function(done) {
+  it('Should be able to reply an error in onRequest', function(done) {
     let ext1 = Sinon.spy()
 
     const nats = require('nats').connect(authUrl)
@@ -99,7 +99,7 @@ describe('Server Extension Async / Await', function() {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreRequest', async function(ctx, req, res) {
+      hemera.ext('onRequest', async function(ctx, req, res) {
         ext1()
         res.send(new Error('test'))
       })
@@ -128,7 +128,7 @@ describe('Server Extension Async / Await', function() {
     })
   })
 
-  it('Should not handle an error as rejected promise in onServerPreRequest', function(done) {
+  it('Should not handle an error as rejected promise in onRequest', function(done) {
     let ext1 = Sinon.spy()
 
     const nats = require('nats').connect(authUrl)
@@ -136,7 +136,7 @@ describe('Server Extension Async / Await', function() {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreRequest', async function(ctx, req, res) {
+      hemera.ext('onRequest', async function(ctx, req, res) {
         ext1()
         return new Error('test')
       })
@@ -165,7 +165,7 @@ describe('Server Extension Async / Await', function() {
     })
   })
 
-  it('Should not handle an error as rejected promise in onServerPreResponse', function(done) {
+  it('Should not handle an error as rejected promise in onSend', function(done) {
     let ext1 = Sinon.spy()
 
     const nats = require('nats').connect(authUrl)
@@ -173,7 +173,7 @@ describe('Server Extension Async / Await', function() {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onServerPreResponse', async function(ctx, req, res) {
+      hemera.ext('onSend', async function(ctx, req, res) {
         ext1()
         return new Error('test')
       })

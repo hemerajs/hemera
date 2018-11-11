@@ -130,22 +130,10 @@ class Hemera extends EventEmitter {
     this._onAddHandlers = []
 
     this._extensionManager = new ExtensionManager()
-    this._extensionManager.add(
-      'onClientPreRequest',
-      DefaultExtensions.onClientPreRequest
-    )
-    this._extensionManager.add(
-      'onClientPostRequest',
-      DefaultExtensions.onClientPostRequest
-    )
-    this._extensionManager.add(
-      'onServerPreRequest',
-      DefaultExtensions.onServerPreRequest
-    )
-    this._extensionManager.add(
-      'onServerPreResponse',
-      DefaultExtensions.onServerPreResponse
-    )
+    this._extensionManager.add('onAct', DefaultExtensions.onAct)
+    this._extensionManager.add('onActFinished', DefaultExtensions.onActFinished)
+    this._extensionManager.add('onRequest', DefaultExtensions.onRequest)
+    this._extensionManager.add('onSend', DefaultExtensions.onSend)
 
     this._configureLogger()
 
@@ -828,10 +816,10 @@ class Hemera extends EventEmitter {
       hemera.matchedAction = null
 
       runExt(
-        hemera._extensionManager.onServerPreRequest,
+        hemera._extensionManager.onRequest,
         serverExtIterator,
         hemera,
-        err => hemera._onServerPreRequestCompleted(err)
+        err => hemera._onRequestCompleted(err)
       )
     }
 
@@ -863,12 +851,12 @@ class Hemera extends EventEmitter {
    * @param {any} value
    * @memberof Hemera
    */
-  _onServerPreRequestCompleted(extensionError) {
+  _onRequestCompleted(extensionError) {
     const self = this
 
     if (extensionError) {
       const internalError = new Errors.HemeraError(
-        'onServerPreRequest extension',
+        'onRequest extension',
         self.errorDetails
       ).causedBy(extensionError)
       self.log.error(internalError)
@@ -881,15 +869,15 @@ class Hemera extends EventEmitter {
     // check if a handler is registered with this pattern
     if (self.matchedAction) {
       self.emit('serverPreHandler', self)
-      if (self._extensionManager.onServerPreHandler.length) {
+      if (self._extensionManager.preHandler.length) {
         runExt(
-          self._extensionManager.onServerPreHandler,
+          self._extensionManager.preHandler,
           serverExtIterator,
           self,
-          err => self._onServerPreHandlerCompleted(err)
+          err => self._preHandlerCompleted(err)
         )
       } else {
-        self._onServerPreHandlerCompleted()
+        self._preHandlerCompleted()
       }
     } else {
       const internalError = new Errors.PatternNotFound(
@@ -909,12 +897,12 @@ class Hemera extends EventEmitter {
    * @param {any} extensionError
    * @memberof Hemera
    */
-  _onServerPreHandlerCompleted(extensionError) {
+  _preHandlerCompleted(extensionError) {
     const self = this
 
     if (extensionError) {
       const internalError = new Errors.HemeraError(
-        'onServerPreHandler extension',
+        'preHandler extension',
         self.errorDetails
       ).causedBy(extensionError)
       self.log.error(internalError)
@@ -1225,11 +1213,8 @@ class Hemera extends EventEmitter {
       return
     }
 
-    runExt(
-      self._extensionManager.onClientPostRequest,
-      clientExtIterator,
-      self,
-      err => self._onClientPostRequestCompleted(err)
+    runExt(self._extensionManager.onActFinished, clientExtIterator, self, err =>
+      self._onActFinishedCallback(err)
     )
   }
 
@@ -1239,13 +1224,13 @@ class Hemera extends EventEmitter {
    * @param {any} extensionError
    * @memberof Hemera
    */
-  _onClientPostRequestCompleted(extensionError) {
+  _onActFinishedCallback(extensionError) {
     const self = this
 
     if (extensionError) {
       let error = self.getRootError(extensionError)
       const internalError = new Errors.HemeraError(
-        'onClientPostRequest extension',
+        'onActFinished extension',
         self.errorDetails
       ).causedBy(extensionError)
       self.log.error(internalError)
@@ -1311,11 +1296,8 @@ class Hemera extends EventEmitter {
 
     if (cb) {
       hemera._execute = cb.bind(hemera)
-      runExt(
-        hemera._extensionManager.onClientPreRequest,
-        clientExtIterator,
-        hemera,
-        err => hemera._onClientPreRequestCompleted(err)
+      runExt(hemera._extensionManager.onAct, clientExtIterator, hemera, err =>
+        hemera._onActCallback(err)
       )
     } else {
       const evaluateResult = new Promise((resolve, reject) => {
@@ -1328,11 +1310,8 @@ class Hemera extends EventEmitter {
         }
       })
 
-      runExt(
-        hemera._extensionManager.onClientPreRequest,
-        clientExtIterator,
-        hemera,
-        err => hemera._onClientPreRequestCompleted(err)
+      runExt(hemera._extensionManager.onAct, clientExtIterator, hemera, err =>
+        hemera._onActCallback(err)
       )
 
       return evaluateResult.then(resp => {
@@ -1367,7 +1346,7 @@ class Hemera extends EventEmitter {
    * @param {any} err
    * @memberof Hemera
    */
-  _onClientPreRequestCompleted(err) {
+  _onActCallback(err) {
     const self = this
     let m = self._clientEncoder(self._message)
 
@@ -1390,9 +1369,9 @@ class Hemera extends EventEmitter {
       let error = self.getRootError(err)
       self.request.payload = null
       self.request.error = error
-      const internalError = new Errors.HemeraError(
-        'onClientPreRequest extension'
-      ).causedBy(err)
+      const internalError = new Errors.HemeraError('onAct extension').causedBy(
+        err
+      )
       self.log.error(internalError)
       self.emit('clientResponseError', error)
       self._execute(error)
@@ -1468,11 +1447,8 @@ class Hemera extends EventEmitter {
     self.response.error = error
     self.emit('clientResponseError', error)
 
-    runExt(
-      self._extensionManager.onClientPostRequest,
-      clientExtIterator,
-      self,
-      err => self._onClientTimeoutPostRequestCompleted(err)
+    runExt(self._extensionManager.onActFinished, clientExtIterator, self, err =>
+      self._onActTimeoutCallback(err)
     )
   }
 
@@ -1482,13 +1458,13 @@ class Hemera extends EventEmitter {
    * @param {any} err
    * @memberof Hemera
    */
-  _onClientTimeoutPostRequestCompleted(err) {
+  _onActTimeoutCallback(err) {
     const self = this
 
     if (err) {
       let error = self.getRootError(err)
       const internalError = new Errors.HemeraError(
-        'onClientPostRequest extension'
+        'onActFinished extension'
       ).causedBy(err)
       self.log.error(internalError)
       self.response.error = error

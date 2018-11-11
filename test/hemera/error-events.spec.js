@@ -15,7 +15,7 @@ describe('Response error events', function() {
     server.kill()
   })
 
-  it('onServerPreResponse extension error', function(done) {
+  it('onSend extension error', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -29,7 +29,7 @@ describe('Response error events', function() {
         spy()
       })
 
-      hemera.ext('onServerPreResponse', function(ctx, resp, reply, next) {
+      hemera.ext('onSend', function(ctx, resp, reply, next) {
         next(new Error('test'))
       })
 
@@ -59,7 +59,7 @@ describe('Response error events', function() {
     })
   })
 
-  it('onServerPreResponse extension error', function(done) {
+  it('onSend extension error', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -73,7 +73,7 @@ describe('Response error events', function() {
         spy()
       })
 
-      hemera.ext('onServerPreResponse', function(ctx, resp, req, next) {
+      hemera.ext('onSend', function(ctx, resp, req, next) {
         next(new Error('test'))
       })
 
@@ -105,7 +105,7 @@ describe('Response error events', function() {
     })
   })
 
-  it('onServerPreHandler extension error', function(done) {
+  it('preHandler extension error', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -119,7 +119,7 @@ describe('Response error events', function() {
         spy()
       })
 
-      hemera.ext('onServerPreHandler', function(ctx, resp, req, next) {
+      hemera.ext('preHandler', function(ctx, resp, req, next) {
         next(new Error('test'))
       })
 
@@ -151,7 +151,7 @@ describe('Response error events', function() {
     })
   })
 
-  it('onClientPostRequest extension error', function(done) {
+  it('onActFinished extension error', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -165,7 +165,7 @@ describe('Response error events', function() {
         spy()
       })
 
-      hemera.ext('onClientPostRequest', function(ctx, next) {
+      hemera.ext('onActFinished', function(ctx, next) {
         next(new Error('test'))
       })
 
@@ -197,7 +197,7 @@ describe('Response error events', function() {
     })
   })
 
-  it('onClientPreRequest extension error', function(done) {
+  it('onAct extension error', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -211,7 +211,7 @@ describe('Response error events', function() {
         spy()
       })
 
-      hemera.ext('onClientPreRequest', function(ctx, next) {
+      hemera.ext('onAct', function(ctx, next) {
         next(new Error('test'))
       })
 

@@ -261,7 +261,7 @@ describe('Plugin interface', function() {
 
     let myPlugin = Hp(
       function(hemera, options, done) {
-        hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+        hemera.ext('preHandler', function(ctx, req, res, next) {
           ext1()
           next()
         })
@@ -288,7 +288,7 @@ describe('Plugin interface', function() {
 
     let myPlugin2 = Hp(
       function(hemera, options, done) {
-        hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+        hemera.ext('preHandler', function(ctx, req, res, next) {
           ext2()
           next()
         })
@@ -340,7 +340,7 @@ describe('Plugin interface', function() {
     )
 
     let myPlugin = Hp(function(hemera, options, done) {
-      hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+      hemera.ext('preHandler', function(ctx, req, res, next) {
         ext1()
         next()
       })
@@ -349,7 +349,7 @@ describe('Plugin interface', function() {
     hemera.use(myPlugin)
 
     let myPlugin2 = Hp(function(hemera, options, done) {
-      hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+      hemera.ext('preHandler', function(ctx, req, res, next) {
         ext2()
         next()
       })
@@ -386,7 +386,7 @@ describe('Plugin interface', function() {
     let ext3 = Sinon.spy()
 
     let myPlugin = Hp(function(hemera, options, done) {
-      hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+      hemera.ext('preHandler', function(ctx, req, res, next) {
         ext1()
         next()
       })
@@ -401,7 +401,7 @@ describe('Plugin interface', function() {
           })
         }
       )
-      hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+      hemera.ext('preHandler', function(ctx, req, res, next) {
         ext2()
         next()
       })
@@ -411,7 +411,7 @@ describe('Plugin interface', function() {
     hemera.use(myPlugin)
 
     let myPlugin2 = Hp(function(hemera, options, done) {
-      hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+      hemera.ext('preHandler', function(ctx, req, res, next) {
         ext3()
         next()
       })
@@ -449,13 +449,13 @@ describe('Plugin interface', function() {
     let ext3 = Sinon.spy()
     let ext4 = Sinon.spy()
 
-    hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+    hemera.ext('preHandler', function(ctx, req, res, next) {
       ext1()
       next()
     })
 
     let myPlugin = Hp(function(hemera, options, done) {
-      hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+      hemera.ext('preHandler', function(ctx, req, res, next) {
         ext2()
         next()
       })
@@ -473,7 +473,7 @@ describe('Plugin interface', function() {
       )
 
       let myPlugin2 = Hp(function(hemera, options, done) {
-        hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+        hemera.ext('preHandler', function(ctx, req, res, next) {
           ext3()
           next()
         })
@@ -488,7 +488,7 @@ describe('Plugin interface', function() {
     hemera.use(myPlugin)
 
     function plugin3(hemera, options, done) {
-      hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+      hemera.ext('preHandler', function(ctx, req, res, next) {
         ext4()
         next()
       })

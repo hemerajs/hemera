@@ -38,7 +38,7 @@ describe('Extension error', function() {
 
     hemera.ready(() => {
       try {
-        hemera.ext('onServerPreHandler', 'foo')
+        hemera.ext('preHandler', 'foo')
       } catch (e) {
         expect(e.name).to.be.equals('HemeraError')
         expect(e.message).to.be.equals('Extension handler must be a function')

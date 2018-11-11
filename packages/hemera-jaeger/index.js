@@ -49,7 +49,7 @@ function hemeraOpentracing(hemera, opts, done) {
     tracer
   })
 
-  hemera.on('serverPreRequest', hemera => {
+  hemera.ext('onRequest', (hemera, request, reply, next) => {
     let rootSpan = tracer.extract(
       Opentracing.FORMAT_TEXT_MAP,
       hemera.trace$[tracingKey]
@@ -73,17 +73,31 @@ function hemeraOpentracing(hemera, opts, done) {
     addContextTags(span, hemera, 'delegate$', opts.delegateTags)
 
     hemera[jaegerContextKey] = span
+
+    next()
   })
 
-  hemera.on('serverPreResponse', function(hemera) {
+  hemera.ext('onSend', (hemera, request, reply, next) => {
     const span = hemera[jaegerContextKey]
 
     addContextTags(span, hemera, 'delegate$', opts.delegateTags)
 
+    if (reply.error) {
+      span.setTag(Opentracing.Tags.ERROR, true)
+      span.log({
+        event: 'error',
+        'error.object': reply.error,
+        message: reply.error.message,
+        stack: reply.error.stack
+      })
+    }
+
     span.finish()
+
+    next()
   })
 
-  hemera.on('clientPreRequest', hemera => {
+  hemera.ext('onAct', (hemera, next) => {
     let span
 
     if (hemera[jaegerContextKey]) {
@@ -124,44 +138,13 @@ function hemeraOpentracing(hemera, opts, done) {
     )
 
     hemera[jaegerContextKey] = span
+
+    next()
   })
 
-  hemera.on('clientPostRequest', hemera => {
+  hemera.ext('onActFinished', (hemera, next) => {
     hemera[jaegerContextKey].finish()
-  })
-
-  hemera.on('serverResponseError', function(err) {
-    let span = tracer.startSpan(
-      `${tracePrefix} Event - serverResponseError - ${this.trace$.method}`,
-      {
-        childOf: this[jaegerContextKey].context()
-      }
-    )
-    span.setTag(Opentracing.Tags.ERROR, true)
-    span.log({
-      event: 'error',
-      'error.object': err,
-      message: err.message,
-      stack: err.stack
-    })
-    span.finish()
-  })
-
-  hemera.on('clientResponseError', function(err) {
-    let span = tracer.startSpan(
-      `${tracePrefix} Event - clientResponseError - ${this.trace$.method}`,
-      {
-        childOf: this[jaegerContextKey].context()
-      }
-    )
-    span.setTag(Opentracing.Tags.ERROR, true)
-    span.log({
-      event: 'error',
-      'error.object': err,
-      message: err.message,
-      stack: err.stack
-    })
-    span.finish()
+    next()
   })
 
   done()

@@ -8,16 +8,16 @@ const hemera = new Hemera(nats, {
 })
 
 hemera.ready(() => {
-  hemera.ext('onServerPreRequest', function(hemera, request, reply, next) {
-    console.log('onServerPreRequest')
+  hemera.ext('onRequest', function(hemera, request, reply, next) {
+    console.log('onRequest')
     next()
   })
-  hemera.ext('onServerPreHandler', function(hemera, request, reply, next) {
-    console.log('onServerPreHandler')
+  hemera.ext('preHandler', function(hemera, request, reply, next) {
+    console.log('preHandler')
     next()
   })
-  hemera.ext('onServerPreResponse', function(hemera, request, reply, next) {
-    console.log('onServerPreResponse')
+  hemera.ext('onSend', function(hemera, request, reply, next) {
+    console.log('onSend')
     next()
   })
 

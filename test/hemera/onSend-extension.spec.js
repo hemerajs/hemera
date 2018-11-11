@@ -1,6 +1,6 @@
 'use strict'
 
-describe('onError extension', function() {
+describe('onSend extension', function() {
   var PORT = 6242
   var authUrl = 'nats://localhost:' + PORT
   var server
@@ -15,15 +15,13 @@ describe('onError extension', function() {
     server.kill()
   })
 
-  it('Should be able to add onError extension handler', function(done) {
+  it('Should be able to add onSend extension handler', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
     let spy = Sinon.spy()
-    hemera.ext('onError', (ctx, request, reply, error, next) => {
+    hemera.ext('onSend', (state, request, reply, next) => {
       spy()
-      expect(error.name).to.be.equals('Error')
-      expect(error.message).to.be.equals('TEST')
       next()
     })
 
@@ -34,7 +32,7 @@ describe('onError extension', function() {
           cmd: 'send'
         },
         (resp, cb) => {
-          cb(new Error('TEST'))
+          cb()
         }
       )
 
@@ -44,9 +42,7 @@ describe('onError extension', function() {
           cmd: 'send'
         },
         (err, resp) => {
-          expect(err).to.be.exists()
-          expect(err.name).to.be.equals('Error')
-          expect(err.message).to.be.equals('TEST')
+          expect(err).to.be.not.exists()
           expect(spy.calledOnce).to.be.equals(true)
           hemera.close(done)
         }
@@ -62,9 +58,9 @@ describe('onError extension', function() {
     const spyPlugin2ExtensionHandler = Sinon.spy()
 
     let plugin1 = function(hemera, options, done) {
-      hemera.ext('onError', function(ctx, request, reply, error, next) {
-        next()
+      hemera.ext('onSend', (state, request, reply, next) => {
         spyPlugin1ExtensionHandler()
+        next()
       })
 
       hemera.add(
@@ -73,7 +69,7 @@ describe('onError extension', function() {
           topic: 'math'
         },
         (resp, cb) => {
-          cb(new Error('test'))
+          cb()
         }
       )
 
@@ -83,9 +79,9 @@ describe('onError extension', function() {
     hemera.use(plugin1)
 
     let plugin2 = function(hemera, options, done) {
-      hemera.ext('onError', function(ctx, request, reply, error, next) {
-        next()
+      hemera.ext('onSend', (state, request, reply, next) => {
         spyPlugin2ExtensionHandler()
+        next()
       })
 
       hemera.add(
@@ -94,7 +90,7 @@ describe('onError extension', function() {
           topic: 'math'
         },
         (resp, cb) => {
-          cb(new Error('test'))
+          cb()
         }
       )
 
@@ -110,9 +106,7 @@ describe('onError extension', function() {
           cmd: 'foo'
         },
         (err, resp) => {
-          expect(err).to.be.exists()
-          expect(err.name).to.be.equals('Error')
-          expect(err.message).to.be.equals('test')
+          expect(err).to.be.not.exists()
           expect(spyPlugin1ExtensionHandler.calledOnce).to.be.equals(true)
           expect(spyPlugin2ExtensionHandler.called).to.be.equals(false)
           hemera.close(done)

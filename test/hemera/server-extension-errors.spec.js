@@ -15,7 +15,7 @@ describe('Server Extension errors', function() {
     server.kill()
   })
 
-  it('Should be able to pass a custom super error to onServerPreRequest', function(done) {
+  it('Should be able to pass a custom super error to onRequest', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -29,7 +29,7 @@ describe('Server Extension errors', function() {
         spy()
       })
 
-      hemera.ext('onServerPreRequest', function(ctx, req, res, next) {
+      hemera.ext('onRequest', function(ctx, req, res, next) {
         next(new UnauthorizedError('test'))
       })
 
@@ -71,7 +71,7 @@ describe('Server Extension errors', function() {
     })
   })
 
-  it('Should be able to pass an error to onServerPreRequest', function(done) {
+  it('Should be able to pass an error to onRequest', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -84,7 +84,7 @@ describe('Server Extension errors', function() {
         expect(err.message).to.be.equals('test')
         spy()
       })
-      hemera.ext('onServerPreRequest', function(ctx, req, res, next) {
+      hemera.ext('onRequest', function(ctx, req, res, next) {
         next(new Error('test'))
       })
 
@@ -139,7 +139,7 @@ describe('Server Extension errors', function() {
         expect(err.message).to.be.equals('test')
         spy()
       })
-      hemera.ext('onServerPreRequest', function(ctx, req, res) {
+      hemera.ext('onRequest', function(ctx, req, res) {
         return Promise.reject(new Error('test'))
       })
 
@@ -177,7 +177,7 @@ describe('Server Extension errors', function() {
     })
   })
 
-  it('Should be able to pass an error to onServerPreHandler', function(done) {
+  it('Should be able to pass an error to preHandler', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -190,7 +190,7 @@ describe('Server Extension errors', function() {
         expect(err.message).to.be.equals('test')
         spy()
       })
-      hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+      hemera.ext('preHandler', function(ctx, req, res, next) {
         next(new Error('test'))
       })
 
@@ -232,7 +232,7 @@ describe('Server Extension errors', function() {
     })
   })
 
-  it('Should be able to pass a custom super error to onServerPreResponse', function(done) {
+  it('Should be able to pass a custom super error to onSend', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -244,7 +244,7 @@ describe('Server Extension errors', function() {
         expect(err.message).to.be.equals('test')
         hemera.close(done)
       })
-      hemera.ext('onServerPreResponse', function(ctx, req, res, next) {
+      hemera.ext('onSend', function(ctx, req, res, next) {
         next(new UnauthorizedError('test'))
       })
 
@@ -273,7 +273,7 @@ describe('Server Extension errors', function() {
     })
   })
 
-  it('Should be able to pass an error to onServerPreResponse', function(done) {
+  it('Should be able to pass an error to onSend', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -285,7 +285,7 @@ describe('Server Extension errors', function() {
         expect(err.message).to.be.equals('test')
         hemera.close(done)
       })
-      hemera.ext('onServerPreResponse', function(ctx, req, res, next) {
+      hemera.ext('onSend', function(ctx, req, res, next) {
         next(new Error('test'))
       })
 

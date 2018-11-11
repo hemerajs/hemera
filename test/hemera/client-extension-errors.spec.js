@@ -15,13 +15,13 @@ describe('Client Extension errors', function() {
     server.kill()
   })
 
-  it('Should be able to pass a super error to onClientPostRequest', function(done) {
+  it('Should be able to pass a super error to onActFinished', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onClientPostRequest', function(ctx, next) {
+      hemera.ext('onActFinished', function(ctx, next) {
         next(new UnauthorizedError('test'))
       })
       hemera.add(
@@ -50,13 +50,13 @@ describe('Client Extension errors', function() {
     })
   })
 
-  it('Should be able to pass an error to onClientPostRequest', function(done) {
+  it('Should be able to pass an error to onActFinished', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onClientPostRequest', function(ctx, next) {
+      hemera.ext('onActFinished', function(ctx, next) {
         next(new Error('test'))
       })
 
@@ -87,13 +87,13 @@ describe('Client Extension errors', function() {
     })
   })
 
-  it('Should be able to pass a custom super error to onClientPreRequest', function(done) {
+  it('Should be able to pass a custom super error to onAct', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onClientPreRequest', function(ctx, next) {
+      hemera.ext('onAct', function(ctx, next) {
         next(new UnauthorizedError('test'))
       })
 
@@ -123,13 +123,13 @@ describe('Client Extension errors', function() {
     })
   })
 
-  it('Should be able to pass an error to onClientPreRequest', function(done) {
+  it('Should be able to pass an error to onAct', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onClientPreRequest', function(ctx, next) {
+      hemera.ext('onAct', function(ctx, next) {
         next(new Error('test'))
       })
 
