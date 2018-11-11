@@ -320,7 +320,7 @@ describe('Plugin interface', function() {
     })
   })
 
-  it('Should not be able to add extensions for upper scope inside plugins', function(done) {
+  it('Should not be able to add extensions for parent scope inside plugins', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

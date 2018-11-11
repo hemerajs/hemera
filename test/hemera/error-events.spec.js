@@ -19,13 +19,14 @@ describe('Response error events', function() {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
+    const spy = Sinon.spy()
 
     hemera.ready(() => {
       hemera.on('serverResponseError', function(err) {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Error')
         expect(err.message).to.be.equals('test')
-        hemera.close(done)
+        spy()
       })
 
       hemera.ext('onServerPreResponse', function(ctx, resp, reply, next) {
@@ -42,29 +43,37 @@ describe('Response error events', function() {
         }
       )
 
-      hemera.act({
-        topic: 'math',
-        cmd: 'add',
-        a: 1,
-        b: 2
-      })
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        err => {
+          expect(err).to.be.exists()
+          expect(spy.calledOnce).to.be.equals(true)
+          hemera.close(done)
+        }
+      )
     })
   })
 
-  it('onServerPreRequest extension error', function(done) {
+  it('onServerPreResponse extension error', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
+    const spy = Sinon.spy()
 
     hemera.ready(() => {
       hemera.on('serverResponseError', function(err) {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Error')
         expect(err.message).to.be.equals('test')
-        hemera.close(done)
+        spy()
       })
 
-      hemera.ext('onServerPreRequest', function(ctx, resp, req, next) {
+      hemera.ext('onServerPreResponse', function(ctx, resp, req, next) {
         next(new Error('test'))
       })
 
@@ -89,6 +98,8 @@ describe('Response error events', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('Error')
           expect(err.message).to.be.equals('test')
+          expect(spy.callCount).to.be.equals(1)
+          hemera.close(done)
         }
       )
     })
@@ -98,13 +109,14 @@ describe('Response error events', function() {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
+    const spy = Sinon.spy()
 
     hemera.ready(() => {
       hemera.on('serverResponseError', function(err) {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Error')
         expect(err.message).to.be.equals('test')
-        hemera.close(done)
+        spy()
       })
 
       hemera.ext('onServerPreHandler', function(ctx, resp, req, next) {
@@ -132,6 +144,8 @@ describe('Response error events', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('Error')
           expect(err.message).to.be.equals('test')
+          expect(spy.calledOnce).to.be.equals(true)
+          hemera.close(done)
         }
       )
     })
@@ -141,13 +155,14 @@ describe('Response error events', function() {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
+    const spy = Sinon.spy()
 
     hemera.ready(() => {
       hemera.on('clientResponseError', function(err) {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Error')
         expect(err.message).to.be.equals('test')
-        hemera.close(done)
+        spy()
       })
 
       hemera.ext('onClientPostRequest', function(ctx, next) {
@@ -175,6 +190,8 @@ describe('Response error events', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('Error')
           expect(err.message).to.be.equals('test')
+          expect(spy.calledOnce).to.be.equals(true)
+          hemera.close(done)
         }
       )
     })
@@ -184,13 +201,14 @@ describe('Response error events', function() {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
+    const spy = Sinon.spy()
 
     hemera.ready(() => {
       hemera.on('clientResponseError', function(err) {
         expect(err).to.be.exists()
         expect(err.name).to.be.equals('Error')
         expect(err.message).to.be.equals('test')
-        hemera.close(done)
+        spy()
       })
 
       hemera.ext('onClientPreRequest', function(ctx, next) {
@@ -218,6 +236,8 @@ describe('Response error events', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('Error')
           expect(err.message).to.be.equals('test')
+          expect(spy.calledOnce).to.be.equals(true)
+          hemera.close(done)
         }
       )
     })

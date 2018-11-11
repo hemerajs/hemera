@@ -22,7 +22,8 @@ class ExtensionManager {
       'onClientPostRequest',
       'onServerPreHandler',
       'onServerPreRequest',
-      'onServerPreResponse'
+      'onServerPreResponse',
+      'onError'
     ]
     this.onClientPreRequest = []
     this.onClientPostRequest = []
@@ -30,6 +31,7 @@ class ExtensionManager {
     this.onServerPreHandler = []
     this.onServerPreRequest = []
     this.onServerPreResponse = []
+    this.onError = []
   }
 
   /**
@@ -78,6 +80,8 @@ class ExtensionManager {
     extensions.onServerPreHandler = e.onServerPreHandler.slice()
     extensions.onServerPreRequest = e.onServerPreRequest.slice()
     extensions.onServerPreResponse = e.onServerPreResponse.slice()
+
+    extensions.onError = e.onError.slice()
 
     return extensions
   }

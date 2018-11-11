@@ -1,8 +1,7 @@
 'use strict'
 
 const Hp = require('hemera-plugin')
-const Jaeger = require('jaeger-client')
-const UDPSender = require('jaeger-client/dist/src/reporters/udp_sender').default
+const initTracer = require('jaeger-client').initTracer
 const Opentracing = require('opentracing')
 
 function addContextTags(span, ctx, key, tags) {
@@ -22,15 +21,16 @@ function addContextTags(span, ctx, key, tags) {
  * @returns
  */
 function hemeraOpentracing(hemera, opts, done) {
-  if (!opts.serviceName) {
-    return done(new Error('serviceName is required'))
+  if (!opts.config.serviceName) {
+    return done(new Error("The config property 'serviceName' is required"))
   }
 
-  const jaegerContextKey = Symbol('jaeger.opentracing')
+  const jaegerContextKey = Symbol.for('jaeger.spanContext')
   hemera.decorate(jaegerContextKey, null)
 
   const contextKey = 'opentracing'
   const tracingKey = 'opentracing'
+  const tracePrefix = 'Hemera'
 
   const tags = {
     HEMERA_PATTERN: 'hemera.pattern',
@@ -43,41 +43,21 @@ function hemeraOpentracing(hemera, opts, done) {
     HEMERA_CONTEXT: 'hemera.context'
   }
 
-  let sampler
-  if (opts.jaeger.sampler.type === 'RateLimiting') {
-    sampler = new Jaeger.RateLimitingSampler(opts.jaeger.sampler.options)
-  } else if (opts.jaeger.sampler.type === 'Probabilistic') {
-    sampler = new Jaeger.ProbabilisticSampler(opts.jaeger.sampler.options)
-  } else if (opts.jaeger.sampler.type === 'GuaranteedThroughput') {
-    sampler = new Jaeger.GuaranteedThroughputSampler(
-      opts.jaeger.sampler.options.lowerBound,
-      opts.jaeger.sampler.options.samplingRate
-    )
-  } else {
-    sampler = new Jaeger.ConstSampler(opts.jaeger.sampler.options)
-  }
-
-  const reporter = new Jaeger.RemoteReporter(
-    new UDPSender(opts.jaeger.reporter)
-  )
-  const tracer = new Jaeger.Tracer(
-    opts.serviceName,
-    reporter,
-    sampler,
-    opts.jaeger.options
-  )
+  const tracer = initTracer(opts.config, opts.options)
 
   hemera.decorate('jaeger', {
     tracer
   })
 
   hemera.on('serverPreRequest', hemera => {
-    let wireCtx = tracer.extract(
+    let rootSpan = tracer.extract(
       Opentracing.FORMAT_TEXT_MAP,
       hemera.trace$[tracingKey]
     )
 
-    let span = tracer.startSpan(hemera.trace$.method, { childOf: wireCtx })
+    let span = tracer.startSpan(`${tracePrefix} - ${hemera.trace$.method}`, {
+      childOf: rootSpan
+    })
 
     span.setTag(Opentracing.Tags.PEER_SERVICE, 'hemera')
     span.setTag(tags.HEMERA_SERVICE, hemera.trace$.service)
@@ -107,15 +87,15 @@ function hemeraOpentracing(hemera, opts, done) {
     let span
 
     if (hemera[jaegerContextKey]) {
-      span = tracer.startSpan(hemera.trace$.method, {
+      span = tracer.startSpan(`${tracePrefix} - ${hemera.trace$.method}`, {
         childOf: hemera[jaegerContextKey]
       })
     } else if (hemera.context$[contextKey]) {
-      span = tracer.startSpan(hemera.trace$.method, {
+      span = tracer.startSpan(`${tracePrefix} - ${hemera.trace$.method}`, {
         childOf: hemera.context$[contextKey]
       })
     } else {
-      span = tracer.startSpan(hemera.trace$.method)
+      span = tracer.startSpan(`${tracePrefix} - ${hemera.trace$.method}`)
     }
 
     // for cross process communication
@@ -151,21 +131,37 @@ function hemeraOpentracing(hemera, opts, done) {
   })
 
   hemera.on('serverResponseError', function(err) {
-    this[jaegerContextKey].log({
+    let span = tracer.startSpan(
+      `${tracePrefix} Event - serverResponseError - ${this.trace$.method}`,
+      {
+        childOf: this[jaegerContextKey].context()
+      }
+    )
+    span.setTag(Opentracing.Tags.ERROR, true)
+    span.log({
       event: 'error',
       'error.object': err,
       message: err.message,
       stack: err.stack
     })
+    span.finish()
   })
 
   hemera.on('clientResponseError', function(err) {
-    this[jaegerContextKey].log({
+    let span = tracer.startSpan(
+      `${tracePrefix} Event - clientResponseError - ${this.trace$.method}`,
+      {
+        childOf: this[jaegerContextKey].context()
+      }
+    )
+    span.setTag(Opentracing.Tags.ERROR, true)
+    span.log({
       event: 'error',
       'error.object': err,
       message: err.message,
       stack: err.stack
     })
+    span.finish()
   })
 
   done()
@@ -176,25 +172,6 @@ module.exports = Hp(hemeraOpentracing, {
   scoped: false,
   name: require('./package.json').name,
   options: {
-    delegateTags: [
-      {
-        key: 'query',
-        tag: 'hemera.db.query'
-      }
-    ],
-    jaeger: {
-      sampler: {
-        type: 'Const',
-        options: true
-      },
-      options: {
-        tags: {
-          'nodejs.version': process.versions.node
-        }
-      },
-      reporter: {
-        host: 'localhost'
-      }
-    }
+    delegateTags: []
   }
 })

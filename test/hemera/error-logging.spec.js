@@ -51,6 +51,7 @@ describe('Error logs', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('TimeoutError')
           expect(resp).to.be.undefined()
+          expect(logs[0].type).to.be.equals('Error')
           expect(logs[0].msg).to.be.equals(
             `Response error must be derivated from type 'Error' but got 'string'`
           )

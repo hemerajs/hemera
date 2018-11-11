@@ -124,7 +124,16 @@ class Reply {
       }
     }
 
-    self.serverPreResponse()
+    if (msg instanceof Error) {
+      runExt(
+        self.hemera._extensionManager.onError,
+        serverExtIterator,
+        self.hemera,
+        _ => self.serverPreResponse()
+      )
+    } else {
+      self.serverPreResponse()
+    }
   }
   /**
    *
