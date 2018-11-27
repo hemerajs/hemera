@@ -1013,7 +1013,7 @@ class Hemera extends EventEmitter {
     }
 
     // when sid was passed
-    if (typeof topic === 'string') {
+    if (typeof topic === 'string' || topic instanceof RegExp) {
       // when topic name was passed
       const subId = self._topics.get(topic)
 

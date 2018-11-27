@@ -212,6 +212,15 @@ describe('Unsubscribe NATS topic', function() {
         }
       )
 
+      hemera.add(
+        {
+          topic: '>'
+        },
+        (resp, cb) => {
+          cb()
+        }
+      )
+
       hemera.act(
         {
           topic: 'math',
