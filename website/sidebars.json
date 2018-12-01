@@ -10,7 +10,6 @@
       "extension",
       "logging",
       "decorator",
-      "event",
       "codec",
       "config"
     ],
@@ -29,7 +28,6 @@
       "timeout",
       "fatal",
       "propagation",
-      "error-event",
       "protection"
     ],
     "Testing": ["integration", "unit"],

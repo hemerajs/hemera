@@ -120,8 +120,6 @@ function onAct(context, next) {
 
   context._message = message
 
-  context.emit('clientPreRequest', context)
-
   next()
 }
 
@@ -227,7 +225,6 @@ function onRequest(context, req, reply, next) {
     // fallback to notFound action when defined
     context.matchedAction = context._router.lookup(context._notFoundPattern)
   }
-  context.emit('serverPreRequest', context)
 
   if (context._config.traceLog === true) {
     context.log = context.log.child({

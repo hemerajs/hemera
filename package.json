@@ -40,10 +40,10 @@
     "clean": "lerna clean",
     "publish": "lerna publish",
     "lerna": "lerna",
-    "test": "nyc mocha -b -r \"./test/hemera/bootstrap\" -t 5000 --exit \"./test/**/*.spec.js\" \"./packages/hemera-zipkin/test/**/*.js\" && npm run typescript",
+    "test": "nyc mocha -b -r \"./test/hemera/bootstrap\" -t 5000 --exit \"./test/**/*.spec.js\" && npm run typescript",
     "typescript": "tsc --project ./test/hemera/types/tsconfig.json",
     "coverage": "npm run test && nyc report --reporter=html",
-    "ci": "nyc mocha -r \"./test/hemera/bootstrap\" -t 5000 --exit \"./test/**/*.spec.js\" \"./packages/hemera-zipkin/test/**/*.js\" && nyc report --reporter=text-lcov | coveralls",
+    "ci": "nyc mocha -r \"./test/hemera/bootstrap\" -t 5000 --exit \"./test/**/*.spec.js\" && nyc report --reporter=text-lcov | coveralls",
     "lock": "lerna exec -- npm i --package-lock-only"
   },
   "husky": {

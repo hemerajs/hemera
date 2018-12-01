@@ -5,8 +5,6 @@ const hemera = new Hemera(nats.connect('nats://127.0.0.1:4242'), {
   logLevel: 'debug'
 })
 
-hemera.on('serverPreResponse', function(hemera) {
-})
 hemera.ext('onSend', function(hemera, request, reply, next) {
   next()
 })

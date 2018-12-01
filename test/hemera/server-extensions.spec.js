@@ -424,7 +424,7 @@ describe('Server Extensions', function() {
     })
   })
 
-  it('Should send the extension error in onSend instead previous extensions errors', function(done) {
+  it('Should send the first extension error even when an error in the onSend extensions occurs', function(done) {
     let preHandlerSpy = Sinon.spy()
     let onSend = Sinon.spy()
 
@@ -462,7 +462,7 @@ describe('Server Extensions', function() {
         (err, resp) => {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('Error')
-          expect(err.message).to.be.equals('test2')
+          expect(err.message).to.be.equals('test1')
           expect(resp).to.be.undefined()
           expect(preHandlerSpy.called).to.be.equals(true)
           expect(onSend.called).to.be.equals(true)

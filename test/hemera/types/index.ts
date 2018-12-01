@@ -10,13 +10,6 @@ hemera.ready((err: Error) => {
   hemera.ext('onClose', function(
     hemera: Hemera<Hemera.NoContext, Hemera.NoContext>
   ) {})
-
-  hemera.on('serverPreResponse', function(
-    hemera: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>
-  ) {
-    const trace = this.trace$
-  })
-
   hemera.ext('onSend', function(hemera, request, reply, next) {
     next()
   })

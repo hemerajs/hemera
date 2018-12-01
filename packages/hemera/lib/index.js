@@ -110,6 +110,7 @@ class Hemera extends EventEmitter {
     this._serverDecoder = DefaultDecoder.decode
     this._schemaCompiler = null
     this._responseSchemaCompiler = null
+    this._errorHandler = null
     this._idGenerator = Util.randomId
 
     // errio settings
@@ -478,6 +479,15 @@ class Hemera extends EventEmitter {
       )
     }
     this._responseSchemaCompiler = fn
+
+    return this
+  }
+
+  setErrorHandler(fn) {
+    if (typeof fn !== 'function') {
+      throw new Errors.HemeraError('ErrorHandler handler must be a function')
+    }
+    this._errorHandler = fn
 
     return this
   }
@@ -860,7 +870,6 @@ class Hemera extends EventEmitter {
         self.errorDetails
       ).causedBy(extensionError)
       self.log.error(internalError)
-      self.emit('serverResponseError', extensionError)
       self.reply.isError = true
       self.reply.send(extensionError)
       return
@@ -868,7 +877,6 @@ class Hemera extends EventEmitter {
 
     // check if a handler is registered with this pattern
     if (self.matchedAction) {
-      self.emit('serverPreHandler', self)
       if (self._extensionManager.preHandler.length) {
         runExt(
           self._extensionManager.preHandler,
@@ -885,7 +893,6 @@ class Hemera extends EventEmitter {
         self.errorDetails
       )
       self.log.error(internalError)
-      self.emit('serverResponseError', internalError)
       self.reply.isError = true
       self.reply.send(internalError)
     }
@@ -906,7 +913,6 @@ class Hemera extends EventEmitter {
         self.errorDetails
       ).causedBy(extensionError)
       self.log.error(internalError)
-      self.emit('serverResponseError', extensionError)
       self.reply.isError = true
       self.reply.send(extensionError)
       return
@@ -933,7 +939,6 @@ class Hemera extends EventEmitter {
         self.errorDetails
       ).causedBy(err)
       self.log.error(internalError)
-      self.emit('serverResponseError', err)
       self.reply.isError = true
       self.reply.send(err)
       return
@@ -1208,7 +1213,6 @@ class Hemera extends EventEmitter {
         self.errorDetails
       ).causedBy(self.response.error)
       self.log.error(internalError)
-      self.emit('clientResponseError', self.response.error)
       self._execute(self.response.error)
       return
     }
@@ -1234,14 +1238,12 @@ class Hemera extends EventEmitter {
         self.errorDetails
       ).causedBy(extensionError)
       self.log.error(internalError)
-      self.emit('clientResponseError', extensionError)
       self._execute(error)
       return
     }
 
     if (self.response.payload.error) {
       let error = Errio.fromObject(self.response.payload.error)
-      self.emit('clientResponseError', error)
       self._execute(error)
       return
     }
@@ -1360,7 +1362,6 @@ class Hemera extends EventEmitter {
         m.error
       )
       self.log.error(error)
-      self.emit('clientResponseError', m.error)
       self._execute(m.error)
       return
     }
@@ -1373,7 +1374,6 @@ class Hemera extends EventEmitter {
         err
       )
       self.log.error(internalError)
-      self.emit('clientResponseError', error)
       self._execute(error)
       return
     }
@@ -1445,7 +1445,6 @@ class Hemera extends EventEmitter {
     const error = new Errors.TimeoutError('Client timeout', self.errorDetails)
     self.log.error(error)
     self.response.error = error
-    self.emit('clientResponseError', error)
 
     runExt(self._extensionManager.onActFinished, clientExtIterator, self, err =>
       self._onActTimeoutCallback(err)
@@ -1468,7 +1467,6 @@ class Hemera extends EventEmitter {
       ).causedBy(err)
       self.log.error(internalError)
       self.response.error = error
-      self.emit('clientResponseError', error)
     }
 
     self._execute(self.response.error)

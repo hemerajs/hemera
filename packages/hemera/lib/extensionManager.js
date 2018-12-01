@@ -22,9 +22,8 @@ class ExtensionManager {
       'onActFinished',
       'preHandler',
       'onRequest',
-      'onResponse',
       'onSend',
-      'onError'
+      'onResponse'
     ]
     this.onAct = []
     this.onActFinished = []
@@ -33,7 +32,6 @@ class ExtensionManager {
     this.onRequest = []
     this.onResponse = []
     this.onSend = []
-    this.onError = []
   }
 
   /**
@@ -83,7 +81,6 @@ class ExtensionManager {
     extensions.onRequest = e.onRequest.slice()
     extensions.onSend = e.onSend.slice()
     extensions.onResponse = e.onResponse.slice()
-    extensions.onError = e.onError.slice()
 
     return extensions
   }

@@ -10,7 +10,7 @@ const hemera = new Hemera(nats, {
 const start = async () => {
   try {
     await hemera.ready()
-    hemera.ext('onRequest', async () => {
+    hemera.ext('onRequest', async (hemera, request, reply) => {
       hemera.log.info('onRequest')
     })
 

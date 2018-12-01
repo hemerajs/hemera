@@ -143,7 +143,7 @@ const myPlugin = hp(
   (hemera, opts, done) => {
     const topic = 'math'
 
-    hemera.ext('onRequest', function(ctx, next) {
+    hemera.ext('onRequest', function(hemera, request, reply, next) {
       // some code
       next()
     })
