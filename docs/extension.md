@@ -30,10 +30,6 @@ hemera.ext('onSend', function(hemera, request, reply, next) {
   // some code
   next()
 })
-hemera.ext('onError', function(hemera, request, { error }, next) {
-  // some code
-  next()
-})
 ```
 
 ## Application lifecycle
