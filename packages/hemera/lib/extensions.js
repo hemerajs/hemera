@@ -156,7 +156,7 @@ function onActFinished(context, next) {
     context.log.info(
       {
         pattern: context.trace$.method,
-        responseTime: context.trace$.duration / 1e6
+        responseTime: context.trace$.duration
       },
       'Request completed'
     )
@@ -165,7 +165,7 @@ function onActFinished(context, next) {
       {
         requestId: context.request$.id,
         pattern: context.trace$.method,
-        responseTime: context.trace$.duration / 1e6
+        responseTime: context.trace$.duration
       },
       'Request completed'
     )

@@ -104,9 +104,11 @@ class Reply {
 
     this.sent = true
 
+    const isNativeError = msg instanceof Error
+
     // 0, null, '' can be send
     if (msg !== undefined) {
-      if (msg instanceof Error) {
+      if (isNativeError) {
         this.error = msg
         this.payload = null
       } else {
@@ -115,7 +117,7 @@ class Reply {
       }
     }
 
-    if (msg instanceof Error || this.isError === true) {
+    if (this.isError === true || isNativeError) {
       this._handleError(msg, () => this._sendHook())
       return
     }
@@ -208,20 +210,13 @@ class Reply {
     }
 
     if (this._response.replyTo) {
-      this.hemera._transport.send(this._response.replyTo, msg.value, err =>
-        this._responseFlushed(err)
-      )
+      this.hemera._transport.send(this._response.replyTo, msg.value)
     }
+
+    this._onResponse()
   }
 
-  _responseFlushed(err) {
-    if (err) {
-      let internalError = new Errors.HemeraError('Nats transport').causedBy(err)
-      this.log.error(internalError)
-      this._handleError(internalError)
-      return
-    }
-
+  _onResponse() {
     runExt(
       this.hemera._extensionManager.onResponse,
       responseExtIterator,

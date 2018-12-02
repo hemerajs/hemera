@@ -802,6 +802,7 @@ class Hemera {
 
     let handler = (request, replyTo) => {
       // create new execution context
+      // this will also encapsulate a topic to the plugin
       let hemera = self.createContext()
       hemera._topic = topic
       hemera.request = new ServerRequest(request)

@@ -1,5 +1,7 @@
 'use strict'
 
+const NUID = require('nuid')
+
 /**
  * Copyright 2016-present, Dustin Deus (deusdustin@gmail.com)
  * All rights reserved.
@@ -8,13 +10,6 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-
-const lut = []
-for (let i = 0; i < 256; i++) {
-  lut[i] = (i < 16 ? '0' : '') + i.toString(16)
-}
-
-const NS_PER_SEC = 1e9
 
 /**
  * @class Util
@@ -58,36 +53,14 @@ class Util {
   }
 
   /**
-   * @returns
-   * Fast ID generator: e7 https://jsperf.com/uuid-generator-opt/18
-   * @memberOf Util
+   * Generates a unique random id
+   * Total length of a NUID string is 22 bytes of base 36 ascii text
    */
   static randomId() {
-    const d0 = (Math.random() * 0xffffffff) | 0
-    const d1 = (Math.random() * 0xffffffff) | 0
-    const d2 = (Math.random() * 0xffffffff) | 0
-    const d3 = (Math.random() * 0xffffffff) | 0
-    return (
-      lut[d0 & 0xff] +
-      lut[(d0 >> 8) & 0xff] +
-      lut[(d0 >> 16) & 0xff] +
-      lut[(d0 >> 24) & 0xff] +
-      lut[d1 & 0xff] +
-      lut[(d1 >> 8) & 0xff] +
-      lut[((d1 >> 16) & 0x0f) | 0x40] +
-      lut[(d1 >> 24) & 0xff] +
-      lut[(d2 & 0x3f) | 0x80] +
-      lut[(d2 >> 8) & 0xff] +
-      lut[(d2 >> 16) & 0xff] +
-      lut[(d2 >> 24) & 0xff] +
-      lut[d3 & 0xff] +
-      lut[(d3 >> 8) & 0xff] +
-      lut[(d3 >> 16) & 0xff] +
-      lut[(d3 >> 24) & 0xff]
-    )
+    return NUID.next()
   }
   /**
-   * Get high resolution time in nanoseconds
+   * Get high resolution time in miliseconds
    *
    * @static
    * @returns
@@ -95,8 +68,8 @@ class Util {
    * @memberOf Util
    */
   static nowHrTime() {
-    const hrtime = process.hrtime()
-    return +hrtime[0] * NS_PER_SEC + +hrtime[1]
+    var ts = process.hrtime()
+    return ts[0] * 1e3 + ts[1] / 1e6
   }
   /**
    *
