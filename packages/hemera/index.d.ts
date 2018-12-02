@@ -475,6 +475,7 @@ declare class Hemera<Request, Response> {
   ): Hemera<Hemera.NoContext, Hemera.NoContext>
 
   setNotFoundPattern(pattern: string | Hemera.ServerPattern | null): void
+  setErrorHandler(handler: (err: Error) => void): void
 
   setIdGenerator(
     generatorFunction: () => string

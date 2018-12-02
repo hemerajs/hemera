@@ -63,15 +63,14 @@ We support error-first-callback style as well as promise and async / await. Use 
 
   ```js
   try {
-    await hemera
-      .act({
-        topic: 'math',
-        cmd: 'add',
-        a: 1,
-        b: 1
-      })
+    await hemera.act({
+      topic: 'math',
+      cmd: 'add',
+      a: 1,
+      b: 1
+    })
   } catch (err) {
-  // some code
+    // some code
   }
   ```
 
@@ -122,3 +121,20 @@ We support error-first-callback style as well as promise and async / await. Use 
 ## Response error
 
 A response error must be derivated from type `Error` otherwise an error is logged and the client will timeout.
+
+## Server error handler
+
+Set a function that will be called whenever an server error happens. Client error are always passed to the callback as first argument.
+
+```js
+hemera.setErrorHandler(err => {
+  // err.message === 'test'
+})
+hemera.add(
+  {
+    topic: 'math',
+    cmd: 'add'
+  },
+  (req, cb) => cb(new Error('test'))
+)
+```

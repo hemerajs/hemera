@@ -36,8 +36,6 @@ class Reply {
     this.log = logger
     this.sent = false
     this.isError = false
-    // it is needed because sendHook can call send
-    this._isSendHookError = false
   }
 
   /**
@@ -99,7 +97,7 @@ class Reply {
    * @memberof Reply
    */
   send(msg) {
-    if (this.sent === true && this._isSendHookError === false) {
+    if (this.sent === true) {
       this.log.warn(new Errors.HemeraError('Reply already sent'))
       return
     }
@@ -160,11 +158,6 @@ class Reply {
   }
 
   _sendHook() {
-    if (this._isSendHookError) {
-      this._sendHookCallback()
-      return
-    }
-
     runExt(
       this.hemera._extensionManager.onSend,
       serverExtIterator,
@@ -179,17 +172,15 @@ class Reply {
    */
   _sendHookCallback(extensionError) {
     if (extensionError) {
-      // when a previous error was set we can just send it
-      if (this.error) {
-        this._send()
-      } else {
-        const internalError = new Errors.HemeraError(
-          'onSend extension',
-          this.hemera.errorDetails
-        ).causedBy(extensionError)
-        this.log.error(internalError)
-        this.isError = true
-        this._isSendHookError = true
+      const internalError = new Errors.HemeraError(
+        'onSend extension',
+        this.hemera.errorDetails
+      ).causedBy(extensionError)
+      this.log.error(internalError)
+
+      // first set error has precedence
+      if (this.error === null) {
+        this.sent = false
         this.send(extensionError)
         return
       }

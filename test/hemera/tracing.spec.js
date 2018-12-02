@@ -172,7 +172,7 @@ describe('Tracing', function() {
         next()
       })
 
-      hemera.on('onSend', function(ctx, request, reply, next) {
+      hemera.ext('onSend', function(ctx, request, reply, next) {
         let meta = {
           service: ctx.trace$.service,
           name: ctx.trace$.method

@@ -108,4 +108,73 @@ describe('Async Response Schema Compiler', function() {
       )
     })
   })
+
+  it('Should not be able to define a seperator schema compiler for a topic which is hosted by a plugin', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    const rootSpy = Sinon.spy()
+    const pluginSpy = Sinon.spy()
+
+    hemera.setResponseSchemaCompiler(schema => {
+      return payload => {
+        rootSpy()
+        return Promise.resolve(true)
+      }
+    })
+
+    // Plugin
+    let myPlugin = Hp(
+      function(hemera, options, done) {
+        hemera.setResponseSchemaCompiler(schema => {
+          return payload => {
+            pluginSpy()
+            return Promise.resolve(true)
+          }
+        })
+        hemera.add(
+          {
+            topic: 'math',
+            cmd: 'add'
+          },
+          (resp, cb) => {
+            cb()
+          }
+        )
+
+        done()
+      },
+      {
+        name: 'myPlugin'
+      }
+    )
+
+    hemera.use(myPlugin)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'sub'
+        },
+        (resp, cb) => {
+          cb()
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'sub'
+        },
+        (err, resp) => {
+          expect(err).not.to.be.exists()
+          expect(resp).to.be.equals(true)
+          expect(rootSpy.called).to.be.equals(false)
+          expect(pluginSpy.called).to.be.equals(true)
+          hemera.close(done)
+        }
+      )
+    })
+  })
 })

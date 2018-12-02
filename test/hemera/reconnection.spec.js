@@ -15,21 +15,23 @@ describe('NATS reconnection', function() {
     server.kill()
   })
 
-  it('Should emit error when nats emit "close" event', function(done) {
+  it('Should log error when nats emit "close" event', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
+    var logSpy = Sinon.spy(hemera.log, 'error')
+
     hemera.ready(() => {
-      // in case of no error handler it will throw
-      hemera.once('error', err => {
-        expect(err).to.be.exists()
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('NATS connection closed!')
-        hemera.close(done)
-      })
       // Is emitted when reconnect has failed or other reasons
       nats.emit('close')
+    })
+
+    nats.once('close', () => {
+      expect(
+        logSpy.firstCall.args[0] instanceof Hemera.errors.HemeraError
+      ).to.be.equals(true)
+      hemera.close(done)
     })
   })
 })

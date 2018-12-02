@@ -14,7 +14,6 @@
  */
 
 const NATS = require('nats')
-const EventEmitter = require('events')
 const Bloomrun = require('bloomrun')
 const Errio = require('errio')
 const Heavy = require('heavy')
@@ -54,7 +53,7 @@ const natsConnCodes = [
 /**
  * @class Hemera
  */
-class Hemera extends EventEmitter {
+class Hemera {
   /**
    * Creates an instance of Hemera
    *
@@ -64,8 +63,6 @@ class Hemera extends EventEmitter {
    * @memberOf Hemera
    */
   constructor(transport, params) {
-    super()
-
     const config = Joi.validate(params || {}, ConfigScheme)
     if (config.error) {
       throw config.error
@@ -712,11 +709,7 @@ class Hemera extends EventEmitter {
     // when nats was not able to reconnect or connection was closed due to other reasons
     // the process should die and restarted
     this._transport.driver.on('close', () => {
-      const error = new Errors.HemeraError('NATS connection closed!')
-      this.log.error(error)
-      // when an 'error' handler was registered no error is thrown
-      // but you have to handle it by yourself
-      this.emit('error', error)
+      this.log.error(new Errors.HemeraError('NATS connection closed!'))
     })
 
     const ready = cb => {

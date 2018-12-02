@@ -343,9 +343,7 @@ describe('Server Extensions', function() {
     hemera.ready(() => {
       hemera.ext('onSend', function(ctx, req, res, next) {
         ext()
-        res.send({
-          msg: 'authorized'
-        })
+        res.send('foo')
         next()
       })
 
@@ -362,9 +360,7 @@ describe('Server Extensions', function() {
       hemera.act(
         {
           topic: 'email',
-          cmd: 'send',
-          email: 'foobar@gmail.com',
-          msg: 'Hi!'
+          cmd: 'send'
         },
         (err, resp) => {
           expect(err).to.be.not.exists()
@@ -472,7 +468,7 @@ describe('Server Extensions', function() {
     })
   })
 
-  it('Should send the extension error in onSend instead the success payload', function(done) {
+  it('Should respond onSend error even when response was already set', function(done) {
     let ext = Sinon.spy()
 
     const nats = require('nats').connect(authUrl)
