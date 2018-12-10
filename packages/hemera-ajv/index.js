@@ -7,6 +7,7 @@ const Ajv = require('ajv')
 function hemeraAjv(hemera, opts, done) {
   const requestSchemaKey = Symbol('ajv.request-schema')
   const responseSchemaKey = Symbol('ajv.response-schema')
+  const isResponseObjectSchemaKey = Symbol('ajv.response-object-schema')
   const ajv = new Ajv(opts.ajv)
   const store = new SchemaStore()
 
@@ -28,6 +29,12 @@ function hemeraAjv(hemera, opts, done) {
         )
       }
       if (addDefinition.schema.schema.response) {
+        if (
+          addDefinition.schema.schema.response.type === 'object' ||
+          addDefinition.schema.schema.response.properties
+        ) {
+          addDefinition.schema[isResponseObjectSchemaKey] = true
+        }
         addDefinition.schema[responseSchemaKey] = ajv.compile(
           addDefinition.schema.schema.response
         )
@@ -55,7 +62,11 @@ function hemeraAjv(hemera, opts, done) {
   hemera.setResponseSchemaCompiler(schema => payload => {
     const validate = schema[responseSchemaKey]
     if (validate) {
-      if (validate(payload) === false) {
+      if (typeof payload !== 'object' && schema[isResponseObjectSchemaKey]) {
+        return {
+          error: new Error('response should be an object')
+        }
+      } else if (validate(payload) === false) {
         const error = new Error(
           ajv.errorsText(validate.errors, {
             dataVar: 'response'
