@@ -425,6 +425,48 @@ describe('Hemera-ajv response validation', function() {
     })
   })
 
+  it('Should expect an array even when undefined is responded', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    hemera.use(HemeraAjv)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'add',
+          schema: {
+            response: {
+              type: 'array',
+              items: {
+                type: 'number'
+              }
+            }
+          }
+        },
+        (resp, cb) => {
+          cb()
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 'dd',
+          b: 2
+        },
+        (err, resp) => {
+          expect(err).to.be.exists()
+          expect(err.name).to.be.equals('Error')
+          expect(err.message).to.be.equals('response should be an array')
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
   it('Should expect an object even when a primtive value is responded', function(done) {
     const nats = require('nats').connect(authUrl)
 

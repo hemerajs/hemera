@@ -8,6 +8,7 @@ function hemeraAjv(hemera, opts, done) {
   const requestSchemaKey = Symbol('ajv.request-schema')
   const responseSchemaKey = Symbol('ajv.response-schema')
   const isResponseObjectSchemaKey = Symbol('ajv.response-object-schema')
+  const isResponseArraySchemaKey = Symbol('ajv.response-array-schema')
   const ajv = new Ajv(opts.ajv)
   const store = new SchemaStore()
 
@@ -29,11 +30,13 @@ function hemeraAjv(hemera, opts, done) {
         )
       }
       if (addDefinition.schema.schema.response) {
-        if (
-          addDefinition.schema.schema.response.type === 'object' ||
-          addDefinition.schema.schema.response.properties
-        ) {
+        const inferedType = inferTypeByKeyword(
+          addDefinition.schema.schema.response
+        )
+        if (inferedType === 'object') {
           addDefinition.schema[isResponseObjectSchemaKey] = true
+        } else if (inferedType === 'array') {
+          addDefinition.schema[isResponseArraySchemaKey] = true
         }
         addDefinition.schema[responseSchemaKey] = ajv.compile(
           addDefinition.schema.schema.response
@@ -62,9 +65,16 @@ function hemeraAjv(hemera, opts, done) {
   hemera.setResponseSchemaCompiler(schema => payload => {
     const validate = schema[responseSchemaKey]
     if (validate) {
-      if (typeof payload !== 'object' && schema[isResponseObjectSchemaKey]) {
+      const isObjectSchema = schema[isResponseObjectSchemaKey]
+      const isArraySchema = schema[isResponseArraySchemaKey]
+      if (typeof payload !== 'object' && (isObjectSchema || isArraySchema)) {
+        if (isObjectSchema) {
+          return {
+            error: new Error('response should be an object')
+          }
+        }
         return {
-          error: new Error('response should be an object')
+          error: new Error('response should be an array')
         }
       } else if (validate(payload) === false) {
         const error = new Error(
@@ -80,6 +90,40 @@ function hemeraAjv(hemera, opts, done) {
   })
 
   done()
+}
+
+const objectKeywords = [
+  'maxProperties',
+  'minProperties',
+  'required',
+  'properties',
+  'patternProperties',
+  'additionalProperties',
+  'dependencies'
+]
+
+const arrayKeywords = [
+  'items',
+  'additionalItems',
+  'maxItems',
+  'minItems',
+  'uniqueItems',
+  'contains'
+]
+
+/**
+ * Infer type based on keyword in order return an error when undefined or primitive is returned
+ * because ajv won't return an error
+ * https://json-schema.org/latest/json-schema-validation.html#rfc.section.6
+ */
+function inferTypeByKeyword(schema) {
+  for (const keyword of objectKeywords) {
+    if (keyword in schema) return 'object'
+  }
+  for (const keyword of arrayKeywords) {
+    if (keyword in schema) return 'array'
+  }
+  return schema.type
 }
 
 module.exports = Hp(hemeraAjv, {
