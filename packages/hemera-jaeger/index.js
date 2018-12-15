@@ -4,14 +4,6 @@ const Hp = require('hemera-plugin')
 const initTracer = require('jaeger-client').initTracer
 const Opentracing = require('opentracing')
 
-function addContextTags(span, ctx, key, tags) {
-  tags.forEach(function(entry) {
-    if (ctx[key][entry.key]) {
-      span.setTag(entry.tag, ctx[key][entry.key])
-    }
-  })
-}
-
 /**
  * Hemera jaeger-opentracing plugin
  *
@@ -70,8 +62,6 @@ function hemeraOpentracing(hemera, opts, done) {
         : false
     )
 
-    addContextTags(span, hemera, 'delegate$', opts.delegateTags)
-
     hemera[jaegerContextKey] = span
 
     next()
@@ -79,8 +69,6 @@ function hemeraOpentracing(hemera, opts, done) {
 
   hemera.ext('onSend', (hemera, request, reply, next) => {
     const span = hemera[jaegerContextKey]
-
-    addContextTags(span, hemera, 'delegate$', opts.delegateTags)
 
     if (reply.error) {
       span.setTag(Opentracing.Tags.ERROR, true)

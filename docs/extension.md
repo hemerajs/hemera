@@ -30,6 +30,10 @@ hemera.ext('onSend', function(hemera, request, reply, next) {
   // some code
   next()
 })
+hemera.ext('onResponse', function(hemera, reply, next) {
+  // some code
+  next()
+})
 ```
 
 ## Application lifecycle
@@ -57,8 +61,16 @@ You can also pass an async function.
 hemera.ext('preHandler', async function(hemera, request, reply) {
   // some code
 })
-
-hemera.ext('onAct', async function(hemera) {
+hemera.ext('onAct', async hemera => {
+  // some code
+})
+hemera.ext('onResponse', async function(hemera, reply) {
+  // some code
+})
+hemera.ext('onClose', async addDefinition => {
+  // some code
+})
+hemera.ext('onAdd', async addDefinition => {
   // some code
 })
 ```
