@@ -11,6 +11,7 @@
 
 const Util = require('./util')
 const Errors = require('./errors')
+const { sAddReceivedMsg } = require('./symbols')
 
 /**
  * - Restore context
@@ -213,9 +214,9 @@ function onRequest(context, req, reply, next) {
   // This is required because NATS unsubscribe events is fired too early.
   // Only relevant for server actions with custom transport options.
   if (context.matchedAction !== null) {
-    context.matchedAction._receivedMsg++
+    context.matchedAction[sAddReceivedMsg]++
     if (
-      context.matchedAction._receivedMsg ===
+      context.matchedAction[sAddReceivedMsg] ===
       context.matchedAction.transport.maxMessages
     ) {
       // we only need to remove the pattern because the subscription is unsubscribed by nats driver automatically

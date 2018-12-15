@@ -9,7 +9,8 @@
  *
  */
 
-const runExt = require('./extensionRunner').extRunner
+const { extRunner } = require('./extensionRunner')
+const { sAddReceivedMsg } = require('./symbols')
 
 class Add {
   constructor(addDef) {
@@ -20,7 +21,7 @@ class Add {
     this.transport = addDef.transport
     this.action = null
     // only used for maxMessages$ flag
-    this._receivedMsg = 0
+    this[sAddReceivedMsg] = 0
   }
 
   _use(handler) {
@@ -42,7 +43,7 @@ class Add {
   }
 
   run(request, response, cb) {
-    runExt(
+    extRunner(
       this.middleware,
       (fn, state, next) => fn(request, response, next),
       null,

@@ -25,10 +25,7 @@ const Avvio = require('avvio')
 const Stream = require('stream').Stream
 
 const runExt = require('./extensionRunner').extRunner
-const serverExtIterator = require('./extensionRunner').serverExtIterator
-const clientExtIterator = require('./extensionRunner').clientExtIterator
 const Errors = require('./errors')
-const Symbols = require('./symbols')
 const Util = require('./util')
 const NatsTransport = require('./transport')
 const DefaultExtensions = require('./extensions')
@@ -42,6 +39,8 @@ const ConfigScheme = require('./configScheme')
 const Reply = require('./reply')
 const Add = require('./add')
 const ExtensionManager = require('./extensionManager')
+const { sChildren, sRegisteredPlugins } = require('./symbols')
+const { serverExtIterator, clientExtIterator } = require('./extensionRunner')
 
 const natsConnCodes = [
   NATS.CONN_ERR,
@@ -146,15 +145,15 @@ class Hemera {
       timeout: this._config.pluginTimeout
     })
 
-    this[Symbols.childrenKey] = []
-    this[Symbols.registeredPlugins] = []
+    this[sChildren] = []
+    this[sRegisteredPlugins] = []
 
     this._avvio.override = (hemera, plugin, opts) => {
       const pluginMeta = this.getPluginMeta(plugin)
 
       if (pluginMeta) {
         if (pluginMeta.name) {
-          hemera[Symbols.registeredPlugins].push(pluginMeta.name)
+          hemera[sRegisteredPlugins].push(pluginMeta.name)
         }
         hemera.checkPluginDependencies(plugin)
         hemera.checkPluginDecorators(plugin)
@@ -166,16 +165,14 @@ class Hemera {
 
       const instance = Object.create(hemera)
 
-      hemera[Symbols.childrenKey].push(instance)
-      instance[Symbols.childrenKey] = []
+      hemera[sChildren].push(instance)
+      instance[sChildren] = []
 
       if (pluginMeta && pluginMeta.name && hemera._config.childLogger) {
         instance.log = hemera.log.child({ plugin: pluginMeta.name })
       }
 
-      instance[Symbols.registeredPlugins] = Object.create(
-        hemera[Symbols.registeredPlugins]
-      )
+      instance[sRegisteredPlugins] = Object.create(hemera[sRegisteredPlugins])
 
       // inherit all extensions
       instance._extensionManager = ExtensionManager.build(
@@ -597,7 +594,7 @@ class Hemera {
       )
     }
     dependencies.forEach(dependency => {
-      if (this[Symbols.registeredPlugins].indexOf(dependency) === -1) {
+      if (this[sRegisteredPlugins].indexOf(dependency) === -1) {
         throw new Errors.HemeraError(
           `The dependency '${dependency}' is not registered`
         )

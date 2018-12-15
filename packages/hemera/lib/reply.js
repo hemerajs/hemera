@@ -13,47 +13,53 @@ const Errors = require('./errors')
 const Errio = require('errio')
 const runExt = require('./extensionRunner').extRunner
 const { responseExtIterator, serverExtIterator } = require('./extensionRunner')
+const {
+  sReplySent,
+  sReplyRequest,
+  sReplyResponse,
+  sReplyHemera
+} = require('./symbols')
 
 class Reply {
   constructor(request, response, hemera, logger) {
-    this._request = request
-    this._response = response
-    this.hemera = hemera
+    this[sReplyRequest] = request
+    this[sReplyResponse] = response
+    this[sReplyHemera] = hemera
     this.log = logger
-    this.sent = false
+    this[sReplySent] = false
     this.isError = false
   }
 
   set payload(value) {
-    this._response.payload = value
+    this[sReplyResponse].payload = value
   }
 
   get payload() {
-    return this._response.payload
+    return this[sReplyResponse].payload
   }
 
   set error(value) {
-    this._response.error = this.hemera._attachHops(
-      this.hemera.getRootError(value)
+    this[sReplyResponse].error = this[sReplyHemera]._attachHops(
+      this[sReplyHemera].getRootError(value)
     )
   }
 
   get error() {
-    return this._response.error
+    return this[sReplyResponse].error
   }
 
   next(msg) {
-    this.sent = false
+    this[sReplySent] = false
     this.send(msg)
   }
 
   send(msg) {
-    if (this.sent === true) {
+    if (this[sReplySent] === true) {
       this.log.warn(new Errors.HemeraError('Reply already sent'))
       return
     }
 
-    this.sent = true
+    this[sReplySent] = true
 
     const isNativeError = msg instanceof Error
 
@@ -85,8 +91,8 @@ class Reply {
       return
     }
 
-    if (this.hemera._errorHandler) {
-      const result = this.hemera._errorHandler(this.hemera, err, this.reply)
+    if (this[sReplyHemera]._errorHandler) {
+      const result = this[sReplyHemera]._errorHandler(this[sReplyHemera], err, this.reply)
       if (result && typeof result.then === 'function') {
         result
           .then(() => {
@@ -97,7 +103,7 @@ class Reply {
           .catch(err => {
             const internalError = new Errors.HemeraError(
               'error handler',
-              this.hemera.errorDetails
+              this[sReplyHemera].errorDetails
             ).causedBy(err)
             this.log.error(internalError)
           })
@@ -112,9 +118,9 @@ class Reply {
 
   _sendHook() {
     runExt(
-      this.hemera._extensionManager.onSend,
+      this[sReplyHemera]._extensionManager.onSend,
       serverExtIterator,
-      this.hemera,
+      this[sReplyHemera],
       err => this._sendHookCallback(err)
     )
   }
@@ -123,13 +129,13 @@ class Reply {
     if (extensionError) {
       const internalError = new Errors.HemeraError(
         'onSend extension',
-        this.hemera.errorDetails
+        this[sReplyHemera].errorDetails
       ).causedBy(extensionError)
       this.log.error(internalError)
 
       // first set error has precedence
       if (this.error === null) {
-        this.sent = false
+        this[sReplySent] = false
         this.send(extensionError)
         return
       }
@@ -140,9 +146,9 @@ class Reply {
 
   _send() {
     let msg = this.build(
-      this.hemera.meta$,
-      this.hemera.trace$,
-      this.hemera.request$
+      this[sReplyHemera].meta$,
+      this[sReplyHemera].trace$,
+      this[sReplyHemera].request$
     )
 
     // don't try to send encoding issues back because
@@ -156,8 +162,8 @@ class Reply {
       return
     }
 
-    if (this._response.replyTo) {
-      this.hemera._transport.send(this._response.replyTo, msg.value)
+    if (this[sReplyResponse].replyTo) {
+      this[sReplyHemera]._transport.send(this[sReplyResponse].replyTo, msg.value)
     }
 
     this._onResponse()
@@ -165,9 +171,9 @@ class Reply {
 
   _onResponse() {
     runExt(
-      this.hemera._extensionManager.onResponse,
+      this[sReplyHemera]._extensionManager.onResponse,
       responseExtIterator,
-      this.hemera,
+      this[sReplyHemera],
       err => {
         if (err) {
           let internalError = new Errors.ParseError(
@@ -189,7 +195,7 @@ class Reply {
       error: this.error ? Errio.toObject(this.error) : null
     }
 
-    return this.hemera._serverEncoder(message)
+    return this[sReplyHemera]._serverEncoder(message)
   }
 }
 
