@@ -60,6 +60,6 @@ function hemeraBlipp(hemera, opts, done) {
 }
 
 module.exports = Hp(hemeraBlipp, {
-  hemera: '^5.0.0',
+  hemera: '>=5.0.0',
   name: require('./package.json').name
 })
