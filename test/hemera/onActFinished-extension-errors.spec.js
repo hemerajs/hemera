@@ -1,6 +1,6 @@
 'use strict'
 
-describe('Response Schema Compiler', function() {
+describe('onActFinished extension error handling', function() {
   const PORT = 6242
   const authUrl = 'nats://localhost:' + PORT
   let server
@@ -13,39 +13,24 @@ describe('Response Schema Compiler', function() {
     server.kill()
   })
 
-  it('Should be able to use a schema compiler function', function(done) {
+  it('Should be able to pass a super error', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
-    hemera.setResponseSchemaCompiler(schema => {
-      expect(schema).to.be.a.equals({
-        a: { foo: 'bar' }
-      })
-      return payload => {
-        expect(payload).to.be.equals({
-          result: 3
-        })
-        return {
-          value: 15
-        }
-      }
-    })
-
     hemera.ready(() => {
+      hemera.ext('onActFinished', function(ctx, next) {
+        next(new UnauthorizedError('test'))
+      })
       hemera.add(
         {
-          topic: 'math',
           cmd: 'add',
-          a: { foo: 'bar' }
+          topic: 'math'
         },
         (resp, cb) => {
-          cb(null, {
-            result: resp.a + resp.b
-          })
+          cb(null, resp.a + resp.b)
         }
       )
-
       hemera.act(
         {
           topic: 'math',
@@ -54,44 +39,32 @@ describe('Response Schema Compiler', function() {
           b: 2
         },
         (err, resp) => {
-          expect(err).not.to.be.exists()
-          expect(resp).to.be.equals(15)
+          expect(err).to.be.exists()
+          expect(err.name).to.be.equals('Unauthorized')
+          expect(err.message).to.be.equals('test')
           hemera.close(done)
         }
       )
     })
   })
 
-  it('Should be able to return an error from schema compiler function', function(done) {
+  it('Should be able to pass an error', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
 
-    hemera.setResponseSchemaCompiler(schema => {
-      expect(schema).to.be.a.equals({
-        a: { foo: 'bar' }
-      })
-      return payload => {
-        expect(payload).to.be.equals({
-          result: 3
-        })
-        return {
-          error: new Error('test')
-        }
-      }
-    })
-
     hemera.ready(() => {
+      hemera.ext('onActFinished', function(ctx, next) {
+        next(new Error('test'))
+      })
+
       hemera.add(
         {
-          topic: 'math',
           cmd: 'add',
-          a: { foo: 'bar' }
+          topic: 'math'
         },
         (resp, cb) => {
-          cb(null, {
-            result: resp.a + resp.b
-          })
+          cb(null, resp.a + resp.b)
         }
       )
 
@@ -104,6 +77,7 @@ describe('Response Schema Compiler', function() {
         },
         (err, resp) => {
           expect(err).to.be.exists()
+          expect(err.name).to.be.equals('Error')
           expect(err.message).to.be.equals('test')
           hemera.close(done)
         }

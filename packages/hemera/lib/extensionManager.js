@@ -11,9 +11,6 @@
 
 const Errors = require('./errors')
 
-/**
- * @class ExtensionManager
- */
 class ExtensionManager {
   constructor() {
     this._stack = []
@@ -34,13 +31,6 @@ class ExtensionManager {
     this.onSend = []
   }
 
-  /**
-   *
-   *
-   * @param {any} handler
-   *
-   * @memberof Extension
-   */
   _add(type, handler) {
     if (this._types.indexOf(type) === -1) {
       let error = new Errors.HemeraError('Extension type is unknown', {
@@ -53,13 +43,6 @@ class ExtensionManager {
     this[type].push(handler)
   }
 
-  /**
-   *
-   *
-   * @param {any} handler
-   *
-   * @memberOf Extension
-   */
   add(type, handler) {
     if (Array.isArray(handler)) {
       handler.forEach(h => this._add(type, h))
@@ -68,10 +51,6 @@ class ExtensionManager {
     }
   }
 
-  /**
-   *
-   * @param {*} e
-   */
   static build(e) {
     const extensions = new ExtensionManager()
     extensions.onAct = e.onAct.slice()

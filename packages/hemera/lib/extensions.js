@@ -15,7 +15,7 @@ const Errors = require('./errors')
 /**
  * - Restore context
  * - Tracing
- * - Check for max recusion error
+ * - Check for recusion error
  * - Build request message
  *
  * @param {*} context

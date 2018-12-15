@@ -14,21 +14,7 @@ const Errio = require('errio')
 const runExt = require('./extensionRunner').extRunner
 const { responseExtIterator, serverExtIterator } = require('./extensionRunner')
 
-/**
- * @TODO rename hook to onServerSend
- *
- * @class Reply
- */
 class Reply {
-  /**
-   * Creates an instance of Reply.
-   * @param {any} request
-   * @param {any} response
-   * @param {any} hemera
-   * @param {any} logger
-   *
-   * @memberof Reply
-   */
   constructor(request, response, hemera, logger) {
     this._request = request
     this._response = response
@@ -38,64 +24,29 @@ class Reply {
     this.isError = false
   }
 
-  /**
-   *
-   *
-   * @param {any} payload
-   *
-   * @memberof Reply
-   */
   set payload(value) {
     this._response.payload = value
   }
 
-  /**
-   *
-   *
-   * @readonly
-   *
-   * @memberof Reply
-   */
   get payload() {
     return this._response.payload
   }
 
-  /**
-   * Set the response error
-   * Error can not be set twice
-   *
-   * @memberof Reply
-   */
   set error(value) {
     this._response.error = this.hemera._attachHops(
       this.hemera.getRootError(value)
     )
   }
 
-  /**
-   *
-   *
-   * @readonly
-   *
-   * @memberof Reply
-   */
   get error() {
     return this._response.error
   }
-  /**
-   *
-   */
+
   next(msg) {
     this.sent = false
     this.send(msg)
   }
 
-  /**
-   * Set the response payload or error
-   *
-   * @param {any} msg
-   * @memberof Reply
-   */
   send(msg) {
     if (this.sent === true) {
       this.log.warn(new Errors.HemeraError('Reply already sent'))
@@ -168,10 +119,6 @@ class Reply {
     )
   }
 
-  /**
-   *
-   * @param {*} extensionError
-   */
   _sendHookCallback(extensionError) {
     if (extensionError) {
       const internalError = new Errors.HemeraError(
@@ -233,12 +180,6 @@ class Reply {
     )
   }
 
-  /**
-   *
-   * @param {*} meta$
-   * @param {*} trace$
-   * @param {*} request$
-   */
   build(meta$, trace$, request$) {
     let message = {
       meta: meta$ || {},

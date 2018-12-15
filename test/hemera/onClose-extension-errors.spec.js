@@ -1,6 +1,6 @@
 'use strict'
 
-describe('onClose extension', function() {
+describe('onClose extension error handling', function() {
   const PORT = 6242
   const authUrl = 'nats://localhost:' + PORT
   let server
@@ -13,7 +13,7 @@ describe('onClose extension', function() {
     server.kill()
   })
 
-  it('Should be able to add onClose extension handler', function(done) {
+  it('Should be able to pass an error to onClose extension handler', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -29,7 +29,7 @@ describe('onClose extension', function() {
     let plugin = function(hemera, options, done) {
       hemera.ext('onClose', function(ctx, next) {
         secondOnCloseHandler()
-        next()
+        next(new Error('test'))
       })
 
       done()
@@ -37,8 +37,10 @@ describe('onClose extension', function() {
 
     hemera.use(plugin)
 
-    hemera.ready(() => {
-      hemera.close(x => {
+    hemera.ready(err => {
+      expect(err).to.be.not.exists()
+      hemera.close(err => {
+        expect(err.message).to.be.equals('test')
         expect(secondOnCloseHandler.callCount).to.be.equals(1)
         expect(firstOnCloseHandler.callCount).to.be.equals(1)
         done()

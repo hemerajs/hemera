@@ -11,22 +11,11 @@ const NUID = require('nuid')
  *
  */
 
-/**
- * @class Util
- */
 class Util {
   static escapeTopicForRegExp(string) {
     return string.replace(/[.+?]/g, '\\$&') // $& Inserts the matched substring.
   }
-  /**
-   *
-   *
-   * @static
-   * @param {any} subject
-   * @returns
-   *
-   * @memberof Util
-   */
+
   static natsWildcardToRegex(subject) {
     if (subject instanceof RegExp) {
       return subject
@@ -71,15 +60,7 @@ class Util {
     var ts = process.hrtime()
     return ts[0] * 1e3 + ts[1] / 1e6
   }
-  /**
-   *
-   *
-   * @static
-   * @param {any} obj
-   * @returns
-   *
-   * @memberOf Util
-   */
+
   static extractSchema(obj) {
     if (obj === null) return obj
 
@@ -93,13 +74,7 @@ class Util {
 
     return o
   }
-  /**
-   * @static
-   * @param {any} obj
-   * @returns
-   *
-   * @memberOf Util
-   */
+
   static cleanPattern(obj) {
     if (obj === null) return obj
 
@@ -118,13 +93,6 @@ class Util {
     return o
   }
 
-  /**
-   * @static
-   * @param {any} obj
-   * @returns
-   *
-   * @memberOf Util
-   */
   static cleanFromSpecialVars(obj) {
     if (obj === null) return obj
 
@@ -138,12 +106,6 @@ class Util {
     return o
   }
 
-  /**
-   * @param {any} args
-   * @returns
-   *
-   * @memberOf Util
-   */
   static pattern(args) {
     if (typeof args === 'string') {
       return args

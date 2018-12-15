@@ -11,12 +11,6 @@
 
 const runExt = require('./extensionRunner').extRunner
 
-/**
- *
- *
- * @export
- * @class Add
- */
 class Add {
   constructor(addDef) {
     this.sid = 0
@@ -29,25 +23,10 @@ class Add {
     this._receivedMsg = 0
   }
 
-  /**
-   *
-   *
-   * @param {any} handler
-   *
-   * @memberof Add
-   */
   _use(handler) {
     this.middleware.push(handler)
   }
 
-  /**
-   *
-   *
-   * @param {any} handler
-   * @returns
-   *
-   * @memberOf Add
-   */
   use(handler) {
     if (Array.isArray(handler)) {
       handler.forEach(h => this._use(h))
@@ -58,26 +37,10 @@ class Add {
     return this
   }
 
-  /**
-   *
-   *
-   * @param {any} cb
-   *
-   * @memberOf Add
-   */
   end(cb) {
     this.action = cb
   }
 
-  /**
-   *
-   *
-   * @param {any} request
-   * @param {any} response
-   * @param {any} cb
-   *
-   * @memberof Add
-   */
   run(request, response, cb) {
     runExt(
       this.middleware,
