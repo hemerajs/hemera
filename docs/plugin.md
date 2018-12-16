@@ -209,7 +209,7 @@ const myPlugin = hp(
 hemera.use(myPlugin)
 ```
 
-## Plugin depdendencies
+## Plugin dependencies
 
 You can declare plugins and decorators as dependencies. The constrains are checked when all plugins are registered.
 

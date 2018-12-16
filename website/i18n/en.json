@@ -49,10 +49,6 @@
         "title": "Ecosystem",
         "sidebar_label": "Ecosystem"
       },
-      "error-event": {
-        "title": "Response error events",
-        "sidebar_label": "Events"
-      },
       "error-handling": {
         "title": "Error-handling",
         "sidebar_label": "Introduction"
@@ -60,10 +56,6 @@
       "error-serialization": {
         "title": "Error serialization",
         "sidebar_label": "Serialization"
-      },
-      "event": {
-        "title": "Events",
-        "sidebar_label": "Events"
       },
       "extension": {
         "title": "Extension",
