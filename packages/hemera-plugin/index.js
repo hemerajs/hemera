@@ -2,8 +2,9 @@
 
 const semver = require('semver')
 const console = require('console')
+const extractPluginName = require('./stackParser')
 
-function plugin(fn, options) {
+function plugin(fn, options = {}) {
   if (typeof fn !== 'function') {
     throw new TypeError(
       `hemera-plugin expects a function, instead got a '${typeof fn}'`
@@ -16,13 +17,9 @@ function plugin(fn, options) {
     fn[Symbol.for('plugin-scoped')] = options.scoped
   }
 
-  if (options === undefined) {
-    return fn
-  }
-
   if (typeof options === 'string') {
     checkVersion(options)
-    return fn
+    options = {}
   }
 
   if (
@@ -33,6 +30,10 @@ function plugin(fn, options) {
     throw new TypeError('The options object should be an object')
   }
 
+  if (!options.name) {
+    options.name = checkName(fn)
+  }
+
   if (options.hemera) {
     checkVersion(options.hemera)
     delete options.hemera
@@ -41,6 +42,16 @@ function plugin(fn, options) {
   fn[Symbol.for('plugin-meta')] = options
 
   return fn
+}
+
+function checkName(fn) {
+  if (fn.name.length > 0) return fn.name
+
+  try {
+    throw new Error('anonymous function')
+  } catch (e) {
+    return extractPluginName(e.stack)
+  }
 }
 
 function checkVersion(version) {

@@ -650,7 +650,8 @@ describe('Plugin interface', function() {
       Hp(function(hemera, options, done) {
         expect(hemera.test).to.be.exists()
         expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals([
-          'parent'
+          'parent',
+          'plugin.spec'
         ])
         done()
       })
@@ -661,7 +662,8 @@ describe('Plugin interface', function() {
       expect(hemera.test).to.be.exists()
 
       expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals([
-        'parent'
+        'parent',
+        'plugin.spec'
       ])
       hemera.close(done)
     })
@@ -716,13 +718,14 @@ describe('Plugin interface', function() {
     hemera.use(
       Hp(function(hemera, options, done) {
         expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals([
-          'parent'
+          'parent',
+          'plugin.spec'
         ])
         hemera.use(
           Hp(function(hemera, options, done) {
             expect(
               hemera[HemeraSymbols.sRegisteredPlugins].slice()
-            ).to.be.equals(['parent'])
+            ).to.be.equals(['parent', 'plugin.spec', 'plugin.spec'])
             done()
           })
         )
@@ -733,7 +736,8 @@ describe('Plugin interface', function() {
     hemera.ready(err => {
       expect(err).to.be.not.exists()
       expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals([
-        'parent'
+        'parent',
+        'plugin.spec'
       ])
       hemera.close(done)
     })
