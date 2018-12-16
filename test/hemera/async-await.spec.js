@@ -1,8 +1,7 @@
 'use strict'
 
-if (Number(process.versions.node[0]) >= 8) {
+if (Number(process.versions.node.split('.')[0]) >= 8) {
   require('./async-await')
   require('./plugin.async-await')
-  require('./server-extension.async-await')
   require('./middleware.async-await')
 }
