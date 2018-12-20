@@ -13,6 +13,51 @@ describe('Error handling', function() {
     server.kill()
   })
 
+  it('Should be possible to define an errorHandler', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    const rootSpy = Sinon.spy()
+
+    hemera.setErrorHandler((hemera, error, reply) => {
+      expect(error).to.be.exists()
+      rootSpy()
+    })
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'user',
+          cmd: 'get'
+        },
+        (resp, cb) => {
+          cb(new Error('root'))
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add'
+        },
+        (err, resp) => {
+          expect(err).to.be.exists()
+          hemera.act(
+            {
+              topic: 'user',
+              cmd: 'get'
+            },
+            (err, resp) => {
+              expect(err).to.be.exists()
+              expect(rootSpy.calledOnce).to.be.equals(true)
+              hemera.close(done)
+            }
+          )
+        }
+      )
+    })
+  })
+
   it('Should be able to define a custom errorHandler in plugins', function(done) {
     const nats = require('nats').connect(authUrl)
 
@@ -87,7 +132,7 @@ describe('Error handling', function() {
     })
   })
 
-  it('Should not be able to define a error handler for a topic which is hosted by a plugin', function(done) {
+  it('Should not be able to define an error handler for a topic which is hosted by a plugin', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)

@@ -12,12 +12,17 @@
 const Errors = require('./errors')
 const Errio = require('errio')
 const runExt = require('./extensionRunner').extRunner
-const { responseExtIterator, serverExtIterator } = require('./extensionRunner')
+const {
+  responseExtIterator,
+  serverExtIterator,
+  serverOnErrorIterator
+} = require('./extensionRunner')
 const {
   sReplySent,
   sReplyRequest,
   sReplyResponse,
-  sReplyHemera
+  sReplyHemera,
+  sReplyIsRunningOnErrorHook
 } = require('./symbols')
 
 class Reply {
@@ -27,6 +32,7 @@ class Reply {
     this[sReplyHemera] = hemera
     this.log = logger
     this[sReplySent] = false
+    this[sReplyIsRunningOnErrorHook] = false
     this.isError = false
   }
 
@@ -54,6 +60,10 @@ class Reply {
   }
 
   send(msg) {
+    if (this[sReplyIsRunningOnErrorHook] === true) {
+      throw new Error('You cannot use `send` inside the `onError` hook')
+    }
+
     if (this[sReplySent] === true) {
       this.log.warn(new Errors.HemeraError('Reply already sent'))
       return
@@ -75,7 +85,7 @@ class Reply {
     }
 
     if (this.isError === true || isNativeError) {
-      this._handleError(msg, () => this._sendHook())
+      this._handleError(msg, () => this._onErrorHook())
       return
     }
 
@@ -120,13 +130,32 @@ class Reply {
     }
   }
 
+  _onErrorHook() {
+    if (this[sReplyHemera]._extensionManager.onError.length) {
+      this[sReplyIsRunningOnErrorHook] = true
+      runExt(
+        this[sReplyHemera]._extensionManager.onError,
+        serverOnErrorIterator,
+        this[sReplyHemera],
+        _ => this._sendHook()
+      )
+      return
+    }
+
+    this._sendHook()
+  }
+
   _sendHook() {
-    runExt(
-      this[sReplyHemera]._extensionManager.onSend,
-      serverExtIterator,
-      this[sReplyHemera],
-      err => this._sendHookCallback(err)
-    )
+    if (this[sReplyHemera]._extensionManager.onSend.length) {
+      runExt(
+        this[sReplyHemera]._extensionManager.onSend,
+        serverExtIterator,
+        this[sReplyHemera],
+        err => this._sendHookCallback(err)
+      )
+    } else {
+      this._sendHookCallback()
+    }
   }
 
   _sendHookCallback(extensionError) {
@@ -177,20 +206,22 @@ class Reply {
   }
 
   _onResponse() {
-    runExt(
-      this[sReplyHemera]._extensionManager.onResponse,
-      responseExtIterator,
-      this[sReplyHemera],
-      err => {
-        if (err) {
-          let internalError = new Errors.ParseError(
-            'onResponse extension'
-          ).causedBy(err)
-          this.log.error(internalError)
-          this._handleError(err)
+    if (this[sReplyHemera]._extensionManager.onResponse.length) {
+      runExt(
+        this[sReplyHemera]._extensionManager.onResponse,
+        responseExtIterator,
+        this[sReplyHemera],
+        err => {
+          if (err) {
+            let internalError = new Errors.ParseError(
+              'onResponse extension'
+            ).causedBy(err)
+            this.log.error(internalError)
+            this._handleError(err)
+          }
         }
-      }
-    )
+      )
+    }
   }
 
   build(meta$, trace$, request$) {

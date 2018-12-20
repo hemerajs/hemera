@@ -34,6 +34,10 @@ hemera.ext('onResponse', function(hemera, reply, next) {
   // some code
   next()
 })
+hemera.ext('onError', function(hemera, payload, error, next) {
+  // some code
+  next()
+})
 ```
 
 ## Application lifecycle
@@ -65,6 +69,9 @@ hemera.ext('onAct', async hemera => {
   // some code
 })
 hemera.ext('onResponse', async function(hemera, reply) {
+  // some code
+})
+hemera.ext('onError', async (hemera, payload, error) => {
   // some code
 })
 hemera.ext('onClose', async addDefinition => {

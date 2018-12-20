@@ -36,6 +36,10 @@ function serverExtIterator(fn, state, next) {
   return fn(state, state.request, state.reply, next)
 }
 
+function serverOnErrorIterator(fn, state, next) {
+  return fn(state, state.reply.payload, state.reply.error, next)
+}
+
 function clientExtIterator(fn, state, next) {
   return fn(state, next)
 }
@@ -44,5 +48,6 @@ module.exports = {
   extRunner,
   serverExtIterator,
   clientExtIterator,
-  responseExtIterator
+  responseExtIterator,
+  serverOnErrorIterator
 }

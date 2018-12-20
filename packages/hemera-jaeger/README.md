@@ -104,7 +104,6 @@ Represent an object with following properties
 
 - The jaeger tracer generates it's own tracing data.
 - This plugin transfers the tracing context in `trace$.opentracing` property.
-- Client and Server response errors are logged as `error` events.
 
 ## Advanced example
 
