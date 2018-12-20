@@ -142,7 +142,5 @@ module.exports = Hp(hemeraOpentracing, {
   hemera: '>=5.8.0',
   scoped: false,
   name: require('./package.json').name,
-  options: {
-    delegateTags: []
-  }
+  options: {}
 })

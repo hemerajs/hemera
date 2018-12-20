@@ -92,7 +92,11 @@ class Reply {
     }
 
     if (this[sReplyHemera]._errorHandler) {
-      const result = this[sReplyHemera]._errorHandler(this[sReplyHemera], err, this.reply)
+      const result = this[sReplyHemera]._errorHandler(
+        this[sReplyHemera],
+        err,
+        this.reply
+      )
       if (result && typeof result.then === 'function') {
         result
           .then(() => {
@@ -163,7 +167,10 @@ class Reply {
     }
 
     if (this[sReplyResponse].replyTo) {
-      this[sReplyHemera]._transport.send(this[sReplyResponse].replyTo, msg.value)
+      this[sReplyHemera]._transport.send(
+        this[sReplyResponse].replyTo,
+        msg.value
+      )
     }
 
     this._onResponse()
