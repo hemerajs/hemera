@@ -41,6 +41,20 @@ function hemeraOpentracing(hemera, opts, done) {
     tracer
   })
 
+  hemera.ext('onError', (hemera, payload, error, next) => {
+    const span = hemera[jaegerContextKey]
+
+    span.setTag(Opentracing.Tags.ERROR, true)
+    span.log({
+      event: 'error',
+      'error.object': error,
+      message: error.message,
+      stack: error.stack
+    })
+
+    next()
+  })
+
   hemera.ext('onRequest', (hemera, request, reply, next) => {
     let rootSpan = tracer.extract(
       Opentracing.FORMAT_TEXT_MAP,
@@ -67,18 +81,8 @@ function hemeraOpentracing(hemera, opts, done) {
     next()
   })
 
-  hemera.ext('onSend', (hemera, request, reply, next) => {
+  hemera.ext('onResponse', (hemera, reply, next) => {
     const span = hemera[jaegerContextKey]
-
-    if (reply.error) {
-      span.setTag(Opentracing.Tags.ERROR, true)
-      span.log({
-        event: 'error',
-        'error.object': reply.error,
-        message: reply.error.message,
-        stack: reply.error.stack
-      })
-    }
 
     span.finish()
 

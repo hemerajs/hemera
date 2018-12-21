@@ -17,6 +17,5 @@ module.exports = {
   sReplyResponse: Symbol('hemera.reply-response'),
   sReplyHemera: Symbol('hemera.reply-hemera'),
   sReplyLog: Symbol('hemera.reply-log'),
-  sReplyIsRunningOnErrorHook: Symbol('hemera.reply-error-hook-run'),
   sAddReceivedMsg: Symbol('hemera.add-receivedMsg')
 }

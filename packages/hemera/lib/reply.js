@@ -21,8 +21,7 @@ const {
   sReplySent,
   sReplyRequest,
   sReplyResponse,
-  sReplyHemera,
-  sReplyIsRunningOnErrorHook
+  sReplyHemera
 } = require('./symbols')
 
 class Reply {
@@ -32,7 +31,6 @@ class Reply {
     this[sReplyHemera] = hemera
     this.log = logger
     this[sReplySent] = false
-    this[sReplyIsRunningOnErrorHook] = false
     this.isError = false
   }
 
@@ -60,10 +58,6 @@ class Reply {
   }
 
   send(msg) {
-    if (this[sReplyIsRunningOnErrorHook] === true) {
-      throw new Error('You cannot use `send` inside the `onError` hook')
-    }
-
     if (this[sReplySent] === true) {
       this.log.warn(new Errors.HemeraError('Reply already sent'))
       return
@@ -132,7 +126,6 @@ class Reply {
 
   _onErrorHook() {
     if (this[sReplyHemera]._extensionManager.onError.length) {
-      this[sReplyIsRunningOnErrorHook] = true
       runExt(
         this[sReplyHemera]._extensionManager.onError,
         serverOnErrorIterator,

@@ -816,12 +816,17 @@ class Hemera {
       // represent the matched server action "add"
       hemera.matchedAction = null
 
-      runExt(
-        hemera._extensionManager.onRequest,
-        serverExtIterator,
-        hemera,
-        err => hemera._onRequestCompleted(err)
-      )
+      if (hemera._extensionManager.onRequest.length) {
+        runExt(
+          hemera._extensionManager.onRequest,
+          serverExtIterator,
+          hemera,
+          err => hemera._onRequestCompleted(err)
+        )
+        return
+      }
+
+      hemera._onRequestCompleted()
     }
 
     // standard pubsub with optional max messages
@@ -1208,9 +1213,17 @@ class Hemera {
       return
     }
 
-    runExt(self._extensionManager.onActFinished, clientExtIterator, self, err =>
-      self._onActFinishedCallback(err)
-    )
+    if (self._extensionManager.onActFinished.length) {
+      runExt(
+        self._extensionManager.onActFinished,
+        clientExtIterator,
+        self,
+        err => self._onActFinishedCallback(err)
+      )
+      return
+    }
+
+    self._onActFinishedCallback()
   }
 
   /**
@@ -1289,9 +1302,13 @@ class Hemera {
 
     if (cb) {
       hemera._execute = cb.bind(hemera)
-      runExt(hemera._extensionManager.onAct, clientExtIterator, hemera, err =>
-        hemera._onActCallback(err)
-      )
+      if (hemera._extensionManager.onAct.length) {
+        runExt(hemera._extensionManager.onAct, clientExtIterator, hemera, err =>
+          hemera._onActCallback(err)
+        )
+        return
+      }
+      hemera._onActCallback()
     } else {
       const evaluateResult = new Promise((resolve, reject) => {
         hemera._execute = (err, result) => {
@@ -1303,9 +1320,13 @@ class Hemera {
         }
       })
 
-      runExt(hemera._extensionManager.onAct, clientExtIterator, hemera, err =>
-        hemera._onActCallback(err)
-      )
+      if (hemera._extensionManager.onAct.length) {
+        runExt(hemera._extensionManager.onAct, clientExtIterator, hemera, err =>
+          hemera._onActCallback(err)
+        )
+      } else {
+        hemera._onActCallback()
+      }
 
       return evaluateResult.then(resp => {
         return {
@@ -1437,9 +1458,16 @@ class Hemera {
     self.log.error(error)
     self.response.error = error
 
-    runExt(self._extensionManager.onActFinished, clientExtIterator, self, err =>
-      self._onActTimeoutCallback(err)
-    )
+    if (self._extensionManager.onActFinished.length) {
+      runExt(
+        self._extensionManager.onActFinished,
+        clientExtIterator,
+        self,
+        err => self._onActTimeoutCallback(err)
+      )
+      return
+    }
+    self._onActTimeoutCallback()
   }
 
   /**
