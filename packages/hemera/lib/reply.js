@@ -108,13 +108,7 @@ class Reply {
               cb()
             }
           })
-          .catch(err => {
-            const internalError = new Errors.HemeraError(
-              'error handler',
-              this[sReplyHemera].errorDetails
-            ).causedBy(err)
-            this.log.error(internalError)
-          })
+          .catch(err => this._logError(err, 'error handler'))
         return
       }
     }
@@ -124,13 +118,24 @@ class Reply {
     }
   }
 
+  _logError(err, message) {
+    const internalError = new Errors.HemeraError(
+      message,
+      this[sReplyHemera].errorDetails
+    ).causedBy(err)
+    this.log.error(internalError)
+  }
+
   _onErrorHook() {
     if (this[sReplyHemera]._extensionManager.onError.length) {
       runExt(
         this[sReplyHemera]._extensionManager.onError,
         serverOnErrorIterator,
         this[sReplyHemera],
-        _ => this._sendHook()
+        err => {
+          if (err) this._logError(err, 'onError extension')
+          this._sendHook()
+        }
       )
       return
     }
@@ -144,27 +149,22 @@ class Reply {
         this[sReplyHemera]._extensionManager.onSend,
         serverExtIterator,
         this[sReplyHemera],
-        err => this._sendHookCallback(err)
+        err => {
+          if (err) {
+            this._logError(err, 'onSend extension')
+
+            // first set error has precedence
+            if (this.error === null) {
+              this[sReplySent] = false
+              this.send(err)
+              return
+            }
+          }
+
+          this._send()
+        }
       )
-    } else {
-      this._sendHookCallback()
-    }
-  }
-
-  _sendHookCallback(extensionError) {
-    if (extensionError) {
-      const internalError = new Errors.HemeraError(
-        'onSend extension',
-        this[sReplyHemera].errorDetails
-      ).causedBy(extensionError)
-      this.log.error(internalError)
-
-      // first set error has precedence
-      if (this.error === null) {
-        this[sReplySent] = false
-        this.send(extensionError)
-        return
-      }
+      return
     }
 
     this._send()
@@ -205,13 +205,7 @@ class Reply {
         responseExtIterator,
         this[sReplyHemera],
         err => {
-          if (err) {
-            let internalError = new Errors.ParseError(
-              'onResponse extension'
-            ).causedBy(err)
-            this.log.error(internalError)
-            this._handleError(err)
-          }
+          if (err) this._logError(err, 'onResponse extension')
         }
       )
     }
