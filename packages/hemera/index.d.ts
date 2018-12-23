@@ -429,6 +429,24 @@ declare class Hemera<Request, Response> {
     ) => Promise<void>
   ): Hemera<Hemera.ServerRequest, Hemera.ServerResponse>
 
+  ext(
+    name: 'onError',
+    handler: (
+      instance: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>,
+      payload: any,
+      error: Error,
+      next: (err?: Error) => void
+    ) => void
+  ): Hemera<Hemera.ServerRequest, Hemera.ServerResponse>
+  ext(
+    name: 'onResponse',
+    handler: (
+      instance: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>,
+      payload: any,
+      error: Error
+    ) => Promise<void>
+  ): Hemera<Hemera.ServerRequest, Hemera.ServerResponse>
+
   ready(): Promise<void>
   ready(readyListener: (err: Error) => void): void
 
