@@ -398,7 +398,7 @@ class Hemera {
   }
 
   /**
-   * Create a custom super error object without to start hemera
+   * Create a custom super error object
    *
    * @readonly
    *
@@ -414,6 +414,22 @@ class Hemera {
     Errio.register(ctor)
     return ctor
   }
+
+  /**
+   * Create a custom super error object
+   *
+   * @param {any} name
+   * @returns
+   *
+   * @memberOf Hemera
+   */
+  createError(name) {
+    const ctor = SuperError.subclass(name)
+    // Register the class with Errio
+    Errio.register(ctor)
+    return ctor
+  }
+
   /**
    * Add an onAdd handler
    *
@@ -647,21 +663,6 @@ class Hemera {
   }
 
   /**
-   * Create a custom super error object in a running hemera instance
-   *
-   * @param {any} name
-   * @returns
-   *
-   * @memberOf Hemera
-   */
-  createError(name) {
-    const ctor = SuperError.subclass(name)
-    // Register the class with Errio
-    Errio.register(ctor)
-    return ctor
-  }
-
-  /**
    *
    *
    * @param {Function} cb
@@ -839,7 +840,7 @@ class Hemera {
         handler
       )
     } else {
-      // queue group names allow load balancing of services
+      // queue group names allow load balancing (random) of services
       return self._transport.subscribe(
         topic,
         {

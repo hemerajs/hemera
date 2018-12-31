@@ -283,7 +283,6 @@ function onSend(context, req, reply, next) {
 
 /**
  * Only validate when:
- * - no error was set before
  * - pattern could be resolved
  * - schemaCompiler was found
  * @param {*} context
@@ -382,7 +381,8 @@ function onRequestLoadTest(context, req, reply, next) {
   if (context._config.load.checkPolicy === true) {
     const error = context._loadPolicy.check()
     if (error) {
-      return next(new Errors.ProcessLoadError(error.message, error.data))
+      next(new Errors.ProcessLoadError(error.message, error.data))
+      return
     }
   }
 
