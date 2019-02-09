@@ -50,12 +50,12 @@
     "heavy": "4.0.x",
     "joi": "11.1.x",
     "nuid": "^1.0.0",
-    "pino": "5.6.x",
+    "pino": "5.11.x",
     "super-error": "2.2.x",
     "tinysonic": "1.3.x"
   },
   "peerDependencies": {
-    "nats": ">= 0.8.x <= 1.x.x"
+    "nats": ">= 0.8.x <= 1.2.x"
   },
   "typings": "./index.d.ts"
 }
