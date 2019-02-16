@@ -782,6 +782,7 @@ class Hemera {
     // avoid duplicate subscribers of the emit stream
     // we use one subscriber per topic
     if (self._topics.has(topic)) {
+      self.log.debug(`Topic '${topic}' was already subscribed!`)
       return 0
     }
 
@@ -909,9 +910,7 @@ class Hemera {
 
     const result = self._processServerAction()
 
-    const isPromise = result && typeof result.then === 'function'
-    if (isPromise) {
-      // avoid to create a seperate promise
+    if (result && typeof result.then === 'function') {
       // eslint-disable-next-line promise/catch-or-return
       result.then(
         payload => self.reply.send(payload),
@@ -968,20 +967,24 @@ class Hemera {
       throw error
     }
 
-    // when sid was passed
+    if (typeof topic !== 'string' && typeof topic !== 'number') {
+      const error = new Errors.HemeraError(`Topic must be from type string or number but got '${typeof topic}'`)
+      self.log.error(error)
+      throw error
+    }
+
     if (typeof topic === 'string') {
-      // when topic name was passed
       const subId = self._topics.get(topic)
 
       if (subId) {
         self._transport.unsubscribe(subId, maxMessages)
+        self.log.debug(`Topic '${topic}' was unsubscribed!`)
         // we remove all subscription related to this topic
         this.cleanTopic(topic)
         return true
       }
     } else {
       self._transport.unsubscribe(topic, maxMessages)
-      return true
     }
 
     return false
@@ -998,7 +1001,8 @@ class Hemera {
     this._topics.delete(topic)
     // remove pattern which belongs to the topic
     this.list().forEach(add => {
-      if (add.pattern.topic === topic) {
+      // stringify to handle regular expressions
+      if (add.transport.topic === topic) {
         this.router.remove(add.pattern)
       }
     })
@@ -1076,7 +1080,7 @@ class Hemera {
 
     // check for invalid topic subscriptions
     // it's not possible to susbcribe to the same topic with different transport options
-    // because we use one subscription for the topic
+    // because we use one NATS subscription for the topic
     const def = this._checkForTransportCollision(addDefinition)
     if (def) {
       this.log.error(
@@ -1095,7 +1099,8 @@ class Hemera {
 
     if (sid > 0) {
       addDefinition.sid = sid
-      this._topics.set(addDefinition.pattern.topic, sid)
+      // stringify to handle regular expressions
+      this._topics.set(addDefinition.transport.topic, sid)
     }
 
     this._runOnAddHandler(addDefinition)
@@ -1135,7 +1140,7 @@ class Hemera {
       const mT1 = def.transport
       // looking for another pattern with same topic but
       // different transport options
-      if (addDefinition.pattern.topic === def.pattern.topic) {
+      if (addDefinition.transport.topic === def.transport.topic) {
         if (mT1.maxMessages !== mT2.maxMessages || mT1.queue !== mT2.queue || mT1.pubsub !== mT2.pubsub) {
           return def
         }

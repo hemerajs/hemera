@@ -41,6 +41,7 @@ describe('Unsubscribe NATS topic', function() {
       const result = hemera.remove('math')
 
       expect(hemera.topics.get('math')).to.be.not.exists()
+      expect(hemera.topics.size).to.be.equals(0)
       expect(hemera.list().length).to.be.equals(0)
       expect(result).to.be.equals(true)
       expect(callback.called).to.be.equals(true)
@@ -88,6 +89,7 @@ describe('Unsubscribe NATS topic', function() {
       const result = hemera.remove('math')
 
       expect(hemera.topics.get('math')).to.be.not.exists()
+      expect(hemera.topics.size).to.be.equals(0)
       expect(hemera.list().length).to.be.equals(0)
       expect(result).to.be.equals(true)
       hemera.close(done)
@@ -100,25 +102,8 @@ describe('Unsubscribe NATS topic', function() {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.add(
-        {
-          topic: 'math',
-          cmd: 'add'
-        },
-        (resp, cb) => {
-          cb(null, {
-            result: resp.a + resp.b
-          })
-        }
-      )
-
-      try {
-        hemera.remove('')
-      } catch (err) {
-        expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals('The sid or topic name is required')
-        hemera.close(done)
-      }
+      expect(() => hemera.remove('')).to.throw(Error, 'The sid or topic name is required')
+      hemera.close(done)
     })
   })
 
@@ -143,11 +128,61 @@ describe('Unsubscribe NATS topic', function() {
       const result = hemera.remove('math1')
       expect(hemera.topics.get('math')).to.be.exists()
       expect(result).to.be.equals(false)
+      expect(hemera.topics.size).to.be.equals(1)
+      expect(hemera.list().length).to.be.equals(1)
       hemera.close(done)
     })
   })
 
-  it('Should be able to unsubscribe a subscription id', function(done) {
+  it('Should be able to unsubscribe by regex', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'systems-europe.a.*'
+        },
+        (resp, cb) => {
+          cb(null, {
+            result: resp.a + resp.b
+          })
+        }
+      )
+
+      expect(hemera.list().length).to.be.equals(1)
+
+      hemera.act(
+        {
+          topic: 'systems-europe.a.test'
+        },
+        function(err) {
+          expect(err).to.be.not.exists()
+
+          const result = hemera.remove('systems-europe.a.*')
+          expect(result).to.be.equals(true)
+          expect(hemera.topics.size).to.be.equals(0)
+          expect(hemera.list().length).to.be.equals(0)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should throw error when topic is no string or subscription id', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      expect(() => hemera.remove(/abc/)).to.throw(Error, "Topic must be from type string or number but got 'object'")
+
+      hemera.close(done)
+    })
+  })
+
+  it('Should be able to unsubscribe all at once', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
@@ -165,32 +200,9 @@ describe('Unsubscribe NATS topic', function() {
         }
       )
 
-      hemera.act(
-        {
-          topic: 'math',
-          cmd: 'add',
-          maxMessages$: -1
-        },
-        function(err, resp) {
-          expect(err).to.be.not.exists()
-
-          const result = hemera.remove(this.sid)
-          expect(result).to.be.equals(true)
-          hemera.close(done)
-        }
-      )
-    })
-  })
-
-  it('Should be able to unsubscribe all at once', function(done) {
-    const nats = require('nats').connect(authUrl)
-
-    const hemera = new Hemera(nats)
-
-    hemera.ready(() => {
       hemera.add(
         {
-          topic: 'math',
+          topic: 'foo.*',
           cmd: 'add'
         },
         (resp, cb) => {

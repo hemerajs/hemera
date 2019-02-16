@@ -249,22 +249,6 @@ describe('Timeouts', function() {
       }, 300)
     })
   })
-})
-
-describe('Timeouts', function() {
-  var PORT = 6242
-  var authUrl = 'nats://localhost:' + PORT
-  var server
-
-  // Start up our own nats-server
-  before(function(done) {
-    server = HemeraTestsuite.start_server(PORT, done)
-  })
-
-  // Shutdown our server after we are done
-  after(function() {
-    server.kill()
-  })
 
   it('Should throw timeout error when callback is not fired', function(done) {
     const nats = require('nats').connect(authUrl)
@@ -304,7 +288,8 @@ describe('Timeouts', function() {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      timeout: 150
+      timeout: 250,
+      logLevel: 'info'
     })
 
     let event = Sinon.spy()
@@ -326,7 +311,8 @@ describe('Timeouts', function() {
           topic: 'email',
           cmd: 'send'
         },
-        (resp, cb) => {}
+        (resp, cb) => {
+        }
       )
 
       hemera.act(
@@ -365,7 +351,9 @@ describe('Timeouts', function() {
           topic: 'email',
           cmd: 'send'
         },
-        (resp, cb) => {}
+        (resp, cb) => {
+          cb()
+        }
       )
 
       hemera.act(
@@ -402,7 +390,9 @@ describe('Timeouts', function() {
           topic: 'email',
           cmd: 'send'
         },
-        (resp, cb) => {}
+        (resp, cb) => {
+          cb()
+        }
       )
 
       hemera.act(

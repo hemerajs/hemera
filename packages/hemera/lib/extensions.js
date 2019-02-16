@@ -207,8 +207,10 @@ function onRequest(context, req, reply, next) {
 
   // incoming pattern
   context._pattern = context.request.payload.pattern
+
   // find matched action
   context.matchedAction = context._router.lookup(context._pattern)
+
   // We have to remove the pattern manually when maxMessages$ was received.
   // This is required because NATS unsubscribe events is fired too early.
   // Only relevant for server actions with custom transport options.

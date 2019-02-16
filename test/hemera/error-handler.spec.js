@@ -1,5 +1,7 @@
 'use strict'
 
+const split = require('split2')
+
 describe('Error handling', function() {
   const PORT = 6242
   const authUrl = 'nats://localhost:' + PORT
@@ -53,6 +55,106 @@ describe('Error handling', function() {
               hemera.close(done)
             }
           )
+        }
+      )
+    })
+  })
+
+  it('Should handle fullfilled promise in errorHandler', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const stream = split(JSON.parse)
+    const hemera = new Hemera(nats, {
+      logger: stream,
+      logLevel: 'error'
+    })
+    const rootSpy = Sinon.spy()
+
+    const logs = []
+
+    stream.on('data', line => {
+      logs.push(line)
+    })
+
+    hemera.setErrorHandler((hemera, error, reply) => {
+      expect(error).to.be.exists()
+      rootSpy()
+      return new Promise(resolve => {
+        setTimeout(resolve, 200)
+      })
+    })
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'user',
+          cmd: 'get'
+        },
+        (resp, cb) => {
+          cb(new Error('root'))
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'user',
+          cmd: 'get'
+        },
+        (err, resp) => {
+          expect(err).to.be.exists()
+          expect(logs).to.be.equals([])
+          expect(rootSpy.calledOnce).to.be.equals(true)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should handle rejected promise in errorHandler', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const stream = split(JSON.parse)
+    const hemera = new Hemera(nats, {
+      logger: stream,
+      logLevel: 'error'
+    })
+    const rootSpy = Sinon.spy()
+
+    const logs = []
+
+    stream.on('data', line => {
+      logs.push(line)
+    })
+
+    hemera.setErrorHandler((hemera, error, reply) => {
+      expect(error).to.be.exists()
+      rootSpy()
+      return new Promise(resolve => {
+        setTimeout(reject, 200)
+      })
+    })
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'user',
+          cmd: 'get'
+        },
+        (resp, cb) => {
+          cb(new Error('root'))
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'user',
+          cmd: 'get'
+        },
+        (err, resp) => {
+          expect(err).to.be.exists()
+          expect(logs[0].msg).to.be.equals('error handler')
+          expect(rootSpy.calledOnce).to.be.equals(true)
+          hemera.close(done)
         }
       )
     })

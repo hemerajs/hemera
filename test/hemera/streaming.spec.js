@@ -80,6 +80,7 @@ describe('Streaming', function() {
           expect(err).to.be.not.exists()
           results.push(resp)
           if (results.length === 10) {
+            // remove the subscription for the global inbox
             hemera.remove(this.sid)
             hemera.close(done)
           }
