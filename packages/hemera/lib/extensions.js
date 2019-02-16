@@ -11,22 +11,23 @@
 
 const Util = require('./util')
 const Errors = require('./errors')
+const { sAddReceivedMsg } = require('./symbols')
 
 /**
  * - Restore context
  * - Tracing
- * - Check for max recusion error
+ * - Check for recusion error
  * - Build request message
  *
  * @param {*} context
  * @param {*} next
  */
-function onClientPreRequest(context, next) {
-  let pattern = context._pattern
+function onAct(context, next) {
+  const pattern = context._pattern
 
-  let parentContext = context._parentContext
-  let cleanPattern = context._cleanPattern
-  let currentTime = Util.nowHrTime()
+  const parentContext = context._parentContext
+  const cleanPattern = context._cleanPattern
+  const currentTime = Util.nowHrTime()
 
   // shared context
   context.context$ = pattern.context$ || parentContext.context$
@@ -42,8 +43,7 @@ function onClientPreRequest(context, next) {
       spanId: pattern.trace$.spanId || context._idGenerator(),
       traceId: pattern.trace$.traceId || context._idGenerator()
     }
-    context.trace$.parentSpanId =
-      pattern.trace$.parentSpanId || parentContext.trace$.spanId
+    context.trace$.parentSpanId = pattern.trace$.parentSpanId || parentContext.trace$.spanId
   } else {
     context.trace$ = {
       spanId: parentContext.trace$.spanId || context._idGenerator(),
@@ -60,7 +60,7 @@ function onClientPreRequest(context, next) {
   if (context._config.maxRecursion > 1) {
     const callSignature = `${context.trace$.traceId}:${context.trace$.method}`
     if (context.meta$ && context.meta$.referrers) {
-      var count = context.meta$.referrers[callSignature]
+      let count = context.meta$.referrers[callSignature]
       count += 1
       context.meta$.referrers[callSignature] = count
       if (count > context._config.maxRecursion) {
@@ -110,7 +110,7 @@ function onClientPreRequest(context, next) {
   }
 
   // build msg
-  let message = {
+  const message = {
     pattern: cleanPattern,
     meta: context.meta$,
     delegate: context.delegate$,
@@ -119,8 +119,6 @@ function onClientPreRequest(context, next) {
   }
 
   context._message = message
-
-  context.emit('clientPreRequest', context)
 
   next()
 }
@@ -132,8 +130,8 @@ function onClientPreRequest(context, next) {
  * @param {*} context
  * @param {*} next
  */
-function onClientPostRequest(context, next) {
-  let msg = context.response.payload
+function onActFinished(context, next) {
+  const msg = context.response.payload
 
   // pass to act context
   if (msg) {
@@ -158,7 +156,7 @@ function onClientPostRequest(context, next) {
     context.log.info(
       {
         pattern: context.trace$.method,
-        responseTime: context.trace$.duration / 1e6
+        responseTime: context.trace$.duration
       },
       'Request completed'
     )
@@ -167,13 +165,11 @@ function onClientPostRequest(context, next) {
       {
         requestId: context.request$.id,
         pattern: context.trace$.method,
-        responseTime: context.trace$.duration / 1e6
+        responseTime: context.trace$.duration
       },
       'Request completed'
     )
   }
-
-  context.emit('clientPostRequest', context)
 
   next()
 }
@@ -188,15 +184,15 @@ function onClientPostRequest(context, next) {
  * @param {any} next
  * @returns
  */
-function onServerPreRequest(context, req, reply, next) {
-  let m = context._serverDecoder(context.request.payload)
+function onRequest(context, req, reply, next) {
+  const m = context._serverDecoder(context.request.payload)
 
   if (m.error) {
     next(m.error)
     return
   }
 
-  let msg = m.value
+  const msg = m.value
 
   if (msg) {
     context.meta$ = msg.meta || {}
@@ -211,17 +207,16 @@ function onServerPreRequest(context, req, reply, next) {
 
   // incoming pattern
   context._pattern = context.request.payload.pattern
+
   // find matched action
   context.matchedAction = context._router.lookup(context._pattern)
+
   // We have to remove the pattern manually when maxMessages$ was received.
   // This is required because NATS unsubscribe events is fired too early.
   // Only relevant for server actions with custom transport options.
   if (context.matchedAction !== null) {
-    context.matchedAction._receivedMsg++
-    if (
-      context.matchedAction._receivedMsg ===
-      context.matchedAction.transport.maxMessages
-    ) {
+    context.matchedAction[sAddReceivedMsg]++
+    if (context.matchedAction[sAddReceivedMsg] === context.matchedAction.transport.maxMessages) {
       // we only need to remove the pattern because the subscription is unsubscribed by nats driver automatically
       context.cleanTopic(context._topic)
     }
@@ -229,7 +224,6 @@ function onServerPreRequest(context, req, reply, next) {
     // fallback to notFound action when defined
     context.matchedAction = context._router.lookup(context._notFoundPattern)
   }
-  context.emit('serverPreRequest', context)
 
   if (context._config.traceLog === true) {
     context.log = context.log.child({
@@ -258,7 +252,7 @@ function onServerPreRequest(context, req, reply, next) {
   next()
 }
 
-function onServerPreResponse(context, req, reply, next) {
+function onSend(context, req, reply, next) {
   if (context._config.traceLog === true) {
     context.log = context.log.child({
       tag: context._config.tag,
@@ -287,7 +281,6 @@ function onServerPreResponse(context, req, reply, next) {
 
 /**
  * Only validate when:
- * - no error was set before
  * - pattern could be resolved
  * - schemaCompiler was found
  * @param {*} context
@@ -295,9 +288,9 @@ function onServerPreResponse(context, req, reply, next) {
  * @param {*} reply
  * @param {*} next
  */
-function onServerPreRequestSchemaValidation(context, req, reply, next) {
+function onRequestSchemaValidation(context, req, reply, next) {
   if (context.matchedAction && context._schemaCompiler) {
-    const schema = context.matchedAction.schema
+    const { schema } = context.matchedAction
     const ret = context._schemaCompiler(schema)(req.payload.pattern)
     if (ret) {
       // promise
@@ -311,9 +304,11 @@ function onServerPreRequestSchemaValidation(context, req, reply, next) {
           next()
         }, next)
         return
-      } else if (ret.error) {
+      }
+      if (ret.error) {
         return next(ret.error)
-      } else if (ret.value) {
+      }
+      if (ret.value) {
         req.payload.pattern = ret.value
         return next()
       }
@@ -334,13 +329,9 @@ function onServerPreRequestSchemaValidation(context, req, reply, next) {
  * @param {*} reply
  * @param {*} next
  */
-function onServerPreResponseSchemaValidation(context, req, reply, next) {
-  if (
-    !reply.error &&
-    context.matchedAction &&
-    context._responseSchemaCompiler
-  ) {
-    const schema = context.matchedAction.schema
+function onSendSchemaValidation(context, req, reply, next) {
+  if (!reply.error && context.matchedAction && context._responseSchemaCompiler) {
+    const { schema } = context.matchedAction
     const ret = context._responseSchemaCompiler(schema)(reply.payload)
     if (ret) {
       // promise
@@ -360,11 +351,13 @@ function onServerPreResponseSchemaValidation(context, req, reply, next) {
           }
         )
         return
-      } else if (ret.error) {
+      }
+      if (ret.error) {
         reply.error = ret.error
         next(ret.error)
         return
-      } else if (ret.value) {
+      }
+      if (ret.value) {
         reply.payload = ret.value
         next()
         return
@@ -382,25 +375,19 @@ function onServerPreResponseSchemaValidation(context, req, reply, next) {
  * @param {any} next
  * @returns
  */
-function onServerPreRequestLoadTest(context, req, reply, next) {
+function onRequestLoadTest(context, req, reply, next) {
   if (context._config.load.checkPolicy === true) {
     const error = context._loadPolicy.check()
     if (error) {
-      return next(new Errors.ProcessLoadError(error.message, error.data))
+      next(new Errors.ProcessLoadError(error.message, error.data))
+      return
     }
   }
 
   next()
 }
 
-module.exports.onClientPreRequest = [onClientPreRequest]
-module.exports.onClientPostRequest = [onClientPostRequest]
-module.exports.onServerPreResponse = [
-  onServerPreResponseSchemaValidation,
-  onServerPreResponse
-]
-module.exports.onServerPreRequest = [
-  onServerPreRequest,
-  onServerPreRequestSchemaValidation,
-  onServerPreRequestLoadTest
-]
+module.exports.onAct = [onAct]
+module.exports.onActFinished = [onActFinished]
+module.exports.onSend = [onSendSchemaValidation, onSend]
+module.exports.onRequest = [onRequest, onRequestSchemaValidation, onRequestLoadTest]

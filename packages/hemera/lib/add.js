@@ -9,14 +9,9 @@
  *
  */
 
-const runExt = require('./extensionRunner').extRunner
+const { extRunner } = require('./extensionRunner')
+const { sAddReceivedMsg } = require('./symbols')
 
-/**
- *
- *
- * @export
- * @class Add
- */
 class Add {
   constructor(addDef) {
     this.sid = 0
@@ -26,28 +21,13 @@ class Add {
     this.transport = addDef.transport
     this.action = null
     // only used for maxMessages$ flag
-    this._receivedMsg = 0
+    this[sAddReceivedMsg] = 0
   }
 
-  /**
-   *
-   *
-   * @param {any} handler
-   *
-   * @memberof Add
-   */
   _use(handler) {
     this.middleware.push(handler)
   }
 
-  /**
-   *
-   *
-   * @param {any} handler
-   * @returns
-   *
-   * @memberOf Add
-   */
   use(handler) {
     if (Array.isArray(handler)) {
       handler.forEach(h => this._use(h))
@@ -58,33 +38,12 @@ class Add {
     return this
   }
 
-  /**
-   *
-   *
-   * @param {any} cb
-   *
-   * @memberOf Add
-   */
   end(cb) {
     this.action = cb
   }
 
-  /**
-   *
-   *
-   * @param {any} request
-   * @param {any} response
-   * @param {any} cb
-   *
-   * @memberof Add
-   */
   run(request, response, cb) {
-    runExt(
-      this.middleware,
-      (fn, state, next) => fn(request, response, next),
-      null,
-      cb
-    )
+    extRunner(this.middleware, (fn, state, next) => fn(request, response, next), null, cb)
   }
 }
 

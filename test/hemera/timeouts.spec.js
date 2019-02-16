@@ -1,16 +1,14 @@
 'use strict'
 
 describe('Timeouts', function() {
-  var PORT = 6242
-  var authUrl = 'nats://localhost:' + PORT
-  var server
+  const PORT = 6242
+  const authUrl = 'nats://localhost:' + PORT
+  let server
 
-  // Start up our own nats-server
   before(function(done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
-  // Shutdown our server after we are done
   after(function() {
     server.kill()
   })
@@ -251,22 +249,6 @@ describe('Timeouts', function() {
       }, 300)
     })
   })
-})
-
-describe('Timeouts', function() {
-  var PORT = 6242
-  var authUrl = 'nats://localhost:' + PORT
-  var server
-
-  // Start up our own nats-server
-  before(function(done) {
-    server = HemeraTestsuite.start_server(PORT, done)
-  })
-
-  // Shutdown our server after we are done
-  after(function() {
-    server.kill()
-  })
 
   it('Should throw timeout error when callback is not fired', function(done) {
     const nats = require('nats').connect(authUrl)
@@ -302,17 +284,18 @@ describe('Timeouts', function() {
     })
   })
 
-  it('Should be able listen on client timeout events in onClientPostRequest', function(done) {
+  it('Should be able listen on client timeout events in onActFinished', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
-      timeout: 150
+      timeout: 250,
+      logLevel: 'info'
     })
 
     let event = Sinon.spy()
 
     hemera.ready(() => {
-      hemera.on('clientPostRequest', function(ctx) {
+      hemera.ext('onActFinished', function(ctx, next) {
         const err = ctx.response.error
 
         expect(err).to.be.exists()
@@ -320,6 +303,7 @@ describe('Timeouts', function() {
         expect(err.message).to.be.equals('Client timeout')
 
         event()
+        next()
       })
 
       hemera.add(
@@ -349,7 +333,7 @@ describe('Timeouts', function() {
     })
   })
 
-  it('Should be able handle super error in extension onClientPostRequest', function(done) {
+  it('Should be able handle super error in extension onActFinished', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -357,7 +341,7 @@ describe('Timeouts', function() {
     })
 
     hemera.ready(() => {
-      hemera.ext('onClientPostRequest', function(ctx, next) {
+      hemera.ext('onActFinished', function(ctx, next) {
         next(new UnauthorizedError('test'))
       })
 
@@ -366,7 +350,9 @@ describe('Timeouts', function() {
           topic: 'email',
           cmd: 'send'
         },
-        (resp, cb) => {}
+        (resp, cb) => {
+          cb()
+        }
       )
 
       hemera.act(
@@ -386,7 +372,7 @@ describe('Timeouts', function() {
     })
   })
 
-  it('Should be able handle error in extension onClientPostRequest', function(done) {
+  it('Should be able handle error in extension onActFinished', function(done) {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats, {
@@ -394,7 +380,7 @@ describe('Timeouts', function() {
     })
 
     hemera.ready(() => {
-      hemera.ext('onClientPostRequest', function(ctx, next) {
+      hemera.ext('onActFinished', function(ctx, next) {
         next(new Error('test'))
       })
 
@@ -403,7 +389,9 @@ describe('Timeouts', function() {
           topic: 'email',
           cmd: 'send'
         },
-        (resp, cb) => {}
+        (resp, cb) => {
+          cb()
+        }
       )
 
       hemera.act(

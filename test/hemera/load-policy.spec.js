@@ -1,16 +1,14 @@
 'use strict'
 
 describe('Load policy for server component', function() {
-  var PORT = 6242
-  var authUrl = 'nats://localhost:' + PORT
-  var server
+  const PORT = 6242
+  const authUrl = 'nats://localhost:' + PORT
+  let server
 
-  // Start up our own nats-server
   before(function(done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
-  // Shutdown our server after we are done
   after(function() {
     server.kill()
   })
@@ -56,9 +54,7 @@ describe('Load policy for server component', function() {
         },
         (err, resp) => {
           expect(respondedSpy.called).to.be.equals(false)
-          expect(err instanceof Hemera.errors.ProcessLoadError).to.be.equals(
-            true
-          )
+          expect(err instanceof Hemera.errors.ProcessLoadError).to.be.equals(true)
           expect(err.heapUsed).to.be.exists()
           expect(err.rss).to.be.least(5)
           expect(err.heapUsed).to.be.exists()

@@ -61,13 +61,13 @@ function hemeraWeb(hemera, opts, done) {
 
     // include json payload to pattern
     if (req.is(contentTypeJson)) {
-      const body = req.body
+      const { body } = req
       if (body) {
         pattern = Object.assign(pattern, body)
       }
     } else if (req.is(contentForm)) {
       // include form data to pattern
-      const body = req.body
+      const { body } = req
       pattern = Object.assign(pattern, body)
     } else if (req.is(contentBinaryStream)) {
       // handle as raw binary data
@@ -115,6 +115,7 @@ function omit(obj, fields) {
 
 const plugin = Hp(hemeraWeb, {
   hemera: '>=5.0.0-rc.1',
+  // eslint-disable-next-line global-require
   name: require('./package.json').name,
   options: {
     port: 3000,

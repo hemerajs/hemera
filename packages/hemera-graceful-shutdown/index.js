@@ -8,7 +8,7 @@ function hemeraGracefulShutdown(hemera, opts, done) {
   gs.process = process
   gs.logger = hemera.log
   gs.addHandler((signal, cb) => {
-    hemera.log.info({ signal: signal }, 'triggering close hook')
+    hemera.log.info({ signal }, 'triggering close hook')
     hemera.close(cb)
   })
   gs.init()
@@ -18,6 +18,7 @@ function hemeraGracefulShutdown(hemera, opts, done) {
 
 const plugin = Hp(hemeraGracefulShutdown, {
   hemera: '>=5.0.0-rc.1',
+  /* eslint-disable-next-line */
   name: require('./package.json').name
 })
 

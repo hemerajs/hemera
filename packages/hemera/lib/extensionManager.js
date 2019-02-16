@@ -11,37 +11,23 @@
 
 const Errors = require('./errors')
 
-/**
- * @class ExtensionManager
- */
 class ExtensionManager {
   constructor() {
     this._stack = []
-    this._types = [
-      'onClientPreRequest',
-      'onClientPostRequest',
-      'onServerPreHandler',
-      'onServerPreRequest',
-      'onServerPreResponse'
-    ]
-    this.onClientPreRequest = []
-    this.onClientPostRequest = []
+    this._types = ['onAct', 'onActFinished', 'preHandler', 'onRequest', 'onSend', 'onResponse', 'onError']
+    this.onAct = []
+    this.onActFinished = []
 
-    this.onServerPreHandler = []
-    this.onServerPreRequest = []
-    this.onServerPreResponse = []
+    this.preHandler = []
+    this.onRequest = []
+    this.onResponse = []
+    this.onSend = []
+    this.onError = []
   }
 
-  /**
-   *
-   *
-   * @param {any} handler
-   *
-   * @memberof Extension
-   */
   _add(type, handler) {
     if (this._types.indexOf(type) === -1) {
-      let error = new Errors.HemeraError('Extension type is unknown', {
+      const error = new Errors.HemeraError('Extension type is unknown', {
         type,
         handler
       })
@@ -51,13 +37,6 @@ class ExtensionManager {
     this[type].push(handler)
   }
 
-  /**
-   *
-   *
-   * @param {any} handler
-   *
-   * @memberOf Extension
-   */
   add(type, handler) {
     if (Array.isArray(handler)) {
       handler.forEach(h => this._add(type, h))
@@ -66,18 +45,16 @@ class ExtensionManager {
     }
   }
 
-  /**
-   *
-   * @param {*} e
-   */
   static build(e) {
     const extensions = new ExtensionManager()
-    extensions.onClientPreRequest = e.onClientPreRequest.slice()
-    extensions.onClientPostRequest = e.onClientPostRequest.slice()
+    extensions.onAct = e.onAct.slice()
+    extensions.onActFinished = e.onActFinished.slice()
 
-    extensions.onServerPreHandler = e.onServerPreHandler.slice()
-    extensions.onServerPreRequest = e.onServerPreRequest.slice()
-    extensions.onServerPreResponse = e.onServerPreResponse.slice()
+    extensions.preHandler = e.preHandler.slice()
+    extensions.onRequest = e.onRequest.slice()
+    extensions.onSend = e.onSend.slice()
+    extensions.onResponse = e.onResponse.slice()
+    extensions.onError = e.onError.slice()
 
     return extensions
   }

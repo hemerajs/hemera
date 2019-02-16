@@ -1,7 +1,7 @@
 'use strict'
 
-const HemeraStats = require('../../packages/hemera-stats')
 const Joi = require('joi')
+const HemeraStats = require('../../packages/hemera-stats')
 
 process.setMaxListeners(0)
 
@@ -89,10 +89,7 @@ describe('Hemera-stats', function() {
           expect(resp.actions[2].schema.a.description).to.be.equals(
             'this key will match anything you give it'
           )
-          expect(resp.actions[2].schema.a.notes).to.be.equals([
-            'this is special',
-            'this is important'
-          ])
+          expect(resp.actions[2].schema.a.notes).to.be.equals(['this is special', 'this is important'])
           expect(resp.actions[2].schema.a.examples).to.be.equals([1])
           expect(resp.app).to.be.exists()
           hemera.close(done)

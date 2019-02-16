@@ -46,9 +46,7 @@ describe('Hemera-joi request validation', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('ValidationError')
           expect(err.details).to.be.exists()
-          expect(err.message).to.be.equals(
-            'child "a" fails because ["a" must be a number]'
-          )
+          expect(err.message).to.be.equals('child "a" fails because ["a" must be a number]')
           hemera.close(done)
         }
       )
@@ -86,9 +84,7 @@ describe('Hemera-joi request validation', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('ValidationError')
           expect(err.details).to.be.exists()
-          expect(err.message).to.be.equals(
-            'child "a" fails because ["a" must be a number]'
-          )
+          expect(err.message).to.be.equals('child "a" fails because ["a" must be a number]')
           hemera.close(done)
         }
       )
@@ -197,9 +193,7 @@ describe('Hemera-joi request validation', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('ValidationError')
           expect(err.details).to.be.exists()
-          expect(err.message).to.be.equals(
-            'child "a" fails because ["a" must be a number]'
-          )
+          expect(err.message).to.be.equals('child "a" fails because ["a" must be a number]')
           hemera.close(done)
         }
       )
@@ -242,9 +236,7 @@ describe('Hemera-joi request validation', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('ValidationError')
           expect(err.details).to.be.exists()
-          expect(err.message).to.be.equals(
-            'child "c" fails because ["c" is required]'
-          )
+          expect(err.message).to.be.equals('child "c" fails because ["c" is required]')
           hemera.close(done)
         }
       )
@@ -575,9 +567,7 @@ describe('Hemera-joi response validation', function() {
         (err, resp) => {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('ValidationError')
-          expect(err.message).to.be.equals(
-            'child "userId" fails because ["userId" must be a number]'
-          )
+          expect(err.message).to.be.equals('child "userId" fails because ["userId" must be a number]')
           hemera.close(done)
         }
       )
@@ -620,9 +610,7 @@ describe('Hemera-joi response validation', function() {
         (err, resp) => {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('ValidationError')
-          expect(err.message).to.be.equals(
-            'child "userId" fails because ["userId" must be a number]'
-          )
+          expect(err.message).to.be.equals('child "userId" fails because ["userId" must be a number]')
           hemera.close(done)
         }
       )

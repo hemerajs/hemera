@@ -1,4 +1,5 @@
 {
+  "private": true,
   "name": "hemera",
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "homepage": "https://hemerajs.github.io/hemera/",
@@ -33,22 +34,21 @@
   ],
   "scripts": {
     "format": "pretty-quick",
+    "format-all": "prettier --config .prettierrc --write ./packages/**/*.js ./test/**/*.js",
     "lint": "eslint \"./packages/**/*.js\" \"./test/**/*.js\"",
     "lint:fix": "eslint --fix  \"./packages/**/*.js\" \"./test/**/*.js\"",
-    "bootstrap": "npm i && lerna bootstrap",
-    "ci:setup": "npm i && lerna bootstrap",
+    "ci:setup": "yarn",
     "clean": "lerna clean",
     "publish": "lerna publish",
     "lerna": "lerna",
-    "test": "nyc mocha -b -r \"./test/hemera/bootstrap\" -t 5000 --exit \"./test/**/*.spec.js\" \"./packages/hemera-zipkin/test/**/*.js\" && npm run typescript",
+    "test": "nyc mocha -b -r \"./test/hemera/bootstrap\" -t 5000 --exit \"./test/**/*.spec.js\" && yarn run typescript",
     "typescript": "tsc --project ./test/hemera/types/tsconfig.json",
-    "coverage": "npm run test && nyc report --reporter=html",
-    "ci": "nyc mocha -r \"./test/hemera/bootstrap\" -t 5000 --exit \"./test/**/*.spec.js\" \"./packages/hemera-zipkin/test/**/*.js\" && nyc report --reporter=text-lcov | coveralls",
-    "lock": "lerna exec -- npm i --package-lock-only"
+    "coverage": "yarn run test && nyc report --reporter=html",
+    "ci": "nyc mocha -r \"./test/hemera/bootstrap\" -t 5000 --exit \"./test/**/*.spec.js\" && nyc report --reporter=text-lcov | coveralls"
   },
   "husky": {
     "hooks": {
-      "precommit": "pretty-quick --staged && npm run lint && npm run test"
+      "precommit": "pretty-quick --staged && yarn run lint && yarn run test"
     }
   },
   "engines": {
@@ -60,24 +60,35 @@
     "axios": "^0.18.0",
     "code": "^4.1.0",
     "coveralls": "^3.0.2",
-    "eslint": "^5.10.0",
-    "eslint-config-hemera": "^0.0.6",
+    "eslint": "^5.14.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-hemera": "^1.0.0",
+    "eslint-config-prettier": "^4.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-mocha": "^5.3.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-prettier": "^3.0.1",
+    "eslint-plugin-promise": "^4.0.1",
     "hemera-testsuite": "^4.1.0",
-    "husky": "^1.2.0",
+    "husky": "^1.3.1",
     "istanbul": "^0.4.5",
     "joi": "^12.0.0",
-    "lerna": "^3.6.0",
-    "lint-staged": "^8.1.0",
+    "lerna": "^3.11.0",
+    "lint-staged": "^8.1.3",
     "mocha": "^5.2.0",
     "mocha-lcov-reporter": "^1.3.0",
-    "nats": "1.0.x",
-    "nyc": "^13.1.0",
-    "prettier": "^1.15.3",
-    "pretty-quick": "^1.8.0",
+    "nats": "1.2.x",
+    "nyc": "^13.2.0",
+    "prettier": "^1.16.4",
+    "pretty-quick": "^1.10.0",
     "promise-retry": "^1.1.1",
     "proxyquire": "^2.1.0",
-    "sinon": "^7.2.0",
-    "split2": "^3.0.0",
-    "typescript": "^3.2.2"
-  }
+    "sinon": "^7.2.3",
+    "split2": "^3.1.0",
+    "typescript": "^3.3.3"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "dependencies": {}
 }

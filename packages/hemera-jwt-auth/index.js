@@ -11,7 +11,7 @@ function hemeraJwtAuth(hemera, opts, done) {
     JwtError
   })
 
-  hemera.ext('onServerPreHandler', function(ctx, req, res, next) {
+  hemera.ext('preHandler', function(ctx, req, res, next) {
     // Get auth from server method
     const auth = ctx.matchedAction.schema.auth$
 
@@ -25,33 +25,27 @@ function hemeraJwtAuth(hemera, opts, done) {
       return next()
     }
 
-    JWT.verify(
-      ctx.meta$.jwtToken,
-      opts.jwt.secret,
-      opts.jwt.options,
-      (err, decoded) => {
-        if (err) {
-          return next(err)
-        }
-        // Make accessible in server method context
-        ctx.auth$ = decoded
-        if (typeof auth === 'object') {
-          // Support single scope
-          if (typeof auth.scope === 'string') {
-            auth.scope = [auth.scope]
-          }
-          // Check if scope is subset
-          if (isSubset(decoded.scope, auth.scope)) {
-            return next()
-          }
-          // Invalid scope return error
-          return next(new JwtError('Invalid scope'))
-        } else {
-          // Invalid auth options return error
-          return next(new JwtError('Invalid auth$ options'))
-        }
+    JWT.verify(ctx.meta$.jwtToken, opts.jwt.secret, opts.jwt.options, (err, decoded) => {
+      if (err) {
+        return next(err)
       }
-    )
+      // Make accessible in server method context
+      ctx.auth$ = decoded
+      if (typeof auth === 'object') {
+        // Support single scope
+        if (typeof auth.scope === 'string') {
+          auth.scope = [auth.scope]
+        }
+        // Check if scope is subset
+        if (isSubset(decoded.scope, auth.scope)) {
+          return next()
+        }
+        // Invalid scope return error
+        return next(new JwtError('Invalid scope'))
+      }
+      // Invalid auth options return error
+      return next(new JwtError('Invalid auth$ options'))
+    })
   })
 
   done()
@@ -72,6 +66,7 @@ function isSubset(scope, subset) {
 
 const plugin = Hp(hemeraJwtAuth, {
   hemera: '>=5.0.0-rc.1',
+  // eslint-disable-next-line global-require
   name: require('./package.json').name,
   scoped: false,
   options: {

@@ -8,9 +8,7 @@ function hemeraBlipp(hemera, opts, done) {
   hemera.ext('onAdd', definition => {
     actions.push({
       hasSpecialProp:
-        definition.transport.pubsub ||
-        definition.transport.maxMessages ||
-        definition.transport.queue,
+        definition.transport.pubsub || definition.transport.maxMessages || definition.transport.queue,
       pattern: patternToString(definition.pattern),
       type: definition.transport.pubsub ? 'PUB' : 'REQ'
     })
@@ -24,18 +22,16 @@ function hemeraBlipp(hemera, opts, done) {
     actions.sort((a, b) => a.pattern > b.pattern)
 
     let output = ''
-    for (let action of actions) {
+    for (const action of actions) {
       output += `${chalk.green(action.type)}`
       if (action.hasSpecialProp) {
         output += `/${chalk.keyword('orange')('$')}`
       }
-      output += `\t${action.pattern.replace(
-        /(?::[\w]+|\[:\w+\])/g,
-        chalk.gray('$&')
-      )}\n`
+      output += `\t${action.pattern.replace(/(?::[\w]+|\[:\w+\])/g, chalk.gray('$&'))}\n`
     }
 
     if (actions.length > 0) {
+      /* eslint-disable no-console */
       console.log(`🏷️  Actions:`)
       console.log(output)
     }
@@ -45,10 +41,10 @@ function hemeraBlipp(hemera, opts, done) {
     if (typeof pattern === 'string') {
       return pattern
     }
-    let sb = []
+    const sb = []
 
-    for (var key in pattern) {
-      sb.push(key + ':' + pattern[key])
+    for (const key in pattern) {
+      sb.push(`${key}:${pattern[key]}`)
     }
 
     sb.sort()
@@ -61,5 +57,6 @@ function hemeraBlipp(hemera, opts, done) {
 
 module.exports = Hp(hemeraBlipp, {
   hemera: '>=5.0.0',
+  /* eslint-disable-next-line */
   name: require('./package.json').name
 })

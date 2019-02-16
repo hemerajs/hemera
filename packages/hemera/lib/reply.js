@@ -9,198 +9,185 @@
  *
  */
 
-const Errors = require('./errors')
 const Errio = require('errio')
+const Errors = require('./errors')
 const runExt = require('./extensionRunner').extRunner
-const serverExtIterator = require('./extensionRunner').serverExtIterator
+const { responseExtIterator, serverExtIterator, serverOnErrorIterator } = require('./extensionRunner')
+const { sReplySent, sReplyRequest, sReplyResponse, sReplyHemera } = require('./symbols')
 
-/**
- * @TODO rename hook to onServerSend
- *
- * @class Reply
- */
 class Reply {
-  /**
-   * Creates an instance of Reply.
-   * @param {any} request
-   * @param {any} response
-   * @param {any} hemera
-   * @param {any} logger
-   *
-   * @memberof Reply
-   */
   constructor(request, response, hemera, logger) {
-    this._request = request
-    this._response = response
-    this.hemera = hemera
+    this[sReplyRequest] = request
+    this[sReplyResponse] = response
+    this[sReplyHemera] = hemera
     this.log = logger
-    this.sent = false
+    this[sReplySent] = false
     this.isError = false
   }
 
-  /**
-   *
-   *
-   * @param {any} payload
-   *
-   * @memberof Reply
-   */
   set payload(value) {
-    this._response.payload = value
+    this[sReplyResponse].payload = value
   }
 
-  /**
-   *
-   *
-   * @readonly
-   *
-   * @memberof Reply
-   */
   get payload() {
-    return this._response.payload
+    return this[sReplyResponse].payload
   }
 
-  /**
-   * Set the response error
-   * Error can not be set twice
-   *
-   * @memberof Reply
-   */
   set error(value) {
-    this._response.error = this.hemera._attachHops(
-      this.hemera.getRootError(value)
-    )
+    this[sReplyResponse].error = this[sReplyHemera]._attachHops(this[sReplyHemera].getRootError(value))
   }
 
-  /**
-   *
-   *
-   * @readonly
-   *
-   * @memberof Reply
-   */
   get error() {
-    return this._response.error
+    return this[sReplyResponse].error
   }
-  /**
-   *
-   */
+
   next(msg) {
-    this.sent = false
+    this[sReplySent] = false
     this.send(msg)
   }
 
-  /**
-   * Set the response payload or error
-   *
-   * @param {any} msg
-   * @memberof Reply
-   */
   send(msg) {
-    const self = this
-    if (self.sent) {
-      self.log.warn(new Errors.HemeraError('Reply already sent'))
+    if (this[sReplySent] === true) {
+      this.log.warn(new Errors.HemeraError('Reply already sent'))
       return
     }
 
-    if (!(msg instanceof Error) && self.isError === true) {
-      const internalError = new Errors.HemeraError(
-        `Response error must be derivated from type 'Error' but got '${typeof msg}'`
-      )
-      self.log.error(internalError)
-      return
-    }
+    this[sReplySent] = true
 
-    self.sent = true
+    const isNativeError = msg instanceof Error
 
     // 0, null, '' can be send
     if (msg !== undefined) {
-      if (msg instanceof Error) {
-        self.error = msg
-        self.payload = null
+      if (isNativeError) {
+        this.error = msg
+        this.payload = null
       } else {
-        self.error = null
-        self.payload = msg
+        this.error = null
+        this.payload = msg
       }
     }
 
-    self.serverPreResponse()
+    if (this.isError === true || isNativeError) {
+      this._handleError(msg, () => this._onErrorHook())
+      return
+    }
+
+    this._sendHook()
   }
-  /**
-   *
-   */
-  serverPreResponse() {
-    const self = this
 
-    self.hemera.emit('serverPreResponse', self.hemera)
-
-    runExt(
-      self.hemera._extensionManager.onServerPreResponse,
-      serverExtIterator,
-      self.hemera,
-      err => self._onServerPreResponseCompleted(err)
-    )
-  }
-  /**
-   *
-   * @param {*} extensionError
-   */
-  _onServerPreResponseCompleted(extensionError) {
-    const self = this
-
-    if (extensionError) {
+  _handleError(err, cb) {
+    if (!(err instanceof Error)) {
       const internalError = new Errors.HemeraError(
-        'onServerPreResponse extension',
-        self.hemera.errorDetails
-      ).causedBy(extensionError)
-      self.log.error(internalError)
-      self.hemera.emit('serverResponseError', extensionError)
-      // don't use send() here in order to avoid rexecution of serverPreResponse
-      // and to send the "send-error" as final response
-      self.error = extensionError
+        `Response error must be derivated from type 'Error' but got '${typeof err}'`
+      )
+      this.log.error(internalError)
+      return
     }
 
-    if (self._response.replyTo) {
-      const msg = self.build(
-        self.hemera.meta$,
-        self.hemera.trace$,
-        self.hemera.request$
-      )
+    if (this[sReplyHemera]._errorHandler) {
+      const result = this[sReplyHemera]._errorHandler(this[sReplyHemera], err, this.reply)
+      if (result && typeof result.then === 'function') {
+        result
+          .then(() => {
+            if (cb) {
+              cb()
+            }
+          })
+          .catch(err => this._logError(err, 'error handler'))
+        return
+      }
+    }
 
-      self.hemera._transport.send(self._response.replyTo, msg.value)
+    if (cb) {
+      cb()
     }
   }
-  /**
-   *
-   * @param {*} meta$
-   * @param {*} trace$
-   * @param {*} request$
-   */
-  build(meta$, trace$, request$) {
-    const self = this
 
-    let message = {
+  _logError(err, message) {
+    const internalError = new Errors.HemeraError(message, this[sReplyHemera].errorDetails).causedBy(err)
+    this.log.error(internalError)
+  }
+
+  _onErrorHook() {
+    if (this[sReplyHemera]._extensionManager.onError.length) {
+      runExt(this[sReplyHemera]._extensionManager.onError, serverOnErrorIterator, this[sReplyHemera], err => {
+        if (err) {
+          this._logError(err, 'onError extension')
+        }
+        this._sendHook()
+      })
+      return
+    }
+
+    this._sendHook()
+  }
+
+  _sendHook() {
+    if (this[sReplyHemera]._extensionManager.onSend.length) {
+      runExt(this[sReplyHemera]._extensionManager.onSend, serverExtIterator, this[sReplyHemera], err => {
+        if (err) {
+          this._logError(err, 'onSend extension')
+
+          // first set error has precedence
+          if (this.error === null) {
+            this[sReplySent] = false
+            this.send(err)
+            return
+          }
+        }
+
+        this._send()
+      })
+      return
+    }
+
+    this._send()
+  }
+
+  _send() {
+    const msg = this.build(this[sReplyHemera].meta$, this[sReplyHemera].trace$, this[sReplyHemera].request$)
+
+    // don't try to send encoding issues back because
+    // it could end up in a endloss loop
+    if (msg.error) {
+      const internalError = new Errors.ParseError('Server encoding').causedBy(msg.error)
+      this.log.error(internalError)
+      this._handleError(msg.error)
+      return
+    }
+
+    if (this[sReplyResponse].replyTo) {
+      this[sReplyHemera]._transport.send(this[sReplyResponse].replyTo, msg.value)
+    }
+
+    this._onResponse()
+  }
+
+  _onResponse() {
+    if (this[sReplyHemera]._extensionManager.onResponse.length) {
+      runExt(
+        this[sReplyHemera]._extensionManager.onResponse,
+        responseExtIterator,
+        this[sReplyHemera],
+        err => {
+          if (err) {
+            this._logError(err, 'onResponse extension')
+          }
+        }
+      )
+    }
+  }
+
+  build(meta$, trace$, request$) {
+    const message = {
       meta: meta$ || {},
       trace: trace$ || {},
       request: request$,
-      result: self.error ? null : self.payload,
-      error: self.error ? Errio.toObject(self.error) : null
+      result: this.error ? null : this.payload,
+      error: this.error ? Errio.toObject(this.error) : null
     }
 
-    let msg = self.hemera._serverEncoder(message)
-
-    if (msg.error) {
-      let internalError = new Errors.ParseError(
-        'Server payload encoding'
-      ).causedBy(msg.error)
-      self.log.error(internalError)
-      self.hemera.emit('serverResponseError', msg.error)
-      message.error = Errio.toObject(msg.error)
-      message.result = null
-      msg = self.hemera._serverEncoder(message)
-    }
-
-    return msg
+    return this[sReplyHemera]._serverEncoder(message)
   }
 }
 

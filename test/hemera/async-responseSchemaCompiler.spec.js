@@ -1,16 +1,14 @@
 'use strict'
 
 describe('Async Response Schema Compiler', function() {
-  var PORT = 6242
-  var authUrl = 'nats://localhost:' + PORT
-  var server
+  const PORT = 6242
+  const authUrl = 'nats://localhost:' + PORT
+  let server
 
-  // Start up our own nats-server
   before(function(done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
-  // Shutdown our server after we are done
   after(function() {
     server.kill()
   })
@@ -103,6 +101,75 @@ describe('Async Response Schema Compiler', function() {
         (err, resp) => {
           expect(err).to.be.exists()
           expect(err.message).to.be.equals('test')
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should not be able to define a seperator schema compiler for a topic which is hosted by a plugin', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    const rootSpy = Sinon.spy()
+    const pluginSpy = Sinon.spy()
+
+    hemera.setResponseSchemaCompiler(schema => {
+      return payload => {
+        rootSpy()
+        return Promise.resolve(true)
+      }
+    })
+
+    // Plugin
+    let myPlugin = Hp(
+      function(hemera, options, done) {
+        hemera.setResponseSchemaCompiler(schema => {
+          return payload => {
+            pluginSpy()
+            return Promise.resolve(true)
+          }
+        })
+        hemera.add(
+          {
+            topic: 'math',
+            cmd: 'add'
+          },
+          (resp, cb) => {
+            cb()
+          }
+        )
+
+        done()
+      },
+      {
+        name: 'myPlugin'
+      }
+    )
+
+    hemera.use(myPlugin)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'sub'
+        },
+        (resp, cb) => {
+          cb()
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'sub'
+        },
+        (err, resp) => {
+          expect(err).not.to.be.exists()
+          expect(resp).to.be.equals(true)
+          expect(rootSpy.called).to.be.equals(false)
+          expect(pluginSpy.called).to.be.equals(true)
           hemera.close(done)
         }
       )

@@ -3,7 +3,7 @@
 const Hp = require('hemera-plugin')
 
 function hemeraKnabe(hemera, opts, done) {
-  let dependencies = []
+  const dependencies = []
 
   // add all providers
   hemera.ext('onAdd', definition => {
@@ -13,7 +13,7 @@ function hemeraKnabe(hemera, opts, done) {
   })
 
   // add all consumers
-  hemera.ext('onClientPreRequest', (hemera, next) => {
+  hemera.ext('onAct', (hemera, next) => {
     if (dependencies.indexOf(hemera.trace$.service) === -1) {
       dependencies.push(hemera.trace$.service)
       if (opts.updates) {
@@ -46,6 +46,7 @@ function hemeraKnabe(hemera, opts, done) {
 
 module.exports = Hp(hemeraKnabe, {
   hemera: '^5.0.0',
+  /* eslint-disable-next-line */
   name: require('./package.json').name,
   options: {
     updates: false, // notify you about consumers updates

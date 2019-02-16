@@ -63,8 +63,8 @@ const siteConfig = {
   favicon: 'img/favicon.png',
   /* colors for website */
   colors: {
-    primaryColor: '#000000',
-    secondaryColor: '#665d79'
+    primaryColor: '#4A4090',
+    secondaryColor: '#79589F'
   },
   // This copyright info is used in /core/Footer.js and blog rss/atom feeds.
   copyright: 'Copyright © ' + new Date().getFullYear() + ' Dustin Deus',
@@ -72,7 +72,7 @@ const siteConfig = {
   projectName: 'hemera', // or set an env variable PROJECT_NAME
   highlight: {
     // Highlight.js theme to use for syntax highlighting in code blocks
-    theme: 'default'
+    theme: 'github'
   },
   scripts: ['https://buttons.github.io/buttons.js'],
   // You may provide arbitrary config keys to be used as needed by your template.

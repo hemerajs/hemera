@@ -3,16 +3,14 @@
 const split = require('split2')
 
 describe('Error logs', function() {
-  var PORT = 6242
-  var authUrl = 'nats://localhost:' + PORT
-  var server
+  const PORT = 6242
+  const authUrl = 'nats://localhost:' + PORT
+  let server
 
-  // Start up our own nats-server
   before(function(done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
-  // Shutdown our server after we are done
   after(function() {
     server.kill()
   })
@@ -51,6 +49,7 @@ describe('Error logs', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('TimeoutError')
           expect(resp).to.be.undefined()
+          expect(logs[0].type).to.be.equals('Error')
           expect(logs[0].msg).to.be.equals(
             `Response error must be derivated from type 'Error' but got 'string'`
           )

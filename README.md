@@ -42,7 +42,7 @@ The key features of NATS in combination with Hemera are:
 * **Pattern driven**: Define RPC's in JSON and use the flexibility of pattern-matching.
 * **Request & Reply**: By default point-to-point involves the fastest or first to respond.
 * **Publish & Subscribe**: Hemera supports all features of NATS. This includes wildcards in subjects and normal publish and fanout mechanism.
-* **Tracing**: Builtin tracing capabilities but we also provide plugins for [Zipkin](https://zipkin.io/) or [Jaeger](https://github.com/jaegertracing/jaeger).
+* **Tracing**: Builtin tracing capabilities but we also provide plugin for [Jaeger](https://github.com/jaegertracing/jaeger).
 * **Monitoring**: NATS server can be monitored by cli or a dashboard.
 * **Payload validation**: Create your own validator or use existing plugins e.g [hemera-joi](https://github.com/hemerajs/hemera/tree/master/packages/hemera-joi) or [hemera-ajv](https://github.com/hemerajs/hemera/tree/master/packages/hemera-ajv).
 * **Serialization**: Use custom serializer e.g [hemera-mgspack](https://github.com/hemerajs/hemera/tree/master/packages/hemera-msgpack).

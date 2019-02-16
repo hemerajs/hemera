@@ -5,20 +5,49 @@ const hemera = new Hemera(nats.connect('nats://127.0.0.1:4242'), {
   logLevel: 'debug'
 })
 
-hemera.ready((err: Error) => {
-  hemera.ext('onAdd', function(addDefintion: Hemera.AddDefinition) {})
-  hemera.ext('onClose', function(
-    hemera: Hemera<Hemera.NoContext, Hemera.NoContext>
-  ) {})
-
-  hemera.on('serverPreResponse', function(
-    hemera: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>
-  ) {
-    const trace = this.trace$
+hemera.ready(async (err: Error) => {
+  // callback-style
+  hemera.ext('onAct', function(hemera, next) {
+    // some code
+    next()
+  })
+  hemera.ext('onActFinished', function(hemera, next) {
+    // some code
+    next()
   })
 
-  hemera.ext('onServerPreResponse', function(hemera, request, reply, next) {
+  hemera.ext('preHandler', function(hemera, request, reply, next) {
+    // some code
     next()
+  })
+  hemera.ext('onRequest', function(hemera, request, reply, next) {
+    // some code
+    next()
+  })
+  hemera.ext('onSend', function(hemera, request, reply, next) {
+    // some code
+    next()
+  })
+  hemera.ext('onResponse', function(hemera, reply, next) {
+    // some code
+    next()
+  })
+
+  // async/await
+  hemera.ext('preHandler', async function(hemera, request, reply) {
+    // some code
+  })
+  hemera.ext('onAct', async hemera => {
+    // some code
+  })
+  hemera.ext('onResponse', async function(hemera, reply) {
+    // some code
+  })
+  hemera.ext('onClose', async addDefinition => {
+    // some code
+  })
+  hemera.ext('onAdd', async addDefinition => {
+    // some code
   })
 
   hemera.add(
@@ -49,11 +78,9 @@ hemera.ready((err: Error) => {
     }
   )
 
-  const response = hemera.act({
+  const response = await hemera.act({
     topic: 'test'
   })
 
-  response.then(responseData => {
-    responseData.context.log.info(responseData.data)
-  })
+  response.context.log.info(response.data)
 })

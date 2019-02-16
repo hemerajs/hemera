@@ -1,16 +1,14 @@
 'use strict'
 
 describe('Schema Compiler', function() {
-  var PORT = 6242
-  var authUrl = 'nats://localhost:' + PORT
-  var server
+  const PORT = 6242
+  const authUrl = 'nats://localhost:' + PORT
+  let server
 
-  // Start up our own nats-server
   before(function(done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
-  // Shutdown our server after we are done
   after(function() {
     server.kill()
   })
@@ -128,9 +126,7 @@ describe('Schema Compiler', function() {
         hemera.setSchemaCompiler(null)
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals(
-          'SchemaCompiler handler must be a function'
-        )
+        expect(err.message).to.be.equals('SchemaCompiler handler must be a function')
         hemera.close(done)
       }
     })
@@ -146,9 +142,7 @@ describe('Schema Compiler', function() {
         hemera.setResponseSchemaCompiler(null)
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals(
-          'ResponseSchemaCompiler handler must be a function'
-        )
+        expect(err.message).to.be.equals('ResponseSchemaCompiler handler must be a function')
         hemera.close(done)
       }
     })

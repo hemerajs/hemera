@@ -1,16 +1,14 @@
 'use strict'
 
 describe('Async Schema Compiler', function() {
-  var PORT = 6242
-  var authUrl = 'nats://localhost:' + PORT
-  var server
+  const PORT = 6242
+  const authUrl = 'nats://localhost:' + PORT
+  let server
 
-  // Start up our own nats-server
   before(function(done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
-  // Shutdown our server after we are done
   after(function() {
     server.kill()
   })
@@ -159,6 +157,75 @@ describe('Async Schema Compiler', function() {
           setTimeout(() => {
             hemera.close(done)
           }, 200)
+        }
+      )
+    })
+  })
+
+  it('Should not be able to define a seperator schema compiler for a topic which is hosted by a plugin', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+    const rootSpy = Sinon.spy()
+    const pluginSpy = Sinon.spy()
+
+    hemera.setSchemaCompiler(schema => {
+      return payload => {
+        rootSpy()
+        return Promise.resolve()
+      }
+    })
+
+    // Plugin
+    let myPlugin = Hp(
+      function(hemera, options, done) {
+        hemera.setSchemaCompiler(schema => {
+          return payload => {
+            pluginSpy()
+            return Promise.resolve()
+          }
+        })
+        hemera.add(
+          {
+            topic: 'math',
+            cmd: 'add'
+          },
+          (resp, cb) => {
+            cb()
+          }
+        )
+
+        done()
+      },
+      {
+        name: 'myPlugin'
+      }
+    )
+
+    hemera.use(myPlugin)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'sub'
+        },
+        (resp, cb) => {
+          cb()
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'sub'
+        },
+        (err, resp) => {
+          expect(err).not.to.be.exists()
+          expect(resp).to.be.equals()
+          expect(rootSpy.called).to.be.equals(false)
+          expect(pluginSpy.called).to.be.equals(true)
+          hemera.close(done)
         }
       )
     })

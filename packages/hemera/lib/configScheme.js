@@ -1,6 +1,6 @@
 const Joi = require('joi')
 const Os = require('os')
-const Stream = require('stream').Stream
+const { Stream } = require('stream')
 const Util = require('./util')
 
 module.exports = Joi.object().keys({
@@ -11,7 +11,7 @@ module.exports = Joi.object().keys({
   // The number of millis to wait a plugin to load after which it will error, 0 = disabled
   pluginTimeout: Joi.number()
     .integer()
-    .default(0),
+    .default(10),
   tag: Joi.string().default(''),
   // Enables pretty log formatter in Pino default logger
   prettyLog: Joi.alternatives()

@@ -12,6 +12,9 @@ function hemeraSlackbot(hemera, opts, done) {
     name: opts.name
   })
 
+  let subscribed = false
+  let wsConnected = false
+
   // Gracefully shutdown
   hemera.ext('onClose', (ctx, done) => {
     hemera.log.debug('Websocket connection closed!')
@@ -21,9 +24,6 @@ function hemeraSlackbot(hemera, opts, done) {
       done()
     }
   })
-
-  let subscribed = false
-  let wsConnected = false
 
   const validMethods = [
     'getChannels',
@@ -53,9 +53,7 @@ function hemeraSlackbot(hemera, opts, done) {
       })
       .use(validationMiddleware)
       .end(function slackBotAction(req, cb) {
-        // eslint-disable-next-line promise/catch-or-return
-        bot[method]
-          .apply(bot, req.params)
+        bot[method](bot, ...req.params)
           .then(resp => cb(null, resp))
           .fail(err => cb(err))
       })
@@ -66,7 +64,7 @@ function hemeraSlackbot(hemera, opts, done) {
       topic,
       cmd: 'subscribe'
     },
-    function(req, reply) {
+    function subscribe(req, reply) {
       if (subscribed) {
         reply(null, true)
         return
@@ -83,7 +81,7 @@ function hemeraSlackbot(hemera, opts, done) {
     }
   )
 
-  bot.on('start', function() {
+  bot.on('start', function start() {
     hemera.log.debug('Websocket connection open!')
     wsConnected = true
     done()
@@ -99,12 +97,13 @@ function hemeraSlackbot(hemera, opts, done) {
   })
 }
 
-function validationMiddleware(req, reply) {
+function validationMiddleware(req) {
   return Joi.validate(req.payload.pattern.params, Joi.array().default([]))
 }
 
 const plugin = Hp(hemeraSlackbot, {
   hemera: '>=5.0.0-rc.1',
+  /* eslint-disable-next-line */
   name: require('./package.json').name
 })
 

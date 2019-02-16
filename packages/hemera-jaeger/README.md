@@ -10,9 +10,29 @@ https://eng.uber.com/distributed-tracing/
 ## Usage
 
 ```js
-const hemera = new Hemera(nats)
-hemera.use(require('hemera-jaeger'), {
-  serviceName: 'math'
+hemera.use(hemeraJaeger, {
+  // See schema https://github.com/jaegertracing/jaeger-client-node/blob/master/src/configuration.js#L37
+  config: {
+    serviceName: 'math',
+    sampler: {
+      type: 'const',
+      param: 1
+    },
+    reporter: {
+      logSpans: true
+    }
+  },
+  // See options https://github.com/jaegertracing/jaeger-client-node/blob/master/src/configuration.js#L192
+  options: {
+    logger: {
+      info: function logInfo(msg) {
+        console.log('INFO ', msg)
+      },
+      error: function logError(msg) {
+        console.log('ERROR', msg)
+      }
+    }
+  }
 })
 ```
 
@@ -21,42 +41,10 @@ hemera.use(require('hemera-jaeger'), {
 Run the [Jaeger tracer](http://jaeger.readthedocs.io/en/latest/)
 
 ```bash
-$ docker run -d -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 -p5775:5775/udp -p6831:6831/udp -p6832:6832/udp -p5778:5778 -p16686:16686 -p14268:14268 -p9411:9411 jaegertracing/all-in-one:latest
+$ docker run -d -e -p5775:5775/udp -p6831:6831/udp -p6832:6832/udp -p5778:5778 -p16686:16686 -p14268:14268 -p9411:9411 jaegertracing/all-in-one:latest
 ```
 
 You can then navigate to http://localhost:16686 to access the Jaeger UI.
-
-## Add contextual data
-
-Look in the [documentation](https://hemerajs.github.io/hemera/1_delegate.html) to learn more about delegate in hemera.
-
-```js
-hemera.use(hemeraJaeger, {
-  serviceName: 'math',
-  delegateTags: [
-    {
-      key: 'query',
-      tag: 'hemera.db.query'
-    }
-  ]
-})
-```
-
-## Use different sampler
-
-Default is `Const`. See [here](https://github.com/uber/jaeger-client-node/tree/master/src/samplers) for all samplers.
-
-```js
-hemera.use(hemeraJaeger, {
-  serviceName: 'math',
-  jaeger: {
-    sampler: {
-      type: 'RateLimiting',
-      options: 1
-    }
-  }
-})
-```
 
 ## Build parent context manually
 
@@ -108,13 +96,14 @@ hemera.act({
 
 ## Plugin decorators
 
-* .jaeger
+- .jaeger
+Represent an object with following properties
+  - tracer: The jaeger tracer instance
 
 ## Caveats
 
-* The jaeger tracer generates it's own tracing data.
-* This plugin transfers the tracing context in `trace$.opentracing` property.
-* Client and Server response errors are logged as `error` events.
+- The jaeger tracer generates it's own tracing data.
+- This plugin transfers the tracing context in `trace$.opentracing` property.
 
 ## Advanced example
 

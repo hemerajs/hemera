@@ -331,56 +331,28 @@ declare class Hemera<Request, Response> {
 
   // client extensions
   ext(
-    name: 'onClientPreRequest',
+    name: 'onAct',
     handler: (
       instance: Hemera<Hemera.ClientRequest, Hemera.ClientResponse>,
       next: Hemera.NodeCallback
     ) => void
   ): Hemera<Hemera.ClientRequest, Hemera.ClientResponse>
   ext(
-    name: 'onClientPreRequest',
+    name: 'onAct',
     handler: (
       instance: Hemera<Hemera.ClientRequest, Hemera.ClientResponse>
     ) => Promise<void>
   ): Hemera<Hemera.ClientRequest, Hemera.ClientResponse>
 
   ext(
-    name: 'onClientPostRequest',
+    name: 'onActFinished',
     handler: (
       instance: Hemera<Hemera.ClientRequest, Hemera.ClientResponse>,
       next: Hemera.NodeCallback
     ) => void
   ): Hemera<Hemera.ClientRequest, Hemera.ClientResponse>
   ext(
-    name: 'onClientPostRequest',
-    handler: (
-      instance: Hemera<Hemera.ClientRequest, Hemera.ClientResponse>
-    ) => Promise<void>
-  ): Hemera<Hemera.ClientRequest, Hemera.ClientResponse>
-
-  ext(
-    name: 'onClientPreRequest',
-    handler: (
-      instance: Hemera<Hemera.ClientRequest, Hemera.ClientResponse>,
-      next: Hemera.NodeCallback
-    ) => void
-  ): Hemera<Hemera.ClientRequest, Hemera.ClientResponse>
-  ext(
-    name: 'onClientPreRequest',
-    handler: (
-      instance: Hemera<Hemera.ClientRequest, Hemera.ClientResponse>
-    ) => Promise<void>
-  ): Hemera<Hemera.ClientRequest, Hemera.ClientResponse>
-
-  ext(
-    name: 'onClientPostRequest',
-    handler: (
-      instance: Hemera<Hemera.ClientRequest, Hemera.ClientResponse>,
-      next: Hemera.NodeCallback
-    ) => void
-  ): Hemera<Hemera.ClientRequest, Hemera.ClientResponse>
-  ext(
-    name: 'onClientPostRequest',
+    name: 'onActFinished',
     handler: (
       instance: Hemera<Hemera.ClientRequest, Hemera.ClientResponse>
     ) => Promise<void>
@@ -388,7 +360,7 @@ declare class Hemera<Request, Response> {
 
   // server extensions
   ext(
-    name: 'onServerPreHandler',
+    name: 'preHandler',
     handler: (
       instance: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>,
       request: Hemera.ServerRequest,
@@ -397,7 +369,7 @@ declare class Hemera<Request, Response> {
     ) => void
   ): Hemera<Hemera.ServerRequest, Hemera.ServerResponse>
   ext(
-    name: 'onServerPreHandler',
+    name: 'preHandler',
     handler: (
       instance: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>,
       request: Hemera.ServerRequest,
@@ -406,7 +378,7 @@ declare class Hemera<Request, Response> {
   ): Hemera<Hemera.ServerRequest, Hemera.ServerResponse>
 
   ext(
-    name: 'onServerPreRequest',
+    name: 'onRequest',
     handler: (
       instance: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>,
       request: Hemera.ServerRequest,
@@ -415,7 +387,7 @@ declare class Hemera<Request, Response> {
     ) => void
   ): Hemera<Hemera.ServerRequest, Hemera.ServerResponse>
   ext(
-    name: 'onServerPreRequest',
+    name: 'onRequest',
     handler: (
       instance: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>,
       request: Hemera.ServerRequest,
@@ -424,7 +396,7 @@ declare class Hemera<Request, Response> {
   ): Hemera<Hemera.ServerRequest, Hemera.ServerResponse>
 
   ext(
-    name: 'onServerPreResponse',
+    name: 'onSend',
     handler: (
       instance: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>,
       request: Hemera.ServerRequest,
@@ -433,7 +405,7 @@ declare class Hemera<Request, Response> {
     ) => void
   ): Hemera<Hemera.ServerRequest, Hemera.ServerResponse>
   ext(
-    name: 'onServerPreResponse',
+    name: 'onSend',
     handler: (
       instance: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>,
       request: Hemera.ServerRequest,
@@ -441,56 +413,39 @@ declare class Hemera<Request, Response> {
     ) => Promise<void>
   ): Hemera<Hemera.ServerRequest, Hemera.ServerResponse>
 
-  // events
-  on(
-    event: 'clientPreRequest',
+  ext(
+    name: 'onResponse',
     handler: (
-      this: Hemera<Hemera.ClientRequest, Hemera.ClientResponse>,
-      instance: Hemera<Hemera.ClientRequest, Hemera.ClientResponse>
+      instance: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>,
+      reply: Hemera.Reply,
+      next: (err?: Error) => void
     ) => void
-  ): Hemera<Request, Response>
-  on(
-    event: 'clientPostRequest',
+  ): Hemera<Hemera.ServerRequest, Hemera.ServerResponse>
+  ext(
+    name: 'onResponse',
     handler: (
-      this: Hemera<Hemera.ClientRequest, Hemera.ClientResponse>,
-      instance: Hemera<Hemera.ClientRequest, Hemera.ClientResponse>
+      instance: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>,
+      reply: Hemera.Reply
+    ) => Promise<void>
+  ): Hemera<Hemera.ServerRequest, Hemera.ServerResponse>
+
+  ext(
+    name: 'onError',
+    handler: (
+      instance: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>,
+      payload: any,
+      error: Error,
+      next: (err?: Error) => void
     ) => void
-  ): Hemera<Request, Response>
-  on(
-    event: 'serverPreHandler',
+  ): Hemera<Hemera.ServerRequest, Hemera.ServerResponse>
+  ext(
+    name: 'onResponse',
     handler: (
-      this: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>,
-      instance: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>
-    ) => void
-  ): Hemera<Request, Response>
-  on(
-    event: 'serverPreRequest',
-    handler: (
-      this: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>,
-      instance: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>
-    ) => void
-  ): Hemera<Request, Response>
-  on(
-    event: 'serverPreResponse',
-    handler: (
-      this: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>,
-      instance: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>
-    ) => void
-  ): Hemera<Request, Response>
-  on(
-    event: 'serverResponseError',
-    handler: (
-      this: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>,
+      instance: Hemera<Hemera.ServerRequest, Hemera.ServerResponse>,
+      payload: any,
       error: Error
-    ) => void
-  ): void
-  on(
-    event: 'clientResponseError',
-    handler: (
-      this: Hemera<Hemera.ClientRequest, Hemera.ClientResponse>,
-      error: Error
-    ) => void
-  ): void
+    ) => Promise<void>
+  ): Hemera<Hemera.ServerRequest, Hemera.ServerResponse>
 
   ready(): Promise<void>
   ready(readyListener: (err: Error) => void): void
@@ -526,6 +481,7 @@ declare class Hemera<Request, Response> {
   ): Hemera<Hemera.NoContext, Hemera.NoContext>
 
   setNotFoundPattern(pattern: string | Hemera.ServerPattern | null): void
+  setErrorHandler(handler: (err: Error) => void): void
 
   setIdGenerator(
     generatorFunction: () => string

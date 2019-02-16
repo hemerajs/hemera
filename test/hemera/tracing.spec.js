@@ -1,16 +1,14 @@
 'use strict'
 
 describe('Tracing', function() {
-  var PORT = 6242
-  var authUrl = 'nats://localhost:' + PORT
-  var server
+  const PORT = 6242
+  const authUrl = 'nats://localhost:' + PORT
+  let server
 
-  // Start up our own nats-server
   before(function(done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
-  // Shutdown our server after we are done
   after(function() {
     server.kill()
   })
@@ -148,7 +146,7 @@ describe('Tracing', function() {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.on('serverPreRequest', function(ctx) {
+      hemera.ext('onRequest', function(ctx, request, reply, next) {
         let meta = {
           service: ctx.trace$.service,
           name: ctx.trace$.method
@@ -168,9 +166,11 @@ describe('Tracing', function() {
         expect(traceData.parentSpanId).to.be.not.exist()
         expect(traceData.spanId).to.be.exist()
         expect(traceData.sampled).to.be.exist()
+
+        next()
       })
 
-      hemera.on('serverPreResponse', function(ctx) {
+      hemera.ext('onSend', function(ctx, request, reply, next) {
         let meta = {
           service: ctx.trace$.service,
           name: ctx.trace$.method
@@ -178,9 +178,11 @@ describe('Tracing', function() {
 
         expect(meta.service).to.be.equals('math')
         expect(meta.name).to.be.equals('a:1,b:2,cmd:add,topic:math')
+
+        next()
       })
 
-      hemera.on('clientPreRequest', function(ctx) {
+      hemera.ext('onAct', function(ctx, next) {
         let meta = {
           service: ctx.trace$.service,
           name: ctx.trace$.method
@@ -200,9 +202,11 @@ describe('Tracing', function() {
         expect(traceData.parentSpanId).to.be.not.exist()
         expect(traceData.spanId).to.be.exist()
         expect(traceData.sampled).to.be.exist()
+
+        next()
       })
 
-      hemera.on('clientPostRequest', function(ctx) {
+      hemera.ext('onActFinished', function(ctx, next) {
         let meta = {
           service: ctx.trace$.service,
           name: ctx.trace$.method
@@ -210,6 +214,8 @@ describe('Tracing', function() {
 
         expect(meta.service).to.be.equals('math')
         expect(meta.name).to.be.equals('a:1,b:2,cmd:add,topic:math')
+
+        next()
       })
 
       hemera.add(
@@ -346,7 +352,7 @@ describe('Tracing', function() {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      hemera.ext('onClientPreRequest', (hemera, next) => {
+      hemera.ext('onAct', (hemera, next) => {
         expect(hemera.trace$.spanId).to.be.equals(1)
         expect(hemera.trace$.traceId).to.be.equals(2)
         expect(hemera.trace$.parentSpanId).to.be.equals(22)

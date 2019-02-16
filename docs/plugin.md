@@ -6,7 +6,7 @@ sidebar_label: Plugin
 
 Hemera's plugin system based on the powerful [Avvio](https://github.com/mcollina/avvio) package. Avvio is fully reentrant and graph-based. You can load components/plugins within plugins, and be still sure that things will happen in the right order.
 
-> Plugins should encourage you to encapsulate a domain specific context in a reusable piece of software. Great practice is to seperate plugins by a different topic name.
+> Plugins should encourage you to encapsulate a domain specific context in a reusable piece of software. Seperate plugins by a different topic name.
 
 ## Plugin helper library
 
@@ -46,7 +46,7 @@ module.exports = myPlugin
 
 ## Break encapsulation
 
-Sometimes it is still useful to write a plugin which effects child as well as sibling scopes. You can archive this with plugin option `scoped: false` property. This approach is used in payload validators `hemera-joi` or authentication `hemera-jwt`.
+Sometimes it is still useful to write a plugin which effects child as well as sibling scopes. You can archive this with plugin option `scoped: false` property. This approach is used in payload validators `hemera-joi` or authentication `hemera-jwt` to provide an overall validation mechanism.
 
 ```js
 const hp = require('hemera-plugin')
@@ -54,7 +54,7 @@ const myPlugin = hp(
   (hemera, opts, done) => {
     const topic = 'math'
 
-    hemera.ext('onClientPostRequest', function(ctx, next) {
+    hemera.ext('onActFinished', function(ctx, next) {
       // some code
       next()
     })
@@ -67,6 +67,17 @@ const myPlugin = hp(
 hemera.use(myPlugin)
 ```
 
+## Scoped sensitive settings are topic aware
+
+If you create a topic for the first time inside a plugin and overwrite one of the settings.
+
+- [Schema Compilers](payload-validation.md#use-your-custom-validator)
+- [Codecs](codec.md)
+- [Not found pattern](notfound-pattern.md)
+- [Error handler](error-handling.md)
+
+They are executed with the plugin scope even if you call the pattern outside of the plugin and define different settings. This encourage the practice to use a unique topic per plugin and separates the responsibility.
+
 ## Register child plugins
 
 You can load plugins inside other plugins. Be ware that [**Scoped sensitive settings**](#scoped-sensitive-settings) are effected.
@@ -76,7 +87,7 @@ const hp = require('hemera-plugin')
 const myPlugin = hp((hemera, opts, done) => {
   const topic = 'math'
 
-  hemera.ext('onClientPostRequest', function(ctx, next) {
+  hemera.ext('onActFinished', function(ctx, next) {
     // some code
     next()
   })
@@ -84,7 +95,7 @@ const myPlugin = hp((hemera, opts, done) => {
   hemera.use(
     hp((hemera, opts, done) => {
       // some code
-      // this plugin will be effected by the 'onClientPostRequest' extension
+      // this plugin will be effected by the 'onActFinished' extension
       done()
     })
   )
@@ -143,7 +154,7 @@ const myPlugin = hp(
   (hemera, opts, done) => {
     const topic = 'math'
 
-    hemera.ext('onServerPreRequest', function(ctx, next) {
+    hemera.ext('onRequest', function(hemera, request, reply, next) {
       // some code
       next()
     })
@@ -198,7 +209,7 @@ const myPlugin = hp(
 hemera.use(myPlugin)
 ```
 
-## Plugin depdendencies
+## Plugin dependencies
 
 You can declare plugins and decorators as dependencies. The constrains are checked when all plugins are registered.
 

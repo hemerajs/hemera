@@ -1,16 +1,14 @@
 'use strict'
 
 describe('Hemera', function() {
-  var PORT = 6242
-  var authUrl = 'nats://localhost:' + PORT
-  var server
+  const PORT = 6242
+  const authUrl = 'nats://localhost:' + PORT
+  let server
 
-  // Start up our own nats-server
   before(function(done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
-  // Shutdown our server after we are done
   after(function() {
     server.kill()
   })
@@ -375,9 +373,7 @@ describe('Hemera', function() {
         })
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals(
-          'Pattern is required to define a server action'
-        )
+        expect(err.message).to.be.equals('Pattern is required to define a server action')
         hemera.close(done)
       }
     })
@@ -400,9 +396,7 @@ describe('Hemera', function() {
         )
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals(
-          'Topic is required and must be from type string'
-        )
+        expect(err.message).to.be.equals('Topic is required and must be from type string')
         hemera.close(done)
       }
     })
@@ -556,9 +550,7 @@ describe('Hemera', function() {
         hemera.act(null, resp => {})
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals(
-          'Pattern is required to start a request'
-        )
+        expect(err.message).to.be.equals('Pattern is required to start a request')
         hemera.close(done)
       }
     })
@@ -579,9 +571,7 @@ describe('Hemera', function() {
         )
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals(
-          'Topic is required and must be from type string'
-        )
+        expect(err.message).to.be.equals('Topic is required and must be from type string')
         hemera.close(done)
       }
     })
