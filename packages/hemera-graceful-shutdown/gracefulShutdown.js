@@ -41,7 +41,7 @@ class GracefulShutdown {
    */
   addHandler(fn) {
     if (typeof fn !== 'function') {
-      throw new Error('Expected a function but got a ' + typeof fn)
+      throw new Error(`Expected a function but got a ${typeof fn}`)
     }
 
     this.handlers.push(fn)
@@ -109,7 +109,7 @@ class GracefulShutdown {
       if (this.process.listenerCount(signal) > 0) {
         this.logger.warn(`${signal} handler was already registered`)
       }
-      this.process.once(signal, s => this.sigHandler(signal))
+      this.process.once(signal, () => this.sigHandler(signal))
     })
   }
 }

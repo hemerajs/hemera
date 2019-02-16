@@ -1,0 +1,41 @@
+root: true
+extends: hemera
+globals:
+  Hemera: true
+  Hp: true
+  HemeraUtil: true
+  HemeraSymbols: true
+  expect: true
+  UnauthorizedError: true
+  HemeraTestsuite: true
+  Sinon: true
+  CodecPipeline: true
+  Code: true
+overrides:
+  - files: "packages/**/*.js"
+    rules:
+      no-underscore-dangle: off
+      no-param-reassign: off
+      prefer-rest-params: off
+      no-shadow: off
+      no-else-return: off
+      guard-for-in: off
+      func-names: off
+  - files: "test/**/*.js"
+    rules:
+      space-before-function-paren:
+        - off
+      global-require: off
+      func-names: off
+      no-shadow: off
+      prefer-const: off
+      prefer-template: off
+      prefer-destructuring: off
+      no-plusplus: off
+      no-var: off
+      object-shorthand: off
+      no-console: off
+      class-methods-use-this: off
+      vars-on-top: off
+      no-unused-vars: off
+      no-use-before-define: off

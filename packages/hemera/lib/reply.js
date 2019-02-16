@@ -9,20 +9,11 @@
  *
  */
 
-const Errors = require('./errors')
 const Errio = require('errio')
+const Errors = require('./errors')
 const runExt = require('./extensionRunner').extRunner
-const {
-  responseExtIterator,
-  serverExtIterator,
-  serverOnErrorIterator
-} = require('./extensionRunner')
-const {
-  sReplySent,
-  sReplyRequest,
-  sReplyResponse,
-  sReplyHemera
-} = require('./symbols')
+const { responseExtIterator, serverExtIterator, serverOnErrorIterator } = require('./extensionRunner')
+const { sReplySent, sReplyRequest, sReplyResponse, sReplyHemera } = require('./symbols')
 
 class Reply {
   constructor(request, response, hemera, logger) {
@@ -43,9 +34,7 @@ class Reply {
   }
 
   set error(value) {
-    this[sReplyResponse].error = this[sReplyHemera]._attachHops(
-      this[sReplyHemera].getRootError(value)
-    )
+    this[sReplyResponse].error = this[sReplyHemera]._attachHops(this[sReplyHemera].getRootError(value))
   }
 
   get error() {
@@ -96,11 +85,7 @@ class Reply {
     }
 
     if (this[sReplyHemera]._errorHandler) {
-      const result = this[sReplyHemera]._errorHandler(
-        this[sReplyHemera],
-        err,
-        this.reply
-      )
+      const result = this[sReplyHemera]._errorHandler(this[sReplyHemera], err, this.reply)
       if (result && typeof result.then === 'function') {
         result
           .then(() => {
@@ -119,24 +104,18 @@ class Reply {
   }
 
   _logError(err, message) {
-    const internalError = new Errors.HemeraError(
-      message,
-      this[sReplyHemera].errorDetails
-    ).causedBy(err)
+    const internalError = new Errors.HemeraError(message, this[sReplyHemera].errorDetails).causedBy(err)
     this.log.error(internalError)
   }
 
   _onErrorHook() {
     if (this[sReplyHemera]._extensionManager.onError.length) {
-      runExt(
-        this[sReplyHemera]._extensionManager.onError,
-        serverOnErrorIterator,
-        this[sReplyHemera],
-        err => {
-          if (err) this._logError(err, 'onError extension')
-          this._sendHook()
+      runExt(this[sReplyHemera]._extensionManager.onError, serverOnErrorIterator, this[sReplyHemera], err => {
+        if (err) {
+          this._logError(err, 'onError extension')
         }
-      )
+        this._sendHook()
+      })
       return
     }
 
@@ -145,25 +124,20 @@ class Reply {
 
   _sendHook() {
     if (this[sReplyHemera]._extensionManager.onSend.length) {
-      runExt(
-        this[sReplyHemera]._extensionManager.onSend,
-        serverExtIterator,
-        this[sReplyHemera],
-        err => {
-          if (err) {
-            this._logError(err, 'onSend extension')
+      runExt(this[sReplyHemera]._extensionManager.onSend, serverExtIterator, this[sReplyHemera], err => {
+        if (err) {
+          this._logError(err, 'onSend extension')
 
-            // first set error has precedence
-            if (this.error === null) {
-              this[sReplySent] = false
-              this.send(err)
-              return
-            }
+          // first set error has precedence
+          if (this.error === null) {
+            this[sReplySent] = false
+            this.send(err)
+            return
           }
-
-          this._send()
         }
-      )
+
+        this._send()
+      })
       return
     }
 
@@ -171,28 +145,19 @@ class Reply {
   }
 
   _send() {
-    let msg = this.build(
-      this[sReplyHemera].meta$,
-      this[sReplyHemera].trace$,
-      this[sReplyHemera].request$
-    )
+    const msg = this.build(this[sReplyHemera].meta$, this[sReplyHemera].trace$, this[sReplyHemera].request$)
 
     // don't try to send encoding issues back because
     // it could end up in a endloss loop
     if (msg.error) {
-      let internalError = new Errors.ParseError('Server encoding').causedBy(
-        msg.error
-      )
+      const internalError = new Errors.ParseError('Server encoding').causedBy(msg.error)
       this.log.error(internalError)
       this._handleError(msg.error)
       return
     }
 
     if (this[sReplyResponse].replyTo) {
-      this[sReplyHemera]._transport.send(
-        this[sReplyResponse].replyTo,
-        msg.value
-      )
+      this[sReplyHemera]._transport.send(this[sReplyResponse].replyTo, msg.value)
     }
 
     this._onResponse()
@@ -205,14 +170,16 @@ class Reply {
         responseExtIterator,
         this[sReplyHemera],
         err => {
-          if (err) this._logError(err, 'onResponse extension')
+          if (err) {
+            this._logError(err, 'onResponse extension')
+          }
         }
       )
     }
   }
 
   build(meta$, trace$, request$) {
-    let message = {
+    const message = {
       meta: meta$ || {},
       trace: trace$ || {},
       request: request$,

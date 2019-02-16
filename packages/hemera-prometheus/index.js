@@ -23,14 +23,12 @@ function hemeraPrometheus(hemera, opts, done) {
   // Expose a single metric on http endpoint
   hemera.decorate('exposeMetric', metric => {
     if (typeof metric !== 'string') {
-      const err = new Error(
-        `Metric name must be from type string but got ${typeof metric}`
-      )
+      const err = new Error(`Metric name must be from type string but got ${typeof metric}`)
       hemera.log.error(err)
       throw err
     }
 
-    server.get('/metrics/' + metric, (req, res) => {
+    server.get(`/metrics/${metric}`, (req, res) => {
       res.set('Content-Type', Prom.register.contentType)
       res.end(Prom.register.getSingleMetricAsString(metric))
     })
@@ -47,6 +45,7 @@ function hemeraPrometheus(hemera, opts, done) {
 
 const plugin = Hp(hemeraPrometheus, {
   hemera: '>=5.0.0-rc.1',
+  /* eslint-disable-next-line */
   name: require('./package.json').name,
   options: {
     collectDefaultMetrics: true,

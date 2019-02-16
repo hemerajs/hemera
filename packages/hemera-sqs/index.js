@@ -179,6 +179,7 @@ function hemeraSQS(hemera, opts, done) {
 
 const plugin = Hp(hemeraSQS, {
   hemera: '>=5.0.0-rc.1',
+  // eslint-disable-next-line global-require
   name: require('./package.json').name,
   options: {
     sqs: {

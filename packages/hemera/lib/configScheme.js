@@ -1,6 +1,6 @@
 const Joi = require('joi')
 const Os = require('os')
-const Stream = require('stream').Stream
+const { Stream } = require('stream')
 const Util = require('./util')
 
 module.exports = Joi.object().keys({

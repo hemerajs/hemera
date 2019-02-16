@@ -26,9 +26,7 @@ describe('NATS reconnection', function() {
     })
 
     nats.once('close', () => {
-      expect(
-        logSpy.firstCall.args[0] instanceof Hemera.errors.HemeraError
-      ).to.be.equals(true)
+      expect(logSpy.firstCall.args[0] instanceof Hemera.errors.HemeraError).to.be.equals(true)
       hemera.close(done)
     })
   })

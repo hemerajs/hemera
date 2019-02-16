@@ -7,6 +7,7 @@ global.Code = require('code')
 global.Hp = require('../../packages/hemera-plugin')
 global.Sinon = require('sinon')
 global.HemeraTestsuite = require('hemera-testsuite')
+
 global.expect = global.Code.expect
 global.UnauthorizedError = Hemera.createError('Unauthorized')
 

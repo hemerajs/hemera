@@ -21,24 +21,19 @@ class Util {
       return subject
     }
 
-    let hasTokenWildcard = subject.toString().indexOf('*') > -1
-    let hasFullWildcard = subject.toString().indexOf('>') > -1
+    const hasTokenWildcard = subject.toString().indexOf('*') > -1
+    const hasFullWildcard = subject.toString().indexOf('>') > -1
+    let sub = subject
 
     if (hasFullWildcard) {
-      subject = Util.escapeTopicForRegExp(subject).replace(
-        '>',
-        '[a-zA-Z0-9-.]+'
-      )
-      return new RegExp('^' + subject + '$', 'i')
+      const fullWildcard = Util.escapeTopicForRegExp(subject).replace('>', '[a-zA-Z0-9-.]+')
+      sub = new RegExp(`^${fullWildcard}$`, 'i')
     } else if (hasTokenWildcard) {
-      subject = Util.escapeTopicForRegExp(subject).replace(
-        /\*/g,
-        '[a-zA-Z0-9-]+'
-      )
-      return new RegExp('^' + subject + '$', 'i')
+      const tokenWildcard = Util.escapeTopicForRegExp(subject).replace(/\*/g, '[a-zA-Z0-9-]+')
+      sub = new RegExp(`^${tokenWildcard}$`, 'i')
     }
 
-    return subject
+    return sub
   }
 
   /**
@@ -48,6 +43,7 @@ class Util {
   static randomId() {
     return NUID.next()
   }
+
   /**
    * Get high resolution time in miliseconds
    *
@@ -57,16 +53,18 @@ class Util {
    * @memberOf Util
    */
   static nowHrTime() {
-    var ts = process.hrtime()
+    const ts = process.hrtime()
     return ts[0] * 1e3 + ts[1] / 1e6
   }
 
   static extractSchema(obj) {
-    if (obj === null) return obj
+    if (obj === null) {
+      return obj
+    }
 
     const o = {}
 
-    for (let key in obj) {
+    for (const key in obj) {
       if (typeof obj[key] === 'object') {
         o[key] = obj[key]
       }
@@ -76,11 +74,13 @@ class Util {
   }
 
   static cleanPattern(obj) {
-    if (obj === null) return obj
+    if (obj === null) {
+      return obj
+    }
 
     const o = {}
 
-    for (let key in obj) {
+    for (const key in obj) {
       if (
         !key.endsWith('$') &&
         (typeof obj[key] !== 'object' || obj[key] instanceof RegExp) &&
@@ -94,11 +94,13 @@ class Util {
   }
 
   static cleanFromSpecialVars(obj) {
-    if (obj === null) return obj
+    if (obj === null) {
+      return obj
+    }
 
     const o = {}
 
-    for (let key in obj) {
+    for (const key in obj) {
       if (!key.endsWith('$')) {
         o[key] = obj[key]
       }
@@ -112,10 +114,10 @@ class Util {
     }
 
     const obj = Util.cleanPattern(args)
-    let sb = []
+    const sb = []
 
-    for (let key in obj) {
-      sb.push(key + ':' + obj[key])
+    for (const key in obj) {
+      sb.push(`${key}:${obj[key]}`)
     }
 
     sb.sort()

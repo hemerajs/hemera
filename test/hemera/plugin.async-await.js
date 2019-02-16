@@ -1,4 +1,5 @@
-/* eslint node/no-unsupported-features: 0 */
+/* eslint node/no-unsupported-features/es-syntax: off */
+
 'use strict'
 
 describe('Async await Plugin interface', function() {

@@ -22,7 +22,7 @@ const TinySonic = require('tinysonic')
 const SuperError = require('super-error')
 const Joi = require('joi')
 const Avvio = require('avvio')
-const Stream = require('stream').Stream
+const { Stream } = require('stream')
 
 const runExt = require('./extensionRunner').extRunner
 const Errors = require('./errors')
@@ -42,12 +42,7 @@ const ExtensionManager = require('./extensionManager')
 const { sChildren, sRegisteredPlugins } = require('./symbols')
 const { serverExtIterator, clientExtIterator } = require('./extensionRunner')
 
-const natsConnCodes = [
-  NATS.CONN_ERR,
-  NATS.SECURE_CONN_REQ,
-  NATS.NON_SECURE_CONN_REQ,
-  NATS.CLIENT_CERT_REQ
-]
+const natsConnCodes = [NATS.CONN_ERR, NATS.SECURE_CONN_REQ, NATS.NON_SECURE_CONN_REQ, NATS.CLIENT_CERT_REQ]
 
 /**
  * @class Hemera
@@ -148,7 +143,7 @@ class Hemera {
     this[sChildren] = []
     this[sRegisteredPlugins] = []
 
-    this._avvio.override = (hemera, plugin, opts) => {
+    this._avvio.override = (hemera, plugin) => {
       const pluginMeta = this.getPluginMeta(plugin)
 
       if (pluginMeta) {
@@ -175,12 +170,10 @@ class Hemera {
       instance[sRegisteredPlugins] = Object.create(hemera[sRegisteredPlugins])
 
       // inherit all extensions
-      instance._extensionManager = ExtensionManager.build(
-        hemera._extensionManager
-      )
+      instance._extensionManager = ExtensionManager.build(hemera._extensionManager)
 
       // decorate root instance. All instances will have access
-      instance.decorate = function() {
+      instance.decorate = function decorate() {
         hemera.decorate.apply(this._root, arguments)
         return instance
       }
@@ -215,10 +208,11 @@ class Hemera {
    * @memberof Hemera
    */
   _registerErrors() {
-    for (let error in Hemera.errors) {
+    for (const error in Hemera.errors) {
       Errio.register(Hemera.errors[error])
     }
   }
+
   /**
    *
    * @param {*} fn
@@ -231,6 +225,7 @@ class Hemera {
 
     return this
   }
+
   /**
    *
    * @param {*} fn
@@ -256,6 +251,7 @@ class Hemera {
 
     return this
   }
+
   /**
    *
    * @param {*} fn
@@ -484,9 +480,7 @@ class Hemera {
    */
   setResponseSchemaCompiler(fn) {
     if (typeof fn !== 'function') {
-      throw new Errors.HemeraError(
-        'ResponseSchemaCompiler handler must be a function'
-      )
+      throw new Errors.HemeraError('ResponseSchemaCompiler handler must be a function')
     }
     this._responseSchemaCompiler = fn
 
@@ -508,6 +502,7 @@ class Hemera {
    * @memberOf Hemera
    */
   fatal() {
+    // eslint-disable-next-line no-process-exit
     this.close(() => process.exit(1))
   }
 
@@ -600,20 +595,16 @@ class Hemera {
     if (!pluginMeta) {
       return
     }
-    const dependencies = pluginMeta.dependencies
+    const { dependencies } = pluginMeta
     if (!dependencies) {
       return
     }
     if (!Array.isArray(dependencies)) {
-      throw new Errors.HemeraError(
-        'Plugin dependencies must be an array of strings'
-      )
+      throw new Errors.HemeraError('Plugin dependencies must be an array of strings')
     }
     dependencies.forEach(dependency => {
       if (this[sRegisteredPlugins].indexOf(dependency) === -1) {
-        throw new Errors.HemeraError(
-          `The dependency '${dependency}' is not registered`
-        )
+        throw new Errors.HemeraError(`The dependency '${dependency}' is not registered`)
       }
     })
   }
@@ -629,20 +620,16 @@ class Hemera {
     if (!pluginMeta) {
       return
     }
-    const decorators = pluginMeta.decorators
+    const { decorators } = pluginMeta
     if (!decorators) {
       return
     }
     if (!Array.isArray(decorators)) {
-      throw new Errors.HemeraError(
-        'Plugin decorators must be an array of strings'
-      )
+      throw new Errors.HemeraError('Plugin decorators must be an array of strings')
     }
     for (let i = 0; i < decorators.length; i++) {
       if (!(decorators[i] in this)) {
-        throw new Errors.HemeraError(
-          `The decorator dependency '${decorators[i]}' is not registered`
-        )
+        throw new Errors.HemeraError(`The decorator dependency '${decorators[i]}' is not registered`)
       }
     }
   }
@@ -787,10 +774,10 @@ class Hemera {
   subscribe(addDefinition) {
     const self = this
 
-    const topic = addDefinition.transport.topic
-    const maxMessages = addDefinition.transport.maxMessages
+    const { topic } = addDefinition.transport
+    const { maxMessages } = addDefinition.transport
     const queue = addDefinition.transport.queue || `queue.${topic}`
-    const pubsub = addDefinition.transport.pubsub
+    const { pubsub } = addDefinition.transport
 
     // avoid duplicate subscribers of the emit stream
     // we use one subscriber per topic
@@ -798,19 +785,14 @@ class Hemera {
       return 0
     }
 
-    let handler = (request, replyTo) => {
+    const handler = (request, replyTo) => {
       // create new execution context
       // this will also encapsulate a topic to the plugin
-      let hemera = self.createContext()
+      const hemera = self.createContext()
       hemera._topic = topic
       hemera.request = new ServerRequest(request)
       hemera.response = new ServerResponse(replyTo)
-      hemera.reply = new Reply(
-        hemera.request,
-        hemera.response,
-        hemera,
-        hemera.log
-      )
+      hemera.reply = new Reply(hemera.request, hemera.response, hemera, hemera.log)
       hemera._pattern = null
       hemera._isServer = true
 
@@ -818,11 +800,8 @@ class Hemera {
       hemera.matchedAction = null
 
       if (hemera._extensionManager.onRequest.length) {
-        runExt(
-          hemera._extensionManager.onRequest,
-          serverExtIterator,
-          hemera,
-          err => hemera._onRequestCompleted(err)
+        runExt(hemera._extensionManager.onRequest, serverExtIterator, hemera, err =>
+          hemera._onRequestCompleted(err)
         )
         return
       }
@@ -862,10 +841,9 @@ class Hemera {
     const self = this
 
     if (extensionError) {
-      const internalError = new Errors.HemeraError(
-        'onRequest extension',
-        self.errorDetails
-      ).causedBy(extensionError)
+      const internalError = new Errors.HemeraError('onRequest extension', self.errorDetails).causedBy(
+        extensionError
+      )
       self.log.error(internalError)
       self.reply.isError = true
       self.reply.send(extensionError)
@@ -875,20 +853,14 @@ class Hemera {
     // check if a handler is registered with this pattern
     if (self.matchedAction) {
       if (self._extensionManager.preHandler.length) {
-        runExt(
-          self._extensionManager.preHandler,
-          serverExtIterator,
-          self,
-          err => self._preHandlerCompleted(err)
+        runExt(self._extensionManager.preHandler, serverExtIterator, self, err =>
+          self._preHandlerCompleted(err)
         )
       } else {
         self._preHandlerCompleted()
       }
     } else {
-      const internalError = new Errors.PatternNotFound(
-        'No action found for this pattern',
-        self.errorDetails
-      )
+      const internalError = new Errors.PatternNotFound('No action found for this pattern', self.errorDetails)
       self.log.error(internalError)
       self.reply.isError = true
       self.reply.send(internalError)
@@ -905,10 +877,9 @@ class Hemera {
     const self = this
 
     if (extensionError) {
-      const internalError = new Errors.HemeraError(
-        'preHandler extension',
-        self.errorDetails
-      ).causedBy(extensionError)
+      const internalError = new Errors.HemeraError('preHandler extension', self.errorDetails).causedBy(
+        extensionError
+      )
       self.log.error(internalError)
       self.reply.isError = true
       self.reply.send(extensionError)
@@ -916,9 +887,7 @@ class Hemera {
     }
 
     // action middleware
-    self.matchedAction.run(self.request, self.reply, err =>
-      self._afterMiddlewareHandler(err)
-    )
+    self.matchedAction.run(self.request, self.reply, err => self._afterMiddlewareHandler(err))
   }
 
   /**
@@ -931,10 +900,7 @@ class Hemera {
     const self = this
 
     if (err) {
-      const internalError = new Errors.HemeraError(
-        'Action middleware',
-        self.errorDetails
-      ).causedBy(err)
+      const internalError = new Errors.HemeraError('Action middleware', self.errorDetails).causedBy(err)
       self.log.error(internalError)
       self.reply.isError = true
       self.reply.send(err)
@@ -965,7 +931,7 @@ class Hemera {
    */
   _processServerAction() {
     const self = this
-    let action = self.matchedAction.action.bind(self)
+    const action = self.matchedAction.action.bind(self)
 
     // if request type is 'pubsub' we don't have to reply back
     if (self.request.payload.request.type === 'pubsub') {
@@ -997,7 +963,7 @@ class Hemera {
     const self = this
 
     if (!topic) {
-      let error = new Errors.HemeraError('The sid or topic name is required')
+      const error = new Errors.HemeraError('The sid or topic name is required')
       self.log.error(error)
       throw error
     }
@@ -1048,9 +1014,7 @@ class Hemera {
    */
   add(pattern, cb) {
     if (!pattern) {
-      let error = new Errors.HemeraError(
-        'Pattern is required to define a server action'
-      )
+      const error = new Errors.HemeraError('Pattern is required to define a server action')
       this.log.error(error)
       throw error
     }
@@ -1062,7 +1026,7 @@ class Hemera {
 
     // topic is needed to subscribe on a subject in NATS
     if (!pattern.topic) {
-      let error = new Errors.HemeraError(
+      const error = new Errors.HemeraError(
         'Topic is required and must be from type string',
         this.errorDetails
       )
@@ -1070,11 +1034,11 @@ class Hemera {
       throw error
     }
 
-    let schema = Util.extractSchema(pattern)
-    let patternOnly = Util.cleanPattern(pattern)
+    const schema = Util.extractSchema(pattern)
+    const patternOnly = Util.cleanPattern(pattern)
 
-    let addDefinition = new Add({
-      schema: schema,
+    const addDefinition = new Add({
+      schema,
       pattern: patternOnly,
       transport: {
         topic: pattern.topic,
@@ -1093,11 +1057,11 @@ class Hemera {
     // Convert nats wildcard tokens to RegexExp
     addDefinition.pattern.topic = Util.natsWildcardToRegex(patternOnly.topic)
 
-    let handler = this._router.lookup(addDefinition.pattern)
+    const handler = this._router.lookup(addDefinition.pattern)
 
     // check if pattern is already registered
     if (this._config.bloomrun.lookupBeforeAdd && handler) {
-      let error = new Errors.HemeraError('Pattern is already in use', {
+      const error = new Errors.HemeraError('Pattern is already in use', {
         pattern: addDefinition.pattern
       })
 
@@ -1119,9 +1083,7 @@ class Hemera {
         'Topic is already registered with special transport options. Please use a different topic name.',
         Util.pattern(def.pattern)
       )
-      throw new Errors.HemeraError(
-        'Topic is already registered with special transport options'
-      )
+      throw new Errors.HemeraError('Topic is already registered with special transport options')
     }
 
     // add to bloomrun
@@ -1140,6 +1102,7 @@ class Hemera {
 
     return addDefinition
   }
+
   /**
    * Run all onAdd handlers in serie
    * options
@@ -1158,6 +1121,7 @@ class Hemera {
       () => {}
     )
   }
+
   /**
    * Check if a topic was already registered with different transport
    * options
@@ -1172,11 +1136,7 @@ class Hemera {
       // looking for another pattern with same topic but
       // different transport options
       if (addDefinition.pattern.topic === def.pattern.topic) {
-        if (
-          mT1.maxMessages !== mT2.maxMessages ||
-          mT1.queue !== mT2.queue ||
-          mT1.pubsub !== mT2.pubsub
-        ) {
+        if (mT1.maxMessages !== mT2.maxMessages || mT1.queue !== mT2.queue || mT1.pubsub !== mT2.pubsub) {
           return def
         }
       }
@@ -1205,21 +1165,17 @@ class Hemera {
 
     // decoding error
     if (self.response.error) {
-      let internalError = new Errors.ParseError(
-        'Client payload decoding',
-        self.errorDetails
-      ).causedBy(self.response.error)
+      const internalError = new Errors.ParseError('Client payload decoding', self.errorDetails).causedBy(
+        self.response.error
+      )
       self.log.error(internalError)
       self._execute(self.response.error)
       return
     }
 
     if (self._extensionManager.onActFinished.length) {
-      runExt(
-        self._extensionManager.onActFinished,
-        clientExtIterator,
-        self,
-        err => self._onActFinishedCallback(err)
+      runExt(self._extensionManager.onActFinished, clientExtIterator, self, err =>
+        self._onActFinishedCallback(err)
       )
       return
     }
@@ -1237,18 +1193,17 @@ class Hemera {
     const self = this
 
     if (extensionError) {
-      let error = self.getRootError(extensionError)
-      const internalError = new Errors.HemeraError(
-        'onActFinished extension',
-        self.errorDetails
-      ).causedBy(extensionError)
+      const error = self.getRootError(extensionError)
+      const internalError = new Errors.HemeraError('onActFinished extension', self.errorDetails).causedBy(
+        extensionError
+      )
       self.log.error(internalError)
       self._execute(error)
       return
     }
 
     if (self.response.payload.error) {
-      let error = Errio.fromObject(self.response.payload.error)
+      const error = Errio.fromObject(self.response.payload.error)
       self._execute(error)
       return
     }
@@ -1267,9 +1222,7 @@ class Hemera {
    */
   act(pattern, cb) {
     if (!pattern) {
-      let error = new Errors.HemeraError(
-        'Pattern is required to start a request'
-      )
+      const error = new Errors.HemeraError('Pattern is required to start a request')
       this.log.error(error)
       throw error
     }
@@ -1281,7 +1234,7 @@ class Hemera {
 
     // topic is needed to subscribe on a subject in NATS
     if (!pattern.topic) {
-      let error = new Errors.HemeraError(
+      const error = new Errors.HemeraError(
         'Topic is required and must be from type string',
         this.errorDetails
       )
@@ -1290,7 +1243,7 @@ class Hemera {
     }
 
     // create new execution context
-    let hemera = this.createContext()
+    const hemera = this.createContext()
     hemera._pattern = pattern
     hemera._parentContext = this
     hemera._cleanPattern = Util.cleanFromSpecialVars(pattern)
@@ -1304,9 +1257,7 @@ class Hemera {
     if (cb) {
       hemera._execute = cb.bind(hemera)
       if (hemera._extensionManager.onAct.length) {
-        runExt(hemera._extensionManager.onAct, clientExtIterator, hemera, err =>
-          hemera._onActCallback(err)
-        )
+        runExt(hemera._extensionManager.onAct, clientExtIterator, hemera, err => hemera._onActCallback(err))
         return
       }
       hemera._onActCallback()
@@ -1322,9 +1273,7 @@ class Hemera {
       })
 
       if (hemera._extensionManager.onAct.length) {
-        runExt(hemera._extensionManager.onAct, clientExtIterator, hemera, err =>
-          hemera._onActCallback(err)
-        )
+        runExt(hemera._extensionManager.onAct, clientExtIterator, hemera, err => hemera._onActCallback(err))
       } else {
         hemera._onActCallback()
       }
@@ -1363,7 +1312,7 @@ class Hemera {
    */
   _onActCallback(err) {
     const self = this
-    let m = self._clientEncoder(self._message)
+    const m = self._clientEncoder(self._message)
 
     self.request.payload = m.value
 
@@ -1371,21 +1320,17 @@ class Hemera {
     if (m.error) {
       self.request.payload = null
       self.request.error = m.error
-      let error = new Errors.ParseError('Client payload encoding').causedBy(
-        m.error
-      )
+      const error = new Errors.ParseError('Client payload encoding').causedBy(m.error)
       self.log.error(error)
       self._execute(m.error)
       return
     }
 
     if (err) {
-      let error = self.getRootError(err)
+      const error = self.getRootError(err)
       self.request.payload = null
       self.request.error = error
-      const internalError = new Errors.HemeraError('onAct extension').causedBy(
-        err
-      )
+      const internalError = new Errors.HemeraError('onAct extension').causedBy(err)
       self.log.error(internalError)
       self._execute(error)
       return
@@ -1393,9 +1338,7 @@ class Hemera {
 
     // use simple publish mechanism instead of request/reply
     if (self._pattern.pubsub$ === true) {
-      self._transport.send(self._pattern.topic, self.request.payload, err =>
-        self._execute(err)
-      )
+      self._transport.send(self._pattern.topic, self.request.payload, err => self._execute(err))
     } else {
       const optOptions = {
         timeout: self._pattern.timeout$ || self.config.timeout,
@@ -1405,21 +1348,14 @@ class Hemera {
       }
       // limit on the number of responses the requestor may receive
       // support maxMessages$ -1
-      if (
-        typeof self._pattern.maxMessages$ === 'number' ||
-        self._pattern.expectedMessages$ > 0
-      ) {
+      if (typeof self._pattern.maxMessages$ === 'number' || self._pattern.expectedMessages$ > 0) {
         // we can't receive more messages than "expected" messages
         // the inbox is closed automatically
-        optOptions.max =
-          self._pattern.expectedMessages$ || self._pattern.maxMessages$
+        optOptions.max = self._pattern.expectedMessages$ || self._pattern.maxMessages$
       }
       // send request
-      self.sid = self._transport.sendRequest(
-        self._pattern.topic,
-        self.request.payload,
-        optOptions,
-        resp => self._sendRequestHandler(resp)
+      self.sid = self._transport.sendRequest(self._pattern.topic, self.request.payload, optOptions, resp =>
+        self._sendRequestHandler(resp)
       )
 
       // create timeout handler only with a combination of expected msg
@@ -1429,6 +1365,7 @@ class Hemera {
       }
     }
   }
+
   /**
    * Handle the timeout when a pattern could not be resolved. Can have different reasons:
    * - No one was connected at the time (service unavailable)
@@ -1460,11 +1397,8 @@ class Hemera {
     self.response.error = error
 
     if (self._extensionManager.onActFinished.length) {
-      runExt(
-        self._extensionManager.onActFinished,
-        clientExtIterator,
-        self,
-        err => self._onActTimeoutCallback(err)
+      runExt(self._extensionManager.onActFinished, clientExtIterator, self, err =>
+        self._onActTimeoutCallback(err)
       )
       return
     }
@@ -1481,10 +1415,8 @@ class Hemera {
     const self = this
 
     if (err) {
-      let error = self.getRootError(err)
-      const internalError = new Errors.HemeraError(
-        'onActFinished extension'
-      ).causedBy(err)
+      const error = self.getRootError(err)
+      const internalError = new Errors.HemeraError('onActFinished extension').causedBy(err)
       self.log.error(internalError)
       self.response.error = error
     }
@@ -1523,7 +1455,7 @@ class Hemera {
    * @memberof Hemera
    */
   removeAll() {
-    for (var topic of this._topics.keys()) {
+    for (const topic of this._topics.keys()) {
       this.remove(topic)
     }
   }

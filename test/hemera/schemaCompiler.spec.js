@@ -126,9 +126,7 @@ describe('Schema Compiler', function() {
         hemera.setSchemaCompiler(null)
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals(
-          'SchemaCompiler handler must be a function'
-        )
+        expect(err.message).to.be.equals('SchemaCompiler handler must be a function')
         hemera.close(done)
       }
     })
@@ -144,9 +142,7 @@ describe('Schema Compiler', function() {
         hemera.setResponseSchemaCompiler(null)
       } catch (err) {
         expect(err.name).to.be.equals('HemeraError')
-        expect(err.message).to.be.equals(
-          'ResponseSchemaCompiler handler must be a function'
-        )
+        expect(err.message).to.be.equals('ResponseSchemaCompiler handler must be a function')
         hemera.close(done)
       }
     })

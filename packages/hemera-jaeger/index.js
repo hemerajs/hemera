@@ -1,7 +1,7 @@
 'use strict'
 
 const Hp = require('hemera-plugin')
-const initTracer = require('jaeger-client').initTracer
+const { initTracer } = require('jaeger-client')
 const Opentracing = require('opentracing')
 
 /**
@@ -56,12 +56,9 @@ function hemeraOpentracing(hemera, opts, done) {
   })
 
   hemera.ext('onRequest', (hemera, request, reply, next) => {
-    let rootSpan = tracer.extract(
-      Opentracing.FORMAT_TEXT_MAP,
-      hemera.trace$[tracingKey]
-    )
+    const rootSpan = tracer.extract(Opentracing.FORMAT_TEXT_MAP, hemera.trace$[tracingKey])
 
-    let span = tracer.startSpan(`${tracePrefix} - ${hemera.trace$.method}`, {
+    const span = tracer.startSpan(`${tracePrefix} - ${hemera.trace$.method}`, {
       childOf: rootSpan
     })
 
@@ -71,9 +68,7 @@ function hemeraOpentracing(hemera, opts, done) {
     span.setTag(tags.HEMERA_CONTEXT, 'server')
     span.setTag(
       tags.HEMERA_PUBSUB,
-      hemera.matchedAction
-        ? hemera.matchedAction.pattern.pubsub$ || false
-        : false
+      hemera.matchedAction ? hemera.matchedAction.pattern.pubsub$ || false : false
     )
 
     hemera[jaegerContextKey] = span
@@ -119,15 +114,9 @@ function hemeraOpentracing(hemera, opts, done) {
       span.setTag(tags.HEMERA_ACT_MAXMSG, hemera.request.transport.maxMessages)
     }
     if (hemera.request.transport.expectedMessages$ > 0) {
-      span.setTag(
-        tags.HEMERA_ACT_EXPECTEDMSG,
-        hemera.request.transport.expectedMessages$
-      )
+      span.setTag(tags.HEMERA_ACT_EXPECTEDMSG, hemera.request.transport.expectedMessages$)
     }
-    span.setTag(
-      tags.HEMERA_ACT_TIMEOUT,
-      hemera.request.pattern.timeout$ || hemera.config.timeout
-    )
+    span.setTag(tags.HEMERA_ACT_TIMEOUT, hemera.request.pattern.timeout$ || hemera.config.timeout)
 
     hemera[jaegerContextKey] = span
 
@@ -145,6 +134,7 @@ function hemeraOpentracing(hemera, opts, done) {
 module.exports = Hp(hemeraOpentracing, {
   hemera: '>=5.8.0',
   scoped: false,
+  /* eslint-disable-next-line */
   name: require('./package.json').name,
   options: {}
 })

@@ -1,8 +1,8 @@
 'use strict'
 
 const Hp = require('hemera-plugin')
-const SchemaStore = require('./schemaStore')
 const Ajv = require('ajv')
+const SchemaStore = require('./schemaStore')
 
 function hemeraAjv(hemera, opts, done) {
   const requestSchemaKey = Symbol('ajv.request-schema')
@@ -25,35 +25,24 @@ function hemeraAjv(hemera, opts, done) {
       store.traverse(addDefinition.schema.schema)
 
       if (addDefinition.schema.schema.request) {
-        addDefinition.schema[requestSchemaKey] = ajv.compile(
-          addDefinition.schema.schema.request
-        )
+        addDefinition.schema[requestSchemaKey] = ajv.compile(addDefinition.schema.schema.request)
       }
       if (addDefinition.schema.schema.response) {
-        const inferedType = inferTypeByKeyword(
-          addDefinition.schema.schema.response
-        )
+        const inferedType = inferTypeByKeyword(addDefinition.schema.schema.response)
         if (inferedType === 'object') {
           addDefinition.schema[isResponseObjectSchemaKey] = true
         } else if (inferedType === 'array') {
           addDefinition.schema[isResponseArraySchemaKey] = true
         }
-        addDefinition.schema[responseSchemaKey] = ajv.compile(
-          addDefinition.schema.schema.response
-        )
+        addDefinition.schema[responseSchemaKey] = ajv.compile(addDefinition.schema.schema.response)
       }
     }
   })
 
   // Request validation
   hemera.setSchemaCompiler(schema => pattern => {
-    if (
-      typeof schema[requestSchemaKey] === 'function' &&
-      schema[requestSchemaKey](pattern) === false
-    ) {
-      const error = new Error(
-        ajv.errorsText(schema[requestSchemaKey].errors, { dataVar: 'pattern' })
-      )
+    if (typeof schema[requestSchemaKey] === 'function' && schema[requestSchemaKey](pattern) === false) {
+      const error = new Error(ajv.errorsText(schema[requestSchemaKey].errors, { dataVar: 'pattern' }))
       error.validation = schema[requestSchemaKey].errors
       return {
         error
@@ -76,7 +65,8 @@ function hemeraAjv(hemera, opts, done) {
         return {
           error: new Error('response should be an array')
         }
-      } else if (validate(payload) === false) {
+      }
+      if (validate(payload) === false) {
         const error = new Error(
           ajv.errorsText(validate.errors, {
             dataVar: 'response'
@@ -102,14 +92,7 @@ const objectKeywords = [
   'dependencies'
 ]
 
-const arrayKeywords = [
-  'items',
-  'additionalItems',
-  'maxItems',
-  'minItems',
-  'uniqueItems',
-  'contains'
-]
+const arrayKeywords = ['items', 'additionalItems', 'maxItems', 'minItems', 'uniqueItems', 'contains']
 
 /**
  * Infer type based on keyword in order return an error when undefined or primitive is returned
@@ -118,10 +101,14 @@ const arrayKeywords = [
  */
 function inferTypeByKeyword(schema) {
   for (const keyword of objectKeywords) {
-    if (keyword in schema) return 'object'
+    if (keyword in schema) {
+      return 'object'
+    }
   }
   for (const keyword of arrayKeywords) {
-    if (keyword in schema) return 'array'
+    if (keyword in schema) {
+      return 'array'
+    }
   }
   return schema.type
 }
@@ -129,6 +116,7 @@ function inferTypeByKeyword(schema) {
 module.exports = Hp(hemeraAjv, {
   hemera: '>=5.1.0',
   scoped: false, // set schema globally
+  /* eslint-disable-next-line */
   name: require('./package.json').name,
   options: {
     ajv: {

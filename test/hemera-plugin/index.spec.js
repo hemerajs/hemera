@@ -1,8 +1,8 @@
 'use strict'
 
+const Proxyquire = require('proxyquire')
 const HemeraPlugin = require('./../../packages/hemera-plugin')
 const extractPluginName = require('./../../packages/hemera-plugin/stackParser')
-const Proxyquire = require('proxyquire')
 
 describe('Hemera plugin', function() {
   it('Should register a plugin', function(done) {
@@ -47,10 +47,7 @@ describe('Hemera plugin', function() {
       HemeraPlugin(true, '1')
     }
 
-    expect(throws).to.throw(
-      Error,
-      "hemera-plugin expects a function, instead got a 'boolean'"
-    )
+    expect(throws).to.throw(Error, "hemera-plugin expects a function, instead got a 'boolean'")
     done()
   })
 
@@ -59,10 +56,7 @@ describe('Hemera plugin', function() {
       HemeraPlugin(() => {}, { hemera: true })
     }
 
-    expect(throws).to.throw(
-      Error,
-      "hemera-plugin expects a version string, instead got 'boolean'"
-    )
+    expect(throws).to.throw(Error, "hemera-plugin expects a version string, instead got 'boolean'")
     done()
   })
 

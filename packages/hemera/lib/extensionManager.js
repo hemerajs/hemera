@@ -14,15 +14,7 @@ const Errors = require('./errors')
 class ExtensionManager {
   constructor() {
     this._stack = []
-    this._types = [
-      'onAct',
-      'onActFinished',
-      'preHandler',
-      'onRequest',
-      'onSend',
-      'onResponse',
-      'onError'
-    ]
+    this._types = ['onAct', 'onActFinished', 'preHandler', 'onRequest', 'onSend', 'onResponse', 'onError']
     this.onAct = []
     this.onActFinished = []
 
@@ -35,7 +27,7 @@ class ExtensionManager {
 
   _add(type, handler) {
     if (this._types.indexOf(type) === -1) {
-      let error = new Errors.HemeraError('Extension type is unknown', {
+      const error = new Errors.HemeraError('Extension type is unknown', {
         type,
         handler
       })

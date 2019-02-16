@@ -43,12 +43,7 @@ class Add {
   }
 
   run(request, response, cb) {
-    extRunner(
-      this.middleware,
-      (fn, state, next) => fn(request, response, next),
-      null,
-      cb
-    )
+    extRunner(this.middleware, (fn, state, next) => fn(request, response, next), null, cb)
   }
 }
 

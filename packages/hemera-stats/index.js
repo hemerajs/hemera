@@ -86,9 +86,10 @@ function hemeraStats(hemera, opts, done) {
 
 function extractJoiSchema(action) {
   const schema = {}
-  for (var key in action.schema) {
+  for (const key in action.schema) {
+    // eslint-disable-next-line no-prototype-builtins
     if (action.schema.hasOwnProperty(key)) {
-      var element = action.schema[key]
+      const element = action.schema[key]
       if (element.isJoi) {
         schema[key] = {
           description: element._description,
@@ -106,6 +107,7 @@ function extractJoiSchema(action) {
 
 const plugin = Hp(hemeraStats, {
   hemera: '>=5.0.0-rc.1',
+  // eslint-disable-next-line global-require
   name: require('./package.json').name
 })
 

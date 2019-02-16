@@ -6,9 +6,7 @@ const extractPluginName = require('./stackParser')
 
 function plugin(fn, options = {}) {
   if (typeof fn !== 'function') {
-    throw new TypeError(
-      `hemera-plugin expects a function, instead got a '${typeof fn}'`
-    )
+    throw new TypeError(`hemera-plugin expects a function, instead got a '${typeof fn}'`)
   }
 
   fn[Symbol.for('plugin-scoped')] = true
@@ -22,11 +20,7 @@ function plugin(fn, options = {}) {
     options = {}
   }
 
-  if (
-    typeof options !== 'object' ||
-    Array.isArray(options) ||
-    options === null
-  ) {
+  if (typeof options !== 'object' || Array.isArray(options) || options === null) {
     throw new TypeError('The options object should be an object')
   }
 
@@ -45,7 +39,9 @@ function plugin(fn, options = {}) {
 }
 
 function checkName(fn) {
-  if (fn.name.length > 0) return fn.name
+  if (fn.name.length > 0) {
+    return fn.name
+  }
 
   try {
     throw new Error('anonymous function')
@@ -56,23 +52,19 @@ function checkName(fn) {
 
 function checkVersion(version) {
   if (typeof version !== 'string') {
-    throw new TypeError(
-      `hemera-plugin expects a version string, instead got '${typeof version}'`
-    )
+    throw new TypeError(`hemera-plugin expects a version string, instead got '${typeof version}'`)
   }
 
-  var hemeraVersion
+  let hemeraVersion
   try {
-    /* eslint node/no-unpublished-require: 0 */
+    // eslint-disable-next-line global-require
     hemeraVersion = require('nats-hemera/package.json').version
   } catch (_) {
     console.info('hemera not found, proceeding anyway')
   }
 
   if (hemeraVersion && !semver.satisfies(hemeraVersion, version)) {
-    throw new Error(
-      `hemera-plugin - expected '${version}' hemera version, '${hemeraVersion}' is installed`
-    )
+    throw new Error(`hemera-plugin - expected '${version}' hemera version, '${hemeraVersion}' is installed`)
   }
 }
 

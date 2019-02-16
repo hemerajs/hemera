@@ -6,7 +6,7 @@ class SchemaStore {
   }
 
   add(schema) {
-    const id = schema['$id']
+    const id = schema.$id
     if (id === undefined) {
       throw new Error('Missing schema $id property')
     }
@@ -19,8 +19,10 @@ class SchemaStore {
   }
 
   cleanId(schema) {
-    for (var key in schema) {
-      if (key === '$id') delete schema[key]
+    for (const key in schema) {
+      if (key === '$id') {
+        delete schema[key]
+      }
       if (schema[key] !== null && typeof schema[key] === 'object') {
         this.cleanId(schema[key])
       }
@@ -38,7 +40,7 @@ class SchemaStore {
     // remove schema id in order to avoid duplication error by ajv
     this.cleanId(schema)
 
-    for (let key in schema) {
+    for (const key in schema) {
       if (typeof schema[key] === 'string' && schema[key].slice(-1) === '#') {
         schema[key] = this.resolve(schema[key].slice(0, -1))
       }

@@ -23,11 +23,11 @@ const { sAddReceivedMsg } = require('./symbols')
  * @param {*} next
  */
 function onAct(context, next) {
-  let pattern = context._pattern
+  const pattern = context._pattern
 
-  let parentContext = context._parentContext
-  let cleanPattern = context._cleanPattern
-  let currentTime = Util.nowHrTime()
+  const parentContext = context._parentContext
+  const cleanPattern = context._cleanPattern
+  const currentTime = Util.nowHrTime()
 
   // shared context
   context.context$ = pattern.context$ || parentContext.context$
@@ -43,8 +43,7 @@ function onAct(context, next) {
       spanId: pattern.trace$.spanId || context._idGenerator(),
       traceId: pattern.trace$.traceId || context._idGenerator()
     }
-    context.trace$.parentSpanId =
-      pattern.trace$.parentSpanId || parentContext.trace$.spanId
+    context.trace$.parentSpanId = pattern.trace$.parentSpanId || parentContext.trace$.spanId
   } else {
     context.trace$ = {
       spanId: parentContext.trace$.spanId || context._idGenerator(),
@@ -61,7 +60,7 @@ function onAct(context, next) {
   if (context._config.maxRecursion > 1) {
     const callSignature = `${context.trace$.traceId}:${context.trace$.method}`
     if (context.meta$ && context.meta$.referrers) {
-      var count = context.meta$.referrers[callSignature]
+      let count = context.meta$.referrers[callSignature]
       count += 1
       context.meta$.referrers[callSignature] = count
       if (count > context._config.maxRecursion) {
@@ -111,7 +110,7 @@ function onAct(context, next) {
   }
 
   // build msg
-  let message = {
+  const message = {
     pattern: cleanPattern,
     meta: context.meta$,
     delegate: context.delegate$,
@@ -132,7 +131,7 @@ function onAct(context, next) {
  * @param {*} next
  */
 function onActFinished(context, next) {
-  let msg = context.response.payload
+  const msg = context.response.payload
 
   // pass to act context
   if (msg) {
@@ -186,14 +185,14 @@ function onActFinished(context, next) {
  * @returns
  */
 function onRequest(context, req, reply, next) {
-  let m = context._serverDecoder(context.request.payload)
+  const m = context._serverDecoder(context.request.payload)
 
   if (m.error) {
     next(m.error)
     return
   }
 
-  let msg = m.value
+  const msg = m.value
 
   if (msg) {
     context.meta$ = msg.meta || {}
@@ -215,10 +214,7 @@ function onRequest(context, req, reply, next) {
   // Only relevant for server actions with custom transport options.
   if (context.matchedAction !== null) {
     context.matchedAction[sAddReceivedMsg]++
-    if (
-      context.matchedAction[sAddReceivedMsg] ===
-      context.matchedAction.transport.maxMessages
-    ) {
+    if (context.matchedAction[sAddReceivedMsg] === context.matchedAction.transport.maxMessages) {
       // we only need to remove the pattern because the subscription is unsubscribed by nats driver automatically
       context.cleanTopic(context._topic)
     }
@@ -292,7 +288,7 @@ function onSend(context, req, reply, next) {
  */
 function onRequestSchemaValidation(context, req, reply, next) {
   if (context.matchedAction && context._schemaCompiler) {
-    const schema = context.matchedAction.schema
+    const { schema } = context.matchedAction
     const ret = context._schemaCompiler(schema)(req.payload.pattern)
     if (ret) {
       // promise
@@ -306,9 +302,11 @@ function onRequestSchemaValidation(context, req, reply, next) {
           next()
         }, next)
         return
-      } else if (ret.error) {
+      }
+      if (ret.error) {
         return next(ret.error)
-      } else if (ret.value) {
+      }
+      if (ret.value) {
         req.payload.pattern = ret.value
         return next()
       }
@@ -330,12 +328,8 @@ function onRequestSchemaValidation(context, req, reply, next) {
  * @param {*} next
  */
 function onSendSchemaValidation(context, req, reply, next) {
-  if (
-    !reply.error &&
-    context.matchedAction &&
-    context._responseSchemaCompiler
-  ) {
-    const schema = context.matchedAction.schema
+  if (!reply.error && context.matchedAction && context._responseSchemaCompiler) {
+    const { schema } = context.matchedAction
     const ret = context._responseSchemaCompiler(schema)(reply.payload)
     if (ret) {
       // promise
@@ -355,11 +349,13 @@ function onSendSchemaValidation(context, req, reply, next) {
           }
         )
         return
-      } else if (ret.error) {
+      }
+      if (ret.error) {
         reply.error = ret.error
         next(ret.error)
         return
-      } else if (ret.value) {
+      }
+      if (ret.value) {
         reply.payload = ret.value
         next()
         return
@@ -392,8 +388,4 @@ function onRequestLoadTest(context, req, reply, next) {
 module.exports.onAct = [onAct]
 module.exports.onActFinished = [onActFinished]
 module.exports.onSend = [onSendSchemaValidation, onSend]
-module.exports.onRequest = [
-  onRequest,
-  onRequestSchemaValidation,
-  onRequestLoadTest
-]
+module.exports.onRequest = [onRequest, onRequestSchemaValidation, onRequestLoadTest]

@@ -48,9 +48,7 @@ describe('Transport options', function() {
           topic: 'math',
           cmd: 'send'
         })
-        expect(err.message).to.be.equals(
-          'Topic is already registered with special transport options'
-        )
+        expect(err.message).to.be.equals('Topic is already registered with special transport options')
         hemera.close(done)
       }
     })
@@ -91,9 +89,7 @@ describe('Transport options', function() {
           topic: 'math',
           cmd: 'send'
         })
-        expect(err.message).to.be.equals(
-          'Topic is already registered with special transport options'
-        )
+        expect(err.message).to.be.equals('Topic is already registered with special transport options')
         hemera.close(done)
       }
     })
@@ -134,9 +130,7 @@ describe('Transport options', function() {
           topic: 'math',
           cmd: 'send'
         })
-        expect(err.message).to.be.equals(
-          'Topic is already registered with special transport options'
-        )
+        expect(err.message).to.be.equals('Topic is already registered with special transport options')
         hemera.close(done)
       }
     })
@@ -177,9 +171,7 @@ describe('Transport options', function() {
           topic: 'math',
           cmd: 'send'
         })
-        expect(err.message).to.be.equals(
-          'Topic is already registered with special transport options'
-        )
+        expect(err.message).to.be.equals('Topic is already registered with special transport options')
         hemera.close(done)
       }
     })
@@ -220,9 +212,7 @@ describe('Transport options', function() {
           topic: 'math',
           cmd: 'send'
         })
-        expect(err.message).to.be.equals(
-          'Topic is already registered with special transport options'
-        )
+        expect(err.message).to.be.equals('Topic is already registered with special transport options')
         hemera.close(done)
       }
     })
@@ -263,9 +253,7 @@ describe('Transport options', function() {
           topic: 'math',
           cmd: 'send'
         })
-        expect(err.message).to.be.equals(
-          'Topic is already registered with special transport options'
-        )
+        expect(err.message).to.be.equals('Topic is already registered with special transport options')
         hemera.close(done)
       }
     })

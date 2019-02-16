@@ -54,9 +54,7 @@ describe('Load policy for server component', function() {
         },
         (err, resp) => {
           expect(respondedSpy.called).to.be.equals(false)
-          expect(err instanceof Hemera.errors.ProcessLoadError).to.be.equals(
-            true
-          )
+          expect(err instanceof Hemera.errors.ProcessLoadError).to.be.equals(true)
           expect(err.heapUsed).to.be.exists()
           expect(err.rss).to.be.least(5)
           expect(err.heapUsed).to.be.exists()

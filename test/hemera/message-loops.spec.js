@@ -181,16 +181,10 @@ describe('Message loop detection', function() {
     })
 
     setTimeout(() => {
-      expect(
-        client1SpyError.callCount + client2SpyError.callCount
-      ).to.be.equals(1)
-      expect(
-        recursionError instanceof Hemera.errors.MaxRecursionError
-      ).to.be.equals(true)
+      expect(client1SpyError.callCount + client2SpyError.callCount).to.be.equals(1)
+      expect(recursionError instanceof Hemera.errors.MaxRecursionError).to.be.equals(true)
       expect(recursionError.count).to.be.equals(maxRecursion)
-      expect(client1Spy.callCount + client2Spy.callCount).to.be.equals(
-        maxRecursion
-      )
+      expect(client1Spy.callCount + client2Spy.callCount).to.be.equals(maxRecursion)
       hemera.close(done)
     }, 500)
   })
@@ -283,9 +277,7 @@ describe('Message loop detection', function() {
           cmd: 'a'
         },
         function(err) {
-          expect(err instanceof Hemera.errors.MaxRecursionError).to.be.equals(
-            true
-          )
+          expect(err instanceof Hemera.errors.MaxRecursionError).to.be.equals(true)
           expect(err.hops.length).to.be.equals(10)
           expect(recursionError.count).to.be.equals(maxRecursion)
         }
@@ -293,12 +285,8 @@ describe('Message loop detection', function() {
     })
 
     setTimeout(() => {
-      expect(
-        client1SpyError.callCount + client2SpyError.callCount
-      ).to.be.equals(10)
-      expect(
-        recursionError instanceof Hemera.errors.MaxRecursionError
-      ).to.be.equals(true)
+      expect(client1SpyError.callCount + client2SpyError.callCount).to.be.equals(10)
+      expect(recursionError instanceof Hemera.errors.MaxRecursionError).to.be.equals(true)
       expect(recursionError.count).to.be.equals(maxRecursion)
       expect(client1Spy.callCount + client2Spy.callCount).to.be.equals(0)
       hemera.close(done)

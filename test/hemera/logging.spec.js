@@ -22,18 +22,23 @@ describe('Logging interface', function() {
       info(msg) {
         console.log(msg)
       }
+
       debug(msg) {
         console.log(msg)
       }
+
       error(msg) {
         console.error(msg)
       }
+
       warn(msg) {
         console.warn(msg)
       }
+
       fatal(msg) {
         console.error(msg)
       }
+
       trace(msg) {
         console.log(msg)
       }

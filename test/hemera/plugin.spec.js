@@ -566,9 +566,7 @@ describe('Plugin interface', function() {
       function(hemera, options, done) {
         let plugin2 = Hp(
           function(hemera, options, done) {
-            expect(
-              hemera[HemeraSymbols.sRegisteredPlugins].slice()
-            ).to.be.equals(['myPlugin', 'myPlugin2'])
+            expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals(['myPlugin', 'myPlugin2'])
             done()
           },
           {
@@ -577,9 +575,7 @@ describe('Plugin interface', function() {
           }
         )
 
-        expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals([
-          'myPlugin'
-        ])
+        expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals(['myPlugin'])
 
         hemera.use(plugin2)
 
@@ -611,9 +607,7 @@ describe('Plugin interface', function() {
           function(hemera, options, done) {
             hemera.decorate('test', true)
             expect(hemera.test).to.be.exists()
-            expect(
-              hemera[HemeraSymbols.sRegisteredPlugins].slice()
-            ).to.be.equals(['parent', 'myPlugin'])
+            expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals(['parent', 'myPlugin'])
             done()
           },
           {
@@ -624,9 +618,11 @@ describe('Plugin interface', function() {
         let plugin2 = Hp(
           function(hemera, options, done) {
             expect(hemera.test).to.be.exists()
-            expect(
-              hemera[HemeraSymbols.sRegisteredPlugins].slice()
-            ).to.be.equals(['parent', 'myPlugin', 'myPlugin2'])
+            expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals([
+              'parent',
+              'myPlugin',
+              'myPlugin2'
+            ])
             done()
           },
           {
@@ -649,10 +645,7 @@ describe('Plugin interface', function() {
     hemera.use(
       Hp(function(hemera, options, done) {
         expect(hemera.test).to.be.exists()
-        expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals([
-          'parent',
-          'plugin.spec'
-        ])
+        expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals(['parent', 'plugin.spec'])
         done()
       })
     )
@@ -661,10 +654,7 @@ describe('Plugin interface', function() {
       expect(err).to.be.not.exists()
       expect(hemera.test).to.be.exists()
 
-      expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals([
-        'parent',
-        'plugin.spec'
-      ])
+      expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals(['parent', 'plugin.spec'])
       hemera.close(done)
     })
   })
@@ -688,9 +678,7 @@ describe('Plugin interface', function() {
 
     hemera.ready(err => {
       expect(err).to.be.not.exists()
-      expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals([
-        'parent'
-      ])
+      expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals(['parent'])
       hemera.close(done)
     })
   })
@@ -702,9 +690,7 @@ describe('Plugin interface', function() {
 
     let parent = Hp(
       function(hemera, options, done) {
-        expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals([
-          'parent'
-        ])
+        expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals(['parent'])
         done()
       },
       {
@@ -717,15 +703,14 @@ describe('Plugin interface', function() {
 
     hemera.use(
       Hp(function(hemera, options, done) {
-        expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals([
-          'parent',
-          'plugin.spec'
-        ])
+        expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals(['parent', 'plugin.spec'])
         hemera.use(
           Hp(function(hemera, options, done) {
-            expect(
-              hemera[HemeraSymbols.sRegisteredPlugins].slice()
-            ).to.be.equals(['parent', 'plugin.spec', 'plugin.spec'])
+            expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals([
+              'parent',
+              'plugin.spec',
+              'plugin.spec'
+            ])
             done()
           })
         )
@@ -735,10 +720,7 @@ describe('Plugin interface', function() {
 
     hemera.ready(err => {
       expect(err).to.be.not.exists()
-      expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals([
-        'parent',
-        'plugin.spec'
-      ])
+      expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals(['parent', 'plugin.spec'])
       hemera.close(done)
     })
   })
@@ -784,9 +766,7 @@ describe('Plugin interface', function() {
     hemera.use(plugin)
 
     hemera.ready(() => {
-      expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals([
-        'myPlugin'
-      ])
+      expect(hemera[HemeraSymbols.sRegisteredPlugins].slice()).to.be.equals(['myPlugin'])
       hemera.close(done)
     })
   })
@@ -808,9 +788,7 @@ describe('Plugin interface', function() {
     hemera.use(plugin)
 
     hemera.ready(err => {
-      expect(err.message).to.be.equals(
-        `The dependency 'hemera-joi' is not registered`
-      )
+      expect(err.message).to.be.equals(`The dependency 'hemera-joi' is not registered`)
       hemera.close(done)
     })
   })
@@ -832,9 +810,7 @@ describe('Plugin interface', function() {
     hemera.use(plugin)
 
     hemera.ready().catch(err => {
-      expect(err.message).to.be.equals(
-        `The dependency 'hemera-joi' is not registered`
-      )
+      expect(err.message).to.be.equals(`The dependency 'hemera-joi' is not registered`)
       hemera.close(done)
     })
   })
@@ -876,9 +852,7 @@ describe('Plugin interface', function() {
     hemera.use(plugin)
     hemera.ready(err => {
       expect(err).to.be.exists()
-      expect(err.message).to.equals(
-        `The decorator dependency 'test' is not registered`
-      )
+      expect(err.message).to.equals(`The decorator dependency 'test' is not registered`)
       done()
     })
   })
@@ -900,9 +874,7 @@ describe('Plugin interface', function() {
     hemera.use(plugin)
     hemera.ready().catch(err => {
       expect(err).to.be.exists()
-      expect(err.message).to.equals(
-        `The decorator dependency 'test' is not registered`
-      )
+      expect(err.message).to.equals(`The decorator dependency 'test' is not registered`)
       done()
     })
   })
@@ -967,9 +939,7 @@ describe('Plugin interface', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('FooBarError')
           expect(err.message).to.be.equals('test')
-          expect(err instanceof hemera.pluginErrors.FooBarError).to.be.equals(
-            true
-          )
+          expect(err instanceof hemera.pluginErrors.FooBarError).to.be.equals(true)
           hemera.close(done)
         }
       )
