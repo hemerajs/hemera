@@ -1,0 +1,63 @@
+{
+  "version-7.0.0-docs": {
+    "Introduction": [
+      "version-7.0.0-what-is-hemera",
+      "version-7.0.0-installation"
+    ],
+    "Basics": [
+      "version-7.0.0-request-reply",
+      "version-7.0.0-pattern-matching",
+      "version-7.0.0-publish-susbcribe",
+      "version-7.0.0-payload-validation",
+      "version-7.0.0-middleware",
+      "version-7.0.0-extension",
+      "version-7.0.0-logging",
+      "version-7.0.0-decorator",
+      "version-7.0.0-codec",
+      "version-7.0.0-config"
+    ],
+    "Context": [
+      "version-7.0.0-metadata",
+      "version-7.0.0-context",
+      "version-7.0.0-delegate",
+      "version-7.0.0-trace",
+      "version-7.0.0-request"
+    ],
+    "Plugins": [
+      "version-7.0.0-ecosystem",
+      "version-7.0.0-plugin"
+    ],
+    "Error handling": [
+      "version-7.0.0-error-handling",
+      "version-7.0.0-error-serialization",
+      "version-7.0.0-notfoundPattern",
+      "version-7.0.0-timeout",
+      "version-7.0.0-fatal",
+      "version-7.0.0-propagation",
+      "version-7.0.0-protection"
+    ],
+    "Testing": [
+      "version-7.0.0-integration",
+      "version-7.0.0-unit"
+    ],
+    "Tooling": [
+      "version-7.0.0-monitoring",
+      "version-7.0.0-cli",
+      "version-7.0.0-typescript"
+    ],
+    "Advanced": [
+      "version-7.0.0-message-format",
+      "version-7.0.0-docker",
+      "version-7.0.0-graphql",
+      "version-7.0.0-bridge",
+      "version-7.0.0-clustering",
+      "version-7.0.0-api-versioning",
+      "version-7.0.0-nats-limit",
+      "version-7.0.0-framework-integrations",
+      "version-7.0.0-hemera-vs-seneca"
+    ],
+    "API": [
+      "version-7.0.0-reference"
+    ]
+  }
+}

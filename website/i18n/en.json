@@ -2420,6 +2420,22 @@
       "version-6.1.1-plugin": {
         "title": "Plugin",
         "sidebar_label": "Plugin"
+      },
+      "version-7.0.0-ecosystem": {
+        "title": "Ecosystem",
+        "sidebar_label": "Ecosystem"
+      },
+      "version-7.0.0-error-handling": {
+        "title": "Error-handling",
+        "sidebar_label": "Introduction"
+      },
+      "version-7.0.0-extension": {
+        "title": "Extension",
+        "sidebar_label": "Extension"
+      },
+      "version-7.0.0-plugin": {
+        "title": "Plugin",
+        "sidebar_label": "Plugin"
       }
     },
     "links": {
