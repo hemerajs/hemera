@@ -45,7 +45,7 @@ function hemeraKnabe(hemera, opts, done) {
 }
 
 module.exports = Hp(hemeraKnabe, {
-  hemera: '^5.0.0',
+  hemera: '>=7',
   /* eslint-disable-next-line */
   name: require('./package.json').name,
   options: {

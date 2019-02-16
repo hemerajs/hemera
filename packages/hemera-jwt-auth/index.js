@@ -65,7 +65,7 @@ function isSubset(scope, subset) {
 }
 
 const plugin = Hp(hemeraJwtAuth, {
-  hemera: '>=5.0.0-rc.1',
+  hemera: '>=7',
   // eslint-disable-next-line global-require
   name: require('./package.json').name,
   scoped: false,

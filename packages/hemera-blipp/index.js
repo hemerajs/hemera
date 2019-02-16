@@ -56,7 +56,7 @@ function hemeraBlipp(hemera, opts, done) {
 }
 
 module.exports = Hp(hemeraBlipp, {
-  hemera: '>=5.0.0',
+  hemera: '>=7',
   /* eslint-disable-next-line */
   name: require('./package.json').name
 })

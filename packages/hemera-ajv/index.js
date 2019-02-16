@@ -114,7 +114,7 @@ function inferTypeByKeyword(schema) {
 }
 
 module.exports = Hp(hemeraAjv, {
-  hemera: '>=5.1.0',
+  hemera: '>=7',
   scoped: false, // set schema globally
   /* eslint-disable-next-line */
   name: require('./package.json').name,

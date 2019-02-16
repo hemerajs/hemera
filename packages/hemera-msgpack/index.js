@@ -39,7 +39,7 @@ function hemeraMsgpack(hemera, opts, done) {
 }
 
 const plugin = Hp(hemeraMsgpack, {
-  hemera: '>=5.0.0-rc.1',
+  hemera: '>=5.0.0',
   scoped: false,
   // eslint-disable-next-line global-require
   name: require('./package.json').name

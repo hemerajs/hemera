@@ -10,7 +10,7 @@ function hemeraSafePromises(hemera, opts, done) {
 }
 
 const plugin = Hp(hemeraSafePromises, {
-  hemera: '>=5.0.0-rc.1',
+  hemera: '>=5.0.0',
   /* eslint-disable-next-line */
   name: require('./package.json').name
 })

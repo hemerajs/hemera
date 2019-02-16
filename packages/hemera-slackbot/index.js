@@ -102,7 +102,7 @@ function validationMiddleware(req) {
 }
 
 const plugin = Hp(hemeraSlackbot, {
-  hemera: '>=5.0.0-rc.1',
+  hemera: '>=7',
   /* eslint-disable-next-line */
   name: require('./package.json').name
 })

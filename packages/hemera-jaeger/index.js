@@ -132,7 +132,7 @@ function hemeraOpentracing(hemera, opts, done) {
 }
 
 module.exports = Hp(hemeraOpentracing, {
-  hemera: '>=5.8.0',
+  hemera: '>=7',
   scoped: false,
   /* eslint-disable-next-line */
   name: require('./package.json').name,
