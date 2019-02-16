@@ -129,8 +129,8 @@ describe('Error handling', function() {
     hemera.setErrorHandler((hemera, error, reply) => {
       expect(error).to.be.exists()
       rootSpy()
-      return new Promise(resolve => {
-        setTimeout(reject, 200)
+      return new Promise((resolve, reject) => {
+        setTimeout(() => reject(new Error('error handler')), 200)
       })
     })
 

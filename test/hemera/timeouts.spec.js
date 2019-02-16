@@ -311,8 +311,7 @@ describe('Timeouts', function() {
           topic: 'email',
           cmd: 'send'
         },
-        (resp, cb) => {
-        }
+        (resp, cb) => {}
       )
 
       hemera.act(

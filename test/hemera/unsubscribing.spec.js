@@ -176,7 +176,10 @@ describe('Unsubscribe NATS topic', function() {
     const hemera = new Hemera(nats)
 
     hemera.ready(() => {
-      expect(() => hemera.remove(/abc/)).to.throw(Error, "Topic must be from type string or number but got 'object'")
+      expect(() => hemera.remove(/abc/)).to.throw(
+        Error,
+        "Topic must be from type string or number but got 'object'"
+      )
 
       hemera.close(done)
     })

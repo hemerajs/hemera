@@ -968,7 +968,9 @@ class Hemera {
     }
 
     if (typeof topic !== 'string' && typeof topic !== 'number') {
-      const error = new Errors.HemeraError(`Topic must be from type string or number but got '${typeof topic}'`)
+      const error = new Errors.HemeraError(
+        `Topic must be from type string or number but got '${typeof topic}'`
+      )
       self.log.error(error)
       throw error
     }
