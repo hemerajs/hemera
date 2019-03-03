@@ -162,7 +162,7 @@ declare namespace Hemera {
 
   type ActPromiseResult<T> = {
     data: T
-    context: Hemera
+    context: Hemera<ClientRequest, ClientResponse>
   }
 
   interface Request {
