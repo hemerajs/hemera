@@ -160,8 +160,8 @@ declare namespace Hemera {
     send: (payload: any) => void
   }
 
-  type ActPromiseResult = {
-    data: any
+  type ActPromiseResult<T> = {
+    data: T
     context: Hemera
   }
 
@@ -185,7 +185,7 @@ declare class Hemera {
   constructor(transport: object, config: Hemera.Config)
   // act
   act(pattern: string | Hemera.ClientPattern, handler: Hemera.ActHandler): void
-  act(pattern: string | Hemera.ClientPattern): Promise<Hemera.ActPromiseResult>
+  act<T>(pattern: string | Hemera.ClientPattern): Promise<Hemera.ActPromiseResult<T>>
 
   // add
   add(
