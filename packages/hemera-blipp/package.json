@@ -1,6 +1,6 @@
 {
   "name": "hemera-blipp",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "Prints your server actions to the console",
   "main": "index.js",
   "repository": {
@@ -19,6 +19,6 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^2.3.2",
-    "hemera-plugin": "^1.3.0"
+    "hemera-plugin": "^2.0.0"
   }
 }

@@ -61,9 +61,9 @@ describe('Util', function() {
   })
 
   it('Generate random id', function(done) {
-    let schema = HemeraUtil.randomId()
-    expect(schema).to.be.string()
-    expect(schema.length).to.be.equals(32)
+    let id = HemeraUtil.randomId()
+    expect(id).to.be.string()
+    expect(id.length).to.be.equals(22)
 
     done()
   })

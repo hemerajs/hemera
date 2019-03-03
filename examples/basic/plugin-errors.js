@@ -5,7 +5,6 @@ const nats = require('nats').connect({
   preserveBuffers: true
 })
 const HemeraJoi = require('./../../packages/hemera-joi')
-
 const hemera = new Hemera(nats, {
   logLevel: 'debug'
 })

@@ -6,13 +6,32 @@ const hemeraJaeger = require('./../../packages/hemera-jaeger')
 const HemeraJoi = require('./../../packages/hemera-joi')
 
 const hemera = new Hemera(nats, {
-  logLevel: 'debug',
+  logLevel: 'error',
   childLogger: true,
   tag: 'math'
 })
 
 hemera.use(hemeraJaeger, {
-  serviceName: 'math'
+  config: {
+    serviceName: 'math',
+    sampler: {
+      type: 'const',
+      param: 1
+    },
+    reporter: {
+      logSpans: true
+    }
+  },
+  options: {
+    logger: {
+      info: function logInfo(msg) {
+        console.log('INFO ', msg)
+      },
+      error: function logError(msg) {
+        console.log('ERROR', msg)
+      }
+    }
+  }
 })
 
 hemera.use(HemeraJoi)
@@ -78,6 +97,6 @@ hemera.ready(() => {
       })
     }
   )
-  hemera.act('topic:auth,cmd:login')
+  hemera.act('topic:auth,cmd:login,maxMessages$:1')
   hemera.act('topic:search,cmd:friends')
 })

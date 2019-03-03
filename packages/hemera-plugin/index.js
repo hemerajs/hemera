@@ -2,12 +2,11 @@
 
 const semver = require('semver')
 const console = require('console')
+const extractPluginName = require('./stackParser')
 
-function plugin(fn, options) {
+function plugin(fn, options = {}) {
   if (typeof fn !== 'function') {
-    throw new TypeError(
-      `hemera-plugin expects a function, instead got a '${typeof fn}'`
-    )
+    throw new TypeError(`hemera-plugin expects a function, instead got a '${typeof fn}'`)
   }
 
   fn[Symbol.for('plugin-scoped')] = true
@@ -16,21 +15,17 @@ function plugin(fn, options) {
     fn[Symbol.for('plugin-scoped')] = options.scoped
   }
 
-  if (options === undefined) {
-    return fn
-  }
-
   if (typeof options === 'string') {
     checkVersion(options)
-    return fn
+    options = {}
   }
 
-  if (
-    typeof options !== 'object' ||
-    Array.isArray(options) ||
-    options === null
-  ) {
+  if (typeof options !== 'object' || Array.isArray(options) || options === null) {
     throw new TypeError('The options object should be an object')
+  }
+
+  if (!options.name) {
+    options.name = checkName(fn)
   }
 
   if (options.hemera) {
@@ -43,25 +38,33 @@ function plugin(fn, options) {
   return fn
 }
 
-function checkVersion(version) {
-  if (typeof version !== 'string') {
-    throw new TypeError(
-      `hemera-plugin expects a version string, instead got '${typeof version}'`
-    )
+function checkName(fn) {
+  if (fn.name.length > 0) {
+    return fn.name
   }
 
-  var hemeraVersion
   try {
-    /* eslint node/no-unpublished-require: 0 */
+    throw new Error('anonymous function')
+  } catch (e) {
+    return extractPluginName(e.stack)
+  }
+}
+
+function checkVersion(version) {
+  if (typeof version !== 'string') {
+    throw new TypeError(`hemera-plugin expects a version string, instead got '${typeof version}'`)
+  }
+
+  let hemeraVersion
+  try {
+    // eslint-disable-next-line global-require
     hemeraVersion = require('nats-hemera/package.json').version
   } catch (_) {
     console.info('hemera not found, proceeding anyway')
   }
 
   if (hemeraVersion && !semver.satisfies(hemeraVersion, version)) {
-    throw new Error(
-      `hemera-plugin - expected '${version}' hemera version, '${hemeraVersion}' is installed`
-    )
+    throw new Error(`hemera-plugin - expected '${version}' hemera version, '${hemeraVersion}' is installed`)
   }
 }
 

@@ -46,9 +46,7 @@ describe('Hemera-joi request validation', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('ValidationError')
           expect(err.details).to.be.exists()
-          expect(err.message).to.be.equals(
-            'child "a" fails because ["a" must be a number]'
-          )
+          expect(err.message).to.be.equals('child "a" fails because ["a" must be a number]')
           hemera.close(done)
         }
       )
@@ -86,9 +84,7 @@ describe('Hemera-joi request validation', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('ValidationError')
           expect(err.details).to.be.exists()
-          expect(err.message).to.be.equals(
-            'child "a" fails because ["a" must be a number]'
-          )
+          expect(err.message).to.be.equals('child "a" fails because ["a" must be a number]')
           hemera.close(done)
         }
       )
@@ -197,9 +193,7 @@ describe('Hemera-joi request validation', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('ValidationError')
           expect(err.details).to.be.exists()
-          expect(err.message).to.be.equals(
-            'child "a" fails because ["a" must be a number]'
-          )
+          expect(err.message).to.be.equals('child "a" fails because ["a" must be a number]')
           hemera.close(done)
         }
       )
@@ -242,9 +236,7 @@ describe('Hemera-joi request validation', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('ValidationError')
           expect(err.details).to.be.exists()
-          expect(err.message).to.be.equals(
-            'child "c" fails because ["c" is required]'
-          )
+          expect(err.message).to.be.equals('child "c" fails because ["c" is required]')
           hemera.close(done)
         }
       )
@@ -494,6 +486,131 @@ describe('Hemera-joi response validation', function() {
         (err, resp) => {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('PatternNotFound')
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should be able to use basePreSchema to support unknown: false mode', function(done) {
+    const nats = require('nats').connect(authUrl)
+    const Joi = require('joi')
+
+    const hemera = new Hemera(nats)
+    hemera.use(HemeraJoi, {
+      basePreSchema: {
+        topic: Joi.string().required(),
+        cmd: Joi.string().required()
+      },
+      pre: { allowUnknown: false }
+    })
+
+    hemera.ready(() => {
+      let Joi = hemera.joi
+      hemera.add(
+        {
+          topic: 'email',
+          cmd: 'send',
+          a: Joi.number().required()
+        },
+        (resp, cb) => {
+          cb()
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'email',
+          cmd: 'send',
+          a: 1
+        },
+        (err, resp) => {
+          expect(err).to.be.not.exists()
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should be able to use basePostSchema standalone', function(done) {
+    const nats = require('nats').connect(authUrl)
+    const Joi = require('joi')
+
+    const hemera = new Hemera(nats)
+    hemera.use(HemeraJoi, {
+      basePostSchema: {
+        userId: Joi.number().required()
+      }
+    })
+
+    hemera.ready(() => {
+      let Joi = hemera.joi
+      hemera.add(
+        {
+          topic: 'email',
+          cmd: 'send',
+          a: Joi.number().required()
+        },
+        (resp, cb) => {
+          cb(null, {
+            userId: null
+          })
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'email',
+          cmd: 'send',
+          a: 1
+        },
+        (err, resp) => {
+          expect(err).to.be.exists()
+          expect(err.name).to.be.equals('ValidationError')
+          expect(err.message).to.be.equals('child "userId" fails because ["userId" must be a number]')
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should be able to use basePostSchema with post$', function(done) {
+    const nats = require('nats').connect(authUrl)
+    const Joi = require('joi')
+
+    const hemera = new Hemera(nats)
+    hemera.use(HemeraJoi, {
+      basePostSchema: {
+        userId: Joi.number().required()
+      }
+    })
+
+    hemera.ready(() => {
+      let Joi = hemera.joi
+      hemera.add(
+        {
+          topic: 'email',
+          cmd: 'send',
+          post$: {},
+          a: Joi.number().required()
+        },
+        (resp, cb) => {
+          cb(null, {
+            userId: null
+          })
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'email',
+          cmd: 'send',
+          a: 1
+        },
+        (err, resp) => {
+          expect(err).to.be.exists()
+          expect(err.name).to.be.equals('ValidationError')
+          expect(err.message).to.be.equals('child "userId" fails because ["userId" must be a number]')
           hemera.close(done)
         }
       )

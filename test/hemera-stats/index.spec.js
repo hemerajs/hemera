@@ -1,7 +1,7 @@
 'use strict'
 
-const HemeraStats = require('../../packages/hemera-stats')
 const Joi = require('joi')
+const HemeraStats = require('../../packages/hemera-stats')
 
 process.setMaxListeners(0)
 
@@ -89,15 +89,64 @@ describe('Hemera-stats', function() {
           expect(resp.actions[2].schema.a.description).to.be.equals(
             'this key will match anything you give it'
           )
-          expect(resp.actions[2].schema.a.notes).to.be.equals([
-            'this is special',
-            'this is important'
-          ])
+          expect(resp.actions[2].schema.a.notes).to.be.equals(['this is special', 'this is important'])
           expect(resp.actions[2].schema.a.examples).to.be.equals([1])
           expect(resp.app).to.be.exists()
           hemera.close(done)
         }
       )
+    })
+  })
+
+  it('Should be able to broadcast process stats to custom pattern', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.use(HemeraStats)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'test'
+        },
+        function(req) {
+          expect(req.stats).to.be.exists()
+          expect(req.stats.uptime).to.be.exists()
+          expect(this.request$.type).to.be.equals('pubsub')
+          hemera.close(done)
+        }
+      )
+      const success = hemera.sendProcStats({
+        topic: 'test'
+      })
+      expect(success instanceof Promise).to.be.equals(true)
+    })
+  })
+
+  it('Should be able to broadcast action stats to custom pattern', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.use(HemeraStats)
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'test'
+        },
+        function(req) {
+          expect(req.stats).to.be.exists()
+          expect(req.stats.actions).to.be.exists()
+          expect(this.request$.type).to.be.equals('pubsub')
+          hemera.close(done)
+        }
+      )
+      const success = hemera.sendActionStats({
+        topic: 'test'
+      })
+      expect(success instanceof Promise).to.be.equals(true)
     })
   })
 })

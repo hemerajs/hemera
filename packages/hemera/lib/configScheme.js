@@ -1,6 +1,6 @@
 const Joi = require('joi')
 const Os = require('os')
-const Stream = require('stream').Stream
+const { Stream } = require('stream')
 const Util = require('./util')
 
 module.exports = Joi.object().keys({
@@ -8,9 +8,15 @@ module.exports = Joi.object().keys({
   timeout: Joi.number()
     .integer()
     .default(2000),
+  // The number of millis to wait a plugin to load after which it will error, 0 = disabled
+  pluginTimeout: Joi.number()
+    .integer()
+    .default(10),
   tag: Joi.string().default(''),
   // Enables pretty log formatter in Pino default logger
-  prettyLog: Joi.boolean().default(true),
+  prettyLog: Joi.alternatives()
+    .try(Joi.boolean(), Joi.object())
+    .default(false),
   // The name of the instance
   name: Joi.string().default(`hemera-${Os.hostname()}-${Util.randomId()}`),
   logLevel: Joi.any()
@@ -23,20 +29,9 @@ module.exports = Joi.object().keys({
     .integer()
     .default(0),
   // Custom logger
-  logger: Joi.alternatives().try(
-    Joi.object()
-      .keys({
-        info: Joi.func().minArity(1),
-        error: Joi.func().minArity(1),
-        debug: Joi.func().minArity(1),
-        fatal: Joi.func().minArity(1),
-        warn: Joi.func().minArity(1),
-        trace: Joi.func().minArity(1),
-        child: Joi.func().minArity(1)
-      })
-      .requiredKeys('info', 'error', 'debug', 'fatal', 'warn', 'trace'),
-    Joi.object().type(Stream)
-  ),
+  logger: Joi.alternatives().try(Joi.object(), Joi.object().type(Stream)),
+  // Attach trace and request informations to the logs. It costs ~10% perf
+  traceLog: Joi.boolean().default(false),
   // The error serialization options
   errio: Joi.object()
     .keys({

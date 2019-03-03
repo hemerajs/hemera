@@ -5,6 +5,7 @@ sidebar_label: Not found pattern
 ---
 
 You can define a pattern which is used as fallback as soon a pattern could not be found on client side. This is very useful for debugging and logging purposes.
+The pattern must be accesible in the same process.
 
 ```js
 hemera.setNotFoundPattern({

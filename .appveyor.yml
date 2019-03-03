@@ -7,9 +7,6 @@ environment:
     - nodejs_version: '10'
       platform: x64
       msvs_toolset: 12
-    - nodejs_version: '9'
-      platform: x64
-      msvs_toolset: 12
     - nodejs_version: '8'
       platform: x64
       msvs_toolset: 12
@@ -40,6 +37,7 @@ init:
 install:
   - ps: Install-Product node $env:nodejs_version $env:Platform
   - ps: Set-ExecutionPolicy Unrestricted -Scope CurrentUser -Force
+  - ps: npm set audit false
   #- npm config get
   # upgrade node-gyp to dodge https://github.com/mapbox/node-pre-gyp/issues/209#issuecomment-307641388
   # and allow make node 4.x x86 builds work
@@ -58,8 +56,8 @@ install:
   - 7z e gnatsd-v1.0.4-windows-386.zip gnatsd.exe -r -oc:\projects\hemera\build
   - cmd: set PATH=%PATH%;C:\projects\hemera\build
 
-  - npm run setup
-  - npm run test
+  - yarn install
+  - yarn run test
 
 build: off
 test: off

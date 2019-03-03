@@ -8,16 +8,26 @@ Granting and authenticating solution with JWT for Hemera
 ## Usage
 
 ```js
-// token encoded with { scope: ['math'] }
-const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZSI6WyJtYXRoIl0sImlhdCI6MTQ4ODEyMjIwN30.UPLLbjDgkB_ajQjI7BUlpUGfZYvsqHP3NqWQIavibeQ'
 const hemera = new Hemera(nats)
 hemera.use(require('hemera-jwt'), {
   enforceAuth: true // set to false if you want to enable it selectively
   jwt: {
-    secret: 'test'
+    secret: '<secret>'
   }
 })
 ```
+
+## JWT Payload signature
+
+- `scope`: Defines a set of rights (`Array<string>` or `string`)
+
+```json
+{ "scope": ["math"] }
+```
+
+## Example
+
+For a full example see [here](/examples/authentication/jwt.js)
 
 ## Plugin decorators
 

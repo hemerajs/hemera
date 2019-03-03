@@ -20,7 +20,7 @@ npm install nats nats-hemera
 
 1.  [Download](https://nats.io/download/) NATS
 2.  Install the path to the executeable in your user path
-3.  Run it!
+3.  Run it! `gnats`
 
 ## Basic Usage
 

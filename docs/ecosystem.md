@@ -22,7 +22,6 @@ The `hemera` repo is managed as a monorepo, composed of multiple npm packages. S
 
 | Tracer                                                                                 | Version                                                                                                           |
 | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| [hemera-zipkin](https://github.com/hemerajs/hemera/tree/master/packages/hemera-zipkin) | [![npm](https://img.shields.io/npm/v/hemera-zipkin.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-zipkin) |
 | [hemera-jaeger](https://github.com/hemerajs/hemera/tree/master/packages/hemera-jaeger) | [![npm](https://img.shields.io/npm/v/hemera-jaeger.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-jaeger) |
 
 | Metrics                                                                                        | Version                                                                                                                   |

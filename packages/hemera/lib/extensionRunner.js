@@ -1,7 +1,7 @@
 'use strict'
 
 function extRunner(functions, runner, state, cb) {
-  var i = 0
+  let i = 0
 
   function next(err) {
     if (err || i === functions.length) {
@@ -28,12 +28,26 @@ function extRunner(functions, runner, state, cb) {
   next()
 }
 
+function responseExtIterator(fn, state, next) {
+  return fn(state, state.reply, next)
+}
+
 function serverExtIterator(fn, state, next) {
   return fn(state, state.request, state.reply, next)
+}
+
+function serverOnErrorIterator(fn, state, next) {
+  return fn(state, state.reply.payload, state.reply.error, next)
 }
 
 function clientExtIterator(fn, state, next) {
   return fn(state, next)
 }
 
-module.exports = { extRunner, serverExtIterator, clientExtIterator }
+module.exports = {
+  extRunner,
+  serverExtIterator,
+  clientExtIterator,
+  responseExtIterator,
+  serverOnErrorIterator
+}

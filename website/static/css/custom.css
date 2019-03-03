@@ -41,3 +41,11 @@
 pre code {
     font-size: 15px;
 }
+
+.post a {
+  color: #408FEC;
+  text-decoration: none;
+  -webkit-transition: color 0.1s linear;
+  -moz-transition: color 0.1s linear;
+  transition: color 0.1s linear;
+}

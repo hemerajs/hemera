@@ -72,7 +72,7 @@ hemera.add(
 )
 ```
 
-## Change Joi settings
+## Joi settings
 
 You can modify the joi validation settings with the `pre` and `post` plugin options.
 
@@ -90,6 +90,24 @@ hemera.use(
     post: { stripUnknown: true }
   })
 )
+```
+
+## Base schemas
+
+You can define base schemas which enrich your existing pre/post schemas. In that way you can ensure that a specific property is always send or if you want to
+set the joi property `allowUnknown` to `false`.
+
+```js
+hemera.use(HemeraJoi, {
+  basePreSchema: {
+    topic: Joi.string().required(),
+    cmd: Joi.string().required()
+  },
+  basePostSchema: {
+    userId: Joi.number().required()
+  },
+  pre: { allowUnknown: false }
+})
 ```
 
 ## Plugin decorators

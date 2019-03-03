@@ -83,7 +83,7 @@ class HomeSplash extends React.Component {
         <div className="inner">
           <ProjectTitle />
           <PromoSection>
-            <Button href="https://repl.it/@StarpTech/Hemera-5">
+            <Button href="https://repl.it/@StarpTech/Hemera-6">
               Try It Out
             </Button>
             <Button href={docUrl('installation.html', language)}>
@@ -126,7 +126,7 @@ const Features = props => (
       },
       {
         content:
-          'Providing reliable and modern plugins to the community e.g for RabbitMQ, Zipkin, Jaeger, Mongodb, Arangodb or Elasticsearch.',
+          'Providing reliable and modern plugins to the community e.g for RabbitMQ, Jaeger, Mongodb, Arangodb or Elasticsearch.',
         image: imgUrl('exchange.svg'),
         imageAlign: 'top',
         title: 'Plugins'
@@ -268,11 +268,11 @@ const WhatIsNats = props => (
   >
     <h2 style={{ margin: '30px 0 30px 0' }}>What is NATS?</h2>
     <iframe
-      width="40%"
-      height="33%"
-      src="https://www.youtube.com/embed/6uPopWEdldU?showinfo=0"
+      width="560"
+      height="315"
+      src="https://www.youtube.com/embed/6uPopWEdldU"
       frameborder="0"
-      allow="autoplay; encrypted-media"
+      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
       allowfullscreen
     />
   </div>

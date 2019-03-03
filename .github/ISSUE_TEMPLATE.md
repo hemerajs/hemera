@@ -21,7 +21,6 @@ Example:
 ## Context
 <!-- Which plugin did you use? -->
 - [ ] nats-hemera (core)
-- [ ] hemera-zipkin
 - [ ] hemera-store
 - [ ] hemera-stats
 - [ ] hemera-rabbitmq

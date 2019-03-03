@@ -3,9 +3,9 @@
 [![npm](https://img.shields.io/npm/v/hemera-stats.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-stats)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
-Provide informations about process stats and registered actions of all hemera instances. This is a broadcast operation.
+Collect service and process stats from all hemera instances.
 
-**Schema extraction only works with the Joi validator**
+**Schema extraction only works with the Joi validator. PR welcome!**
 
 Use cases:
 
@@ -31,14 +31,22 @@ hemera.use(require('hemera-stats'))
 # Monitoring
 
 * [Monitoring API](#monitoring-api)
-  * [Process Info](#process-info)
-  * [Registered actions](#registered-actions)
+  * Pull
+    * [Process Info](#process-info)
+    * [Registered actions](#registered-actions)
+  * Push
+    * [sendProcStats](#sendProcStats)
+    * [sendActionStats](#sendActionStats)
 
 ---
 
+# Pull
+
+Subscribe for informations.
+
 ## Process Info
 
-You will reveive informations from all hemera instances which has activated this plugin.
+Returns process informations.
 
 The pattern is:
 
@@ -51,9 +59,10 @@ Example:
 hemera.act(
   {
     topic: 'stats',
-    cmd: 'processInfo'
+    cmd: 'processInfo',
+    maxMessages$: -1
   },
-  function(err, resp) {}
+  function(err, resp) {} // Handler is called multiple times
 )
 ```
 
@@ -73,7 +82,7 @@ Result:
 
 ## Registered actions
 
-You will reveive informations from all hemera instances which has activated this plugin.
+Returns all registered server actions.
 
 The pattern is:
 
@@ -116,4 +125,32 @@ Result:
         "ts": 1488632377418
     }]
 }
+```
+
+# Push
+
+Request for informations.
+
+### sendProcStats
+
+Broadcast the process informations to the specific pattern.
+
+Example:
+
+```js
+hemera.sendProcStats({
+  topic: 'action.stats'
+})
+```
+
+### sendActionStats
+
+Broadcast the action informations to the specific pattern.
+
+Example:
+
+```js
+hemera.sendActionStats({
+  topic: 'process.stats'
+})
 ```

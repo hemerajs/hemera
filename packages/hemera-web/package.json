@@ -1,6 +1,6 @@
 {
   "name": "hemera-web",
-  "version": "4.0.3",
+  "version": "5.0.0",
   "description": "Http route mapping for Hemera microservices.",
   "main": "index.js",
   "repository": {
@@ -13,7 +13,7 @@
   "dependencies": {
     "body-parser": "1.18.x",
     "express": "4.16.x",
-    "hemera-plugin": "^1.3.0"
+    "hemera-plugin": "^2.0.0"
   },
   "engines": {
     "node": ">=6"

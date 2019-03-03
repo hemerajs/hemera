@@ -122,11 +122,7 @@ class StorePattern {
       options: Joi.object()
         .keys({
           fields: Joi.alternatives().try(Joi.object(), Joi.array()),
-          orderBy: Joi.alternatives().try(
-            Joi.object(),
-            Joi.array(),
-            Joi.string()
-          ),
+          orderBy: Joi.alternatives().try(Joi.object(), Joi.array(), Joi.string()),
           offset: Joi.number().integer(),
           limit: Joi.number().integer()
         })

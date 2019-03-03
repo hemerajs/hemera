@@ -6,16 +6,16 @@ sidebar_label: Plugin
 
 Hemera's plugin system based on the powerful [Avvio](https://github.com/mcollina/avvio) package. Avvio is fully reentrant and graph-based. You can load components/plugins within plugins, and be still sure that things will happen in the right order.
 
-> Plugins should encourage you to encapsulate a domain specific context in a reusable piece of software. Great practice is to seperate plugins by a different topic name.
+> Plugins should encourage you to encapsulate a domain specific context in a reusable piece of software. Seperate plugins by a different topic name.
 
 ## Plugin helper library
 
 Before we get into the plugin system of hemera you have to install a package called [`hemera-plugin`](https://github.com/hemerajs/hemera/tree/master/packages/hemera-plugin). This package can do some things for you:
 
-* Check the bare-minimum version of Hemera
-* Provide consistent interface to register plugins even when the api is changed
-* Pass metadata to intialize your plugin with correct dependencies, default options and name
-* Skip plugin encapsulation
+- Check the bare-minimum version of Hemera
+- Provide consistent interface to register plugins even when the api is changed
+- Pass metadata to intialize your plugin with correct dependencies, default options and name
+- Skip plugin encapsulation
 
 ## Create a plugin
 
@@ -42,25 +42,41 @@ const myPlugin = hp((hemera, opts, done) => {
 module.exports = myPlugin
 ```
 
+> Plugins are **encapsulated** "_scoped_" by default. If you define an extension inside it will only effects the actions in your plugin. You can disable it if you set the hemera plugin option `scoped:false`.
+
 ## Break encapsulation
 
-Sometimes it is still useful to write a plugin which effects child as well as sibling scopes. You can archive this with plugin option `scoped: false` property. This approach is used in payload validators `hemera-joi` or authentication `hemera-jwt`.
+Sometimes it is still useful to write a plugin which effects child as well as sibling scopes. You can archive this with plugin option `scoped: false` property. This approach is used in payload validators `hemera-joi` or authentication `hemera-jwt` to provide an overall validation mechanism.
 
 ```js
 const hp = require('hemera-plugin')
-const myPlugin = hp((hemera, opts, done) => {
-  const topic = 'math'
+const myPlugin = hp(
+  (hemera, opts, done) => {
+    const topic = 'math'
 
-  hemera.ext('onClientPostRequest', function(ctx, next) {
-    // some code
-    next()
-  })
+    hemera.ext('onActFinished', function(ctx, next) {
+      // some code
+      next()
+    })
 
-  done()
-})
+    done()
+  },
+  { scoped: false }
+)
 
 hemera.use(myPlugin)
 ```
+
+## Scoped sensitive settings are topic aware
+
+If you create a topic for the first time inside a plugin and overwrite one of the settings.
+
+- [Schema Compilers](payload-validation.md#use-your-custom-validator)
+- [Codecs](codec.md)
+- [Not found pattern](notfound-pattern.md)
+- [Error handler](error-handling.md)
+
+They are executed with the plugin scope even if you call the pattern outside of the plugin and define different settings. This encourage the practice to use a unique topic per plugin and separates the responsibility.
 
 ## Register child plugins
 
@@ -71,7 +87,7 @@ const hp = require('hemera-plugin')
 const myPlugin = hp((hemera, opts, done) => {
   const topic = 'math'
 
-  hemera.ext('onClientPostRequest', function(ctx, next) {
+  hemera.ext('onActFinished', function(ctx, next) {
     // some code
     next()
   })
@@ -79,8 +95,7 @@ const myPlugin = hp((hemera, opts, done) => {
   hemera.use(
     hp((hemera, opts, done) => {
       // some code
-      // this plugin will be effected
-      // because it inherit the prototype
+      // this plugin will be effected by the 'onActFinished' extension
       done()
     })
   )
@@ -130,8 +145,8 @@ hemera.ready()
 
 ### Global registration
 
-Sometimes it is still useful to write a plugin which effects sibling and child scopes. You can disable the creation of a plugin scope with the `scoped: false` property.
-This approach is used in payload validators `hemera-joi` or authentication `hemera-jwt`.
+Sometimes it's still useful to write a plugin which effects sibling and child scopes. You can disable the creation of a plugin scope with the `scoped: false` property.
+This approach is used in payload validators `hemera-joi` or authentication plugins like `hemera-jwt`.
 
 ```js
 const hp = require('hemera-plugin')
@@ -139,7 +154,7 @@ const myPlugin = hp(
   (hemera, opts, done) => {
     const topic = 'math'
 
-    hemera.ext('onServerPreRequest', function(ctx, next) {
+    hemera.ext('onRequest', function(hemera, request, reply, next) {
       // some code
       next()
     })
@@ -156,20 +171,18 @@ hemera.use(myPlugin)
 
 ### Scoped sensitive settings
 
-* [Request/Response Extensions](extension.md#server-client-lifecycle)
-* [Decorators](decorator.md)
-* [Schema Compilers](payload-validation.md#use-your-custom-validator)
-* [Codecs](codec.md)
-* [Not found pattern](notfound-pattern.md)
+- [Request/Response Extensions](extension.md#server-client-lifecycle)
+- [Decorators](decorator.md)
+- [Schema Compilers](payload-validation.md#use-your-custom-validator)
+- [Codecs](codec.md)
+- [Not found pattern](notfound-pattern.md)
 
 ## Add plugin metadata
-
-You can also pass an async function.
 
 ```js
 const hp = require('hemera-plugin')
 const myPlugin = hp(
-  (hemera, opts, done) => {
+  async (hemera, opts) => {
     const topic = 'math'
 
     hemera.add(
@@ -183,8 +196,6 @@ const myPlugin = hp(
         })
       }
     )
-
-    done()
   },
   {
     hemera: '0.x', // bare-minimum version of Hemera
@@ -198,9 +209,9 @@ const myPlugin = hp(
 hemera.use(myPlugin)
 ```
 
-## Plugin depdendencies
+## Plugin dependencies
 
-You can declare plugin and decorators as dependencies. The constrains are checked when all plugins are registered.
+You can declare plugins and decorators as dependencies. The constrains are checked when all plugins are registered.
 
 ```js
 const hp = require('hemera-plugin')
@@ -224,7 +235,7 @@ hemera.ready(err => {
 
 ## Async / Await
 
-You can also pass an async function.
+You can also pass an async function and omit the `done` callback.
 
 ```js
 const hp = require('hemera-plugin')
@@ -262,4 +273,19 @@ hemera.use(plugin).after(cb)
 // or
 hemera.use(plugin)
 hemera.after(cb)
+```
+
+## Plugin timeout
+
+If you need to handle a lot of plugins you could run into timeout issues e.g if you forgot to call the callback of a plugin or when no promise was resolved. These errors are hard to track. In order to find out the cause you can specify a `pluginTimeout`.
+`pluginTimeout` is the number of millis to wait before a plugin is marked as "frozen".
+The error object has a property `fn` which contains your plugin function and all associated informations about your plugin.
+
+```js
+new Hemera(nats, { pluginTimeout: 100 })
+hemera.use(plugin)
+hemera.use(err => {
+  err.fn.name // the name of the plugin function
+  err.fn[Symbol.for('plugin-meta')] // all plugin informations like name or options
+})
 ```

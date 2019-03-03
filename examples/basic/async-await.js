@@ -10,8 +10,8 @@ const hemera = new Hemera(nats, {
 const start = async () => {
   try {
     await hemera.ready()
-    hemera.ext('onServerPreRequest', async () => {
-      hemera.log.info('onServerPreRequest')
+    hemera.ext('onRequest', async (hemera, request, reply) => {
+      hemera.log.info('onRequest')
     })
 
     hemera.add(
@@ -23,7 +23,7 @@ const start = async () => {
         return req.a + req.b
       }
     )
-    hemera.log.info(`service listening`)
+    hemera.log.info(`Service listening`)
     // start request
     const out = await hemera.act({
       topic: 'math',

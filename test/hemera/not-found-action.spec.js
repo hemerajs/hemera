@@ -1,16 +1,14 @@
 'use strict'
 
 describe('Not found action', function() {
-  var PORT = 6242
-  var authUrl = 'nats://localhost:' + PORT
-  var server
+  const PORT = 6242
+  const authUrl = 'nats://localhost:' + PORT
+  let server
 
-  // Start up our own nats-server
   before(function(done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
-  // Shutdown our server after we are done
   after(function() {
     server.kill()
   })
@@ -25,6 +23,39 @@ describe('Not found action', function() {
         topic: 'math',
         cmd: 'notFound'
       })
+
+      hemera.add(
+        {
+          topic: 'math',
+          cmd: 'notFound'
+        },
+        (req, cb) => {
+          cb(null, true)
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'dedede',
+          timeout$: 200
+        },
+        function(err, resp) {
+          expect(err).to.be.not.exists()
+          expect(resp).to.be.equals(true)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('setNotFoundPattern should accept a pattern as string', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera.setNotFoundPattern('topic:math,cmd:notFound')
 
       hemera.add(
         {

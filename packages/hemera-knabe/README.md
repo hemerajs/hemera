@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/hemera-knabe.svg?maxAge=3600)](https://www.npmjs.com/package/hemera-knabe)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](#badge)
 
-Send a report about your service dependencies.
+Collect a report about your service dependencies and send it to pattern `topic:knabe` (default).
 
 ## Usage
 

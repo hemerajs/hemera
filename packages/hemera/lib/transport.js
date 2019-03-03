@@ -9,108 +9,41 @@
  *
  */
 
-/**
- *
- *
- * @class Transport
- */
 class NatsTransport {
-  /**
-   * Creates an instance of NatsTransport.
-   *
-   * @param {any} params
-   *
-   * @memberOf NatsTransport
-   */
   constructor(params) {
     this.nc = params.transport
   }
 
-  /**
-   *
-   *
-   * @readonly
-   *
-   * @memberOf NatsTransport
-   */
   get driver() {
     return this.nc
   }
 
-  /**
-   *
-   *
-   * @returns
-   *
-   * @memberOf NatsTransport
-   */
-  timeout() {
-    return this.nc.timeout.apply(this.nc, arguments)
+  timeout(sid, timeout, expected, callback) {
+    return this.nc.timeout(sid, timeout, expected, callback)
   }
 
-  /**
-   *
-   *
-   * @returns
-   *
-   * @memberOf NatsTransport
-   */
-  send() {
-    return this.nc.publish.apply(this.nc, arguments)
+  send(subject, msg, optReply, optCallback) {
+    return this.nc.publish(subject, msg, optReply, optCallback)
   }
 
-  /**
-   *
-   *
-   * @returns
-   *
-   * @memberOf NatsTransport
-   */
   close() {
-    return this.nc.close.apply(this.nc, arguments)
+    return this.nc.close()
   }
 
-  /**
-   *
-   *
-   * @returns
-   * @memberof NatsTransport
-   */
-  flush() {
-    return this.nc.flush.apply(this.nc, arguments)
+  flush(optCallback) {
+    return this.nc.flush(optCallback)
   }
 
-  /**
-   *
-   *
-   * @returns
-   *
-   * @memberOf NatsTransport
-   */
-  subscribe() {
-    return this.nc.subscribe.apply(this.nc, arguments)
+  subscribe(subject, opts, callback) {
+    return this.nc.subscribe(subject, opts, callback)
   }
 
-  /**
-   *
-   *
-   * @returns
-   *
-   * @memberOf NatsTransport
-   */
-  unsubscribe() {
-    return this.nc.unsubscribe.apply(this.nc, arguments)
+  unsubscribe(sid, optMax) {
+    return this.nc.unsubscribe(sid, optMax)
   }
 
-  /**
-   *
-   *
-   * @returns
-   *
-   * @memberOf NatsTransport
-   */
-  sendRequest() {
-    return this.nc.request.apply(this.nc, arguments)
+  sendRequest(subject, optMsg, optOptions, callback) {
+    return this.nc.request(subject, optMsg, optOptions, callback)
   }
 }
 

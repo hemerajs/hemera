@@ -1,6 +1,6 @@
 {
   "name": "hemera-sqs",
-  "version": "4.0.2",
+  "version": "5.0.0",
   "description": "This is a plugin to use Aamazon SQS with Hemera",
   "main": "index.js",
   "repository": {
@@ -10,12 +10,12 @@
   "scripts": {
     "lint": "eslint index.js",
     "test": "nyc mocha -t 5000 ./test/**/*.js",
-    "coverage": "npm run test && nyc report --reporter=html"
+    "coverage": "yarn run test && nyc report --reporter=html"
   },
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
     "aws-sdk": "2.93.x",
-    "hemera-plugin": "^1.3.0"
+    "hemera-plugin": "^2.0.0"
   }
 }

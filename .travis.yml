@@ -1,12 +1,12 @@
 language: node_js
 
 node_js:
-  - "10"
-  - "9"
-  - "8"
-  - "6"
+  - '10'
+  - '8'
+  - '6'
 
 script:
+  - npm set audit false
   - npm run ci:setup && npm run ci
 
 before_script:

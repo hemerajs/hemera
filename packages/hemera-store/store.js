@@ -40,6 +40,7 @@ class Store {
   get options() {
     return this._options
   }
+
   /**
    * Create a new entity
    *
@@ -69,6 +70,7 @@ class Store {
   removeById() {
     throw new Error('Not implemented yet')
   }
+
   /**
    * Update an entity
    *

@@ -10,13 +10,15 @@
       "extension",
       "logging",
       "decorator",
+      "codec",
+      "config"
+    ],
+    "Context": [
       "metadata",
       "context",
       "delegate",
       "trace",
-      "event",
-      "codec",
-      "config"
+      "request"
     ],
     "Plugins": ["ecosystem", "plugin"],
     "Error handling": [
@@ -26,12 +28,12 @@
       "timeout",
       "fatal",
       "propagation",
-      "error-event",
       "protection"
     ],
     "Testing": ["integration", "unit"],
     "Tooling": ["monitoring", "cli", "typescript"],
     "Advanced": [
+      "message-format",
       "docker",
       "graphql",
       "bridge",
@@ -41,6 +43,6 @@
       "framework-integrations",
       "hemera-vs-seneca"
     ],
-    "Api": ["reference"]
+    "API": ["reference"]
   }
 }

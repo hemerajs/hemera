@@ -1,0 +1,65 @@
+{
+  "version-5.8.5-docs": {
+    "Introduction": [
+      "version-5.8.5-what-is-hemera",
+      "version-5.8.5-installation"
+    ],
+    "Basics": [
+      "version-5.8.5-request-reply",
+      "version-5.8.5-pattern-matching",
+      "version-5.8.5-publish-susbcribe",
+      "version-5.8.5-payload-validation",
+      "version-5.8.5-middleware",
+      "version-5.8.5-extension",
+      "version-5.8.5-logging",
+      "version-5.8.5-decorator",
+      "version-5.8.5-event",
+      "version-5.8.5-codec",
+      "version-5.8.5-config"
+    ],
+    "Context": [
+      "version-5.8.5-metadata",
+      "version-5.8.5-context",
+      "version-5.8.5-delegate",
+      "version-5.8.5-trace",
+      "version-5.8.5-request"
+    ],
+    "Plugins": [
+      "version-5.8.5-ecosystem",
+      "version-5.8.5-plugin"
+    ],
+    "Error handling": [
+      "version-5.8.5-error-handling",
+      "version-5.8.5-error-serialization",
+      "version-5.8.5-notfoundPattern",
+      "version-5.8.5-timeout",
+      "version-5.8.5-fatal",
+      "version-5.8.5-propagation",
+      "version-5.8.5-error-event",
+      "version-5.8.5-protection"
+    ],
+    "Testing": [
+      "version-5.8.5-integration",
+      "version-5.8.5-unit"
+    ],
+    "Tooling": [
+      "version-5.8.5-monitoring",
+      "version-5.8.5-cli",
+      "version-5.8.5-typescript"
+    ],
+    "Advanced": [
+      "version-5.8.5-message-format",
+      "version-5.8.5-docker",
+      "version-5.8.5-graphql",
+      "version-5.8.5-bridge",
+      "version-5.8.5-clustering",
+      "version-5.8.5-api-versioning",
+      "version-5.8.5-nats-limit",
+      "version-5.8.5-framework-integrations",
+      "version-5.8.5-hemera-vs-seneca"
+    ],
+    "API": [
+      "version-5.8.5-reference"
+    ]
+  }
+}

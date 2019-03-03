@@ -10,6 +10,12 @@
  */
 
 module.exports = {
-  childrenKey: Symbol('hemera.children'),
-  registeredPlugins: Symbol('hemera.registered-plugin')
+  sChildren: Symbol('hemera.children'),
+  sRegisteredPlugins: Symbol('hemera.registered-plugin'),
+  sReplySent: Symbol('hemera.reply-sent'),
+  sReplyRequest: Symbol('hemera.reply-request'),
+  sReplyResponse: Symbol('hemera.reply-response'),
+  sReplyHemera: Symbol('hemera.reply-hemera'),
+  sReplyLog: Symbol('hemera.reply-log'),
+  sAddReceivedMsg: Symbol('hemera.add-receivedMsg')
 }

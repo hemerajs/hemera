@@ -384,7 +384,7 @@ describe('Hemera-jwt-auth', function() {
           }
         },
         function(req, cb) {
-          delete this.meta$['jwtToken']
+          delete this.meta$.jwtToken
 
           this.act(
             {

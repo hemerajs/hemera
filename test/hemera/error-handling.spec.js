@@ -1,16 +1,14 @@
 'use strict'
 
 describe('Error handling', function() {
-  var PORT = 6242
-  var authUrl = 'nats://localhost:' + PORT
-  var server
+  const PORT = 6242
+  const authUrl = 'nats://localhost:' + PORT
+  let server
 
-  // Start up our own nats-server
   before(function(done) {
     server = HemeraTestsuite.start_server(PORT, done)
   })
 
-  // Shutdown our server after we are done
   after(function() {
     server.kill()
   })
@@ -89,6 +87,44 @@ describe('Error handling', function() {
           expect(err.name).to.be.equals('ResponseError')
           expect(err.message).to.be.equals('test')
           expect(err instanceof Hemera.errors.ResponseError).to.be.equals(true)
+          hemera.close(done)
+        }
+      )
+    })
+  })
+
+  it('Should respond with error when no native error object was passed in server action callback', function(done) {
+    const nats = require('nats').connect(authUrl)
+
+    const hemera = new Hemera(nats, {
+      timeout: 25
+    })
+
+    hemera.ready(() => {
+      hemera.add(
+        {
+          topic: 'email',
+          cmd: 'send'
+        },
+        (resp, cb) => {
+          // an error is logged that the interface was used incorrrectly
+          // the request will timeout because the server could not indentify if it's success or error payload
+          // eslint-disable-next-line standard/no-callback-literal
+          cb('test')
+        }
+      )
+
+      hemera.act(
+        {
+          topic: 'email',
+          cmd: 'send',
+          email: 'foobar@gmail.com',
+          msg: 'Hi!'
+        },
+        (err, resp) => {
+          expect(err).to.be.exists()
+          expect(err.name).to.be.equals('TimeoutError')
+          expect(resp).to.be.undefined()
           hemera.close(done)
         }
       )
@@ -243,14 +279,6 @@ describe('Error handling', function() {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
-    const spy = Sinon.spy()
-
-    hemera.on('clientResponseError', function(err) {
-      expect(err).to.be.exists()
-      expect(err.name).to.be.equals('Error')
-      expect(err.message).to.be.equals('TEST')
-      spy()
-    })
 
     hemera.ready(() => {
       hemera.add(
@@ -280,7 +308,6 @@ describe('Error handling', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('Error')
           expect(err.message).to.be.equals('TEST')
-          expect(spy.calledOnce).to.be.equals(true)
           hemera.close(done)
         }
       )
@@ -293,10 +320,10 @@ describe('Error handling', function() {
     const hemera = new Hemera(nats)
     const spy = Sinon.spy()
 
-    hemera.on('serverResponseError', function(err) {
-      expect(err).to.be.exists()
-      expect(err.name).to.be.equals('Error')
-      expect(err.message).to.be.equals('TEST')
+    hemera.setErrorHandler((hemera, error, reply) => {
+      expect(error).to.be.exists()
+      expect(error.name).to.be.equals('Error')
+      expect(error.message).to.be.equals('TEST')
       spy()
     })
 
@@ -335,30 +362,14 @@ describe('Error handling', function() {
     })
   })
 
-  it('Should be able to handle server encoding error', function(done) {
+  it('Should return timeout when server produce encoding error', function(done) {
     const nats = require('nats').connect(authUrl)
 
-    const hemera = new Hemera(nats)
-    const spy = Sinon.spy()
-    let call = 0
-
-    hemera.on('serverResponseError', function(err) {
-      expect(err).to.be.exists()
-      expect(err.name).to.be.equals('Error')
-      expect(err.message).to.be.equals('TEST')
-      spy()
-    })
+    const hemera = new Hemera(nats, { timeout: 100 })
 
     hemera.setServerEncoder(msg => {
-      call++
-      if (call === 1) {
-        // because the second call is needed to respond it back
-        return {
-          error: new Error('TEST')
-        }
-      }
       return {
-        value: JSON.stringify(msg)
+        error: new Error('TEST')
       }
     })
 
@@ -382,9 +393,8 @@ describe('Error handling', function() {
         },
         (err, resp) => {
           expect(err).to.be.exists()
-          expect(err.name).to.be.equals('Error')
-          expect(err.message).to.be.equals('TEST')
-          expect(spy.calledOnce).to.be.equals(true)
+          expect(err.name).to.be.equals('TimeoutError')
+          expect(err.message).to.be.equals('Client timeout')
           hemera.close(done)
         }
       )
@@ -395,14 +405,6 @@ describe('Error handling', function() {
     const nats = require('nats').connect(authUrl)
 
     const hemera = new Hemera(nats)
-    const spy = Sinon.spy()
-
-    hemera.on('clientResponseError', function(err) {
-      expect(err).to.be.exists()
-      expect(err.name).to.be.equals('Error')
-      expect(err.message).to.be.equals('TEST')
-      spy()
-    })
 
     hemera.setClientEncoder(msg => {
       return {
@@ -432,7 +434,6 @@ describe('Error handling', function() {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('Error')
           expect(err.message).to.be.equals('TEST')
-          expect(spy.calledOnce).to.be.equals(true)
           hemera.close(done)
         }
       )

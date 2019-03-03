@@ -1,5 +1,7 @@
 'use strict'
 
+const NUID = require('nuid')
+
 /**
  * Copyright 2016-present, Dustin Deus (deusdustin@gmail.com)
  * All rights reserved.
@@ -9,83 +11,41 @@
  *
  */
 
-const lut = []
-for (let i = 0; i < 256; i++) {
-  lut[i] = (i < 16 ? '0' : '') + i.toString(16)
-}
-
-/**
- * @class Util
- */
 class Util {
   static escapeTopicForRegExp(string) {
     return string.replace(/[.+?]/g, '\\$&') // $& Inserts the matched substring.
   }
-  /**
-   *
-   *
-   * @static
-   * @param {any} subject
-   * @returns
-   *
-   * @memberof Util
-   */
+
   static natsWildcardToRegex(subject) {
     if (subject instanceof RegExp) {
       return subject
     }
 
-    let hasTokenWildcard = subject.toString().indexOf('*') > -1
-    let hasFullWildcard = subject.toString().indexOf('>') > -1
+    const hasTokenWildcard = subject.toString().indexOf('*') > -1
+    const hasFullWildcard = subject.toString().indexOf('>') > -1
+    let sub = subject
 
     if (hasFullWildcard) {
-      subject = Util.escapeTopicForRegExp(subject).replace(
-        '>',
-        '[a-zA-Z0-9-.]+'
-      )
-      return new RegExp('^' + subject + '$', 'i')
+      const fullWildcard = Util.escapeTopicForRegExp(subject).replace('>', '[a-zA-Z0-9-.]+')
+      sub = new RegExp(`^${fullWildcard}$`, 'i')
     } else if (hasTokenWildcard) {
-      subject = Util.escapeTopicForRegExp(subject).replace(
-        /\*/g,
-        '[a-zA-Z0-9-]+'
-      )
-      return new RegExp('^' + subject + '$', 'i')
+      const tokenWildcard = Util.escapeTopicForRegExp(subject).replace(/\*/g, '[a-zA-Z0-9-]+')
+      sub = new RegExp(`^${tokenWildcard}$`, 'i')
     }
 
-    return subject
+    return sub
   }
 
   /**
-   * @returns
-   * Fast ID generator: e7 https://jsperf.com/uuid-generator-opt/18
-   * @memberOf Util
+   * Generates a unique random id
+   * Total length of a NUID string is 22 bytes of base 36 ascii text
    */
   static randomId() {
-    const d0 = (Math.random() * 0xffffffff) | 0
-    const d1 = (Math.random() * 0xffffffff) | 0
-    const d2 = (Math.random() * 0xffffffff) | 0
-    const d3 = (Math.random() * 0xffffffff) | 0
-    return (
-      lut[d0 & 0xff] +
-      lut[(d0 >> 8) & 0xff] +
-      lut[(d0 >> 16) & 0xff] +
-      lut[(d0 >> 24) & 0xff] +
-      lut[d1 & 0xff] +
-      lut[(d1 >> 8) & 0xff] +
-      lut[((d1 >> 16) & 0x0f) | 0x40] +
-      lut[(d1 >> 24) & 0xff] +
-      lut[(d2 & 0x3f) | 0x80] +
-      lut[(d2 >> 8) & 0xff] +
-      lut[(d2 >> 16) & 0xff] +
-      lut[(d2 >> 24) & 0xff] +
-      lut[d3 & 0xff] +
-      lut[(d3 >> 8) & 0xff] +
-      lut[(d3 >> 16) & 0xff] +
-      lut[(d3 >> 24) & 0xff]
-    )
+    return NUID.next()
   }
+
   /**
-   * Get high resolution time in nanoseconds
+   * Get high resolution time in miliseconds
    *
    * @static
    * @returns
@@ -93,24 +53,18 @@ class Util {
    * @memberOf Util
    */
   static nowHrTime() {
-    const hrtime = process.hrtime()
-    return +hrtime[0] * 1e9 + +hrtime[1]
+    const ts = process.hrtime()
+    return ts[0] * 1e3 + ts[1] / 1e6
   }
-  /**
-   *
-   *
-   * @static
-   * @param {any} obj
-   * @returns
-   *
-   * @memberOf Util
-   */
+
   static extractSchema(obj) {
-    if (obj === null) return obj
+    if (obj === null) {
+      return obj
+    }
 
     const o = {}
 
-    for (var key in obj) {
+    for (const key in obj) {
       if (typeof obj[key] === 'object') {
         o[key] = obj[key]
       }
@@ -118,19 +72,15 @@ class Util {
 
     return o
   }
-  /**
-   * @static
-   * @param {any} obj
-   * @returns
-   *
-   * @memberOf Util
-   */
+
   static cleanPattern(obj) {
-    if (obj === null) return obj
+    if (obj === null) {
+      return obj
+    }
 
     const o = {}
 
-    for (var key in obj) {
+    for (const key in obj) {
       if (
         !key.endsWith('$') &&
         (typeof obj[key] !== 'object' || obj[key] instanceof RegExp) &&
@@ -143,19 +93,14 @@ class Util {
     return o
   }
 
-  /**
-   * @static
-   * @param {any} obj
-   * @returns
-   *
-   * @memberOf Util
-   */
   static cleanFromSpecialVars(obj) {
-    if (obj === null) return obj
+    if (obj === null) {
+      return obj
+    }
 
     const o = {}
 
-    for (var key in obj) {
+    for (const key in obj) {
       if (!key.endsWith('$')) {
         o[key] = obj[key]
       }
@@ -163,22 +108,16 @@ class Util {
     return o
   }
 
-  /**
-   * @param {any} args
-   * @returns
-   *
-   * @memberOf Util
-   */
   static pattern(args) {
     if (typeof args === 'string') {
       return args
     }
 
     const obj = Util.cleanPattern(args)
-    let sb = []
+    const sb = []
 
-    for (var key in obj) {
-      sb.push(key + ':' + obj[key])
+    for (const key in obj) {
+      sb.push(`${key}:${obj[key]}`)
     }
 
     sb.sort()

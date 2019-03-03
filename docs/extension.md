@@ -9,24 +9,32 @@ Extensions allow you to listen to specific events in the application or request/
 ## Server & Client lifecycle
 
 ```js
-hemera.ext('onClientPreRequest', function(hemera, next) {
+hemera.ext('onAct', function(hemera, next) {
   // some code
   next()
 })
-hemera.ext('onClientPostRequest', function(hemera, next) {
+hemera.ext('onActFinished', function(hemera, next) {
   // some code
   next()
 })
 
-hemera.ext('onServerPreHandler', function(hemera, request, reply, next) {
+hemera.ext('preHandler', function(hemera, request, reply, next) {
   // some code
   next()
 })
-hemera.ext('onServerPreRequest', function(hemera, request, reply, next) {
+hemera.ext('onRequest', function(hemera, request, reply, next) {
   // some code
   next()
 })
-hemera.ext('onServerPreResponse', function(hemera, request, reply, next) {
+hemera.ext('onSend', function(hemera, request, reply, next) {
+  // some code
+  next()
+})
+hemera.ext('onResponse', function(hemera, reply, next) {
+  // some code
+  next()
+})
+hemera.ext('onError', function(hemera, payload, error, next) {
   // some code
   next()
 })
@@ -54,11 +62,22 @@ hemera.ext('onAdd', addDefinition => {
 You can also pass an async function.
 
 ```js
-hemera.ext('onServerPreHandler', async function(hemera, request, reply) {
+hemera.ext('preHandler', async function(hemera, request, reply) {
   // some code
 })
-
-hemera.ext('onClientPreRequest', async function(hemera) {
+hemera.ext('onAct', async hemera => {
+  // some code
+})
+hemera.ext('onResponse', async function(hemera, reply) {
+  // some code
+})
+hemera.ext('onError', async (hemera, payload, error) => {
+  // some code
+})
+hemera.ext('onClose', async addDefinition => {
+  // some code
+})
+hemera.ext('onAdd', async addDefinition => {
   // some code
 })
 ```

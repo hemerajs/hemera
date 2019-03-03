@@ -32,7 +32,7 @@ function hemeraEmail(hemera, opts, done) {
   done()
 }
 
-function validationMiddlware(req, reply) {
+function validationMiddlware(req) {
   return Joi.validate(
     req.payload.pattern.message,
     Joi.object()
@@ -51,6 +51,7 @@ function validationMiddlware(req, reply) {
 
 const plugin = Hp(hemeraEmail, {
   hemera: '>=5.0.0-rc.1',
+  // eslint-disable-next-line global-require
   name: require('./package.json').name,
   options: {
     transport: {

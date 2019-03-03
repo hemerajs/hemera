@@ -1,6 +1,6 @@
 {
   "name": "hemera-store",
-  "version": "1.1.18",
+  "version": "2.0.0",
   "description": "This is a store interface for Hemera to be interoperable with most database interfaces",
   "main": "index.js",
   "repository": {
@@ -10,7 +10,7 @@
   "scripts": {
     "lint": "eslint index.js",
     "test": "nyc mocha -t 5000 ./test/**/*.js",
-    "coverage": "npm run test && nyc report --reporter=html"
+    "coverage": "yarn run test && nyc report --reporter=html"
   },
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",

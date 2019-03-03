@@ -19,7 +19,7 @@ const start = async () => {
         return req.a + req.b
       }
     )
-    hemera.log.info(`service listening`)
+    hemera.log.info(`Service listening`)
     // start request
     let out = await hemera.act({
       topic: 'math',

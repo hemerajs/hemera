@@ -9,48 +9,25 @@
  *
  */
 
-const runExt = require('./extensionRunner').extRunner
+const { extRunner } = require('./extensionRunner')
+const { sAddReceivedMsg } = require('./symbols')
 
-/**
- *
- *
- * @export
- * @class Add
- */
 class Add {
-  /**
-   * Creates an instance of Add.
-   * @param {any} addDef
-   *
-   * @memberOf Add
-   */
   constructor(addDef) {
-    this.actMeta = addDef
     this.sid = 0
-    this.actMeta.middleware = addDef.middleware || []
+    this.middleware = addDef.middleware || []
+    this.pattern = addDef.pattern
+    this.schema = addDef.schema
+    this.transport = addDef.transport
+    this.action = null
     // only used for maxMessages$ flag
-    this._receivedMsg = 0
+    this[sAddReceivedMsg] = 0
   }
 
-  /**
-   *
-   *
-   * @param {any} handler
-   *
-   * @memberof Add
-   */
   _use(handler) {
-    this.actMeta.middleware.push(handler)
+    this.middleware.push(handler)
   }
 
-  /**
-   *
-   *
-   * @param {any} handler
-   * @returns
-   *
-   * @memberOf Add
-   */
   use(handler) {
     if (Array.isArray(handler)) {
       handler.forEach(h => this._use(h))
@@ -61,98 +38,12 @@ class Add {
     return this
   }
 
-  /**
-   *
-   *
-   * @param {any} cb
-   *
-   * @memberOf Add
-   */
   end(cb) {
     this.action = cb
   }
 
-  /**
-   *
-   *
-   * @param {any} request
-   * @param {any} response
-   * @param {any} cb
-   *
-   * @memberof Add
-   */
   run(request, response, cb) {
-    runExt(
-      this.middleware,
-      (fn, state, next) => fn(request, response, next),
-      null,
-      cb
-    )
-  }
-
-  /**
-   *
-   *
-   * @readonly
-   *
-   * @memberOf Add
-   */
-  get middleware() {
-    return this.actMeta.middleware
-  }
-
-  /**
-   *
-   *
-   * @readonly
-   *
-   * @memberOf Add
-   */
-  get schema() {
-    return this.actMeta.schema
-  }
-
-  /**
-   *
-   *
-   * @readonly
-   *
-   * @memberOf Add
-   */
-  get pattern() {
-    return this.actMeta.pattern
-  }
-
-  /**
-   *
-   *
-   *
-   * @memberOf Add
-   */
-  set action(action) {
-    this.actMeta.action = action
-  }
-
-  /**
-   *
-   *
-   * @readonly
-   *
-   * @memberOf Add
-   */
-  get action() {
-    return this.actMeta.action
-  }
-
-  /**
-   *
-   *
-   * @readonly
-   *
-   * @memberOf Add
-   */
-  get transport() {
-    return this.actMeta.transport
+    extRunner(this.middleware, (fn, state, next) => fn(request, response, next), null, cb)
   }
 }
 
