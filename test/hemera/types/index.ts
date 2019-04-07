@@ -1,6 +1,11 @@
 import * as Hemera from './../../../packages/hemera'
 import * as nats from 'nats'
 
+type FileResult = {
+  do: string
+  isDone: boolean
+}
+
 const hemera = new Hemera(nats.connect('nats://127.0.0.1:4242'), {
   logLevel: 'debug'
 })
@@ -78,9 +83,15 @@ hemera.ready(async (err: Error) => {
     }
   )
 
-  const response = await hemera.act({
+  const response1 = await hemera.act({
     topic: 'test'
   })
 
-  response.context.log.info(response.data)
+  const response2 = await hemera.act<FileResult>({
+    topic: 'test'
+  })
+
+  response2.data.do
+
+  response1.context.log.info(response1.data)
 })
