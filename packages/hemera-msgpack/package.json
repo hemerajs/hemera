@@ -1,6 +1,6 @@
 {
   "name": "hemera-msgpack",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "description": "This is a plugin to use Msgpack with Hemera",
   "main": "index.js",
   "repository": {
@@ -13,7 +13,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "hemera-plugin": "^2.0.0",
+    "hemera-plugin": "^2.0.1",
     "msgpack5": "^4.2.1"
   }
 }
