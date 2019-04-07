@@ -228,8 +228,8 @@ declare namespace Hemera {
     send: (message: Error | any) => void
   }
 
-  type ActPromiseResult = {
-    data: any
+  type ActPromiseResult<T> = {
+    data: T
     context: Hemera<ClientRequest, ClientResponse>
   }
 
@@ -255,7 +255,7 @@ declare class Hemera<Request, Response> {
   constructor(transport: object, config: Hemera.Config)
   // act
   act(pattern: string | Hemera.ClientPattern, handler: Hemera.ActHandler): void
-  act(pattern: string | Hemera.ClientPattern): Promise<Hemera.ActPromiseResult>
+  act<T>(pattern: string | Hemera.ClientPattern): Promise<Hemera.ActPromiseResult<T>>
 
   // add
   add(
