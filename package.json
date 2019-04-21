@@ -44,7 +44,8 @@
     "test": "nyc mocha -b -r \"./test/hemera/bootstrap\" -t 5000 --exit \"./test/**/*.spec.js\" && yarn run typescript",
     "typescript": "tsc --project ./test/hemera/types/tsconfig.json",
     "coverage": "yarn run test && nyc report --reporter=html",
-    "ci": "nyc mocha -r \"./test/hemera/bootstrap\" -t 5000 --exit \"./test/**/*.spec.js\" && nyc report --reporter=text-lcov | coveralls"
+    "ci": "nyc mocha -r \"./test/hemera/bootstrap\" -t 5000 --exit \"./test/**/*.spec.js\" && nyc report --reporter=text-lcov | coveralls",
+    "postinstall": "opencollective-postinstall"
   },
   "husky": {
     "hooks": {
@@ -90,5 +91,12 @@
   "workspaces": [
     "packages/*"
   ],
-  "dependencies": {}
+  "dependencies": {
+    "opencollective-postinstall": "^2.0.2",
+    "opencollective": "^1.0.3"
+  },
+  "collective": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/hemera"
+  }
 }
