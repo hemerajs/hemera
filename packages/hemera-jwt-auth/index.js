@@ -2,7 +2,7 @@
 
 const Hp = require('hemera-plugin')
 const JWT = require('jsonwebtoken')
-const Hoek = require('hoek')
+const Hoek = require('@hapi/hoek')
 
 function hemeraJwtAuth(hemera, opts, done) {
   const JwtError = hemera.createError('JwtError')
