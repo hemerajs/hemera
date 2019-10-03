@@ -72,11 +72,7 @@ module.exports = Joi.object().keys({
           // Frequency of load sampling in milliseconds (zero is no sampling)
           sampleInterval: Joi.number()
             .integer()
-            .default(0)
-        })
-        .default(),
-      policy: Joi.object()
-        .keys({
+            .default(0),
           // Reject requests when V8 heap is over size in bytes (zero is no max)
           maxHeapUsedBytes: Joi.number()
             .integer()

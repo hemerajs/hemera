@@ -16,7 +16,7 @@
 const NATS = require('nats')
 const Bloomrun = require('bloomrun')
 const Errio = require('errio')
-const Heavy = require('heavy')
+const Heavy = require('@hapi/heavy')
 const Pino = require('pino')
 const TinySonic = require('tinysonic')
 const SuperError = require('super-error')
@@ -109,9 +109,6 @@ class Hemera {
 
     // Register all default hemera errors
     this._registerErrors()
-
-    // create load policy
-    this._loadPolicy = this._heavy.policy(this._config.load.policy)
 
     // start tracking process stats
     this._heavy.start()

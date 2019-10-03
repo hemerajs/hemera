@@ -21,11 +21,9 @@ describe('Load policy for server component', function() {
       load: {
         checkPolicy: true,
         process: {
-          sampleInterval: 1
-        },
-        policy: {
+          sampleInterval: 1,
           maxRssBytes: 5
-        }
+        },
       }
     })
 

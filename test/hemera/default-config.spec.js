@@ -41,13 +41,11 @@ describe('Hemera default config', function() {
       load: {
         checkPolicy: true, // Check on every request (server) if the load policy was observed,
         process: {
-          sampleInterval: 0 // Frequency of load sampling in milliseconds (zero is no sampling)
-        },
-        policy: {
+          sampleInterval: 0, // Frequency of load sampling in milliseconds (zero is no sampling)
           maxHeapUsedBytes: 0, // Reject requests when V8 heap is over size in bytes (zero is no max)
           maxRssBytes: 0, // Reject requests when process RSS is over size in bytes (zero is no max)
           maxEventLoopDelay: 0 // Milliseconds of delay after which requests are rejected (zero is no max)
-        }
+        },
       }
     }
 
