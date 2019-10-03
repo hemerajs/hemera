@@ -494,7 +494,7 @@ describe('Hemera-joi response validation', function() {
 
   it('Should be able to use basePreSchema to support unknown: false mode', function(done) {
     const nats = require('nats').connect(authUrl)
-    const Joi = require('joi')
+    const Joi = require('@hapi/joi')
 
     const hemera = new Hemera(nats)
     hemera.use(HemeraJoi, {
@@ -534,7 +534,7 @@ describe('Hemera-joi response validation', function() {
 
   it('Should be able to use basePostSchema standalone', function(done) {
     const nats = require('nats').connect(authUrl)
-    const Joi = require('joi')
+    const Joi = require('@hapi/joi')
 
     const hemera = new Hemera(nats)
     hemera.use(HemeraJoi, {
@@ -576,7 +576,7 @@ describe('Hemera-joi response validation', function() {
 
   it('Should be able to use basePostSchema with post$', function(done) {
     const nats = require('nats').connect(authUrl)
-    const Joi = require('joi')
+    const Joi = require('@hapi/joi')
 
     const hemera = new Hemera(nats)
     hemera.use(HemeraJoi, {

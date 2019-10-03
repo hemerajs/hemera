@@ -20,7 +20,7 @@ const Heavy = require('heavy')
 const Pino = require('pino')
 const TinySonic = require('tinysonic')
 const SuperError = require('super-error')
-const Joi = require('joi')
+const Joi = require('@hapi/joi')
 const Avvio = require('avvio')
 const { Stream } = require('stream')
 

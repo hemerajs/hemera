@@ -15,6 +15,6 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "joi": "10.4.x"
+    "@hapi/joi": "15.1.x"
   }
 }

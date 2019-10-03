@@ -1,7 +1,7 @@
 'use strict'
 
 const Hp = require('hemera-plugin')
-const Joi = require('joi')
+const Joi = require('@hapi/joi')
 const Nodemailer = require('nodemailer')
 
 function hemeraEmail(hemera, opts, done) {

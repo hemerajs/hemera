@@ -1,7 +1,7 @@
 'use strict'
 
 const Hp = require('hemera-plugin')
-const Joi = require('joi')
+const Joi = require('@hapi/joi')
 
 function hemeraJoi(hemera, opts, done) {
   hemera.decorate('joi', Joi)

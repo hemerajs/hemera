@@ -2,7 +2,7 @@
 
 const SlackBot = require('slackbots')
 const Hp = require('hemera-plugin')
-const Joi = require('joi')
+const Joi = require('@hapi/joi')
 
 function hemeraSlackbot(hemera, opts, done) {
   const topic = 'slackbot'

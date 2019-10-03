@@ -11,8 +11,8 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
+    "@hapi/joi": "15.1.x",
     "hemera-plugin": "^2.0.1",
-    "joi": "12.0.x",
     "slackbots": "1.1.x"
   },
   "engines": {

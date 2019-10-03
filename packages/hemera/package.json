@@ -43,12 +43,12 @@
     "@types/pino": "^5.6.0"
   },
   "dependencies": {
+    "@hapi/joi": "15.1.x",
     "avvio": "6.0.x",
     "bloomrun": "4.1.x",
     "errio": "1.2.x",
     "fast-safe-stringify": "2.0.x",
     "heavy": "4.0.x",
-    "joi": "11.1.x",
     "nuid": "^1.0.0",
     "pino": "5.11.x",
     "super-error": "2.2.x",
