@@ -39,7 +39,7 @@ const ConfigScheme = require('./configScheme')
 const Reply = require('./reply')
 const Add = require('./add')
 const ExtensionManager = require('./extensionManager')
-const { sChildren, sRegisteredPlugins } = require('./symbols')
+const { sChildren, sRegisteredPlugins, sReplySent } = require('./symbols')
 const { serverExtIterator, clientExtIterator } = require('./extensionRunner')
 
 const natsConnCodes = [NATS.CONN_ERR, NATS.SECURE_CONN_REQ, NATS.NON_SECURE_CONN_REQ, NATS.CLIENT_CERT_REQ]
@@ -905,6 +905,10 @@ class Hemera {
       self.log.error(internalError)
       self.reply.isError = true
       self.reply.send(err)
+      return
+    }
+
+    if (self.reply[sReplySent] === true) {
       return
     }
 
