@@ -1,6 +1,6 @@
 {
   "name": "hemera-slackbot",
-  "version": "5.0.1",
+  "version": "5.1.0",
   "description": "Send Slack Messages over Hemera",
   "main": "index.js",
   "repository": {
