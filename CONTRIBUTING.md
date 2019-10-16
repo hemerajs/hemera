@@ -11,7 +11,7 @@ please read the [code of conduct](CODE_OF_CONDUCT.md).
 
 ```sh
 $ git clone YOUR_HEMERA_REPO_URL
-$ npm run setup
+$ npm run ci:setup
 ```
 
 ## Testing
