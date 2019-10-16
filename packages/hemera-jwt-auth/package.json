@@ -16,7 +16,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "@hapi/hoek": "8.2.x",
+    "@hapi/hoek": "8.3.x",
     "hemera-plugin": "^2.0.1",
     "jsonwebtoken": "8.2.0"
   }
