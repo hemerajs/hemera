@@ -1,6 +1,6 @@
 {
   "name": "hemera-store",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "This is a store interface for Hemera to be interoperable with most database interfaces",
   "main": "index.js",
   "repository": {
