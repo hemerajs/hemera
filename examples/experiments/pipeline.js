@@ -93,9 +93,7 @@ class Pipeline {
    */
   pipe(pattern) {
     this._stack.push(prev => {
-      return this._hemera
-        .act(Object.assign(pattern, prev))
-        .then(resp => resp.data)
+      return this._hemera.act(Object.assign(pattern, prev)).then(resp => resp.data)
     })
     return this
   }

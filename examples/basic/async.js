@@ -55,7 +55,10 @@ hemera.ready(() => {
     hemera.act({ topic: 'math', cmd: 'add', a: n, b: 2 }, callback)
   }
 
-  const add1and2 = compose(add1, add2)
+  const add1and2 = compose(
+    add1,
+    add2
+  )
   add1and2(10, function(err, result) {
     if (err) {
       hemera.log.error(err)

@@ -43,7 +43,7 @@
     "@types/pino": "^5.8.12"
   },
   "dependencies": {
-    "avvio": "6.0.x",
+    "avvio": "6.2.x",
     "bloomrun": "4.1.x",
     "errio": "1.2.x",
     "fast-safe-stringify": "2.0.x",
