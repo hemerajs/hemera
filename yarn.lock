@@ -4173,16 +4173,7 @@ joi@10.x.x:
     items "2.x.x"
     topo "2.x.x"
 
-joi@11.1.x:
-  version "11.1.1"
-  resolved "https://registry.yarnpkg.com/joi/-/joi-11.1.1.tgz#08194537d3b9c796bac8666deb3a825c1a5d83c1"
-  integrity sha512-hffQzH42mYLvUCqhUPZZGegiiIjVvHcOV8mrxXPci8qZFOp2sHK4778GPyI3ZlvqTOHs8qZN6DovDnBR1slO4g==
-  dependencies:
-    hoek "4.x.x"
-    isemail "3.x.x"
-    topo "2.x.x"
-
-joi@14.3.x:
+joi@14.3.x, joi@^14.3.1:
   version "14.3.1"
   resolved "https://registry.yarnpkg.com/joi/-/joi-14.3.1.tgz#164a262ec0b855466e0c35eea2a885ae8b6c703c"
   integrity sha512-LQDdM+pkOrpAn4Lp+neNIFV3axv1Vna3j38bisbQhETPMANYRbFJFUyOZcOClYvM/hppMhGWuKSFEK9vjrB+bQ==
@@ -4190,15 +4181,6 @@ joi@14.3.x:
     hoek "6.x.x"
     isemail "3.x.x"
     topo "3.x.x"
-
-joi@^12.0.0:
-  version "12.0.0"
-  resolved "https://registry.yarnpkg.com/joi/-/joi-12.0.0.tgz#46f55e68f4d9628f01bbb695902c8b307ad8d33a"
-  integrity sha512-z0FNlV4NGgjQN1fdtHYXf5kmgludM65fG/JlXzU6+rwkt9U5UWuXVYnXa2FpK0u6+qBuCmrm5byPNuiiddAHvQ==
-  dependencies:
-    hoek "4.x.x"
-    isemail "3.x.x"
-    topo "2.x.x"
 
 js-tokens@^4.0.0:
   version "4.0.0"

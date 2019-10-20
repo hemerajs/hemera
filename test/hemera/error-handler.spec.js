@@ -40,7 +40,8 @@ describe('Error handling', function() {
       hemera.act(
         {
           topic: 'math',
-          cmd: 'add'
+          cmd: 'add',
+          timeout$: 200
         },
         (err, resp) => {
           expect(err).to.be.exists()
@@ -130,7 +131,7 @@ describe('Error handling', function() {
       expect(error).to.be.exists()
       rootSpy()
       return new Promise((resolve, reject) => {
-        setTimeout(() => reject(new Error('error handler')), 200)
+        setImmediate(() => reject(new Error('error handler')))
       })
     })
 
@@ -148,7 +149,8 @@ describe('Error handling', function() {
       hemera.act(
         {
           topic: 'user',
-          cmd: 'get'
+          cmd: 'get',
+          timeout$: 200
         },
         (err, resp) => {
           expect(err).to.be.exists()
@@ -216,6 +218,8 @@ describe('Error handling', function() {
           cmd: 'add'
         },
         (err, resp) => {
+          console.log(err)
+
           expect(err).to.be.exists()
           expect(pluginSpy.calledOnce).to.be.equals(true)
           hemera.act(
