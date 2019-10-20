@@ -46,4 +46,41 @@ describe('Middleware Async / Await', function() {
       )
     })
   })
+
+  it('Should be able to reply in middleware', function(done) {
+    const nats = require('nats').connect(authUrl)
+    const spy = Sinon.spy()
+
+    const hemera = new Hemera(nats)
+
+    hemera.ready(() => {
+      hemera
+        .add({
+          topic: 'math',
+          cmd: 'add'
+        })
+        .use(async function(req, resp) {
+          resp.send({ a: 1 })
+        })
+        .end(async function(req, cb) {
+          spy()
+          cb(null)
+        })
+
+      hemera.act(
+        {
+          topic: 'math',
+          cmd: 'add',
+          a: 1,
+          b: 2
+        },
+        function(err, resp) {
+          expect(err).to.be.not.exists()
+          expect(spy.called).to.be.equals(false)
+          expect(resp).to.be.equals({ a: 1 })
+          hemera.close(done)
+        }
+      )
+    })
+  })
 })

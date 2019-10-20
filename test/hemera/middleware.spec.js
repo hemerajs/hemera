@@ -165,6 +165,7 @@ describe('Middleware', function() {
 
   it('Should be able to reply in middleware', function(done) {
     const nats = require('nats').connect(authUrl)
+    const spy = Sinon.spy()
 
     const hemera = new Hemera(nats)
 
@@ -176,9 +177,9 @@ describe('Middleware', function() {
         })
         .use(function(req, resp, next) {
           resp.send({ a: 1 })
-          next()
         })
         .end(function(req, cb) {
+          spy()
           cb(null, req.a + req.b)
         })
 
@@ -191,7 +192,8 @@ describe('Middleware', function() {
         },
         function(err, resp) {
           expect(err).to.be.not.exists()
-          expect(resp.a).to.be.equals(1)
+          expect(spy.called).to.be.equals(false)
+          expect(resp).to.be.equals({ a: 1 })
           hemera.close(done)
         }
       )

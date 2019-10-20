@@ -28,8 +28,7 @@ hemera.ready(() => {
         StringValue: '6'
       }
     },
-    MessageBody:
-      'Information about current NY Times fiction bestseller for week of 12/11/2016.',
+    MessageBody: 'Information about current NY Times fiction bestseller for week of 12/11/2016.',
     QueueUrl: 'SQS_QUEUE_URL'
   }
 

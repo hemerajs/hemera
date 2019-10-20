@@ -108,6 +108,7 @@ describe('Not found action', function() {
   it('Should be encapsulated in plugin from root / 2', function(done) {
     const nats = require('nats').connect(authUrl)
 
+    const notFoundSpy = Sinon.spy()
     const hemera = new Hemera(nats)
 
     hemera.use((hemera, opts, done) => {
@@ -137,7 +138,7 @@ describe('Not found action', function() {
         function(err, resp) {
           expect(err).to.be.not.exists()
           expect(resp).to.be.equals(true)
-          hemera.close(done)
+          notFoundSpy()
         }
       )
       done()
@@ -155,6 +156,7 @@ describe('Not found action', function() {
         function(err, resp) {
           expect(err).to.be.exists()
           expect(err.name).to.be.equals('TimeoutError')
+          expect(notFoundSpy.called).to.be.equals(true)
           hemera.close(done)
         }
       )
