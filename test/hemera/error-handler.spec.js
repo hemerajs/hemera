@@ -218,8 +218,6 @@ describe('Error handling', function() {
           cmd: 'add'
         },
         (err, resp) => {
-          console.log(err)
-
           expect(err).to.be.exists()
           expect(pluginSpy.calledOnce).to.be.equals(true)
           hemera.act(

@@ -48,7 +48,7 @@
     "errio": "1.2.x",
     "fast-safe-stringify": "2.0.x",
     "heavy": "4.0.x",
-    "joi": "14.3.x",
+    "@hapi/joi": "16.1.x",
     "nuid": "^1.1.0",
     "pino": "5.13.x",
     "super-error": "2.4.x",

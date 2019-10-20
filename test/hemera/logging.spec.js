@@ -95,9 +95,7 @@ describe('Logging interface', function() {
       })
     } catch (err) {
       expect(err).to.be.exists()
-      expect(err.message).to.be.equals(
-        'child "logger" fails because ["logger" must be an object, "logger" must be an object]'
-      )
+      expect(err.message).to.be.equals('"logger" must be one of [object]')
       nats.close()
       done()
     }

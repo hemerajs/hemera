@@ -1,4 +1,4 @@
-const Joi = require('joi')
+const Joi = require('@hapi/joi')
 const Os = require('os')
 const { Stream } = require('stream')
 const Util = require('./util')
@@ -20,7 +20,7 @@ module.exports = Joi.object().keys({
   // The name of the instance
   name: Joi.string().default(`hemera-${Os.hostname()}-${Util.randomId()}`),
   logLevel: Joi.any()
-    .valid(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'])
+    .valid('fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent')
     .default('silent'),
   // Create a child logger per section / plugin. Only possible with default logger Pino.
   childLogger: Joi.boolean().default(false),
@@ -29,7 +29,7 @@ module.exports = Joi.object().keys({
     .integer()
     .default(0),
   // Custom logger
-  logger: Joi.alternatives().try(Joi.object(), Joi.object().type(Stream)),
+  logger: Joi.alternatives().try(Joi.object(), Joi.object().instance(Stream)),
   // Attach trace and request informations to the logs. It costs ~10% perf
   traceLog: Joi.boolean().default(false),
   // The error serialization options
@@ -57,7 +57,7 @@ module.exports = Joi.object().keys({
   bloomrun: Joi.object()
     .keys({
       indexing: Joi.any()
-        .valid(['insertion', 'depth'])
+        .valid('insertion', 'depth')
         .default('insertion'),
       // Checks if the pattern is no duplicate depends on the indexing strategy
       lookupBeforeAdd: Joi.boolean().default(false)
