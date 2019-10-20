@@ -5,14 +5,7 @@ import * as nats from 'nats'
 import { Stream } from 'stream'
 
 declare namespace Hemera {
-  type LogLevel =
-    | 'fatal'
-    | 'error'
-    | 'warn'
-    | 'info'
-    | 'debug'
-    | 'trace'
-    | 'silent'
+  type LogLevel = 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace' | 'silent'
 
   interface ErrioConfig {
     recursive?: boolean
@@ -56,32 +49,13 @@ declare namespace Hemera {
 
   interface NatsTransport {
     driver(): any
-    timeout(
-      sid: number,
-      timeout: number,
-      expected: number,
-      callback: (sid: number) => void
-    ): void
-    send(
-      subject: string,
-      msg?: string | Buffer,
-      reply?: string,
-      callback?: Function
-    ): void
+    timeout(sid: number, timeout: number, expected: number, callback: (sid: number) => void): void
+    send(subject: string, msg?: string | Buffer, reply?: string, callback?: Function): void
     close(): void
     flush(callback?: Function): void
-    subscribe(
-      subject: string,
-      opts: nats.SubscribeOptions,
-      callback: Function
-    ): number
+    subscribe(subject: string, opts: nats.SubscribeOptions, callback: Function): number
     unsubscribe(sid: number, max?: number): void
-    request(
-      subject: string,
-      msg?: string,
-      options?: nats.SubscribeOptions,
-      callback?: Function
-    ): number
+    request(subject: string, msg?: string, options?: nats.SubscribeOptions, callback?: Function): number
   }
 
   interface Config {
@@ -103,18 +77,14 @@ declare namespace Hemera {
   interface LoadConfig {
     checkPolicy?: boolean
     shouldCrash?: boolean
-    process?: LoadProcessConfig
     policy?: LoadPolicyConfig
   }
 
   interface LoadPolicyConfig {
+    sampleInterval?: number
     maxHeapUsedBytes?: number
     maxRssBytes?: number
     maxEventLoopDelay?: number
-  }
-
-  interface LoadProcessConfig {
-    sampleInterval?: number
   }
 
   interface ClientPattern {
@@ -155,27 +125,11 @@ declare namespace Hemera {
       queue: string
     }
     // callback
-    use(
-      handler: (
-        request: Request,
-        response: Response,
-        next: Hemera.NodeCallback
-      ) => void
-    ): AddDefinition
-    use(
-      handler: ((
-        request: Request,
-        response: Response,
-        next: Hemera.NodeCallback
-      ) => void)[]
-    ): AddDefinition
+    use(handler: (request: Request, response: Response, next: Hemera.NodeCallback) => void): AddDefinition
+    use(handler: ((request: Request, response: Response, next: Hemera.NodeCallback) => void)[]): AddDefinition
     // promise
-    use(
-      handler: (request: Request, response: Response) => Promise<void>
-    ): AddDefinition
-    use(
-      handler: ((request: Request, response: Response) => Promise<void>)[]
-    ): AddDefinition
+    use(handler: (request: Request, response: Response) => Promise<void>): AddDefinition
+    use(handler: ((request: Request, response: Response) => Promise<void>)[]): AddDefinition
     end(action: (request: ServerPattern, cb: NodeCallback) => void): void
     end(action: (request: ServerPattern) => Promise<any>): void
   }
@@ -285,10 +239,7 @@ declare class Hemera<Request, Response> {
     options?: object
   ): void
   use(
-    plugin: (
-      instance: Hemera<Hemera.NoContext, Hemera.NoContext>,
-      opts: object
-    ) => Promise<void>,
+    plugin: (instance: Hemera<Hemera.NoContext, Hemera.NoContext>, opts: object) => Promise<void>,
     options?: object
   ): void
 
@@ -322,10 +273,7 @@ declare class Hemera<Request, Response> {
 
   ext(
     name: 'onClose',
-    handler: (
-      instance: Hemera<Hemera.NoContext, Hemera.NoContext>,
-      next: Hemera.NodeCallback
-    ) => void
+    handler: (instance: Hemera<Hemera.NoContext, Hemera.NoContext>, next: Hemera.NodeCallback) => void
   ): Hemera<Hemera.NoContext, Hemera.NoContext>
   ext(name: 'onClose'): Promise<void>
 
@@ -339,9 +287,7 @@ declare class Hemera<Request, Response> {
   ): Hemera<Hemera.ClientRequest, Hemera.ClientResponse>
   ext(
     name: 'onAct',
-    handler: (
-      instance: Hemera<Hemera.ClientRequest, Hemera.ClientResponse>
-    ) => Promise<void>
+    handler: (instance: Hemera<Hemera.ClientRequest, Hemera.ClientResponse>) => Promise<void>
   ): Hemera<Hemera.ClientRequest, Hemera.ClientResponse>
 
   ext(
@@ -353,9 +299,7 @@ declare class Hemera<Request, Response> {
   ): Hemera<Hemera.ClientRequest, Hemera.ClientResponse>
   ext(
     name: 'onActFinished',
-    handler: (
-      instance: Hemera<Hemera.ClientRequest, Hemera.ClientResponse>
-    ) => Promise<void>
+    handler: (instance: Hemera<Hemera.ClientRequest, Hemera.ClientResponse>) => Promise<void>
   ): Hemera<Hemera.ClientRequest, Hemera.ClientResponse>
 
   // server extensions
@@ -483,9 +427,7 @@ declare class Hemera<Request, Response> {
   setNotFoundPattern(pattern: string | Hemera.ServerPattern | null): void
   setErrorHandler(handler: (err: Error) => void): void
 
-  setIdGenerator(
-    generatorFunction: () => string
-  ): Hemera<Hemera.NoContext, Hemera.NoContext>
+  setIdGenerator(generatorFunction: () => string): Hemera<Hemera.NoContext, Hemera.NoContext>
   checkPluginDependencies(plugin: Hemera.Plugin): void
 
   log: pino.Logger | Hemera.Logger

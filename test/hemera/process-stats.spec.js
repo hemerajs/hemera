@@ -18,7 +18,7 @@ describe('Process stats', function() {
 
     const hemera = new Hemera(nats, {
       load: {
-        process: {
+        policy: {
           sampleInterval: 1
         }
       }

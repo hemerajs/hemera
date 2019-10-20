@@ -90,6 +90,7 @@ function extractJoiSchema(action) {
     // eslint-disable-next-line no-prototype-builtins
     if (action.schema.hasOwnProperty(key)) {
       const element = action.schema[key]
+
       if (element.isJoi) {
         schema[key] = {
           description: element._description,

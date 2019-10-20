@@ -377,8 +377,9 @@ function onSendSchemaValidation(context, req, reply, next) {
  */
 function onRequestLoadTest(context, req, reply, next) {
   if (context._config.load.checkPolicy === true) {
-    const error = context._loadPolicy.check()
-    if (error) {
+    try {
+      context._heavy.check()
+    } catch (error) {
       next(new Errors.ProcessLoadError(error.message, error.data))
       return
     }

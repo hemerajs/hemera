@@ -16,11 +16,10 @@
 const NATS = require('nats')
 const Bloomrun = require('bloomrun')
 const Errio = require('errio')
-const Heavy = require('heavy')
+const Heavy = require('@hapi/heavy')
 const Pino = require('pino')
 const TinySonic = require('tinysonic')
 const SuperError = require('super-error')
-const Joi = require('@hapi/joi')
 const Avvio = require('avvio')
 const { Stream } = require('stream')
 
@@ -66,7 +65,7 @@ class Hemera {
     this._isReady = false
     this._config = config.value
     this._router = Bloomrun(this._config.bloomrun)
-    this._heavy = new Heavy(this._config.load.process)
+    this._heavy = new Heavy(this._config.load.policy)
     this._transport = new NatsTransport({
       transport
     })
@@ -109,9 +108,6 @@ class Hemera {
 
     // Register all default hemera errors
     this._registerErrors()
-
-    // create load policy
-    this._loadPolicy = this._heavy.policy(this._config.load.policy)
 
     // start tracking process stats
     this._heavy.start()
