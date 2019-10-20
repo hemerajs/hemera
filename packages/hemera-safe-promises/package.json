@@ -19,6 +19,6 @@
   "license": "MIT",
   "dependencies": {
     "hemera-plugin": "^2.0.2",
-    "make-promises-safe": "3.0.x"
+    "make-promises-safe": "5.1.x"
   }
 }

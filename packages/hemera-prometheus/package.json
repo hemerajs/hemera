@@ -11,11 +11,8 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "express": "4.16.x",
+    "express": "4.17.x",
     "hemera-plugin": "^2.0.2",
-    "prom-client": "11.1.x"
-  },
-  "engines": {
-    "node": ">=6"
+    "prom-client": "11.5.x"
   }
 }

@@ -10,14 +10,11 @@
   "scripts": {
     "lint": "eslint index.js"
   },
-  "engines": {
-    "node": ">=6"
-  },
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
     "hemera-plugin": "^2.0.2",
     "hoek": "4.2.x",
-    "jsonwebtoken": "8.2.0"
+    "jsonwebtoken": "8.5.x"
   }
 }

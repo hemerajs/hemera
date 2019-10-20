@@ -13,7 +13,7 @@
   "author": "Dustin Deus (https://github.com/StarpTech)",
   "license": "MIT",
   "dependencies": {
-    "semver": "5.5.x"
+    "semver": "6.3.x"
   },
   "peerDependencies": {
     "nats-hemera": ">=5.3.0"

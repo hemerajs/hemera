@@ -83,7 +83,7 @@ hemera.ready(async (err: Error) => {
     }
   )
 
-  const response1 = await hemera.act({
+  const response1 = await hemera.act<FileResult>({
     topic: 'test'
   })
 

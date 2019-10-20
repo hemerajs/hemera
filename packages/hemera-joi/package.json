@@ -7,9 +7,6 @@
     "url": "git@github.com:hemerajs/hemera.git",
     "type": "git"
   },
-  "engines": {
-    "node": ">=6"
-  },
   "keywords": [
     "joi",
     "ajv",
@@ -20,6 +17,6 @@
   "license": "MIT",
   "dependencies": {
     "hemera-plugin": "^2.0.2",
-    "joi": "12.0.x"
+    "joi": "14.3.x"
   }
 }
