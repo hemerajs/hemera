@@ -27,7 +27,7 @@ describe('Async / Await support', function() {
         topic: 'math',
         cmd: 'add'
       })
-      .use(async function(req, resp) {
+      .use(async function(req, reply) {
         await Promise.resolve()
       })
       .end(function(req, cb) {

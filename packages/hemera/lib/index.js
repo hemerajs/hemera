@@ -39,7 +39,7 @@ const Reply = require('./reply')
 const Add = require('./add')
 const ExtensionManager = require('./extensionManager')
 const { sChildren, sRegisteredPlugins, sReplySent } = require('./symbols')
-const { serverExtIterator, clientExtIterator } = require('./extensionRunner')
+const { serverExtIterator, clientExtIterator, onAddHandlerIterator } = require('./extensionRunner')
 
 const natsConnCodes = [NATS.CONN_ERR, NATS.SECURE_CONN_REQ, NATS.NON_SECURE_CONN_REQ, NATS.CLIENT_CERT_REQ]
 
@@ -1118,15 +1118,7 @@ class Hemera {
    * @memberof Hemera
    */
   _runOnAddHandler(addDefinition) {
-    runExt(
-      this._onAddHandlers,
-      (fn, state, next) => {
-        fn(addDefinition)
-        next()
-      },
-      this,
-      () => {}
-    )
+    runExt(this._onAddHandlers, onAddHandlerIterator, { addDefinition }, () => {})
   }
 
   /**

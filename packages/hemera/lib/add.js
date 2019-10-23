@@ -9,7 +9,7 @@
  *
  */
 
-const { extRunner } = require('./extensionRunner')
+const { extRunner, middlewareIterator } = require('./extensionRunner')
 const { sAddReceivedMsg } = require('./symbols')
 
 class Add {
@@ -42,8 +42,8 @@ class Add {
     this.action = cb
   }
 
-  run(request, response, cb) {
-    extRunner(this.middleware, (fn, state, next) => fn(request, response, next), null, cb)
+  run(request, reply, cb) {
+    extRunner(this.middleware, middlewareIterator, { request, reply }, cb)
   }
 }
 

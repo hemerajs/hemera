@@ -28,6 +28,15 @@ function extRunner(functions, runner, state, cb) {
   next()
 }
 
+function onAddHandlerIterator(fn, state, next) {
+  fn(state.addDefinition)
+  next()
+}
+
+function middlewareIterator(fn, state, next) {
+  return fn(state.request, state.reply, next)
+}
+
 function responseExtIterator(fn, state, next) {
   return fn(state, state.reply, next)
 }
@@ -46,6 +55,8 @@ function clientExtIterator(fn, state, next) {
 
 module.exports = {
   extRunner,
+  onAddHandlerIterator,
+  middlewareIterator,
   serverExtIterator,
   clientExtIterator,
   responseExtIterator,
