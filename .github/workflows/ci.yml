@@ -1,0 +1,34 @@
+name: ci
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        node-version: [6.x, 8.x, 10.x, 12.x]
+        os: [ubuntu-16.04, windows-2016, macOS-10.14]
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install
+        run: |
+          npm install
+
+      - name: Install nats-server
+        run: |
+          wget https://github.com/nats-io/gnatsd/releases/download/v1.4.1/gnatsd-v1.4.1-linux-amd64.zip -qO tmp.zip
+          unzip tmp.zip
+          mv gnatsd-v1.4.1-linux-amd64 gnatsd
+
+      - name: Run tests
+        run: |
+          npm run ci:setup && npm run ci
