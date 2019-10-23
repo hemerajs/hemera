@@ -775,7 +775,7 @@ class Hemera {
     const queue = addDefinition.transport.queue || `queue.${topic}`
     const { pubsub } = addDefinition.transport
 
-    // avoid duplicate subscribers of the emit stream
+    // avoid creating duplicate NATS subscribers
     // we use one subscriber per topic
     if (self._topics.has(topic)) {
       self.log.debug(`Topic '${topic}' was already subscribed!`)
@@ -784,7 +784,7 @@ class Hemera {
 
     const handler = (request, replyTo) => {
       // create new execution context
-      // this will also encapsulate a topic to the plugin
+      // this will encapsulate a topic to the plugin
       const hemera = self.createContext()
       hemera._topic = topic
       hemera.request = new ServerRequest(request)
@@ -1081,8 +1081,8 @@ class Hemera {
     }
 
     // check for invalid topic subscriptions
-    // it's not possible to susbcribe to the same topic with different transport options
-    // because we use one NATS subscription for the topic
+    // it's not possible to subscribe to the same topic with different transport options
+    // because we use exactly one NATS subscription for the topic
     const def = this._checkForTransportCollision(addDefinition)
     if (def) {
       this.log.error(
