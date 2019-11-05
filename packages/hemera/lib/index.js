@@ -64,6 +64,7 @@ class Hemera {
 
     this._root = this
     this._isReady = false
+    this._isReadyWaits = []
     this._config = config.value
     this._router = Bloomrun(this._config.bloomrun)
     this._heavy = new Heavy(this._config.load.process)
@@ -110,6 +111,7 @@ class Hemera {
     // Register all default hemera errors
     this._registerErrors()
 
+    this._registerEvents()
     // create load policy
     this._loadPolicy = this._heavy.policy(this._config.load.policy)
 
@@ -200,6 +202,65 @@ class Hemera {
     } else {
       this.log = Pino(loggerOpts)
     }
+  }
+
+  /**
+   *
+   *
+   * @memberof Hemera
+   */
+  _registerEvents() {
+    this._transport.driver.on('error', err => {
+      this.log.error(err, 'Could not connect to NATS!')
+      this.log.error("NATS Code: '%s', Message: %s", err.code, err.message)
+
+      // Exit only on connection issues.
+      // Authorization and protocol issues don't lead to process termination
+      if (natsConnCodes.indexOf(err.code) > -1) {
+        // We have no NATS connection and can only gracefully shutdown hemera
+        this.close()
+      }
+      
+      this._isReady=false;
+    })
+
+    this._transport.driver.on('permission_error', err => {
+      this.log.error(err, 'NATS permission error')
+      this._isReady=false;
+    })
+
+    this._transport.driver.on('reconnect', () => {
+      this.log.info('NATS reconnected!')
+      this._isReady=false;
+    })
+
+    this._transport.driver.on('reconnecting', () => {
+      this.log.warn('NATS reconnecting ...')
+      this._isReady=false;
+    })
+
+    this._transport.driver.on('disconnect', () => {
+      this.log.warn('NATS disconnected!')
+      this._isReady=false;
+    })
+
+    // when nats was not able to reconnect or connection was closed due to other reasons
+    // the process should die and restarted
+    this._transport.driver.on('close', () => {
+      this.log.error(new Errors.HemeraError('NATS connection closed!'))
+      this._isReady=false;
+    })
+
+    this._transport.driver.on('connect', () => {
+      this.log.info('Connected!')
+
+      this._isReadyWaits.forEach((readyCall)=>{
+        this.bootstrap(readyCall)
+      })
+      this._isReadyWaits=[]
+      this._isReady=true;
+
+    })
   }
 
   /**
@@ -657,55 +718,22 @@ class Hemera {
    * @memberOf Hemera
    */
   ready(cb) {
-    if (this._isReady) {
-      throw new Errors.HemeraError('Hemera was already bootstraped')
-    }
+    // if (this._isReady) {
+    //   throw new Errors.HemeraError('Hemera was already bootstraped')
+    // }
 
-    this._isReady = true
-
-    this._transport.driver.on('error', err => {
-      this.log.error(err, 'Could not connect to NATS!')
-      this.log.error("NATS Code: '%s', Message: %s", err.code, err.message)
-
-      // Exit only on connection issues.
-      // Authorization and protocol issues don't lead to process termination
-      if (natsConnCodes.indexOf(err.code) > -1) {
-        // We have no NATS connection and can only gracefully shutdown hemera
-        this.close()
-      }
-    })
-
-    this._transport.driver.on('permission_error', err => {
-      this.log.error(err, 'NATS permission error')
-    })
-
-    this._transport.driver.on('reconnect', () => {
-      this.log.info('NATS reconnected!')
-    })
-
-    this._transport.driver.on('reconnecting', () => {
-      this.log.warn('NATS reconnecting ...')
-    })
-
-    this._transport.driver.on('disconnect', () => {
-      this.log.warn('NATS disconnected!')
-    })
-
-    // when nats was not able to reconnect or connection was closed due to other reasons
-    // the process should die and restarted
-    this._transport.driver.on('close', () => {
-      this.log.error(new Errors.HemeraError('NATS connection closed!'))
-    })
+    // this._isReady = true
 
     const ready = cb => {
-      if (this._transport.driver.connected) {
+      if (this._isReady) {
         this.log.info('Connected!')
         this.bootstrap(cb)
       } else {
-        this._transport.driver.on('connect', () => {
-          this.log.info('Connected!')
-          this.bootstrap(cb)
-        })
+        this._isReadyWaits.push(cb);
+        // this._transport.driver.on('connect', () => {
+        //   this.log.info('Connected!')
+        //   this.bootstrap(cb)
+        // })
       }
     }
 
@@ -1129,7 +1157,7 @@ class Hemera {
         next()
       },
       this,
-      () => {}
+      () => { }
     )
   }
 
