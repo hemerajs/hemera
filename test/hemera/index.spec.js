@@ -18,7 +18,9 @@ describe('Hemera', function() {
     const hemera = new Hemera(nats)
     hemera.ready(() => {
       try {
-        hemera.ready()
+        hemera.ready(()=>{
+          done()
+        })
       } catch (err) {
         expect(err.message).to.be.equals('Hemera was already bootstraped')
         done()
