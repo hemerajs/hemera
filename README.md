@@ -22,6 +22,13 @@ A <a href="http://nodejs.org/">Node.js</a> microservices toolkit for the <a href
 * **Documentation:** https://hemerajs.github.io/hemera/
 * **Lead Maintainer:** [Dustin Deus](https://github.com/StarpTech)
 
+---
+
+> **Note**: Are you looking for the next generation API Developer Platform? 🔎 Have a look at: [WunderGraph](https://github.com/wundergraph/wundergraph)
+Turn your services, databases and 3rd party APIs into a secure unified API in just a few minutes. 🪄
+
+---
+
 ## 📓 Getting Started
 
 Hemera (/ˈhɛmərə/; Ancient Greek: Ἡμέρα [hɛːméra] "day") is a small wrapper around the official NATS driver. NATS is a simple, fast and reliable solution for the internal communication of a distributed system. It chooses simplicity and reliability over guaranteed delivery. We want to provide a toolkit to develop micro services in an easy and powerful way. We provide a pattern matching RPC style. You don't have to worry about the transport. NATS is powerful.
