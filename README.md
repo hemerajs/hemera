@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-<a href="http://opensource.org/licenses/MIT"><img src="https://camo.githubusercontent.com/11ad3ffb000cd7668567587af947347c738b6472/68747470733a2f2f696d672e736869656c64732e696f2f6e706d2f6c2f657870726573732e7376673f7374796c653d666c61742d737175617265266d61784167653d33363030" alt="License MIT" data-canonical-src="https://img.shields.io/npm/l/express.svg?amp;maxAge=3600" style="max-width:100%;"></a>
+<a href="http://opensource.org/licenses/MIT"><a href="#backers" alt="sponsors on Open Collective"><img src="https://opencollective.com/hemera/backers/badge.svg" /></a> <a href="#sponsors" alt="Sponsors on Open Collective"><img src="https://opencollective.com/hemera/sponsors/badge.svg" /></a> <img src="https://camo.githubusercontent.com/11ad3ffb000cd7668567587af947347c738b6472/68747470733a2f2f696d672e736869656c64732e696f2f6e706d2f6c2f657870726573732e7376673f7374796c653d666c61742d737175617265266d61784167653d33363030" alt="License MIT" data-canonical-src="https://img.shields.io/npm/l/express.svg?amp;maxAge=3600" style="max-width:100%;"></a>
 <a href="https://travis-ci.org/hemerajs/hemera"><img src="https://travis-ci.org/hemerajs/hemera.svg?branch=master" alt="Build Status" data-canonical-src="https://travis-ci.org/hemerajs/hemera.svg?branch=master" style="max-width:100%;"></a>
 <a href="https://ci.appveyor.com/project/StarpTech/hemera"><img src="https://ci.appveyor.com/api/projects/status/s3to4boq8yawulpn?svg=true" alt="Build Status" data-canonical-src="https://ci.appveyor.com/project/StarpTech/hemera" style="max-width:100%;"></a>
 <a href='https://coveralls.io/github/hemerajs/hemera?branch=master'><img src='https://coveralls.io/repos/github/hemerajs/hemera/badge.svg?branch=master' alt='Coverage Status' /></a>
@@ -96,3 +96,33 @@ Hemera is free for any use (MIT license). If you are in production don't miss th
 # Sponsorship
 
 Development of the hemera core module generously supported by contributions from individuals and corporations. If you are benefiting from hemera and would like to help keep the project financially sustainable, please visit [Dustin Deus](https://www.patreon.com/starptech) Patreon page, his [Paypal Me](https://www.paypal.me/payinstant/25) or contact him via [email](mailto:deusdustin@gmail.com).
+
+## Contributors
+
+This project exists thanks to all the people who contribute. 
+<a href="https://github.com/hemerajs/hemera/graphs/contributors"><img src="https://opencollective.com/hemera/contributors.svg?width=890&button=false" /></a>
+
+
+## Backers
+
+Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/hemera#backer)]
+
+<a href="https://opencollective.com/hemera#backers" target="_blank"><img src="https://opencollective.com/hemera/backers.svg?width=890"></a>
+
+
+## Sponsors
+
+Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/hemera#sponsor)]
+
+<a href="https://opencollective.com/hemera/sponsor/0/website" target="_blank"><img src="https://opencollective.com/hemera/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/hemera/sponsor/1/website" target="_blank"><img src="https://opencollective.com/hemera/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/hemera/sponsor/2/website" target="_blank"><img src="https://opencollective.com/hemera/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/hemera/sponsor/3/website" target="_blank"><img src="https://opencollective.com/hemera/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/hemera/sponsor/4/website" target="_blank"><img src="https://opencollective.com/hemera/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/hemera/sponsor/5/website" target="_blank"><img src="https://opencollective.com/hemera/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/hemera/sponsor/6/website" target="_blank"><img src="https://opencollective.com/hemera/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/hemera/sponsor/7/website" target="_blank"><img src="https://opencollective.com/hemera/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/hemera/sponsor/8/website" target="_blank"><img src="https://opencollective.com/hemera/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/hemera/sponsor/9/website" target="_blank"><img src="https://opencollective.com/hemera/sponsor/9/avatar.svg"></a>
+
+
