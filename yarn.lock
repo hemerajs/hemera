@@ -3380,7 +3380,7 @@ lcov-parse@^0.0.10:
   resolved "https://registry.yarnpkg.com/lcov-parse/-/lcov-parse-0.0.10.tgz#1b0b8ff9ac9c7889250582b70b71315d9da6d9a3"
   integrity sha1-GwuP+ayceIklBYK3C3ExXZ2m2aM=
 
-lerna@2.11.1:
+lerna@2.11.0:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/lerna/-/lerna-2.11.0.tgz#89b5681e286d388dda5bbbdbbf6b84c8094eff65"
   integrity sha512-kgM6zwe2P2tR30MYvgiLLW+9buFCm6E7o8HnRlhTgm70WVBvXVhydqv+q/MF2HrVZkCawfVtCfetyQmtd4oHhQ==
@@ -4062,10 +4062,10 @@ node-int64@^0.4.0:
   resolved "https://registry.yarnpkg.com/node-int64/-/node-int64-0.4.0.tgz#87a9065cdb355d3182d8f94ce11188b825c68a3b"
   integrity sha1-h6kGXNs1XTGC2PlM4RGIuCXGijs=
 
-nodemailer@4.6.x:
-  version "4.6.8"
-  resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-4.6.8.tgz#f82fb407828bf2e76d92acc34b823d83e774f89c"
-  integrity sha512-A3s7EM/426OBIZbLHXq2KkgvmKbn2Xga4m4G+ZUA4IaZvG8PcZXrFh+2E4VaS2o+emhuUVRnzKN2YmpkXQ9qwA==
+nodemailer@6.4.x:
+  version "6.4.16"
+  resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-6.4.16.tgz#5cb6391b1d79ab7eff32d6f9f48366b5a7117293"
+  integrity sha512-68K0LgZ6hmZ7PVmwL78gzNdjpj5viqBdFqKrTtr9bZbJYj6BRj5W6WGkxXrEnUl3Co3CBXi3CZBUlpV/foGnOQ==
 
 nopt@3.x:
   version "3.0.6"
